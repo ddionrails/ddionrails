@@ -35,6 +35,7 @@ black = "*"
 isort = "*"
 mypy = "*"
 radon = "*"
+codecov = "*"
 
 # Testing
 pytest = "*"
