@@ -4,6 +4,7 @@
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.3/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
+[![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
 [![Travis][travis-badge]](https://travis-ci.org/ddionrails/ddionrails/)
 [![PyUp][pyup-badge]](https://pyup.io/repos/github/ddionrails/ddionrails/)
 
@@ -119,3 +120,5 @@ This project is licensed under the GNU AGPLv3 License - see the [LICENSE.md](htt
 [coverage-badge]: https://img.shields.io/coveralls/github/jekyll/jekyll.svg
 [travis-badge]: https://img.shields.io/travis/ddionrails/ddionrails.svg
 [pyup-badge]: https://pyup.io/repos/github/ddionrails/ddionrails/shield.svg
+[issues-badge]: https://img.shields.io/github/issues/ddionrails/ddionrails.svg
+
