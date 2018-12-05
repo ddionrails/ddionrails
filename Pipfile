@@ -26,6 +26,8 @@ bibtexparser = "*"
 paver = "*"
 fabric = "*"
 
+idna = "==2.7" # pin idna to 2.7 for now
+
 [dev-packages]
 # Linters and code style
 black = "*"

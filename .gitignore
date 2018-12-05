@@ -114,20 +114,17 @@ venv.bak/
 *~
 *.swp
 
-/ddionrails/db/*
-!/ddionrails/db/.gitkeep
+/db/*
+!/db/.gitkeep
 
-/ddionrails/repositories/*
-!/ddionrails/repositories/.gitkeep
+/static/repositories/*
+!/static/repositories/.gitkeep
 
-/ddionrails/static/repositories/*
-!/ddionrails/static/repositories/.gitkeep
+/local/*
+!/local/.gitkeep
 
-/ddionrails/local/*
-!/ddionrails/local/.gitkeep
-
-/ddionrails/temp/*
-!/ddionrails/temp/.gitkeep
+/temp/*
+!/temp/.gitkeep
 
 x.py
 debug.log
