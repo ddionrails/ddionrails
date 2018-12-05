@@ -144,3 +144,4 @@ node_modules/
 secrets.json
 
 /ddionrails/static/dist/*
+webpack-stats.json

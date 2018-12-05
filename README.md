@@ -1,5 +1,5 @@
 # DDI on Rails – version 2
---------------------------
+
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-360/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.3/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
