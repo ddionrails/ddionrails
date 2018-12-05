@@ -304,7 +304,7 @@ def elastic_search_javascript_library():
     run(
         """
             cd ./node_modules/ddionrails-elasticsearch
-            npm install --save-dev
+            npm install
             ./node_modules/.bin/ng build --prod
         """
     )
@@ -319,7 +319,7 @@ def webpack():
 @task
 def setup_frontend():
     """ Setup all frontend dependencies """
-    run("""npm install --save-dev""")
+    run("""npm install""")
     elastic_search_javascript_library()
     webpack()
 
