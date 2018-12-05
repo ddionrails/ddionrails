@@ -7,6 +7,7 @@
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
 [![Travis][travis-badge]](https://travis-ci.org/ddionrails/ddionrails/)
 [![PyUp][pyup-badge]](https://pyup.io/repos/github/ddionrails/ddionrails/)
+[![Greenkeeper][greenkeeper-badge]](https://greenkeeper.io/)
 
 [![Repo size][reposize-badge]][reposize-badge]
 
@@ -119,5 +120,5 @@ This project is licensed under the GNU AGPLv3 License - see the [LICENSE.md](htt
 [coverage-badge]: https://img.shields.io/coveralls/github/jekyll/jekyll.svg
 [travis-badge]: https://img.shields.io/travis/ddionrails/ddionrails.svg
 [pyup-badge]: https://pyup.io/repos/github/ddionrails/ddionrails/shield.svg
+[greenkeeper-badge]: https://badges.greenkeeper.io/greenkeeperio/badges.svg
 [issues-badge]: https://img.shields.io/github/issues/ddionrails/ddionrails.svg
-
