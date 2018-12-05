@@ -4,5 +4,6 @@ python:
 install:
   - pip install pipenv
   - pipenv install --dev
+  - pipenv run paver copy_secrets_file
 script:
   - pytest
