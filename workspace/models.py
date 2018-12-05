@@ -103,8 +103,12 @@ class Basket(ElasticMixin, models.Model):
 
 
 class BasketVariable(models.Model):
-    basket = models.ForeignKey(Basket, related_name="baskets_variables", on_delete=models.CASCADE)
-    variable = models.ForeignKey(Variable, related_name="baskets_variables", on_delete=models.CASCADE)
+    basket = models.ForeignKey(
+        Basket, related_name="baskets_variables", on_delete=models.CASCADE
+    )
+    variable = models.ForeignKey(
+        Variable, related_name="baskets_variables", on_delete=models.CASCADE
+    )
 
     class Meta:
         unique_together = ("basket", "variable")
@@ -144,4 +148,7 @@ class Script(models.Model):
         return "/workspace/baskets/%s/scripts/%s" % (self.basket.id, self.id)
 
     def get_absolute_url(self):
-        return reverse("workspace:script_detail", kwargs={"basket_id": self.basket.id, "script_id": self.id})
+        return reverse(
+            "workspace:script_detail",
+            kwargs={"basket_id": self.basket.id, "script_id": self.id},
+        )

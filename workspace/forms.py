@@ -35,9 +35,11 @@ class BasketCSVForm(BasketForm):
         if self.data["name"] != self.data["name"].lower():
             self.data["cs_name"] = self.data["name"]
             self.data["name"] = self.data["name"].lower()
-        if not "study" in self.data.keys():
-            self.data["study"] = Study.objects.get(name=self.data["study_name"].lower()).pk
-        if not "user" in self.data.keys():
+        if "study" not in self.data.keys():
+            self.data["study"] = Study.objects.get(
+                name=self.data["study_name"].lower()
+            ).pk
+        if "user" not in self.data.keys():
             self.data["user"] = User.objects.get(username=self.data["username"]).pk
 
 
@@ -48,9 +50,11 @@ class BasketVariableForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if not "basket" in self.data.keys():
-            self.data["basket"] = Basket.get_or_create(self.data["basket_name"], self.data["username"]).pk
-        if not "variable" in self.data.keys():
+        if "basket" not in self.data.keys():
+            self.data["basket"] = Basket.get_or_create(
+                self.data["basket_name"], self.data["username"]
+            ).pk
+        if "variable" not in self.data.keys():
             try:
                 self.data["variable"] = Variable.get(
                     dict(

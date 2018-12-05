@@ -17,13 +17,27 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
     Instrument.
     """
 
-    name = models.CharField(max_length=255, validators=[validate_lowercase], db_index=True)
+    name = models.CharField(
+        max_length=255, validators=[validate_lowercase], db_index=True
+    )
     label = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
-    study = models.ForeignKey(Study, blank=True, null=True, related_name="instruments", on_delete=models.CASCADE)
-    period = models.ForeignKey(Period, blank=True, null=True, related_name="instruments", on_delete=models.CASCADE)
+    study = models.ForeignKey(
+        Study, blank=True, null=True, related_name="instruments", on_delete=models.CASCADE
+    )
+    period = models.ForeignKey(
+        Period,
+        blank=True,
+        null=True,
+        related_name="instruments",
+        on_delete=models.CASCADE,
+    )
     analysis_unit = models.ForeignKey(
-        AnalysisUnit, blank=True, null=True, related_name="instruments", on_delete=models.CASCADE
+        AnalysisUnit,
+        blank=True,
+        null=True,
+        related_name="instruments",
+        on_delete=models.CASCADE,
     )
 
     objects = InheritanceManager()
@@ -38,7 +52,10 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
         io_fields = ["study", "name", "label", "description", "period", "analysis_unit"]
 
     def get_absolute_url(self):
-        return reverse("inst:instrument_detail", kwargs={"study_name": self.study.name, "instrument_name": self.name})
+        return reverse(
+            "inst:instrument_detail",
+            kwargs={"study_name": self.study.name, "instrument_name": self.name},
+        )
 
     def layout_class(self):
         return "instrument"
@@ -49,9 +66,15 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
 
 class Question(ElasticMixin, DorMixin, models.Model):
     instrument = models.ForeignKey(
-        Instrument, blank=True, null=True, related_name="questions", on_delete=models.CASCADE
+        Instrument,
+        blank=True,
+        null=True,
+        related_name="questions",
+        on_delete=models.CASCADE,
     )
-    name = models.CharField(max_length=255, validators=[validate_lowercase], db_index=True)
+    name = models.CharField(
+        max_length=255, validators=[validate_lowercase], db_index=True
+    )
     label = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
     sort_id = models.IntegerField(blank=True, null=True)
@@ -118,7 +141,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
     def translate_item(self, item, language):
         item["text"] = item.get("text_%s" % language, item.get("text", ""))
-        item["instruction"] = item.get("instruction_%s" % language, item.get("instruction", ""))
+        item["instruction"] = item.get(
+            "instruction_%s" % language, item.get("instruction", "")
+        )
         for answer in item.get("answers", []):
             answer["label"] = answer.get("label_%s" % language, answer.get("label", ""))
 
@@ -170,8 +195,12 @@ class QuestionVariable(models.Model):
     Linking items in an instrument with related variables.
     """
 
-    question = models.ForeignKey(Question, related_name="questions_variables", on_delete=models.CASCADE)
-    variable = models.ForeignKey(Variable, related_name="questions_variables", on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        Question, related_name="questions_variables", on_delete=models.CASCADE
+    )
+    variable = models.ForeignKey(
+        Variable, related_name="questions_variables", on_delete=models.CASCADE
+    )
 
     class Meta:
         unique_together = ("question", "variable")
@@ -186,8 +215,12 @@ class ConceptQuestion(models.Model):
     Linking items in an instrument with related variables.
     """
 
-    question = models.ForeignKey(Question, related_name="concepts_questions", on_delete=models.CASCADE)
-    concept = models.ForeignKey(Concept, related_name="concepts_questions", on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        Question, related_name="concepts_questions", on_delete=models.CASCADE
+    )
+    concept = models.ForeignKey(
+        Concept, related_name="concepts_questions", on_delete=models.CASCADE
+    )
 
     class Meta:
         unique_together = ("question", "concept")

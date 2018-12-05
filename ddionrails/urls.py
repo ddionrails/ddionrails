@@ -10,7 +10,14 @@ import studies.views as studies_views
 from elastic.views import angular as angular_search
 from studies.views import StudyDetailView, study_topics
 
-from .views import HomePageView, contact_page, elastic_proxy, elastic_test, imprint_page, quick_page
+from .views import (
+    HomePageView,
+    contact_page,
+    elastic_proxy,
+    elastic_test,
+    imprint_page,
+    quick_page,
+)
 
 handler400 = "ddionrails.views.bad_request"
 handler403 = "ddionrails.views.permission_denied"
@@ -35,18 +42,37 @@ urlpatterns = [
     url(r"^accounts/login/", LoginView.as_view()),
     url(r"^elastic(?P<path>.*)$", elastic_proxy),
     # Study by name
-    url(r"^(?P<study_name>[a-z0-9_\-]+)$", StudyDetailView.as_view(), name="study_detail"),
+    url(
+        r"^(?P<study_name>[a-z0-9_\-]+)$", StudyDetailView.as_view(), name="study_detail"
+    ),
     # Study-specific links
     url(r"^(?P<study_name>[a-z0-9_\-]+)/data/", include("data.urls", namespace="data")),
-    url(r"^(?P<study_name>[a-z0-9_\-]+)/publ/", include("publications.urls", namespace="publ")),
-    url(r"^(?P<study_name>[a-z0-9_\-]+)/inst/", include("instruments.urls", namespace="inst")),
+    url(
+        r"^(?P<study_name>[a-z0-9_\-]+)/publ/",
+        include("publications.urls", namespace="publ"),
+    ),
+    url(
+        r"^(?P<study_name>[a-z0-9_\-]+)/inst/",
+        include("instruments.urls", namespace="inst"),
+    ),
     url(r"^(?P<study_name>[a-z0-9_\-]+)/topics/", study_topics, name="study.topics"),
     # Redirects for search interface
-    url(r"^publication/(?P<id>[0-9]+)", publications_views.PublicationRedirectView.as_view()),
+    url(
+        r"^publication/(?P<id>[0-9]+)",
+        publications_views.PublicationRedirectView.as_view(),
+    ),
     url(r"^variable/(?P<id>[0-9]+)", data_views.variable_redirect),
     url(r"^dataset/(?P<id>[0-9]+)", data_views.dataset_redirect),
-    url(r"^instrument/(?P<id>[0-9]+)", instruments_views.InstrumentRedirectView.as_view(), name="instrument_redirect"),
-    url(r"^question/(?P<id>[0-9]+)", instruments_views.QuestionRedirectView.as_view(), name="question_redirect"),
+    url(
+        r"^instrument/(?P<id>[0-9]+)",
+        instruments_views.InstrumentRedirectView.as_view(),
+        name="instrument_redirect",
+    ),
+    url(
+        r"^question/(?P<id>[0-9]+)",
+        instruments_views.QuestionRedirectView.as_view(),
+        name="question_redirect",
+    ),
     url(r"^study/(?P<id>[0-9]+)", studies_views.StudyRedirectView.as_view()),
 ]
 
@@ -55,4 +81,4 @@ if settings.DEBUG:
     import debug_toolbar
 
     urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
-    urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
+    urlpatterns += [url(r"^silk/", include("silk.urls", namespace="silk"))]

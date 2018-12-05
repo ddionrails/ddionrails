@@ -1,6 +1,12 @@
 import pytest
 
-from workspace.forms import BasketCSVForm, BasketForm, BasketVariableForm, UserCreationForm, UserForm
+from workspace.forms import (
+    BasketCSVForm,
+    BasketForm,
+    BasketVariableForm,
+    UserCreationForm,
+    UserForm,
+)
 
 
 pytestmark = [pytest.mark.workspace, pytest.mark.form]
@@ -27,7 +33,9 @@ def valid_user_data():
 @pytest.fixture
 def valid_user_creation_data():
     """ A valid input for user creation forms and imports """
-    return dict(username="some-user", password1="some-password", password2="some-password")
+    return dict(
+        username="some-user", password1="some-password", password2="some-password"
+    )
 
 
 class TestBasketForm:
@@ -48,7 +56,9 @@ class TestBasketForm:
 
 class TestBasketCSVForm:
     def test_form_with_invalid_data(self, study, user):
-        invalid_basket_csv_data = dict(name="", study_name=study.name, username=user.username)
+        invalid_basket_csv_data = dict(
+            name="", study_name=study.name, username=user.username
+        )
         form = BasketCSVForm(data=invalid_basket_csv_data)
         assert form.is_valid() is False
         expected_errors = {"name": ["This field is required."]}
@@ -63,12 +73,16 @@ class TestBasketCSVForm:
         assert basket.user == user
 
     def test_form_with_valid_data(self, study, user):
-        valid_basket_csv_data = dict(name="some-basket", study_name=study.name, username=user.username)
+        valid_basket_csv_data = dict(
+            name="some-basket", study_name=study.name, username=user.username
+        )
         form = BasketCSVForm(data=valid_basket_csv_data)
         assert form.is_valid() is True
 
     def test_form_with_valid_data_not_lower_case(self, study, user):
-        valid_basket_csv_data = dict(name="SOME-BASKET", study_name=study.name, username=user.username)
+        valid_basket_csv_data = dict(
+            name="SOME-BASKET", study_name=study.name, username=user.username
+        )
         form = BasketCSVForm(data=valid_basket_csv_data)
         assert form.is_valid() is True
         form.full_clean()
@@ -146,7 +160,10 @@ class TestUserForm:
     def test_form_with_invalid_data(self, empty_data):
         form = UserForm(data=empty_data)
         assert form.is_valid() is False
-        expected_errors = {"username": ["This field is required."], "password": ["This field is required."]}
+        expected_errors = {
+            "username": ["This field is required."],
+            "password": ["This field is required."],
+        }
         assert form.errors == expected_errors
 
     def test_form_with_valid_data(self, db, valid_user_data):

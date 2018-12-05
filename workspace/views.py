@@ -1,37 +1,49 @@
+import json
 import pprint
 from collections import OrderedDict
-from django.shortcuts import render, redirect
+
 from django.contrib import messages
-from django.http import HttpResponse
-from concepts.models import Concept
-from .forms import UserCreationForm, BasketForm
 from django.forms.widgets import HiddenInput
-from .models import *
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+
+from concepts.models import Concept
+from data.models import Variable
+
+from .forms import BasketForm, UserCreationForm
+from .models import Basket, BasketVariable, Script
 from .scripts import SoepStata
+
 
 def own_basket_only(view):
     """Decorator for basket-related views."""
+
     def wrapper(request, basket_id, *args, **kwargs):
         basket = Basket.objects.get(pk=basket_id)
         if basket.user == request.user:
             return view(request, basket_id, *args, **kwargs)
         else:
-            messages.add_message(request, messages.INFO,
-                "You don't have the user rights to access basket %s." % basket_id)
+            messages.add_message(
+                request,
+                messages.INFO,
+                "You don't have the user rights to access basket %s." % basket_id,
+            )
             return redirect("/")
+
     return wrapper
+
 
 # ---------------------------------------------------------
 
+
 def account_overview(request):
     if request.user.is_authenticated:
-        context = dict(
-            user=request.user,
-        )
+        context = dict(user=request.user)
         return render(request, "workspace/account.html", context=context)
     else:
-        return HttpResponse('Unauthorized', status=401)
-    
+        return HttpResponse("Unauthorized", status=401)
+
+
 def basket_list(request):
     if request.user.is_authenticated:
         basket_list = request.user.baskets.all()
@@ -40,84 +52,85 @@ def basket_list(request):
     context = dict(basket_list=basket_list)
     return render(request, "workspace/basket_list.html", context=context)
 
+
 @own_basket_only
 def render_script(request, basket_id, script_name):
-    basket=Basket.objects.get(pk=basket_id)
+    basket = Basket.objects.get(pk=basket_id)
     context = dict(
-        basket=basket,
-        variables=basket.variables.all(),
-        script_name=script_name,
+        basket=basket, variables=basket.variables.all(), script_name=script_name
     )
     template = "scripts/%s.html" % script_name
     return render(request, template, context=context)
+
 
 @own_basket_only
 def add_variable(request, basket_id, variable_id):
     try:
         relation = BasketVariable.objects.create(
-            basket_id=basket_id,
-            variable_id=variable_id,
+            basket_id=basket_id, variable_id=variable_id
         )
     except:
         pass
     return redirect(request.META.get("HTTP_REFERER"))
 
+
 @own_basket_only
 def remove_variable(request, basket_id, variable_id):
     try:
         relation = BasketVariable.objects.get(
-            basket_id=basket_id,
-            variable_id=variable_id,
+            basket_id=basket_id, variable_id=variable_id
         )
         relation.delete()
     except:
         pass
     return redirect(request.META.get("HTTP_REFERER"))
 
+
 @own_basket_only
 def add_concept(request, basket_id, concept_id):
     study_id = Basket.objects.get(id=basket_id).study_id
-    variable_list = Variable.objects.filter(
-        dataset__study_id=study_id
-    ).filter(
-        concept_id=concept_id
-    ).all()
+    variable_list = (
+        Variable.objects.filter(dataset__study_id=study_id)
+        .filter(concept_id=concept_id)
+        .all()
+    )
     for variable in variable_list:
         try:
             relation, status = BasketVariable.objects.get_or_create(
-                basket_id=basket_id,
-                variable_id=variable.id,
+                basket_id=basket_id, variable_id=variable.id
             )
         except:
             pass
     return redirect(request.META.get("HTTP_REFERER"))
 
+
 @own_basket_only
 def remove_concept(request, basket_id, concept_id):
     study_id = Basket.objects.get(id=basket_id).study_id
-    variable_list = Variable.objects.filter(
-        dataset__study_id=study_id
-    ).filter(
-        concept_id=concept_id
-    ).all()
+    variable_list = (
+        Variable.objects.filter(dataset__study_id=study_id)
+        .filter(concept_id=concept_id)
+        .all()
+    )
     for variable in variable_list:
         try:
             relation = BasketVariable.objects.get(
-                basket_id=basket_id,
-                variable_id=variable.id,
+                basket_id=basket_id, variable_id=variable.id
             )
             relation.delete()
         except:
             pass
     return redirect(request.META.get("HTTP_REFERER"))
 
+
 @own_basket_only
 def basket_to_csv(request, basket_id):
     basket = Basket.objects.get(pk=basket_id)
     csv = basket.to_csv()
     response = HttpResponse(csv, content_type="text/csv")
-    response['Content-Disposition'] = 'attachment; filename="basket.csv"'
+    response["Content-Disposition"] = 'attachment; filename="basket.csv"'
     return response
+
 
 @own_basket_only
 def basket_detail(request, basket_id):
@@ -129,16 +142,20 @@ def basket_detail(request, basket_id):
             vars_with_concept.append(variable)
         else:
             vars_without_concept.append(variable)
-    concept_list = sorted(Concept.objects.filter(
-        id__in=set([ v.concept.id for v in vars_with_concept ])
-    ).all(), key=lambda x: x.name)
-    related_variable_list = Variable.objects.filter(
-        concept_id__in=set([ concept.id for concept in concept_list ])
-    ).filter(
-        dataset__study_id=basket.study.id
-    ).prefetch_related(
-        "dataset", "dataset__period", "period", "concept"
-    ).all()
+    concept_list = sorted(
+        Concept.objects.filter(
+            id__in=set([v.concept.id for v in vars_with_concept])
+        ).all(),
+        key=lambda x: x.name,
+    )
+    related_variable_list = (
+        Variable.objects.filter(
+            concept_id__in=set([concept.id for concept in concept_list])
+        )
+        .filter(dataset__study_id=basket.study.id)
+        .prefetch_related("dataset", "dataset__period", "period", "concept")
+        .all()
+    )
     period_list = []
     for v in related_variable_list:
         try:
@@ -151,7 +168,7 @@ def basket_detail(request, basket_id):
         related_variable_table[concept.name] = OrderedDict(
             id=concept.id,
             label=concept.label,
-            periods=OrderedDict([ (p, list()) for p in period_list]),
+            periods=OrderedDict([(p, list()) for p in period_list]),
         )
     bad_variables = list()
     for v in related_variable_list:
@@ -160,12 +177,9 @@ def basket_detail(request, basket_id):
         except:
             period_name = ""
         try:
-            related_variable_table[v.concept.name]["periods"][period_name].append(dict(
-                name=v.name,
-                link=str(v),
-                active=v in variable_list,
-                id=v.id,
-            ))
+            related_variable_table[v.concept.name]["periods"][period_name].append(
+                dict(name=v.name, link=str(v), active=v in variable_list, id=v.id)
+            )
             if related_variable_table[v.concept.name]["label"] == "":
                 related_variable_table[v.concept.name]["label"] = v.label
         except:
@@ -180,16 +194,19 @@ def basket_detail(request, basket_id):
         related_variable_table=related_variable_table,
         period_list=period_list,
         concept_list=concept_list,
-        debug_string = pprint.pformat(dict(
-            table_input=related_variable_table,
-            bad_variables=bad_variables,
-            period_list=period_list,
-        )),
+        debug_string=pprint.pformat(
+            dict(
+                table_input=related_variable_table,
+                bad_variables=bad_variables,
+                period_list=period_list,
+            )
+        ),
     )
     return render(request, "workspace/basket_detail.html", context=context)
 
+
 def register(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -199,10 +216,11 @@ def register(request):
     context = dict(form=form)
     return render(request, "registration/register.html", context=context)
 
+
 def basket_new(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = BasketForm(request.POST)
-        form.fields['user'].widget = HiddenInput()
+        form.fields["user"].widget = HiddenInput()
         if form.is_valid():
             basket = form.save(commit=False)
             basket.user = request.user
@@ -211,9 +229,10 @@ def basket_new(request):
             return redirect("/workspace/baskets/")
     else:
         form = BasketForm(initial=dict(user=request.user.id))
-        form.fields['user'].widget = HiddenInput()
+        form.fields["user"].widget = HiddenInput()
     context = dict(form=form)
     return render(request, "workspace/basket_create.html", context=context)
+
 
 def script_detail(request, basket_id, script_id):
     script = Script.objects.get(pk=script_id)
@@ -221,8 +240,11 @@ def script_detail(request, basket_id, script_id):
         script.name = request.POST.get("field_name", "")
         script.label = request.POST.get("field_label", "")
         script.generator_name = request.POST.get("field_generator_name", "")
-        settings_dict = { key.replace("settings_", ""): value for key, value in\
-            request.POST.items() if "settings_" in key }
+        settings_dict = {
+            key.replace("settings_", ""): value
+            for key, value in request.POST.items()
+            if "settings_" in key
+        }
         script.settings = json.dumps(settings_dict)
         script.save()
     else:
@@ -234,56 +256,60 @@ def script_detail(request, basket_id, script_id):
             field["value"] = settings_dict[field["name"]]
         if not "value" in field.keys():
             field["value"] = script_config.DEFAULT_DICT[field["name"]]
-    s=script.get_script_input()
+    s = script.get_script_input()
     context = dict(
         basket=script.basket,
         script=script,
         fields=fields,
         settings=settings_dict,
         s=s,
-        debug_string = pprint.pformat(s),
+        debug_string=pprint.pformat(s),
     )
     return render(request, "workspace/script_detail.html", context=context)
 
+
 def basket_search(request, basket_id):
     basket = Basket.objects.get(pk=basket_id)
-    context = dict(
-        basket=basket,
-        study_id=basket.study_id,
-    )
+    context = dict(basket=basket, study_id=basket.study_id)
     return render(request, "workspace/angular.html", context=context)
+
 
 def script_raw(request, basket_id, script_id):
     script = Script.objects.get(pk=script_id)
     text = script.get_script_input()["text"]
     return HttpResponse(text, content_type="text/plain")
 
+
 def basket_delete(request, basket_id):
     basket = Basket.objects.get(pk=basket_id)
     basket.delete()
     return redirect("/workspace/baskets/")
+
 
 def script_delete(request, basket_id, script_id):
     script = Script.objects.get(pk=script_id)
     script.delete()
     return redirect("/workspace/baskets/%s" % basket_id)
 
+
 def user_delete(request):
     request.user.delete()
     return redirect("/workspace/logout/")
 
+
 def script_new_lang(request, basket_id, generator_name):
     script = Script.objects.create(
-        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1) ,
+        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1),
         basket_id=basket_id,
         settings=SoepStata.DEFAULT_CONFIG,
-        generator_name=generator_name
+        generator_name=generator_name,
     )
     return redirect("/workspace/baskets/%s/scripts/%s" % (basket_id, script.id))
 
+
 def script_new(request, basket_id):
     script = Script.objects.create(
-        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1) ,
+        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1),
         basket_id=basket_id,
         settings=SoepStata.DEFAULT_CONFIG,
     )

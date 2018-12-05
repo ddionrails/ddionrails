@@ -6,11 +6,15 @@ pytestmark = [pytest.mark.data, pytest.mark.models]
 
 class TestVariableModel:
     def test_string_method(self, variable):
-        expected = f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
+        expected = (
+            f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
+        )
         assert str(variable) == expected
 
     def test_absolute_url_method(self, variable):
-        expected = f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
+        expected = (
+            f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
+        )
         assert variable.get_absolute_url() == expected
 
 

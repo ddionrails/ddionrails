@@ -10,17 +10,19 @@ from tests.factories import UserFactory
 pytestmark = [pytest.mark.functional]
 
 
-
 @pytest.fixture()
 def authenticated_browser(selenium, client, live_server, known_user):
     """Return a browser instance with logged-in user session."""
-     # https://flowfx.de/blog/test-django-with-selenium-pytest-and-user-authentication/
-    client.login(username=known_user.username, password='secret')
-    cookie = client.cookies['sessionid']
+    # https://flowfx.de/blog/test-django-with-selenium-pytest-and-user-authentication/
+    client.login(username=known_user.username, password="secret")
+    cookie = client.cookies["sessionid"]
     selenium.get(live_server.url)
-    selenium.add_cookie({'name': 'sessionid', 'value': cookie.value, 'secure': False, 'path': '/'})
+    selenium.add_cookie(
+        {"name": "sessionid", "value": cookie.value, "secure": False, "path": "/"}
+    )
     # selenium.refresh()
     return selenium
+
 
 # @pytest.mark.skip(reason="no way of currently testing this")
 class TestNavigation:
@@ -75,7 +77,9 @@ class TestNavigation:
 
     def test_get_password_reset_page_from_login(self, selenium, live_server):
         selenium.get(live_server.url + "/workspace/login/")
-        password_reset_link = selenium.find_element_by_xpath("//a[contains(@href,'password_reset')]")
+        password_reset_link = selenium.find_element_by_xpath(
+            "//a[contains(@href,'password_reset')]"
+        )
         password_reset_link.click()
         heading = selenium.find_element_by_tag_name("h1")
         assert heading.text == "Django administration"
@@ -83,7 +87,9 @@ class TestNavigation:
 
     def test_studies_dropdown_menu(self, selenium, live_server, study):
         selenium.get(live_server.url)
-        studies_dropdown_menu = selenium.find_element_by_xpath('//button[contains(text(), "Studies")]')
+        studies_dropdown_menu = selenium.find_element_by_xpath(
+            '//button[contains(text(), "Studies")]'
+        )
         expanded = studies_dropdown_menu.get_attribute("aria-expanded")
         assert expanded == "false"
         studies_dropdown_menu.click()
@@ -126,7 +132,9 @@ class TestNavigation:
         dataset_link = dataset_table.find_element_by_link_text(dataset.name)
         assert dataset_link
 
-    def test_study_instruments_section_link(self, selenium, live_server, study, instrument):
+    def test_study_instruments_section_link(
+        self, selenium, live_server, study, instrument
+    ):
         instrument.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
@@ -258,42 +266,42 @@ class TestWorkspace:
         authenticated_browser.get(live_server.url + "/workspace/login/")
         baskets_link = authenticated_browser.find_element_by_link_text("My baskets")
         baskets_link.click()
-        create_basket_link = authenticated_browser.find_element_by_link_text("Create basket")
-        create_basket_link.click()
-        basket_data = dict(
-            name='some-basket',
-            label='Some basket',
+        create_basket_link = authenticated_browser.find_element_by_link_text(
+            "Create basket"
         )
+        create_basket_link.click()
+        basket_data = dict(name="some-basket", label="Some basket")
         input_basket_name = authenticated_browser.find_element_by_id("id_name")
         input_basket_label = authenticated_browser.find_element_by_id("id_label")
-        input_basket_name.send_keys(basket_data['name'])
-        input_basket_label.send_keys(basket_data['label'])
+        input_basket_name.send_keys(basket_data["name"])
+        input_basket_label.send_keys(basket_data["label"])
         select_study = Select(authenticated_browser.find_element_by_id("id_study"))
         select_study.select_by_visible_text(str(study))
-        create_basket_button = authenticated_browser.find_element_by_xpath('//input[@value="Create basket"]')
+        create_basket_button = authenticated_browser.find_element_by_xpath(
+            '//input[@value="Create basket"]'
+        )
         create_basket_button.click()
 
-        basket_list = authenticated_browser.find_element_by_css_selector("div.list-group-item")
-        assert basket_data['name'] in basket_list.text
+        basket_list = authenticated_browser.find_element_by_css_selector(
+            "div.list-group-item"
+        )
+        assert basket_data["name"] in basket_list.text
 
         # TODO : assert Basket successfully created. message
 
-
-    def test_perform_basket(self, authenticated_browser, live_server, study, known_user, basket):
+    def test_perform_basket(
+        self, authenticated_browser, live_server, study, known_user, basket
+    ):
         basket.user = known_user
         basket.save()
         authenticated_browser.get(live_server.url + "/workspace/baskets/")
-        delete_url = '/workspace/baskets/' + str(basket.pk) + '/delete'
-        authenticated_browser.find_element_by_xpath("//a[@href='" + delete_url + "']").click()
+        delete_url = "/workspace/baskets/" + str(basket.pk) + "/delete"
+        authenticated_browser.find_element_by_xpath(
+            "//a[@href='" + delete_url + "']"
+        ).click()
         alert = authenticated_browser.switch_to.alert
-        assert alert.text == 'Are you sure you want to delete basket ' + basket.name + '?'
+        assert alert.text == "Are you sure you want to delete basket " + basket.name + "?"
         alert.accept()
-
-
-
-
-
-
 
 
 # @pytest.mark.skip(reason="no way of currently testing this")
@@ -315,7 +323,9 @@ class TestSearchPage:
             selenium.find_element_by_xpath('//button[contains(text(), "Previous")]')
         next_button = selenium.find_element_by_xpath('//button[contains(text(), "Next")]')
         next_button.click()
-        previous_button = selenium.find_element_by_xpath('//button[contains(text(), "Previous")]')
+        previous_button = selenium.find_element_by_xpath(
+            '//button[contains(text(), "Previous")]'
+        )
         assert previous_button
 
     @pytest.mark.skip(reason="no way of currently testing this")
@@ -329,7 +339,9 @@ class TestSearchPage:
 
     @pytest.mark.skip(reason="no way of currently testing this")
     def test_search_with_es(self, selenium, live_server, settings, study):
-        r = study.set_elastic(dict(name=study.name, label=study.label, description=study.description))
+        r = study.set_elastic(
+            dict(name=study.name, label=study.label, description=study.description)
+        )
         selenium.get(live_server.url + "/search/")
         search_form = selenium.find_element_by_xpath("//input[@placeholder='Search ...']")
         search_form.send_keys("some-study")

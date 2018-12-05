@@ -25,7 +25,9 @@ class TestConceptDetailView:
 
     def test_concept_view_with_existing_concept_name(self, client, concept):
         concept_name = "some-concept"
-        url = reverse("concepts:concept_detail_name", kwargs={"concept_name": concept_name})
+        url = reverse(
+            "concepts:concept_detail_name", kwargs={"concept_name": concept_name}
+        )
         response = client.get(url)
         assert response.status_code == 200
         template_name = "concepts/concept_detail.html"
@@ -35,13 +37,17 @@ class TestConceptDetailView:
         output_variables = list(response.context["variables"])
         assert output_variables == expected_variables
 
-        expected_questions = list(Question.objects.filter(concepts_questions__concept_id=concept.id).all())
+        expected_questions = list(
+            Question.objects.filter(concepts_questions__concept_id=concept.id).all()
+        )
         output_questions = list(response.context["questions"])
         assert output_questions == expected_questions
 
     def test_concept_view_with_non_existing_concept_name(self, rf, concept):
         concept_name = "missing-concept"
-        url = reverse("concepts:concept_detail_name", kwargs={"concept_name": concept_name})
+        url = reverse(
+            "concepts:concept_detail_name", kwargs={"concept_name": concept_name}
+        )
         request = rf.get(url)
         with pytest.raises(Http404):
             ConceptDetail.as_view()(request, concept_name=concept_name)

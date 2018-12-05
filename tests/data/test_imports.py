@@ -2,7 +2,12 @@ from pprint import pprint
 
 import pytest
 
-from data.imports import DatasetImport, DatasetJsonImport, TransformationImport, VariableImport
+from data.imports import (
+    DatasetImport,
+    DatasetJsonImport,
+    TransformationImport,
+    VariableImport,
+)
 from data.models import Dataset, Transformation, Variable
 
 from .factories import VariableFactory
@@ -33,18 +38,24 @@ def transformation_importer():
 class TestDatasetImport:
     """ Tests for csv based dataset imports """
 
-    def test_dataset_csv_import_with_invalid_data(self, db, dataset_csv_importer, empty_data):
+    def test_dataset_csv_import_with_invalid_data(
+        self, db, dataset_csv_importer, empty_data
+    ):
 
         with pytest.raises(KeyError) as excinfo:
             dataset_csv_importer.import_element(empty_data)
 
-    def test__import_dataset_links_method_gets_called(self, db, mocker, dataset_csv_importer):
+    def test__import_dataset_links_method_gets_called(
+        self, db, mocker, dataset_csv_importer
+    ):
         valid_dataset_data = dict(dataset_name="some-dataset")
         mocker.patch("data.imports.DatasetImport._import_dataset_links")
         dataset_csv_importer.import_element(valid_dataset_data)
         DatasetImport._import_dataset_links.assert_called_once()
 
-    def test__import_dataset_links_method_with_minimal_fields(self, dataset, mocker, dataset_csv_importer):
+    def test__import_dataset_links_method_with_minimal_fields(
+        self, dataset, mocker, dataset_csv_importer
+    ):
         """ This import method needs an already existing dataset and study in the database """
         valid_dataset_data = dict(dataset_name="some-dataset")
         assert Dataset.objects.count() == 1
@@ -63,7 +74,9 @@ class TestDatasetImport:
         assert dataset.period_id == 1
         assert dataset.period.name == "none"
 
-    def test__import_dataset_links_method_with_more_fields(self, dataset, mocker, dataset_csv_importer):
+    def test__import_dataset_links_method_with_more_fields(
+        self, dataset, mocker, dataset_csv_importer
+    ):
         """ This import method needs an already existing dataset and study in the database """
 
         valid_dataset_data = dict(
@@ -102,16 +115,24 @@ class TestDatasetJsonImport:
         mocked__import_dataset.assert_called_once()
 
     def test_import_dataset_method(self, mocker, dataset_json_importer):
-        mocked_import_variable = mocker.patch.object(DatasetJsonImport, "_import_variable")
+        mocked_import_variable = mocker.patch.object(
+            DatasetJsonImport, "_import_variable"
+        )
         name = "some-dataset"
         content = [dict(study="some-study", dataset="some-dataset", name="some-variable")]
         dataset_json_importer._import_dataset(name, content)
         mocked_import_variable.assert_called_once()
 
     def test_import_dataset_method_with_dictionary(self, mocker, dataset_json_importer):
-        mocked_import_variable = mocker.patch.object(DatasetJsonImport, "_import_variable")
+        mocked_import_variable = mocker.patch.object(
+            DatasetJsonImport, "_import_variable"
+        )
         name = "some-dataset"
-        content = dict(some_dataset=dict(study="some-study", dataset="some-dataset", name="some-variable"))
+        content = dict(
+            some_dataset=dict(
+                study="some-study", dataset="some-dataset", name="some-variable"
+            )
+        )
         dataset_json_importer._import_dataset(name, content)
         mocked_import_variable.assert_called_once()
 
@@ -128,9 +149,16 @@ class TestDatasetJsonImport:
         dataset_json_importer._import_variable(var, dataset, sort_id)
         mocked_set_elastic.assert_called_once()
 
-    def test_import_variable_method_with_uni_key(self, mocker, dataset_json_importer, dataset):
+    def test_import_variable_method_with_uni_key(
+        self, mocker, dataset_json_importer, dataset
+    ):
         mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
-        var = dict(study="some-study", dataset="some-dataset", variable="some-variable", uni=dict(valid=1))
+        var = dict(
+            study="some-study",
+            dataset="some-dataset",
+            variable="some-variable",
+            uni=dict(valid=1),
+        )
         dataset = dataset
         sort_id = 0
         dataset_json_importer._import_variable(var, dataset, sort_id)
@@ -173,13 +201,19 @@ class TestTransformationImport:
 
 class TestVariableImport:
     def test_import_element_method(self, mocker, variable_importer, dataset):
-        mocked_import_variable_links = mocker.patch.object(VariableImport, "_import_variable_links")
+        mocked_import_variable_links = mocker.patch.object(
+            VariableImport, "_import_variable_links"
+        )
         element = dict(dataset_name=dataset.name, variable_name="some-variable")
         variable_importer.import_element(element)
         mocked_import_variable_links.assert_called_once()
 
-    def test_import_element_method_fails(self, mocker, capsys, variable_importer, dataset):
-        mocked_import_variable_links = mocker.patch.object(VariableImport, "_import_variable_links")
+    def test_import_element_method_fails(
+        self, mocker, capsys, variable_importer, dataset
+    ):
+        mocked_import_variable_links = mocker.patch.object(
+            VariableImport, "_import_variable_links"
+        )
         # TODO: Insert real exception
         mocked_import_variable_links.side_effect = KeyError
         element = dict(dataset_name="asdas", variable_name="")
@@ -193,7 +227,9 @@ class TestVariableImport:
         element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
         variable_importer._import_variable_links(element)
 
-    def test_import_variable_links_method_with_concept_name(self, variable_importer, variable):
+    def test_import_variable_links_method_with_concept_name(
+        self, variable_importer, variable
+    ):
         element = dict(
             dataset_name=variable.dataset.name,
             variable_name=variable.name,

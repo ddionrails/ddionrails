@@ -8,7 +8,9 @@ class TestInstrumentModel:
         assert str(instrument) == "/" + study.name + "/inst/" + instrument.name
 
     def test_get_absolute_url_method(self, instrument, study):
-        assert instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
+        assert (
+            instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
+        )
 
 
 class TestQuestionModel:

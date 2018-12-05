@@ -1,6 +1,11 @@
 import pytest
 
-from concepts.imports import AnalysisUnitImport, ConceptImport, ConceptualDatasetImport, PeriodImport
+from concepts.imports import (
+    AnalysisUnitImport,
+    ConceptImport,
+    ConceptualDatasetImport,
+    PeriodImport,
+)
 from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 
 pytestmark = [pytest.mark.concepts, pytest.mark.imports]
@@ -47,7 +52,9 @@ class TestConceptImport:
 
 
 class TestAnalysisUnitImport:
-    def test_import_with_valid_data(self, analysis_unit_importer, valid_analysis_unit_data):
+    def test_import_with_valid_data(
+        self, analysis_unit_importer, valid_analysis_unit_data
+    ):
         response = analysis_unit_importer.import_element(valid_analysis_unit_data)
         assert isinstance(response, AnalysisUnit)
         assert response.name == valid_analysis_unit_data["analysis_unit_name"]
@@ -58,8 +65,12 @@ class TestAnalysisUnitImport:
 
 
 class TestConceptualDatasetImport:
-    def test_import_with_valid_data(self, conceptual_dataset_importer, valid_conceptual_dataset_data):
-        response = conceptual_dataset_importer.import_element(valid_conceptual_dataset_data)
+    def test_import_with_valid_data(
+        self, conceptual_dataset_importer, valid_conceptual_dataset_data
+    ):
+        response = conceptual_dataset_importer.import_element(
+            valid_conceptual_dataset_data
+        )
         assert isinstance(response, ConceptualDataset)
         assert response.name == valid_conceptual_dataset_data["conceptual_dataset_name"]
 

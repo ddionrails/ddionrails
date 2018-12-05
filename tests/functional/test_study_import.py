@@ -57,7 +57,9 @@ class TestStudyImport:
         assert Transformation.objects.count() == 0
         assert Instrument.objects.count() == 0
 
-        study = Study.objects.create(name="soep-test", repo="github.com/ddionrails/testsuite")
+        study = Study.objects.create(
+            name="soep-test", repo="github.com/ddionrails/testsuite"
+        )
         assert Study.objects.count() == 1
 
         settings.IMPORT_BRANCH = "data-only"
@@ -228,11 +230,21 @@ def test_elastic_search_indexing(es_client, db, settings):
     num_documents_in_es = es_client.count(settings.INDEX_NAME).get("count")
     print("es testing:", num_documents_in_es)
 
-    num_questions_in_es = count_documents_in_es_by_doctype(es_client, settings.INDEX_NAME, "question")
-    num_publications_in_es = count_documents_in_es_by_doctype(es_client, settings.INDEX_NAME, "publication")
-    num_concepts_in_es = count_documents_in_es_by_doctype(es_client, settings.INDEX_NAME, "concept")
-    num_variables_in_es = count_documents_in_es_by_doctype(es_client, settings.INDEX_NAME, "variable")
-    num_studies_in_es = count_documents_in_es_by_doctype(es_client, settings.INDEX_NAME, "study")
+    num_questions_in_es = count_documents_in_es_by_doctype(
+        es_client, settings.INDEX_NAME, "question"
+    )
+    num_publications_in_es = count_documents_in_es_by_doctype(
+        es_client, settings.INDEX_NAME, "publication"
+    )
+    num_concepts_in_es = count_documents_in_es_by_doctype(
+        es_client, settings.INDEX_NAME, "concept"
+    )
+    num_variables_in_es = count_documents_in_es_by_doctype(
+        es_client, settings.INDEX_NAME, "variable"
+    )
+    num_studies_in_es = count_documents_in_es_by_doctype(
+        es_client, settings.INDEX_NAME, "study"
+    )
 
     print(num_studies_in_es)
     print(num_questions_in_es)
@@ -241,5 +253,11 @@ def test_elastic_search_indexing(es_client, db, settings):
     print(num_variables_in_es)
 
     assert num_documents_in_es == sum(
-        (num_studies_in_es, num_questions_in_es, num_publications_in_es, num_concepts_in_es, num_variables_in_es)
+        (
+            num_studies_in_es,
+            num_questions_in_es,
+            num_publications_in_es,
+            num_concepts_in_es,
+            num_variables_in_es,
+        )
     )

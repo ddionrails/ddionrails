@@ -18,18 +18,32 @@ class Dataset(ElasticMixin, DorMixin, models.Model):
     Representation of a dataset.
     """
 
-    name = models.CharField(max_length=255, validators=[validate_lowercase], db_index=True)
+    name = models.CharField(
+        max_length=255, validators=[validate_lowercase], db_index=True
+    )
     label = models.CharField(max_length=255, blank=True)
     label_de = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True)
     boost = models.FloatField(blank=True, null=True)
-    study = models.ForeignKey(Study, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE)
-    conceptual_dataset = models.ForeignKey(
-        ConceptualDataset, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
+    study = models.ForeignKey(
+        Study, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
     )
-    period = models.ForeignKey(Period, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE)
+    conceptual_dataset = models.ForeignKey(
+        ConceptualDataset,
+        blank=True,
+        null=True,
+        related_name="datasets",
+        on_delete=models.CASCADE,
+    )
+    period = models.ForeignKey(
+        Period, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
+    )
     analysis_unit = models.ForeignKey(
-        AnalysisUnit, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
+        AnalysisUnit,
+        blank=True,
+        null=True,
+        related_name="datasets",
+        on_delete=models.CASCADE,
     )
 
     DOC_TYPE = "dataset"
@@ -44,7 +58,10 @@ class Dataset(ElasticMixin, DorMixin, models.Model):
         return "%s/data/%s" % (self.study, self.name)
 
     def get_absolute_url(self):
-        return reverse("data:dataset", kwargs={"study_name": self.study.name, "dataset_name": self.name})
+        return reverse(
+            "data:dataset",
+            kwargs={"study_name": self.study.name, "dataset_name": self.name},
+        )
 
 
 class Variable(ElasticMixin, DorMixin, models.Model):
@@ -52,15 +69,23 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     Representation of a variable.
     """
 
-    name = models.CharField(max_length=255, validators=[validate_lowercase], db_index=True)
-    dataset = models.ForeignKey(Dataset, blank=True, null=True, related_name="variables", on_delete=models.CASCADE)
+    name = models.CharField(
+        max_length=255, validators=[validate_lowercase], db_index=True
+    )
+    dataset = models.ForeignKey(
+        Dataset, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+    )
     label = models.CharField(max_length=255, blank=True)
     label_de = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True)
     description_long = models.TextField(blank=True)
     sort_id = models.IntegerField(blank=True, null=True)
-    concept = models.ForeignKey(Concept, blank=True, null=True, related_name="variables", on_delete=models.CASCADE)
-    period = models.ForeignKey(Period, blank=True, null=True, related_name="variables", on_delete=models.CASCADE)
+    concept = models.ForeignKey(
+        Concept, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+    )
+    period = models.ForeignKey(
+        Period, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+    )
 
     DOC_TYPE = "variable"
 
@@ -156,7 +181,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def get_related_variables(self):
         if self.concept:
             variables = (
-                self.__class__.objects.select_related("dataset", "dataset__study", "dataset__period")
+                self.__class__.objects.select_related(
+                    "dataset", "dataset__study", "dataset__period"
+                )
                 .filter(concept_id=self.concept.id)
                 .filter(dataset__study_id=self.dataset.study.id)
             )
@@ -212,10 +239,14 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             x["label"][language] = s.get("label_" + language, "")
         try:
             for i in range(len(s["categories"]["values"])):
-                x[s["categories"]["values"][i]] = OrderedDict(en=s["categories"]["labels"][i])
+                x[s["categories"]["values"][i]] = OrderedDict(
+                    en=s["categories"]["labels"][i]
+                )
             for language in self.translation_languages():
                 for i in range(len(s["categories"]["values"])):
-                    x[s["categories"]["values"][i]][language] = s["categories"]["labels_" + language][i]
+                    x[s["categories"]["values"][i]][language] = s["categories"][
+                        "labels_" + language
+                    ][i]
         except:
             pass
         return x
@@ -246,7 +277,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     @classmethod
     def index_prefetch(self, queryset):
         return (
-            queryset.prefetch_related("dataset__study").prefetch_related("dataset__period").prefetch_related("period")
+            queryset.prefetch_related("dataset__study")
+            .prefetch_related("dataset__period")
+            .prefetch_related("period")
         )
 
     def to_json(self):
@@ -258,14 +291,26 @@ class Transformation(models.Model):
     Representation of a variable.
     """
 
-    origin = models.ForeignKey(Variable, related_name="target_variables", on_delete=models.CASCADE)
-    target = models.ForeignKey(Variable, related_name="origin_variables", on_delete=models.CASCADE)
+    origin = models.ForeignKey(
+        Variable, related_name="target_variables", on_delete=models.CASCADE
+    )
+    target = models.ForeignKey(
+        Variable, related_name="origin_variables", on_delete=models.CASCADE
+    )
 
     class Meta:
         unique_together = ("origin", "target")
 
     @classmethod
-    def goc_by_name(cls, origin_study, origin_dataset, origin_variable, target_study, target_dataset, target_variable):
+    def goc_by_name(
+        cls,
+        origin_study,
+        origin_dataset,
+        origin_variable,
+        target_study,
+        target_dataset,
+        target_variable,
+    ):
         origin = (
             Variable.objects.filter(dataset__study__name=origin_study)
             .filter(dataset__name=origin_dataset)

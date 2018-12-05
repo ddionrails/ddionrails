@@ -21,8 +21,12 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         verbose_name="concept name",
         help_text="Name of the concept.",
     )
-    label = models.CharField(max_length=255, blank=True, help_text="Label (English) of the concept.")
-    description = models.TextField(blank=True, help_text="Description of the concept using Markdown.")
+    label = models.CharField(
+        max_length=255, blank=True, help_text="Label (English) of the concept."
+    )
+    description = models.TextField(
+        blank=True, help_text="Description of the concept using Markdown."
+    )
 
     DOC_TYPE = "concept"
 
@@ -46,7 +50,16 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
                 label = self.variables.first().label
             except:
                 label = ""
-        study = list(set([s.name for s in Study.objects.filter(datasets__variables__concept_id=self.id).all()]))
+        study = list(
+            set(
+                [
+                    s.name
+                    for s in Study.objects.filter(
+                        datasets__variables__concept_id=self.id
+                    ).all()
+                ]
+            )
+        )
         self.set_elastic(dict(name=self.name, label=label, study=study))
 
     @classmethod
