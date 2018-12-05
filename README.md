@@ -1,7 +1,5 @@
 # DDI on Rails – version 2
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/ddionrails/ddionrails.svg)](https://greenkeeper.io/)
-
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-360/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
