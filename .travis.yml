@@ -7,9 +7,8 @@ install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
-  - npm --version
   - npm install
-  - ./node_modules/.bin/webpack --version
-  - pipenv run paver elastic_search_javascript_library
+  - pipenv run paver setup_frontend
+  - ./node_modules/ddionrails-elasticsearch/node_modules/.bin/ng --version
 script:
-  - python --version
+  - pytest
