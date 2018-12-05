@@ -19,7 +19,6 @@ In contrast to similar products, DDI on Rails is study-independent and open-sour
 
 
 ## Getting Started
-------------------
 
 ### Prerequisites
 
