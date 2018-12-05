@@ -1,0 +1,28 @@
+<div class="panel panel-default">
+<div class="panel-heading">
+  Label translations
+</div>
+
+<table class=table>
+<thead>
+<tr>
+<th></th>
+<th>en</th>
+{% for language in variable.translation_languages %}
+  <th>{{ language }}</th>
+{% endfor %}
+</tr>
+</thead>
+<tbody>
+{% for key, cat in variable.translation_table.items %}
+<tr>
+  <th>{{ key }}</th>
+  {% for x in cat.values %}
+    <td>{{ x }} </td>
+  {% endfor %}
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>

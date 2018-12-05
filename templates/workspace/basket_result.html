@@ -1,0 +1,13 @@
+<div class="list-group-item">
+  <a href="/workspace/baskets/{{ basket.pk }}/delete"
+       onclick="return confirm('Are you sure you want to delete basket {{ basket.name }}?')"
+       class="badge"
+  >
+    <span class="glyphicon glyphicon-trash"></span>
+  </a>
+  <b><a href="/workspace/baskets/{{ basket.pk }}">{{ basket.title }}</a></b>
+  [basket: {{ basket.name }}]
+  <br/>
+  {{ basket }}
+  <br/>
+</div>

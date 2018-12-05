@@ -1,0 +1,28 @@
+<div class="modal fade" id="searchHelpModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Help for the search field</h4>
+      </div>
+      <div class="modal-body">
+
+<p>The search interface was rebuild and offers several options.</p>
+
+<ul>
+  <li><code>+namespace:'study-name'</code> reduces the search to elements in one study.</li>
+  <li><code>+variable:xyz</code> and <code>+dataset:xyz</code> can be used to look for specific variable names or variables from one specific dataset.</li>
+  <li>Wildcards (<code>*</code>) can be used both on generic search terms (e.g., <code>politic*</code> matches both "politic" and "political") and within fields (e.g., <code>variable:ap01*</code> matches "ap0101" or "ap0102")</li>
+</ul>
+<p><b>Example:</b> Search for keywords starting with "politic" in the SOEP-Core dataset "ap":</p>
+<pre>
++namespace:'soep-core' +dataset:ap politic*
+</pre>
+
+
+
+
+      </div>
+    </div>
+  </div>
+</div>

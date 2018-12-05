@@ -1,0 +1,35 @@
+{
+  "name": "ddionrails",
+  "version": "2.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddionrails/ddionrails.git"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": {
+    "name": "Marcel Hebing"
+  },
+  "dependencies": {
+    "bootstrap": "3.3.5",
+    "datatables.net": "^1.10.19",
+    "datatables.net-bs": "^2.1.1",
+    "datatables.net-dt": "^2.1.1",
+    "datatables.net-responsive": "^2.2.3",
+    "datatables.net-responsive-bs": "^2.2.3",
+    "datatables.net-responsive-dt": "^2.2.3",
+    "ddionrails-elasticsearch": "git+https://github.com/ddionrails/ddionrails-elasticsearch.git#v0.1.0",
+    "ddionrails-visualization": "git+https://github.com/ddionrails/ddionrails-visualization.git#v0.1.0",
+    "jquery": "^3.3.1"
+  },
+  "devDependencies": {
+    "css-loader": "^1.0.1",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^2.0.0",
+    "node-sass": "^4.10.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "webpack": "^4.25.1",
+    "webpack-bundle-tracker": "^0.4.2-beta",
+    "webpack-cli": "^3.1.2"
+  }
+}

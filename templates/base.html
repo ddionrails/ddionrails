@@ -1,0 +1,113 @@
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Start here with modifications -->
+    <title>
+      {% block title %}
+      paneldata.org
+      {% endblock title %}
+    </title>
+
+     <!-- Webpack rendered CSS -->
+    {% render_bundle 'index' 'css' %}
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    
+    {% block header %}
+    {% endblock header %}
+
+    <div class="container" id="nav-container">
+      <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="row" style="padding-top: 15px;">
+            <div class="col-md-12">
+              <div class="btn-group">
+                {% include "nav/home.html" %}
+                {% include "nav/angular.html" %}
+              </div>
+              <div class="btn-group pull-right">
+                {% include "nav/user.html" %}
+              </div>
+            </div>
+            {% comment %}
+            {% include "nav/search.html" %}
+            {% endcomment %}
+          </div>
+        </div>
+        {% block studynav %}
+        <div class="container" style="min-height: 15px;">
+        </div>
+        {% endblock studynav %}
+      </nav>
+    </div><!-- /.container -->
+
+    <div class="container container-white" id="main-container">
+
+      {% for message in messages %}
+        <div class="alert alert-warning" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+      {% block content%}
+        Hi
+      {% endblock content %}
+    </div><!-- /.container -->
+
+    <div class="container container-white" id="foot-container">
+      <hr />
+      <p><strong><a href="/contact/">Contact / feedback</a></strong></p>
+      <p class='text-muted'>
+      <a href='http://ddionrails.org' target='_blank'>DDI on Rails</a>,
+      designed and built by
+      <a href='http://www.marcelhebing.de' target='_blank'>Marcel Hebing</a>.
+      <br />
+      <a href='http://www.diw.de/en/soep/' target='_blank'>German Socio-economic Panel</a>
+      (SOEP) |
+      <a href='/imprint/'>Imprint</a>
+      <br />
+      <a href="#" data-toggle="modal" data-target="#debugModal">Debug information</a>
+      </p>
+    </div>
+
+    <div class="modal fade" id="debugModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Debug information</h4>
+          </div>
+          <div class="modal-body">
+            <pre>{{ debug_string }}</pre>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    {% include "elastic/help.html" %}
+    {% include "tracker.html" %}
+
+    <!-- Webpack rendered JS -->
+    {% render_bundle 'index' 'js' %}
+
+    <!-- ddionrails JS search library -->
+    {% render_bundle 'inline' 'js' %}
+    {% render_bundle 'polyfills' 'js' %}
+    {% render_bundle 'vendor' 'js' %}
+    {% render_bundle 'main' 'js' %}
+
+    {% block scripts %}
+    {% endblock scripts %}
+  </body>
+</html>
+

@@ -1,0 +1,81 @@
+{% extends "base_basket.html" %}
+
+{% block title %}
+{{ basket.name }} (basket on paneldata.org)
+{% endblock %}
+
+{% block content %}
+
+  <h1>Basket: {{ basket.name }}</h1>
+
+
+  <div class="row">
+
+    <div class="col-md-12">
+      {% include "workspace/basket_info.html" %}
+
+{% comment %}
+<app-root study="{{ basket.study.name }}" basket="{{ basket.id }}">Loading...</app-root>
+<app-root study="{{ study.name }}" basket="{{ basket.id }}">Loading...</app-root>
+{% endcomment %}
+<script type="text/javascript" src="/static/js/elastic/inline.bundle.js"></script>
+<script type="text/javascript" src="/static/js/elastic/polyfills.bundle.js"></script>
+<script type="text/javascript" src="/static/js/elastic/styles.bundle.js"></script>
+<script type="text/javascript" src="/static/js/elastic/vendor.bundle.js"></script>
+<script type="text/javascript" src="/static/js/elastic/main.bundle.js"></script></body>
+
+    </div>
+    <div class="col-md-6">
+      {% include "workspace/basket_actions_partial.html" %}
+    </div>
+
+    <div class="col-md-6">
+      {% include "workspace/script_list_partial.html" %}
+      {% comment %}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Variables</b>
+        </div>
+        <a class="anchor" id="variables"></a>
+        <div class="list-group">
+          {% for variable in basket.variables.all %}
+            {% include "workspace/basket_variable.html" %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endcomment %}
+    </div>
+  </div>
+
+<!-- close container -->
+</div>
+
+  {% include "workspace/related_variable_table.html" %}
+
+{% if has_vars_without_concept %}
+  <p>
+  <strong>Variables without concept reference:</strong>
+  </p>
+
+  <ul>
+    {% for variable in vars_without_concept %}
+      <li>{{ variable.title }}
+        <span class="btn-group btn-group-xs btn-group-var" role="group">
+        <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
+           title="Remove variable" class="basket-button btn btn-success">
+          <span class="glyphicon glyphicon-shopping-cart"></span>
+        </button>
+          <a href="{{ variable }}" class="btn btn-default"
+             title="{{ variable }}">
+            {{ variable.name }}
+          </a>
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+<div class="container">
+<!-- reopen container -->
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+
+{% if question.previous_question %}
+<a href="{{ question.previous_question }}" class="btn btn-default">Previous question</a>
+{% endif %}
+{% if question.next_question %}
+<a href="{{ question.next_question }}" class="btn btn-default pull-right">Next question</a>
+{% endif %}
+
+<div class="clearfix"></div>
+<hr />
+<div class="panel panel-default">
+  <div class="panel-heading">
+    Instrument
+  </div>
+  <div class="panel-body">
+    <p>This question is at position {{ question.sort_id }} in:</p>
+    <p><b>
+      <a href="{{ question.instrument }}">
+        {{ question.instrument.title }}
+      </a>
+    </b></p>
+  </div>
+</div>

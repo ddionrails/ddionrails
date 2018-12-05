@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <h1>Account details</h1>
+
+  <p><b>User name:</b> {{ user.username }}</p>
+  <p><b>User email:</b> {{ user.email }}</p>
+
+  <h2>Dangerous zone</h2>
+
+  <a class="btn btn-danger"
+     href="/workspace/delete_account/"
+     onclick="return confirm('Are you sure you want to delete your user account?')">
+    Delete account
+  </a>
+
+{% endblock content %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if not user.is_authenticated %}
+    <div class="alert alert-success">
+      <b>Update November 2018:</b>
+      Bugfixes and new features for baskets and script generator,
+      such as an improved layout, CSV export and new options to edit.
+    </div>
+  {% endif %}
+  <img class="img-responsive"
+       src="/static/repositories/system/ddionrails/background.png">
+
+  <div class="list-group">
+    {% for study in study_list %}
+      {% include "studies/study_result.html" %}
+    {% endfor %}
+  </div>
+{% endblock content %}

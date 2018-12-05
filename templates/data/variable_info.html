@@ -1,0 +1,82 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>Info</b>
+  </div>
+  <div class="panel-body">
+    <p>
+      <b>Variable name:</b>
+      <a href="{{ variable }}">{{ variable.name }}</a>
+    </p>
+    <p>
+      <b>Dataset:</b>
+      <a href="{{ variable.dataset }}">
+        {{ variable.dataset.name }}
+        <small>– {{ variable.dataset.label }}</small>
+      </a>
+    </p>
+    <p>
+      <b>Study:</b>
+      <a href="{{ study }}">{{ study.title }}</a>
+    </p>
+    <hr />
+    <p>
+      <b>Description:</b>
+      {{ variable.html_description | safe }}
+    </p>
+    <p>
+      {{ variable.html_description_long | safe }}
+    </p>
+    <hr />
+    <p>
+      <b>Analysis unit:</b>
+        {{ variable.dataset.analysis_unit.name }}
+    </p>
+    <p>
+      <b>Period:</b>
+        {{ variable.dataset.period.name }}
+    </p>
+    <p>
+      <b>Conceptual Dataset:</b>
+        {{ variable.dataset.conceptual_dataset.name }}
+    </p>
+    <hr />
+    <p>
+      <b>Concept:</b>
+      {% if concept %}
+        <a href="{{ concept }}">{{ concept.title }}</a>
+      {% else %}
+        No concept available.
+      {% endif %}
+    </p>
+    <p><b>Question:</b></p>
+    <ul>
+    {% for question in questions %}
+      <li><a href="{{ question }}">{{ question.title }}</a></li>
+    {% endfor %}
+    </ul>
+    {% if variable.origin_variables.count > 0 %}
+      <hr/>
+      <p><b>Transformations: origin variabels</b></p>
+      <ul>
+      {% for origin in variable.origin_variables.all %}
+        <li><a href="{{ origin.origin }}">
+          {{ origin.origin.title }}<br/>
+          <small>{{ origin.origin }}</small>
+        </a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% if variable.target_variables.count > 0 %}
+      <hr/>
+      <p><b>Transformations: target variabels</b></p>
+      <ul>
+      {% for target in variable.target_variables.all %}
+        <li><a href="{{ target.target }}">
+          {{ target.target.title }}<br/>
+          <small>{{ target.target }}</small>
+        </a></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>

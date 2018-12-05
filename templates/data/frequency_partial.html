@@ -1,0 +1,25 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>Frequencies</b>
+  </div>
+  <table class="table" id="frequency_table">
+    <thead>
+      <tr>
+        <th>Value</th>
+        <th>Label</th>
+        <th>Frequency</th>
+        <th>Valid</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in category_list %}
+        <tr>
+          <td>{{ category.value }}</td>
+          <td>{{ category.label }}</td>
+          <td>{{ category.frequency }}</td>
+          <td>{{ category.valid }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

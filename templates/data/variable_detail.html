@@ -1,0 +1,106 @@
+{% extends "base_study.html" %}
+
+{% block title %}
+{{ variable }}
+{% endblock title %}
+
+{% block content %}
+
+  <h1>{{ variable.title }}</h1>
+
+  <div class="row">
+
+    <div class="col-md-8">
+      <div class="btn-toolbar" role="toolbar" aria-label="...">
+        <div class='btn-group btn-group-sm pull-right'
+             id='chart_nav_dropdown' role='group'>
+        </div>
+        <div class="btn-group btn-group-sm pull-right" role="group" aria-label="..." id="vis_menu">
+            <button type="button" class="btn btn-default opt chart_nav"
+                    id="percent">Percent</button>
+            <button type="button" class="btn btn-default opt chart_nav"
+                    id="missings">Hide Missings</button>
+            <button type="button" class="btn btn-default opt chart_nav"
+                    id="weighted">Weighted</button> 
+        </div>  
+      </div>
+      <div id="menu"></div>
+      <div id="chart"></div>
+      <div id="chart_missings"></div>
+      {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
+      {% if variable.has_translations %}
+        {% include "data/translation_table.html" %}
+      {% endif %}
+    </div>
+  
+    <div class="col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <b>Basket</b>
+        </div>
+        <div class="list-group">
+          {% if user.is_authenticated %}
+            {% for basket in basket_list %}
+              <div class="list-group-item">
+                {% if variable in basket.variables.all %}
+                <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">
+                  Remove
+                </a> from
+                {% else %}
+                <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">
+                  Add
+                </a> to
+                {% endif %}
+                basket
+                <a href="/workspace/baskets/{{ basket.id }}">
+                  {{ basket.name }}
+                </a>
+              </div>
+            {% endfor %}
+            <div class="panel-body text-right">
+            <a href="/workspace/baskets/new" class="btn btn-default">
+              Create a new basket
+            </a>
+            </div>
+          {% else %}
+            <div class="panel-body">
+            Please <a href="/workspace/login/">login</a>
+            or <a href="/workspace/register/">register</a>
+            to use the basket functionality.
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% include "data/variable_info.html" %}
+      {% include "data/statistics_partial.html" with statistic_list=variable.get_statistics %}
+    </div>
+    {% if False %}
+      {% if variable.is_categorical %}
+        {% include "data/frequency_partial.html" with category_list=variable.get_categories %}
+      {% endif %}
+    {% endif %}
+
+  </div>
+
+  {% if label_table %}
+  <h2>Label table</h2>
+  <p>The label table provides you with an overview of label definitions across related variables to identify changes over time in longitudinal variables. The first number indicates the value code, the second number (in brackets) represents the frequency in the data. Please note that labels are simplified and values with frequency = 0 are hidden.</p>
+  </div><!-- End content -->
+  <div class="table-responsive">
+    {{ label_table.to_html | safe }}
+  </div>
+  <div class="content"><!-- Restart content -->
+  {% endif %}
+
+{% endblock content %}
+
+{% block scripts %}
+  <script>
+    var path = "{{ variable }}.json"
+    var rawData;
+    d3.json(path, function(json) {
+        rawData = json;
+        render(rawData);
+    });
+  </script>
+{% endblock scripts %}

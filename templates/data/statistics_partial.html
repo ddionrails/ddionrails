@@ -1,0 +1,21 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <b>Statistics</b>
+  </div>
+  <table class="table" id="statistics_table">
+    <thead>
+      <tr>
+        <th>Measure</th>
+        <th>Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for statistic in statistic_list %}
+        <tr>
+          <td>{{ statistic.name }}</td>
+          <td>{{ statistic.value }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

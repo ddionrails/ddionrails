@@ -1,0 +1,26 @@
+{% extends template %}
+
+{% block content %}
+  <h1>Search results</h1>
+  <p>
+    <b>Your search term:</b>
+    {{ q }}
+  </p>
+  <p>
+    <b>Number of hits:</b>
+    {{ results.hits.total }}
+  </p>
+  {% if has_hits %}
+    <h2>Results</h2>
+    <div class="list-group">
+    {% for hit in hits %}
+      <a href="/{{ hit.type }}/{{ hit.id }}" class="list-group-item">
+        {{ hit.type.capitalize }}
+        {{ hit.name }}
+        <b>{{ hit.label }}</b> [id: {{hit.id}}] in <b>{{ hit.namespace }}</b>
+        {{ hit.dataset }} {{ hit.instrument }}
+      </a>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endblock content %}

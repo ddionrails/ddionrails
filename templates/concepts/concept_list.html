@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Concepts</h1>
+  {% for concept in concept_list %}
+    {% include "concepts/concept_result.html" %}
+  {% endfor %}
+{% endblock content %}

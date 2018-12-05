@@ -1,0 +1,59 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+# Django related libraries
+django = "*"
+django-extensions = "*"
+django-model-utils = "*"
+django-rq = "*"
+redis = "==2.10.6" # see: https://github.com/andymccurdy/redis-py/issues/1068
+django-webpack-loader = "*"
+
+# Markup related libraries
+pyyaml = "*"
+markdown = "*"
+
+# Elasticsearch
+elasticsearch-dsl = "==2.2.0"
+
+# Needed for Publications
+bibtexparser = "*"
+
+# Project scripting
+paver = "*"
+fabric = "*"
+
+[dev-packages]
+# Linters and code style
+black = "*"
+"flake8" = "*"
+isort = "*"
+mypy = "*"
+radon = "*"
+
+# Testing
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+pytest-mock = "*"
+pytest-selenium = "*"
+factory-boy = "*"
+django-coverage-plugin = "*"
+django-test-without-migrations = "*"
+fakeredis = "*"
+
+# Documentation
+sphinx = "*"
+sphinx-rtd-theme = "*"
+
+# Libraries for local development
+django-debug-toolbar = "*"
+django-silk = "*"
+werkzeug = "*"
+pre-commit = "*"
+
+[requires]
+python_version = "3.6"

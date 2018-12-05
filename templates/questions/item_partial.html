@@ -1,0 +1,64 @@
+
+{% if item.layout == "individual" %}
+  <p>
+    {% if "filter" in item %}
+      <div class="row"><div class="col-md-6 col-md-offset-6">
+        <pre><b>filter:</b> {{ item.filter }}</pre>
+      </div></div>
+    {% endif %}
+    <b>{{ item.text }}</b>
+    <p style="color: grey;">{{ item.instruction }}</p>
+    {% for answer in item.answers %}
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" disabled="disabled">
+          {{ answer.label }}
+        </label>
+      </div>
+    {% endfor %}
+  </p>
+  {% if item.scale != "cat" and item.scale != "txt" %}
+    <input type="text" class="form-control" disabled="disabled"
+           placeholder="Response scale: {{ item.scale }}">
+  {% endif %}
+  <hr />
+{% endif %}
+
+
+{% if item.layout == "matrix_header" %}
+<table class="table">
+  <thead>
+  <tr>
+    <th></th>
+    {% for a in item.answers %}<th>{{ a.label }}</th>{% endfor %}
+    <th></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <th>{{ item.text }}</th>
+    {% for a in item.answers %}<td><input type="checkbox" disabled="disabled"></td>{% endfor %}
+    <td style="color: grey;">{{ item.instruction }} {{ item.filter }}</td>
+  </tr>
+{% endif %}
+
+
+{% if item.layout == "matrix_element" %}
+  <tr>
+    <th>{{ item.text }}</th>
+    {% for a in item.answers %}<td><input type="checkbox" disabled="disabled"></td>{% endfor %}
+    <td style="color: grey;">{{ item.instruction }} {{ item.filter }}</td>
+  </tr>
+{% endif %}
+
+
+{% if item.layout == "matrix_footer" %}
+  <tr>
+    <th>{{ item.text }}</th>
+    {% for a in item.answers %}<td><input type="checkbox" disabled="disabled"></td>{% endfor %}
+    <td style="color: grey;">{{ item.instruction }} {{ item.filter }}</td>
+  </tr>
+  </tbody>
+</table>
+<hr />
+{% endif %}

@@ -1,0 +1,21 @@
+{% extends "base_study.html" %}
+
+{% block title %}
+{{ dataset }}
+{% endblock %}
+
+{% block content %}
+
+  <h1>{{ dataset.title }}</h1>
+  <div class="row">
+    <div class="col-md-9">
+      {{ dataset.html_description | safe }}
+      <h2>Variables</h2>
+      {% include "data/variable_table.html" %}
+    </div>
+    <div class="col-md-3">
+      {% include "data/dataset_info.html" %}
+    </div>
+  </div>
+
+{% endblock content %}

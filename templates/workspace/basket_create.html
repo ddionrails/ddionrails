@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Create baskets</h2>
+
+{% if form.errors %}
+  <div class="alert alert-danger" role="alert">
+    {{ form.errors }}
+  </div>
+{% endif %}
+
+<form method="post" action="/workspace/baskets/new">
+{% csrf_token %}
+{{ form.as_p }}
+<input type="submit" value="Create basket" />
+<input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+{% endblock %}
+

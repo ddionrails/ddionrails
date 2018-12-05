@@ -1,0 +1,22 @@
+<table class="table datatable" id="{{ table_id }}">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Label</th>
+      <th>Period</th>
+      <th>Analysis Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for instrument in instrument_list %}
+      <tr>
+        <td>
+          <a href="{{ instrument }}">{{ instrument.name }}</a>
+        </td>
+        <td>{{ instrument.label }}</td>
+        <td>{{ instrument.period.label }}</td>
+        <td>{{ instrument.analysis_unit.label }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

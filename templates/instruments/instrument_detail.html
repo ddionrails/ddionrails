@@ -1,0 +1,19 @@
+{% extends "base_study.html" %}
+
+{% block content %}
+
+  <h1>{{ instrument.title }} [instrument]</h1>
+  <p class="breadcrumb">{{ instrument }}</p>
+
+  <div class="row">
+    <div class="col-sm-9">
+      {{ instrument.html_description | safe }}
+      <h2>Questions</h2>
+      {% include "questions/question_table.html" %}
+    </div>
+    <div class="col-sm-3">
+      {% include "instruments/instrument_info.html" %}
+    </div>
+  </div>
+
+{% endblock content %}

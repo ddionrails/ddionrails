@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>{{ organization.title }}</h1>
+  <p>Name: {{ organization.name }}</p>
+  <p>Label: {{ organization.label }}</p>
+  <div class="panel panel-default">
+    <div class="panel-body">
+      {{ organization.html_description | safe }}
+    </div>
+  </div>
+  <h2>Studies</h2>
+  {% for study in studies %}
+    {% include "studies/study_result.html" %}
+  {% endfor %}
+{% endblock content %}

@@ -1,0 +1,17 @@
+<div class="panel panel-default info-panel">
+  <div class="panel-heading">
+    <b>Study info</b>
+  </div>
+  <div class="panel-body">
+    <p>Name: {{ study.name }}</p>
+    <p>Label: {{ study.label }}</p>
+    {% if study.organization %}
+      <p>
+        Organization:
+        <a href="/{{ study.organization.name }}">
+          {{ study.organization.name }}
+        </a>
+      </p>
+    {% endif %}
+  </div>
+</div>

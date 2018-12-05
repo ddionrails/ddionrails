@@ -1,0 +1,22 @@
+{% extends "base_study.html" %}
+
+{% block content %}
+
+  <app-root study="{{ study.name }}">Loading search...</app-root>
+  <div class="row">
+  <div class="col-md-9">
+  {{ study.html_description | safe }}
+  </div>
+  <div class="col-md-3">
+  {% include "studies/study_info.html" %}
+  </div>
+  </div>
+
+  <h2>Datasets</h2>
+  <a class="anchor" id="datasets"></a>
+  {% include "data/dataset_table.html" with table_id="dataset_table" %}
+  <h2>Instruments</h2>
+  <a class="anchor" id="instruments"></a>
+  {% include "instruments/instrument_table.html" with table_id="instrument_table" %}
+
+{% endblock content %}

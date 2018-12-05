@@ -1,0 +1,74 @@
+{% extends "base_study.html" %}
+
+{% block content %}
+
+
+
+<div class="row">
+  <div class="col-md-9">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h2 class="text-center">{{ question.get_cs_name }}</h2>
+        <p>{{ question.description }}</p>
+        <hr />
+        {% for item in question.item_array %}
+          {% include "questions/item_partial.html" %}
+        {% endfor %}
+      </div>
+    </div>
+    {% for language, translated_question in question.translations.items %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        {{ language }}
+      </div>
+      <div class="panel-body">
+        {% for item in translated_question %}
+          {% include "questions/item_partial.html" %}
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="col-md-3">
+    {% include "questions/question_info.html" %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <b>Variables</b>
+      </div>
+      {% if variables %}
+      <div class="list-group">
+        {% for variable in variables %}
+          {% include "data/variable_result.html" %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="panel-body">
+        <p>no related variables found</p>
+      </div>
+      {% endif %}
+    </div>
+    
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <b>Concepts</b>
+      </div>
+      <div class="list-group">
+      </div>
+      {% if concept_list %}
+      <div class="list-group">
+        {% for concept in concept_list %}
+          {% include "concepts/concept_result.html" %}
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="panel-body">
+        <p>no related concepts found</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+
+{% endblock content %}
