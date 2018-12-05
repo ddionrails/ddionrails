@@ -6,6 +6,8 @@ install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
-  - pipenv run paver setup_frontend
+  - npm --version
+  - npm install
+  - ./node_modules/.bin/webpack --version
 script:
   - pytest
