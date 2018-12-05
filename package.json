@@ -19,6 +19,7 @@
     "datatables.net-responsive-dt": "^2.2.3",
     "ddionrails-elasticsearch": "git+https://github.com/ddionrails/ddionrails-elasticsearch.git#v0.1.0",
     "ddionrails-visualization": "git+https://github.com/ddionrails/ddionrails-visualization.git#v0.1.0",
+    "har-validator": "^5.1.3",
     "jquery": "^3.3.1"
   },
   "devDependencies": {
@@ -28,7 +29,7 @@
     "node-sass": "^4.10.0",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
-    "webpack": "^4.25.1",
+    "webpack": "^4.27.1",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.1.2"
   }
