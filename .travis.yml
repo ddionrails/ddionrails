@@ -1,9 +1,11 @@
 language: python
 python:
   - "3.6"
+node_js: 10
 install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
+  - pipenv run paver setup_frontend
 script:
   - pytest
