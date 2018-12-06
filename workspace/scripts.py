@@ -183,6 +183,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         path_out="out/",
         analysis_unit="p",
         private="t",
+        gender="b",
         balanced="t",
         age_group="adult",
     )
@@ -206,6 +207,12 @@ class SoepStata(ScriptConfig, SoepMixin):
                 scale="select",
                 options=dict(t="Private households only", f="All households"),
             ),
+            dict(name="gender", label="Gender",
+                scale="select", options=dict(
+                    b="Both",
+                    m="Male",
+                    f="Female"),
+                ),
             dict(
                 name="balanced",
                 label="Sample composition",
@@ -257,6 +264,7 @@ class SoepStata(ScriptConfig, SoepMixin):
                 self._render_pfad(),
                 self._render_balanced(),
                 self._render_private(),
+                self._render_gender(),
                 self._render_sort_pfad(),
                 self._render_hrf(),
                 self._render_create_master(),
@@ -373,6 +381,15 @@ class SoepStata(ScriptConfig, SoepMixin):
             return heading + "\nkeep if (" + "|".join(temp) + ")"
         else:
             return heading + "\n/* all households */"
+            
+    def _render_gender(self):
+        heading = "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n"
+        if self.settings["gender"] == "m":
+            return heading + "\nkeep if (sex == 1)"
+        elif self.settings["gender"] == "f":
+            return heading + "\nkeep if (sex == 2)"
+        else:
+            return heading + "\n/* all genders */"
 
     def _render_sort_pfad(self):
         heading = "\n\n* * * SORT PFAD * * *\n"
@@ -496,6 +513,15 @@ class SoepSpss(SoepStata):
             return heading + "\nselect if (" + "|".join(temp) + ")."
         else:
             return heading + "\n* all households *."
+            
+    def _render_gender(self):
+        heading = "\n* ### GENDER ( male = 1 / female = 2) ### *.\n"
+        if self.settings["gender"] == "m":
+            return heading + "\nselect if (sex == 1)."
+        elif self.settings["gender"] == "f":
+            return heading + "\nselect if (sex == 2)."
+        else:
+            return heading + "\n* all genders *."
 
     def _render_sort_pfad(self):
         script = "\n* ### SORT [H|P]PFAD ### *.\n"
@@ -623,7 +649,17 @@ class SoepR(SoepStata):
                 temp.append(" (%s%s == 1 | %s%s == 2)" % (y, set_name, y, set_name))
             return heading + "\npfad <- with(pfad, pfad[" + "|".join(temp) + ", ])"
         else:
-            return heading + "\n#all households"
+            return heading + "\n# all households"
+            
+    def _render_gender(self):
+        ### TODO: male and female for R
+        heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
+        if self.settings["gender"] == "m":
+            return heading + "\n# male: not avaiable for R at the moment"
+        elif self.settings["gender"] == "f":
+            return heading + "\n# female: not avaiable for R at the moment"
+        else:
+            return heading + "\n# all genders"
 
     def _render_sort_pfad(self):
         script = "\n### SORT [H|P]PFAD ###\n"
