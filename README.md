@@ -1,7 +1,5 @@
 # DDI on Rails – version 2
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0382ce2fae284b608bfba7bc2da74a4b)](https://app.codacy.com/app/ddionrails/ddionrails?utm_source=github.com&utm_medium=referral&utm_content=ddionrails/ddionrails&utm_campaign=Badge_Grade_Dashboard)
-
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-360/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
@@ -9,6 +7,7 @@
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
 [![Travis][travis-badge]](https://travis-ci.org/ddionrails/ddionrails/)
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
+[![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
 [![PyUp][pyup-badge]](https://pyup.io/repos/github/ddionrails/ddionrails/)
 [![Greenkeeper][greenkeeper-badge]](https://greenkeeper.io/)
 
@@ -125,3 +124,4 @@ This project is licensed under the GNU AGPLv3 License - see the [LICENSE.md](htt
 [pyup-badge]: https://pyup.io/repos/github/ddionrails/ddionrails/shield.svg
 [greenkeeper-badge]: https://badges.greenkeeper.io/greenkeeperio/badges.svg
 [issues-badge]: https://img.shields.io/github/issues/ddionrails/ddionrails.svg
+[codacy-badge]: https://api.codacy.com/project/badge/Grade/0382ce2fae284b608bfba7bc2da74a4b
