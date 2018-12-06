@@ -1,5 +1,7 @@
 # DDI on Rails – version 2
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0382ce2fae284b608bfba7bc2da74a4b)](https://app.codacy.com/app/ddionrails/ddionrails?utm_source=github.com&utm_medium=referral&utm_content=ddionrails/ddionrails&utm_campaign=Badge_Grade_Dashboard)
+
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-360/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
