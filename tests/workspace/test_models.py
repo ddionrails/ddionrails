@@ -3,16 +3,7 @@ import pytest
 from studies.models import Study
 from workspace.models import Script, Basket, BasketVariable, ScriptConfig
 
-from .factories import ScriptFactory
-
-
 pytestmark = [pytest.mark.workspace]
-
-
-@pytest.fixture
-def script(db):
-    """ A script in the database """
-    return ScriptFactory(name="some-script", label="Some Script")
 
 
 @pytest.fixture
