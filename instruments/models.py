@@ -129,7 +129,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             return self.label
         try:
             return self.items.first().title()
-        except:
+        except AttributeError:
             return self.name
 
     def __str__(self):
