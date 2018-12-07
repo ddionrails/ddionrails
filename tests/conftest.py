@@ -1,5 +1,6 @@
 import pytest
 
+from tests.concepts.factories import ConceptFactory
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.ddionrails.factories import SystemFactory
 from tests.factories import UserFactory
@@ -62,3 +63,11 @@ def instrument(db):
 def empty_data():
     """ Empty dictionary is used as invalid data for form and import tests """
     return {}
+
+
+@pytest.fixture
+def concept(db):
+    """ A concept in the database """
+    return ConceptFactory(
+        name="some-concept", label="Some Concept", description="This is some concept"
+    )

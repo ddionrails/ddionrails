@@ -92,11 +92,11 @@ class Basket(ElasticMixin, models.Model):
             )
             try:
                 row["concept_name"] = variable.concept.name
-            except:
+            except AttributeError:
                 pass
             try:
                 row["period_name"] = variable.dataset.period.name
-            except:
+            except AttributeError:
                 pass
             writer.writerow(row)
         return output.getvalue()
