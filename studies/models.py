@@ -15,8 +15,8 @@ from elastic.mixins import ModelMixin as ElasticMixin
 class Study(ElasticMixin, DorMixin, models.Model):
     """
     Stores a single study,
-    related to :model:`data.Dataset`, :model:`instruments.Instrument`, :model:`concepts.Period` and
-    :model:`workspace.Basket`.
+    related to :model:`data.Dataset`, :model:`instruments.Instrument`,
+    :model:`concepts.Period` and :model:`workspace.Basket`.
     """
 
     name = models.CharField(max_length=255, unique=True, db_index=True)
@@ -36,7 +36,9 @@ class Study(ElasticMixin, DorMixin, models.Model):
         id_fields = ["name"]
 
     def import_path(self):
-        path = os.path.join(settings.IMPORT_REPO_PATH, self.name, settings.IMPORT_SUB_DIRECTORY)
+        path = os.path.join(
+            settings.IMPORT_REPO_PATH, self.name, settings.IMPORT_SUB_DIRECTORY
+        )
         return path
 
     def repo_url(self):
@@ -57,7 +59,11 @@ class Study(ElasticMixin, DorMixin, models.Model):
     def get_list_of_topic_files(self):
         file_names = glob.glob(
             os.path.join(
-                os.path.abspath(os.path.dirname(ddionrails.__file__)), "..", self.import_path(), "topics", "*.md"
+                os.path.abspath(os.path.dirname(ddionrails.__file__)),
+                "..",
+                self.import_path(),
+                "topics",
+                "*.md",
             )
         )
         file_names.sort()

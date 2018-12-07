@@ -13,86 +13,83 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-
     # Django core
-    'django.contrib.admin',
-    'django.contrib.admindocs',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
+    "django.contrib.admin",
+    "django.contrib.admindocs",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     # Third party
-    'django_extensions',
-    'elasticsearch',
-    'elasticsearch_dsl',
-    'markdown',
-    'django_rq',
-    'webpack_loader',
-
+    "django_extensions",
+    "elasticsearch",
+    "elasticsearch_dsl",
+    "markdown",
+    "django_rq",
+    "webpack_loader",
     # DDI on Rails
-    'ddionrails',
-    'concepts',
-    'imports',
-    'studies',
-    'data',
-    'elastic',
-    'workspace',
-    'publications',
-    'instruments',
-    'api',
+    "ddionrails",
+    "concepts",
+    "imports",
+    "studies",
+    "data",
+    "elastic",
+    "workspace",
+    "publications",
+    "instruments",
+    "api",
 ]
 
 # MIDDLEWARE
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.security.SecurityMiddleware",
 ]
 
-ROOT_URLCONF = 'ddionrails.urls'
+ROOT_URLCONF = "ddionrails.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ["templates"],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'studies.models.context',
-            ],
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": ["templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "studies.models.context",
+            ]
         },
-    },
+    }
 ]
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db/db.sqlite3'),
-    },
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db/db.sqlite3"),
+    }
 }
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'Europe/Berlin'
+TIME_ZONE = "Europe/Berlin"
 
 USE_I18N = True
 
@@ -109,19 +106,17 @@ LOGOUT_REDIRECT_URL = "/"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+STATIC_URL = "/static/"
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
 WEBPACK_LOADER = {
-    'DEFAULT': {
+    "DEFAULT": {
         # 'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'dist/', # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+        "BUNDLE_DIR_NAME": "dist/",  # must end with slash
+        "STATS_FILE": os.path.join(BASE_DIR, "webpack-stats.json"),
+        "POLL_INTERVAL": 0.1,
+        "TIMEOUT": None,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
 
@@ -133,8 +128,8 @@ IMPORT_SUB_DIRECTORY = "ddionrails/"
 
 # DDI on Rails: index
 
-INDEX_HOST = "localhost" # not used yet
-INDEX_PORT = "9200"      # not used yet
+INDEX_HOST = "localhost"  # not used yet
+INDEX_PORT = "9200"  # not used yet
 INDEX_NAME = "dor"
 
 # Django RQ
@@ -143,9 +138,7 @@ RQ_SHOW_ADMIN_LINK = True
 # Github (either "https" or "ssh")
 GIT_PROTOCOL = "https"
 
-SHELL_PLUS_PRE_IMPORTS = (
-    ("imports.manager", "*"),
-)
+SHELL_PLUS_PRE_IMPORTS = (("imports.manager", "*"),)
 
 SERVER_EMAIL = "admin@paneldata.org"
 DEFAULT_FROM_EMAIL = "webmaster@paneldata.org"
@@ -157,12 +150,14 @@ SECRETS_FILE = os.path.join(BASE_DIR, "secrets.json")
 with open(SECRETS_FILE) as f:
     secrets = json.loads(f.read())
 
+
 def get_secret(setting, secrets=secrets):
     """ Get the secret variable or return explicit exception. """
     try:
         return secrets[setting]
     except KeyError:
-        error_msg = ''
+        error_msg = ""
         raise ImproperlyConfigured(error_msg)
 
-SECRET_KEY = get_secret('SECRET_KEY')
+
+SECRET_KEY = get_secret("SECRET_KEY")

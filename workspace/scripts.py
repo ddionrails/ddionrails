@@ -116,7 +116,7 @@ class SoepMixin:
         script_dict = dict()
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
-            if not dataset_name in script_dict.keys():
+            if dataset_name not in script_dict.keys():
                 script_dict[dataset_name] = self._create_dataset_dict(
                     dataset_name, variable
                 )

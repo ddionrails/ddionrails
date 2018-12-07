@@ -1,35 +1,20 @@
 import json
-from collections import OrderedDict, defaultdict
+from collections import OrderedDict
 
-from django.core.exceptions import (
-    ObjectDoesNotExist,
-)
+from django.core.exceptions import ObjectDoesNotExist
 
-from concepts.models import (
-    AnalysisUnit,
-    Concept,
-    ConceptualDataset,
-    Period,
-)
+from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from imports import imports
 
-from .forms import (
-    DatasetForm,
-    VariableForm,
-)
-from .models import (
-    Dataset,
-    Transformation,
-    Variable,
-)
+from .forms import DatasetForm, VariableForm
+from .models import Dataset, Transformation, Variable
 
 
 class DatasetJsonImport(imports.Import):
-
     def execute_import(self):
-        self.content = json.JSONDecoder(
-            object_pairs_hook=OrderedDict
-        ).decode(self.content)
+        self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(
+            self.content
+        )
         self._import_dataset(self.name, self.content)
 
     def _import_dataset(self, name, content):
@@ -61,7 +46,6 @@ class DatasetJsonImport(imports.Import):
 
 
 class DatasetImport(imports.CSVImport):
-
     class DOR:
         form = DatasetForm
 
@@ -73,21 +57,19 @@ class DatasetImport(imports.CSVImport):
 
     def _import_dataset_links(self, element):
         dataset = Dataset.objects.get(
-            study=self.study,
-            name=element["dataset_name"].lower(),
+            study=self.study, name=element["dataset_name"].lower()
         )
         period_name = element.get("period_name", "none")
         dataset.period, status = Period.objects.get_or_create(
-            study=self.study,
-            name=period_name,
+            study=self.study, name=period_name
         )
         analysis_unit_name = element.get("analysis_unit_name", "none")
         dataset.analysis_unit, status = AnalysisUnit.objects.get_or_create(
-            name=analysis_unit_name,
+            name=analysis_unit_name
         )
         conceptual_dataset_name = element.get("conceptual_dataset_name", "none")
         dataset.conceptual_dataset, status = ConceptualDataset.objects.get_or_create(
-            name=conceptual_dataset_name,
+            name=conceptual_dataset_name
         )
         dataset.boost = float(element.get("boost", 1))
         dataset.label = element.get("label", "")
@@ -96,7 +78,6 @@ class DatasetImport(imports.CSVImport):
 
 
 class VariableImport(imports.CSVImport):
-
     class DOR:
         form = VariableForm
 
@@ -104,19 +85,17 @@ class VariableImport(imports.CSVImport):
         try:
             self._import_variable_links(element)
         except:
-            print("[ERROR] Failed to import variable %s from dataset %s" % (
-                element.get("variable_name"),
-                element.get("dataset_name"),
-            ))
+            print(
+                "[ERROR] Failed to import variable %s from dataset %s"
+                % (element.get("variable_name"), element.get("dataset_name"))
+            )
 
     def _import_variable_links(self, element):
         dataset = Dataset.objects.get(
-            study=self.study,
-            name=element["dataset_name"].lower(),
+            study=self.study, name=element["dataset_name"].lower()
         )
         variable = Variable.objects.get(
-            dataset=dataset,
-            name=element["variable_name"].lower(),
+            dataset=dataset, name=element["variable_name"].lower()
         )
         concept_name = element.get("concept_name", "").lower()
         if concept_name != "":
@@ -128,7 +107,6 @@ class VariableImport(imports.CSVImport):
 
 
 class TransformationImport(imports.CSVImport):
-
     class DOR:
         form = VariableForm
 

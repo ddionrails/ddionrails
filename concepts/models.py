@@ -42,7 +42,7 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         return reverse("concepts:concept_detail_name", kwargs={"concept_name": self.name})
 
     def index(self):
-        """ Indexes the concept in Elasticsearch using its name, label and related study """
+        """ Indexes the concept in Elasticsearch (name, label and related study) """
         if self.label and self.label != "":
             label = self.label
         else:

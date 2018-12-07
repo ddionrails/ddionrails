@@ -53,7 +53,7 @@ class QuestionVariableImport(imports.CSVImport):
             lower_dict_names(link)
             question = self._get_question(link)
             variable = self._get_variable(link)
-            qv_link = QuestionVariable.objects.get_or_create(
+            QuestionVariable.objects.get_or_create(
                 question=question,
                 variable=variable,
             )
@@ -87,7 +87,7 @@ class ConceptQuestionImport(imports.CSVImport):
             lower_dict_names(link)
             question = self._get_question(link)
             concept = self._get_concept(link)
-            qv_link = ConceptQuestion.objects.get_or_create(
+            ConceptQuestion.objects.get_or_create(
                 question=question,
                 concept=concept,
             )

@@ -24,7 +24,9 @@ def study_description_importer(study, filename):
 
 class TestStudyImport:
     def test_import_with_valid_data(self, study_importer):
-        valid_study_data = dict(name="some-study", label="Some Study", description="This is some study")
+        valid_study_data = dict(
+            name="some-study", label="Some Study", description="This is some study"
+        )
         response = study_importer.import_element(valid_study_data)
         assert isinstance(response, Study)
         assert response.name == valid_study_data["name"]
@@ -38,7 +40,9 @@ class TestStudyImport:
 class TestStudyDescriptionImport:
     def test_import_with_valid_data(self, mocker, study_description_importer):
         study_description_importer.content = "some-study-description"
-        study_description_importer.data = dict(name="some-study", label="Some Study", config="some-config")
+        study_description_importer.data = dict(
+            name="some-study", label="Some Study", config="some-config"
+        )
         mocked_set_elastic = mocker.patch.object(Study, "set_elastic")
         study_description_importer.execute_import()
         mocked_set_elastic.assert_called_once()
