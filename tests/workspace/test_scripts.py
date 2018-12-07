@@ -2,6 +2,7 @@ import pytest
 
 from workspace.scripts import SoepStata
 from workspace.scripts import SoepSpss
+from workspace.scripts import SoepR
 
 ### Stata Settings
 
@@ -23,6 +24,16 @@ def soepspss(script, basket):
 def heading_spss():
     return "### GENDER ( male = 1 / female = 2) ###"
 
+### R Settings
+
+@pytest.fixture
+def soepr(script, basket):
+    return SoepR(script, basket)
+
+@pytest.fixture
+def heading_r():
+    return "### GENDER ( male = 1 / female = 2) ###"
+    
 
 class TestSoepStataClass:
     def test_render_gender_method_with_male(self, soepstata, heading_stata):
@@ -66,4 +77,26 @@ class TestSoepSpssClass:
         result = soepspss._render_gender()
         command = "\n* all genders *."
         assert heading_spss in result
+        assert command in result
+        
+class TestSoepRClass:
+    def test_render_gender_method_with_male(self, soepr, heading_r):
+        soepr.settings["gender"] = "m"
+        result = soepr._render_gender()
+        command = "pfad <- pfad[pfad$sex==1,]"
+        assert heading_r in result
+        assert command in result
+
+    def test_render_gender_method_with_female(self, soepr, heading_r):
+        soepr.settings["gender"] = "f"
+        result = soepr._render_gender()
+        command = "pfad <- pfad[pfad$sex==2,]"
+        assert heading_r in result
+        assert command in result
+
+    def test_render_gender_method_with_both(self, soepr, heading_r):
+        soepr.settings["gender"] = "b"
+        result = soepr._render_gender()
+        command = "\n# all genders"
+        assert heading_r in result
         assert command in result
