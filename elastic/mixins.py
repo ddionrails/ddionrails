@@ -1,14 +1,16 @@
 import json
-from elasticsearch import Elasticsearch
+
 from django.conf import settings
+from elasticsearch import Elasticsearch
 
 es = Elasticsearch()
+
 
 class ModelMixin:
     """
     Requires a valid DOC_TYPE
     """
-    
+
     INDEX_NAME = settings.INDEX_NAME
     DOC_TYPE = "default"
     elastic = None
@@ -16,13 +18,11 @@ class ModelMixin:
     def get_elastic(self, as_json=False):
         if not self.elastic:
             try:
-                self.elastic= es.get(
-                    index=self.INDEX_NAME,
-                    doc_type=self.DOC_TYPE,
-                    id=self.id,
+                self.elastic = es.get(
+                    index=self.INDEX_NAME, doc_type=self.DOC_TYPE, id=self.id
                 )
             except:
-                self.elastic = {"_id": self.id, "status":"not found"}
+                self.elastic = {"_id": self.id, "status": "not found"}
         if as_json:
             return json.dumps(self.elastic)
         else:
@@ -44,11 +44,7 @@ class ModelMixin:
             return default
 
     def delete_elastic(self):
-        es.delete(
-            index=self.INDEX_NAME,
-            doc_type=self.DOC_TYPE,
-            id=self.id,
-        )
+        es.delete(index=self.INDEX_NAME, doc_type=self.DOC_TYPE, id=self.id)
 
     def set_elastic(self, body, update=False):
         """
@@ -56,17 +52,14 @@ class ModelMixin:
         supports update by doc only.
         """
         if update:
-           res = es.update(
-                index=self.INDEX_NAME ,
+            res = es.update(
+                index=self.INDEX_NAME,
                 doc_type=self.DOC_TYPE,
                 id=self.id,
                 body=dict(doc=body),
             )
         else:
             res = es.index(
-                index=self.INDEX_NAME,
-                doc_type=self.DOC_TYPE,
-                id=self.id,
-                body=body,
+                index=self.INDEX_NAME, doc_type=self.DOC_TYPE, id=self.id, body=body
             )
         return res

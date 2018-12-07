@@ -1,10 +1,8 @@
 import pytest
-
-from elastic.views import search, angular
-from django.urls import reverse, resolve
-
+from django.urls import reverse
 
 pytestmark = [pytest.mark.elastic, pytest.mark.views]
+
 
 class TestSearchView:
     def test_search_view(self, client, study):
@@ -15,4 +13,3 @@ class TestSearchView:
 
 class TestAngularView:
     pass
-

@@ -2,7 +2,6 @@ from django.conf.urls import url
 
 from data.views import (
     dataset_detail,
-    variable_detail,
     variable_json,
     VariableDetailView
 )

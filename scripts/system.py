@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 
-from imports.manager import SystemImportManager, Repository
-from ddionrails.models import System
 from django_rq import job
+
+from ddionrails.models import System
+from imports.manager import Repository, SystemImportManager
+
 
 @job
 def run_system():
@@ -10,6 +12,7 @@ def run_system():
     repo = Repository(system)
     repo.update_or_clone_repo()
     SystemImportManager(system).run_import(import_all=True)
+
 
 def run():
     run_system()

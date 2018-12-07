@@ -66,9 +66,7 @@ def render_script(request, basket_id, script_name):
 @own_basket_only
 def add_variable(request, basket_id, variable_id):
     try:
-        relation = BasketVariable.objects.create(
-            basket_id=basket_id, variable_id=variable_id
-        )
+        BasketVariable.objects.create(basket_id=basket_id, variable_id=variable_id)
     except:
         pass
     return redirect(request.META.get("HTTP_REFERER"))
@@ -209,7 +207,7 @@ def register(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            form.save()
             return redirect("/")
     else:
         form = UserCreationForm()
@@ -254,7 +252,7 @@ def script_detail(request, basket_id, script_id):
     for field in fields:
         if field["name"] in settings_dict.keys():
             field["value"] = settings_dict[field["name"]]
-        if not "value" in field.keys():
+        if "value" not in field.keys():
             field["value"] = script_config.DEFAULT_DICT[field["name"]]
     s = script.get_script_input()
     context = dict(

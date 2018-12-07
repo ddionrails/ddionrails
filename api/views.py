@@ -1,22 +1,23 @@
 import json
-from django.shortcuts import render, redirect
+
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django_rq import job
-from ddionrails.setup import setup
+
 from data.models import Variable
-from concepts.models import Concept
-from instruments.models import Question
-from publications.models import Publication
+from ddionrails.setup import setup
+
 
 @job
 def rq_command():
     setup()
     print("Number of variables:", Variable.objects.count())
 
+
 def test_rq(request):
-    #django_rq.enqueue(rq_command)
     rq_command.delay()
-    return HttpResponse("RQ test initiated.") 
+    return HttpResponse("RQ test initiated.")
+
 
 def get_test_object(object_type, object_id):
     object_type = object_type.title()
@@ -25,6 +26,7 @@ def get_test_object(object_type, object_id):
         return x
     else:
         return None
+
 
 def test_preview(request, object_type, object_id):
     x = get_test_object(object_type, object_id)
@@ -38,6 +40,7 @@ def test_preview(request, object_type, object_id):
         return HttpResponse(json.dumps(response), content_type="text/plain")
     else:
         return HttpResponse("No valid type.")
+
 
 def test_redirect(request, object_type, object_id):
     x = get_test_object(object_type, object_id)
