@@ -207,12 +207,12 @@ class SoepStata(ScriptConfig, SoepMixin):
                 scale="select",
                 options=dict(t="Private households only", f="All households"),
             ),
-            dict(name="gender", label="Gender",
-                scale="select", options=dict(
-                    b="Both",
-                    m="Male",
-                    f="Female"),
-                ),
+            dict(
+                name="gender",
+                label="Gender",
+                scale="select",
+                options=dict(b="Both", m="Male", f="Female"),
+            ),
             dict(
                 name="balanced",
                 label="Sample composition",
@@ -381,7 +381,7 @@ class SoepStata(ScriptConfig, SoepMixin):
             return heading + "\nkeep if (" + "|".join(temp) + ")"
         else:
             return heading + "\n/* all households */"
-            
+
     def _render_gender(self):
         heading = "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n"
         if self.settings["gender"] == "m":
@@ -513,7 +513,7 @@ class SoepSpss(SoepStata):
             return heading + "\nselect if (" + "|".join(temp) + ")."
         else:
             return heading + "\n* all households *."
-            
+
     def _render_gender(self):
         heading = "\n* ### GENDER ( male = 1 / female = 2) ### *.\n"
         if self.settings["gender"] == "m":
@@ -650,7 +650,7 @@ class SoepR(SoepStata):
             return heading + "\npfad <- with(pfad, pfad[" + "|".join(temp) + ", ])"
         else:
             return heading + "\n# all households"
-            
+
     def _render_gender(self):
         heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
         if self.settings["gender"] == "m":
