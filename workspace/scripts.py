@@ -652,12 +652,11 @@ class SoepR(SoepStata):
             return heading + "\n# all households"
             
     def _render_gender(self):
-        ### TODO: male and female for R
         heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
         if self.settings["gender"] == "m":
-            return heading + "\n# male: not avaiable for R at the moment"
+            return heading + "\npfad <- pfad[pfad$sex==1,]"
         elif self.settings["gender"] == "f":
-            return heading + "\n# female: not avaiable for R at the moment"
+            return heading + "\npfad <- pfad[pfad$sex==2,]"
         else:
             return heading + "\n# all genders"
 
