@@ -1,11 +1,11 @@
 import pytest
 
 from ddionrails.helpers import (
-    jekyll_reader,
+    # jekyll_reader,
     lower_dict_names,
     render_markdown,
-    script_list,
-    script_list_output,
+    # script_list,
+    # script_list_output,
 )
 
 md_text = """

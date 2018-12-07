@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import django_rq
-from django.conf import settings
+
 
 from concepts.models import Concept
 from imports.manager import Repository, StudyImportManager

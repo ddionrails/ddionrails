@@ -1,7 +1,7 @@
 import pytest
 
 from studies.models import Study
-from workspace.models import Basket, BasketVariable, Script
+from workspace.models import Script
 
 from .factories import ScriptFactory
 

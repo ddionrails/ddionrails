@@ -1,8 +1,11 @@
-import re
 import pprint
+import re
+
 from django.shortcuts import render
+
 from studies.models import Study
-from .helpers import simple_search, parse_results
+
+from .helpers import parse_results, simple_search
 
 NAMESPACE_REG = "namespace:[\"']?([a-z0-9-]*)"
 
@@ -32,6 +35,7 @@ def search(request):
         debug_string=pprint.pformat(results, width=120),
     )
     return render(request, "elastic/search.html", context=context)
+
 
 def angular(request):
     return render(request, "elastic/angular.html")

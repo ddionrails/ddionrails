@@ -30,8 +30,19 @@ INDEX_NAME = "testing"
 
 logging.disable(logging.CRITICAL)
 
-RQ_QUEUES = {"default": {"HOST": "localhost", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360, "ASYNC": False}}
+RQ_QUEUES = {
+    "default": {
+        "HOST": "localhost",
+        "PORT": 6379,
+        "DB": 0,
+        "DEFAULT_TIMEOUT": 360,
+        "ASYNC": False,
+    }
+}
 
 # https://github.com/rq/django-rq/issues/277#issuecomment-391555883
-# Credit to @zyv, adapted from https://github.com/rq/django-rq/issues/106#issuecomment-367674954
-django_rq.queues.get_redis_connection = lambda _, strict: FakeStrictRedis() if strict else FakeRedis()
+# Credit to @zyv
+# adapted from https://github.com/rq/django-rq/issues/106#issuecomment-367674954
+django_rq.queues.get_redis_connection = (
+    lambda _, strict: FakeStrictRedis() if strict else FakeRedis()
+)

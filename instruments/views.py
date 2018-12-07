@@ -12,7 +12,8 @@ from .models import Instrument, Question
 
 def study_instrument_list(request, study_name):
     context = dict(
-        study=Study.objects.get(name=study_name), instrument_list=Instrument.objects.filter(study__name=study_name)
+        study=Study.objects.get(name=study_name),
+        instrument_list=Instrument.objects.filter(study__name=study_name),
     )
     return render(request, "instruments/study_instrument_list.html", context=context)
 
@@ -30,7 +31,9 @@ class InstrumentDetailView(DetailView):
 
     def get_object(self, queryset=None):
         instrument = get_object_or_404(
-            Instrument, study__name=self.kwargs["study_name"], name=self.kwargs["instrument_name"]
+            Instrument,
+            study__name=self.kwargs["study_name"],
+            name=self.kwargs["instrument_name"],
         )
         return instrument
 
@@ -60,7 +63,9 @@ def question_detail(request, study_name, instrument_name, question_name):
     concept_list = question.concept_list()
     try:
         related_questions = Question.objects.filter(
-            items__items_variables__variable__concept_id__in=[concept.id for concept in concept_list]
+            items__items_variables__variable__concept_id__in=[
+                concept.id for concept in concept_list
+            ]
         ).distinct()
     except:
         related_questions = []

@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
 
+
 def parse_results(results):
     """
     Transform results into a simplified strutured that can be used
@@ -15,7 +16,8 @@ def parse_results(results):
             new_results.append(x)
         return new_results
     except:
-      return []
+        return []
+
 
 def simple_search(q, from_value=0, size_value=25):
     """Simple search for a term in all document types."""
@@ -37,11 +39,7 @@ class Hit:
         self.score = json["_score"]
         self.source = json["_source"]
         self.type = json["_type"]
-        self.key = "/".join([
-            self.index,
-            self.type,
-            self.id,
-        ])
+        self.key = "/".join([self.index, self.type, self.id])
 
 
 class Result:

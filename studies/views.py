@@ -35,9 +35,18 @@ class StudyDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["dataset_list"] = (
-            Dataset.objects.select_related("study", "conceptual_dataset", "period", "analysis_unit")
+            Dataset.objects.select_related(
+                "study", "conceptual_dataset", "period", "analysis_unit"
+            )
             .filter(study=self.object)
-            .only("name", "label", "study__name", "conceptual_dataset__name", "period__name", "analysis_unit__name")
+            .only(
+                "name",
+                "label",
+                "study__name",
+                "conceptual_dataset__name",
+                "period__name",
+                "analysis_unit__name",
+            )
         )
         context["instrument_list"] = (
             Instrument.objects.select_related("study", "period", "analysis_unit")
@@ -45,7 +54,9 @@ class StudyDetailView(DetailView):
             .only("name", "label", "study__name", "period__name", "analysis_unit__name")
         )
         context["debug_string"] = pprint.pformat(
-            dict(name=self.object.name, config=self.object.get_config(), getcwd=os.getcwd())
+            dict(
+                name=self.object.name, config=self.object.get_config(), getcwd=os.getcwd()
+            )
         )
         return context
 

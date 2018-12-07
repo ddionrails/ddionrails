@@ -32,7 +32,9 @@ def extend_context_for_variable(request, context):
     study = variable.get_study()
     context["related_variables"] = variable.get_related_variables()
     context["label_table"] = LabelTable(context["related_variables"])
-    context["questions"] = Question.objects.filter(questions_variables__variable=variable.id)
+    context["questions"] = Question.objects.filter(
+        questions_variables__variable=variable.id
+    )
     context["study"] = study
     context["debug_string"] = pprint.pformat(variable.get_elastic(), width=120)
     context["concept"] = variable.get_concept()
@@ -59,7 +61,12 @@ class VariableDetailView(DetailView):
 
     def get_object(self, queryset=None):
         queryset = Variable.objects.select_related(
-            "dataset", "dataset__study", "dataset__conceptual_dataset", "dataset__analysis_unit", "concept", "period"
+            "dataset",
+            "dataset__study",
+            "dataset__conceptual_dataset",
+            "dataset__analysis_unit",
+            "concept",
+            "period",
         ).filter(
             name=self.kwargs["variable_name"],
             dataset__name=self.kwargs["dataset_name"],
@@ -74,12 +81,16 @@ class VariableDetailView(DetailView):
         context["study"] = study
         context["related_variables"] = variable.get_related_variables()
         context["label_table"] = LabelTable(context["related_variables"])
-        context["questions"] = Question.objects.filter(questions_variables__variable=variable)
+        context["questions"] = Question.objects.filter(
+            questions_variables__variable=variable
+        )
         context["debug_string"] = pprint.pformat(variable.get_elastic(), width=120)
         context["concept"] = variable.get_concept()
         context["row_helper"] = RowHelper()
         context["basket_list"] = (
-            Basket.objects.filter(study_id=study.id).filter(user_id=self.request.user.id).all()
+            Basket.objects.filter(study_id=study.id)
+            .filter(user_id=self.request.user.id)
+            .all()
         )  # TODO user!
         return context
 
@@ -108,7 +119,9 @@ def variable_json(request, study_name, dataset_name, variable_name):
 
 def dataset_detail(request, study_name, dataset_name):
     dataset = get_object_or_404(Dataset, study__name=study_name, name=dataset_name)
-    context = dict(dataset=dataset, variables=dataset.variables.all(), study=dataset.study)
+    context = dict(
+        dataset=dataset, variables=dataset.variables.all(), study=dataset.study
+    )
     return render(request, "data/dataset_detail.html", context=context)
 
 
@@ -119,6 +132,8 @@ def variable_preview_id(request, variable_id):
         name=variable.name,
         title=variable.title(),
         type="variable",
-        html=render(request, "data/variable_preview.html", context=context).content.decode("utf8"),
+        html=render(
+            request, "data/variable_preview.html", context=context
+        ).content.decode("utf8"),
     )
     return HttpResponse(json.dumps(response), content_type="text/plain")

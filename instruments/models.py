@@ -125,7 +125,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             return self.name
 
     def title(self):
-        if self.label != None and self.label != "":
+        if self.label is not None and self.label != "":
             return self.label
         try:
             return self.items.first().title()
