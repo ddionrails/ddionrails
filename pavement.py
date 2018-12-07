@@ -26,7 +26,7 @@ print("[INFO] Using %s settings." % local_settings)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.%s" % local_settings)
 
 
-### Helper functions ###
+# Helper functions
 
 
 def info(text):
@@ -50,7 +50,7 @@ def elastic_server():
     return "%s:%s/%s" % (settings.INDEX_HOST, settings.INDEX_PORT, settings.INDEX_NAME)
 
 
-### Tasks ###
+# Tasks
 
 
 @task
@@ -195,7 +195,10 @@ def import_system():
 def import_all_studies():
     """Run scripts: import."""
     django.setup()
-    run("./manage.py runscript scripts.import_studies --settings=settings.%s" % local_settings)
+    run(
+        "./manage.py runscript scripts.import_studies --settings=settings.%s"
+        % local_settings
+    )
 
 
 @task

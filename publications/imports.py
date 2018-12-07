@@ -1,11 +1,12 @@
-from imports import imports
 import bibtexparser
-from studies.models import Study
-from .models import *
-from .forms import *
+
+from imports import imports
+
+from .forms import PublicationForm
+from .models import Publication
+
 
 class PublicationImport(imports.Import):
-
     def execute_import(self):
         bibtex = bibtexparser.loads(self.content)
         self.bibtex = bibtex
@@ -25,11 +26,7 @@ class PublicationImport(imports.Import):
         bibtex_item["study"] = self.study.name
         bibtex_item["label"] = label
         bibtex_item["period"] = bibtex_item.get("year", "")
-        import_dict = dict(
-            name=bibtex_item["ID"],
-            study=self.study.id,
-            label=label,
-        )
+        import_dict = dict(name=bibtex_item["ID"], study=self.study.id, label=label)
         try:
             name = PublicationForm(import_dict).data["name"]
             x = Publication.objects.get(name=name)

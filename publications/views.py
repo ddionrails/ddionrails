@@ -23,7 +23,9 @@ class PublicationDetailView(DetailView):
 
     def get_object(self, queryset=None):
         publication = get_object_or_404(
-            Publication, name=self.kwargs["publication_name"], study__name=self.kwargs["study_name"]
+            Publication,
+            name=self.kwargs["publication_name"],
+            study__name=self.kwargs["study_name"],
         )
         return publication
 
@@ -32,7 +34,9 @@ class PublicationDetailView(DetailView):
         context["bibtex"] = self.object.get_source()
         context["debug_string"] = pprint.pformat(self.object.get_elastic(), width=120)
         context["study"] = self.object.study
-        context["links"] = [x.strip() for x in context["bibtex"].get("link", "").split(",")]
+        context["links"] = [
+            x.strip() for x in context["bibtex"].get("link", "").split(",")
+        ]
         return context
 
 

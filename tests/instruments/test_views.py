@@ -2,14 +2,22 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from instruments.views import InstrumentDetailView, InstrumentRedirectView, QuestionRedirectView
+from instruments.views import (
+    InstrumentDetailView,
+    InstrumentRedirectView,
+    QuestionRedirectView,
+)
 
 
 @pytest.mark.django_db
 class TestInstrumentDetailView:
     def test_detail_view_with_existing_names(self, client, instrument):
         url = reverse(
-            "inst:instrument_detail", kwargs={"study_name": instrument.study.name, "instrument_name": instrument.name}
+            "inst:instrument_detail",
+            kwargs={
+                "study_name": instrument.study.name,
+                "instrument_name": instrument.name,
+            },
         )
         response = client.get(url)
         assert response.status_code == 200

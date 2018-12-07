@@ -35,19 +35,27 @@ def basket(study, user):
 @pytest.fixture
 def dataset(db):
     """ A dataset in the database """
-    return DatasetFactory(name="some-dataset", label="Some Dataset", description="This is some dataset")
+    return DatasetFactory(
+        name="some-dataset", label="Some Dataset", description="This is some dataset"
+    )
 
 
 @pytest.fixture
 def variable(db):
     """ A variable in the database """
-    return VariableFactory(name="some-variable", label="Some Variable", description="This is some variable")
+    return VariableFactory(
+        name="some-variable", label="Some Variable", description="This is some variable"
+    )
 
 
 @pytest.fixture
 def instrument(db):
     """ An instrument in the database """
-    return InstrumentFactory(name="some-instrument", label="Some Instrument", description="This is some instrument")
+    return InstrumentFactory(
+        name="some-instrument",
+        label="Some Instrument",
+        description="This is some instrument",
+    )
 
 
 @pytest.fixture()

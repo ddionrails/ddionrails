@@ -26,7 +26,11 @@ class TestPublicationDetailView:
         mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
         mocked_get_source.return_value = dict()
         url = reverse(
-            "publ:publication", kwargs={"study_name": publication.study.name, "publication_name": publication.name}
+            "publ:publication",
+            kwargs={
+                "study_name": publication.study.name,
+                "publication_name": publication.name,
+            },
         )
         response = client.get(url)
         assert response.status_code == 200
@@ -36,7 +40,11 @@ class TestPublicationDetailView:
         mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
         mocked_get_source.return_value = dict()
         url = reverse(
-            "publ:publication", kwargs={"study_name": "invalid-study-name", "publication_name": publication.name}
+            "publ:publication",
+            kwargs={
+                "study_name": "invalid-study-name",
+                "publication_name": publication.name,
+            },
         )
         # TODO raise 404?
         response = client.get(url)

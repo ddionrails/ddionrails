@@ -1,8 +1,11 @@
-import sys
-sys.path.append(".")
 import os
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.development")
+import sys
+
 import django
- 
+
+sys.path.append(".")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.development")
+
+
 def setup():
     django.setup()

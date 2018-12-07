@@ -17,30 +17,19 @@ from data.imports import (
     TransformationImport,
     VariableImport,
 )
-from ddionrails.helpers import (
-    script_list,
-    script_list_output,
-)
+from ddionrails.helpers import script_list, script_list_output
 from instruments.imports import (
     ConceptQuestionImport,
     InstrumentImport,
     QuestionVariableImport,
 )
 from publications.imports import PublicationImport
-from studies.imports import (
-    StudyDescriptionImport,
-    StudyImport,
-)
+from studies.imports import StudyDescriptionImport, StudyImport
 from studies.models import Study
-from workspace.imports import (
-    BasketImport,
-    BasketVariableImport,
-    UserImport,
-)
+from workspace.imports import BasketImport, BasketVariableImport, UserImport
 
 
 class Repository:
-
     def __init__(self, study_or_system):
         self.study_or_system = study_or_system
         self.link = study_or_system.repo_url()
@@ -52,25 +41,19 @@ class Repository:
             "cd %s" % settings.IMPORT_REPO_PATH,
             "git clone %s %s" % (self.link, self.name),
             "cd %s" % self.name,
-            "git checkout -b %s origin/%s" % (
-                settings.IMPORT_BRANCH, settings.IMPORT_BRANCH, ),
-            "git branch --set-upstream-to=origin/%s %s" % (
-                settings.IMPORT_BRANCH, settings.IMPORT_BRANCH, ),
+            "git checkout -b %s origin/%s"
+            % (settings.IMPORT_BRANCH, settings.IMPORT_BRANCH),
+            "git branch --set-upstream-to=origin/%s %s"
+            % (settings.IMPORT_BRANCH, settings.IMPORT_BRANCH),
         ]
         script_list(script)
 
     def set_branch(self, branch=settings.IMPORT_BRANCH):
-        script = [
-            "cd %s" % self.path,
-            "git checkout %s" % branch,
-        ]
+        script = ["cd %s" % self.path, "git checkout %s" % branch]
         script_list(script)
 
     def update_repo(self):
-        script = [
-            "cd %s" % self.path,
-            "git pull",
-        ]
+        script = ["cd %s" % self.path, "git pull"]
         script_list(script)
 
     def update_or_clone_repo(self):
@@ -81,10 +64,7 @@ class Repository:
             self.clone_repo()
 
     def get_commit_id(self):
-        script = [
-            "cd %s" % self.path,
-            "git log --pretty=format:'%H' -n 1",
-        ]
+        script = ["cd %s" % self.path, "git log --pretty=format:'%H' -n 1"]
         return script_list_output(script)
 
     def set_commit_id(self):
@@ -98,18 +78,13 @@ class Repository:
     def list_changed_files(self):
         script = [
             "cd %s" % self.path,
-            "git diff --name-only %s -- %s" % (
-                self.study_or_system.current_commit,
-                settings.IMPORT_SUB_DIRECTORY
-            )
+            "git diff --name-only %s -- %s"
+            % (self.study_or_system.current_commit, settings.IMPORT_SUB_DIRECTORY),
         ]
         return script_list_output(script).split()
 
     def list_all_files(self):
-        script = [
-            "cd %s" % self.path,
-            "find %s" % settings.IMPORT_SUB_DIRECTORY,
-        ]
+        script = ["cd %s" % self.path, "find %s" % settings.IMPORT_SUB_DIRECTORY]
         return script_list_output(script).split()
 
     def import_list(self, import_all=False):
@@ -121,7 +96,6 @@ class Repository:
 
 
 class ImportLink:
-
     def __init__(self, expression, importer, activate_import=True):
         self.expression = re.compile(expression)
         self.importer = importer
@@ -133,10 +107,7 @@ class ImportLink:
                 self._process_import_file(import_file, study=study)
 
     def _import(self, study, import_file):
-        self.importer.run_import(
-            import_file,
-            study=study,
-        )
+        self.importer.run_import(import_file, study=study)
 
     def _process_import_file(self, import_file, study=None):
         import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
@@ -153,9 +124,7 @@ class SystemImportManager:
     def __init__(self, system):
         self.system = system
         self.repo = Repository(system)
-        self.import_patterns = [
-            ImportLink("^studies.csv$", StudyImport),
-        ]
+        self.import_patterns = [ImportLink("^studies.csv$", StudyImport)]
 
     def run_import(self, import_all=False):
         """
@@ -209,14 +178,12 @@ class StudyImportManager:
             ImportLink("^periods.csv$", PeriodImport),
             ImportLink("^conceptual_datasets.csv$", ConceptualDatasetImport),
             ImportLink("^study.md$", StudyDescriptionImport),
-            ImportLink("^instruments\/.*\.json$", InstrumentImport),
-            ImportLink("^datasets\/.*\.json$", DatasetJsonImport),
+            ImportLink(r"^instruments\/.*\.json$", InstrumentImport),
+            ImportLink(r"^datasets\/.*\.json$", DatasetJsonImport),
             ImportLink("^datasets.csv$", DatasetImport),
             ImportLink("^variables.csv$", VariableImport),
-            ImportLink("^questions_variables.csv$",
-                       QuestionVariableImport),
-            ImportLink("^concepts_questions.csv$",
-                       ConceptQuestionImport),
+            ImportLink("^questions_variables.csv$", QuestionVariableImport),
+            ImportLink("^concepts_questions.csv$", ConceptQuestionImport),
             ImportLink("^transformations.csv$", TransformationImport),
             ImportLink("^bibtex.bib$", PublicationImport),
         ]
@@ -239,7 +206,6 @@ class StudyImportManager:
 
 
 class LocalImport:
-
     def __init__(self, study_name=""):
         if study_name != "":
             self.study = Study.objects.get(name=study_name)
@@ -283,23 +249,17 @@ class LocalImport:
                 self._enqueue_import(filename, InstrumentImport)
 
     def _get_json_files(self, dir_name):
-        filelist = glob.glob(os.path.join(
-            self.repo.path,
-            settings.IMPORT_SUB_DIRECTORY,
-            dir_name,
-            "*json",
-        ))
-        filelist = [x.replace(os.path.join(
-            self.repo.path,
-            settings.IMPORT_SUB_DIRECTORY,
-        ), "") for x in filelist]
+        filelist = glob.glob(
+            os.path.join(self.repo.path, settings.IMPORT_SUB_DIRECTORY, dir_name, "*json")
+        )
+        filelist = [
+            x.replace(os.path.join(self.repo.path, settings.IMPORT_SUB_DIRECTORY), "")
+            for x in filelist
+        ]
         return filelist
 
     def _import(self, import_file, importer):
-        importer.run_import(
-            import_file,
-            study=self.study,
-        )
+        importer.run_import(import_file, study=self.study)
 
     def _enqueue_import(self, import_file, importer):
         import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")

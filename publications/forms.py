@@ -1,9 +1,11 @@
 from django import forms
+
 from ddionrails.helpers import lower_dict_names
-from .models import *
+
+from .models import Publication
+
 
 class PublicationForm(forms.ModelForm):
-
     class Meta:
         model = Publication
         fields = ["name", "label", "description", "study"]

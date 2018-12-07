@@ -41,10 +41,7 @@ class Import:
             return self.system.import_path()
 
     def file_path(self):
-        return os.path.join(
-            self.import_path(),
-            self.filename,
-        )
+        return os.path.join(self.import_path(), self.filename)
 
 
 class JekyllImport(Import):
@@ -110,7 +107,9 @@ class CSVImport(Import):
         try:
             model = self.DOR.form.Meta.model
             fields = model.DOR.id_fields
-            definition = {key: value for key, value in form(element).data.items() if key in fields}
+            definition = {
+                key: value for key, value in form(element).data.items() if key in fields
+            }
             x = model.objects.get(**definition)
         except:
             x = None

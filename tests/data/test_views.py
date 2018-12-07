@@ -1,20 +1,20 @@
 import json
-from pprint import pprint
+
 
 import pytest
-from django.http import JsonResponse
+
 from django.http.response import Http404
 from django.urls import reverse
 
 from data.models import Variable
 from data.views import (
     RowHelper,
-    dataset_detail,
+    # dataset_detail,
     dataset_redirect,
-    extend_context_for_variable,
-    variable_detail,
-    variable_json,
-    variable_preview_id,
+    # extend_context_for_variable,
+    # variable_detail,
+    # variable_json,
+    # variable_preview_id,
     variable_redirect,
 )
 

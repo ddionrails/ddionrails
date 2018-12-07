@@ -1,11 +1,12 @@
 import time
-from pprint import pprint
 
 import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 from tests.factories import UserFactory
+from tests.workspace.test_forms import valid_basket_data
 
 pytestmark = [pytest.mark.functional]
 
@@ -185,11 +186,6 @@ def known_user():
     return UserFactory(username="knut", password="secret")
 
 
-from tests.workspace.test_forms import valid_basket_data
-
-
-from selenium.webdriver.support.ui import Select
-
 # @pytest.mark.skip(reason="no way of currently testing this")
 class TestWorkspace:
 
@@ -249,7 +245,8 @@ class TestWorkspace:
         login_button = selenium.find_element_by_xpath('//input[@value="Login"]')
         login_button.click()
         assert (
-            "Please enter a correct username and password. Note that both fields may be case-sensitive."
+            "Please enter a correct username and password. "
+            "Note that both fields may be case-sensitive."
             in selenium.page_source
         )
 
