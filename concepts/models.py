@@ -48,7 +48,7 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         else:
             try:
                 label = self.variables.first().label
-            except:
+            except AttributeError:
                 label = ""
         study = list(
             set(
