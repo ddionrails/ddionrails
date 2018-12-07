@@ -1,26 +1,18 @@
-from django.conf.urls import url
+from django.urls import path
 
-from data.views import (
-    dataset_detail,
-    variable_json,
-    VariableDetailView
-)
+from data.views import dataset_detail, variable_json, VariableDetailView
 
-app_name = 'data'
+app_name = "data"
 
 urlpatterns = [
-    url(
-        r'^(?P<dataset_name>[a-z0-9_\-]+)$',
-        dataset_detail,
-        name="dataset",
-    ),
-    url(
-        r'^(?P<dataset_name>[a-z0-9_\-]+)/(?P<variable_name>[a-z0-9_\-]+)$',
+    path("<slug:dataset_name>", dataset_detail, name="dataset"),
+    path(
+        "<slug:dataset_name>/<slug:variable_name>",
         VariableDetailView.as_view(),
         name="variable",
     ),
-    url(
-        r'^(?P<dataset_name>[a-z0-9_\-]+)/(?P<variable_name>[a-z0-9_\-]+).json$',
+    path(
+        "<slug:dataset_name>/<slug:variable_name>.json",
         variable_json,
         name="variable_json",
     ),
