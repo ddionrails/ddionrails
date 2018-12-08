@@ -1,15 +1,13 @@
 /*!
  * ddionrails - main.css
  * Copyright 2015-2018
- * Licensed under AGPL (https://github.com/mhebing/ddionrails2/blob/master/LICENSE)
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 */
 
 html {
   height: 100%;
 }
 body {
-  /* padding-top: 100px; */
-  /* background-color: gray; */
   height: 100%;
 }
 #nav-container {
