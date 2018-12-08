@@ -4,7 +4,7 @@ var BundleTracker = require("webpack-bundle-tracker");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var glob = require("glob");
 
-entry: glob.sync("./test/**/*Spec.js")
+entry: glob.sync("./test/**/*Spec.js");
 
 module.exports = {
   context: __dirname,
@@ -13,10 +13,18 @@ module.exports = {
     index: "./static/src/js/index",
 
     /* ddionrails-elasticsearch: search library*/
-    inline: glob.sync("./node_modules/ddionrails-elasticsearch/dist/inline.*.bundle.js"),
-    polyfills: glob.sync("./node_modules/ddionrails-elasticsearch/dist/polyfills.*.bundle.js"),
-    vendor: glob.sync("./node_modules/ddionrails-elasticsearch/dist/vendor.*.bundle.js"),
-    main: glob.sync("./node_modules/ddionrails-elasticsearch/dist/main.*.bundle.js"),
+    inline: glob.sync(
+      "./node_modules/ddionrails-elasticsearch/dist/inline.*.bundle.js"
+    ),
+    polyfills: glob.sync(
+      "./node_modules/ddionrails-elasticsearch/dist/polyfills.*.bundle.js"
+    ),
+    vendor: glob.sync(
+      "./node_modules/ddionrails-elasticsearch/dist/vendor.*.bundle.js"
+    ),
+    main: glob.sync(
+      "./node_modules/ddionrails-elasticsearch/dist/main.*.bundle.js"
+    )
   },
   output: {
     path: path.resolve("./static/dist/"),
