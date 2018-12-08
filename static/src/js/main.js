@@ -1,17 +1,10 @@
 /*!
  * ddionrails - main.js
  * Copyright 2015-2018
- * Licensed under AGPL (https://github.com/mhebing/ddionrails2/blob/master/LICENSE)
-*/
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+ */
 
 var basketButton = (function() {
-  /*
-  var changeCount = function($count, value) {
-    var old = +$count.html();
-    $count.html( old + value );
-  };
-  */
-
   var addVariable = function($button, $count) {
     $.ajax({
       url:
@@ -22,7 +15,6 @@ var basketButton = (function() {
       success: function() {
         $button.removeClass("btn-default");
         $button.addClass("btn-success");
-        //changeCount($count, 1);
       }
     });
   };
@@ -37,7 +29,6 @@ var basketButton = (function() {
       success: function() {
         $button.removeClass("btn-success");
         $button.addClass("btn-default");
-        //changeCount($count, -1);
       }
     });
   };
@@ -63,5 +54,4 @@ $(function() {
   $(".datatable").DataTable();
 });
 
-
-export {basketButton};
+export { basketButton };
