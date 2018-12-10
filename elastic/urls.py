@@ -1,7 +1,8 @@
-from django.conf.urls import url
+from django.urls import path
+
 
 from .views import search
 
 app_name = "elastic"
 
-urlpatterns = [url(r"^$", search, name="search")]
+urlpatterns = [path("", search, name="search")]
