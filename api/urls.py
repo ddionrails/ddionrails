@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.urls import path
 
 from data.views import variable_preview_id
 
@@ -7,19 +7,19 @@ from .views import test_preview, test_redirect, test_rq
 app_name = "api"
 
 urlpatterns = [
-    url(r"^test/rq$", test_rq, name="test_rq"),
-    url(
-        r"^test/preview/variable/(?P<variable_id>[a-z0-9_\-]+)$",
+    path("test/rq", test_rq, name="test_rq"),
+    path(
+        "test/preview/variable/<int:variable_id>",
         variable_preview_id,
         name="variable_preview",
     ),
-    url(
-        r"^test/preview/(?P<object_type>[A-Za-z]+)/(?P<object_id>[a-z0-9_\-]+)$",
+    path(
+        "test/preview/<str:object_type>/<int:object_id>",
         test_preview,
         name="test_preview",
     ),
-    url(
-        r"^test/redirect/(?P<object_type>[A-Za-z]+)/(?P<object_id>[a-z0-9_\-]+)$",
+    path(
+        "test/redirect/<str:object_type>/<int:object_id>",
         test_redirect,
         name="test_redirect",
     ),
