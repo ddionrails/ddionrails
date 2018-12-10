@@ -4,8 +4,11 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django_rq import job
 
+from concepts.models import Concept
 from data.models import Variable
 from ddionrails.setup import setup
+from instruments.models import Question
+from publications.models import Publication
 
 
 @job
