@@ -11,7 +11,6 @@ django = "*"
 django-extensions = "*"
 django-model-utils = "*"
 django-rq = "*"
-redis = "==2.10.6"
 django-webpack-loader = "*"
 
 # Markup related libraries
