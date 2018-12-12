@@ -27,7 +27,7 @@ def invalid_basket_csv_data():
 @pytest.fixture
 def valid_user_data():
     """ A valid input for user forms and imports """
-    return dict(username="some-user", password="some-password")
+    return dict(username="some-user", password="some-password")  # noqa
 
 
 @pytest.fixture

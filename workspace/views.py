@@ -116,7 +116,7 @@ def remove_concept(request, basket_id, concept_id):
                 basket_id=basket_id, variable_id=variable.id
             )
             relation.delete()
-        except:
+        except BasketVariable.DoesNotExist:
             pass
     return redirect(request.META.get("HTTP_REFERER"))
 
