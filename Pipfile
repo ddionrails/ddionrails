@@ -1,7 +1,9 @@
 [[source]]
+
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
+
 
 [packages]
 # Django related libraries
@@ -9,7 +11,6 @@ django = "*"
 django-extensions = "*"
 django-model-utils = "*"
 django-rq = "*"
-redis = "==2.10.6" # see: https://github.com/andymccurdy/redis-py/issues/1068
 django-webpack-loader = "*"
 
 # Markup related libraries
@@ -26,12 +27,11 @@ bibtexparser = "*"
 paver = "*"
 fabric = "*"
 
-idna = "==2.7" # pin idna to 2.7 for now
 
 [dev-packages]
 # Linters and code style
 black = "*"
-"flake8" = "*"
+flake8 = "*"
 isort = "*"
 mypy = "*"
 radon = "*"
@@ -57,6 +57,7 @@ django-debug-toolbar = "*"
 django-silk = "*"
 werkzeug = "*"
 pre-commit = "*"
+
 
 [requires]
 python_version = "3.6"
