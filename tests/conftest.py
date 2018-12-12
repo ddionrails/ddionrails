@@ -24,7 +24,7 @@ def study(db):
 @pytest.fixture
 def user(db):
     """ A user in the database """
-    return UserFactory(username="some-user", password="some-password")
+    return UserFactory(username="some-user", password="some-password")  # noqa
 
 
 @pytest.fixture
