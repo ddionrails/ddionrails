@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from workspace.scripts import ScriptConfig, SoepMixin, SoepR, SoepSpss, SoepStata
 from workspace.models import BasketVariable
+from workspace.scripts import ScriptConfig, SoepMixin, SoepR, SoepSpss, SoepStata
 
 
 @pytest.fixture
@@ -34,6 +34,50 @@ def soepr(script, basket):
 @pytest.fixture
 def script_config(script, basket):
     return ScriptConfig(script, basket)
+
+
+@pytest.fixture
+def soepmixin():
+    return SoepMixin()
+
+
+@pytest.fixture
+def soepletters():
+    return [
+        "a",
+        "b",
+        "c",
+        "d",
+        "e",
+        "f",
+        "g",
+        "h",
+        "i",
+        "j",
+        "k",
+        "l",
+        "m",
+        "n",
+        "o",
+        "p",
+        "q",
+        "r",
+        "s",
+        "t",
+        "u",
+        "v",
+        "w",
+        "x",
+        "y",
+        "z",
+        "ba",
+        "bb",
+        "bc",
+        "bd",
+        "be",
+        "bf",
+        "bg",
+    ]
 
 
 class TestScriptConfig:
@@ -76,15 +120,64 @@ class TestScriptConfig:
         result = ScriptConfig._get_list_of_configs()
 
 
+testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
+
+
 class TestSoepMixin:
-    def test_soep_year_method(self):
-        pass
+    def test_soep_year_method(self, soepmixin):
+        year = 2001
+        result = soepmixin._soep_year(year)
 
-    def test_soep_letters_method(self):
-        pass
+    def test_soep_letters_method(self, soepmixin, soepletters):
+        result = soepmixin._soep_letters()
+        assert result == soepletters
 
-    def test_soep_classify_dataset_method(self):
-        pass
+    def test_soep_letters_method_page_1(self, soepmixin):
+        page = 1
+        result = soepmixin._soep_letters(page)
+        assert result == [
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+            "g",
+            "h",
+            "i",
+            "j",
+            "k",
+            "l",
+            "m",
+            "n",
+            "o",
+            "p",
+            "q",
+            "r",
+            "s",
+            "t",
+            "u",
+            "v",
+            "w",
+            "x",
+            "y",
+            "z",
+        ]
+
+    def test_soep_letters_method_page_2(self, soepmixin):
+        page = 2
+        result = soepmixin._soep_letters(page)
+        assert result == ["ba", "bb", "bc", "bd", "be", "bf", "bg"]
+
+    @pytest.mark.parametrize("input,expected", testdata_soep_classify_dataset_method)
+    def test_soep_classify_dataset_method(
+        self, mocker, soepmixin, soepletters, input, expected
+    ):
+        mocked_soep_letters = mocker.patch.object(SoepMixin, "_soep_letters")
+        mocked_soep_letters.return_value = soepletters
+        dataset_name = input
+        result = soepmixin._soep_classify_dataset(dataset_name)
+        assert result == expected
 
     def test_soep_letter_year_method(self):
         pass
