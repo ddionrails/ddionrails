@@ -77,10 +77,80 @@ class TestScriptConfig:
 
 
 class TestSoepMixin:
-    pass
+    def test_soep_year_method(self):
+        pass
+
+    def test_soep_letters_method(self):
+        pass
+
+    def test_soep_classify_dataset_method(self):
+        pass
+
+    def test_soep_letter_year_method(self):
+        pass
+
+    def test_soep_get_year_method(self):
+        pass
+
+    def test_generate_script_dict_method(self):
+        pass
+
+    def test_create_dataset_dict_method(self):
+        pass
+
+    def test_enrich_dataset_dict_method(self):
+        pass
+
+    def test_validate_datasets_method(self):
+        pass
+
+    def test_get_selected_years_method(self):
+        pass
 
 
 class TestSoepStataClass:
+    def test_init_method(self):
+        pass
+
+    def test_get_script_input_method(self):
+        pass
+
+    def test_render_disclaimer_method(self):
+        pass
+
+    def test_render_local_variables_method(self):
+        pass
+
+    def test_render_not_processed_method(self):
+        pass
+
+    def test_render_pfad_method(self):
+        pass
+
+    def test_render_balanced_method(self):
+        pass
+
+    def test_render_private_method(self):
+        pass
+
+    def test_render_sort_pfad_method(self):
+        pass
+
+    def test_render_hrf_method(self):
+        pass
+
+    def test_render_create_master_method(self):
+        pass
+
+    def test_render_read_data_method(self):
+        pass
+
+    def test_render_merge_method(self):
+        pass
+
+    def test_render_done_method(self):
+        pass
+
     def test_render_gender_method_with_male(self, soepstata, heading_stata):
         soepstata.settings["gender"] = "m"
         result = soepstata._render_gender()
@@ -104,6 +174,18 @@ class TestSoepStataClass:
 
 
 class TestSoepSpssClass:
+    def test_render_local_variables_method(self):
+        pass
+
+    def test_render_pfad_method(self):
+        pass
+
+    def test_render_balanced_method(self):
+        pass
+
+    def test_render_private_method(self):
+        pass
+
     def test_render_gender_method_with_male(self, soepspss, heading_spss_r):
         soepspss.settings["gender"] = "m"
         result = soepspss._render_gender()
