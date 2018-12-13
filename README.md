@@ -82,6 +82,12 @@ Install front-end-dependencies
 (ddionrails) $ paver setup_frontend
 ```
 
+For development: copy default secrets.json
+
+```
+(ddionrails) $ paver copy_secrets_file
+```
+
 Make migrations
 
 ```
