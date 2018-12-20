@@ -31,7 +31,6 @@ black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
-radon = "*"
 codecov = "*"
 
 # Testing
