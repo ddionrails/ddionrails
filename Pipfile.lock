@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b8b6ce7ff77053225e422a056fc19e053646191563fc6d6595556a6ee8d892c2"
+            "sha256": "1db5c133cbe34cd4fc16ba22a64aacacc59f11b06f7007ea03bc2b28f7cd27ac"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -407,13 +407,6 @@
             "index": "pypi",
             "version": "==2.0.15"
         },
-        "colorama": {
-            "hashes": [
-                "sha256:f8ac84de7840f5b9c4e3347b3c1eaa50f7e49c2b07596221daec5edaabbd7c48",
-                "sha256:05eed71e2e327246ad6b38c540c4a3117230b19679b875190486ddd2d721422d"
-            ],
-            "version": "==0.4.1"
-        },
         "coverage": {
             "hashes": [
                 "sha256:029c69deaeeeae1b15bc6c59f0ffa28aa8473721c614a23f2c2976dec245cd12",
@@ -525,13 +518,6 @@
             "index": "pypi",
             "version": "==3.6.0"
         },
-        "flake8-polyfill": {
-            "hashes": [
-                "sha256:12be6a34ee3ab795b19ca73505e7b55826d5f6ad7230d31b18e106400169b9e9",
-                "sha256:e44b087597f6da52ec6393a709e7108b2905317d0c0b744cdca6208e670d8eda"
-            ],
-            "version": "==1.0.2"
-        },
         "gprof2dot": {
             "hashes": [
                 "sha256:48c1e168c28b8a8eb23bf30fda78fe2ef218269a41505341ec27c27083e47cf4"
@@ -589,13 +575,6 @@
                 "sha256:f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"
             ],
             "version": "==2.10"
-        },
-        "mando": {
-            "hashes": [
-                "sha256:4ce09faec7e5192ffc3c57830e26acba0fd6cd11e1ee81af0d4df0657463bd1c",
-                "sha256:79feb19dc0f097daa64a1243db578e7674909b75f88ac2220f1c065c10a0d960"
-            ],
-            "version": "==0.6.4"
         },
         "markupsafe": {
             "hashes": [
@@ -815,14 +794,6 @@
             ],
             "index": "pypi",
             "version": "==4.2b4"
-        },
-        "radon": {
-            "hashes": [
-                "sha256:38e495a4aa4c1d7293d3c1733393961fb52209c9bc2d75163c3ba8124d8bbbaa",
-                "sha256:f893f2faa632a060f6d0f01843d10a0395515bde865c759c0dd3f15239caf11b"
-            ],
-            "index": "pypi",
-            "version": "==2.4.0"
         },
         "redis": {
             "hashes": [
