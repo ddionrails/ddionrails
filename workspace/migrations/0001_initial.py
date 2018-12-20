@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('label', models.CharField(blank=True, max_length=255)),
                 ('description', models.TextField(blank=True)),
                 ('security_token', models.CharField(blank=True, max_length=255)),
-                ('release', models.ForeignKey(related_name='baskets', null=True, blank=True, to='data.Release', on_delete=models.CASCADE)),
+                # ('release', models.ForeignKey(related_name='baskets', null=True, blank=True, to='data.Release', on_delete=models.CASCADE)),
                 ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='baskets', on_delete=models.CASCADE)),
             ],
             bases=(elastic.mixins.ModelMixin, models.Model),
