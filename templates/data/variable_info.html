@@ -18,6 +18,7 @@
       <b>Study:</b>
       <a href="{{ study }}">{{ study.title }}</a>
     </p>
+    {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
     <hr />
     <p>
       <b>Description:</b>
