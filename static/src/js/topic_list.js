@@ -90,6 +90,13 @@ $(function () {
             }
 
         },
+        // When tree fully loaded: if parameter 'open' is set in URL open specified node
+        init: function(event, data){
+            if(open != null) {
+                var node = $("#tree").fancytree("getNodeByKey", open);
+                node.makeVisible();
+            }
+        }
     });
 
     // Search the tree for search string
