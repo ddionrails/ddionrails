@@ -4,27 +4,12 @@ import pprint
 from django.shortcuts import HttpResponse, get_object_or_404, redirect, render
 from django.views.generic import DetailView
 
+from ddionrails.helpers import RowHelper
 from instruments.models import Question
 from workspace.models import Basket
 
 from .helpers import LabelTable
 from .models import Dataset, Variable
-
-
-class RowHelper:
-    def __init__(self, number_of_rows=4):
-        self.i = 0
-        self.n = number_of_rows
-
-    def row(self):
-        self.i += 1
-        if (self.i % self.n) == 0:
-            return True
-        else:
-            return False
-
-    def reset(self):
-        self.i = 0
 
 
 def extend_context_for_variable(request, context):
@@ -34,6 +19,8 @@ def extend_context_for_variable(request, context):
     context["label_table"] = LabelTable(context["related_variables"])
     context["questions"] = Question.objects.filter(
         questions_variables__variable=variable.id
+    ) | Question.objects.filter(
+        questions_variables__variable__target_variables__target_id=variable.id
     )
     context["study"] = study
     context["debug_string"] = pprint.pformat(variable.get_elastic(), width=120)

@@ -27,7 +27,71 @@
       <div id="menu"></div>
       <div id="chart"></div>
       <div id="chart_missings"></div>
+      {% if variable.image_url %}
+        <img src="{{ variable.image_url }}" class="img-responsive">
+      {% endif %}
+
+
+
+<div>
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+      <a href="#related_variables" aria-controls="related_variables"
+         role="tab" data-toggle="tab">
+        Related variables
+        <span class="badge">{{ variable.get_related_variables | length }}</span>
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="#origin_variables" aria-controls="origin_variables"
+         role="tab" data-toggle="tab">
+        Input variables
+        <span class="badge">{{ variable.origin_variables.count }}</span>
+      </a>
+    </li>
+    <li role="presentation">
+      <a href="#target_variables" aria-controls="target_variables"
+         role="tab" data-toggle="tab">
+        Output variables
+        <span class="badge">{{ variable.target_variables.count }}</span>
+      </a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="related_variables">
       {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="origin_variables">
+      {% for study, variable_list in variable.get_origin_variables.items %}
+        {% include "data/related_variables.html" with table_name=study.title %}
+      {% endfor %}
+    </div>
+    <div role="tabpanel" class="tab-pane" id="target_variables">
+    <div class="panel panel-default">
+      <div class="panel-body">
+      <ul>
+      {% for target in variable.target_variables.all %}
+        <li><a href="{{ target.target }}">
+        {{ target.target.title }}<br/>
+        <small>{{ target.target }}</small>
+      </a></li>
+      {% endfor %}
+      </ul>
+      </div>
+    </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+
+
       {% if variable.has_translations %}
         {% include "data/translation_table.html" %}
       {% endif %}

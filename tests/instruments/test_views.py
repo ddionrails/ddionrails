@@ -2,6 +2,7 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
+from elastic.mixins import ModelMixin
 from instruments.views import (
     InstrumentDetailView,
     InstrumentRedirectView,
@@ -11,7 +12,12 @@ from instruments.views import (
 
 @pytest.mark.django_db
 class TestInstrumentDetailView:
-    def test_detail_view_with_existing_names(self, client, instrument):
+    def test_detail_view_with_existing_names(self, mocker, client, instrument):
+
+        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
+        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
+        mocked_get_source.return_value = dict()
+
         url = reverse(
             "inst:instrument_detail",
             kwargs={
@@ -19,6 +25,7 @@ class TestInstrumentDetailView:
                 "instrument_name": instrument.name,
             },
         )
+
         response = client.get(url)
         assert response.status_code == 200
         template = "instruments/instrument_detail.html"

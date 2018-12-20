@@ -1,4 +1,4 @@
-from elastic.helpers import Hit
+from elastic.helpers import Hit, Result, parse_results, simple_search
 
 
 class TestHit:

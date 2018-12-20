@@ -1,22 +1,23 @@
 import json
-
+from pprint import pprint
 
 import pytest
-
+from django.http import JsonResponse
 from django.http.response import Http404
 from django.urls import reverse
 
 from data.models import Variable
 from data.views import (
     RowHelper,
-    # dataset_detail,
+    dataset_detail,
     dataset_redirect,
-    # extend_context_for_variable,
-    # variable_detail,
-    # variable_json,
-    # variable_preview_id,
+    extend_context_for_variable,
+    variable_detail,
+    variable_json,
+    variable_preview_id,
     variable_redirect,
 )
+from elastic.mixins import ModelMixin
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
 
@@ -46,7 +47,12 @@ class TestExtendContextForVariable:
 
 
 class TestDatasetDetailView:
-    def test_detail_view_with_existing_names(self, client, dataset):
+    def test_detail_view_with_existing_names(self, mocker, client, dataset):
+
+        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
+        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
+        mocked_get_source.return_value = dict()
+
         url = reverse(
             "data:dataset",
             kwargs={"study_name": dataset.study.name, "dataset_name": dataset.name},
@@ -102,6 +108,11 @@ class TestDatasetRedirectView:
 
 class TestVariableDetailView:
     def test_detail_view_with_existing_names(self, client, mocker, variable):
+
+        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
+        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
+        mocked_get_source.return_value = dict()
+
         url = reverse(
             "data:variable",
             kwargs={

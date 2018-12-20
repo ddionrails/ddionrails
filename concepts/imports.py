@@ -1,3 +1,5 @@
+import json
+
 from imports import imports
 
 from .forms import (
@@ -5,23 +7,68 @@ from .forms import (
     ConceptForm,
     ConceptualDatasetForm,
     PeriodForm,
+    TopicForm,
 )
+from .models import Topic
+
+
+class TopicImport(imports.CSVImport):
+    class DOR:
+        form = TopicForm
+
+    def process_element(self, element):
+        parent_name = element.get("parent_name", None)
+        if parent_name:
+            try:
+                element["parent"] = Topic.objects.get_or_create(
+                    study=self.study, name=parent_name
+                )[0].id
+            except:
+                print("Couldn't import parent for: %s" % element)
+        element["study"] = self.study.id
+        return element
+
+
+class TopicJsonImport(imports.Import):
+    def execute_import(self):
+        self.content = json.JSONDecoder(
+            # object_pairs_hook=OrderedDict
+        ).decode(self.content)
+        print(self.content)
+        self._import_topic_list()
+
+    def _import_topic_list(self):
+        study = self.study
+        body1 = dict(topic_languages=["de", "en"])
+        body2 = dict(topiclist=self.content)
+        study.set_elastic(body1, update=True)
+        study.set_topiclist(body2)
 
 
 class ConceptImport(imports.CSVImport):
-
     class DOR:
         form = ConceptForm
 
+    def import_element(self, element):
+        new_concept = super().import_element(element)
+        topic_name = element.get("topic_name", None)
+        if topic_name and new_concept:
+            try:
+                topic = Topic.objects.get(name=topic_name, study=self.study)
+                topic.concepts.add(new_concept)
+            except:
+                print(
+                    "Couldnt link concept %s to topic %s" % (new_concept.name, topic_name)
+                )
+        return new_concept
+
 
 class AnalysisUnitImport(imports.CSVImport):
-
     class DOR:
         form = AnalysisUnitForm
 
 
 class PeriodImport(imports.CSVImport):
-
     class DOR:
         form = PeriodForm
 
@@ -31,6 +78,5 @@ class PeriodImport(imports.CSVImport):
 
 
 class ConceptualDatasetImport(imports.CSVImport):
-
     class DOR:
         form = ConceptualDatasetForm
