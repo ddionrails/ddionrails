@@ -3,10 +3,10 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
-import data.views as data_views
 import instruments.views as instruments_views
 import publications.views as publications_views
 import studies.views as studies_views
+from data.views import DatasetRedirectView, VariableRedirectView
 from elastic.views import angular as angular_search
 from studies.views import StudyDetailView, study_topics, study_topics2
 
@@ -51,8 +51,8 @@ urlpatterns = [
     path("<slug:study_name>/topics2/<slug:language>", study_topics2, name="study.topics"),
     # Redirects for search interface
     path("publication/<int:id>", publications_views.PublicationRedirectView.as_view()),
-    path("variable/<int:id>", data_views.variable_redirect),
-    path("dataset/<int:id>", data_views.dataset_redirect),
+    path("variable/<int:id>", VariableRedirectView.as_view()),
+    path("dataset/<int:id>", DatasetRedirectView.as_view()),
     path(
         "instrument/<int:id>",
         instruments_views.InstrumentRedirectView.as_view(),
