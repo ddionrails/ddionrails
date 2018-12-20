@@ -1,4 +1,6 @@
 import copy
+import json
+from collections import OrderedDict
 
 from django.db import models
 from django.urls import reverse
@@ -76,6 +78,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
         max_length=255, validators=[validate_lowercase], db_index=True
     )
     label = models.CharField(max_length=255, blank=True)
+    label_de = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
     sort_id = models.IntegerField(blank=True, null=True)
 
@@ -114,8 +117,60 @@ class Question(ElasticMixin, DorMixin, models.Model):
         x = self.instrument.questions.get(sort_id=self.sort_id + 1)
         return x
 
+    def get_period(self, id=False, default=None):
+        try:
+            p = self.instrument.period
+            if id == True:
+                return p.id
+            elif id == "name":
+                return p.name
+            else:
+                return p
+        except:
+            return default
+
+    def get_related_question_set(self, all_studies=False, by_study_and_period=False):
+        concept_list = self.get_concepts()
+        if all_studies:
+            study_list = Study.objects.all()
+        else:
+            study_list = [self.instrument.study]
+        direct_questions = Question.objects.filter(
+            concepts_questions__concept_id__in=concept_list,
+            instrument__study_id__in=study_list,
+        )
+        indirect_questions = Question.objects.filter(
+            questions_variables__variable__concept__in=concept_list,
+            instrument__study_id__in=study_list,
+        )
+        combined_set = direct_questions | indirect_questions
+        if by_study_and_period:
+            result = OrderedDict()
+            for study in study_list:
+                result[study.name] = OrderedDict()
+                result[study.name]["no period"] = list()
+                for period in study.periods.order_by("name"):
+                    result[study.name][period.name] = list()
+            for question in combined_set:
+                result[question.instrument.study.name][
+                    question.get_period(id="name", default="no period")
+                ].append(question)
+            return result
+        else:
+            return combined_set
+
+    def get_concepts(self):
+        direct_concepts = Concept.objects.filter(
+            concepts_questions__question_id=self.pk
+        ).all()
+        indirect_concepts = Concept.objects.filter(
+            variables__questions_variables__question_id=self.pk
+        ).all()
+        return direct_concepts | indirect_concepts
+
     def concept_list(self):
-        return Concept.objects.filter(concepts_questions__question_id=self.pk).all()
+        """DEPRECATED NAME"""
+        self.get_concepts()
 
     def get_cs_name(self):
         x = self.get_source().get("question", "")
@@ -125,11 +180,19 @@ class Question(ElasticMixin, DorMixin, models.Model):
             return self.name
 
     def title(self):
-        if self.label is not None and self.label != "":
+        if self.label != None and self.label != "":
             return self.label
         try:
             return self.items.first().title()
-        except AttributeError:
+        except:
+            return self.name
+
+    def title_de(self):
+        if self.label_de != None and self.label_de != "":
+            return self.label
+        try:
+            return self.items.first().title_de()
+        except:
             return self.name
 
     def __str__(self):
@@ -188,6 +251,37 @@ class Question(ElasticMixin, DorMixin, models.Model):
                 items[i]["layout"] = "individual"
             before = current
         return items
+
+    def to_topic_dict(self, language="en"):
+        if language == "de":
+            title = self.label_de if self.label_de != "" else self.title()
+        else:
+            title = self.title()
+        try:
+            concept_name = self.questions_variables.first().variable.concept.name
+        except:
+            concept_name = ""
+        return dict(
+            title=title,
+            key="question_%s" % self.id,
+            name=self.name,
+            type="question",
+            concept_key="concept_%s" % concept_name,
+        )
+
+    def comparison_string(self, to_string=False):
+        cs = ["Question %s" % self.title()]
+        for item in self.get_source().get("items", []):
+            cs += [
+                "",
+                "Item: %s (scale: %s)" % (item.get("value"), item.get("scale")),
+                item.get("text", ""),
+            ]
+            cs += ["%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])]
+        if to_string:
+            return "\n".join(cs)
+        else:
+            return cs
 
 
 class QuestionVariable(models.Model):

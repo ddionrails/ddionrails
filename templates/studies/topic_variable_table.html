@@ -1,0 +1,26 @@
+<!--
+<table class="table datatable" id="variable_table">
+-->
+<h2>Variables</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Variable (label)</th>
+      <th>Variable</th>
+      <th>Dataset</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for variable in variables %}
+    <tr>
+      {% if language == "de" %}
+      <td>{{ variable.title_de }}</td>
+      {% else %}
+      <td>{{ variable.title }}</td>
+      {% endif %}
+      <td><a href="{{ variable }}">{{ variable.name }}</a></td>
+      <td><a href="{{ variable.dataset }}">{{ variable.dataset.name }}</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
