@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import path
 
 from data.views import variable_preview_id
@@ -12,7 +11,6 @@ from .views import (
     concept_by_study,
     object_redirect,
     test_preview,
-    # test_redirect,
     test_rq,
     topic_by_study,
     topic_list,
@@ -32,49 +30,29 @@ urlpatterns = [
         test_preview,
         name="test_preview",
     ),
-    # path(
-    #     "test/redirect/<str:object_type>/<int:object_id>",
-    #     test_redirect,
-    #     name="test_redirect",
-    # ),
-    #######
-    url(
-        r"^questions/compare/(?P<from_id>[0-9]+)/(?P<to_id>[0-9]+)$",
-        question_comparison_partial,
-    ),
-    url(
-        r"^test/redirect/(?P<object_type>[A-Za-z]+)/(?P<object_id>[a-z0-9_\-]+)$",
+    path("questions/compare/<int:from_id>/<int:to_id>", question_comparison_partial),
+    path(
+        "test/redirect/<str:object_type>/<str:object_id>",
         object_redirect,
         name="object_redirect",
     ),
-    url(
-        r"^topics/redirect/(?P<object_type>[A-Za-z]+)_(?P<object_id>[a-z0-9_\-]+)$",
-        object_redirect,
-        name="object_redirect",
-    ),
-    url(r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)$", topic_list),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/concept_(?P<concept_name>[a-z0-9\-_]+)$",
+    path("topics/<str:study_name>/<str:language>", topic_list),
+    path(
+        "topics/<str:study_name>/<str:language>/concept_<str:concept_name>",
         concept_by_study,
     ),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/topic_(?P<topic_name>[a-z0-9\-_]+)$",
-        topic_by_study,
-    ),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/baskets$",
-        baskets_by_study_and_user,
-    ),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/concept_(?P<concept_name>[a-z0-9\-_]+)/add_to_basket/(?P<basket_id>[a-z0-9\-_]+)$",
+    path("topics/<str:study_name>/<str:language>/topic_<str:topic_name>", topic_by_study),
+    path("topics/<str:study_name>/<str:language>/baskets", baskets_by_study_and_user),
+    path(
+        "topics/<str:study_name>/<str:language>/concept_<str:concept_name>/add_to_basket/<int:basket_id>",
         add_variables_by_concept,
     ),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/topic_(?P<topic_name>[a-z0-9\-_]+)/add_to_basket/(?P<basket_id>[a-z0-9\-_]+)$",
+    path(
+        "topics/<str:study_name>/<str:language>/topic_<str:topic_name>/add_to_basket/<int:basket_id>",
         add_variables_by_topic,
     ),
-    url(
-        r"^topics/(?P<study_name>[a-z0-9\-_]+)/(?P<language>[a-z0-9\-_]+)/variable_(?P<variable_id>[a-z0-9\-_]+)/add_to_basket/(?P<basket_id>[a-z0-9\-_]+)$",
+    path(
+        "topics/<str:study_name>/<str:language>/variable_<int:variable_id>/add_to_basket/<int:basket_id>",
         add_variable_by_id,
     ),
 ]
