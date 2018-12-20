@@ -14,12 +14,16 @@
 
 $.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
 
+// Get current URL to read 'open' Parameter for opening specified node
+var url_string = window.location.href;
+var url = new URL(url_string);
+var open = url.searchParams.get("open");
+
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
 var filter_options_string = "<span class='btn-group btn-group-sm filter-options' role='group'><button type='button' data-tooltip='tooltip' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='glyphicon glyphicon-stats' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' title='Show all related questions' onclick='filter(this, \"question\")'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" +
     "<button type='button' data-tooltip='tooltip' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
 var base_url = location.protocol + '//' + window.location.host + "/api/topics/" + study + "/" + language
-
 
 // Define what the tree structure will look like, for more information and options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
@@ -80,11 +84,19 @@ $(function () {
             if ($(node.span).find('span.filter-options').length == 0) {
                 if (node.type == 'topic' || node.type == 'concept') {
                     $spanTitle.after(filter_options_string);
+                    // $spanTitle.before(node.key)
                 }
             }
-
         },
+        // When tree fully loaded: if parameter 'open' is set in URL open specified node
+        init: function (event, data) {
+            if (open != null) {
+                var node = $("#tree").fancytree("getNodeByKey", open);
+                node.makeVisible();
+            }
+        }
     });
+
 
     // Search the tree for search string
     $('#btn-search').on('click', function () {
@@ -92,38 +104,45 @@ $(function () {
     });
 
     // Trigger search on enter
-    $('.search-bar').keypress(function(e){
-        if(e.which == 13){//Enter key pressed
+    $('.search-bar').keypress(function (e) {
+        if (e.which == 13) {//Enter key pressed
             $('#btn-search').click();
         }
     });
 
 
     // Activate tooltip for more information about filter buttons, e.g. 'Show all related variables'
-    $('body').tooltip({selector:'[data-tooltip=tooltip]', trigger: "hover"});
+    $('body').tooltip({selector: '[data-tooltip=tooltip]', trigger: "hover"});
 });
 
 
 // On click on a topic or concept show all variables oder questions
 function filter(node, type) {
-    $('#tree').find("button[class*='-btn-active']").removeClass ("variable-btn-active question-btn-active")
+
+    // show spinner while loading
+    $("#tree_variables").empty();
+    $('.spinner').show();
+    $('#tree').find("button[class*='-btn-active']").removeClass("variable-btn-active question-btn-active")
     $(node).toggleClass(type + '-btn-active')
 
     var activeNode = $.ui.fancytree.getNode(node);
 
     var extraClasses = activeNode.extraClasses || "";
     var url = base_url + "/" + activeNode.key
-    if(type == 'variable'){
+    if (type == 'variable') {
         url += '?variable_html=true';
-    } if(type == 'question'){
+    }
+    if (type == 'question') {
         url += '?question_html=true';
     }
     var data;
+
     jQuery.get(url, function (data) {
+        $('.spinner').hide(); // hide the loading message
         $("#tree_variables").html(data);
         $("#variable_table").DataTable();
     }).fail(function () {
-        // $("#tree_variables").prev('h5').text('');
+        $('.spinner').hide(); // hide the loading message
         $("#tree_variables").html("<p><span class='glyphicon glyphicon-alert' aria-hidden='true'></span> Load Error!</p>");
     });
 }
@@ -192,8 +211,8 @@ function addToBasket(el) {
 
     var url = base_url + "/baskets";
     jQuery.getJSON(url, function (data) {
-        if(data.user_logged_in) {
-            if(data.baskets.length == 0){
+        if (data.user_logged_in) {
+            if (data.baskets.length == 0) {
                 var redirect_create_basket_url = location.protocol + '//' + window.location.host + "/workspace/baskets";
                 $('#basket_list').append("<p><a class='btn btn-primary' href='" + redirect_create_basket_url + "'>Create a basket</a></p>");
             }
