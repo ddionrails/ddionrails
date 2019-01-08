@@ -806,10 +806,10 @@
         },
         "pytest-selenium": {
             "hashes": [
-                "sha256:34919635b2219cae8b2116f72c9e66121c9e4946b709158071c1148106d7f272",
-                "sha256:a3b6af86c7f9e0ec436ef6a0e5199ac7e220f57e438a5064e7d1a3a22a4547a4"
+                "sha256:0f5c63cec610bf6e0ef2b8f5095afc024d5dedb4a67af2a846c73c84654b6b2e",
+                "sha256:798684c72b6dd3c70768903813e6055938a30049de28809882428feb5db9033e"
             ],
-            "version": "==1.15.0"
+            "version": "==1.15.1"
         },
         "pytest-variables": {
             "hashes": [
