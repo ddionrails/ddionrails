@@ -4,7 +4,10 @@ cache:
   - pip
   - npm
 node_js: 10
+addons:
+  firefox: latest
 before_install:
+  - firefox -version
   - npm i -g npm@6.4.1
 install:
   - pip install pipenv
