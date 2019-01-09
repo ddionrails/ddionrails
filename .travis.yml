@@ -24,6 +24,6 @@ script:
 #  - pytest
 #  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
 #  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
-  - pytest -m "functional" tests/functional/test_browser.py::TestNavigation --driver Firefox --driver-path tests/geckodriver--cov-append
+  - pytest -m "functional" tests/functional/test_browser.py::TestNavigation --driver Firefox --driver-path tests/geckodriver --cov-append
 after_success:
   - codecov
