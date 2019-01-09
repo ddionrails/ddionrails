@@ -10,6 +10,12 @@ from tests.workspace.test_forms import valid_basket_data
 
 pytestmark = [pytest.mark.functional]
 
+# https://pytest-selenium.readthedocs.io/en/latest/user_guide.html?highlight=implicitly_wait#common-selenium-setup
+@pytest.fixture
+def selenium(selenium):
+    selenium.implicitly_wait(10)
+    return selenium
+
 
 @pytest.fixture()
 def authenticated_browser(selenium, client, live_server, known_user):
