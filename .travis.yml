@@ -7,8 +7,11 @@ node_js: 10
 addons:
   firefox: latest
 before_install:
-  - firefox -version
   - npm i -g npm@6.4.1
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+  - mkdir geckodriver
+  - tar -xzf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
+  - export PATH=$PATH:$PWD/geckodriver
 install:
   - pip install pipenv
   - pipenv install --dev
@@ -19,8 +22,9 @@ install:
 before_script:
   - sleep 10
 script:
-  - pytest
-  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
-  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
+#  - pytest
+#  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
+#  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
+  - pytest -m "functional" tests/functional/test_browser.py::TestNavigation --driver firefox --cov-append
 after_success:
   - codecov
