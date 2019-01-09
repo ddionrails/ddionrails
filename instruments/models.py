@@ -164,15 +164,16 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def get_concepts(self):
         direct_concepts = Concept.objects.filter(
             concepts_questions__question_id=self.pk
-        ).all()
+        )
         indirect_concepts = Concept.objects.filter(
             variables__questions_variables__question_id=self.pk
-        ).all()
-        return direct_concepts | indirect_concepts
+        )
+        result = direct_concepts | indirect_concepts
+        return result.distinct()
 
     def concept_list(self):
         """DEPRECATED NAME"""
-        self.get_concepts()
+        return self.get_concepts()
 
     def get_cs_name(self):
         x = self.get_source().get("question", "")

@@ -63,7 +63,7 @@ def question_detail(request, study_name, instrument_name, question_name):
         .get(name=question_name)
     )
 
-    concept_list = question.concept_list()
+    concept_list = question.get_concepts()
     try:
         related_questions = Question.objects.filter(
             items__items_variables__variable__concept_id__in=[
