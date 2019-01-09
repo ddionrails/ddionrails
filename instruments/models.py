@@ -144,6 +144,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             instrument__study_id__in=study_list,
         )
         combined_set = direct_questions | indirect_questions
+        combined_set = combined_set.distinct()
         if by_study_and_period:
             result = OrderedDict()
             for study in study_list:
