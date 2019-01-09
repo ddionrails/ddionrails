@@ -1,5 +1,6 @@
 import copy
 import json
+import textwrap
 from collections import OrderedDict
 
 from django.db import models
@@ -270,15 +271,24 @@ class Question(ElasticMixin, DorMixin, models.Model):
             concept_key="concept_%s" % concept_name,
         )
 
-    def comparison_string(self, to_string=False):
-        cs = ["Question %s" % self.title()]
+    def comparison_string(self, to_string=False, wrap=50):
+        cs = ["Question: %s" % self.title()]
         for item in self.get_source().get("items", []):
             cs += [
                 "",
-                "Item: %s (scale: %s)" % (item.get("value"), item.get("scale")),
+                "Item: %s (scale: %s)" % (item.get("item"), item.get("scale")),
                 item.get("text", ""),
             ]
             cs += ["%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])]
+        if wrap:
+            cs_temp = [ textwrap.wrap(line, wrap) for line in cs ]
+            cs = []
+            for wrap in cs_temp:
+                if wrap == []:
+                    cs.append("")
+                else:
+                    cs += wrap
+            #cs = [ line for wrap in cs2 for line in wrap ]
         if to_string:
             return "\n".join(cs)
         else:
