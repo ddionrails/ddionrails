@@ -29,6 +29,6 @@ script:
 #  - pytest
 #  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
 #  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
-  -  xvfb-run pytest -m "functional" tests/functional/test_browser.py::TestNavigation --driver Firefox --cov-append
+  - xvfb-run pytest -m "functional" tests/functional/test_browser.py::TestNavigation --driver Firefox --cov-append
 after_success:
   - codecov
