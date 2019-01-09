@@ -38,7 +38,7 @@ class TestNavigation:
         heading = selenium.find_element_by_tag_name("h1")
         assert heading.text == "Contact / feedback"
         assert "SOEP Hotline" in selenium.page_source
-        assert "Github" in selenium.page_source
+        assert "GitHub" in selenium.page_source
 
     def test_get_imprint_page_from_home(self, selenium, live_server):
         selenium.get(live_server.url)
