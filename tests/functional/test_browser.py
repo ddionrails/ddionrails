@@ -118,6 +118,11 @@ class TestNavigation:
     def test_study_page(self, selenium, live_server, study):
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
+
+        from pprint import pprint
+        print(study_nav_bar.get_attribute('outerHTML'))
+        pprint(study_nav_bar.text)
+
         assert study_nav_bar.find_element_by_link_text("Data")
         assert study_nav_bar.find_element_by_link_text("Instruments")
         assert study_nav_bar.find_element_by_link_text("Publications")
