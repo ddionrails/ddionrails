@@ -124,14 +124,9 @@ class TestNavigation:
     def test_study_page(self, selenium, live_server, study):
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-
-        from pprint import pprint
-        print(study_nav_bar.get_attribute('outerHTML'))
-        pprint(study_nav_bar.text)
-
-        assert selenium.find_element_by_xpath("//a[contains(@href,'#datasets')]")
-        assert selenium.find_element_by_xpath("//a[contains(@href,'#instruments')]")
-        assert selenium.find_element_by_xpath("//a[contains(@href,'/publ/')]")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#datasets')]")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
