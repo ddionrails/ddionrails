@@ -129,9 +129,9 @@ class TestNavigation:
         print(study_nav_bar.get_attribute('outerHTML'))
         pprint(study_nav_bar.text)
 
-        assert study_nav_bar.find_element_by_link_text("Data")
-        assert study_nav_bar.find_element_by_link_text("Instruments")
-        assert study_nav_bar.find_element_by_link_text("Publications")
+        assert selenium.find_element_by_xpath("//a[contains(@href,'#datasets')]")
+        assert selenium.find_element_by_xpath("//a[contains(@href,'#instruments')]")
+        assert selenium.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
