@@ -128,6 +128,7 @@ class TestNavigation:
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
+    @pytest.mark.skip(reason="TODO")
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
@@ -139,6 +140,7 @@ class TestNavigation:
         dataset_link = dataset_table.find_element_by_link_text(dataset.name)
         assert dataset_link
 
+    @pytest.mark.skip(reason="TODO")
     def test_study_instruments_section_link(
         self, selenium, live_server, study, instrument
     ):
