@@ -71,6 +71,9 @@
       {% endfor %}
     </div>
     <div role="tabpanel" class="tab-pane" id="target_variables">
+      {% for study, variable_list in variable.get_target_variables.items %}
+        {% include "data/related_variables.html" with table_name=study.title %}
+      {% endfor %}
     <div class="panel panel-default">
       <div class="panel-body">
       <ul>
