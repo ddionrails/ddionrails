@@ -132,7 +132,7 @@ class TestNavigation:
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        datasets_section_link = study_nav_bar.find_element_by_link_text("Data")
+        datasets_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#datasets')]")
         datasets_section_link.click()
 
         dataset_table = selenium.find_element_by_id("dataset_table_wrapper")
@@ -145,7 +145,7 @@ class TestNavigation:
         instrument.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        instruments_section_link = study_nav_bar.find_element_by_link_text("Instruments")
+        instruments_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
         instruments_section_link.click()
 
         instrument_table = selenium.find_element_by_id("instrument_table_wrapper")
