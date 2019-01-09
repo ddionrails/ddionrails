@@ -216,6 +216,40 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         """
         return self.origin_variables.count() > 0
 
+    def get_targets_by_study_and_period(self, object_type="variable"):
+        """
+        Get objects that are based on an relationship through transformations
+        in the direction to target (e.g., all wide variables, which a long
+        variable is based on).
+
+        :param object_type: type of return value
+        :type object_type: "variable" or "question"
+        :return: Nested dicts, study --> period --> list of variables/questions
+        """
+        target_variables = [x.target for x in self.target_variables.all()]
+        studies = set(
+            [target_variable.dataset.study for target_variable in target_variables]
+        )
+        result = OrderedDict()
+        for study in studies:
+            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
+            result[study.name] = OrderedDict()
+            for period in periods:
+                result[study.name][period.name] = list()
+        for target_variable in target_variables:
+            study_name = target_variable.dataset.study.name
+            period_name = target_variable.get_period(id="name", default="no period")
+            if object_type == "variable":
+                result[study_name][period_name].append(target_variable)
+            elif object_type == "question":
+                result[study_name][
+                    period_name
+                ] += target_variable.questions_variables.all()
+        return result
+
+    def get_target_variables(self):
+        return self.get_targets_by_study_and_period(object_type="variable")
+
     def get_origins_by_study_and_period(self, object_type="variable"):
         """
         Get objects that are based on an relationship through transformations
