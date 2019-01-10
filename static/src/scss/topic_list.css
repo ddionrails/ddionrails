@@ -23,25 +23,12 @@ ul.fancytree-container {
     display: block;
 }
 
-/*span.filter-options button[class*="-btn-active"] {*/
-    /*color: red;*/
-/*}*/
-
-/*li.variable-btn-active > span.fancytree-node span:nth-child(4) button.filter-option-variable {*/
-    /*color: red;*/
-/*}*/
-
-/*li.question-btn-active > span.fancytree-node span:nth-child(5) button.filter-option-variable {*/
-    /*color: red;*/
-/*}*/
-
 span.fancytree-expander:hover {
     color: steelblue !important;
 }
 
 .topic-list-wrapper {
     margin-top: 20px;
-    /*background-color: rosybrown;*/
     display: flex;
 }
 
@@ -59,7 +46,3 @@ html,
 body {
     height: 100%;
 }
-
-/*.search-bar {*/
-    /*position: fixed;*/
-/*}*/
