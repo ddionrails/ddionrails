@@ -284,12 +284,11 @@ class Question(ElasticMixin, DorMixin, models.Model):
         if wrap:
             cs_temp = [ textwrap.wrap(line, wrap) for line in cs ]
             cs = []
-            for wrap in cs_temp:
-                if wrap == []:
+            for line_list in cs_temp:
+                if line_list == []:
                     cs.append("")
                 else:
-                    cs += wrap
-            #cs = [ line for wrap in cs2 for line in wrap ]
+                    cs += line_list
         if to_string:
             return "\n".join(cs)
         else:
