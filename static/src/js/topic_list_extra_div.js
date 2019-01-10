@@ -77,9 +77,6 @@ $(function () {
         renderNode: function (event, data) {
             var node = data.node;
             var d = node.data.description || '';
-            // if ($(node.span).find('span.filter-options').length == 0) {
-            //     node.setTitle('[' + node.title + '] ' + d)
-            // };
             var $spanTitle = $(node.span).find('span.fancytree-title');
             if ($(node.span).find('span.filter-options').length == 0) {
                 if (node.type == 'topic' || node.type == 'concept') {
@@ -234,16 +231,8 @@ function addToBasketRequest(node_key, basket_id) {
     jQuery.get(url, function (data) {
     }).done(function () {
         $('#basket_success').removeClass('hidden');
-        // setTimeout(function () {
-        //     $('#basket_success').toggleClass('hidden');
-        //     $('#topic-list-add-to-basket').modal('hide');
-        // }, 5000);
     }).fail(function () {
         $('#basket_error').removeClass('hidden');
-        // setTimeout(function () {
-        //     $('#basket_error').toggleClass('hidden');
-        //     $('#topic-list-add-to-basket').modal('hide');
-        // }, 5000);
     })
 }
 
