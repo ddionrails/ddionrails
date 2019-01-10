@@ -5,6 +5,6 @@ from .models import Publication
 
 @admin.register(Publication)
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ("name", "title", "author", "study", "period")
+    list_display = ("name", "title", "author", "study", "year")
     list_per_page = 25
     search_fields = ("name", "title", "author")

@@ -13,12 +13,11 @@ class PublicationForm(forms.ModelForm):
             "sub_type",
             "title",
             "author",
-            "date",
+            "year",
             "abstract",
             "cite",
             "url",
-            "period",
-            "study",
+            "studies",
         )
 
     def __init__(self, *args, **kwargs):
