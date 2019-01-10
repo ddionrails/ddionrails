@@ -1,7 +1,6 @@
 from django.db import models
 from django.urls import reverse
 
-from concepts.models import Period
 from data.models import Dataset, Variable
 from ddionrails.helpers import render_markdown
 from ddionrails.mixins import ModelMixin as DorMixin
@@ -19,12 +18,12 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     sub_type = models.CharField(max_length=255, blank=True)
     title = models.TextField(blank=True)
     author = models.TextField(blank=True)
-    date = models.TextField(blank=True)
+    year = models.TextField(blank=True)
     abstract = models.TextField(blank=True)
     cite = models.TextField(blank=True)
     url = models.TextField(blank=True)
+    studies = models.TextField(blank=True)
 
-    period = models.ForeignKey(Period, blank=True, null=True, on_delete=models.CASCADE)
     study = models.ForeignKey(
         Study,
         blank=True,
@@ -49,20 +48,16 @@ class Publication(ElasticMixin, DorMixin, models.Model):
             study_name = self.study.name
         except:
             study_name = ""
-        try:
-            period_name = self.period.name
-        except:
-            period_name = ""
         return dict(
             name=self.name,
             sub_type=self.sub_type,
             title=self.title,
             author=self.author,
-            date=self.date,
+            year=self.year,
+            period=self.year,
             abstract=self.abstract,
             cite=self.cite,
             url=self.url,
-            period=period_name,
             study=study_name,
         )
 
