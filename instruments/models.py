@@ -1,5 +1,6 @@
 import copy
 import json
+import textwrap
 from collections import OrderedDict
 
 from django.db import models
@@ -144,6 +145,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             instrument__study_id__in=study_list,
         )
         combined_set = direct_questions | indirect_questions
+        combined_set = combined_set.distinct()
         if by_study_and_period:
             result = OrderedDict()
             for study in study_list:
@@ -162,15 +164,16 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def get_concepts(self):
         direct_concepts = Concept.objects.filter(
             concepts_questions__question_id=self.pk
-        ).all()
+        )
         indirect_concepts = Concept.objects.filter(
             variables__questions_variables__question_id=self.pk
-        ).all()
-        return direct_concepts | indirect_concepts
+        )
+        result = direct_concepts | indirect_concepts
+        return result.distinct()
 
     def concept_list(self):
         """DEPRECATED NAME"""
-        self.get_concepts()
+        return self.get_concepts()
 
     def get_cs_name(self):
         x = self.get_source().get("question", "")
@@ -269,15 +272,23 @@ class Question(ElasticMixin, DorMixin, models.Model):
             concept_key="concept_%s" % concept_name,
         )
 
-    def comparison_string(self, to_string=False):
-        cs = ["Question %s" % self.title()]
+    def comparison_string(self, to_string=False, wrap=50):
+        cs = ["Question: %s" % self.title()]
         for item in self.get_source().get("items", []):
             cs += [
                 "",
-                "Item: %s (scale: %s)" % (item.get("value"), item.get("scale")),
+                "Item: %s (scale: %s)" % (item.get("item"), item.get("scale")),
                 item.get("text", ""),
             ]
             cs += ["%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])]
+        if wrap:
+            cs_temp = [ textwrap.wrap(line, wrap) for line in cs ]
+            cs = []
+            for line_list in cs_temp:
+                if line_list == []:
+                    cs.append("")
+                else:
+                    cs += line_list
         if to_string:
             return "\n".join(cs)
         else:

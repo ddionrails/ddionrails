@@ -38,9 +38,6 @@ $(function () {
             mode: "hide"  // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
         },
         icon: function (event, data) {
-            // if (data.node.isExpanded() && data.typeInfo == 'topic'){
-            //     return 'folderOpen'
-            // }
             return data.typeInfo.icon;
         },
         glyph: {
@@ -133,7 +130,6 @@ function filter(node, type) {
     jQuery.getJSON(url, function (json) {
         data = json;
         if (activeNode.hasChildren() && !$(activeNode.li).hasClass(type + '-btn-active')) {
-            // console.log("Hat Kinder und nicht aktiv")
             removeAllChildren(activeNode, type);
             if (type == 'variable') {
                 for (var i = 0; i < data.variable_list.length; i++) {
@@ -164,7 +160,6 @@ function filter(node, type) {
             activeNode.setExpanded(true);
         }
         else if (activeNode.hasChildren() && $(activeNode.li).hasClass(type + '-btn-active')) {
-            // console.log("Hat Kinder und aktiv")
             removeAllChildren(activeNode, type);
             $(activeNode.li).removeClass(type + '-btn-active')
             activeNode.visit(function (node) {
@@ -174,7 +169,6 @@ function filter(node, type) {
             }, true);
         }
         else if (!activeNode.hasChildren() && !$(activeNode.li).hasClass(type + '-btn-active')) {
-            // console.log("Hat keine Kinder und nicht aktiv")
             if (type == 'variable') {
                 for (var i = 0; i < data.variable_list.length; i++) {
                     var concept_key = data.variable_list[i].concept_key.toString();
@@ -206,7 +200,6 @@ function filter(node, type) {
             activeNode.setExpanded(true);
         }
         else if (!activeNode.hasChildren() && $(activeNode).hasClass(type + '-btn-active')) {
-            // console.log("Hat keine Kinder und aktiv")
             removeAllChildren(activeNode, type);
             $(activeNode).removeClass(type + '-btn-active')
         }
@@ -301,16 +294,8 @@ function addToBasketRequest(node_key, basket_id) {
     jQuery.get(url, function (data) {
     }).done(function () {
         $('#basket_success').removeClass('hidden');
-        // setTimeout(function () {
-        //     $('#basket_success').toggleClass('hidden');
-        //     $('#topic-list-add-to-basket').modal('hide');
-        // }, 5000);
     }).fail(function () {
         $('#basket_error').removeClass('hidden');
-        // setTimeout(function () {
-        //     $('#basket_error').toggleClass('hidden');
-        //     $('#topic-list-add-to-basket').modal('hide');
-        // }, 5000);
     })
 }
 

@@ -55,29 +55,5 @@
       <li><a href="{{ question }}">{{ question.title }}</a></li>
     {% endfor %}
     </ul>
-    {% if variable.origin_variables.count > 0 %}
-      <hr/>
-      <p><b>Transformations: origin variabels</b></p>
-      <ul>
-      {% for origin in variable.origin_variables.all %}
-        <li><a href="{{ origin.origin }}">
-          {{ origin.origin.title }}<br/>
-          <small>{{ origin.origin }}</small>
-        </a></li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-    {% if variable.target_variables.count > 0 %}
-      <hr/>
-      <p><b>Transformations: target variabels</b></p>
-      <ul>
-      {% for target in variable.target_variables.all %}
-        <li><a href="{{ target.target }}">
-          {{ target.target.title }}<br/>
-          <small>{{ target.target }}</small>
-        </a></li>
-      {% endfor %}
-      </ul>
-    {% endif %}
   </div>
 </div>
