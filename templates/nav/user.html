@@ -3,5 +3,5 @@
 <a class="btn btn-default" href="/workspace/account/">My account</a>
 <a class="btn btn-default" href="/workspace/logout/">Logout</a>
 {% else %}
-<a class="btn btn-default" href="/workspace/login/">Register / log in</a> 
+<a class="btn btn-default" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a> 
 {% endif %}
