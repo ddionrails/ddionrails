@@ -79,7 +79,7 @@ class TestScriptModel:
     @pytest.mark.skip(reason="no way of currently testing this")
     def test_get_config_method(self, mocker, script):
         mocked_get_config = mocker.patch.object(ScriptConfig, "get_config")
-        # mocked_get_config.return_value = dict(key="value")
+        mocked_get_config.return_value = dict(key="value")
         result = script.get_config()
         assert result
 
