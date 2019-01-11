@@ -121,8 +121,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return self.category_list_cache
 
     def get_name_cs(self):
+        """Get the case sensitive version of the variable name, if available"""
         try:
-            name_cs = self.get_source.get("name_cs")
+            name_cs = self.get_source["name_cs"]
         except:
             name_cs = self.name
         return name_cs
