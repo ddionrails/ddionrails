@@ -3,7 +3,7 @@ import logging
 import django_rq.queues
 from fakeredis import FakeRedis, FakeStrictRedis
 
-from .base import * # noqa
+from .base import *
 
 DEBUG = False
 TEMPLATE_DEBUG = False

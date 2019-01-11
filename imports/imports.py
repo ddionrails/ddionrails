@@ -22,13 +22,6 @@ class Import:
         self.filename = filename
         self.basename = os.path.basename(self.filename)
         self.name = os.path.splitext(self.basename)[0]
-        self.content = None
-
-    class DOR:
-        form = None
-
-    def execute_import(self):
-        raise NotImplementedError
 
     @classmethod
     @transaction.atomic
@@ -69,11 +62,6 @@ class JekyllImport(Import):
         [Markdown](http://daringfireball.net/projects/markdown/).
     """
 
-    def __init__(self, filename, study=None, system=None):
-        super().__init__(filename, study, system)
-        self.data = None
-        self.yaml_content = None
-
     def read_file(self):
         with open(self.file_path(), "r") as f:
             lines = f.read().splitlines()
@@ -85,7 +73,7 @@ class JekyllImport(Import):
         if line == "---":
             while lines:
                 line = lines.pop(0)
-                if line in "---":
+                if line in ("---"):
                     break
                 yaml_lines.append(line)
         else:

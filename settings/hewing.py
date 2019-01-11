@@ -1,4 +1,4 @@
-from .base import * # noqa
+from .base import *
 
 WSGI_APPLICATION = "ddionrails.wsgi_hewing.application"
 

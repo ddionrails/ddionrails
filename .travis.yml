@@ -4,31 +4,14 @@ cache:
   - pip
   - npm
 node_js: 10
-env:
-  global:
-  - DISPLAY=:99.0
-  - GECKODRIVER_VERSION=0.23.0
-addons:
-  firefox: latest
 before_install:
   - npm i -g npm@6.4.1
-  - curl -L -o /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
-  - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
-  - export PATH=$HOME/geckodriver:$PATH
-  - geckodriver --version
 install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
-  - pipenv run paver install_elastic
-  - db/elasticsearch/bin/elasticsearch -d
   - pipenv run paver setup_frontend
-before_script:
-  - sleep 10
 script:
   - pytest
-  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
-  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
-  - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
 after_success:
   - codecov

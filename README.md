@@ -1,7 +1,7 @@
 # DDI on Rails – version 2
 
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-360/)
-[![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.5/)
+[![Django version][django-badge]](https://docs.djangoproject.com/en/2.1/releases/2.1.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
@@ -67,7 +67,7 @@ Verify e.g. Django is installed
 
 ```
 (ddionrails) $ django-admin --version
-2.1.5
+2.1.4
 ```
 
 Install Elasticsearch
@@ -131,7 +131,7 @@ This project is licensed under the GNU AGPLv3 License - see the [LICENSE.md](htt
 <!-- Markdown link & img dfn's -->
 
 [python-badge]: https://img.shields.io/badge/Python-3.6-blue.svg
-[django-badge]: https://img.shields.io/badge/Django-2.1.5-blue.svg
+[django-badge]: https://img.shields.io/badge/Django-2.1.4-blue.svg
 [license-badge]: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
 [reposize-badge]: https://img.shields.io/github/repo-size/badges/shields.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
