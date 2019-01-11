@@ -1,7 +1,19 @@
 from django import forms
 
-from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
 from ddionrails.helpers import lower_dict_names
+
+
+class TopicForm(forms.ModelForm):
+    class Meta:
+        model = Topic
+        fields = Topic.DOR.io_fields
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        lower_dict_names(self.data)
+        if "name" not in self.data.keys():
+            self.data["name"] = self.data.get("topic_name")
 
 
 class ConceptForm(forms.ModelForm):
@@ -26,7 +38,8 @@ class PeriodForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         lower_dict_names(self.data)
-        self.data["name"] = self.data.get("period_name")
+        if "name" not in self.data.keys():
+            self.data["name"] = self.data.get("period_name")
 
 
 class AnalysisUnitForm(forms.ModelForm):
