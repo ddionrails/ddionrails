@@ -51,7 +51,7 @@ def jekyll_reader(text):
     if line == "---":
         while lines:
             line = lines.pop(0)
-            if line in "---":
+            if line in ("---"):
                 break
             yaml_lines.append(line)
     else:
