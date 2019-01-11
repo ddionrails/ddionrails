@@ -384,9 +384,9 @@ class SoepStata(ScriptConfig, SoepMixin):
 
     def _render_gender(self):
         heading = "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n"
-        if self.settings["gender"] == "m":
+        if self.settings.get("gender", "b") == "m":
             return heading + "\nkeep if (sex == 1)"
-        elif self.settings["gender"] == "f":
+        elif self.settings.get("gender", "b") == "f":
             return heading + "\nkeep if (sex == 2)"
         else:
             return heading + "\n/* all genders */"
@@ -516,9 +516,9 @@ class SoepSpss(SoepStata):
 
     def _render_gender(self):
         heading = "\n* ### GENDER ( male = 1 / female = 2) ### *.\n"
-        if self.settings["gender"] == "m":
+        if self.settings.get("gender", "b") == "m":
             return heading + "\nselect if (sex == 1)."
-        elif self.settings["gender"] == "f":
+        elif self.settings.get("gender", "b") == "f":
             return heading + "\nselect if (sex == 2)."
         else:
             return heading + "\n* all genders *."
@@ -653,9 +653,9 @@ class SoepR(SoepStata):
 
     def _render_gender(self):
         heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
-        if self.settings["gender"] == "m":
+        if self.settings.get("gender", "b") == "m":
             return heading + "\npfad <- pfad[pfad$sex==1,]"
-        elif self.settings["gender"] == "f":
+        elif self.settings.get("gender", "b") == "f":
             return heading + "\npfad <- pfad[pfad$sex==2,]"
         else:
             return heading + "\n# all genders"
