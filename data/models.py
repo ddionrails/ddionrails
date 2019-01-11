@@ -120,6 +120,13 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             self.category_list_cache = self._construct_categories()
         return self.category_list_cache
 
+    def get_name_cs(self):
+        try:
+            name_cs = self.get_source.get("name_cs")
+        except:
+            name_cs = self.name
+        return name_cs
+
     def _construct_categories(self):
         try:
             c = self.get_source().get("uni", None)
