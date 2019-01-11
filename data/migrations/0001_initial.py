@@ -29,18 +29,18 @@ class Migration(migrations.Migration):
             ],
             bases=(elastic.mixins.ModelMixin, ddionrails.mixins.ModelMixin, models.Model),
         ),
-        migrations.CreateModel(
-            name='Release',
-            fields=[
-                ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
-                ('name', models.CharField(validators=[ddionrails.validators.validate_lowercase], max_length=255)),
-                ('label', models.CharField(blank=True, max_length=255)),
-                ('description', models.TextField(blank=True)),
-                ('active', models.BooleanField(default=False)),
-                ('study', models.ForeignKey(related_name='releases', null=True, blank=True, to='studies.Study', on_delete=models.CASCADE)),
-            ],
-            bases=(elastic.mixins.ModelMixin, ddionrails.mixins.ModelMixin, models.Model),
-        ),
+        # migrations.CreateModel(
+        #     name='Release',
+        #     fields=[
+        #         ('id', models.AutoField(serialize=False, verbose_name='ID', primary_key=True, auto_created=True)),
+        #         ('name', models.CharField(validators=[ddionrails.validators.validate_lowercase], max_length=255)),
+        #         ('label', models.CharField(blank=True, max_length=255)),
+        #         ('description', models.TextField(blank=True)),
+        #         ('active', models.BooleanField(default=False)),
+        #         ('study', models.ForeignKey(related_name='releases', null=True, blank=True, to='studies.Study', on_delete=models.CASCADE)),
+        #     ],
+        #     bases=(elastic.mixins.ModelMixin, ddionrails.mixins.ModelMixin, models.Model),
+        # ),
         migrations.CreateModel(
             name='Variable',
             fields=[
@@ -59,10 +59,10 @@ class Migration(migrations.Migration):
             name='variable',
             unique_together=set([('name', 'dataset')]),
         ),
-        migrations.AlterUniqueTogether(
-            name='release',
-            unique_together=set([('study', 'name')]),
-        ),
+        # migrations.AlterUniqueTogether(
+        #     name='release',
+        #     unique_together=set([('study', 'name')]),
+        # ),
         migrations.AlterUniqueTogether(
             name='dataset',
             unique_together=set([('study', 'name')]),

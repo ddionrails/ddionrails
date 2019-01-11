@@ -101,6 +101,9 @@ class Basket(ElasticMixin, models.Model):
             writer.writerow(row)
         return output.getvalue()
 
+    def to_dict(self):
+        return dict(name=self.name, label=self.label, id=self.id)
+
 
 class BasketVariable(models.Model):
     basket = models.ForeignKey(

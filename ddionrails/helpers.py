@@ -16,8 +16,8 @@ def render_markdown(text):
     """
     text = escape(text)
     text = markdown(text, extensions=["markdown.extensions.tables"])
-    text = text.replace("<table>", "<table class=\"table\">")
-    return(text)
+    text = text.replace("<table>", '<table class="table">')
+    return text
 
 
 def script_list(script):
@@ -57,8 +57,21 @@ def jekyll_reader(text):
     else:
         lines.insert(0, line)
     yaml_content = "\n".join(yaml_lines)
-    return dict(
-        content="\n".join(lines),
-        yaml_content=yaml_content,
-        data=yaml.safe_load(yaml_content),
-    )
+    return dict(content="\n".join(lines), yaml_content=yaml_content, data=yaml.safe_load(yaml_content))
+
+
+class RowHelper:
+    def __init__(self, number_of_rows=4):
+        self.i = 0
+        self.n = number_of_rows
+
+    def row(self):
+        self.i += 1
+        if (self.i % self.n) == 0:
+            return True
+        else:
+            return False
+
+    def reset(self):
+        self.i = 0
+        return ""

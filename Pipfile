@@ -20,9 +20,6 @@ markdown = "*"
 # Elasticsearch
 elasticsearch-dsl = "==2.2.0"
 
-# Needed for Publications
-bibtexparser = "*"
-
 # Project scripting
 paver = "*"
 fabric = "*"
@@ -34,7 +31,6 @@ black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
-radon = "*"
 codecov = "*"
 
 # Testing

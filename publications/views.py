@@ -40,6 +40,26 @@ class PublicationDetailView(DetailView):
         return context
 
 
+def publication_detail(request, study_name, publication_name):
+    publication = Publication.objects.filter(study__name=study_name).get(
+        name=publication_name
+    )
+    context = dict(
+        publication=publication,
+        debug_string="Dict:\n%s\nElastic\n%s"
+        % (
+            pprint.pformat(publication.__dict__, width=120),
+            pprint.pformat(publication.get_source()),
+        ),
+        study=publication.study,
+    )
+    return render(request, "publications/publication_detail.html", context=context)
+
+
 def study_publication_list(request, study_name):
-    context = dict(study=Study.objects.get(name=study_name))
+    study = Study.objects.get(name=study_name)
+    context = dict(
+        study=study,
+        # publications=study.publications.all(),
+    )
     return render(request, "publications/study_publication_list.html", context=context)

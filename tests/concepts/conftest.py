@@ -9,14 +9,6 @@ from .factories import (
 
 
 @pytest.fixture
-def concept(db):
-    """ A concept in the database """
-    return ConceptFactory(
-        name="some-concept", label="Some Concept", description="This is some concept"
-    )
-
-
-@pytest.fixture
 def concept_without_label(db):
     """ A concept without label in the database """
     return ConceptFactory(name="some-concept", description="This is some concept")
