@@ -24,7 +24,7 @@ class TestPageViews:
         content = str(response.content)
         assert "Contact / feedback" in content
         assert "SOEP Hotline" in content
-        assert "Github" in content
+        assert "GitHub" in content
 
     def test_home_page(self, rf, db):
         url = reverse("homepage")
