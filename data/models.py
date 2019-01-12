@@ -86,7 +86,6 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     period = models.ForeignKey(
         Period, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
     )
-    image_url = models.TextField(blank=True)
 
     DOC_TYPE = "variable"
 
@@ -172,10 +171,8 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             p1 = self.dataset.period
             p2 = self.period
             p = p2 if p2 else p1
-            if id == True:
+            if id:
                 return p.id
-            elif id == "name":
-                return p.name
             else:
                 return p
         except:
@@ -207,85 +204,6 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             except:
                 results["none"].append(variable)
         return OrderedDict(sorted(results.items()))
-
-    def has_origin_variables(self):
-        """
-        TEMPORARY / DEPRECATED
-
-        Find a better solution, when to show origin variables…
-        """
-        return self.origin_variables.count() > 0
-
-    def get_targets_by_study_and_period(self, object_type="variable"):
-        """
-        Get objects that are based on an relationship through transformations
-        in the direction to target (e.g., all wide variables, which a long
-        variable is based on).
-
-        :param object_type: type of return value
-        :type object_type: "variable" or "question"
-        :return: Nested dicts, study --> period --> list of variables/questions
-        """
-        target_variables = [x.target for x in self.target_variables.all()]
-        studies = set(
-            [target_variable.dataset.study for target_variable in target_variables]
-        )
-        result = OrderedDict()
-        for study in studies:
-            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
-            result[study.name] = OrderedDict()
-            for period in periods:
-                result[study.name][period.name] = list()
-        for target_variable in target_variables:
-            study_name = target_variable.dataset.study.name
-            period_name = target_variable.get_period(id="name", default="no period")
-            if object_type == "variable":
-                result[study_name][period_name].append(target_variable)
-            elif object_type == "question":
-                result[study_name][
-                    period_name
-                ] += target_variable.questions_variables.all()
-        return result
-
-    def get_target_variables(self):
-        return self.get_targets_by_study_and_period(object_type="variable")
-
-    def get_origins_by_study_and_period(self, object_type="variable"):
-        """
-        Get objects that are based on an relationship through transformations
-        in the direction to origin (e.g., all wide variables, which a long
-        variable is based on).
-
-        :param object_type: type of return value
-        :type object_type: "variable" or "question"
-        :return: Nested dicts, study --> period --> list of variables/questions
-        """
-        origin_variables = [x.origin for x in self.origin_variables.all()]
-        studies = set(
-            [origin_variable.dataset.study for origin_variable in origin_variables]
-        )
-        result = OrderedDict()
-        for study in studies:
-            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
-            result[study.name] = OrderedDict()
-            for period in periods:
-                result[study.name][period.name] = list()
-        for origin_variable in origin_variables:
-            study_name = origin_variable.dataset.study.name
-            period_name = origin_variable.get_period(id="name", default="no period")
-            if object_type == "variable":
-                result[study_name][period_name].append(origin_variable)
-            elif object_type == "question":
-                result[study_name][
-                    period_name
-                ] += origin_variable.questions_variables.all()
-        return result
-
-    def get_origin_variables(self):
-        return self.get_origins_by_study_and_period(object_type="variable")
-
-    def get_origin_questions(self):
-        return self.get_origins_by_study_and_period(object_type="question")
 
     def has_translations(self):
         return len(self.translation_languages()) > 0
@@ -353,33 +271,8 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def title(self):
         return self.label if self.label != "" else self.name
 
-    def title_de(self):
-        if self.label_de != "" and self.label_de is not None:
-            return self.label_de
-        else:
-            return self.title()
-
     def to_dict(self):
-        return dict(
-            id=self.id,
-            name=self.name,
-            label=self.label,
-            label_de=self.label_de,
-            concept_id=self.concept_id,
-        )
-
-    def to_topic_dict(self, language="en"):
-        if language == "de":
-            title = self.label_de if self.label_de != "" else self.title()
-        else:
-            title = self.title()
-        return dict(
-            key="variable_%s" % self.id,
-            name=self.name,
-            title=title,
-            concept_key="concept_%s" % self.concept.name,
-            type="variable",
-        )
+        return dict(name=self.name, label=self.label)
 
     @classmethod
     def index_prefetch(self, queryset):

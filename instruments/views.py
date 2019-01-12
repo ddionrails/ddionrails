@@ -1,13 +1,10 @@
-import difflib
 import pprint
 
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
 from data.models import Variable
-from ddionrails.helpers import RowHelper
 from studies.models import Study
 
 from .models import Instrument, Question
@@ -63,7 +60,7 @@ def question_detail(request, study_name, instrument_name, question_name):
         .get(name=question_name)
     )
 
-    concept_list = question.get_concepts()
+    concept_list = question.concept_list()
     try:
         related_questions = Question.objects.filter(
             items__items_variables__variable__concept_id__in=[
@@ -78,22 +75,6 @@ def question_detail(request, study_name, instrument_name, question_name):
         concept_list=concept_list,
         related_questions=related_questions,
         variables=Variable.objects.filter(questions_variables__question=question.id),
-        related_questions2=question.get_related_question_set(by_study_and_period=True)[
-            question.instrument.study.name
-        ],
-        row_helper=RowHelper(),
         debug_string=pprint.pformat(question.get_elastic(), width=120),
     )
     return render(request, "questions/question_detail.html", context=context)
-
-
-def question_comparison_partial(request, from_id, to_id):
-    from_question = Question.objects.get(pk=from_id)
-    to_question = Question.objects.get(pk=to_id)
-    diff_text = difflib.HtmlDiff().make_file(
-        from_question.comparison_string(),
-        to_question.comparison_string(),
-        fromdesc=from_question.name,
-        todesc=to_question.name,
-    )
-    return HttpResponse(diff_text)

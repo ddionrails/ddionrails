@@ -103,7 +103,6 @@ class VariableImport(imports.CSVImport):
             variable.concept = concept
         variable.description = element.get("description", "")
         variable.description_long = element.get("description_long", "")
-        variable.image_url = element.get("image_url", "")
         variable.save()
 
 

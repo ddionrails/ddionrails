@@ -1,18 +1,5 @@
 {% extends "base_study.html" %}
 
-{% block scripts %}
-<script>
-$(function(){
-    $(".compare-btn").click(function(){
-        var from_id = $( this ).attr("from_id");
-        var to_id = $( this ).attr("to_id");
-        console.log("Compare question " + from_id + " to question " + to_id + ".")
-        $("#question_comparison").load("/api/questions/compare/" + from_id + "/" +  to_id);
-    });
-})
-</script>
-{% endblock %}
-
 {% block content %}
 
 
@@ -41,7 +28,6 @@ $(function(){
       </div>
     </div>
     {% endfor %}
-  {% include "questions/related_questions.html" with question_list=related_questions2 table_name="Related questions" %}
   </div>
 
   <div class="col-md-3">
@@ -83,8 +69,6 @@ $(function(){
     </div>
   </div>
 </div>
-
-
 
 
 {% endblock content %}

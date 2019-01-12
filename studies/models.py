@@ -12,14 +12,6 @@ from ddionrails.mixins import ModelMixin as DorMixin
 from elastic.mixins import ModelMixin as ElasticMixin
 
 
-class TopicList(ElasticMixin):
-
-    DOC_TYPE = "topiclist"
-
-    def __init__(self, study):
-        self.id = study.id
-
-
 class Study(ElasticMixin, DorMixin, models.Model):
     """
     Stores a single study,
@@ -94,23 +86,6 @@ class Study(ElasticMixin, DorMixin, models.Model):
                 return json.loads(self.config)
             except JSONDecodeError:
                 return []
-
-    def set_topiclist(self, body):
-        t = TopicList(self)
-        t.set_elastic(body)
-
-    def get_topic_languages(self):
-        return self.get_source().get("topic_languages", [])
-
-    def has_topics(self):
-        return len(self.get_topic_languages()) > 0
-
-    def get_topiclist(self, language="en"):
-        t = TopicList(self)
-        all_lists = t.get_source().get("topiclist")
-        for topiclist in all_lists:
-            if topiclist.get("language", "") == language:
-                return topiclist.get("topics")
 
 
 def context(request):

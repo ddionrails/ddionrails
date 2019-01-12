@@ -1,72 +1,20 @@
 {% extends "base_study.html" %}
 
-{% block styles %}
-<!-- TODO: Load Topic CSS from webpack here -->
-{% endblock styles %}
-
-{% block scripts %}
-<!-- TODO: Load Topic JS from webpack here -->
-<!-- TODO: Load jquery-fancytree from webpack here -->
-
-<script>
-    var study = '{{study.name}}';
-    var language = '{{language}}';
-</script>
-<script src="./../../static/src/js/topic_list.js"></script>
-{% endblock scripts %}
-
 {% block content %}
 
-<h2><span class="small glyphicon glyphicon-folder-close"></span> Topics</h2>
-<div class="conainer test">
-    <a class="anchor" id="topics"></a>
-    <div class="row">
-        <div class="col-md-offset-8 col-md-4 col-xs-8 col-xs-offset-4 search-bar">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search node .." id="search">
-                <span class="input-group-btn">
-		<button class="btn btn-default" type="button" aria-pressed="true" id="btn-search"><span
-                class='glyphicon glyphicon-search'
-                aria-hidden='true'></span></button>
-	</span>
-            </div>
-        </div>
+  <h2>Topics</h2>
+  <a class="anchor" id="topics"></a>
+  {% for topic in topics %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <a data-toggle="collapse" href="#topic_{{ topic.name }}" aria-expand="true" aria-controlls="topic_{{ topic.name }}">
+          {{ topic.label }}
+        </a>
+      </div>
+      <div class="panel-body panel-collapse collapse" id="topic_{{ topic.name }}">
+        {{ topic.content | safe }}
+      </div>
     </div>
-    <div class="row topic-list-wrapper">
-        <div class="col-md-12 col-xs-12">
-            <div class="topic-list-content">
-                <div id="tree"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="topic-list-add-to-basket">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Add to basket</h4>
-            </div>
-            <div class="modal-body">
-                <div class="alert alert-success hidden" role="alert" id="basket_success">
-                    <strong>Successfully </strong>added to basket.
-                </div>
-                <div class="alert alert-danger hidden" role="alert" id="basket_error">
-                    <strong>An error occured. </strong>Please try again later.
-                </div>
-                <p>Do you really want to add <span id="number_of_variables"></span> element(s) to your basket?</p>
-                <p>Select a basket:</p>
-                <div id="basket_list"></div>
-            </div>
-            <!--<div class="modal-footer">-->
-            <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-            <!--<a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}"  type="button" class="btn btn-primary">Add to basket</a>-->
-            <!--</div>-->
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+  {% endfor %}
 
 {% endblock content %}
