@@ -293,7 +293,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def translation_languages(self):
         if not hasattr(self, "languages"):
             keys = list(self.get_source().keys())
-            self.languages = [x.replace("label_", "") for x in keys if ("label_" in x)]
+            self.languages = [x.replace("label_", "") for x in keys if "label_" in x]
         return self.languages
 
     def translate_item(self, language):
