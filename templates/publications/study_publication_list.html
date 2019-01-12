@@ -3,8 +3,4 @@
 {% block content %}
   <h1>Publications</h1>
   <app-root type="publication" study="{{ study.name }}">Loading...</app-root>
-  {% if publications %}
-    <h2>Table</h2>
-    {% include "publications/publication_table.html" %}
-  {% endif %}
 {% endblock content %}

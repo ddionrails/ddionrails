@@ -13,20 +13,20 @@ class UserCreationForm(UCF):
     class Meta:
 
         model = User
-        fields = ("username", "email")
+        fields = ["username", "email"]
 
 
 class UserForm(forms.ModelForm):
     class Meta:
 
         model = User
-        fields = ("username", "email", "password")
+        fields = ["username", "email", "password"]
 
 
 class BasketForm(forms.ModelForm):
     class Meta:
         model = Basket
-        fields = ("name", "label", "description", "security_token", "study", "user")
+        fields = ["name", "label", "description", "security_token", "study", "user"]
 
 
 class BasketCSVForm(BasketForm):
@@ -46,7 +46,7 @@ class BasketCSVForm(BasketForm):
 class BasketVariableForm(forms.ModelForm):
     class Meta:
         model = BasketVariable
-        fields = ("basket", "variable")
+        fields = ["basket", "variable"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

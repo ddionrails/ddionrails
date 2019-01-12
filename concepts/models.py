@@ -7,31 +7,6 @@ from elastic.mixins import ModelMixin as ElasticMixin
 from studies.models import Study
 
 
-class Topic(models.Model, ModelMixin, ElasticMixin):
-
-    name = models.CharField(max_length=255, validators=[validate_lowercase], unique=True)
-    label = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    study = models.ForeignKey(Study, on_delete=models.CASCADE)
-    parent = models.ForeignKey(
-        "self", related_name="children", null=True, blank=True, on_delete=models.CASCADE
-    )
-
-    class Meta:
-        unique_together = ("study", "name")
-
-    class DOR:
-        id_fields = ["study", "name"]
-        io_fields = ["study", "name", "label", "description", "parent"]
-
-    @classmethod
-    def get_children(cls, topic_id):
-        children = list(cls.objects.filter(parent_id=topic_id).all())
-        for child in children:
-            children += list(cls.get_children(child.id))
-        return children
-
-
 class Concept(models.Model, ModelMixin, ElasticMixin):
     """
     Stores a single concept,
@@ -52,7 +27,6 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
     description = models.TextField(
         blank=True, help_text="Description of the concept using Markdown."
     )
-    topics = models.ManyToManyField(Topic, related_name="concepts")
 
     DOC_TYPE = "concept"
 

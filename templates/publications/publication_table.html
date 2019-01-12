@@ -8,7 +8,7 @@
   <tbody>
     {% for publication in publications %}
     <tr>
-      <td><a href="{{ publication }}">{{ publication.title }}</a></td>
+      <td><a href="{{ publication }}">{{ publication.label }}</a></td>
       <td>{{ publication.name }}</td>
     </tr>
     {% endfor %}

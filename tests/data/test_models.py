@@ -1,5 +1,4 @@
 import pytest
-
 from data.models import Variable
 
 pytestmark = [pytest.mark.data, pytest.mark.models]

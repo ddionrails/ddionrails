@@ -3,4 +3,7 @@
 {% block content %}
   <h1>Publications</h1>
   <app-root type="publication">Loading...</app-root>
+  {% for publication in publication_list %}
+    {% include "publications/publication_result.html" %}
+  {% endfor %}
 {% endblock content %}

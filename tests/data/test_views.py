@@ -1,12 +1,22 @@
 import json
 
+
 import pytest
+
 from django.http.response import Http404
 from django.urls import reverse
 
 from data.models import Variable
-from data.views import DatasetRedirectView, RowHelper, VariableRedirectView
-from elastic.mixins import ModelMixin
+from data.views import (
+    RowHelper,
+    # dataset_detail,
+    dataset_redirect,
+    # extend_context_for_variable,
+    # variable_detail,
+    # variable_json,
+    # variable_preview_id,
+    variable_redirect,
+)
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
 
@@ -36,12 +46,7 @@ class TestExtendContextForVariable:
 
 
 class TestDatasetDetailView:
-    def test_detail_view_with_existing_names(self, mocker, client, dataset):
-
-        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
-
+    def test_detail_view_with_existing_names(self, client, dataset):
         url = reverse(
             "data:dataset",
             kwargs={"study_name": dataset.study.name, "dataset_name": dataset.name},
@@ -85,23 +90,18 @@ class TestDatasetDetailView:
 class TestDatasetRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, dataset):
         request = rf.get("dataset", kwargs={"pk": dataset.pk})
-        response = DatasetRedirectView.as_view()(request, id=dataset.pk)
+        response = dataset_redirect(request, id=dataset.pk)
         assert response.status_code == 302
 
     def test_redirect_view_with_invalid_pk(self, rf, dataset):
         invalid_dataset_id = 999
         request = rf.get("study", kwargs={"pk": invalid_dataset_id})
         with pytest.raises(Http404):
-            DatasetRedirectView.as_view()(request, id=invalid_dataset_id)
+            dataset_redirect(request, id=invalid_dataset_id)
 
 
 class TestVariableDetailView:
     def test_detail_view_with_existing_names(self, client, mocker, variable):
-
-        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
-
         url = reverse(
             "data:variable",
             kwargs={
@@ -188,11 +188,11 @@ class TestVariablePreviewIdView:
 class TestVariableRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, variable):
         request = rf.get("variable", kwargs={"pk": variable.pk})
-        response = VariableRedirectView.as_view()(request, id=variable.pk)
+        response = variable_redirect(request, id=variable.pk)
         assert response.status_code == 302
 
     def test_redirect_view_with_invalid_pk(self, db, rf):
         invalid_pk = 999
         request = rf.get("variable", kwargs={"pk": invalid_pk})
         with pytest.raises(Http404):
-            VariableRedirectView.as_view()(request, id=invalid_pk)
+            variable_redirect(request, id=invalid_pk)

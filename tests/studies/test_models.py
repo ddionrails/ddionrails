@@ -1,6 +1,7 @@
 import pathlib
 
 import pytest
+
 from studies.models import Study, context
 
 pytestmark = [pytest.mark.studies, pytest.mark.models]
@@ -14,7 +15,14 @@ class TestStudyModel:
         assert study.get_absolute_url() == "/" + study.name
 
     def test_import_path_method(self, study, settings):
-        expected = str(pathlib.Path(settings.IMPORT_REPO_PATH) / study.name / settings.IMPORT_SUB_DIRECTORY) + "/"
+        expected = (
+            str(
+                pathlib.Path(settings.IMPORT_REPO_PATH)
+                / study.name
+                / settings.IMPORT_SUB_DIRECTORY
+            )
+            + "/"
+        )
         assert study.import_path() == expected
 
     def test_repo_url_method_https(self, study, settings):
@@ -35,18 +43,20 @@ class TestStudyModel:
             study.repo_url()
             assert excinfo.value == "Specify a protocol for Git in your settings."
 
-    # def test_get_list_of_topic_files_method_without_files(self, study, mocker):
-    #     mocker.patch("glob.glob", return_value=["topic1.md"])
-    #     topics = study.get_list_of_topic_files()
-    #     assert topics == ["topic1.md"]
-    #
-    # def test_has_topics_method_with_topic_files(self, study, mocker):
-    #     mocker.patch("studies.models.Study.get_list_of_topic_files", return_value=["topic1.md"])
-    #     assert study.has_topics() is True
-    #
-    # def test_has_topics_method_without_topic_files(self, study, mocker):
-    #     mocker.patch("studies.models.Study.get_list_of_topic_files", return_value=[])
-    #     assert study.has_topics() is False
+    def test_get_list_of_topic_files_method_without_files(self, study, mocker):
+        mocker.patch("glob.glob", return_value=["topic1.md"])
+        topics = study.get_list_of_topic_files()
+        assert topics == ["topic1.md"]
+
+    def test_has_topics_method_with_topic_files(self, study, mocker):
+        mocker.patch(
+            "studies.models.Study.get_list_of_topic_files", return_value=["topic1.md"]
+        )
+        assert study.has_topics() is True
+
+    def test_has_topics_method_without_topic_files(self, study, mocker):
+        mocker.patch("studies.models.Study.get_list_of_topic_files", return_value=[])
+        assert study.has_topics() is False
 
     def test_get_config_method_text(self, study):
         study.config = '{"some-key": "some-value"}'

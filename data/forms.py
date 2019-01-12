@@ -28,15 +28,7 @@ class DatasetForm(forms.ModelForm):
 class VariableForm(forms.ModelForm):
     class Meta:
         model = Variable
-        fields = (
-            "name",
-            "label",
-            "description",
-            "concept",
-            "dataset",
-            "sort_id",
-            "image_url",
-        )
+        fields = ("name", "label", "description", "concept", "dataset", "sort_id")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

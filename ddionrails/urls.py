@@ -3,12 +3,12 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
 
+import data.views as data_views
 import instruments.views as instruments_views
 import publications.views as publications_views
 import studies.views as studies_views
-from data.views import DatasetRedirectView, VariableRedirectView
 from elastic.views import angular as angular_search
-from studies.views import StudyDetailView, study_topics, study_topics2
+from studies.views import StudyDetailView, study_topics
 
 from .views import (
     HomePageView,
@@ -41,18 +41,18 @@ urlpatterns = [
     path("user/", include("django.contrib.auth.urls")),
     path("accounts/login/", LoginView.as_view()),
     path("elastic<path:path>", elastic_proxy),
+
     # Study by name
     path("<slug:study_name>", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links
     path("<slug:study_name>/data/", include("data.urls", namespace="data")),
     path("<slug:study_name>/publ/", include("publications.urls", namespace="publ")),
     path("<slug:study_name>/inst/", include("instruments.urls", namespace="inst")),
-    path("<slug:study_name>/topics/<slug:language>", study_topics, name="study.topics"),
-    path("<slug:study_name>/topics2/<slug:language>", study_topics2, name="study.topics"),
+    path("<slug:study_name>/topics/", study_topics, name="study.topics"),
     # Redirects for search interface
     path("publication/<int:id>", publications_views.PublicationRedirectView.as_view()),
-    path("variable/<int:id>", VariableRedirectView.as_view()),
-    path("dataset/<int:id>", DatasetRedirectView.as_view()),
+    path("variable/<int:id>", data_views.variable_redirect),
+    path("dataset/<int:id>", data_views.dataset_redirect),
     path(
         "instrument/<int:id>",
         instruments_views.InstrumentRedirectView.as_view(),

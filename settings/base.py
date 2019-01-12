@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     "data",
     "elastic",
     "workspace",
-    "instruments",
     "publications",
+    "instruments",
     "api",
 ]
 

@@ -1,6 +1,11 @@
 import pytest
 
-from concepts.forms import AnalysisUnitForm, ConceptForm, ConceptualDatasetForm, PeriodForm
+from concepts.forms import (
+    AnalysisUnitForm,
+    ConceptForm,
+    ConceptualDatasetForm,
+    PeriodForm,
+)
 
 pytestmark = [pytest.mark.concepts, pytest.mark.form]
 
@@ -30,7 +35,10 @@ class TestPeriodForm:
     def test_form_with_invalid_data(self, empty_data):
         form = PeriodForm(data=empty_data)
         assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."], "study": ["This field is required."]}
+        expected_errors = {
+            "name": ["This field is required."],
+            "study": ["This field is required."],
+        }
         assert form.errors == expected_errors
 
     def test_form_with_valid_data(self, db, valid_period_data):
@@ -63,4 +71,7 @@ class TestConceptualDatasetForm:
         form = ConceptualDatasetForm(data=valid_conceptual_dataset_data)
         assert form.is_valid() is True
         conceptual_dataset = form.save()
-        assert conceptual_dataset.name == valid_conceptual_dataset_data["conceptual_dataset_name"]
+        assert (
+            conceptual_dataset.name
+            == valid_conceptual_dataset_data["conceptual_dataset_name"]
+        )
