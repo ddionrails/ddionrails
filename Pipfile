@@ -1,5 +1,4 @@
 [[source]]
-
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
@@ -22,6 +21,7 @@ elasticsearch-dsl = "==2.2.0"
 
 # Needed for Publications
 bibtexparser = "*"
+pyparsing = "==2.3.0" # pin temporarily
 
 # Project scripting
 paver = "*"
