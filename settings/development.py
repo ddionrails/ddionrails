@@ -1,4 +1,4 @@
-from .base import *
+from .base import * # noqa
 
 WSGI_APPLICATION = "ddionrails.wsgi.application"
 

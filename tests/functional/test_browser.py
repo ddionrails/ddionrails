@@ -10,6 +10,12 @@ from tests.workspace.test_forms import valid_basket_data
 
 pytestmark = [pytest.mark.functional]
 
+# https://pytest-selenium.readthedocs.io/en/latest/user_guide.html?highlight=implicitly_wait#common-selenium-setup
+@pytest.fixture
+def selenium(selenium):
+    selenium.implicitly_wait(10)
+    return selenium
+
 
 @pytest.fixture()
 def authenticated_browser(selenium, client, live_server, known_user):
@@ -38,7 +44,7 @@ class TestNavigation:
         heading = selenium.find_element_by_tag_name("h1")
         assert heading.text == "Contact / feedback"
         assert "SOEP Hotline" in selenium.page_source
-        assert "Github" in selenium.page_source
+        assert "GitHub" in selenium.page_source
 
     def test_get_imprint_page_from_home(self, selenium, live_server):
         selenium.get(live_server.url)
@@ -97,6 +103,7 @@ class TestNavigation:
         expanded = studies_dropdown_menu.get_attribute("aria-expanded")
         assert expanded == "true"
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_dropdown_menu(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -106,6 +113,7 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_home_page_list(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -115,31 +123,34 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_page(self, selenium, live_server, study):
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        assert study_nav_bar.find_element_by_link_text("Data")
-        assert study_nav_bar.find_element_by_link_text("Instruments")
-        assert study_nav_bar.find_element_by_link_text("Publications")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#datasets')]")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
+        assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        datasets_section_link = study_nav_bar.find_element_by_link_text("Data")
+        datasets_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#datasets')]")
         datasets_section_link.click()
 
         dataset_table = selenium.find_element_by_id("dataset_table_wrapper")
         dataset_link = dataset_table.find_element_by_link_text(dataset.name)
         assert dataset_link
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_instruments_section_link(
         self, selenium, live_server, study, instrument
     ):
         instrument.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        instruments_section_link = study_nav_bar.find_element_by_link_text("Instruments")
+        instruments_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
         instruments_section_link.click()
 
         instrument_table = selenium.find_element_by_id("instrument_table_wrapper")
