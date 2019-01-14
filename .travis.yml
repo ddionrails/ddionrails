@@ -30,5 +30,6 @@ script:
   - pytest -m "functional" tests/functional/test_system_import.py --cov-append
   - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
   - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
+  - python manage.py migrate
 after_success:
   - codecov
