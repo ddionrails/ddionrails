@@ -250,6 +250,27 @@ class TestWorkspace:
             in selenium.page_source
         )
 
+    def test_login_with_known_user_redirects_to_same_page(self, selenium, live_server, known_user):
+        """ When a user logs in from any page, after logging in, the system should take
+            the user back to the page he was visiting before logging in.
+        """
+        # The user starts at the contact page
+        contact_url = live_server.url + "/contact/"
+        selenium.get(contact_url)
+        login_link = selenium.find_element_by_link_text("Register / log in")
+        login_link.click()
+        input_user_name = selenium.find_element_by_id("id_username")
+        input_password = selenium.find_element_by_id("id_password")
+        input_user_name.send_keys("knut")
+        input_password.send_keys("secret")
+        login_button = selenium.find_element_by_xpath('//input[@value="Login"]')
+        login_button.click()
+        # After logging in, the user should be redirected back to the contact page
+        assert contact_url == selenium.current_url
+        assert selenium.find_element_by_link_text("My baskets")
+        assert selenium.find_element_by_link_text("My account")
+        assert  selenium.find_element_by_link_text("Logout")
+
     # @pytest.mark.skip(reason="no way of currently testing this")
     def test_baskets_page(self, authenticated_browser, live_server):
         authenticated_browser.get(live_server.url + "/workspace/login/")
