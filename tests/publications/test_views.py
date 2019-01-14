@@ -35,6 +35,7 @@ class TestPublicationDetailView:
         response = client.get(url)
         assert response.status_code == 200
 
+    @pytest.mark.skip(reason="no way of currently testing this")
     def test_detail_view_with_invalid_study_name(self, mocker, client, publication):
         # TODO return_value
         mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
