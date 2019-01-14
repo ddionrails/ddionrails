@@ -10,6 +10,8 @@ from concepts.imports import (
     ConceptImport,
     ConceptualDatasetImport,
     PeriodImport,
+    TopicImport,
+    TopicJsonImport,
 )
 from data.imports import (
     DatasetImport,
@@ -23,7 +25,7 @@ from instruments.imports import (
     InstrumentImport,
     QuestionVariableImport,
 )
-from publications.imports import PublicationImport
+from publications.imports import AttachmentImport, PublicationImport
 from studies.imports import StudyDescriptionImport, StudyImport
 from studies.models import Study
 from workspace.imports import BasketImport, BasketVariableImport, UserImport
@@ -173,11 +175,13 @@ class StudyImportManager:
         self.study = study
         self.repo = Repository(study)
         self.import_patterns = [
+            ImportLink("^study.md$", StudyDescriptionImport),
+            ImportLink("^topics.csv$", TopicImport),
+            ImportLink("^topics.json$", TopicJsonImport),
             ImportLink("^concepts.csv$", ConceptImport),
             ImportLink("^analysis_units.csv$", AnalysisUnitImport),
             ImportLink("^periods.csv$", PeriodImport),
             ImportLink("^conceptual_datasets.csv$", ConceptualDatasetImport),
-            ImportLink("^study.md$", StudyDescriptionImport),
             ImportLink(r"^instruments\/.*\.json$", InstrumentImport),
             ImportLink(r"^datasets\/.*\.json$", DatasetJsonImport),
             ImportLink("^datasets.csv$", DatasetImport),
@@ -185,7 +189,8 @@ class StudyImportManager:
             ImportLink("^questions_variables.csv$", QuestionVariableImport),
             ImportLink("^concepts_questions.csv$", ConceptQuestionImport),
             ImportLink("^transformations.csv$", TransformationImport),
-            ImportLink("^bibtex.bib$", PublicationImport),
+            ImportLink("^attachments.csv$", AttachmentImport),
+            ImportLink("^publications.csv$", PublicationImport),
         ]
 
     def run_import(self, import_all=False):
@@ -218,17 +223,20 @@ class LocalImport:
 
     def run_import(self, filename):
         importer_dict = {
+            "study.md": StudyDescriptionImport,
+            "topics.csv": TopicImport,
+            "topics.json": TopicJsonImport,
             "concepts.csv": ConceptImport,
             "analysis_units.csv": AnalysisUnitImport,
             "periods.csv": PeriodImport,
             "conceptual_datasets.csv": ConceptualDatasetImport,
-            "study.md": StudyDescriptionImport,
             "datasets.csv": DatasetImport,
             "variables.csv": VariableImport,
             "transformations.csv": TransformationImport,
             "questions_variables.csv": QuestionVariableImport,
             "concepts_questions.csv": ConceptQuestionImport,
-            "bibtex.bib": PublicationImport,
+            "attachments.csv": AttachmentImport,
+            "publications.csv": PublicationImport,
         }
         self._enqueue_import(filename, importer_dict[filename])
 

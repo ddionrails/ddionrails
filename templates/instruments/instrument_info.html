@@ -3,7 +3,8 @@
     <b>Instrument info</b>
   </div>
   <div class="panel-body">
-    <p>Name: {{ instrument.name }}</p>
-    <p>Label: {{ instrument.label }}</p>
+    <p><b>Name:</b> {{ instrument.name }}</p>
+    <p><b>Label:</b> {{ instrument.label }}</p>
+    {% include "publications/attachments_partial.html" with attachments=instrument.attachments %}
   </div>
 </div>

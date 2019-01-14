@@ -10,7 +10,6 @@ from django.views.generic.base import RedirectView
 from data.models import Dataset
 from instruments.models import Instrument
 
-from .helpers import render_topics
 from .models import Study
 
 
@@ -55,19 +54,24 @@ class StudyDetailView(DetailView):
         )
         context["debug_string"] = pprint.pformat(
             dict(
-                name=self.object.name, config=self.object.get_config(), getcwd=os.getcwd()
+                name=self.object.name,
+                config=self.object.get_config(),
+                source=self.object.get_source(),
+                getcwd=os.getcwd(),
             )
         )
         return context
 
 
-def study_topics(request: HttpRequest, study_name: str) -> HttpResponse:
+def study_topics(request: HttpRequest, study_name: str, language: str) -> HttpResponse:
     study = get_object_or_404(Study, name=study_name)
-    context = dict(study=study, topics=list())
-    file_names = study.get_list_of_topic_files()
-    for file_name in file_names:
-        with open(file_name, "r") as f:
-            name, label, content = render_topics(f.read(), study)
-            context["topics"].append(dict(name=name, label=label, content=content))
-    context["hide_topics"] = len(context["topics"]) == 0
+    context = dict(study=study, language=language)
+    # context["hide_topics"] = len(context["topics"]) == 0
     return render(request, "studies/study_topics.html", context=context)
+
+
+def study_topics2(request, study_name, language):
+    study = get_object_or_404(Study, name=study_name)
+    context = dict(study=study, language=language)
+    # context["hide_topics"] = len(context["topics"]) == 0
+    return render(request, "studies/study_topics_extra_div.html", context=context)

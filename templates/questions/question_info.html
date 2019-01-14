@@ -10,14 +10,15 @@
 <hr />
 <div class="panel panel-default">
   <div class="panel-heading">
-    Instrument
+    Info
   </div>
   <div class="panel-body">
-    <p>This question is at position {{ question.sort_id }} in:</p>
-    <p><b>
+    <p><b>Name:</b> {{ question.name }}</p>
+    <p><b>Instrument:</b> This question is at position <b>{{ question.sort_id }}</b> in instrument 
       <a href="{{ question.instrument }}">
         {{ question.instrument.title }}
       </a>
-    </b></p>
+    </p>
+    {% include "publications/attachments_partial.html" with attachments=question.attachments %}
   </div>
 </div>
