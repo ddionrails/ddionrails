@@ -1,9 +1,14 @@
 import pytest
 
 from studies.models import Study
-from workspace.models import Script
+from workspace.models import Script, Basket, BasketVariable, ScriptConfig
 
 pytestmark = [pytest.mark.workspace]
+
+
+@pytest.fixture
+def csv_heading(db):
+    return "name,label,label_de,dataset_name,dataset_label,dataset_label_de,study_name,study_label,study_label_de,concept_name,period_name"
 
 
 class TestBasketModel:
@@ -26,8 +31,10 @@ class TestBasketModel:
         basket.label = "Some basket"
         assert basket.title() == basket.label
 
-    def test_get_or_create_method(self):
-        pass
+    @pytest.mark.skip(reason="no way of currently testing this")
+    def test_get_or_create_method(self, user):
+        basket = Basket.get_or_create("some-basket", user.username)
+        assert basket
 
     def test_get_script_generators_method(self, basket):
         result = basket.get_script_generators()
@@ -39,13 +46,47 @@ class TestBasketModel:
         result = basket.get_script_generators()
         assert result == "some-script-generator"
 
-    def test_to_csv_method(self, mocker, basket, variable):
-        pass
+    def test_to_csv_method_with_empty_basket(self, basket, csv_heading):
+        result = basket.to_csv()
+        assert csv_heading in result
+
+    def test_to_csv_method_with_variable_in_basket(self, basket, variable, csv_heading):
+        basket_variable = BasketVariable(basket=basket, variable=variable)
+        basket_variable.save()
+        result = basket.to_csv()
+        assert csv_heading in result
+        assert variable.name in result
+        assert variable.label in result
+        assert variable.dataset.name in result
+        assert variable.dataset.study.name in result
+
+    def test_to_csv_method_with_variable_and_concept_in_basket(
+        self, basket, variable, concept, csv_heading
+    ):
+        concept.variables.add(variable)
+        basket_variable = BasketVariable(basket=basket, variable=variable)
+        basket_variable.save()
+        result = basket.to_csv()
+        assert csv_heading in result
+        assert variable.name in result
+        assert variable.label in result
+        assert variable.dataset.name in result
+        assert variable.dataset.study.name in result
+        assert variable.concept.name in result
 
 
 class TestScriptModel:
-    def test_get_config_method(self):
-        pass
+    @pytest.mark.skip(reason="no way of currently testing this")
+    def test_get_config_method(self, mocker, script):
+        mocked_get_config = mocker.patch.object(ScriptConfig, "get_config")
+        mocked_get_config.return_value = dict(key="value")
+        result = script.get_config()
+        assert result
+
+    def test_get_config_method_with_local_config(self, script):
+        script.local_config = "local-config"
+        result = script.get_config()
+        assert result == script.local_config
 
     def test_get_settings_method(self, script):
         script.settings_dict = dict(key="value")

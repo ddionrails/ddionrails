@@ -1,10 +1,10 @@
 import pytest
-from django.http.response import Http404
 from django.http import Http404
+from django.http.response import Http404
 from django.urls import reverse
 
-from publications.views import study_publication_list, PublicationRedirectView
 from elastic.mixins import ModelMixin
+from publications.views import PublicationRedirectView, study_publication_list
 
 
 class TestPublicationRedirectView:
