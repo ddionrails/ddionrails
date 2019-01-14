@@ -770,10 +770,10 @@
         },
         "pytest-html": {
             "hashes": [
-                "sha256:74ad1ad9bf4c2c15184e4d7f31fe28fa09c19ff6a459e65c106be88f1e5349cd",
-                "sha256:e7ee0f7a83f6a6d2a5a356c09d64ba8acffd007b8b76c5f421f2e39e9f92b1fe"
+                "sha256:648b7ba1d6035cc021d607e9d44f4dc06e916bdb04e09572dd04fb82eecab9ed",
+                "sha256:a7c65cdd9d5e4d09cef2f500ca801f80c1110204f24e5b84d019c6f919b15e9e"
             ],
-            "version": "==1.19.0"
+            "version": "==1.20.0"
         },
         "pytest-metadata": {
             "hashes": [
