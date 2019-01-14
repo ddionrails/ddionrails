@@ -12,11 +12,6 @@ class PublicationImport(imports.CSVImport):
 
     def process_element(self, element):
         element["study"] = self.study.id
-        try:
-            period = Period.objects.get(element["period_name"])
-            element["period"] = period.id
-        except:
-            pass
         return element
 
     def import_element(self, element):
