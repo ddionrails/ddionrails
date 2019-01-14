@@ -103,6 +103,7 @@ class TestNavigation:
         expanded = studies_dropdown_menu.get_attribute("aria-expanded")
         assert expanded == "true"
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_dropdown_menu(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -112,6 +113,7 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_home_page_list(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -121,6 +123,7 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_page(self, selenium, live_server, study):
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
@@ -128,7 +131,7 @@ class TestNavigation:
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
-    @pytest.mark.skip(reason="TODO")
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
@@ -140,7 +143,7 @@ class TestNavigation:
         dataset_link = dataset_table.find_element_by_link_text(dataset.name)
         assert dataset_link
 
-    @pytest.mark.skip(reason="TODO")
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_instruments_section_link(
         self, selenium, live_server, study, instrument
     ):
