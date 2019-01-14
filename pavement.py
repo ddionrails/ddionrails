@@ -321,7 +321,7 @@ def webpack():
 @task
 def webpack_watch():
     """ Watch webpack bundles (in development) """
-    run("""./node_modules/.bin/webpack --config webpack.config.js --watch""")
+    run("""./node_modules/.bin/webpack --config webpack.config.js --watch --debug --devtool source-map""")
 
 @task
 def setup_frontend():
