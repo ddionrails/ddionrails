@@ -1,10 +1,3 @@
-#!/bin/sh
-
-##
-# Activate virtualenv.
-#
-source ~/.envs/ddionrails2/bin/activate
-
 ##
 # Initiate tmus session if not existing.
 #
