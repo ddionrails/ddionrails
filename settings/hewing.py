@@ -1,4 +1,4 @@
-from .base import * # noqa
+from .base import *  # noqa
 
 WSGI_APPLICATION = "ddionrails.wsgi_hewing.application"
 
@@ -51,7 +51,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["/data/WWW/vhosts/paneldata.soep.de/ddionrails2/ddionrails/templates"],
+        "DIRS": [BASE_DIR + "/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
