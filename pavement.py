@@ -9,7 +9,7 @@ import sys
 import django
 from django.conf import settings
 from django.core import management
-from paver.easy import task
+from paver.easy import task, needs, consume_args
 
 sys.path.append(".")
 
@@ -356,3 +356,23 @@ def system_test():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.testing")
     django.setup()
     run("""pytest -v -m functional """)
+
+@task
+@needs("install_elastic", "setup_frontend", "copy_secrets_file", "migrate")
+def initial_setup():
+    """Run initial commands to setup DDI on Rails after download"""
+    pass
+
+@task
+@consume_args
+def update_study(args):
+    """Update repo of a study and import all files, one argument: study-name"""
+    django.setup()
+    from studies.models import Study
+    from imports.manager import StudyImportManager, Repository
+    study_name = args[0]
+    study = Study.objects.get(name=study_name)
+    Repository(study).update_or_clone_repo()
+    StudyImportManager(study).run_import(import_all=True)
+
+
