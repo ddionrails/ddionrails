@@ -19,48 +19,28 @@ path = pathlib.Path.cwd() / BACKUP_DIR / str(today)
 path.mkdir(parents=True, exist_ok=True)
 
 
-def backup_users(format_):
-    """ Backup user data to file with given format """
-    num_users = User.objects.count()
-    click.secho(f"Exporting {num_users} users", fg="green")
-    dataset = UserResource().export()
-    formatted_users = dataset.export(format_)
-    users_filename = (path / "users").with_suffix("." + format_)
-    with open(str(users_filename), "w") as f:
-        f.write(formatted_users)
+def determine_model_and_resource(entity: str):
+    """ Determine which model and export resource to use """
+    if entity == "users":
+        return User, UserResource
+    if entity == "baskets":
+        return Basket, BasketResource
+    if entity == "scripts":
+        return Script, ScriptExportResource
+    if entity == "basket_variables":
+        return BasketVariable, BasketVariableExportResource
 
 
-def backup_baskets(format_):
-    """ Backup baskets data to file with given format """
-    num_baskets = Basket.objects.count()
-    click.secho(f"Exporting {num_baskets} baskets", fg="green")
-    dataset = BasketResource().export()
-    formatted_baskets = dataset.export(format_)
-    baskets_filename = (path / "baskets").with_suffix("." + format_)
-    with open(str(baskets_filename), "w") as f:
-        f.write(formatted_baskets)
-
-
-def backup_basket_variables(format_):
-    """ Backup basket variables data to file with given format """
-    num_basket_variables = BasketVariable.objects.count()
-    click.secho(f"Exporting {num_basket_variables} baskets variables", fg="green")
-    dataset = BasketVariableExportResource().export()
-    formatted_basket_variables = dataset.export(format_)
-    basket_variables_filename = (path / "basket_variables").with_suffix("." + format_)
-    with open(str(basket_variables_filename), "w") as f:
-        f.write(formatted_basket_variables)
-
-
-def backup_scripts(format_):
-    """ Backup scripts data to file with given format """
-    num_scripts = Script.objects.count()
-    click.secho(f"Exporting {num_scripts} scripts", fg="green")
-    dataset = ScriptExportResource().export()
-    formatted_scripts = dataset.export(format_)
-    scripts_filename = (path / "scripts").with_suffix("." + format_)
-    with open(str(scripts_filename), "w") as f:
-        f.write(formatted_scripts)
+def backup_entity(entity: str, format_: str):
+    """ Backup data to file with given format """
+    model, resource = determine_model_and_resource(entity)
+    num_entries = model.objects.count()
+    click.secho(f"Exporting {num_entries} {entity}", fg="green")
+    dataset = resource().export()
+    formatted = dataset.export(format_)
+    filename = (path / entity).with_suffix("." + format_)
+    with open(str(filename), "w") as f:
+        f.write(formatted)
 
 
 @click.command()
@@ -69,22 +49,24 @@ def backup_scripts(format_):
 @click.option("-v", "--basket-variables", default=False, is_flag=True)
 @click.option("-s", "--scripts", default=False, is_flag=True)
 @click.option("-f", "--format", "format_", default="csv")
-def command(users, baskets, basket_variables, scripts, format_):
+def command(
+    users: bool, baskets: bool, basket_variables: bool, scripts: bool, format_: str
+):
     if users:
-        backup_users(format_)
+        backup_entity("users", format_)
 
     if baskets:
-        backup_baskets(format_)
+        backup_entity("baskets", format_)
 
     if basket_variables:
-        backup_basket_variables(format_)
+        backup_entity("basket_variables", format_)
 
     if scripts:
-        backup_scripts(format_)
+        backup_entity("scripts", format_)
 
     # If no command line argument is given, backup all entities
     if any((users, baskets, basket_variables, scripts)) is False:
-        backup_users(format_)
-        backup_baskets(format_)
-        backup_basket_variables(format_)
-        backup_scripts(format_)
+        backup_entity("users", format_)
+        backup_entity("baskets", format_)
+        backup_entity("basket_variables", format_)
+        backup_entity("scripts", format_)
