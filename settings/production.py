@@ -1,4 +1,4 @@
-from .base import * # noqa
+from .base import *  # noqa
 
 WSGI_APPLICATION = "ddionrails.wsgi_production.application"
 DEBUG = False
@@ -41,7 +41,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR + '/templates'],
+        "DIRS": [BASE_DIR + "/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
