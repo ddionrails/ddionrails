@@ -118,7 +118,7 @@ function filter(node, type) {
 
     // show spinner while loading
     $("#tree_variables").empty();
-    $('.spinner').show();
+    $('.sk-three-bounce').show();
     $('#tree').find("button[class*='-btn-active']").removeClass("variable-btn-active question-btn-active")
     $(node).toggleClass(type + '-btn-active')
 
@@ -135,11 +135,11 @@ function filter(node, type) {
     var data;
 
     jQuery.get(url, function (data) {
-        $('.spinner').hide(); // hide the loading message
+        $('.sk-three-bounce').hide(); // hide the loading message
         $("#tree_variables").html(data);
         $("#variable_table").DataTable();
     }).fail(function () {
-        $('.spinner').hide(); // hide the loading message
+        $('.sk-three-bounce').hide(); // hide the loading message
         $("#tree_variables").html("<p><span class='glyphicon glyphicon-alert' aria-hidden='true'></span> Load Error!</p>");
     });
 }
