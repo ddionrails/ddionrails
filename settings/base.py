@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "markdown",
     "django_rq",
     "webpack_loader",
+    "import_export",
     # DDI on Rails
     "ddionrails",
     "concepts",
