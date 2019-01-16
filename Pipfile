@@ -11,6 +11,7 @@ django-extensions = "*"
 django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
+django-import-export = "*"
 
 # Markup related libraries
 pyyaml = "*"
