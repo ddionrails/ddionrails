@@ -136,8 +136,24 @@ class TestScriptResource:
         settings = '{"some-key": "some-value"}'
 
         dataset = tablib.Dataset(
-            [username, basket.name, script_name, generator_name, label, settings],
-            headers=["user", "basket", "name", "generator_name", "label", "settings"],
+            [
+                username,
+                basket.name,
+                study.name,
+                script_name,
+                generator_name,
+                label,
+                settings,
+            ],
+            headers=[
+                "user",
+                "basket",
+                "study",
+                "name",
+                "generator_name",
+                "label",
+                "settings",
+            ],
         )
         result = ScriptImportResource().import_data(dataset, dry_run=False)
 
@@ -146,6 +162,7 @@ class TestScriptResource:
         script = Script.objects.first()
         assert script_name == script.name
         assert basket == script.basket
+        assert study == script.basket.study
         assert generator_name == script.generator_name
         assert label == script.label
         assert settings == script.settings

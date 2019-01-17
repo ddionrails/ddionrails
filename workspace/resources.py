@@ -62,8 +62,9 @@ class VariableWidgket(ForeignKeyWidget):
         return self.model.objects.get(**params)
 
 
-class BasketWidgket(ForeignKeyWidget):
+class BasketWidget(ForeignKeyWidget):
     """ Widget to select basket by name and username """
+
     def clean(self, value, row=None, *args, **kwargs):
         params = {}
         params["name"] = row["basket"]
@@ -102,7 +103,7 @@ class BasketVariableExportResource(resources.ModelResource):
 class BasketVariableImportResource(resources.ModelResource):
     """ Import resource for basket variable model """
 
-    basket = Field(attribute="basket", widget=BasketWidgket(Basket, "name"))
+    basket = Field(attribute="basket", widget=BasketWidget(Basket, "name"))
     variable = Field(attribute="variable", widget=VariableWidgket(Variable, "name"))
 
     class Meta:
@@ -116,6 +117,7 @@ class ScriptExportResource(resources.ModelResource):
 
     user = Field(attribute="basket__user__username")
     basket = Field(attribute="basket__name")
+    study = Field(attribute="basket__study__name")
 
     class Meta:
         model = Script
@@ -125,10 +127,18 @@ class ScriptExportResource(resources.ModelResource):
 class ScriptImportResource(resources.ModelResource):
     """ Import resource for script model """
 
-    basket = Field(attribute="basket", widget=BasketWidgket(Basket, "name"))
+    basket = Field(attribute="basket", widget=BasketWidget(Basket, "name"))
     user = Field(attribute="basket__user", widget=ForeignKeyWidget(User, "username"))
+    study = Field(attribute="basket__study", widget=ForeignKeyWidget(Study, "name"))
 
     class Meta:
         model = Script
-        import_id_fields = ("user", "basket", "name")
-        exclude = ("id", "user")
+        import_id_fields = (
+            "user",
+            "basket",
+            "name",
+            "study",
+            "generator_name",
+            "settings",
+        )
+        exclude = ("id", "user", "study")
