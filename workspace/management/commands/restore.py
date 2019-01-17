@@ -65,7 +65,11 @@ def restore_entity(entity: str, format_: str):
     # Try to import the data in dry_run mode
     result = resource().import_data(dataset, dry_run=True)
     if result.has_errors():
-        click.secho(f"Error while importing {entity}", fg="red")
+        click.secho(f"Error while importing {entity} from {filename}", fg="red")
+
+        for line, errors in result.row_errors():
+            for error in errors:
+                click.secho(f"Error in line: {line}, {error.error}, {error.row}", fg="red")
     else:
         # Actually write the data to the database if no errors were encountered in dry run
         resource().import_data(dataset, dry_run=False)
@@ -86,3 +90,19 @@ def command(
 
     if users:
         restore_entity("users", format_)
+
+    if baskets:
+        restore_entity("baskets", format_)
+
+    if basket_variables:
+        restore_entity("basket_variables", format_)
+
+    if scripts:
+        restore_entity("scripts", format_)
+
+    # If no command line argument is given, backup all entities
+    if any((users, baskets, basket_variables, scripts)) is False:
+        restore_entity("users", format_)
+        restore_entity("baskets", format_)
+        restore_entity("basket_variables", format_)
+        restore_entity("scripts", format_)
