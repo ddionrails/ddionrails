@@ -1,8 +1,11 @@
+import pytest
+from click.testing import CliRunner
 from django.contrib.auth.models import User
 from django.utils import timezone
 
 import tablib
 from data.models import Variable
+from workspace.management.commands import backup, restore
 from workspace.models import Basket, BasketVariable, Script
 from workspace.resources import (
     BasketResource,
@@ -166,3 +169,73 @@ class TestScriptResource:
         assert generator_name == script.generator_name
         assert label == script.label
         assert settings == script.settings
+
+
+@pytest.fixture()
+def clirunner():
+    return CliRunner()
+
+
+@pytest.mark.django_db
+class TestBackupManagementCommand:
+    @pytest.mark.parametrize("argument", ("--users", "-u"))
+    def test_backup_users(self, clirunner, argument, user):
+        pass
+
+    def test_backup_baskets(self):
+        pass
+
+    def test_backup_scripts(self):
+        pass
+
+    def test_backup_basket_variables(self):
+        pass
+
+    def test_backup_all(self):
+        pass
+
+
+@pytest.mark.django_db
+class TestRestoreManagementCommand:
+    @pytest.mark.parametrize("argument", ("--users", "-u"))
+    def test_restore_users(self, clirunner, argument, client):
+        assert 0 == User.objects.count()
+        result = clirunner.invoke(
+            restore.command, [argument, "-p", "tests/workspace/test_data/"]
+        )
+        assert result.exit_code == 0
+        assert "Succesfully" in result.output
+        assert 1 == User.objects.count()
+        user = User.objects.first()
+        assert "some-user" == user.username
+        assert "some-user@some-mail.org" == user.email
+
+        # test user can login
+        logged_in = client.login(username=user.username, password="some-password")
+        assert logged_in is True
+
+    @pytest.mark.parametrize("argument", ("--baskets", "-b"))
+    def test_restore_baskets(self, clirunner, argument, user, study):
+        assert 0 == Basket.objects.count()
+        result = clirunner.invoke(
+            restore.command, [argument, "-p", "tests/workspace/test_data/"]
+        )
+        assert result.exit_code == 0
+        assert "Succesfully" in result.output
+        assert 1 == Basket.objects.count()
+        basket = Basket.objects.first()
+        assert "some-basket" == basket.name
+        assert "Some Basket" == basket.label
+        assert "This is some basket" == basket.description
+        assert "security_token" == basket.security_token
+        assert user == basket.user
+        assert study == basket.study
+
+    def test_restore_scripts(self):
+        pass
+
+    def test_restore_basket_variables(self):
+        pass
+
+    def test_restore_all(self):
+        pass
