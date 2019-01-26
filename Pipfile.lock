@@ -831,11 +831,10 @@
         },
         "radon": {
             "hashes": [
-                "sha256:38e495a4aa4c1d7293d3c1733393961fb52209c9bc2d75163c3ba8124d8bbbaa",
-                "sha256:f893f2faa632a060f6d0f01843d10a0395515bde865c759c0dd3f15239caf11b"
+                "sha256:fa3167f531d3b01453697d73b89d7e00a3fbadbd7087a228c3c092232dcd1ecd",
+                "sha256:ef5b38ee6c9994032a4cb3de0f6689e0046024ae3ff3b16944d72a4dce99650e"
             ],
-            "index": "pypi",
-            "version": "==2.4.0"
+            "version": "==3.0.0"
         },
         "redis": {
             "hashes": [
