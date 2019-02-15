@@ -21,7 +21,6 @@ elasticsearch-dsl = "==2.2.0"
 
 # Needed for Publications
 bibtexparser = "*"
-pyparsing = "==2.3.0" # pin temporarily
 
 # Project scripting
 paver = "*"
@@ -30,11 +29,9 @@ fabric = "*"
 
 [dev-packages]
 # Linters and code style
-black = "*"
 flake8 = "*"
 isort = "*"
 mypy = "*"
-radon = "*"
 codecov = "*"
 
 # Testing
@@ -54,7 +51,6 @@ sphinx-rtd-theme = "*"
 
 # Libraries for local development
 django-debug-toolbar = "*"
-django-silk = "*"
 werkzeug = "*"
 pre-commit = "*"
 
