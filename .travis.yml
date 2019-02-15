@@ -17,12 +17,14 @@ before_install:
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
   - export PATH=$HOME/geckodriver:$PATH
   - geckodriver --version
+  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.4.2/elasticsearch-2.4.2.deb && sudo dpkg -i --force-confnew elasticsearch-2.4.2.deb && sudo service elasticsearch restart
+  - curl localhost:9200
 install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
-  - pipenv run paver install_elastic
-  - db/elasticsearch/bin/elasticsearch -d
+#  - pipenv run paver install_elastic
+#  - db/elasticsearch/bin/elasticsearch -d
   - pipenv run paver setup_frontend
 before_script:
   - sleep 10
