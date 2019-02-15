@@ -6,7 +6,7 @@ name = "pypi"
 
 [packages]
 # Django related libraries
-django = "*"
+django = "==2.1.7" # pin temporarily until 2.2 is production ready
 django-extensions = "*"
 django-model-utils = "*"
 django-rq = "*"
