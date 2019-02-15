@@ -1,16 +1,8 @@
 import pathlib
 
-from django.contrib.auth.models import User
-
 import djclick as click
-from import_export.formats.base_formats import CSV, JSON, YAML
-from workspace.models import Basket, BasketVariable, Script
-from workspace.resources import (
-    BasketResource,
-    BasketVariableImportResource,
-    ScriptImportResource,
-    UserResource,
-)
+from import_export.formats.base_formats import CSV, JSON, YAML, TextFormat
+from workspace.resources import determine_model_and_resource
 
 
 def get_most_recent_backup_directory():
@@ -25,19 +17,7 @@ def get_most_recent_backup_directory():
         exit()
 
 
-def determine_model_and_resource(entity: str):
-    """ Determine which model and export resource to use """
-    if entity == "users":
-        return User, UserResource
-    if entity == "baskets":
-        return Basket, BasketResource
-    if entity == "scripts":
-        return Script, ScriptImportResource
-    if entity == "basket_variables":
-        return BasketVariable, BasketVariableImportResource
-
-
-def determine_import_format(format_):
+def determine_import_format(format_: str) -> TextFormat:
     """ Determine which format to use for import """
     if format_ == "csv":
         return CSV
@@ -47,7 +27,7 @@ def determine_import_format(format_):
         return YAML
 
 
-def restore_entity(entity: str, path: str, format_: str):
+def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     """ Restore data from file in given path with given format """
     model, resource = determine_model_and_resource(entity)
     filename = (path / entity).with_suffix("." + format_)
