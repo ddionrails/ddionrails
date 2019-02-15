@@ -142,3 +142,15 @@ class ScriptImportResource(resources.ModelResource):
             "settings",
         )
         exclude = ("id", "user", "study")
+
+
+def determine_model_and_resource(entity: str) -> tuple:
+    """ Determine which model and export resource to use """
+    if entity == "users":
+        return User, UserResource
+    if entity == "baskets":
+        return Basket, BasketResource
+    if entity == "scripts":
+        return Script, ScriptImportResource
+    if entity == "basket_variables":
+        return BasketVariable, BasketVariableImportResource
