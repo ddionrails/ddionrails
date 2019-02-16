@@ -516,10 +516,10 @@
         },
         "fakeredis": {
             "hashes": [
-                "sha256:ff7d5e24dd113e12cd9e82907ea6a21d6a5ab54f9bbe3bd2fa6619d16b3ab5e6",
-                "sha256:f1254acb6ee6ebb51fa55c54dfec26b2bee4fbab6f55de0ee768216bc213d4b8"
+                "sha256:6da5424c96a40f652fad0b1c9f88c65c8629ac5a6abbcd0ee5089666ac73d176",
+                "sha256:a1e2bf619449701e6c52bf8ac926d09b2f12c78f6e2cff36e391cc2707cd7d37"
             ],
-            "version": "==1.0"
+            "version": "==1.0.1"
         },
         "flake8": {
             "hashes": [
