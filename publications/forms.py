@@ -9,6 +9,7 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = (
+            "study",
             "name",
             "sub_type",
             "title",
