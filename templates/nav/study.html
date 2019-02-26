@@ -22,8 +22,7 @@
         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Topics <span class="caret"></span></a>
         <ul class="dropdown-menu">
           {% for language in study.get_topic_languages %}
-          <li><a href="/{{ study.name }}/topics/{{ language }}">Design 1 in {{ language }}</a></li>
-          <li><a href="/{{ study.name }}/topics2/{{ language }}">Design 2 in {{ language }}</a></li>
+          <li><a href="/{{ study.name }}/topics/{{ language }}">Topics in {{ language }}</a></li>
           {% endfor %}
         </ul>
       </li>
