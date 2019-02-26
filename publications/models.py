@@ -22,6 +22,7 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     abstract = models.TextField(blank=True)
     cite = models.TextField(blank=True)
     url = models.TextField(blank=True)
+    doi = models.TextField(blank=True)
     studies = models.TextField(blank=True)
 
     study = models.ForeignKey(
