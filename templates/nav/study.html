@@ -18,14 +18,7 @@
       -->
       <li><a href="/{{ study.name }}#instruments">Instruments</a></li>
       {% if study.has_topics %}
-      <li role="presentation" class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Topics <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          {% for language in study.get_topic_languages %}
-          <li><a href="/{{ study.name }}/topics/{{ language }}">Topics in {{ language }}</a></li>
-          {% endfor %}
-        </ul>
-      </li>
+      <li><a href="/{{ study.name }}/topics/en">Topics</a></li>
       {% endif %}
       <li><a href="/{{ study.name }}/publ/">Publications</a></li>
     </ul>
