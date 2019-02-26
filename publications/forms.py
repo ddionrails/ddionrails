@@ -18,6 +18,7 @@ class PublicationForm(forms.ModelForm):
             "abstract",
             "cite",
             "url",
+            "doi",
             "studies",
         )
 
