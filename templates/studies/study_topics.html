@@ -17,6 +17,15 @@
 
 {% block content %}
 
+<p class="text-right">
+  Languages:
+  {% for link_language in study.get_topic_languages %}
+    {% if link_language == language %}<b>{% endif %}
+    &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
+    {% if link_language == language %}</b>{% endif %}
+  {% endfor %}
+</p>
+
 <h2><span class="small glyphicon glyphicon-folder-close"></span> Topics</h2>
 <a class="anchor" id="topics"></a>
 <div class="row">
