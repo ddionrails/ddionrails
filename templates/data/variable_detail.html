@@ -66,26 +66,22 @@
       {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
     </div>
     <div role="tabpanel" class="tab-pane" id="origin_variables">
-      {% for study, variable_list in variable.get_origin_variables.items %}
-        {% include "data/related_variables.html" with table_name=study.title %}
-      {% endfor %}
+      {% if variable.get_origin_variables %}
+        {% for study, variable_list in variable.get_origin_variables.items %}
+          {% include "data/related_variables.html" with table_name=study.title %}
+        {% endfor %}
+      {% else %}
+        <div class="well">No input variables</div>
+      {% endif %}
     </div>
     <div role="tabpanel" class="tab-pane" id="target_variables">
-      {% for study, variable_list in variable.get_target_variables.items %}
-        {% include "data/related_variables.html" with table_name=study.title %}
-      {% endfor %}
-    <div class="panel panel-default">
-      <div class="panel-body">
-      <ul>
-      {% for target in variable.target_variables.all %}
-        <li><a href="{{ target.target }}">
-        {{ target.target.title }}<br/>
-        <small>{{ target.target }}</small>
-      </a></li>
-      {% endfor %}
-      </ul>
-      </div>
-    </div>
+      {% if variable.get_target_variables %}
+        {% for study, variable_list in variable.get_target_variables.items %}
+          {% include "data/related_variables.html" with table_name=study.title %}
+        {% endfor %}
+      {% else %}
+        <div class="well">No output variables</div>
+      {% endif %}
     </div>
   </div>
 
