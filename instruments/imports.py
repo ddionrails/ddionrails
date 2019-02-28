@@ -24,7 +24,7 @@ class InstrumentImport(imports.Import):
         instrument = Instrument.get_or_create(import_dict)
 
         # add period relation to instrument
-        period_name = content.get("period_name", "")
+        period_name = content.get("period", "")
         period = Period.objects.get(name=period_name)
         instrument.period = period
 
