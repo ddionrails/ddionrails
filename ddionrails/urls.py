@@ -70,4 +70,3 @@ urlpatterns = [
 if settings.DEBUG and ("_hewing" or "_production") not in settings.WSGI_APPLICATION:
     import debug_toolbar
     urlpatterns = [path(r"__debug__/", include(debug_toolbar.urls))] + urlpatterns
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
