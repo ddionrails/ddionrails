@@ -21,12 +21,12 @@ var open = url.searchParams.get("open");
 
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
-var filter_options_string = "<span class='btn-group btn-group-sm filter-options' role='group'><button type='button' data-tooltip='tooltip' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='glyphicon glyphicon-stats' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' title='Show all related questions' onclick='filter(this, \"question\")'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" +
-    "<button type='button' data-tooltip='tooltip' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
-var clipboard = "<button type='button' data-tooltip='tooltip' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>"
-var filter_and_clipboard = filter_options_string.substr(0, 836) + clipboard + filter_options_string.substr(836);
-var base_url = location.protocol + '//' + window.location.host + "/api/topics/" + study + "/" + language
-
+var filter_options_string = "<span class='btn-group btn-group-sm filter-options' data-container='body' role='group'><button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='glyphicon glyphicon-stats' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' data-container='body' title='Show all related questions' onclick='filter(this, \"question\")'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" +
+    "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
+var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>"
+var filter_and_clipboard = filter_options_string.substr(0, 924) + clipboard + filter_options_string.substr(924);
+var api_url = location.protocol + '//' + window.location.host + "/api/topics/" + study + "/" + language
+var base_url = location.protocol + '//' + window.location.host + "/" + study + "/topics/" + language
 
 // Define what the tree structure will look like, for more information and options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
@@ -74,7 +74,7 @@ $(function () {
 
         },
         source: {
-            url: base_url, // load data from api (topic and concepts only)
+            url: api_url, // load data from api (topic and concepts only)
             cache: false
         },
         renderNode: function (event, data) {
@@ -97,6 +97,7 @@ $(function () {
             if (open != null) {
                 var node = $("#tree").fancytree("getNodeByKey", open);
                 node.makeVisible();
+                node.setActive(true)
             }
         }
     });
@@ -132,7 +133,7 @@ function filter(node, type) {
     var activeNode = $.ui.fancytree.getNode(node);
 
     var extraClasses = activeNode.extraClasses || "";
-    var url = base_url + "/" + activeNode.key
+    var url = api_url + "/" + activeNode.key
     if (type == 'variable') {
         url += '?variable_html=true';
     }
@@ -199,7 +200,7 @@ function removeAllChildren(activeNode, type) {
 // a list of the user's baskets
 function addToBasket(el) {
     var node = $.ui.fancytree.getNode(el);
-    var url = base_url + "/" + node.key + "?variable_list=false";
+    var url = api_url + "/" + node.key + "?variable_list=false";
     $('#basket_list').empty();
     var number_of_variables = '?';
     if (node.type == 'variable') {
@@ -213,7 +214,7 @@ function addToBasket(el) {
         })
     }
 
-    var url = base_url + "/baskets";
+    var url = api_url + "/baskets";
     jQuery.getJSON(url, function (data) {
         if (data.user_logged_in) {
             if (data.baskets.length == 0) {
@@ -234,7 +235,7 @@ function addToBasket(el) {
 // Call API to add an element (identified by node_key) to a basket (identified by basket_id)
 // On success show success message else error message
 function addToBasketRequest(node_key, basket_id) {
-    var url = base_url + "/" + node_key + "/add_to_basket/" + basket_id;
+    var url = api_url + "/" + node_key + "/add_to_basket/" + basket_id;
     jQuery.get(url, function (data) {
     }).done(function () {
         $('#basket_success').removeClass('hidden');
@@ -254,7 +255,8 @@ $('#topic-list-add-to-basket').on('hidden.bs.modal', function () {
 function copy_url_to_clipboard(el) {
     var activeNode = $.ui.fancytree.getNode(el);
 
-    var url = url_string + "?open=" + activeNode.key
+    // URL need to be selectable to be copied to clipboard, append temporary element
+    url = base_url + "?open=" + activeNode.key
     const tmp = document.createElement('textarea');
     tmp.value = url;
     document.body.appendChild(tmp);
@@ -262,8 +264,9 @@ function copy_url_to_clipboard(el) {
     document.execCommand('copy');
     document.body.removeChild(tmp);
 
+    // Show feedback message (url copied)
     $(el).attr('title', 'Copied URL').tooltip('fixTitle').tooltip('show');
     setTimeout(function () {
-        $(el).attr('title', 'Copy URL').tooltip('fixTitle').tooltip('show');
+        $(el).attr('title', 'Copy URL').tooltip('fixTitle');
     }, 1000)
 }
