@@ -25,7 +25,7 @@ bibtexparser = "*"
 # Project scripting
 paver = "*"
 fabric = "*"
-
+redis = "==3.1" # pin temporarily
 
 [dev-packages]
 # Linters and code style
@@ -53,7 +53,7 @@ sphinx-rtd-theme = "*"
 django-debug-toolbar = "*"
 werkzeug = "*"
 pre-commit = "*"
-
+black = "==18.9b0" # pin until black leaves pre-release status
 
 [requires]
 python_version = "3.6"
