@@ -23,7 +23,10 @@ var open = url.searchParams.get("open");
 // This buttons will be append to the nodes defined by fancytree
 var filter_options_string = "<span class='btn-group btn-group-sm filter-options' role='group'><button type='button' data-tooltip='tooltip' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='glyphicon glyphicon-stats' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' title='Show all related questions' onclick='filter(this, \"question\")'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" +
     "<button type='button' data-tooltip='tooltip' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
+var clipboard = "<button type='button' data-tooltip='tooltip' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>"
+var filter_and_clipboard = filter_options_string.substr(0, 836) + clipboard + filter_options_string.substr(836);
 var base_url = location.protocol + '//' + window.location.host + "/api/topics/" + study + "/" + language
+
 
 // Define what the tree structure will look like, for more information and options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
@@ -79,7 +82,11 @@ $(function () {
             var d = node.data.description || '';
             var $spanTitle = $(node.span).find('span.fancytree-title');
             if ($(node.span).find('span.filter-options').length == 0) {
-                if (node.type == 'topic' || node.type == 'concept') {
+                if (node.type == 'topic') {
+                    $spanTitle.after(filter_and_clipboard); // insert additional copy_to_clipboard button to button group
+                    // $spanTitle.before(node.key)
+                }
+                if (node.type == 'concept') {
                     $spanTitle.after(filter_options_string);
                     // $spanTitle.before(node.key)
                 }
@@ -241,3 +248,22 @@ $('#topic-list-add-to-basket').on('hidden.bs.modal', function () {
     $('#basket_success').addClass('hidden');
     $('#basket_error').addClass('hidden');
 })
+
+
+// Copy the URL of selected topic to clipboard
+function copy_url_to_clipboard(el) {
+    var activeNode = $.ui.fancytree.getNode(el);
+
+    var url = url_string + "?open=" + activeNode.key
+    const tmp = document.createElement('textarea');
+    tmp.value = url;
+    document.body.appendChild(tmp);
+    tmp.select();
+    document.execCommand('copy');
+    document.body.removeChild(tmp);
+
+    $(el).attr('title', 'Copied URL').tooltip('fixTitle').tooltip('show');
+    setTimeout(function () {
+        $(el).attr('title', 'Copy URL').tooltip('fixTitle').tooltip('show');
+    }, 1000)
+}
