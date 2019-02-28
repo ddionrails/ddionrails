@@ -25,6 +25,12 @@ class InstrumentImport(imports.Import):
 
         # add period relation to instrument
         period_name = content.get("period", "")
+
+        # Workaround for periods coming in as float, w.g. 2001.0
+        try:
+            period_name = str(int(period_name))
+        except ValueError:
+            period_name = str(period_name)
         period = Period.objects.get(name=period_name)
         instrument.period = period
 
