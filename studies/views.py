@@ -7,8 +7,8 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
-from data.models import Dataset
-from instruments.models import Instrument
+from data.models import Dataset, Variable
+from instruments.models import Instrument, Question
 
 from .models import Study
 
@@ -33,6 +33,11 @@ class StudyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["num_datasets"] = Dataset.objects.filter(study=self.object).count()
+        context["num_variables"] = Variable.objects.filter(dataset__study=self.object).count()
+        context["num_instruments"] = Instrument.objects.filter(study=self.object).count()
+        context["num_questions"] = Question.objects.filter(instrument__study=self.object).count()
+
         context["dataset_list"] = (
             Dataset.objects.select_related(
                 "study", "conceptual_dataset", "period", "analysis_unit"
