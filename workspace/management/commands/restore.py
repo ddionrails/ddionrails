@@ -53,7 +53,8 @@ def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
                     f"Error in line: {line}, {error.error}, {error.row}", fg="red"
                 )
                 output.append(error.row.values())
-        with open('local/backup/backup_restore_error_log.csv', 'w') as f:
+        log_file = path / 'error_log.csv'
+        with open(str(log_file), 'w') as f:
             f.write(output.csv)
     else:
         # Actually write the data to the database if no errors were encountered in dry run
