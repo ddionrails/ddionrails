@@ -9,33 +9,51 @@
 <!-- TODO: Load jquery-fancytree from webpack here -->
 
 <script>
-    var study = '{{study.name}}';
-    var language = '{{language}}';
+    var study = '{{study.name}}'
+    var language = '{{ language }}'
 </script>
 <script src="./../../static/src/js/topic_list.js"></script>
 {% endblock scripts %}
 
 {% block content %}
 
+<p class="text-right">
+  Languages:
+  {% for link_language in study.get_topic_languages %}
+    {% if link_language == language %}<b>{% endif %}
+    &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
+    {% if link_language == language %}</b>{% endif %}
+  {% endfor %}
+</p>
+
 <h2><span class="small glyphicon glyphicon-folder-close"></span> Topics</h2>
-<div class="conainer test">
-    <a class="anchor" id="topics"></a>
-    <div class="row">
-        <div class="col-md-offset-8 col-md-4 col-xs-8 col-xs-offset-4 search-bar">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search node .." id="search">
-                <span class="input-group-btn">
+<a class="anchor" id="topics"></a>
+<div class="row">
+    <div class="col-md-offset-8 col-md-4 col-xs-8 col-xs-offset-4 search-bar">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search node .." id="search">
+            <span class="input-group-btn">
 		<button class="btn btn-default" type="button" aria-pressed="true" id="btn-search"><span
                 class='glyphicon glyphicon-search'
                 aria-hidden='true'></span></button>
 	</span>
-            </div>
         </div>
     </div>
-    <div class="row topic-list-wrapper">
-        <div class="col-md-12 col-xs-12">
-            <div class="topic-list-content">
-                <div id="tree"></div>
+</div>
+<div class="row topic-list-wrapper">
+    <div class="col-md-6 col-xs-6">
+        <div class="topic-list-content">
+            <div id="tree"></div>
+        </div>
+    </div>
+    <div class="col-md-6 col-xs-6">
+        <div class="topic-list-content">
+            <div class="sk-three-bounce" style="display: none">
+                <div class="sk-child sk-bounce1"></div>
+                <div class="sk-child sk-bounce2"></div>
+                <div class="sk-child sk-bounce3"></div>
+            </div>
+            <div id="tree_variables">
             </div>
         </div>
     </div>
@@ -60,10 +78,6 @@
                 <p>Select a basket:</p>
                 <div id="basket_list"></div>
             </div>
-            <!--<div class="modal-footer">-->
-            <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-            <!--<a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}"  type="button" class="btn btn-primary">Add to basket</a>-->
-            <!--</div>-->
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
