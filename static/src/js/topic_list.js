@@ -1,11 +1,8 @@
 /***
- * Topic List Design 2
+ * Topic List
  *
  * This script visualizes a tree structure of topics and their concepts, questions and variables using the fancytree library.
  * Make sure you set study and language variable in template, else api calls will not work.
- *
- * In design 1 questions and variables are integrated directly to the tree. In design 2 variables and questions will
- * be placed in another div on the right side.
  *
  * @author cstolpe
  *
@@ -84,11 +81,9 @@ $(function () {
             if ($(node.span).find('span.filter-options').length == 0) {
                 if (node.type == 'topic') {
                     $spanTitle.after(filter_and_clipboard); // insert additional copy_to_clipboard button to button group
-                    // $spanTitle.before(node.key)
                 }
                 if (node.type == 'concept') {
                     $spanTitle.after(filter_options_string);
-                    // $spanTitle.before(node.key)
                 }
             }
         },
@@ -151,18 +146,6 @@ function filter(node, type) {
         $("#tree_variables").html("<p><span class='glyphicon glyphicon-alert' aria-hidden='true'></span> Load Error!</p>");
     });
 }
-
-function toggleChildren(node) {
-    var node = $.ui.fancytree.getNode(node);
-    var children = node.getChildren();
-
-    if (children) {
-        for (var i = 0; i < children.length; i++) {
-//                    children[i].toggleClass('hide');
-        }
-    }
-}
-
 
 // Remove all variables and questions from active node
 function removeAsyncLoadedData(activeNode, type) {
