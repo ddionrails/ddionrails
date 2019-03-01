@@ -25,6 +25,10 @@ class InstrumentImport(imports.Import):
 
         # add period relation to instrument
         period_name = content.get("period", "")
+        # Workaround for two ways to name period: period, period_name
+        # => period_name
+        if period_name == "":
+            period_name = content.get("period_name", "")
 
         # Workaround for periods coming in as float, w.g. 2001.0
         try:
