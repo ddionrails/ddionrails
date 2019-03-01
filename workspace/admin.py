@@ -5,4 +5,6 @@ from .models import Basket
 
 @admin.register(Basket)
 class BasketAdmin(admin.ModelAdmin):
-    fields = ("name", "label", "description", "security_token", "user")
+    list_display = ("name", "label", "user", "study")
+    list_filter = ("study",)
+    list_per_page = 25
