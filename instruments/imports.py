@@ -2,7 +2,7 @@ import json
 import logging
 from collections import OrderedDict
 
-from concepts.models import Concept
+from concepts.models import Concept, Period
 from data.models import Variable
 from ddionrails.helpers import lower_dict_names
 from imports import imports
@@ -14,12 +14,26 @@ logger = logging.getLogger("imports")
 
 class InstrumentImport(imports.Import):
     def execute_import(self):
-        self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(self.content)
+        self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(
+            self.content
+        )
         self._import_instrument(self.name, self.content)
 
     def _import_instrument(self, name, content):
         import_dict = dict(study=self.study, name=name)
         instrument = Instrument.get_or_create(import_dict)
+
+        # add period relation to instrument
+        period_name = content.get("period", "")
+
+        # Workaround for periods coming in as float, w.g. 2001.0
+        try:
+            period_name = str(int(period_name))
+        except ValueError:
+            period_name = str(period_name)
+        period = Period.objects.get(name=period_name)
+        instrument.period = period
+
         for name, q in content["questions"].items():
             import_dict = dict(name=q["question"], instrument=instrument)
             question = Question.get_or_create(import_dict)
@@ -45,7 +59,9 @@ class QuestionVariableImport(imports.CSVImport):
             lower_dict_names(link)
             question = self._get_question(link)
             variable = self._get_variable(link)
-            qv_link = QuestionVariable.objects.get_or_create(question=question, variable=variable)
+            qv_link = QuestionVariable.objects.get_or_create(
+                question=question, variable=variable
+            )
         except:
             print("[ERROR] QV import failed.")
 
@@ -77,7 +93,9 @@ class ConceptQuestionImport(imports.CSVImport):
             lower_dict_names(link)
             question = self._get_question(link)
             concept = self._get_concept(link)
-            qv_link = ConceptQuestion.objects.get_or_create(question=question, concept=concept)
+            qv_link = ConceptQuestion.objects.get_or_create(
+                question=question, concept=concept
+            )
         except:
             print("[ERROR] CQ import failed.")
 

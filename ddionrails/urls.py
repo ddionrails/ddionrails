@@ -8,7 +8,7 @@ import publications.views as publications_views
 import studies.views as studies_views
 from data.views import DatasetRedirectView, VariableRedirectView
 from elastic.views import angular as angular_search
-from studies.views import StudyDetailView, study_topics, study_topics2
+from studies.views import StudyDetailView, study_topics
 
 from .views import (
     HomePageView,
@@ -48,7 +48,6 @@ urlpatterns = [
     path("<slug:study_name>/publ/", include("publications.urls", namespace="publ")),
     path("<slug:study_name>/inst/", include("instruments.urls", namespace="inst")),
     path("<slug:study_name>/topics/<slug:language>", study_topics, name="study.topics"),
-    path("<slug:study_name>/topics2/<slug:language>", study_topics2, name="study.topics"),
     # Redirects for search interface
     path("publication/<int:id>", publications_views.PublicationRedirectView.as_view()),
     path("variable/<int:id>", VariableRedirectView.as_view()),
@@ -70,4 +69,3 @@ urlpatterns = [
 if settings.DEBUG and ("_hewing" or "_production") not in settings.WSGI_APPLICATION:
     import debug_toolbar
     urlpatterns = [path(r"__debug__/", include(debug_toolbar.urls))] + urlpatterns
-    urlpatterns += [path("silk/", include("silk.urls", namespace="silk"))]
