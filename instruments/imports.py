@@ -35,7 +35,7 @@ class InstrumentImport(imports.Import):
             period_name = str(int(period_name))
         except ValueError:
             period_name = str(period_name)
-        period = Period.objects.get(name=period_name)
+        period = Period.objects.get(name=period_name, study=self.study)
         instrument.period = period
 
         for name, q in content["questions"].items():
