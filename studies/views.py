@@ -71,12 +71,5 @@ class StudyDetailView(DetailView):
 def study_topics(request: HttpRequest, study_name: str, language: str) -> HttpResponse:
     study = get_object_or_404(Study, name=study_name)
     context = dict(study=study, language=language)
-    # context["hide_topics"] = len(context["topics"]) == 0
     return render(request, "studies/study_topics.html", context=context)
 
-
-def study_topics2(request, study_name, language):
-    study = get_object_or_404(Study, name=study_name)
-    context = dict(study=study, language=language)
-    # context["hide_topics"] = len(context["topics"]) == 0
-    return render(request, "studies/study_topics_extra_div.html", context=context)
