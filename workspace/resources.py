@@ -77,6 +77,7 @@ class BasketVariableExportResource(resources.ModelResource):
 
     basket = Field(attribute="basket__name")
     user = Field(attribute="basket__user__username")
+    email = Field(attribute="basket__user__email")
     study = Field(attribute="variable__dataset__study__name")
     dataset = Field(attribute="variable__dataset__name")
     variable = Field(attribute="variable__name")
@@ -84,7 +85,7 @@ class BasketVariableExportResource(resources.ModelResource):
     class Meta:
         model = BasketVariable
         exclude = ("id",)
-        export_order = ("basket", "user", "study", "dataset", "variable")
+        export_order = ("basket", "user", "email", "study", "dataset", "variable")
 
     def get_queryset(self):
         return (
