@@ -3,6 +3,7 @@ import pathlib
 import djclick as click
 from import_export.formats.base_formats import CSV, JSON, YAML, TextFormat
 from workspace.resources import determine_model_and_resource
+import tablib
 
 
 def get_most_recent_backup_directory():
@@ -29,7 +30,7 @@ def determine_import_format(format_: str) -> TextFormat:
 
 def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     """ Restore data from file in given path with given format """
-    model, resource = determine_model_and_resource(entity)
+    model, resource = determine_model_and_resource(entity, method="restore")
     filename = (path / entity).with_suffix("." + format_)
     try:
         with open(str(filename), "r") as f:
@@ -43,13 +44,17 @@ def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     # Try to import the data in dry_run mode
     result = resource().import_data(dataset, dry_run=True)
     if result.has_errors():
+        output = tablib.Dataset()
+        output.headers = ['basket', 'user', "email", 'study', 'dataset', 'variable']
         click.secho(f"Error while importing {entity} from {filename}", fg="red")
-
         for line, errors in result.row_errors():
             for error in errors:
                 click.secho(
                     f"Error in line: {line}, {error.error}, {error.row}", fg="red"
                 )
+                output.append(error.row.values())
+        with open('local/backup/backup_restore_error_log.csv', 'w') as f:
+            f.write(output.csv)
     else:
         # Actually write the data to the database if no errors were encountered in dry run
         resource().import_data(dataset, dry_run=False)
@@ -86,7 +91,7 @@ def command(
         restore_entity("baskets", path, format_)
 
     if basket_variables:
-        restore_entity("basket_variables_import", path, format_)
+        restore_entity("basket_variables", path, format_)
 
     if scripts:
         restore_entity("scripts_import", path, format_)
@@ -95,5 +100,5 @@ def command(
     if any((users, baskets, basket_variables, scripts)) is False:
         restore_entity("users", path, format_)
         restore_entity("baskets", path, format_)
-        restore_entity("basket_variables_import", path, format_)
-        restore_entity("scripts_import", path, format_)
+        restore_entity("basket_variables", path, format_)
+        restore_entity("scripts", path, format_)
