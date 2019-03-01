@@ -15,7 +15,7 @@ def create_backup_directory(base_dir: pathlib.Path) -> pathlib.Path:
 
 def backup_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     """ Backup data to file with given format """
-    model, resource = determine_model_and_resource(entity)
+    model, resource = determine_model_and_resource(entity, method="backup")
     num_entries = model.objects.count()
     click.secho(f"Exporting {num_entries} {entity}", fg="green")
     dataset = resource().export()
@@ -50,14 +50,14 @@ def command(
         backup_entity("baskets", path, format_)
 
     if basket_variables:
-        backup_entity("basket_variables_export", path, format_)
+        backup_entity("basket_variables", path, format_)
 
     if scripts:
-        backup_entity("scripts_export", path, format_)
+        backup_entity("scripts", path, format_)
 
     # If no command line argument is given, backup all entities
     if any((users, baskets, basket_variables, scripts)) is False:
         backup_entity("users", path, format_)
         backup_entity("baskets", path, format_)
-        backup_entity("basket_variables_export", path, format_)
-        backup_entity("scripts_export", path, format_)
+        backup_entity("basket_variables", path, format_)
+        backup_entity("scripts", path, format_)
