@@ -86,14 +86,14 @@ def command(
         restore_entity("baskets", path, format_)
 
     if basket_variables:
-        restore_entity("basket_variables", path, format_)
+        restore_entity("basket_variables_import", path, format_)
 
     if scripts:
-        restore_entity("scripts", path, format_)
+        restore_entity("scripts_import", path, format_)
 
     # If no command line argument is given, backup all entities
     if any((users, baskets, basket_variables, scripts)) is False:
         restore_entity("users", path, format_)
         restore_entity("baskets", path, format_)
-        restore_entity("basket_variables", path, format_)
-        restore_entity("scripts", path, format_)
+        restore_entity("basket_variables_import", path, format_)
+        restore_entity("scripts_import", path, format_)

@@ -50,14 +50,14 @@ def command(
         backup_entity("baskets", path, format_)
 
     if basket_variables:
-        backup_entity("basket_variables", path, format_)
+        backup_entity("basket_variables_export", path, format_)
 
     if scripts:
-        backup_entity("scripts", path, format_)
+        backup_entity("scripts_export", path, format_)
 
     # If no command line argument is given, backup all entities
     if any((users, baskets, basket_variables, scripts)) is False:
         backup_entity("users", path, format_)
         backup_entity("baskets", path, format_)
-        backup_entity("basket_variables", path, format_)
-        backup_entity("scripts", path, format_)
+        backup_entity("basket_variables_export", path, format_)
+        backup_entity("scripts_export", path, format_)

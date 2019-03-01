@@ -145,12 +145,16 @@ class ScriptImportResource(resources.ModelResource):
 
 
 def determine_model_and_resource(entity: str) -> tuple:
-    """ Determine which model and export resource to use """
+    """ Determine which model and resource to use """
     if entity == "users":
         return User, UserResource
     if entity == "baskets":
         return Basket, BasketResource
-    if entity == "scripts":
+    if entity == "scripts_import":
         return Script, ScriptImportResource
-    if entity == "basket_variables":
+    if entity == "scripts_export":
+        return Script, ScriptExportResource
+    if entity == "basket_variables_import":
         return BasketVariable, BasketVariableImportResource
+    if entity == "basket_variables_export":
+        return BasketVariable, BasketVariableExportResource
