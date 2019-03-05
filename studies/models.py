@@ -1,4 +1,3 @@
-import glob
 import json
 import os
 from json.decoder import JSONDecodeError
@@ -7,7 +6,6 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-import ddionrails
 from ddionrails.mixins import ModelMixin as DorMixin
 from elastic.mixins import ModelMixin as ElasticMixin
 
@@ -64,22 +62,6 @@ class Study(ElasticMixin, DorMixin, models.Model):
     def get_absolute_url(self):
         return reverse("study_detail", kwargs={"study_name": self.name})
 
-    def get_list_of_topic_files(self):
-        file_names = glob.glob(
-            os.path.join(
-                os.path.abspath(os.path.dirname(ddionrails.__file__)),
-                "..",
-                self.import_path(),
-                "topics",
-                "*.md",
-            )
-        )
-        file_names.sort()
-        return file_names
-
-    def has_topics(self):
-        return len(self.get_list_of_topic_files()) > 0
-
     def get_config(self, text=False):
         """
         The configuration is stored as a JSON object in a single text field in
@@ -102,7 +84,7 @@ class Study(ElasticMixin, DorMixin, models.Model):
     def get_topic_languages(self):
         return self.get_source().get("topic_languages", [])
 
-    def has_topics(self):
+    def has_topics(self) -> bool:
         return len(self.get_topic_languages()) > 0
 
     def get_topiclist(self, language="en"):
