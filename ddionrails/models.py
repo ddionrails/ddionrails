@@ -13,9 +13,7 @@ class System(models.Model):
 
     def import_path(self):
         path = os.path.join(
-            settings.IMPORT_REPO_PATH,
-            self.name,
-            settings.IMPORT_SUB_DIRECTORY,
+            settings.IMPORT_REPO_PATH, self.name, settings.IMPORT_SUB_DIRECTORY
         )
         return path
 
@@ -27,23 +25,3 @@ class System(models.Model):
         else:
             s = System.objects.first()
         return s
-
-
-class Backup():
-
-    name = settings.BACKUP_NAME
-    current_commit = ""
-
-    def repo_url(self):
-        return settings.BACKUP_REPO_URL
-
-    def import_path(self):
-        path = os.path.join(
-            settings.IMPORT_REPO_PATH,
-            self.name,
-            settings.IMPORT_SUB_DIRECTORY,
-        )
-        return path
-
-    def save(self):
-        pass

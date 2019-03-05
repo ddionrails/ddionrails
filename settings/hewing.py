@@ -8,8 +8,7 @@ ALLOWED_HOSTS = ["hewing.soep.de", "ddionrails.soep.de"]
 
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
-BACKUP_NAME = "backup"
-BACKUP_REPO_URL = "https://github.com/ddionrails/test-backup.git"
+
 IMPORT_BRANCH = "development"
 
 LOGGING = {
