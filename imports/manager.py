@@ -28,7 +28,6 @@ from instruments.imports import (
 from publications.imports import AttachmentImport, PublicationImport
 from studies.imports import StudyDescriptionImport, StudyImport
 from studies.models import Study
-from workspace.imports import BasketImport, BasketVariableImport, UserImport
 
 
 class Repository:
