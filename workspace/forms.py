@@ -26,7 +26,7 @@ class UserForm(forms.ModelForm):
 class BasketForm(forms.ModelForm):
     class Meta:
         model = Basket
-        fields = ("name", "label", "description", "security_token", "study", "user")
+        fields = ("name", "label", "description", "study", "user")
 
 
 class BasketCSVForm(BasketForm):
