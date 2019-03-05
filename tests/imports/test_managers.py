@@ -1,7 +1,6 @@
 import pytest
 
 from imports.manager import (
-    BackupImportManager,
     ImportLink,
     LocalImport,
     Repository,
@@ -21,10 +20,6 @@ class TestImportLink:
 
 
 class TestSystemImportManager:
-    pass
-
-
-class TestBackupImportManager:
     pass
 
 
