@@ -13,6 +13,7 @@ django-rq = "*"
 django-webpack-loader = "*"
 django-import-export = "*"
 django-click = "*"
+django-crispy-forms = "*"
 
 # Markup related libraries
 pyyaml = "*"
