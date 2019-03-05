@@ -58,7 +58,7 @@ class Basket(ElasticMixin, models.Model):
         try:
             config = self.study.get_config()
             return config["script_generators"]
-        except TypeError:
+        except (TypeError, KeyError):
             return None
 
     def to_csv(self):
