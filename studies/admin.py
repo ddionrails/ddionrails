@@ -9,4 +9,6 @@ class StudyInline(admin.TabularInline):
     fields = ["name", "label", "repo"]
 
 
-admin.site.register(Study)
+@admin.register(Study)
+class StudyAdmin(admin.ModelAdmin):
+    list_display = ("name", "label", "created", "modified")
