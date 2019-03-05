@@ -1,8 +1,9 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 
-<h1>Create basket</h2>
+<h1>Create basket</h1>
 
 {% if form.errors %}
   <div class="alert alert-danger" role="alert">
@@ -12,7 +13,7 @@
 
 <form method="post" action="/workspace/baskets/new">
 {% csrf_token %}
-{{ form.as_p }}
+{{ form|crispy }}
 <input type="submit" value="Create basket" />
 <input type="hidden" name="next" value="{{ next }}" />
 </form>
