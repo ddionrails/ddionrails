@@ -59,6 +59,7 @@ class Publication(ElasticMixin, DorMixin, models.Model):
             abstract=self.abstract,
             cite=self.cite,
             url=self.url,
+            doi=self.doi,
             study=study_name,
         )
 
