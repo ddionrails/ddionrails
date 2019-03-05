@@ -31,10 +31,7 @@ class TopicImport(imports.CSVImport):
 
 class TopicJsonImport(imports.Import):
     def execute_import(self):
-        self.content = json.JSONDecoder(
-            # object_pairs_hook=OrderedDict
-        ).decode(self.content)
-        print(self.content)
+        self.content = json.JSONDecoder().decode(self.content)
         self._import_topic_list()
 
     def _import_topic_list(self):
