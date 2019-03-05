@@ -41,7 +41,7 @@ class Repository:
     def clone_repo(self):
         script = [
             "cd %s" % settings.IMPORT_REPO_PATH,
-            "git clone %s %s" % (self.link, self.name),
+            f"git clone --depth 1 {self.link} {self.name}",
             "cd %s" % self.name,
             "git checkout -b %s origin/%s"
             % (settings.IMPORT_BRANCH, settings.IMPORT_BRANCH),
