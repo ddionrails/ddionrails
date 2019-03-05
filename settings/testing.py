@@ -23,8 +23,7 @@ MIDDLEWARE = [
 
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
-BACKUP_NAME = "backup"
-BACKUP_REPO_URL = "https://github.com/ddionrails/test-backup.git"
+
 IMPORT_BRANCH = "master"
 INDEX_NAME = "testing"
 
