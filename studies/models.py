@@ -5,6 +5,7 @@ from json.decoder import JSONDecodeError
 from django.conf import settings
 from django.db import models
 from django.urls import reverse
+from model_utils.models import TimeStampedModel
 
 from ddionrails.mixins import ModelMixin as DorMixin
 from elastic.mixins import ModelMixin as ElasticMixin
@@ -18,7 +19,7 @@ class TopicList(ElasticMixin):
         self.id = study.id
 
 
-class Study(ElasticMixin, DorMixin, models.Model):
+class Study(ElasticMixin, DorMixin, TimeStampedModel):
     """
     Stores a single study,
     related to :model:`data.Dataset`, :model:`instruments.Instrument`,
