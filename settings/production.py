@@ -6,8 +6,7 @@ ALLOWED_HOSTS = [".paneldata.org", "paneldata.soep.de", "data.soep.de"]
 
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
-BACKUP_NAME = "backup"
-BACKUP_REPO_URL = "https://github.com/ddionrails/test-backup.git"
+
 IMPORT_BRANCH = "master"
 
 LOGGING = {

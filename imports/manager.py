@@ -141,31 +141,6 @@ class SystemImportManager:
         self.repo.set_commit_id()
 
 
-class BackupImportManager:
-    """Import the files from the backup repository."""
-
-    def __init__(self, backup):
-        self.backup = backup
-        self.repo = Repository(backup)
-        self.import_patterns = [
-            ImportLink("^users.csv$", UserImport),
-            ImportLink("^baskets.csv$", BasketImport),
-            ImportLink("^baskets_variables.csv$", BasketVariableImport),
-        ]
-
-    def run_import(self, import_all=False):
-        """
-        Run the backup import.
-        """
-        if import_all or self.backup.current_commit == "":
-            import_files = self.repo.list_all_files()
-        else:
-            import_files = self.repo.list_changed_files()
-        for link in self.import_patterns:
-            link.run_import(import_files, self.backup)
-        self.repo.set_commit_id()
-
-
 class StudyImportManager:
     """
     The ``StudyImportManager`` controls the automated imports for a study.
