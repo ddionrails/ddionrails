@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "django_rq",
     "webpack_loader",
     "import_export",
+    "crispy_forms",
     # DDI on Rails
     "ddionrails",
     "concepts",
@@ -162,3 +163,5 @@ def get_secret(setting, secrets=secrets):
 
 
 SECRET_KEY = get_secret("SECRET_KEY")
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
