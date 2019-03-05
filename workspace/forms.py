@@ -14,4 +14,4 @@ class UserCreationForm(UCF):
 class BasketForm(forms.ModelForm):
     class Meta:
         model = Basket
-        fields = ("name", "label", "description", "security_token", "study", "user")
+        fields = ("name", "label", "description", "study", "user")
