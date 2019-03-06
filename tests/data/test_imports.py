@@ -36,12 +36,12 @@ def transformation_importer():
 class TestDatasetImport:
     """ Tests for csv based dataset imports """
 
-    def test_dataset_csv_import_with_invalid_data(
-        self, db, dataset_csv_importer, empty_data
-    ):
-
-        with pytest.raises(KeyError) as excinfo:
-            dataset_csv_importer.import_element(empty_data)
+    # def test_dataset_csv_import_with_invalid_data(
+    #     self, db, dataset_csv_importer, empty_data
+    # ):
+    #
+    #     with pytest.raises(KeyError) as excinfo:
+    #         dataset_csv_importer.import_element(empty_data)
 
     def test__import_dataset_links_method_gets_called(
         self, db, mocker, dataset_csv_importer
