@@ -16,14 +16,26 @@ from .resources import (
 @admin.register(Basket)
 class BasketAdmin(ImportExportModelAdmin):
     """ The basket admin can import and export script files """
-    fields = ("name", "label", "description", "security_token", "user", "study")
-    list_display = ("name", "user", "study")
+
+    fields = (
+        "name",
+        "label",
+        "description",
+        "security_token",
+        "user",
+        "study",
+        "created",
+        "modified",
+    )
+    readonly_fields = ("created", "modified")
+    list_display = ("name", "user", "study", "created", "modified")
     resource_class = BasketResource
 
 
 @admin.register(BasketVariable)
 class BasketVariableAdmin(ImportMixin, admin.ModelAdmin):
     """ The basket variable admin can import script files """
+
     list_display = ("basket", "variable")
     list_per_page = 10
     resource_class = BasketVariableImportResource
@@ -32,13 +44,17 @@ class BasketVariableAdmin(ImportMixin, admin.ModelAdmin):
 @admin.register(Script)
 class ScriptAdmin(ImportMixin, admin.ModelAdmin):
     """ The script admin can import script files """
+
     list_select_related = ("basket",)
+    list_display = ("name", "basket", "created", "modified")
     list_per_page = 10
+    readonly_fields = ("created", "modified")
     resource_class = ScriptImportResource
 
 
 class ImportExportUserAdmin(ImportExportMixin, UserAdmin):
     """ The basket admin can import and export user files """
+
     resource_class = UserResource
 
 
