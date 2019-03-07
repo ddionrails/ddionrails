@@ -29,7 +29,7 @@ class BasketResource(resources.ModelResource):
     class Meta:
         model = Basket
         import_id_fields = ("user", "name", "study")
-        fields = ("name", "label", "description", "security_token", "user", "study")
+        fields = ("name", "label", "description", "security_token", "user", "study", "created", "modified")
 
     def get_queryset(self):
         return (
@@ -42,6 +42,8 @@ class BasketResource(resources.ModelResource):
                 "security_token",
                 "user__username",
                 "study__name",
+                "created",
+                "modified"
             )
         )
 
