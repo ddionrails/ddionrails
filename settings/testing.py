@@ -25,7 +25,7 @@ SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
 
 IMPORT_BRANCH = "master"
-INDEX_NAME = "testing"
+INDEX_NAME = "dor" # This necessary beacuse ddionrails-elasticsearch has the index hardwired. No way to switch index for search.
 
 logging.disable(logging.CRITICAL)
 

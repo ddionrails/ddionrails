@@ -48,6 +48,8 @@ factory-boy = "*"
 django-coverage-plugin = "*"
 django-test-without-migrations = "*"
 fakeredis = "*"
+splinter = "*"
+pytest-splinter = "*"
 
 # Documentation
 sphinx = "*"
