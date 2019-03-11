@@ -1,7 +1,6 @@
 import os
 import subprocess
 
-import yaml
 from django.utils.html import escape
 from markdown import markdown
 
@@ -42,22 +41,6 @@ def lower_dict_names(dictionary):
     for key, value in dictionary.items():
         if "_name" in key:
             dictionary[key] = value.lower()
-
-
-def jekyll_reader(text):
-    lines = text.split("\n")
-    yaml_lines = []
-    line = lines.pop(0)
-    if line == "---":
-        while lines:
-            line = lines.pop(0)
-            if line in ("---"):
-                break
-            yaml_lines.append(line)
-    else:
-        lines.insert(0, line)
-    yaml_content = "\n".join(yaml_lines)
-    return dict(content="\n".join(lines), yaml_content=yaml_content, data=yaml.safe_load(yaml_content))
 
 
 class RowHelper:
