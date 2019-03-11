@@ -1,7 +1,6 @@
 import pytest
 
 from ddionrails.helpers import (
-    jekyll_reader,
     lower_dict_names,
     render_markdown,
     script_list,
