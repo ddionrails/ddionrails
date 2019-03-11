@@ -1,5 +1,4 @@
 import json
-import pprint
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -9,7 +8,6 @@ from concepts.models import Concept, Topic
 from data.models import Variable
 from ddionrails.setup import setup
 from instruments.models import Question
-from publications.models import Publication
 from studies.models import Study
 from workspace.models import Basket, BasketVariable
 
