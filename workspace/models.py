@@ -5,6 +5,7 @@ import json
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
+from model_utils.models import TimeStampedModel
 
 from data.models import Variable
 from ddionrails.helpers import render_markdown
@@ -15,7 +16,7 @@ from studies.models import Study
 from .scripts import ScriptConfig
 
 
-class Basket(ElasticMixin, models.Model):
+class Basket(ElasticMixin, TimeStampedModel):
     """
     Basket
     """
@@ -117,7 +118,7 @@ class BasketVariable(models.Model):
         unique_together = ("basket", "variable")
 
 
-class Script(models.Model):
+class Script(TimeStampedModel):
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     generator_name = models.CharField(max_length=255, default="soep-stata")
