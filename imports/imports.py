@@ -1,9 +1,9 @@
 import logging
 import os
 
-import yaml
 from django.db import transaction
 
+import frontmatter
 from imports.helpers import read_csv
 
 logger = logging.getLogger("imports")
@@ -72,31 +72,15 @@ class JekyllImport(Import):
     def __init__(self, filename, study=None, system=None):
         super().__init__(filename, study, system)
         self.data = None
-        self.yaml_content = None
 
     def read_file(self):
         with open(self.file_path(), "r") as f:
-            lines = f.read().splitlines()
-            self.read_lines(lines)
-
-    def read_lines(self, lines):
-        yaml_lines = []
-        line = lines.pop(0)
-        if line == "---":
-            while lines:
-                line = lines.pop(0)
-                if line in "---":
-                    break
-                yaml_lines.append(line)
-        else:
-            lines.insert(0, line)
-        self.content = "\n".join(lines)
-        self.yaml_content = "\n".join(yaml_lines)
-        self.data = yaml.safe_load(self.yaml_content)
+            jekyll_content = frontmatter.load(f)
+        self.content = jekyll_content.content
+        self.data = jekyll_content.metadata
 
     def execute_import(self):
-        print(self.data)
-        print(self.content)
+        raise NotImplementedError
 
 
 class CSVImport(Import):
