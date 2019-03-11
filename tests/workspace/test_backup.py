@@ -3,7 +3,6 @@ from click.testing import CliRunner
 from dateutil.parser import parse
 from django.contrib.auth.models import User
 from django.utils import timezone
-from pytz import timezone
 
 import tablib
 from data.models import Variable
