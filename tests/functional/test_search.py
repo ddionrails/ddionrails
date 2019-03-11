@@ -16,6 +16,9 @@ def es_client():
     with open(mapping_file, "r") as f:
         mapping = json.loads(f.read())
     es = Elasticsearch()
+
+    # workaround to delete existing index
+    es.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
     es.indices.create(index=settings.INDEX_NAME, ignore=400, body=mapping)
     # wait for elastic search index to be created
     time.sleep(0.1)
