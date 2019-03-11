@@ -16,5 +16,6 @@ class TestObjectRedirectView:
 
     def test_concept_redirect(self, client, concept):
         url = "/api/test/redirect/concept/1"
-        response = client.get(url)
-        assert 302 == response.status_code
+        response = client.get(url, follow=True)
+        assert 200 == response.status_code
+        assert response.redirect_chain[-1][0] == concept.get_absolute_url()
