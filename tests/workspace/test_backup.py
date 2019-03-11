@@ -1,5 +1,6 @@
 import pytest
 from click.testing import CliRunner
+from dateutil.parser import parse
 from django.contrib.auth.models import User
 from django.utils import timezone
 
@@ -50,9 +51,20 @@ class TestUserResource:
 class TestBasketResource:
     def test_export(self, db, basket):
         dataset = BasketResource().export()
-        assert basket.name in dataset.csv
-        assert basket.study.name in dataset.csv
-        assert basket.user.username in dataset.csv
+
+        # select first row from exported baskets
+        basket_export = dataset.dict[0]
+        assert basket.name in basket_export["name"]
+        assert basket.label in basket_export["label"]
+        assert basket.description in basket_export["description"]
+        assert basket.security_token in basket_export["security_token"]
+        assert basket.study.name in basket_export["study"]
+        assert basket.user.username in basket_export["user"]
+
+        created_timestamp = basket.created.strftime("%Y-%m-%d %H:%M:%S %Z")
+        assert created_timestamp in basket_export["created"]
+        modified_timestamp = basket.modified.strftime("%Y-%m-%d %H:%M:%S %Z")
+        assert modified_timestamp in basket_export["modified"]
 
     def test_import(self, db, user, study):
         assert 0 == Basket.objects.count()
@@ -63,10 +75,31 @@ class TestBasketResource:
         label = "Some basket"
         description = "This is some basket"
         security_token = "some-security-token"
+        created = "2019-03-10 12:00:00 UTC"
+        created_datetime = parse(created)
+        modified = "2019-03-10 12:00:00 UTC"
 
         dataset = tablib.Dataset(
-            [study, username, name, label, description, security_token],
-            headers=["study", "user", "name", "label", "description", "security_token"],
+            [
+                study,
+                username,
+                name,
+                label,
+                description,
+                security_token,
+                created,
+                modified,
+            ],
+            headers=[
+                "study",
+                "user",
+                "name",
+                "label",
+                "description",
+                "security_token",
+                "created",
+                "modified",
+            ],
         )
 
         result = BasketResource().import_data(dataset, dry_run=False)
@@ -79,6 +112,9 @@ class TestBasketResource:
         assert label == basket.label
         assert description == basket.description
         assert security_token == basket.security_token
+
+        assert created_datetime == basket.created
+        # Basket gets new modified timestamp after importing
 
 
 class TestBasketVariableResource:
@@ -182,7 +218,12 @@ class TestBackupManagementCommand:
     def test_backup_users(self, clirunner, argument, user):
         pass
 
-    def test_backup_baskets(self):
+    @pytest.mark.parametrize("argument", ("--baskets", "-b"))
+    def test_backup_baskets(self, clirunner, argument):
+        # TODO: Temporary folder
+        # result = clirunner.invoke(
+        #     restore.command, [argument, "-p", "tests/workspace/test_data/"]
+        # )
         pass
 
     def test_backup_scripts(self):
