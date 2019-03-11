@@ -24,7 +24,6 @@ class Basket(ElasticMixin, TimeStampedModel):
     name = models.CharField(max_length=255, validators=[validate_lowercase])
     label = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
-    security_token = models.CharField(max_length=255, blank=True)
     study = models.ForeignKey(Study, related_name="baskets", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="baskets", on_delete=models.CASCADE)
     variables = models.ManyToManyField(Variable, through="BasketVariable")
