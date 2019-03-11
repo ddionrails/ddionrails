@@ -50,9 +50,20 @@ class TestUserResource:
 class TestBasketResource:
     def test_export(self, db, basket):
         dataset = BasketResource().export()
-        assert basket.name in dataset.csv
-        assert basket.study.name in dataset.csv
-        assert basket.user.username in dataset.csv
+
+        # select first row from exported baskets
+        basket_export = dataset.dict[0]
+        assert basket.name in basket_export["name"]
+        assert basket.label in basket_export["label"]
+        assert basket.description in basket_export["description"]
+        assert basket.security_token in basket_export["security_token"]
+        assert basket.study.name in basket_export["study"]
+        assert basket.user.username in basket_export["user"]
+
+        created_timestamp = basket.created.strftime("%Y-%m-%d %H:%M:%S")
+        assert created_timestamp in basket_export["created"]
+        modified_timestamp = basket.modified.strftime("%Y-%m-%d %H:%M:%S")
+        assert modified_timestamp in basket_export["modified"]
 
     def test_import(self, db, user, study):
         assert 0 == Basket.objects.count()
