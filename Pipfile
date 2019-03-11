@@ -1,12 +1,13 @@
 [[source]]
+
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
 
 [packages]
-# Django related libraries
-django = "==2.1.7" # pin temporarily until 2.2 is production ready
+
+django = "==2.1.7"
 django-extensions = "*"
 django-model-utils = "*"
 django-rq = "*"
@@ -14,31 +15,22 @@ django-webpack-loader = "*"
 django-import-export = "*"
 django-click = "*"
 django-crispy-forms = "*"
-
-# Markup related libraries
 pyyaml = "*"
 markdown = "*"
-
-# Elasticsearch
-elasticsearch-dsl = "==2.2.0"
-
-# Needed for Publications
+elasticsearch-dsl = "==6.3.1"
 bibtexparser = "*"
-
-# Project scripting
 paver = "*"
 fabric = "*"
-redis = "==3.1" # pin temporarily
+redis = "==3.1"
+
 
 [dev-packages]
-# Linters and code style
-black = "==18.9b0" # pin until black leaves pre-release status
+
+black = "==18.9b0"
 flake8 = "*"
 isort = "*"
 mypy = "*"
 codecov = "*"
-
-# Testing
 pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
@@ -50,15 +42,13 @@ django-test-without-migrations = "*"
 fakeredis = "*"
 splinter = "*"
 pytest-splinter = "*"
-
-# Documentation
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
-# Libraries for local development
 django-debug-toolbar = "*"
 werkzeug = "*"
 pre-commit = "*"
 
+
 [requires]
+
 python_version = "3.6"
