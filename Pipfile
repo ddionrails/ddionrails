@@ -18,6 +18,7 @@ django-crispy-forms = "*"
 # Markup related libraries
 pyyaml = "*"
 markdown = "*"
+python-frontmatter = "*"
 
 # Elasticsearch
 elasticsearch-dsl = "==2.2.0"
