@@ -60,9 +60,9 @@ def test_preview(request, object_type, object_id):
 
 
 def object_redirect(request: WSGIRequest, object_type: str, object_id: str):
-    x = _get_object(object_type, object_id)
-    if x:
-        return redirect(str(x))
+    obj = _get_object(object_type, object_id)
+    if obj:
+        return redirect(obj.get_absolute_url())
     else:
         return redirect("/")
 
