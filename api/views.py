@@ -1,5 +1,6 @@
 import json
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django_rq import job
@@ -8,17 +9,23 @@ from concepts.models import Concept, Topic
 from data.models import Variable
 from ddionrails.setup import setup
 from instruments.models import Question
+from publications.models import Publication
 from studies.models import Study
 from workspace.models import Basket, BasketVariable
 
 # HELPERS
 
 
-def _get_object(object_type, object_id):
-    object_type = object_type.title()
-    if object_type in ["Variable", "Question", "Concept", "Publication"]:
-        x = eval("%s.objects.get(id=%s)" % (object_type, object_id))
-        return x
+def _get_object(object_type: str, object_id: str):
+    redirect_mapping = {
+        "concept": Concept,
+        "publication": Publication,
+        "question": Question,
+        "variable": Variable,
+    }
+    model = redirect_mapping.get(object_type)
+    if model:
+        return get_object_or_404(model, pk=object_id)
     else:
         return None
 
@@ -52,7 +59,7 @@ def test_preview(request, object_type, object_id):
         return HttpResponse("No valid type.")
 
 
-def object_redirect(request, object_type, object_id):
+def object_redirect(request: WSGIRequest, object_type: str, object_id: str):
     x = _get_object(object_type, object_id)
     if x:
         return redirect(str(x))
