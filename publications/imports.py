@@ -1,20 +1,23 @@
+from collections import OrderedDict
+
 from concepts.models import Period
 from data.models import Dataset, Variable
 from imports import imports
 from instruments.models import Instrument, Question
 
 from .forms import AttachmentForm, PublicationForm
+from .models import Publication
 
 
 class PublicationImport(imports.CSVImport):
     class DOR:
         form = PublicationForm
 
-    def process_element(self, element):
+    def process_element(self, element: OrderedDict) -> OrderedDict:
         element["study"] = self.study.id
         return element
 
-    def import_element(self, element):
+    def import_element(self, element: OrderedDict) -> Publication:
         import_object = super().import_element(element)
         try:
             import_object.set_elastic(import_object.to_elastic_dict())
