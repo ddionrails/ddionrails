@@ -57,7 +57,6 @@ class TestBasketResource:
         assert basket.name in basket_export["name"]
         assert basket.label in basket_export["label"]
         assert basket.description in basket_export["description"]
-        assert basket.security_token in basket_export["security_token"]
         assert basket.study.name in basket_export["study"]
         assert basket.user.username in basket_export["user"]
 
@@ -74,7 +73,6 @@ class TestBasketResource:
         name = "some-basket"
         label = "Some basket"
         description = "This is some basket"
-        security_token = "some-security-token"
         created = "2019-03-10 12:00:00 UTC"
         created_datetime = parse(created)
         modified = "2019-03-10 12:00:00 UTC"
@@ -86,7 +84,6 @@ class TestBasketResource:
                 name,
                 label,
                 description,
-                security_token,
                 created,
                 modified,
             ],
@@ -96,7 +93,6 @@ class TestBasketResource:
                 "name",
                 "label",
                 "description",
-                "security_token",
                 "created",
                 "modified",
             ],
@@ -111,7 +107,6 @@ class TestBasketResource:
         assert name == basket.name
         assert label == basket.label
         assert description == basket.description
-        assert security_token == basket.security_token
 
         assert created_datetime == basket.created
         # Basket gets new modified timestamp after importing
@@ -268,7 +263,6 @@ class TestRestoreManagementCommand:
         assert "some-basket" == basket.name
         assert "Some Basket" == basket.label
         assert "This is some basket" == basket.description
-        assert "security_token" == basket.security_token
         assert user == basket.user
         assert study == basket.study
 
