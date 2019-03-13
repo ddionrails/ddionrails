@@ -1,6 +1,7 @@
 import difflib
 import pprint
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
@@ -13,10 +14,10 @@ from studies.models import Study
 from .models import Instrument, Question
 
 
-def study_instrument_list(request, study_name):
+def study_instrument_list(request: WSGIRequest, study_name: str):
+    study = get_object_or_404(Study, name=study_name)
     context = dict(
-        study=Study.objects.get(name=study_name),
-        instrument_list=Instrument.objects.filter(study__name=study_name),
+        study=study, instrument_list=Instrument.objects.filter(study__name=study_name)
     )
     return render(request, "instruments/study_instrument_list.html", context=context)
 
@@ -87,9 +88,9 @@ def question_detail(request, study_name, instrument_name, question_name):
     return render(request, "questions/question_detail.html", context=context)
 
 
-def question_comparison_partial(request, from_id, to_id):
-    from_question = Question.objects.get(pk=from_id)
-    to_question = Question.objects.get(pk=to_id)
+def question_comparison_partial(request: WSGIRequest, from_id: int, to_id: int):
+    from_question = get_object_or_404(Question, pk=from_id)
+    to_question = get_object_or_404(Question, pk=to_id)
     diff_text = difflib.HtmlDiff().make_file(
         from_question.comparison_string(),
         to_question.comparison_string(),
