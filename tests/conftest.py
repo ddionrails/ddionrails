@@ -4,7 +4,8 @@ from tests.concepts.factories import ConceptFactory
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.ddionrails.factories import SystemFactory
 from tests.factories import UserFactory
-from tests.instruments.factories import InstrumentFactory
+from tests.instruments.factories import InstrumentFactory, QuestionFactory
+from tests.publications.factories import PublicationFactory
 from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketFactory
 
@@ -70,4 +71,18 @@ def concept(db):
     """ A concept in the database """
     return ConceptFactory(
         name="some-concept", label="Some Concept", description="This is some concept"
+    )
+
+
+@pytest.fixture
+def publication(study):
+    """ A publication in the database, relates to study fixture """
+    return PublicationFactory(name="some-publication", study=study)
+
+
+@pytest.fixture
+def question(db):
+    """ A question in the database """
+    return QuestionFactory(
+        name="some-question", label="Some Question", description="This is some question"
     )
