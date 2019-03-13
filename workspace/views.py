@@ -74,10 +74,10 @@ def add_variable(request, basket_id, variable_id):
 
 
 @own_basket_only
-def remove_variable(request, basket_id, variable_id):
+def remove_variable(request: WSGIRequest, basket_id: int, variable_id: int):
     try:
-        relation = BasketVariable.objects.get(
-            basket_id=basket_id, variable_id=variable_id
+        relation = get_object_or_404(
+            BasketVariable, basket_id=basket_id, variable_id=variable_id
         )
         relation.delete()
     except:
@@ -86,7 +86,7 @@ def remove_variable(request, basket_id, variable_id):
 
 
 @own_basket_only
-def add_concept(request, basket_id, concept_id):
+def add_concept(request: WSGIRequest, basket_id: int, concept_id: int):
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id
     variable_list = (
@@ -115,8 +115,8 @@ def remove_concept(request, basket_id, concept_id):
     )
     for variable in variable_list:
         try:
-            relation = BasketVariable.objects.get(
-                basket_id=basket_id, variable_id=variable.id
+            relation = get_object_or_404(
+                BasketVariable, basket_id=basket_id, variable_id=variable.id
             )
             relation.delete()
         except BasketVariable.DoesNotExist:
