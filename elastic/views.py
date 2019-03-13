@@ -1,7 +1,7 @@
 import pprint
 import re
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 
 from studies.models import Study
 
@@ -19,7 +19,7 @@ def search(request):
         results = []
     try:
         study_name = re.search(NAMESPACE_REG, q).group(1)
-        study = Study.objects.get(name=study_name)
+        study = get_object_or_404(Study, name=study_name)
         template = "base_study.html"
     except:
         study = None

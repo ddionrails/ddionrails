@@ -3,6 +3,7 @@ import json
 from collections import OrderedDict
 
 from django.db import models
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
@@ -97,11 +98,10 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         id_fields = ["name", "dataset"]
 
     @classmethod
-    def get(cls, x):
-        """Parameters: x = dict"""
-        study = Study.objects.get(name=x["study_name"])
-        dataset = Dataset.objects.get(name=x["dataset_name"], study=study)
-        variable = cls.objects.get(name=x["name"], dataset=dataset)
+    def get(cls, x: dict):
+        study = get_object_or_404(Study, name=x["study_name"])
+        dataset = get_object_or_404(Dataset, name=x["dataset_name"], study=study)
+        variable = get_object_or_404(cls, name=x["name"], dataset=dataset)
         return variable
 
     @classmethod

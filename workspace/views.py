@@ -3,9 +3,10 @@ import pprint
 from collections import OrderedDict
 
 from django.contrib import messages
+from django.core.handlers.wsgi import WSGIRequest
 from django.forms.widgets import HiddenInput
 from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from concepts.models import Concept
 from data.models import Variable
@@ -18,8 +19,8 @@ from .scripts import SoepStata
 def own_basket_only(view):
     """Decorator for basket-related views."""
 
-    def wrapper(request, basket_id, *args, **kwargs):
-        basket = Basket.objects.get(pk=basket_id)
+    def wrapper(request: WSGIRequest, basket_id: int, *args, **kwargs):
+        basket = get_object_or_404(Basket, pk=basket_id)
         if basket.user == request.user:
             return view(request, basket_id, *args, **kwargs)
         else:
@@ -36,7 +37,7 @@ def own_basket_only(view):
 # ---------------------------------------------------------
 
 
-def account_overview(request):
+def account_overview(request: WSGIRequest):
     if request.user.is_authenticated:
         context = dict(user=request.user)
         return render(request, "workspace/account.html", context=context)
@@ -44,7 +45,7 @@ def account_overview(request):
         return HttpResponse("Unauthorized", status=401)
 
 
-def basket_list(request):
+def basket_list(request: WSGIRequest):
     if request.user.is_authenticated:
         basket_list = request.user.baskets.all()
     else:
@@ -55,7 +56,7 @@ def basket_list(request):
 
 @own_basket_only
 def render_script(request, basket_id, script_name):
-    basket = Basket.objects.get(pk=basket_id)
+    basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(
         basket=basket, variables=basket.variables.all(), script_name=script_name
     )
@@ -73,10 +74,10 @@ def add_variable(request, basket_id, variable_id):
 
 
 @own_basket_only
-def remove_variable(request, basket_id, variable_id):
+def remove_variable(request: WSGIRequest, basket_id: int, variable_id: int):
     try:
-        relation = BasketVariable.objects.get(
-            basket_id=basket_id, variable_id=variable_id
+        relation = get_object_or_404(
+            BasketVariable, basket_id=basket_id, variable_id=variable_id
         )
         relation.delete()
     except:
@@ -85,8 +86,9 @@ def remove_variable(request, basket_id, variable_id):
 
 
 @own_basket_only
-def add_concept(request, basket_id, concept_id):
-    study_id = Basket.objects.get(id=basket_id).study_id
+def add_concept(request: WSGIRequest, basket_id: int, concept_id: int):
+    basket = get_object_or_404(Basket, pk=basket_id)
+    study_id = basket.study_id
     variable_list = (
         Variable.objects.filter(dataset__study_id=study_id)
         .filter(concept_id=concept_id)
@@ -104,7 +106,8 @@ def add_concept(request, basket_id, concept_id):
 
 @own_basket_only
 def remove_concept(request, basket_id, concept_id):
-    study_id = Basket.objects.get(id=basket_id).study_id
+    basket = get_object_or_404(Basket, pk=basket_id)
+    study_id = basket.study_id
     variable_list = (
         Variable.objects.filter(dataset__study_id=study_id)
         .filter(concept_id=concept_id)
@@ -112,8 +115,8 @@ def remove_concept(request, basket_id, concept_id):
     )
     for variable in variable_list:
         try:
-            relation = BasketVariable.objects.get(
-                basket_id=basket_id, variable_id=variable.id
+            relation = get_object_or_404(
+                BasketVariable, basket_id=basket_id, variable_id=variable.id
             )
             relation.delete()
         except BasketVariable.DoesNotExist:
@@ -123,7 +126,7 @@ def remove_concept(request, basket_id, concept_id):
 
 @own_basket_only
 def basket_to_csv(request, basket_id):
-    basket = Basket.objects.get(pk=basket_id)
+    basket = get_object_or_404(Basket, pk=basket_id)
     csv = basket.to_csv()
     response = HttpResponse(csv, content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="basket.csv"'
@@ -132,7 +135,7 @@ def basket_to_csv(request, basket_id):
 
 @own_basket_only
 def basket_detail(request, basket_id):
-    basket = Basket.objects.get(pk=basket_id)
+    basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
     vars_with_concept, vars_without_concept = list(), list()
     for variable in variable_list:
@@ -233,7 +236,7 @@ def basket_new(request):
 
 
 def script_detail(request, basket_id, script_id):
-    script = Script.objects.get(pk=script_id)
+    script = get_object_or_404(Script, pk=script_id)
     if request.method == "POST":
         script.name = request.POST.get("field_name", "")
         script.label = request.POST.get("field_label", "")
@@ -266,49 +269,53 @@ def script_detail(request, basket_id, script_id):
     return render(request, "workspace/script_detail.html", context=context)
 
 
-def basket_search(request, basket_id):
-    basket = Basket.objects.get(pk=basket_id)
+def basket_search(request: WSGIRequest, basket_id: int):
+    basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(basket=basket, study_id=basket.study_id)
     return render(request, "workspace/angular.html", context=context)
 
 
-def script_raw(request, basket_id, script_id):
-    script = Script.objects.get(pk=script_id)
+def script_raw(request: WSGIRequest, basket_id: int, script_id: int):
+    script = get_object_or_404(Script, pk=script_id)
     text = script.get_script_input()["text"]
     return HttpResponse(text, content_type="text/plain")
 
 
-def basket_delete(request, basket_id):
-    basket = Basket.objects.get(pk=basket_id)
+def basket_delete(request: WSGIRequest, basket_id: int):
+    basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
     return redirect("/workspace/baskets/")
 
 
-def script_delete(request, basket_id, script_id):
-    script = Script.objects.get(pk=script_id)
+def script_delete(request: WSGIRequest, basket_id: int, script_id: int):
+    script = get_object_or_404(Script, pk=script_id)
     script.delete()
     return redirect("/workspace/baskets/%s" % basket_id)
 
 
-def user_delete(request):
+def user_delete(request: WSGIRequest):
     request.user.delete()
     return redirect("/workspace/logout/")
 
 
-def script_new_lang(request, basket_id, generator_name):
+def script_new_lang(request: WSGIRequest, basket_id: int, generator_name: str):
+    basket = get_object_or_404(Basket, pk=basket_id)
+    script_count = basket.script_set.count() + 1
+    script_name = f"script-{script_count}"
     script = Script.objects.create(
-        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1),
+        name=script_name,
         basket_id=basket_id,
         settings=SoepStata.DEFAULT_CONFIG,
         generator_name=generator_name,
     )
-    return redirect("/workspace/baskets/%s/scripts/%s" % (basket_id, script.id))
+    return redirect(script.get_absolute_url())
 
 
-def script_new(request, basket_id):
+def script_new(request: WSGIRequest, basket_id: int):
+    basket = get_object_or_404(Basket, pk=basket_id)
+    script_count = basket.script_set.count() + 1
+    script_name = f"script-{script_count}"
     script = Script.objects.create(
-        name="script-%s" % str(Basket.objects.get(id=basket_id).script_set.count() + 1),
-        basket_id=basket_id,
-        settings=SoepStata.DEFAULT_CONFIG,
+        name=script_name, basket_id=basket_id, settings=SoepStata.DEFAULT_CONFIG
     )
-    return redirect("/workspace/baskets/%s/scripts/%s" % (basket_id, script.id))
+    return redirect(script.get_absolute_url())
