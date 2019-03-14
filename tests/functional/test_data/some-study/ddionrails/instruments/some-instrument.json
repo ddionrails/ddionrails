@@ -7,9 +7,9 @@
   "description_de": "",
   "instrument": "some-instrument",
   "questions": {
-    "Q1": {
-      "question": "Q1",
-      "name": "Q1",
+    "some-question": {
+      "question": "some-question",
+      "name": "some-question",
       "label": "New respondent",
       "items": [
         {
@@ -39,7 +39,7 @@
       ],
       "sn": 0,
       "instrument": "some-instrument",
-      "study": "soep-is"
+      "study": "some-study"
     }
   }
 }
