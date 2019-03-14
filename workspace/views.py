@@ -133,8 +133,20 @@ def basket_to_csv(request, basket_id):
     return response
 
 
+note = (
+    "The script-generators help you especially to merge variables from "
+    "different year-specific datasets (e.g. bhp, bgp) to one wide file."
+    "This (and more) work is already done in the long files (e.g. pl, hl),"
+    " which you find in the top-level directory."
+    "If you still want to use the script-generator, please note that only the files"
+    ' in the "raw" subdirectory can be processed.'
+    'Please specify the complete adress of the "raw" subdirectory'
+    ' (e.g. D:\\v35\\raw) as your "Input path".'
+)
+
+
 @own_basket_only
-def basket_detail(request, basket_id):
+def basket_detail(request: WSGIRequest, basket_id: int):
     basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
     vars_with_concept, vars_without_concept = list(), list()
@@ -185,6 +197,7 @@ def basket_detail(request, basket_id):
                 related_variable_table[v.concept.name]["label"] = v.label
         except:
             bad_variables.append(v)
+
     context = dict(
         basket=basket,
         study=basket.study,
@@ -202,7 +215,14 @@ def basket_detail(request, basket_id):
                 period_list=period_list,
             )
         ),
+        note=None,
     )
+
+    # Add note about Script generator
+    # see: https://github.com/ddionrails/ddionrails/issues/359
+    if basket.study.name == "soep-core":
+        context["note"] = note
+
     return render(request, "workspace/basket_detail.html", context=context)
 
 
