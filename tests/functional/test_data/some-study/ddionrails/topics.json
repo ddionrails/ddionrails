@@ -1,0 +1,24 @@
+[
+  {
+    "language": "en",
+    "topics": [
+      {
+        "key": "root",
+        "children": [],
+        "title": "root",
+        "type": "topic"
+      }
+    ]
+  },
+  {
+    "language": "de",
+    "topics": [
+            {
+        "key": "root",
+        "children": [],
+        "title": "wurzel",
+        "type": "topic"
+      }
+    ]
+  }
+]
