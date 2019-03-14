@@ -1,48 +1,12 @@
 import pytest
 
-from .factories import (
-    AnalysisUnitFactory,
-    ConceptFactory,
-    ConceptualDatasetFactory,
-    PeriodFactory,
-)
+from .factories import ConceptFactory, PeriodFactory
 
 
 @pytest.fixture
 def concept_without_label(db):
     """ A concept without label in the database """
     return ConceptFactory(name="some-concept", description="This is some concept")
-
-
-@pytest.fixture
-def analysis_unit(db):
-    """ An analysis unit in the database """
-    return AnalysisUnitFactory(
-        name="some-analysis-unit",
-        label="Some analysis unit",
-        description="This is some analysis unit",
-    )
-
-
-@pytest.fixture
-def conceptual_dataset(db):
-    """ A conceptual dataset in the database """
-    return ConceptualDatasetFactory(
-        name="some-conceptual-dataset",
-        label="Some conceptual dataset",
-        description="This is some conceptualdataset",
-    )
-
-
-@pytest.fixture
-def period(db):
-    """ A period in the database """
-    return PeriodFactory(
-        name="some-period",
-        label="Some period",
-        description="This is some period",
-        definition="2018",
-    )
 
 
 @pytest.fixture
