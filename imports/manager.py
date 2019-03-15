@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+import shutil
 from collections import OrderedDict
 from pathlib import Path
 
@@ -133,18 +134,21 @@ class SystemImportManager:
     def __init__(self, system):
         self.system = system
         self.repo = Repository(system)
-        self.import_patterns = [ImportLink("^studies.csv$", StudyImport)]
 
     def run_import(self, import_all=False):
         """
         Run the system import.
         """
-        if import_all or self.system.repo_url() == "":
-            import_files = self.repo.list_all_files()
-        else:
-            import_files = self.repo.list_changed_files()
-        for link in self.import_patterns:
-            link.run_import(import_files, self.system)
+
+        base_dir = Path(
+            f"{settings.IMPORT_REPO_PATH}{self.system.name}/{settings.IMPORT_SUB_DIRECTORY}"
+        )
+        studies_file = base_dir / "studies.csv"
+        django_rq.enqueue(StudyImport.run_import, studies_file, self.system)
+
+        # Copy background image to static/
+        image_file = base_dir / "background.png"
+        shutil.copy(image_file, "static/")
         self.repo.set_commit_id()
 
 
