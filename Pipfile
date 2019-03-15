@@ -3,8 +3,11 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
+redis = "==3.1" # pin temporarily
+gunicorn = "*"
+psycopg2-binary = "*"
+
 # Django related libraries
 django = "==2.1.7" # pin temporarily until 2.2 is production ready
 django-extensions = "*"
@@ -29,7 +32,7 @@ bibtexparser = "*"
 # Project scripting
 paver = "*"
 fabric = "*"
-redis = "==3.1" # pin temporarily
+
 
 [dev-packages]
 # Linters and code style
