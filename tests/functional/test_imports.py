@@ -4,7 +4,7 @@ import pytest
 
 from concepts.models import Concept, ConceptualDataset, Period, AnalysisUnit, Topic
 from data.models import Dataset, Transformation, Variable
-from imports.manager import LocalImport, StudyImportManager
+from imports.manager import StudyImportManager
 from instruments.models import Instrument, Question, ConceptQuestion, QuestionVariable
 from publications.models import Publication, Attachment
 from studies.models import Study
