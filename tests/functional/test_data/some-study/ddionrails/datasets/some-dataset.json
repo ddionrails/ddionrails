@@ -1,8 +1,9 @@
 {
   "some-variable": {
+    "name": "some-variable",
     "variable": "some-variable",
+    "study": "some-study",
     "categories": {
-
     }
   }
 }
