@@ -9,7 +9,8 @@ from imports import imports
 
 from .models import ConceptQuestion, Instrument, Question, QuestionVariable
 
-logger = logging.getLogger("imports")
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class InstrumentImport(imports.Import):
@@ -67,7 +68,13 @@ class QuestionVariableImport(imports.CSVImport):
                 question=question, variable=variable
             )
         except:
-            print("[ERROR] QV import failed.")
+            variable = (
+                f"{link['study_name']}/{link['dataset_name']}/{link['variable_name']}"
+            )
+            question = (
+                f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"
+            )
+            logger.error(f'Could not link variable "{variable}" to question "{question}"')
 
     def _get_question(self, link):
         question = (
@@ -101,7 +108,11 @@ class ConceptQuestionImport(imports.CSVImport):
                 question=question, concept=concept
             )
         except:
-            print("[ERROR] CQ import failed.")
+            question = (
+                f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"
+            )
+            concept = link["concept_name"]
+            logger.error(f'Could not link concept "{concept}" to question "{question}"')
 
     def _get_question(self, link):
         question = (
