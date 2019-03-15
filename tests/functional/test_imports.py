@@ -3,7 +3,6 @@ import time
 from pprint import pprint
 
 import pytest
-from django.conf import settings
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
@@ -16,9 +15,6 @@ from studies.models import Study
 from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.functional]
-
-
-# es = Elasticsearch()
 
 
 @pytest.fixture()
@@ -260,8 +256,8 @@ class TestStudyImportManager:
         assert study == publication.study
         s = (
             Search(using=es_client)
-                .doc_type("publication")
-                .query("match", title="Some Publication")
+            .doc_type("publication")
+            .query("match", title="Some Publication")
         )
         assert 1 == s.count()
         response = s.execute()
@@ -270,8 +266,6 @@ class TestStudyImportManager:
         assert "some-doi" == hit.doi
         assert "2018" == hit.year
 
-
-    # @pytest.mark.skip
     def test_import_all(self, study_import_manager, es_client):
         assert 1 == Study.objects.count()
 
@@ -302,11 +296,7 @@ class TestStudyImportManager:
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        s = (
-            Search(using=es_client)
-                .doc_type("study")
-                .query("match", name="some-study")
-        )
+        s = Search(using=es_client).doc_type("study").query("match", name="some-study")
         assert 1 == s.count()
         # s = (
         #     Search(using=es_client)
@@ -316,13 +306,13 @@ class TestStudyImportManager:
         # assert 1 == s.count()
         s = (
             Search(using=es_client)
-                .doc_type("variable")
-                .query("match", name="some-variable")
+            .doc_type("variable")
+            .query("match", name="some-variable")
         )
         assert 1 == s.count()
         s = (
             Search(using=es_client)
-                .doc_type("publication")
-                .query("match", title="Some Publication")
+            .doc_type("publication")
+            .query("match", title="Some Publication")
         )
         assert 1 == s.count()
