@@ -6,7 +6,8 @@ from django.db import transaction
 import frontmatter
 from imports.helpers import read_csv
 
-logger = logging.getLogger("imports")
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class Import:
@@ -48,7 +49,7 @@ class Import:
             return self.system.import_path()
 
     def file_path(self):
-        return os.path.join(self.import_path(), self.filename)
+        return self.filename
 
 
 class JekyllImport(Import):
@@ -116,8 +117,6 @@ class CSVImport(Import):
             print(".", end="")
             return new_object
         else:
-            print("\nError:", self.__class__, "-", form.data)
-            print(form.errors.as_data())
             logger.error("Import error in " + str(self.__class__))
             logger.error(form.data)
             logger.error(form.errors.as_data())
