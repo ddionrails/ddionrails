@@ -18,7 +18,7 @@ from .update import update_study
 @click.option("-t", "--transformations", default=False, is_flag=True)
 @click.option("-qv", "--questions_variables", default=False, is_flag=True)
 @click.option("-cq", "--concepts_questions", default=False, is_flag=True)
-@click.option("-u", "--update", default=False)
+@click.option("-u", "--update", default=True)
 @click.option("--filename")
 def command(
     study_name,
