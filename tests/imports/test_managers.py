@@ -2,7 +2,6 @@ import pytest
 
 from imports.manager import (
     ImportLink,
-    LocalImport,
     Repository,
     StudyImportManager,
     SystemImportManager,
