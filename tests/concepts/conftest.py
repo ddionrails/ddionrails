@@ -5,6 +5,7 @@ from .factories import (
     ConceptFactory,
     ConceptualDatasetFactory,
     PeriodFactory,
+    TopicFactory,
 )
 
 
@@ -107,3 +108,8 @@ def valid_period_data(study):
         description="This is some period",
         definition="2018",
     )
+
+
+@pytest.fixture
+def topic(study):
+    return TopicFactory(name="some-topic", study=study)
