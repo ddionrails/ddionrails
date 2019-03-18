@@ -22,7 +22,7 @@ elasticsearch-dsl = "==6.3.1"
 bibtexparser = "*"
 paver = "*"
 fabric = "*"
-redis = "==3.1"
+redis = "==3.2.1"
 
 
 [dev-packages]
