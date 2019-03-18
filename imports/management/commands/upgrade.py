@@ -20,7 +20,7 @@ from .update import update_study
 @click.option("-t", "--transformations", default=False, is_flag=True)
 @click.option("-qv", "--questions_variables", default=False, is_flag=True)
 @click.option("-cq", "--concepts_questions", default=False, is_flag=True)
-@click.option("-l", "--local", default=False)
+@click.option("-l", "--local", default=False, is_flag=True)
 @click.option("--filename")
 def command(
     study_name,
