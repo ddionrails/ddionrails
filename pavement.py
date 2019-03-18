@@ -9,7 +9,7 @@ import sys
 import django
 from django.conf import settings
 from django.core import management
-from paver.easy import task, needs, consume_args
+from paver.easy import consume_args, needs, task
 
 sys.path.append(".")
 
@@ -195,10 +195,8 @@ def import_system():
 def import_all_studies():
     """Run scripts: import."""
     django.setup()
-    run(
-        "./manage.py runscript scripts.import_studies --settings=settings.%s"
-        % local_settings
-    )
+    management.call_command("update", "--all")
+    management.call_command("upgrade", "--all")
 
 
 @task
@@ -318,10 +316,14 @@ def webpack():
     """ Create webpack bundles """
     run("""./node_modules/.bin/webpack --config webpack.config.js""")
 
+
 @task
 def webpack_watch():
     """ Watch webpack bundles (in development) """
-    run("""./node_modules/.bin/webpack --config webpack.config.js --watch --debug --devtool source-map""")
+    run(
+        """./node_modules/.bin/webpack --config webpack.config.js --watch --debug --devtool source-map"""
+    )
+
 
 @task
 def setup_frontend():
@@ -357,11 +359,13 @@ def system_test():
     django.setup()
     run("""pytest -v -m functional """)
 
+
 @task
 @needs("install_elastic", "setup_frontend", "copy_secrets_file", "migrate")
 def initial_setup():
     """Run initial commands to setup DDI on Rails after download"""
     pass
+
 
 @task
 @consume_args
@@ -370,9 +374,8 @@ def update_study(args):
     django.setup()
     from studies.models import Study
     from imports.manager import StudyImportManager, Repository
+
     study_name = args[0]
     study = Study.objects.get(name=study_name)
     Repository(study).update_or_clone_repo()
-    StudyImportManager(study).run_import(import_all=True)
-
-
+    StudyImportManager(study).import_all_entities()
