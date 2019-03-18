@@ -27,7 +27,7 @@ redis = "==3.2.1"
 
 [dev-packages]
 
-black = "==18.9b0"
+black = "==19.3b0"
 flake8 = "*"
 isort = "*"
 mypy = "*"
