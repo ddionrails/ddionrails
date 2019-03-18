@@ -111,5 +111,11 @@ def valid_period_data(study):
 
 
 @pytest.fixture
+def valid_topic_data(study):
+    """ A valid input for topic forms and imports """
+    return dict(name="some-topic", study=study.pk)
+
+
+@pytest.fixture
 def topic(study):
     return TopicFactory(name="some-topic", study=study)

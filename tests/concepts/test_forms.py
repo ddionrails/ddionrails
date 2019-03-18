@@ -1,6 +1,12 @@
 import pytest
 
-from concepts.forms import AnalysisUnitForm, ConceptForm, ConceptualDatasetForm, PeriodForm
+from concepts.forms import (
+    AnalysisUnitForm,
+    ConceptForm,
+    ConceptualDatasetForm,
+    PeriodForm,
+    TopicForm,
+)
 
 pytestmark = [pytest.mark.concepts, pytest.mark.form]
 
@@ -10,7 +16,7 @@ class TestConceptForm:
         form = ConceptForm(data=empty_data)
         assert form.is_valid() is False
         expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
+        assert dict(form.errors) == expected_errors
 
     def test_form_with_valid_data(self, db, valid_concept_data):
         form = ConceptForm(data=valid_concept_data)
@@ -18,7 +24,6 @@ class TestConceptForm:
         concept = form.save()
         assert concept.name == valid_concept_data["concept_name"]
 
-    # TODO: When is a concept imported directly with "name"?
     def test_form_with_minimal_valid_data(self, db, minimal_valid_concept_data):
         form = ConceptForm(data=minimal_valid_concept_data)
         assert form.is_valid() is True
@@ -30,8 +35,11 @@ class TestPeriodForm:
     def test_form_with_invalid_data(self, empty_data):
         form = PeriodForm(data=empty_data)
         assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."], "study": ["This field is required."]}
-        assert form.errors == expected_errors
+        expected_errors = {
+            "name": ["This field is required."],
+            "study": ["This field is required."],
+        }
+        assert dict(form.errors) == expected_errors
 
     def test_form_with_valid_data(self, db, valid_period_data):
         form = PeriodForm(data=valid_period_data)
@@ -43,7 +51,7 @@ class TestAnalysisUnitForm:
         form = AnalysisUnitForm(data=empty_data)
         assert form.is_valid() is False
         expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
+        assert dict(form.errors) == expected_errors
 
     def test_form_with_valid_data(self, db, valid_analysis_unit_data):
         form = AnalysisUnitForm(data=valid_analysis_unit_data)
@@ -57,10 +65,30 @@ class TestConceptualDatasetForm:
         form = ConceptualDatasetForm(data=empty_data)
         assert form.is_valid() is False
         expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
+        assert dict(form.errors) == expected_errors
 
     def test_form_with_valid_data(self, db, valid_conceptual_dataset_data):
         form = ConceptualDatasetForm(data=valid_conceptual_dataset_data)
         assert form.is_valid() is True
         conceptual_dataset = form.save()
-        assert conceptual_dataset.name == valid_conceptual_dataset_data["conceptual_dataset_name"]
+        assert (
+            conceptual_dataset.name
+            == valid_conceptual_dataset_data["conceptual_dataset_name"]
+        )
+
+
+class TestTopicForm:
+    def test_form_with_invalid_data(self, empty_data):
+        form = TopicForm(data=empty_data)
+        assert form.is_valid() is False
+        expected_errors = {
+            "name": ["This field is required."],
+            "study": ["This field is required."],
+        }
+        assert dict(form.errors) == expected_errors
+
+    def test_form_with_valid_data(self, db, valid_topic_data):
+        form = TopicForm(data=valid_topic_data)
+        assert form.is_valid() is True
+        topic = form.save()
+        assert topic.name == valid_topic_data["name"]
