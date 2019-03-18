@@ -1,8 +1,9 @@
+import django_rq
+
 import djclick as click
-
-from studies.models import Study
-
+from concepts.models import Concept
 from imports.manager import StudyImportManager
+from studies.models import Study
 
 from .update import update_study
 
@@ -12,6 +13,7 @@ from .update import update_study
 @click.option("--all", "_all", default=False, is_flag=True)
 @click.option("-a", "--analysis_units", default=False, is_flag=True)
 @click.option("-p", "--periods", default=False, is_flag=True)
+@click.option("-c", "--concepts", default=False, is_flag=True)
 @click.option("-v", "--variables", default=False, is_flag=True)
 @click.option("-d", "--datasets", default=False, is_flag=True)
 @click.option("-i", "--instruments", default=False, is_flag=True)
@@ -26,13 +28,14 @@ def command(
     analysis_units,
     filename,
     periods,
+    concepts,
     update,
     datasets,
     instruments,
     questions_variables,
     concepts_questions,
     transformations,
-    _all
+    _all,
 ):
     if _all is True:
         print("upgrade all studies")
@@ -58,6 +61,7 @@ def command(
                 (
                     analysis_units,
                     periods,
+                    concepts,
                     variables,
                     datasets,
                     instruments,
@@ -75,6 +79,9 @@ def command(
                 manager.import_single_entity("variables")
             if periods:
                 manager.import_single_entity("periods")
+            if concepts:
+                manager.import_single_entity("concepts")
+                django_rq.enqueue(Concept.index_all)
             if datasets:
                 if filename:
                     manager.import_single_entity("datasets.json", filename)
