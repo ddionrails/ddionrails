@@ -298,12 +298,12 @@ class TestStudyImportManager:
 
         s = Search(using=es_client).doc_type("study").query("match", name="some-study")
         assert 1 == s.count()
-        # s = (
-        #     Search(using=es_client)
-        #         .doc_type("concept")
-        #         .query("match", name="some-concept")
-        # )
-        # assert 1 == s.count()
+        s = (
+            Search(using=es_client)
+                .doc_type("concept")
+                .query("match", name="some-concept")
+        )
+        assert 1 == s.count()
         s = (
             Search(using=es_client)
             .doc_type("variable")
