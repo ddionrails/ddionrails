@@ -3,6 +3,7 @@ import io
 import json
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
@@ -27,7 +28,6 @@ class Basket(ElasticMixin, TimeStampedModel):
     study = models.ForeignKey(Study, related_name="baskets", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="baskets", on_delete=models.CASCADE)
     variables = models.ManyToManyField(Variable, through="BasketVariable")
-    # TODO Validate that the variable is part of the study.
 
     DOC_TYPE = "basket"
 
@@ -115,6 +115,18 @@ class BasketVariable(models.Model):
 
     class Meta:
         unique_together = ("basket", "variable")
+
+    def clean(self, *args, **kwargs):
+        """ Custom clean method for BasketVariable
+            the basket's study and the variable's dataset's study have to be the same.
+        """
+        basket_study = self.basket.study
+        variable_study = self.variable.dataset.study
+        if not basket_study == variable_study:
+            raise ValidationError(
+                f'Basket study "{basket_study}" does not match variable study "{variable_study}"'
+            )
+        super(BasketVariable, self).clean()
 
 
 class Script(TimeStampedModel):
