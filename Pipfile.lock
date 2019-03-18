@@ -211,11 +211,10 @@
         },
         "elasticsearch-dsl": {
             "hashes": [
-                "sha256:99bbb4dcbcfb5db4f57499237f24acf1397543e895e99994a09af2a6fbef93bc",
-                "sha256:c8132c6e1bdfc5c345999d3949dd53a53b59ea73e2ee005f695de78be0552ceb"
+                "sha256:5f43196a3fd91b2eac90f7345e99f92c66004d85a1fd803cdecf756430827231",
+                "sha256:5f80b3b4a6e61db5d273bc57c32a80b2ddbc555afcc122c62c20440c355008be"
             ],
-            "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==6.3.1"
         },
         "et-xmlfile": {
             "hashes": [
