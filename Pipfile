@@ -29,7 +29,6 @@ bibtexparser = "*"
 # Project scripting
 paver = "*"
 fabric = "*"
-redis = "==3.1" # pin temporarily
 
 [dev-packages]
 # Linters and code style
