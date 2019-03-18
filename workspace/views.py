@@ -65,9 +65,11 @@ def render_script(request, basket_id, script_name):
 
 
 @own_basket_only
-def add_variable(request, basket_id, variable_id):
+def add_variable(request: WSGIRequest, basket_id: int, variable_id: int):
     try:
-        BasketVariable.objects.create(basket_id=basket_id, variable_id=variable_id)
+        basket_variable = BasketVariable(basket_id=basket_id, variable_id=variable_id)
+        basket_variable.clean()
+        basket_variable.save()
     except:
         pass
     return redirect(request.META.get("HTTP_REFERER"))

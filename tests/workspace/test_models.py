@@ -1,7 +1,10 @@
 import pytest
+from django.core.exceptions import ValidationError
 
 from studies.models import Study
-from workspace.models import Script, Basket, BasketVariable, ScriptConfig
+from tests.data.factories import DatasetFactory, VariableFactory
+from tests.studies.factories import StudyFactory
+from workspace.models import Basket, BasketVariable, Script, ScriptConfig
 
 pytestmark = [pytest.mark.workspace]
 
@@ -73,6 +76,28 @@ class TestBasketModel:
         assert variable.dataset.name in result
         assert variable.dataset.study.name in result
         assert variable.concept.name in result
+
+
+class TestBasketVariableModel:
+    def test_clean_method(self, study, variable, basket):
+        basket_variable = BasketVariable(basket_id=basket.id, variable_id=variable.id)
+        basket_variable.clean()
+        basket_variable.save()
+        assert 1 == BasketVariable.objects.count()
+
+    def test_clean_method_fails(self, basket):
+        """ BasketVariable clean method should raise an ValidationError when basket and variable study do not match """
+        other_study = StudyFactory(name="some-other-study")
+        other_dataset = DatasetFactory(name="some-other-dataset", study=other_study)
+        other_variable = VariableFactory(
+            name="some-other-variable", dataset=other_dataset
+        )
+        basket_variable = BasketVariable(
+            basket_id=basket.id, variable_id=other_variable.id
+        )
+        with pytest.raises(ValidationError):
+            basket_variable.clean()
+        assert 0 == BasketVariable.objects.count()
 
 
 class TestScriptModel:
