@@ -20,7 +20,7 @@ from .update import update_study
 @click.option("-t", "--transformations", default=False, is_flag=True)
 @click.option("-qv", "--questions_variables", default=False, is_flag=True)
 @click.option("-cq", "--concepts_questions", default=False, is_flag=True)
-@click.option("-u", "--update", default=True)
+@click.option("-l", "--local", default=False)
 @click.option("--filename")
 def command(
     study_name,
@@ -29,7 +29,7 @@ def command(
     filename,
     periods,
     concepts,
-    update,
+    local,
     datasets,
     instruments,
     questions_variables,
@@ -52,7 +52,7 @@ def command(
         except Exception as e:
             print(e)
             exit(1)
-        if update:
+        if local is False:
             update_study(study)
 
         manager = StudyImportManager(study)
