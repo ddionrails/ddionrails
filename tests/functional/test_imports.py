@@ -1,6 +1,5 @@
 import json
 import time
-from pprint import pprint
 
 import pytest
 from elasticsearch import Elasticsearch
@@ -77,7 +76,7 @@ class TestStudyImportManager:
         time.sleep(1)
         study_import_manager.import_single_entity("topics.json")
         time.sleep(1)
-        s = Search(using=es_client).doc_type("study").query("match", name="some-study")
+        s = Search(using=es_client).doc_type("study")
         assert 1 == s.count()
         response = s.execute()
         hit = response.hits[0]
@@ -101,13 +100,8 @@ class TestStudyImportManager:
         concept.index()
         # wait for indexing to complete
         time.sleep(1)
-        s = (
-            Search(using=es_client)
-            .doc_type("concept")
-            .query("match", name="some-concept")
-        )
+        s = Search(using=es_client).doc_type("concept")
         assert 1 == s.count()
-
         response = s.execute()
         hit = response.hits[0]
         assert "some-concept" == hit.name
@@ -151,11 +145,8 @@ class TestStudyImportManager:
         assert "some-instrument" == instrument.name
         assert study == instrument.study
         assert period == instrument.period
-        s = (
-            Search(using=es_client)
-            .doc_type("question")
-            .query("match", name="some-question")
-        )
+
+        s = Search(using=es_client).doc_type("question")
         assert 1 == s.count()
         response = s.execute()
         hit = response.hits[0]
@@ -170,19 +161,15 @@ class TestStudyImportManager:
         # wait for indexing to complete
         time.sleep(1)
         assert 1 == Dataset.objects.count()
-        assert 1 == Variable.objects.count()
+        assert 2 == Variable.objects.count()
         dataset = Dataset.objects.first()
         variable = Variable.objects.first()
         assert "some-dataset" == dataset.name
         assert study == dataset.study
         assert "some-variable" == variable.name
 
-        s = (
-            Search(using=es_client)
-            .doc_type("variable")
-            .query("match", name="some-variable")
-        )
-        assert 1 == s.count()
+        s = Search(using=es_client).doc_type("variable")
+        assert 2 == s.count()
         response = s.execute()
         hit = response.hits[0]
         assert study.name == hit.study
@@ -254,11 +241,7 @@ class TestStudyImportManager:
         assert "Some Publication" == publication.title
         assert "some-doi" == publication.doi
         assert study == publication.study
-        s = (
-            Search(using=es_client)
-            .doc_type("publication")
-            .query("match", title="Some Publication")
-        )
+        s = Search(using=es_client).doc_type("publication")
         assert 1 == s.count()
         response = s.execute()
         hit = response.hits[0]
@@ -287,32 +270,20 @@ class TestStudyImportManager:
         assert 1 == Concept.objects.count()
         assert 1 == ConceptualDataset.objects.count()
         assert 1 == Dataset.objects.count()
-        assert 1 == Variable.objects.count()
+        assert 2 == Variable.objects.count()
         assert 1 == Period.objects.count()
         assert 1 == Publication.objects.count()
         assert 1 == Question.objects.count()
-        # assert 1 == Transformation.objects.count()
+        assert 1 == Transformation.objects.count()
         assert 1 == Instrument.objects.count()
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        s = Search(using=es_client).doc_type("study").query("match", name="some-study")
+        s = Search(using=es_client).doc_type("study")
         assert 1 == s.count()
-        s = (
-            Search(using=es_client)
-                .doc_type("concept")
-                .query("match", name="some-concept")
-        )
+        s = Search(using=es_client).doc_type("concept")
         assert 1 == s.count()
-        s = (
-            Search(using=es_client)
-            .doc_type("variable")
-            .query("match", name="some-variable")
-        )
-        assert 1 == s.count()
-        s = (
-            Search(using=es_client)
-            .doc_type("publication")
-            .query("match", title="Some Publication")
-        )
+        s = Search(using=es_client).doc_type("variable")
+        assert 2 == s.count()
+        s = Search(using=es_client).doc_type("publication")
         assert 1 == s.count()
