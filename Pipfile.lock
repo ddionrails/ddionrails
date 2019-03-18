@@ -188,11 +188,10 @@
         },
         "django-rq": {
             "hashes": [
-                "sha256:3ab01d75694c4124baa497ebd4d6c7ebbf9d93cb4b390bfe253b62220562a299",
-                "sha256:48a41c464194096af34be7dfba2b1a71a1cec1f466734e51813b9d138fc20676"
+                "sha256:858636b52b470f9a5e5ebc721ba5d9383dfcb649c46a8dcae20fe2b2670cfac6",
+                "sha256:a2ddb5e9c259cf0f965087699c3ce24634fb34e0d0d77c28bb18c8dc3a9a2262"
             ],
-            "index": "pypi",
-            "version": "==1.3.0"
+            "version": "==1.3.1"
         },
         "django-webpack-loader": {
             "hashes": [
