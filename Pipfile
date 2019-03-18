@@ -5,6 +5,7 @@ name = "pypi"
 
 
 [packages]
+
 # Django related libraries
 django = "==2.1.7" # pin temporarily until 2.2 is production ready
 django-extensions = "*"
@@ -15,6 +16,12 @@ django-import-export = "*"
 django-click = "*"
 django-crispy-forms = "*"
 
+# wsgi
+gunicorn = "*"
+
+# git
+gitpython = "*"
+
 # Markup related libraries
 pyyaml = "*"
 markdown = "*"
@@ -23,8 +30,8 @@ python-frontmatter = "*"
 # Elasticsearch
 elasticsearch-dsl = "==2.2.0"
 
-# Needed for Publications
-bibtexparser = "*"
+# Postgres
+psycopg2-binary = "*"
 
 # Project scripting
 paver = "*"
