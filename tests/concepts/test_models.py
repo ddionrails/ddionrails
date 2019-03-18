@@ -1,7 +1,9 @@
 import pytest
 
-from concepts.models import Concept
+from concepts.models import Concept, Topic
 from elastic.mixins import ModelMixin
+
+from .factories import TopicFactory
 
 pytestmark = [pytest.mark.concepts, pytest.mark.models]
 
@@ -58,3 +60,12 @@ class TestPeriodModel:
 
     def test_is_range_method_without_range(self, period):
         assert period.is_range() is False
+
+
+class TestTopicModel:
+    def test_get_children_method(self, topic):
+        child_topic = TopicFactory(name="child-topic", parent=topic)
+        grand_child_topic = TopicFactory(name="grand-child-topic", parent=child_topic)
+        children = Topic.get_children(topic.pk)
+        assert child_topic in children
+        assert grand_child_topic in children
