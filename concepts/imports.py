@@ -59,7 +59,7 @@ class ConceptImport(imports.CSVImport):
                 topic.concepts.add(new_concept)
             except:
                 logger.error(
-                    f'Could not link concept concept "{new_concept.name}"" to topic "{topic_name}"'
+                    f'Could not link concept "{new_concept.name}"" to topic "{topic_name}"'
                 )
         return new_concept
 
