@@ -90,6 +90,10 @@ class VariableImport(imports.CSVImport):
         form = VariableForm
 
     def import_element(self, element):
+        # TODO: Workaround
+        if "variable_name" not in element.keys():
+            element["variable_name"] = element.get("name")
+
         try:
             self._import_variable_links(element)
         except:
