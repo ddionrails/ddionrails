@@ -6,6 +6,9 @@ name = "pypi"
 
 [packages]
 
+# pin temporarily
+redis = "==3.1"
+
 # Django related libraries
 django = "==2.1.7" # pin temporarily until 2.2 is production ready
 django-extensions = "*"
