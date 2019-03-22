@@ -142,6 +142,9 @@ class AnalysisUnit(models.Model, ModelMixin):
     label = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
 
+    def title(self):
+        return self.label if self.label != "" else self.name
+
     def __str__(self):
         return "/analysis_unit/%s" % self.name
 
