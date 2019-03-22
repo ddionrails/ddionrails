@@ -1,0 +1,45 @@
+{
+  "study_name": "some-study",
+  "questionnaire": "some-instrument",
+  "label": "Some Instrument",
+  "period_name": "some-period",
+  "label_de": "Some Fragebogen",
+  "description_de": "",
+  "instrument": "some-instrument",
+  "questions": {
+    "some-question": {
+      "question": "some-question",
+      "name": "some-question",
+      "label": "New respondent",
+      "items": [
+        {
+          "text_de": "Neu zu befragende Person",
+          "instruction_de": "Wird anhand der Infos aus der Paneldatei (bei erstmals zu befragenden Jugendlichen) bzw. beim Anlegen einer neuen Person automatisch generiert.",
+          "text": "New respondent",
+          "instruction": "Is generated automatically with the creation of a new person, using info from the panel file (with the first survey of adolescent).",
+          "scale": "cat",
+          "answer_list": "1+",
+          "concept": "lela",
+          "number": "Q1",
+          "answers": [
+            {
+              "value": 1,
+              "label_de": "Ja",
+              "label": "Yes"
+            },
+            {
+              "value": 2,
+              "label_de": "Nein",
+              "label": "No"
+            }
+          ],
+          "sn": 0,
+          "item": "root"
+        }
+      ],
+      "sn": 0,
+      "instrument": "some-instrument",
+      "study": "some-study"
+    }
+  }
+}

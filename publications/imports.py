@@ -1,3 +1,4 @@
+import logging
 from collections import OrderedDict
 
 from concepts.models import Period
@@ -7,6 +8,9 @@ from instruments.models import Instrument, Question
 
 from .forms import AttachmentForm, PublicationForm
 from .models import Publication
+
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class PublicationImport(imports.CSVImport):
@@ -22,7 +26,7 @@ class PublicationImport(imports.CSVImport):
         try:
             import_object.set_elastic(import_object.to_elastic_dict())
         except:
-            print("Couldn't import %s" % import_object)
+            logger.error(f'Failed to import publication "{element["name"]}"')
         return import_object
 
 

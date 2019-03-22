@@ -31,7 +31,6 @@ before_script:
 script:
   - pytest
   - pytest -m "functional" tests/functional/test_system_import.py --cov-append
-  - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
   - pytest -m "functional" tests/functional/test_imports.py --cov-append
   - xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
   - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
