@@ -281,8 +281,11 @@ class TestStudyImportManager:
 
         s = Search(using=es_client).doc_type("study")
         assert 1 == s.count()
-        s = Search(using=es_client).doc_type("concept")
-        assert 1 == s.count()
+
+        # Concepts will be indexed when mgmt command "upgrade" is called
+
+        # s = Search(using=es_client).doc_type("concept")
+        # assert 1 == s.count()
         s = Search(using=es_client).doc_type("variable")
         assert 2 == s.count()
         s = Search(using=es_client).doc_type("publication")
