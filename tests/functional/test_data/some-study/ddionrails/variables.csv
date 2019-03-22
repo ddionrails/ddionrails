@@ -1,0 +1,3 @@
+study_name,dataset_name,variable_name,concept_name,image_url
+some-study,some-dataset,some-variable,some-concept,https://variable-image.de
+some-study,some-dataset,some-other-variable,some-concept,https://variable-other-image.de

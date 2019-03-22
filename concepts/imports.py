@@ -1,4 +1,5 @@
 import json
+import logging
 
 from imports import imports
 
@@ -10,6 +11,9 @@ from .forms import (
     TopicForm,
 )
 from .models import Topic
+
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class TopicImport(imports.CSVImport):
@@ -24,7 +28,7 @@ class TopicImport(imports.CSVImport):
                     study=self.study, name=parent_name
                 )[0].id
             except:
-                print("Couldn't import parent for: %s" % element)
+                logger.error(f'Could not import parent for: "{element}"')
         element["study"] = self.study.id
         return element
 
@@ -54,8 +58,8 @@ class ConceptImport(imports.CSVImport):
                 topic = Topic.objects.get(name=topic_name, study=self.study)
                 topic.concepts.add(new_concept)
             except:
-                print(
-                    "Couldnt link concept %s to topic %s" % (new_concept.name, topic_name)
+                logger.error(
+                    f'Could not link concept "{new_concept.name}"" to topic "{topic_name}"'
                 )
         return new_concept
 

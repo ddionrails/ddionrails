@@ -1,4 +1,5 @@
 import json
+import logging
 from collections import OrderedDict
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -8,6 +9,9 @@ from imports import imports
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
+
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class DatasetJsonImport(imports.Import):
@@ -57,7 +61,7 @@ class DatasetImport(imports.CSVImport):
         try:
             self._import_dataset_links(element)
         except:
-            print("[ERROR] Failed to import dataset %s" % element["dataset_name"])
+            logger.error(f'Failed to import dataset "{element["dataset_name"]}"')
 
     def _import_dataset_links(self, element: OrderedDict):
         dataset = Dataset.objects.get(
@@ -86,12 +90,17 @@ class VariableImport(imports.CSVImport):
         form = VariableForm
 
     def import_element(self, element):
+        # TODO: Workaround
+        if "variable_name" not in element.keys():
+            element["variable_name"] = element.get("name")
+
         try:
             self._import_variable_links(element)
         except:
-            print(
-                "[ERROR] Failed to import variable %s from dataset %s"
-                % (element.get("variable_name"), element.get("dataset_name"))
+            variable = element.get("variable_name")
+            dataset = element.get("dataset_name")
+            logger.error(
+                f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
 
     def _import_variable_links(self, element):
@@ -126,4 +135,8 @@ class TransformationImport(imports.CSVImport):
                 element["target_variable_name"],
             )
         except ObjectDoesNotExist:
-            print("[ERROR] Failed to import transformation")
+            origin_variable = f"{element['origin_study_name']}/{element['origin_dataset_name']}/{element['origin_variable_name']}"
+            target_variable = f"{element['target_study_name']}/{element['target_dataset_name']}/{element['target_variable_name']}"
+            logger.error(
+                f'Failed to import transformation from variable"{origin_variable}" to variable "{target_variable}"'
+            )

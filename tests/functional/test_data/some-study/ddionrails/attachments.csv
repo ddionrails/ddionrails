@@ -1,0 +1,2 @@
+type,study_name,dataset_name,variable_name,instrument_name,question_name,url,url_text
+study,some-study,,,,,https://some-study.de,some-study
