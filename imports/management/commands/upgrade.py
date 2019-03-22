@@ -44,6 +44,7 @@ def command(
             update_study(study)
             manager = StudyImportManager(study)
             manager.import_all_entities()
+        django_rq.enqueue(Concept.index_all)
         exit(0)
 
     else:
@@ -74,6 +75,7 @@ def command(
         ):
             print("upgrade all entities")
             manager.import_all_entities()
+            django_rq.enqueue(Concept.index_all)
         else:
             if variables:
                 manager.import_single_entity("variables")

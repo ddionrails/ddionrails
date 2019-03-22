@@ -268,4 +268,3 @@ class StudyImportManager:
         logger.info(f'Study "{self.study.name}" starts importing of all entities')
         for entity in self.IMPORT_ORDER.keys():
             self.import_single_entity(entity)
-        django_rq.enqueue(Concept.index_all)
