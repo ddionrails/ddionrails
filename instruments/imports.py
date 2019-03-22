@@ -25,18 +25,18 @@ class InstrumentImport(imports.Import):
         instrument = Instrument.get_or_create(import_dict)
 
         # add period relation to instrument
-        period_name = content.get("period", "")
+        period_name = content.get("period", "none")
         # Workaround for two ways to name period: period, period_name
         # => period_name
-        if period_name == "":
-            period_name = content.get("period_name", "")
+        if period_name == "none":
+            period_name = content.get("period_name", "none")
 
         # Workaround for periods coming in as float, w.g. 2001.0
         try:
             period_name = str(int(period_name))
         except ValueError:
             period_name = str(period_name)
-        period = Period.objects.get(name=period_name, study=self.study)
+        period = Period.objects.get_or_create(name=period_name, study=self.study)
         instrument.period = period
 
         for name, q in content["questions"].items():
