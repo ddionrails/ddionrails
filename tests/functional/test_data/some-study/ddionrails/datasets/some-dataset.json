@@ -1,0 +1,16 @@
+{
+  "some-variable": {
+    "name": "some-variable",
+    "variable": "some-variable",
+    "study": "some-study",
+    "categories": {
+    }
+  },
+  "some-other-variable": {
+    "name": "some-other-variable",
+    "variable": "some-other-variable",
+    "study": "some-study",
+    "categories": {
+    }
+  }
+}

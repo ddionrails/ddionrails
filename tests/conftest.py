@@ -1,6 +1,12 @@
 import pytest
 
-from tests.concepts.factories import ConceptFactory
+from tests.concepts.factories import (
+    AnalysisUnitFactory,
+    ConceptFactory,
+    ConceptualDatasetFactory,
+    PeriodFactory,
+    TopicFactory,
+)
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.ddionrails.factories import SystemFactory
 from tests.factories import UserFactory
@@ -86,3 +92,39 @@ def question(db):
     return QuestionFactory(
         name="some-question", label="Some Question", description="This is some question"
     )
+
+
+@pytest.fixture
+def analysis_unit(db):
+    """ An analysis unit in the database """
+    return AnalysisUnitFactory(
+        name="some-analysis-unit",
+        label="Some analysis unit",
+        description="This is some analysis unit",
+    )
+
+
+@pytest.fixture
+def conceptual_dataset(db):
+    """ A conceptual dataset in the database """
+    return ConceptualDatasetFactory(
+        name="some-conceptual-dataset",
+        label="Some conceptual dataset",
+        description="This is some conceptualdataset",
+    )
+
+
+@pytest.fixture
+def period(db):
+    """ A period in the database """
+    return PeriodFactory(
+        name="some-period",
+        label="Some period",
+        description="This is some period",
+        definition="2018",
+    )
+
+
+@pytest.fixture
+def topic(db):
+    return TopicFactory(name="some-topic")

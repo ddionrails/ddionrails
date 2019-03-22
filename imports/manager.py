@@ -1,6 +1,9 @@
-import glob
+import logging
 import os
 import re
+import shutil
+from collections import OrderedDict
+from pathlib import Path
 
 import django_rq
 from django.conf import settings
@@ -13,6 +16,7 @@ from concepts.imports import (
     TopicImport,
     TopicJsonImport,
 )
+from concepts.models import Concept
 from data.imports import (
     DatasetImport,
     DatasetJsonImport,
@@ -28,6 +32,9 @@ from instruments.imports import (
 from publications.imports import AttachmentImport, PublicationImport
 from studies.imports import StudyDescriptionImport, StudyImport
 from studies.models import Study
+
+logging.config.fileConfig("logging.conf")
+logger = logging.getLogger(__name__)
 
 
 class Repository:
@@ -96,6 +103,11 @@ class Repository:
 
 class ImportLink:
     def __init__(self, expression, importer, activate_import=True):
+
+        print(expression)
+        print(importer)
+        print(activate_import)
+
         self.expression = re.compile(expression)
         self.importer = importer
         self.activate_import = activate_import
@@ -109,7 +121,7 @@ class ImportLink:
         self.importer.run_import(import_file, study=study)
 
     def _process_import_file(self, import_file, study=None):
-        import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
+        # import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
         if self._match(import_file):
             django_rq.enqueue(self._import, study, import_file)
 
@@ -123,124 +135,136 @@ class SystemImportManager:
     def __init__(self, system):
         self.system = system
         self.repo = Repository(system)
-        self.import_patterns = [ImportLink("^studies.csv$", StudyImport)]
 
     def run_import(self, import_all=False):
         """
         Run the system import.
         """
-        if import_all or self.system.repo_url() == "":
-            import_files = self.repo.list_all_files()
-        else:
-            import_files = self.repo.list_changed_files()
-        for link in self.import_patterns:
-            link.run_import(import_files, self.system)
+
+        base_dir = Path(
+            f"{settings.IMPORT_REPO_PATH}{self.system.name}/{settings.IMPORT_SUB_DIRECTORY}"
+        )
+        studies_file = base_dir / "studies.csv"
+        django_rq.enqueue(StudyImport.run_import, studies_file, self.system)
+
+        # Copy background image to static/
+        image_file = base_dir / "background.png"
+        shutil.copy(image_file, "static/")
         self.repo.set_commit_id()
 
 
 class StudyImportManager:
-    """
-    The ``StudyImportManager`` controls the automated imports for a study.
-    """
-
-    def __init__(self, study):
+    def __init__(self, study: Study):
         self.study = study
         self.repo = Repository(study)
-        self.import_patterns = [
-            ImportLink("^study.md$", StudyDescriptionImport),
-            ImportLink("^topics.csv$", TopicImport),
-            ImportLink("^topics.json$", TopicJsonImport),
-            ImportLink("^concepts.csv$", ConceptImport),
-            ImportLink("^analysis_units.csv$", AnalysisUnitImport),
-            ImportLink("^periods.csv$", PeriodImport),
-            ImportLink("^conceptual_datasets.csv$", ConceptualDatasetImport),
-            ImportLink(r"^instruments\/.*\.json$", InstrumentImport),
-            ImportLink(r"^datasets\/.*\.json$", DatasetJsonImport),
-            ImportLink("^datasets.csv$", DatasetImport),
-            ImportLink("^variables.csv$", VariableImport),
-            ImportLink("^questions_variables.csv$", QuestionVariableImport),
-            ImportLink("^concepts_questions.csv$", ConceptQuestionImport),
-            ImportLink("^transformations.csv$", TransformationImport),
-            ImportLink("^attachments.csv$", AttachmentImport),
-            ImportLink("^publications.csv$", PublicationImport),
-        ]
+        self.base_dir = Path(
+            f"{settings.IMPORT_REPO_PATH}/{self.study}/{settings.IMPORT_SUB_DIRECTORY}/"
+        )
 
-    def run_import(self, import_all=False):
-        """
-        Run the study import. Parameters:
-
-        import all
-            If set to ``True``, all files in the repo will be imported.
-        """
-        if import_all or self.study.repo_url() == "":
-            import_files = self.repo.list_all_files()
-        else:
-            import_files = self.repo.list_changed_files()
-        for link in self.import_patterns:
-            link.run_import(import_files, self.study)
-        self.repo.set_commit_id()
-        # django_rq.enqueue(Concept.index_all) # moved to scripts/import.py
-
-
-class LocalImport:
-    def __init__(self, study_name=""):
-        if study_name != "":
-            self.study = Study.objects.get(name=study_name)
-        else:
-            self.study = Study.objects.first()
-        self.repo = Repository(self.study)
+        self.IMPORT_ORDER = OrderedDict(
+            {
+                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
+                "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
+                "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
+                "concepts": (ConceptImport, self.base_dir / "concepts.csv"),
+                "analysis_units": (
+                    AnalysisUnitImport,
+                    self.base_dir / "analysis_units.csv",
+                ),
+                "periods": (PeriodImport, self.base_dir / "periods.csv"),
+                "conceptual_datasets": (
+                    ConceptualDatasetImport,
+                    self.base_dir / "conceptual_datasets.csv",
+                ),
+                "instruments": (
+                    InstrumentImport,
+                    Path(self.base_dir / "instruments/").glob("*.json"),
+                ),
+                "datasets.json": (
+                    DatasetJsonImport,
+                    Path(self.base_dir / "datasets/").glob("*.json"),
+                ),
+                "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
+                "variables": (VariableImport, self.base_dir / "variables.csv"),
+                "questions_variables": (
+                    QuestionVariableImport,
+                    self.base_dir / "questions_variables.csv",
+                ),
+                "concepts_questions": (
+                    ConceptQuestionImport,
+                    self.base_dir / "concepts_questions.csv",
+                ),
+                "transformations": (
+                    TransformationImport,
+                    self.base_dir / "transformations.csv",
+                ),
+                "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
+                "publications": (PublicationImport, self.base_dir / "publications.csv"),
+            }
+        )
 
     def update_repo(self):
         self.repo.update_repo()
+        self.repo.set_commit_id()
 
-    def run_import(self, filename):
-        importer_dict = {
-            "study.md": StudyDescriptionImport,
-            "topics.csv": TopicImport,
-            "topics.json": TopicJsonImport,
-            "concepts.csv": ConceptImport,
-            "analysis_units.csv": AnalysisUnitImport,
-            "periods.csv": PeriodImport,
-            "conceptual_datasets.csv": ConceptualDatasetImport,
-            "datasets.csv": DatasetImport,
-            "variables.csv": VariableImport,
-            "transformations.csv": TransformationImport,
-            "questions_variables.csv": QuestionVariableImport,
-            "concepts_questions.csv": ConceptQuestionImport,
-            "attachments.csv": AttachmentImport,
-            "publications.csv": PublicationImport,
-        }
-        self._enqueue_import(filename, importer_dict[filename])
+    def import_single_entity(self, entity: str, filename: bool = None):
+        """
+        Example usage:
 
-    def import_datasets(self, filename=None):
+        study = Study.objects.get(name="some-study")
+        manager = StudyImportManager(study)
+
+        manager.import_single_entity("study")
+        manager.import_single_entity("periods")
+        manager.import_single_entity("instruments", "instruments/some-instrument.json")
+
+        """
+        logger.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
+        importer_class, default_file_path = self.IMPORT_ORDER.get(entity)
+
+        # import specific file
         if filename:
-            self._enqueue_import(filename, DatasetJsonImport)
+            file = self.base_dir / filename
+            if file.is_file():
+                logger.info(
+                    f'Study "{self.study.name}" starts import of file: "{file.name}"'
+                )
+                importer = importer_class(file, self.study)
+                django_rq.enqueue(importer.run_import, file, self.study)
+            else:
+                logger.error(f'Study "{self.study.name}" has no file: "{file.name}"')
         else:
-            files = self._get_json_files("datasets")
-            for filename in files:
-                self._enqueue_import(filename, DatasetJsonImport)
 
-    def import_instruments(self, filename=None):
-        if filename:
-            self._enqueue_import(filename, InstrumentImport)
-        else:
-            files = self._get_json_files("instruments")
-            for filename in files:
-                self._enqueue_import(filename, InstrumentImport)
+            # single file import
+            if isinstance(default_file_path, Path):
+                if default_file_path.is_file():
+                    importer = importer_class(default_file_path, self.study)
+                    django_rq.enqueue(importer.run_import, default_file_path, self.study)
+                else:
+                    logger.warning(
+                        f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
+                    )
 
-    def _get_json_files(self, dir_name):
-        filelist = glob.glob(
-            os.path.join(self.repo.path, settings.IMPORT_SUB_DIRECTORY, dir_name, "*json")
-        )
-        filelist = [
-            x.replace(os.path.join(self.repo.path, settings.IMPORT_SUB_DIRECTORY), "")
-            for x in filelist
-        ]
-        return filelist
+            # multiple files import, e.g. instruments, datasets
+            else:
 
-    def _import(self, import_file, importer):
-        importer.run_import(import_file, study=self.study)
+                for file in sorted(default_file_path):
+                    logger.info(
+                        f'Study "{self.study.name}" starts import of file: "{file.name}"'
+                    )
+                    importer = importer_class(file, self.study)
+                    django_rq.enqueue(importer.run_import, file, self.study)
 
-    def _enqueue_import(self, import_file, importer):
-        import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
-        django_rq.enqueue(self._import, import_file, importer)
+    def import_all_entities(self):
+        """
+        Example usage:
+
+        study = Study.objects.get(name="some-study")
+        manager = StudyImportManager(study)
+
+        manager.import_all_entities()
+
+        """
+        logger.info(f'Study "{self.study.name}" starts importing of all entities')
+        for entity in self.IMPORT_ORDER.keys():
+            self.import_single_entity(entity)

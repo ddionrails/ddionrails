@@ -5,7 +5,7 @@ import pytest
 from django.conf import settings
 from elasticsearch import Elasticsearch
 
-from imports.manager import LocalImport
+from imports.manager import StudyImportManager
 from publications.models import Publication
 
 pytestmark = [pytest.mark.functional]
@@ -30,9 +30,9 @@ def es_client():
 def publication_in_search_index(settings, es_client, study):
     # redirect study data path to test data directory
     settings.IMPORT_REPO_PATH = "tests/functional/test_data/"
-    importer = LocalImport(study.name)
-    importer.run_import("study.md")
-    importer.run_import("publications.csv")
+    manager = StudyImportManager(study)
+    manager.import_single_entity("study")
+    manager.import_single_entity("publications")
     # wait for indexing to be done
     time.sleep(1)
 
