@@ -3,7 +3,6 @@ import time
 from pathlib import Path
 from pprint import pprint
 
-import bibtexparser
 import pytest
 from elasticsearch import Elasticsearch
 
@@ -126,14 +125,14 @@ class TestStudyImport:
             Period.objects.count() == num_periods_in_csv
         ), "the number of periods in the database does not match the number in the file"
 
-        # TODO: Bibtex or publications.csv ?
-        # num_publications_in_csv = count_lines_in_file(publications_file)
-        with open(publications_file_bib, "r") as f:
-            bibtex = bibtexparser.loads(f.read())
-        num_publications_in_bib = len(bibtex.entries)
-        assert (
-            Publication.objects.count() == num_publications_in_bib
-        ), "the number of publications in the database does not match the number in the file"
+        # # TODO: Bibtex or publications.csv ?
+        # # num_publications_in_csv = count_lines_in_file(publications_file)
+        # with open(publications_file_bib, "r") as f:
+        #     bibtex = bibtexparser.loads(f.read())
+        # num_publications_in_bib = len(bibtex.entries)
+        # assert (
+        #     Publication.objects.count() == num_publications_in_bib
+        # ), "the number of publications in the database does not match the number in the file"
 
         num_questions_in_csv = count_lines_in_file(questions_file)
         assert (

@@ -7,10 +7,9 @@ from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
-from data.models import Dataset
-from instruments.models import Instrument
+from data.models import Dataset, Variable
+from instruments.models import Instrument, Question
 
-from .helpers import render_topics
 from .models import Study
 
 
@@ -34,6 +33,15 @@ class StudyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["num_datasets"] = Dataset.objects.filter(study=self.object).count()
+        context["num_variables"] = Variable.objects.filter(
+            dataset__study=self.object
+        ).count()
+        context["num_instruments"] = Instrument.objects.filter(study=self.object).count()
+        context["num_questions"] = Question.objects.filter(
+            instrument__study=self.object
+        ).count()
+
         context["dataset_list"] = (
             Dataset.objects.select_related(
                 "study", "conceptual_dataset", "period", "analysis_unit"
@@ -44,8 +52,10 @@ class StudyDetailView(DetailView):
                 "label",
                 "study__name",
                 "conceptual_dataset__name",
+                "conceptual_dataset__label",
                 "period__name",
                 "analysis_unit__name",
+                "analysis_unit__label",
             )
         )
         context["instrument_list"] = (
@@ -55,19 +65,16 @@ class StudyDetailView(DetailView):
         )
         context["debug_string"] = pprint.pformat(
             dict(
-                name=self.object.name, config=self.object.get_config(), getcwd=os.getcwd()
+                name=self.object.name,
+                config=self.object.get_config(),
+                source=self.object.get_source(),
+                getcwd=os.getcwd(),
             )
         )
         return context
 
 
-def study_topics(request: HttpRequest, study_name: str) -> HttpResponse:
+def study_topics(request: HttpRequest, study_name: str, language: str) -> HttpResponse:
     study = get_object_or_404(Study, name=study_name)
-    context = dict(study=study, topics=list())
-    file_names = study.get_list_of_topic_files()
-    for file_name in file_names:
-        with open(file_name, "r") as f:
-            name, label, content = render_topics(f.read(), study)
-            context["topics"].append(dict(name=name, label=label, content=content))
-    context["hide_topics"] = len(context["topics"]) == 0
+    context = dict(study=study, language=language)
     return render(request, "studies/study_topics.html", context=context)

@@ -10,6 +10,8 @@ from concepts.imports import (
     ConceptImport,
     ConceptualDatasetImport,
     PeriodImport,
+    TopicImport,
+    TopicJsonImport,
 )
 from data.imports import (
     DatasetImport,
@@ -23,10 +25,9 @@ from instruments.imports import (
     InstrumentImport,
     QuestionVariableImport,
 )
-from publications.imports import PublicationImport
+from publications.imports import AttachmentImport, PublicationImport
 from studies.imports import StudyDescriptionImport, StudyImport
 from studies.models import Study
-from workspace.imports import BasketImport, BasketVariableImport, UserImport
 
 
 class Repository:
@@ -38,13 +39,11 @@ class Repository:
 
     def clone_repo(self):
         script = [
-            "cd %s" % settings.IMPORT_REPO_PATH,
-            "git clone %s %s" % (self.link, self.name),
-            "cd %s" % self.name,
-            "git checkout -b %s origin/%s"
-            % (settings.IMPORT_BRANCH, settings.IMPORT_BRANCH),
-            "git branch --set-upstream-to=origin/%s %s"
-            % (settings.IMPORT_BRANCH, settings.IMPORT_BRANCH),
+            f"cd {settings.IMPORT_REPO_PATH}",
+            f"git clone --depth 1 {self.link} {self.name} -b {settings.IMPORT_BRANCH}",
+            f"cd {self.name}",
+            f"git checkout -b {settings.IMPORT_BRANCH} origin/{settings.IMPORT_BRANCH}",
+            f"git branch --set-upstream-to=origin/{settings.IMPORT_BRANCH} {settings.IMPORT_BRANCH}",
         ]
         script_list(script)
 
@@ -139,31 +138,6 @@ class SystemImportManager:
         self.repo.set_commit_id()
 
 
-class BackupImportManager:
-    """Import the files from the backup repository."""
-
-    def __init__(self, backup):
-        self.backup = backup
-        self.repo = Repository(backup)
-        self.import_patterns = [
-            ImportLink("^users.csv$", UserImport),
-            ImportLink("^baskets.csv$", BasketImport),
-            ImportLink("^baskets_variables.csv$", BasketVariableImport),
-        ]
-
-    def run_import(self, import_all=False):
-        """
-        Run the backup import.
-        """
-        if import_all or self.backup.current_commit == "":
-            import_files = self.repo.list_all_files()
-        else:
-            import_files = self.repo.list_changed_files()
-        for link in self.import_patterns:
-            link.run_import(import_files, self.backup)
-        self.repo.set_commit_id()
-
-
 class StudyImportManager:
     """
     The ``StudyImportManager`` controls the automated imports for a study.
@@ -173,11 +147,13 @@ class StudyImportManager:
         self.study = study
         self.repo = Repository(study)
         self.import_patterns = [
+            ImportLink("^study.md$", StudyDescriptionImport),
+            ImportLink("^topics.csv$", TopicImport),
+            ImportLink("^topics.json$", TopicJsonImport),
             ImportLink("^concepts.csv$", ConceptImport),
             ImportLink("^analysis_units.csv$", AnalysisUnitImport),
             ImportLink("^periods.csv$", PeriodImport),
             ImportLink("^conceptual_datasets.csv$", ConceptualDatasetImport),
-            ImportLink("^study.md$", StudyDescriptionImport),
             ImportLink(r"^instruments\/.*\.json$", InstrumentImport),
             ImportLink(r"^datasets\/.*\.json$", DatasetJsonImport),
             ImportLink("^datasets.csv$", DatasetImport),
@@ -185,7 +161,8 @@ class StudyImportManager:
             ImportLink("^questions_variables.csv$", QuestionVariableImport),
             ImportLink("^concepts_questions.csv$", ConceptQuestionImport),
             ImportLink("^transformations.csv$", TransformationImport),
-            ImportLink("^bibtex.bib$", PublicationImport),
+            ImportLink("^attachments.csv$", AttachmentImport),
+            ImportLink("^publications.csv$", PublicationImport),
         ]
 
     def run_import(self, import_all=False):
@@ -218,17 +195,20 @@ class LocalImport:
 
     def run_import(self, filename):
         importer_dict = {
+            "study.md": StudyDescriptionImport,
+            "topics.csv": TopicImport,
+            "topics.json": TopicJsonImport,
             "concepts.csv": ConceptImport,
             "analysis_units.csv": AnalysisUnitImport,
             "periods.csv": PeriodImport,
             "conceptual_datasets.csv": ConceptualDatasetImport,
-            "study.md": StudyDescriptionImport,
             "datasets.csv": DatasetImport,
             "variables.csv": VariableImport,
             "transformations.csv": TransformationImport,
             "questions_variables.csv": QuestionVariableImport,
             "concepts_questions.csv": ConceptQuestionImport,
-            "bibtex.bib": PublicationImport,
+            "attachments.csv": AttachmentImport,
+            "publications.csv": PublicationImport,
         }
         self._enqueue_import(filename, importer_dict[filename])
 

@@ -28,6 +28,8 @@ INSTALLED_APPS = [
     "markdown",
     "django_rq",
     "webpack_loader",
+    "import_export",
+    "crispy_forms",
     # DDI on Rails
     "ddionrails",
     "concepts",
@@ -36,8 +38,8 @@ INSTALLED_APPS = [
     "data",
     "elastic",
     "workspace",
-    "publications",
     "instruments",
+    "publications",
     "api",
 ]
 
@@ -89,13 +91,14 @@ DATABASES = {
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Europe/Berlin"
+USE_TZ = True
+TIME_ZONE = "UTC"
+# TIME_ZONE = "Europe/Berlin"
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
 
 
 # Misc
@@ -161,3 +164,9 @@ def get_secret(setting, secrets=secrets):
 
 
 SECRET_KEY = get_secret("SECRET_KEY")
+
+CRISPY_TEMPLATE_PACK = "bootstrap3"
+
+
+# https://django-import-export.readthedocs.io/en/latest/api_widgets.html?highlight=date#import_export.widgets.DateTimeWidget
+DATETIME_INPUT_FORMATS = ("%Y-%m-%d %H:%M:%S %Z",)

@@ -103,6 +103,7 @@ class TestNavigation:
         expanded = studies_dropdown_menu.get_attribute("aria-expanded")
         assert expanded == "true"
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_dropdown_menu(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -112,6 +113,7 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_link_from_home_page_list(self, selenium, live_server, study):
         selenium.get(live_server.url)
         study_list = selenium.find_element_by_css_selector("div.list-group")
@@ -121,6 +123,7 @@ class TestNavigation:
         assert study.name in study_info_box.text
         assert study.label in study_info_box.text
 
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_page(self, selenium, live_server, study):
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
@@ -128,7 +131,7 @@ class TestNavigation:
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
         assert study_nav_bar.find_element_by_xpath("//a[contains(@href,'/publ/')]")
 
-    @pytest.mark.skip(reason="TODO")
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_datasets_section_link(self, selenium, live_server, study, dataset):
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
@@ -140,7 +143,7 @@ class TestNavigation:
         dataset_link = dataset_table.find_element_by_link_text(dataset.name)
         assert dataset_link
 
-    @pytest.mark.skip(reason="TODO")
+    @pytest.mark.skip(reason="Needs Elasticsearch")
     def test_study_instruments_section_link(
         self, selenium, live_server, study, instrument
     ):
@@ -257,6 +260,27 @@ class TestWorkspace:
             "Note that both fields may be case-sensitive."
             in selenium.page_source
         )
+
+    def test_login_with_known_user_redirects_to_same_page(self, selenium, live_server, known_user):
+        """ When a user logs in from any page, after logging in, the system should take
+            the user back to the page he was visiting before logging in.
+        """
+        # The user starts at the contact page
+        contact_url = live_server.url + "/contact/"
+        selenium.get(contact_url)
+        login_link = selenium.find_element_by_link_text("Register / log in")
+        login_link.click()
+        input_user_name = selenium.find_element_by_id("id_username")
+        input_password = selenium.find_element_by_id("id_password")
+        input_user_name.send_keys("knut")
+        input_password.send_keys("secret")
+        login_button = selenium.find_element_by_xpath('//input[@value="Login"]')
+        login_button.click()
+        # After logging in, the user should be redirected back to the contact page
+        assert contact_url == selenium.current_url
+        assert selenium.find_element_by_link_text("My baskets")
+        assert selenium.find_element_by_link_text("My account")
+        assert  selenium.find_element_by_link_text("Logout")
 
     # @pytest.mark.skip(reason="no way of currently testing this")
     def test_baskets_page(self, authenticated_browser, live_server):

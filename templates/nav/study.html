@@ -13,14 +13,11 @@
   <div id="navbar" class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li><a href="/{{ study.name }}#datasets">Data</a></li>
-      <!--
-      <li><a href="/{{ study.name }}#topics">Topics</a></li>
-      -->
       <li><a href="/{{ study.name }}#instruments">Instruments</a></li>
       {% if study.has_topics %}
-      <li><a href="/{{ study.name }}/topics/">Topics</a></li>
+        <li><a href="/{{ study.name }}/topics/en">Topics</a></li>
       {% endif %}
       <li><a href="/{{ study.name }}/publ/">Publications</a></li>
     </ul>
-  </div><!--/.nav-collapse -->
+  </div>
 </div>

@@ -31,15 +31,16 @@ class PublicationDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["bibtex"] = self.object.get_source()
+        context["publication"] = self.object
         context["debug_string"] = pprint.pformat(self.object.get_elastic(), width=120)
         context["study"] = self.object.study
-        context["links"] = [
-            x.strip() for x in context["bibtex"].get("link", "").split(",")
-        ]
         return context
 
 
 def study_publication_list(request, study_name):
-    context = dict(study=Study.objects.get(name=study_name))
+    study = get_object_or_404(Study, name=study_name)
+    context = dict(
+        study=study,
+        # publications=study.publications.all(),
+    )
     return render(request, "publications/study_publication_list.html", context=context)

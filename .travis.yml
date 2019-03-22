@@ -1,3 +1,4 @@
+dist: xenial
 language: python
 python: "3.6"
 cache:
@@ -8,6 +9,7 @@ env:
   global:
   - DISPLAY=:99.0
   - GECKODRIVER_VERSION=0.23.0
+  - ELASTICSEARCH_VERSION=2.4.2
 addons:
   firefox: latest
 before_install:
@@ -16,12 +18,13 @@ before_install:
   - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
   - export PATH=$HOME/geckodriver:$PATH
   - geckodriver --version
+  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ELASTICSEARCH_VERSION/elasticsearch-$ELASTICSEARCH_VERSION.deb && sudo dpkg -i --force-confnew elasticsearch-$ELASTICSEARCH_VERSION.deb && sudo service elasticsearch restart
+  - sleep 10
+  - curl localhost:9200
 install:
   - pip install pipenv
   - pipenv install --dev
   - pipenv run paver copy_secrets_file
-  - pipenv run paver install_elastic
-  - db/elasticsearch/bin/elasticsearch -d
   - pipenv run paver setup_frontend
 before_script:
   - sleep 10
@@ -29,6 +32,9 @@ script:
   - pytest
   - pytest -m "functional" tests/functional/test_system_import.py --cov-append
   - pytest -m "functional" tests/functional/test_study_import.py::TestStudyImport --cov-append
+  - pytest -m "functional" tests/functional/test_imports.py --cov-append
+  - xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
   - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
+  - python manage.py migrate
 after_success:
   - codecov

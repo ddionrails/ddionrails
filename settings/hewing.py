@@ -1,4 +1,4 @@
-from .base import * # noqa
+from .base import *  # noqa
 
 WSGI_APPLICATION = "ddionrails.wsgi_hewing.application"
 
@@ -6,18 +6,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["hewing.soep.de", "ddionrails.soep.de"]
 
-# django-debug-toolbar
-# ------------------------------------------------------------------------------
-# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
-INSTALLED_APPS += ["debug_toolbar"]
-# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
-MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
-# https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
-
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
-BACKUP_NAME = "backup"
-BACKUP_REPO_URL = "https://github.com/ddionrails/test-backup.git"
+
 IMPORT_BRANCH = "development"
 
 LOGGING = {
@@ -51,7 +42,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["/data/WWW/vhosts/paneldata.soep.de/ddionrails2/ddionrails/templates"],
+        "DIRS": [BASE_DIR + "/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

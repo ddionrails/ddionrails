@@ -5,6 +5,10 @@
   <div class="panel-body">
     <p>Name: {{ study.name }}</p>
     <p>Label: {{ study.label }}</p>
+    <p>Datasets: {{ num_datasets }}</p>
+    <p>Variables: {{ num_variables }}</p>
+    <p>Instruments: {{ num_instruments }}</p>
+    <p>Questions: {{ num_questions }}</p>
     {% if study.organization %}
       <p>
         Organization:
@@ -13,5 +17,6 @@
         </a>
       </p>
     {% endif %}
+    {% include "publications/attachments_partial.html" with attachments=study.attachments %}
   </div>
 </div>

@@ -49,13 +49,17 @@ class DatasetImport(imports.CSVImport):
     class DOR:
         form = DatasetForm
 
-    def import_element(self, element):
+    def import_element(self, element: OrderedDict):
+        # TODO: Workaround
+        if "dataset_name" not in element.keys():
+            element["dataset_name"] = element.get("name")
+
         try:
             self._import_dataset_links(element)
         except:
             print("[ERROR] Failed to import dataset %s" % element["dataset_name"])
 
-    def _import_dataset_links(self, element):
+    def _import_dataset_links(self, element: OrderedDict):
         dataset = Dataset.objects.get(
             study=self.study, name=element["dataset_name"].lower()
         )
@@ -103,6 +107,7 @@ class VariableImport(imports.CSVImport):
             variable.concept = concept
         variable.description = element.get("description", "")
         variable.description_long = element.get("description_long", "")
+        variable.image_url = element.get("image_url", "")
         variable.save()
 
 

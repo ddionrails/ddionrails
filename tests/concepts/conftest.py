@@ -5,15 +5,8 @@ from .factories import (
     ConceptFactory,
     ConceptualDatasetFactory,
     PeriodFactory,
+    TopicFactory,
 )
-
-
-@pytest.fixture
-def concept(db):
-    """ A concept in the database """
-    return ConceptFactory(
-        name="some-concept", label="Some Concept", description="This is some concept"
-    )
 
 
 @pytest.fixture
@@ -115,3 +108,14 @@ def valid_period_data(study):
         description="This is some period",
         definition="2018",
     )
+
+
+@pytest.fixture
+def valid_topic_data(study):
+    """ A valid input for topic forms and imports """
+    return dict(name="some-topic", study=study.pk)
+
+
+@pytest.fixture
+def topic(study):
+    return TopicFactory(name="some-topic", study=study)

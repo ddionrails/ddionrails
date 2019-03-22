@@ -1,7 +1,10 @@
+{{ row_helper.reset }}
 <div class="panel panel-default">
+  {% if table_name %}
   <div class="panel-heading">
-    <b>Related variabels</b>
+    <b>{{ table_name }}</b>
   </div>
+  {% endif %}
   <div class="panel-body">
     <div class="row">
       {% for period_name, variables in variable_list.items %}

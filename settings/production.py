@@ -1,4 +1,4 @@
-from .base import * # noqa
+from .base import *  # noqa
 
 WSGI_APPLICATION = "ddionrails.wsgi_production.application"
 DEBUG = False
@@ -6,8 +6,7 @@ ALLOWED_HOSTS = [".paneldata.org", "paneldata.soep.de", "data.soep.de"]
 
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
-BACKUP_NAME = "backup"
-BACKUP_REPO_URL = "https://github.com/ddionrails/test-backup.git"
+
 IMPORT_BRANCH = "master"
 
 LOGGING = {
@@ -41,7 +40,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["/data/WWW/vhosts/paneldata.soep.de/ddionrails2/ddionrails/templates"],
+        "DIRS": [BASE_DIR + "/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

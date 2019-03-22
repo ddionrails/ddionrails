@@ -1,6 +1,6 @@
 import factory
 
-from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
 from tests.studies.factories import StudyFactory
 
 
@@ -35,4 +35,14 @@ class PeriodFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Period
+        django_get_or_create = ("study", "name")
+
+
+class TopicFactory(factory.django.DjangoModelFactory):
+    """Topic factory"""
+
+    study = factory.SubFactory(StudyFactory, name="some-study")
+
+    class Meta:
+        model = Topic
         django_get_or_create = ("study", "name")

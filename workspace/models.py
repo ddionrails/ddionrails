@@ -3,8 +3,10 @@ import io
 import json
 
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from model_utils.models import TimeStampedModel
 
 from data.models import Variable
 from ddionrails.helpers import render_markdown
@@ -15,7 +17,7 @@ from studies.models import Study
 from .scripts import ScriptConfig
 
 
-class Basket(ElasticMixin, models.Model):
+class Basket(ElasticMixin, TimeStampedModel):
     """
     Basket
     """
@@ -23,11 +25,9 @@ class Basket(ElasticMixin, models.Model):
     name = models.CharField(max_length=255, validators=[validate_lowercase])
     label = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
-    security_token = models.CharField(max_length=255, blank=True)
     study = models.ForeignKey(Study, related_name="baskets", on_delete=models.CASCADE)
     user = models.ForeignKey(User, related_name="baskets", on_delete=models.CASCADE)
     variables = models.ManyToManyField(Variable, through="BasketVariable")
-    # TODO Validate that the variable is part of the study.
 
     DOC_TYPE = "basket"
 
@@ -58,7 +58,7 @@ class Basket(ElasticMixin, models.Model):
         try:
             config = self.study.get_config()
             return config["script_generators"]
-        except TypeError:
+        except (TypeError, KeyError):
             return None
 
     def to_csv(self):
@@ -101,6 +101,9 @@ class Basket(ElasticMixin, models.Model):
             writer.writerow(row)
         return output.getvalue()
 
+    def to_dict(self):
+        return dict(name=self.name, label=self.label, id=self.id)
+
 
 class BasketVariable(models.Model):
     basket = models.ForeignKey(
@@ -113,8 +116,20 @@ class BasketVariable(models.Model):
     class Meta:
         unique_together = ("basket", "variable")
 
+    def clean(self, *args, **kwargs):
+        """ Custom clean method for BasketVariable
+            the basket's study and the variable's dataset's study have to be the same.
+        """
+        basket_study = self.basket.study
+        variable_study = self.variable.dataset.study
+        if not basket_study == variable_study:
+            raise ValidationError(
+                f'Basket study "{basket_study}" does not match variable study "{variable_study}"'
+            )
+        super(BasketVariable, self).clean()
 
-class Script(models.Model):
+
+class Script(TimeStampedModel):
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     generator_name = models.CharField(max_length=255, default="soep-stata")

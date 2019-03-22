@@ -1,12 +1,6 @@
 import pytest
 
-from .factories import QuestionFactory
 
-
-@pytest.fixture
-def question(db):
-    """ A question in the database """
-    return QuestionFactory(name="some-question", label="Some Question", description="This is some question")
 
 
 @pytest.fixture

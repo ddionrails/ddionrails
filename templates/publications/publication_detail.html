@@ -6,58 +6,32 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <div class="text-center">
-      <p style="font-size: 150%;">{{ bibtex.title }}</p>
-      <p><b>{{ bibtex.author }}</b></p>
-      <p>{{ bibtex.year }}</p>
-      <p>
-        {{ bibtex.journal }}
-        {{ bibtex.series }}
-        {{ bibtex.booktitle }}
-        {% if bibtex.volume %} · Vol {% endif %} {{ bibtex.volume }}
-        {% if bibtex.number %} · No {% endif %} {{ bibtex.number }}
-        {% if bibtex.pages %}  · p {% endif %} {{ bibtex.pages }}
-      </p>
-      <p>{{ bibtex.publisher }}</p>
-      {% for link in links %}
-        <p><a href="{{ link }}">
-          {{ link }}
+      <p class="lead">{{ publication.author }} ({{ publication.year }})</p>
+      <h1>{{ publication.title }}</h1>
+      {% if publication.sub_type %}<p>[{{ publication.sub_type }}]</p>{% endif %}
+    </div>
+    {{ publication.html_abstract | safe }}
+    {% if publication.url %}
+    <div class="text-right">
+        <p><a href="{{ publication.url }}" class="btn btn-primary">Go to publication</a></p>
+    </div>
+    {% endif %}
+    {% if publication.doi %}
+    <div class="text-right">
+        <p><a href="https://doi.org/{{ publication.doi }}" class="btn btn-primary">
+            Go to DOI {{ publication.doi }}
         </a></p>
-      {% endfor %}
     </div>
-    {{ bibtex.abstract }}
+    {% endif %}
   </div>
 </div>
 
+{% if publication.studies %}
+  <p><b>This publication uses the following data sources:</b></p>
+  <p>{{ publication.studies }}</p>
+{% endif %}
 
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <div class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Show all details
-        </a>
-      </h4>
-    </div>
-    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+<p><b>Please cite as:</b></p>
+{{ publication.html_cite | safe }}
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th>Key</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-  {% for key, value in bibtex.items %}
-      <tr>
-        <td>{{ key }}</td>
-        <td>{{ value }}</td>
-      </tr>
-  {% endfor %}
-    </tbody>
-  </table>
-
-      </div>
-  </div>
-</div>
 {% endblock content %}

@@ -1,10 +1,10 @@
 import pytest
-from django.http.response import Http404
 from django.http import Http404
+from django.http.response import Http404
 from django.urls import reverse
 
-from publications.views import study_publication_list, PublicationRedirectView
 from elastic.mixins import ModelMixin
+from publications.views import PublicationRedirectView, study_publication_list
 
 
 class TestPublicationRedirectView:
@@ -35,6 +35,7 @@ class TestPublicationDetailView:
         response = client.get(url)
         assert response.status_code == 200
 
+    @pytest.mark.skip(reason="no way of currently testing this")
     def test_detail_view_with_invalid_study_name(self, mocker, client, publication):
         # TODO return_value
         mocked_get_source = mocker.patch.object(ModelMixin, "get_source")

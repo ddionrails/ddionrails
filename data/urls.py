@@ -1,11 +1,11 @@
 from django.urls import path
 
-from data.views import dataset_detail, variable_json, VariableDetailView
+from data.views import DatasetDetailView, VariableDetailView, variable_json
 
 app_name = "data"
 
 urlpatterns = [
-    path("<slug:dataset_name>", dataset_detail, name="dataset"),
+    path("<slug:dataset_name>", DatasetDetailView.as_view(), name="dataset"),
     path(
         "<slug:dataset_name>/<slug:variable_name>",
         VariableDetailView.as_view(),

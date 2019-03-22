@@ -1,42 +1,72 @@
-import bibtexparser
+from collections import OrderedDict
 
+from concepts.models import Period
+from data.models import Dataset, Variable
 from imports import imports
+from instruments.models import Instrument, Question
 
-from .forms import PublicationForm
+from .forms import AttachmentForm, PublicationForm
 from .models import Publication
 
 
-class PublicationImport(imports.Import):
-    def execute_import(self):
-        bibtex = bibtexparser.loads(self.content)
-        self.bibtex = bibtex
-        for item in bibtex.entries:
-            try:
-                self._import_publication(item)
-            except:
-                print("X")
+class PublicationImport(imports.CSVImport):
+    class DOR:
+        form = PublicationForm
 
-    def _import_publication(self, bibtex_item):
-        label = "%s (%s): %s" % (
-            bibtex_item.get("author", ""),
-            bibtex_item.get("year", ""),
-            bibtex_item.get("title", ""),
-        )
-        bibtex_item["namespace"] = self.study.name
-        bibtex_item["study"] = self.study.name
-        bibtex_item["label"] = label
-        bibtex_item["period"] = bibtex_item.get("year", "")
-        import_dict = dict(name=bibtex_item["ID"], study=self.study.id, label=label)
+    def process_element(self, element: OrderedDict) -> OrderedDict:
+        element["study"] = self.study.id
+        return element
+
+    def import_element(self, element: OrderedDict) -> Publication:
+        import_object = super().import_element(element)
         try:
-            name = PublicationForm(import_dict).data["name"]
-            x = Publication.objects.get(name=name)
+            import_object.set_elastic(import_object.to_elastic_dict())
         except:
-            x = None
-        form = PublicationForm(import_dict, instance=x)
-        form.full_clean()
-        if form.is_valid():
-            publication = form.save()
-            publication.set_elastic(bibtex_item)
-            print("p", end="")
-        else:
-            print("\n[ERROR] Broken publication import", form.data)
+            print("Couldn't import %s" % import_object)
+        return import_object
+
+
+class AttachmentImport(imports.CSVImport):
+    class DOR:
+        form = AttachmentForm
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.study.related_attachments.all().delete()
+
+    def process_element(self, element):
+        element["context_study"] = self.study.id
+        t = element.get("type")
+        if t == "study":
+            element["study"] = self.study.id
+        elif t == "variable":
+            element["variable"] = (
+                Variable.objects.filter(
+                    dataset__study_id=self.study.id,
+                    dataset__name=element.get("dataset_name"),
+                )
+                .get(name=element.get("variable_name"))
+                .id
+            )
+        elif t == "dataset":
+            element["dataset"] = (
+                Dataset.objects.filter(study_id=self.study.id)
+                .get(name=element.get("dataset_name"))
+                .id
+            )
+        elif t == "question":
+            element["question"] = (
+                Question.objects.filter(
+                    instrument__study_id=self.study.id,
+                    instrument__name=element.get("instrument_name"),
+                )
+                .get(name=element.get("question_name"))
+                .id
+            )
+        elif t == "instrument":
+            element["instrument"] = (
+                Instrument.objects.filter(study_id=self.study.id)
+                .get(name=element.get("instrument_name"))
+                .id
+            )
+        return element
