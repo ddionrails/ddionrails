@@ -39,6 +39,12 @@ class TestAnalysisUnitModel:
     def test_string_method(self, analysis_unit):
         assert str(analysis_unit) == "/analysis_unit/" + analysis_unit.name
 
+    def test_title_method_with_label(self, analysis_unit):
+        assert analysis_unit.title() == analysis_unit.label
+
+    def test_title_method_without_label(self, analysis_unit_without_label):
+        assert analysis_unit_without_label.title() == analysis_unit_without_label.name
+
 
 class TestConceptualDatasetModel:
     def test_string_method(self, conceptual_dataset):
