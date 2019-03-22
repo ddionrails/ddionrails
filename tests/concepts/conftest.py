@@ -1,6 +1,11 @@
 import pytest
 
-from .factories import AnalysisUnitFactory, ConceptFactory, ConceptualDatasetFactory, PeriodFactory
+from .factories import (
+    AnalysisUnitFactory,
+    ConceptFactory,
+    ConceptualDatasetFactory,
+    PeriodFactory,
+)
 
 
 @pytest.fixture
