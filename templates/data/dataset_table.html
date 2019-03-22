@@ -15,21 +15,9 @@
           <a href="{{ dataset }}">{{ dataset.name }}</a>
         </td>
         <td>{{ dataset.title }}</td>
-        <td>
-          {% if dataset.conceptual_dataset.label %}
-            {{ dataset.conceptual_dataset.label }}
-          {% else %}
-            {{ dataset.conceptual_dataset.name }}
-          {% endif %}
-        </td>
-        <td>{{ dataset.period.name }}</td>
-        <td>
-          {% if dataset.analysis_unit.label %}
-            {{ dataset.analysis_unit.label }}
-          {% else %}
-            {{ dataset.analysis_unit.name }}
-          {% endif %}
-        </td>
+        <td>{{ dataset.conceptual_dataset.title }}</td>
+        <td>{{ dataset.period.title }}</td>
+        <td>{{ dataset.analysis_unit.title }}</td>
       </tr>
     {% endfor %}
   </tbody>
