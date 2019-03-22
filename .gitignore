@@ -143,5 +143,8 @@ node_modules/
 
 secrets.json
 
+# Static files
+/ddionrails/static/background.png
 /ddionrails/static/dist/*
+
 webpack-stats.json
