@@ -16,6 +16,12 @@ def period_without_label(db):
 
 
 @pytest.fixture
+def analysis_unit_without_label(db):
+    """ A analysis_unit without a label in the database """
+    return PeriodFactory(name="some-period", description="This is some period")
+
+
+@pytest.fixture
 def period_with_range_definition(db):
     """ A period with a range period definition in the database """
     return PeriodFactory(
