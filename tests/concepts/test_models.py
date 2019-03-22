@@ -50,6 +50,15 @@ class TestConceptualDatasetModel:
     def test_string_method(self, conceptual_dataset):
         assert str(conceptual_dataset) == "/conceptual_dataset/" + conceptual_dataset.name
 
+    def test_title_method_with_label(self, conceptual_dataset):
+        assert conceptual_dataset.title() == conceptual_dataset.label
+
+    def test_title_method_without_label(self, conceptual_dataset_without_label):
+        assert (
+            conceptual_dataset_without_label.title()
+            == conceptual_dataset_without_label.name
+        )
+
 
 class TestPeriodModel:
     def test_string_method(self, period):
