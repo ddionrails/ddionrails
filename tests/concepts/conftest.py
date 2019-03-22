@@ -16,6 +16,12 @@ def period_without_label(db):
 
 
 @pytest.fixture
+def conceptual_dataset_without_label(db):
+    """ A conceptual_dataset without a label in the database """
+    return PeriodFactory(name="some-period", description="This is some period")
+
+
+@pytest.fixture
 def analysis_unit_without_label(db):
     """ A analysis_unit without a label in the database """
     return AnalysisUnitFactory(name="some-period", description="This is some period")
