@@ -1,6 +1,11 @@
 import pytest
 
-from .factories import AnalysisUnitFactory, ConceptFactory, PeriodFactory
+from .factories import (
+    AnalysisUnitFactory,
+    ConceptFactory,
+    ConceptualDatasetFactory,
+    PeriodFactory,
+)
 
 
 @pytest.fixture
@@ -13,6 +18,12 @@ def concept_without_label(db):
 def period_without_label(db):
     """ A period without a label in the database """
     return PeriodFactory(name="some-period", description="This is some period")
+
+
+@pytest.fixture
+def conceptual_dataset_without_label(db):
+    """ A conceptual_dataset without a label in the database """
+    return ConceptualDatasetFactory(name="some-period", description="This is some period")
 
 
 @pytest.fixture
