@@ -1,6 +1,8 @@
 import json
 import pprint
 
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import JsonResponse
 from django.shortcuts import HttpResponse, get_object_or_404, render
 from django.views.generic import DetailView, RedirectView
 
@@ -19,6 +21,7 @@ class DatasetRedirectView(RedirectView):
         to
         /<str:study_name>/data/<str:dataset_name>
     """
+
     def get_redirect_url(self, *args, **kwargs):
         dataset = get_object_or_404(Dataset, id=kwargs["id"])
         return dataset.get_absolute_url()
@@ -125,16 +128,17 @@ class VariableDetailView(DetailView):
         return context
 
 
-# TODO
-def variable_json(request, study_name, dataset_name, variable_name):
-    variable = (
-        Variable.objects.filter(dataset__study__name=study_name)
-        .filter(dataset__name=dataset_name)
-        .get(name=variable_name)
+def variable_json(
+    request: WSGIRequest, study_name: str, dataset_name: str, variable_name: str
+):
+    variable = get_object_or_404(
+        Variable,
+        dataset__study__name=study_name,
+        dataset__name=dataset_name,
+        name=variable_name,
     )
-    var_json = variable.get_source(as_json=True)
-    # TODO: use JsonResponse here
-    return HttpResponse(var_json, content_type="application/json")
+    var_json = variable.get_source(as_json=False)
+    return JsonResponse(var_json)
 
 
 def extend_context_for_variable(request, context):
@@ -155,6 +159,7 @@ def extend_context_for_variable(request, context):
         Basket.objects.filter(study_id=study.id).filter(user_id=request.user.id).all()
     )  # TODO user!
     return context
+
 
 # TODO
 def variable_preview_id(request, variable_id):
