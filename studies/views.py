@@ -54,6 +54,7 @@ class StudyDetailView(DetailView):
                 "conceptual_dataset__name",
                 "conceptual_dataset__label",
                 "period__name",
+                "period__label",
                 "analysis_unit__name",
                 "analysis_unit__label",
             )
@@ -61,7 +62,15 @@ class StudyDetailView(DetailView):
         context["instrument_list"] = (
             Instrument.objects.select_related("study", "period", "analysis_unit")
             .filter(study=self.object)
-            .only("name", "label", "study__name", "period__name", "analysis_unit__name")
+            .only(
+                "name",
+                "label",
+                "study__name",
+                "period__name",
+                "period__label",
+                "analysis_unit__name",
+                "analysis_unit__label",
+            )
         )
         context["debug_string"] = pprint.pformat(
             dict(
