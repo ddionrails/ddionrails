@@ -1,6 +1,7 @@
+import pytest
 from django.urls import reverse
 
-from workspace.views import script_detail, own_basket_only
+from workspace.views import own_basket_only, script_detail
 
 from .factories import UserFactory
 
@@ -18,6 +19,7 @@ class TestOwnBasketOnlyDecorator:
 
 
 class TestScriptDetailView:
+    @pytest.mark.skip
     def test_script_detail_view_with_script_created_before_update(
         self, rf, basket, script
     ):
