@@ -3,6 +3,7 @@ import pprint
 from collections import OrderedDict
 
 from django.contrib import messages
+from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.forms.widgets import HiddenInput
 from django.http import HttpResponse
@@ -24,13 +25,7 @@ def own_basket_only(view):
         if basket.user == request.user:
             return view(request, basket_id, *args, **kwargs)
         else:
-            messages.add_message(
-                request,
-                messages.INFO,
-                "You don't have the user rights to access basket %s." % basket_id,
-            )
-            return redirect("/")
-
+            raise PermissionDenied
     return wrapper
 
 
