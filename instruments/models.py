@@ -49,6 +49,7 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
 
     class Meta:
         unique_together = ("study", "name")
+        ordering = ("study", "name")
 
     class DOR:
         id_fields = ["study", "name"]
