@@ -10,6 +10,7 @@ from .update import update_study
 
 @click.command()
 @click.option("-s", "--study", "study_name", default=False)
+@click.option("--study_description", default=False, is_flag=True)
 @click.option("--all", "_all", default=False, is_flag=True)
 @click.option("-a", "--analysis_units", default=False, is_flag=True)
 @click.option("--attachments", default=False, is_flag=True)
@@ -26,6 +27,7 @@ from .update import update_study
 @click.option("--filename")
 def command(
     study_name,
+    study_description,
     variables,
     analysis_units,
     attachments,
@@ -65,6 +67,7 @@ def command(
             any(
                 (
                     analysis_units,
+                    study_description,
                     attachments,
                     periods,
                     concepts,
@@ -85,6 +88,8 @@ def command(
         else:
             if variables:
                 manager.import_single_entity("variables")
+            if study_description:
+                manager.import_single_entity("study")
             if periods:
                 manager.import_single_entity("periods")
             if concepts:
