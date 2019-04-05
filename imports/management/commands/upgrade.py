@@ -12,8 +12,10 @@ from .update import update_study
 @click.option("-s", "--study", "study_name", default=False)
 @click.option("--all", "_all", default=False, is_flag=True)
 @click.option("-a", "--analysis_units", default=False, is_flag=True)
+@click.option("--attachments", default=False, is_flag=True)
 @click.option("-p", "--periods", default=False, is_flag=True)
 @click.option("-c", "--concepts", default=False, is_flag=True)
+@click.option("--conceptual_datasets", default=False, is_flag=True)
 @click.option("-v", "--variables", default=False, is_flag=True)
 @click.option("-d", "--datasets", default=False, is_flag=True)
 @click.option("-i", "--instruments", default=False, is_flag=True)
@@ -26,9 +28,11 @@ def command(
     study_name,
     variables,
     analysis_units,
+    attachments,
     filename,
     periods,
     concepts,
+    conceptual_datasets,
     local,
     datasets,
     instruments,
@@ -61,8 +65,10 @@ def command(
             any(
                 (
                     analysis_units,
+                    attachments,
                     periods,
                     concepts,
+                    conceptual_datasets,
                     variables,
                     datasets,
                     instruments,
@@ -84,6 +90,10 @@ def command(
             if concepts:
                 manager.import_single_entity("concepts")
                 django_rq.enqueue(Concept.index_all)
+            if attachments:
+                manager.import_single_entity("attachments")
+            if conceptual_datasets:
+                manager.import_single_entity("conceptual_datasets")
             if datasets:
                 if filename:
                     manager.import_single_entity("datasets.json", filename)
