@@ -4,6 +4,8 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DEBUG = True
 
+SECRET_KEY = env("DJANGO_SECRET_KEY", default=",`+?wJ)6}}_}Lb!s/h#x2Sym~,\wW]vs)Q[G3wEDL~;WzK.8Fk")
+
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites

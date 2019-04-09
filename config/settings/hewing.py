@@ -2,8 +2,6 @@ from .base import *  # noqa
 
 WSGI_APPLICATION = "config.wsgi_hewing.application"
 
-DEBUG = True
-
 ALLOWED_HOSTS = ["hewing.soep.de", "ddionrails.soep.de"]
 
 SYSTEM_NAME = "system"
