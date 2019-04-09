@@ -8,8 +8,6 @@ ENV DOCKER_APP_DIRECTORY /usr/src/app
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
 COPY ./ ${DOCKER_APP_DIRECTORY}/
-COPY ./package.json ${DOCKER_APP_DIRECTORY}/package.json
-COPY ./package-lock.json ${DOCKER_APP_DIRECTORY}/package-lock.json
 
 RUN apk update \
     && apk add \
@@ -29,7 +27,7 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 RUN pip install --upgrade pipenv
-RUN pipenv install --skip-lock --system --dev
+RUN pipenv install --dev
 RUN npm install
 
 # Setup frontend
