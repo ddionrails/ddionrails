@@ -42,7 +42,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [ROOT_DIR.path("templates")],
+        "DIRS": [BASE_DIR.path("templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
