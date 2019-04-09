@@ -13,7 +13,7 @@ pytestmark = [pytest.mark.functional]
 
 @pytest.fixture()
 def es_client():
-    mapping_file = "elastic/mapping.json"
+    mapping_file = "ddionrails/elastic/mapping.json"
     with open(mapping_file, "r") as f:
         mapping = json.loads(f.read())
     es = Elasticsearch()
