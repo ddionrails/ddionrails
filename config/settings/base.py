@@ -7,10 +7,10 @@ APPS_DIR = BASE_DIR.path("ddionrails")
 env = environ.Env()
 DEBUG = env.bool("DJANGO_DEBUG", False)
 SECRET_KEY = env("DJANGO_SECRET_KEY")
+ALLOWED_HOSTS = tuple(env.list('ALLOWED_HOSTS', default=[]))
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
-ALLOWED_HOSTS = []
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
