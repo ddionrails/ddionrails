@@ -9,6 +9,7 @@ BASE_DIR = environ.Path(__file__) - 3
 APPS_DIR = BASE_DIR.path("ddionrails")
 env = environ.Env()
 DEBUG = env.bool("DJANGO_DEBUG", False)
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
