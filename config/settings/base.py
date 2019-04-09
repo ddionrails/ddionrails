@@ -7,6 +7,8 @@ import environ
 
 BASE_DIR = environ.Path(__file__) - 3
 APPS_DIR = BASE_DIR.path("ddionrails")
+env = environ.Env()
+DEBUG = env.bool("DJANGO_DEBUG", False)
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -150,27 +152,7 @@ SHELL_PLUS_PRE_IMPORTS = (("imports.manager", "*"),)
 SERVER_EMAIL = "admin@paneldata.org"
 DEFAULT_FROM_EMAIL = "webmaster@paneldata.org"
 
-# credit to "Two Scoops of Django 1.11", p. 55
-# 5.4.1 Using JSON Files
-SECRETS_FILE = BASE_DIR.path("secrets.json")
-
-with open(SECRETS_FILE) as f:
-    secrets = json.loads(f.read())
-
-
-def get_secret(setting, secrets=secrets):
-    """ Get the secret variable or return explicit exception. """
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = ""
-        raise ImproperlyConfigured(error_msg)
-
-
-SECRET_KEY = get_secret("SECRET_KEY")
-
 CRISPY_TEMPLATE_PACK = "bootstrap3"
-
 
 # https://django-import-export.readthedocs.io/en/latest/api_widgets.html?highlight=date#import_export.widgets.DateTimeWidget
 DATETIME_INPUT_FORMATS = ("%Y-%m-%d %H:%M:%S %Z",)
