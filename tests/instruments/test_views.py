@@ -2,12 +2,8 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from elastic.mixins import ModelMixin
-from instruments.views import (
-    InstrumentDetailView,
-    InstrumentRedirectView,
-    QuestionRedirectView,
-)
+from ddionrails.elastic.mixins import ModelMixin
+from ddionrails.instruments.views import InstrumentRedirectView, QuestionRedirectView
 
 
 @pytest.mark.django_db

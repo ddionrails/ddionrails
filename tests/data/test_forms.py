@@ -1,9 +1,6 @@
 import pytest
 
-from data.forms import (
-    DatasetForm,
-    VariableForm,
-)
+from ddionrails.data.forms import DatasetForm, VariableForm
 
 pytestmark = [pytest.mark.data, pytest.mark.form]
 
@@ -44,7 +41,7 @@ class TestVariableForm:
         assert variable.dataset.name == valid_variable_data["dataset_name"]
 
     def test_form_with_valid_data_with_concept(self, valid_variable_data):
-        valid_variable_data['concept_name'] = 'some-concept'
+        valid_variable_data["concept_name"] = "some-concept"
         form = VariableForm(data=valid_variable_data)
         assert form.is_valid() is True
         variable = form.save()

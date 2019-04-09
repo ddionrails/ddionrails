@@ -5,12 +5,23 @@ import pytest
 from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
-from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
-from data.models import Dataset, Transformation, Variable
-from imports.manager import StudyImportManager
-from instruments.models import ConceptQuestion, Instrument, Question, QuestionVariable
-from publications.models import Attachment, Publication
-from studies.models import Study
+from ddionrails.concepts.models import (
+    AnalysisUnit,
+    Concept,
+    ConceptualDataset,
+    Period,
+    Topic,
+)
+from ddionrails.data.models import Dataset, Transformation, Variable
+from ddionrails.imports.manager import StudyImportManager
+from ddionrails.instruments.models import (
+    ConceptQuestion,
+    Instrument,
+    Question,
+    QuestionVariable,
+)
+from ddionrails.publications.models import Attachment, Publication
+from ddionrails.studies.models import Study
 from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.functional]

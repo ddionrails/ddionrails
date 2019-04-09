@@ -2,8 +2,8 @@
 
 from django_rq import job
 
-from ddionrails.models import System
-from imports.manager import Repository, SystemImportManager
+from ddionrails.base.models import System
+from ddionrails.imports.manager import Repository, SystemImportManager
 
 
 @job

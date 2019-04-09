@@ -1,8 +1,6 @@
 import pytest
 
 
-
-
 @pytest.fixture
 def invalid_instrument_data(study):
     """ An invalid input for instrument forms and imports, relates to study fixture """

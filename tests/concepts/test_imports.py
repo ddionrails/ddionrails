@@ -1,12 +1,12 @@
 import pytest
 
-from concepts.imports import (
+from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
     ConceptualDatasetImport,
     PeriodImport,
 )
-from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 
 pytestmark = [pytest.mark.concepts, pytest.mark.imports]
 

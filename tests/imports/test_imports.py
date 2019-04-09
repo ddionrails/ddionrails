@@ -1,9 +1,8 @@
 import pytest
-
-from imports.imports import CSVImport, Import, JekyllImport
-
-from django.forms import ModelForm
 from django.db import models
+from django.forms import ModelForm
+
+from ddionrails.imports.imports import CSVImport, Import, JekyllImport
 
 pytestmark = pytest.mark.imports
 
@@ -69,7 +68,7 @@ class TestImport:
 
 class TestCSVImport:
     def test_read_file_method(self, mocker, csv_importer):
-        mocked_read_csv = mocker.patch("imports.imports.read_csv")
+        mocked_read_csv = mocker.patch("ddionrails.imports.imports.read_csv")
         mocked_file_path = mocker.patch.object(CSVImport, "file_path")
         csv_importer.read_file()
         mocked_read_csv.assert_called_once()
@@ -96,8 +95,8 @@ class TestCSVImport:
             class DOR:
                 form = SampleForm
 
-        sample_importer = SampleImport('DUMMY.CSV')
-        element = 'element'
+        sample_importer = SampleImport("DUMMY.CSV")
+        element = "element"
         sample_importer.import_element(element)
 
     def test_process_element_method(self, csv_importer):
