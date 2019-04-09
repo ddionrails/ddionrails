@@ -1,14 +1,14 @@
 import pytest
+import tablib
 from click.testing import CliRunner
 from dateutil.parser import parse
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-import tablib
-from data.models import Variable
-from workspace.management.commands import backup, restore
-from workspace.models import Basket, BasketVariable, Script
-from workspace.resources import (
+from ddionrails.data.models import Variable
+from ddionrails.workspace.management.commands import restore
+from ddionrails.workspace.models import Basket, BasketVariable, Script
+from ddionrails.workspace.resources import (
     BasketResource,
     BasketVariableExportResource,
     BasketVariableImportResource,
@@ -78,15 +78,7 @@ class TestBasketResource:
         modified = "2019-03-10 12:00:00 UTC"
 
         dataset = tablib.Dataset(
-            [
-                study,
-                username,
-                name,
-                label,
-                description,
-                created,
-                modified,
-            ],
+            [study, username, name, label, description, created, modified],
             headers=[
                 "study",
                 "user",

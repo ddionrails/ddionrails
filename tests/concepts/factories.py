@@ -1,6 +1,12 @@
 import factory
 
-from concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
+from ddionrails.concepts.models import (
+    AnalysisUnit,
+    Concept,
+    ConceptualDataset,
+    Period,
+    Topic,
+)
 from tests.studies.factories import StudyFactory
 
 

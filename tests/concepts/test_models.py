@@ -1,7 +1,7 @@
 import pytest
 
-from concepts.models import Concept, Topic
-from elastic.mixins import ModelMixin
+from ddionrails.concepts.models import Concept, Topic
+from ddionrails.elastic.mixins import ModelMixin
 
 from .factories import TopicFactory
 
@@ -16,12 +16,12 @@ class TestConceptModel:
         assert concept.get_absolute_url() == "/concept/" + concept.name
 
     def test_index_method_with_concept_with_label(self, mocker, concept):
-        mocker.patch("elastic.mixins.ModelMixin.set_elastic")
+        mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
         concept.index()
         ModelMixin.set_elastic.assert_called_once()
 
     def test_index_method_with_concept_without_label(self, mocker, concept_without_label):
-        mocker.patch("elastic.mixins.ModelMixin.set_elastic")
+        mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
         concept_without_label.index()
         ModelMixin.set_elastic.assert_called_once()
 
@@ -30,7 +30,7 @@ class TestConceptModel:
         Concept.index_all()
 
     def test_index_all_method_with_one_concept(self, mocker, concept):
-        mocker.patch("concepts.models.Concept.index")
+        mocker.patch("ddionrails.concepts.models.Concept.index")
         Concept.index_all()
         Concept.index.assert_called_once()
 

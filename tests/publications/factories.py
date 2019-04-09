@@ -1,6 +1,6 @@
 import factory
 
-from publications.models import Publication
+from ddionrails.publications.models import Publication
 from tests.studies.factories import StudyFactory
 
 

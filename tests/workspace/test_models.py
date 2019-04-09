@@ -1,10 +1,10 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from studies.models import Study
+from ddionrails.studies.models import Study
+from ddionrails.workspace.models import Basket, BasketVariable, Script, ScriptConfig
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
-from workspace.models import Basket, BasketVariable, Script, ScriptConfig
 
 pytestmark = [pytest.mark.workspace]
 
@@ -23,7 +23,9 @@ class TestBasketModel:
         assert basket.get_absolute_url() == expected
 
     def test_html_description_method(self, mocker, basket):
-        mocked_render_markdown = mocker.patch("workspace.models.render_markdown")
+        mocked_render_markdown = mocker.patch(
+            "ddionrails.workspace.models.render_markdown"
+        )
         basket.html_description()
         mocked_render_markdown.assert_called_once()
 

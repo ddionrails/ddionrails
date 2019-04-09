@@ -1,4 +1,4 @@
-from instruments.forms import InstrumentForm, QuestionForm
+from ddionrails.instruments.forms import InstrumentForm, QuestionForm
 
 
 class TestInstrumentForm:
@@ -16,13 +16,13 @@ class TestInstrumentForm:
 
     def test_form_with_valid_data_with_other_keys(self, study):
         valid_instrument_data = dict(
-            instrument_name="some-instrument",
-            study_name=study.name
+            instrument_name="some-instrument", study_name=study.name
         )
         form = InstrumentForm(data=valid_instrument_data)
         assert form.is_valid() is True
         instrument = form.save()
         assert instrument.name == valid_instrument_data["instrument_name"]
+
 
 class TestQuestionForm:
     def test_form_with_invalid_data(self, invalid_question_data):
@@ -35,16 +35,16 @@ class TestQuestionForm:
         form = QuestionForm(data=valid_question_data)
         assert form.is_valid() is True
         question = form.save()
-        assert question.name == valid_question_data['question_name']
+        assert question.name == valid_question_data["question_name"]
 
     def test_form_with_valid_data_with_other_keys(self, study, instrument):
         valid_question_data = dict(
-            question_name='some-question',
+            question_name="some-question",
             instrument_name=instrument.name,
             study_name=study.name,
         )
         form = QuestionForm(data=valid_question_data)
         assert form.is_valid() is True
-        assert form.data['instrument_object'] == instrument
+        assert form.data["instrument_object"] == instrument
         question = form.save()
-        assert question.name == valid_question_data['question_name']
+        assert question.name == valid_question_data["question_name"]

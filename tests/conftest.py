@@ -1,5 +1,6 @@
 import pytest
 
+from tests.base.factories import SystemFactory
 from tests.concepts.factories import (
     AnalysisUnitFactory,
     ConceptFactory,
@@ -8,7 +9,6 @@ from tests.concepts.factories import (
     TopicFactory,
 )
 from tests.data.factories import DatasetFactory, VariableFactory
-from tests.ddionrails.factories import SystemFactory
 from tests.factories import UserFactory
 from tests.instruments.factories import InstrumentFactory, QuestionFactory
 from tests.publications.factories import PublicationFactory
