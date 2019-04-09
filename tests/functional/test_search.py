@@ -5,10 +5,11 @@ import pytest
 from django.conf import settings
 from elasticsearch import Elasticsearch
 
-from imports.manager import StudyImportManager
-from publications.models import Publication
+from ddionrails.imports.manager import StudyImportManager
+from ddionrails.publications.models import Publication
 
 pytestmark = [pytest.mark.functional]
+
 
 @pytest.fixture()
 def es_client():

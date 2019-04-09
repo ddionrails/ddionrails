@@ -4,9 +4,9 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from data.models import Variable
-from data.views import DatasetRedirectView, RowHelper, VariableRedirectView
-from elastic.mixins import ModelMixin
+from ddionrails.data.models import Variable
+from ddionrails.data.views import DatasetRedirectView, RowHelper, VariableRedirectView
+from ddionrails.elastic.mixins import ModelMixin
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
 

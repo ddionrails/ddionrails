@@ -2,7 +2,7 @@ import json
 
 from elasticsearch import Elasticsearch
 
-from elastic.mixins import ModelMixin
+from ddionrails.elastic.mixins import ModelMixin
 
 
 class TestModelMixin:
@@ -28,28 +28,36 @@ class TestModelMixin:
 
     def test_get_source_method(self, mocker):
         mocked_get_elastic = mocker.patch.object(ModelMixin, "get_elastic")
-        mocked_get_elastic.return_value = dict(_id=1, _index="dor", _source=dict(name="some-variable"))
+        mocked_get_elastic.return_value = dict(
+            _id=1, _index="dor", _source=dict(name="some-variable")
+        )
         model_mixin = ModelMixin()
         result = model_mixin.get_source()
         assert result["name"] == "some-variable"
 
     def test_get_source_method_as_json(self, mocker):
         mocked_get_elastic = mocker.patch.object(ModelMixin, "get_elastic")
-        mocked_get_elastic.return_value = dict(_id=1, _index="dor", _source=dict(name="some-variable"))
+        mocked_get_elastic.return_value = dict(
+            _id=1, _index="dor", _source=dict(name="some-variable")
+        )
         model_mixin = ModelMixin()
         result = model_mixin.get_source(as_json=True)
         assert result == json.dumps({"name": "some-variable"})
 
     def test_get_attribute_method(self, mocker):
         mocked_get_elastic = mocker.patch.object(ModelMixin, "get_elastic")
-        mocked_get_elastic.return_value = dict(_id=1, _index="dor", _source=dict(name="some-variable"))
+        mocked_get_elastic.return_value = dict(
+            _id=1, _index="dor", _source=dict(name="some-variable")
+        )
         model_mixin = ModelMixin()
         result = model_mixin.get_attribute("name", None)
         assert result == "some-variable"
 
     def test_get_attribute_method_fails(self, mocker):
         mocked_get_elastic = mocker.patch.object(ModelMixin, "get_elastic")
-        mocked_get_elastic.return_value = dict(_id=1, _index="dor", _source=dict(name="some-variable"))
+        mocked_get_elastic.return_value = dict(
+            _id=1, _index="dor", _source=dict(name="some-variable")
+        )
         model_mixin = ModelMixin()
         result = model_mixin.get_attribute("alternative", None)
         assert result is None

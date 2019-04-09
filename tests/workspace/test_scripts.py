@@ -2,8 +2,14 @@ import json
 
 import pytest
 
-from workspace.models import BasketVariable
-from workspace.scripts import ScriptConfig, SoepMixin, SoepR, SoepSpss, SoepStata
+from ddionrails.workspace.models import BasketVariable
+from ddionrails.workspace.scripts import (
+    ScriptConfig,
+    SoepMixin,
+    SoepR,
+    SoepSpss,
+    SoepStata,
+)
 
 
 @pytest.fixture

@@ -1,8 +1,8 @@
 import factory
 
+from ddionrails.workspace.models import Basket, Script
 from tests.factories import UserFactory
 from tests.studies.factories import StudyFactory
-from workspace.models import Basket, Script
 
 
 class BasketFactory(factory.django.DjangoModelFactory):

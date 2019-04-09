@@ -1,6 +1,6 @@
 import pytest
 
-from studies.forms import StudyForm, StudyInitialForm
+from ddionrails.studies.forms import StudyForm, StudyInitialForm
 
 pytestmark = [pytest.mark.studies, pytest.mark.form]
 
@@ -13,7 +13,9 @@ class TestStudyForm:
         assert form.errors == expected_errors
 
     def test_form_with_valid_data(self, db):
-        valid_study_data = dict(name="some-study", label="Some Study", description="This is some study")
+        valid_study_data = dict(
+            name="some-study", label="Some Study", description="This is some study"
+        )
         form = StudyForm(data=valid_study_data)
         assert form.is_valid() is True
         study = form.save()

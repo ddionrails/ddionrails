@@ -1,14 +1,12 @@
-import logging
-
 import pytest
 
-from data.imports import (
+from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
     TransformationImport,
     VariableImport,
 )
-from data.models import Dataset, Transformation, Variable
+from ddionrails.data.models import Dataset, Transformation, Variable
 
 from .factories import VariableFactory
 
@@ -49,7 +47,7 @@ class TestDatasetImport:
         self, db, mocker, dataset_csv_importer
     ):
         valid_dataset_data = dict(dataset_name="some-dataset")
-        mocker.patch("data.imports.DatasetImport._import_dataset_links")
+        mocker.patch("ddionrails.data.imports.DatasetImport._import_dataset_links")
         dataset_csv_importer.import_element(valid_dataset_data)
         DatasetImport._import_dataset_links.assert_called_once()
 

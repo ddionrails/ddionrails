@@ -22,4 +22,6 @@ def invalid_variable_data(study):
 @pytest.fixture
 def valid_variable_data(study):
     """ A valid input for variable forms and imports """
-    return dict(variable_name="some-variable", dataset_name="some-dataset", study_object=study)
+    return dict(
+        variable_name="some-variable", dataset_name="some-dataset", study_object=study
+    )

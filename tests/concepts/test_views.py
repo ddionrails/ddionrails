@@ -2,8 +2,8 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from concepts.views import ConceptDetail
-from instruments.models import Question
+from ddionrails.concepts.views import ConceptDetail
+from ddionrails.instruments.models import Question
 
 pytestmark = [pytest.mark.concepts, pytest.mark.views]
 
