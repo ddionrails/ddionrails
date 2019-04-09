@@ -3,19 +3,38 @@ FROM python:3.7.3-alpine
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-WORKDIR /usr/src/app
+ENV DOCKER_APP_DIRECTORY /usr/src/app
+
+WORKDIR ${DOCKER_APP_DIRECTORY}
+
+COPY ./ ${DOCKER_APP_DIRECTORY}/
+COPY ./package.json ${DOCKER_APP_DIRECTORY}/package.json
+COPY ./package-lock.json ${DOCKER_APP_DIRECTORY}/package-lock.json
 
 RUN apk update \
-    && apk add git build-base \
-    && apk add bash \
-    && apk add graphviz graphviz-dev \
-    && apk add postgresql-dev \
-    && apk add nodejs nodejs-npm
+    && apk add \
+        bash \
+        build-base \
+        git \
+        graphviz \
+        graphviz-dev \
+        nodejs \
+        nodejs-npm \
+        postgresql-dev \
+        # pipenv did not want to build without these 
+        gcc \
+        libffi-dev \
+        make \
+        musl-dev \
+    && rm -rf /var/cache/apk/*
 
 RUN pip install --upgrade pipenv
-COPY ./Pipfile /usr/src/app/Pipfile
 RUN pipenv install --skip-lock --system --dev
-COPY ./package.json /usr/src/app/package.json
 RUN npm install
 
-COPY . /usr/src/app/
+# Setup frontend
+RUN cd ./node_modules/ddionrails-elasticsearch \
+    && npm install \
+    && ./node_modules/.bin/ng build --prod 
+RUN ./node_modules/.bin/webpack --config webpack.config.js
+RUN python manage.py migrate
