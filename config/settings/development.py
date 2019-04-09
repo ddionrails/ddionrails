@@ -1,7 +1,5 @@
 from .base import *  # noqa
 
-WSGI_APPLICATION = "config.wsgi.application"
-
 DEBUG = True
 
 # django-debug-toolbar
