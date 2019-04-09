@@ -5,8 +5,8 @@ from django.core.exceptions import ImproperlyConfigured
 
 import environ
 
-ROOT_DIR = environ.Path(__file__) - 3
-APPS_DIR = ROOT_DIR.path("ddionrails")
+BASE_DIR = environ.Path(__file__) - 3
+APPS_DIR = BASE_DIR.path("ddionrails")
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -86,7 +86,7 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": str(ROOT_DIR.path("db/db.sqlite3")),
+        "NAME": str(BASE_DIR.path("db/db.sqlite3")),
     }
 }
 
@@ -114,13 +114,13 @@ LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (str(ROOT_DIR.path("static")),)
+STATICFILES_DIRS = (str(BASE_DIR.path("static")),)
 
 WEBPACK_LOADER = {
     "DEFAULT": {
         # 'CACHE': not DEBUG,
         "BUNDLE_DIR_NAME": "dist/",  # must end with slash
-        "STATS_FILE": ROOT_DIR.path("webpack-stats.json"),
+        "STATS_FILE": BASE_DIR.path("webpack-stats.json"),
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": None,
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
@@ -152,7 +152,7 @@ DEFAULT_FROM_EMAIL = "webmaster@paneldata.org"
 
 # credit to "Two Scoops of Django 1.11", p. 55
 # 5.4.1 Using JSON Files
-SECRETS_FILE = ROOT_DIR.path("secrets.json")
+SECRETS_FILE = BASE_DIR.path("secrets.json")
 
 with open(SECRETS_FILE) as f:
     secrets = json.loads(f.read())
