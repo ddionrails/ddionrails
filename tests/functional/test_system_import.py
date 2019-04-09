@@ -1,11 +1,10 @@
 from pathlib import Path
 
 import pytest
-from django.core import management
 
-from ddionrails.models import System
+from ddionrails.base.models import System
+from ddionrails.studies.models import Study
 from scripts import system
-from studies.models import Study
 
 pytestmark = [pytest.mark.imports, pytest.mark.functional]
 

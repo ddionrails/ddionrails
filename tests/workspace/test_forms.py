@@ -1,6 +1,6 @@
 import pytest
 
-from workspace.forms import BasketForm, UserCreationForm
+from ddionrails.workspace.forms import BasketForm, UserCreationForm
 
 pytestmark = [pytest.mark.workspace, pytest.mark.form]
 

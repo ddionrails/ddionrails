@@ -1,6 +1,6 @@
 import pytest
 
-from data.helpers import LabelTable
+from ddionrails.data.helpers import LabelTable
 from tests.concepts.factories import PeriodFactory
 
 from .factories import DatasetFactory, VariableFactory

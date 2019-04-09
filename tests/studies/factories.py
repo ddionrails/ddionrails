@@ -1,6 +1,6 @@
 import factory
 
-from studies.models import Study
+from ddionrails.studies.models import Study
 
 
 class StudyFactory(factory.django.DjangoModelFactory):

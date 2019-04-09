@@ -1,7 +1,5 @@
 import pytest
-from django.urls import resolve, reverse
-
-from elastic.views import angular, search
+from django.urls import reverse
 
 pytestmark = [pytest.mark.elastic, pytest.mark.views]
 

@@ -1,7 +1,8 @@
 import pathlib
 
 import pytest
-from studies.models import Study, context
+
+from ddionrails.studies.models import Study, context
 
 pytestmark = [pytest.mark.studies, pytest.mark.models]
 
@@ -14,7 +15,14 @@ class TestStudyModel:
         assert study.get_absolute_url() == "/" + study.name
 
     def test_import_path_method(self, study, settings):
-        expected = str(pathlib.Path(settings.IMPORT_REPO_PATH) / study.name / settings.IMPORT_SUB_DIRECTORY) + "/"
+        expected = (
+            str(
+                pathlib.Path(settings.IMPORT_REPO_PATH)
+                / study.name
+                / settings.IMPORT_SUB_DIRECTORY
+            )
+            + "/"
+        )
         assert study.import_path() == expected
 
     def test_repo_url_method_https(self, study, settings):

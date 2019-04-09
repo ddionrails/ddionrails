@@ -1,7 +1,7 @@
 import pytest
 from django.urls import reverse
 
-from workspace.views import own_basket_only, script_detail
+from ddionrails.workspace.views import script_detail
 
 from .factories import UserFactory
 

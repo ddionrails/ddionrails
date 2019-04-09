@@ -1,8 +1,8 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from studies.imports import StudyDescriptionImport, StudyImport
-from studies.models import Study
+from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
+from ddionrails.studies.models import Study
 
 
 @pytest.fixture

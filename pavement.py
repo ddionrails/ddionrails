@@ -372,8 +372,8 @@ def initial_setup():
 def update_study(args):
     """Update repo of a study and import all files, one argument: study-name"""
     django.setup()
-    from studies.models import Study
-    from imports.manager import StudyImportManager, Repository
+    from ddionrails.studies.models import Study
+    from ddionrails.imports.manager import StudyImportManager, Repository
 
     study_name = args[0]
     study = Study.objects.get(name=study_name)

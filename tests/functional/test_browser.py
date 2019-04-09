@@ -136,7 +136,9 @@ class TestNavigation:
         dataset.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        datasets_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#datasets')]")
+        datasets_section_link = study_nav_bar.find_element_by_xpath(
+            "//a[contains(@href,'#datasets')]"
+        )
         datasets_section_link.click()
 
         dataset_table = selenium.find_element_by_id("dataset_table_wrapper")
@@ -150,7 +152,9 @@ class TestNavigation:
         instrument.study = study
         selenium.get(live_server.url + "/" + study.name)
         study_nav_bar = selenium.find_element_by_id("navbar")
-        instruments_section_link = study_nav_bar.find_element_by_xpath("//a[contains(@href,'#instruments')]")
+        instruments_section_link = study_nav_bar.find_element_by_xpath(
+            "//a[contains(@href,'#instruments')]"
+        )
         instruments_section_link.click()
 
         instrument_table = selenium.find_element_by_id("instrument_table_wrapper")
@@ -257,11 +261,12 @@ class TestWorkspace:
         login_button.click()
         assert (
             "Please enter a correct username and password. "
-            "Note that both fields may be case-sensitive."
-            in selenium.page_source
+            "Note that both fields may be case-sensitive." in selenium.page_source
         )
 
-    def test_login_with_known_user_redirects_to_same_page(self, selenium, live_server, known_user):
+    def test_login_with_known_user_redirects_to_same_page(
+        self, selenium, live_server, known_user
+    ):
         """ When a user logs in from any page, after logging in, the system should take
             the user back to the page he was visiting before logging in.
         """
@@ -280,7 +285,7 @@ class TestWorkspace:
         assert contact_url == selenium.current_url
         assert selenium.find_element_by_link_text("My baskets")
         assert selenium.find_element_by_link_text("My account")
-        assert  selenium.find_element_by_link_text("Logout")
+        assert selenium.find_element_by_link_text("Logout")
 
     # @pytest.mark.skip(reason="no way of currently testing this")
     def test_baskets_page(self, authenticated_browser, live_server):

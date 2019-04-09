@@ -2,8 +2,8 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from elastic.mixins import ModelMixin
-from studies.views import StudyDetailView, StudyRedirectView, study_topics
+from ddionrails.elastic.mixins import ModelMixin
+from ddionrails.studies.views import StudyDetailView, StudyRedirectView
 
 pytestmark = [pytest.mark.studies, pytest.mark.views]
 

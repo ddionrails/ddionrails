@@ -1,6 +1,6 @@
 import pytest
 
-from concepts.forms import (
+from ddionrails.concepts.forms import (
     AnalysisUnitForm,
     ConceptForm,
     ConceptualDatasetForm,
