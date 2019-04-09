@@ -1,7 +1,7 @@
 from .base import *  # noqa
 
 WSGI_APPLICATION = "config.wsgi_production.application"
-DEBUG = False
+
 ALLOWED_HOSTS = [".paneldata.org", "paneldata.soep.de", "data.soep.de"]
 
 SYSTEM_NAME = "system"

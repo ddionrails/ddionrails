@@ -5,7 +5,6 @@ from fakeredis import FakeRedis, FakeStrictRedis
 
 from .base import *  # noqa
 
-DEBUG = False
 TEMPLATE_DEBUG = False
 
 # INSTALLED_APPS.remove("django_extensions")
