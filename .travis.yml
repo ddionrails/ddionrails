@@ -10,6 +10,7 @@ env:
   - DISPLAY=:99.0
   - GECKODRIVER_VERSION=0.23.0
   - ELASTICSEARCH_VERSION=2.4.2
+  - DJANGO_SECRET_KEY=your-secret-key
 addons:
   firefox: latest
 before_install:
@@ -24,7 +25,6 @@ before_install:
 install:
   - pip install pipenv
   - pipenv install --dev
-  - pipenv run paver copy_secrets_file
   - pipenv run paver setup_frontend
 before_script:
   - sleep 10
