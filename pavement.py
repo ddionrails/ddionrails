@@ -200,15 +200,8 @@ def import_all_studies():
 
 
 @task
-def copy_secrets_file():
-    """ Copy the secrets.json.example and rename it to secrets.json """
-    shutil.copyfile("secrets.json.example", "secrets.json")
-
-
-@task
 def full_test():
     """Rebuild the test environment and import data."""
-    copy_secrets_file()
     django.setup()
     test_env()
     if local_settings == "development":
@@ -361,7 +354,7 @@ def system_test():
 
 
 @task
-@needs("install_elastic", "setup_frontend", "copy_secrets_file", "migrate")
+@needs("install_elastic", "setup_frontend", "migrate")
 def initial_setup():
     """Run initial commands to setup DDI on Rails after download"""
     pass
