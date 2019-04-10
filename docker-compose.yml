@@ -4,5 +4,15 @@ services:
   web:
     build: .
     command: python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000
+    # Set your own variables, use of the example files at yout own risk.
+    #env_file: 
+    #  - docker_environments/django.env.example
+    #  - docker_environments/database.env.example
     ports:
       - 8000:8000
+    entrypoint: bash /usr/src/app/entrypoint.sh
+  postgres:
+    image: postgres:11.2-alpine 
+    # Set your own variables, use of the example files at yout own risk.
+    #env_file:
+    #  - docker_environments/database.env.example

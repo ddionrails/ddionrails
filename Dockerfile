@@ -27,7 +27,7 @@ RUN apk update \
     && rm -rf /var/cache/apk/*
 
 RUN pip install --upgrade pipenv
-RUN pipenv install --dev
+RUN pipenv install --system --dev
 RUN npm install
 
 # Setup frontend
@@ -35,4 +35,4 @@ RUN cd ./node_modules/ddionrails-elasticsearch \
     && npm install \
     && ./node_modules/.bin/ng build --prod 
 RUN ./node_modules/.bin/webpack --config webpack.config.js
-RUN python manage.py migrate
+ENTRYPOINT [ ${DOCKER_APP_DIRECTORY}"/entrypoint.sh" ]
