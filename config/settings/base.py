@@ -1,14 +1,13 @@
 import os
 
-import environ
+from pathlib import Path
 
-BASE_DIR = environ.Path(__file__) - 3
-APPS_DIR = BASE_DIR.path("ddionrails")
+BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY"))
+APPS_DIR = BASE_DIR.joinpath('ddionrails')
 
-env = environ.Env()
-DEBUG = env.bool("DJANGO_DEBUG", False)
-SECRET_KEY = env("DJANGO_SECRET_KEY")
-ALLOWED_HOSTS = tuple(env.list("ALLOWED_HOSTS", default=[]))
+DEBUG = os.getenv("DJANGO_DEBUG", False)
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -88,7 +87,7 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': os.getenv('POSTGRES_DB', default=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'NAME': os.getenv('POSTGRES_DB', default=BASE_DIR.joinpath('db.sqlite3')),
         'USER': os.getenv('POSTGRES_USER', default='user'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='password'),
         'HOST': os.getenv('POSTGRES_HOST', default='localhost'),
@@ -120,13 +119,13 @@ LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (str(BASE_DIR.path("static")),)
+STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
 
 WEBPACK_LOADER = {
     "DEFAULT": {
         # 'CACHE': not DEBUG,
         "BUNDLE_DIR_NAME": "dist/",  # must end with slash
-        "STATS_FILE": BASE_DIR.path("webpack-stats.json"),
+        "STATS_FILE": BASE_DIR.joinpath("webpack-stats.json"),
         "POLL_INTERVAL": 0.1,
         "TIMEOUT": None,
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
