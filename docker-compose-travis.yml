@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  web:
+    env_file: 
+      - docker_environments/django.env.example
+      - docker_environments/database.env.example
+  postgres:
+    env_file:
+      - docker_environments/database.env.example
