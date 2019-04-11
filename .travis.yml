@@ -1,39 +1,39 @@
 dist: xenial
+sudo: required
 language: python
-python: "3.7"
-cache:
-  - pip
-  - npm
-node_js: 10
+services:
+  - docker
+python:
+  - "3.7"
 env:
   global:
-  - DISPLAY=:99.0
-  - GECKODRIVER_VERSION=0.23.0
+#  - DISPLAY=:99.0
+#  - GECKODRIVER_VERSION=0.23.0
   - ELASTICSEARCH_VERSION=2.4.2
-  - DJANGO_SECRET_KEY=your-secret-key
 addons:
   firefox: latest
 before_install:
-  - npm i -g npm@6.9.0
-  - curl -L -o /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
-  - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
-  - export PATH=$HOME/geckodriver:$PATH
-  - geckodriver --version
+  - docker --version
+  - docker-compose --version
+#  - curl -L -o /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
+#  - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
+#  - export PATH=$HOME/geckodriver:$PATH
+#  - geckodriver --version
   - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/$ELASTICSEARCH_VERSION/elasticsearch-$ELASTICSEARCH_VERSION.deb && sudo dpkg -i --force-confnew elasticsearch-$ELASTICSEARCH_VERSION.deb && sudo service elasticsearch restart
   - sleep 10
   - curl localhost:9200
-install:
-  - pip install pipenv
-  - pipenv install --dev
-  - pipenv run paver setup_frontend
 before_script:
-  - sleep 10
+  - docker-compose -f "docker-compose.yml" -f "docker-compose-travis.yml" up --build -d
+  - docker images
+  - docker ps -a
 script:
-  - pytest
-  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
-  - pytest -m "functional" tests/functional/test_imports.py --cov-append
-  - xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
-  - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
-  - python manage.py migrate
-after_success:
-  - codecov
+  - docker-compose exec web pytest
+#  - pytest -m "functional" tests/functional/test_system_import.py --cov-append
+#  - pytest -m "functional" tests/functional/test_imports.py --cov-append
+#  - xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
+#  - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
+#  - python manage.py migrate
+after_script:
+  - docker-compose -f "docker-compose.yml" -f "docker-compose-travis.yml" down
+#after_success:
+#  - codecov
