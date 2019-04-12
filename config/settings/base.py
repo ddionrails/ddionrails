@@ -140,7 +140,7 @@ IMPORT_SUB_DIRECTORY = "ddionrails/"
 
 # DDI on Rails: index
 
-INDEX_HOST = "localhost"  # not used yet
+INDEX_HOST = "elasticsearch"  # not used yet
 INDEX_PORT = "9200"  # not used yet
 INDEX_NAME = "dor"
 

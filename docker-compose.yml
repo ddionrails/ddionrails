@@ -16,3 +16,22 @@ services:
     # Set your own variables, use of the example files at yout own risk.
     #env_file:
     #  - docker_environments/database.env.example
+  elasticsearch:
+    image: elasticsearch:2.2.0
+    # These settings are taken from the elastic search installation guide:
+    # https://www.elastic.co/guide/en/elasticsearch/reference/6.7/docker.html
+    # I am unclear about their necessity and function, except ES_JAVA_OPTS.
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      # Sets the RAM the java VM is allowed to use
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+
+volumes:
+  elastic_data:
