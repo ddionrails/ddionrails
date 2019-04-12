@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web:
     build: .
-    command: python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000
+    command: gunicorn config.wsgi --bind 0.0.0.0:8000
     # Set your own variables, use of the example files at yout own risk.
     #env_file: 
     #  - docker_environments/django.env.example
@@ -32,6 +32,8 @@ services:
         hard: -1
     volumes:
       - elastic_data:/usr/share/elasticsearch/data
+  redis:
+    image: redis:4-alpine3.9
 
 volumes:
   elastic_data:
