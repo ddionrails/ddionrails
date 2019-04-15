@@ -1,0 +1,15 @@
+version: '3.7'
+
+services:
+  web:
+    command: python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000
+    env_file: 
+      - docker/environments/django.env.example
+      - docker/environments/database.env.example
+    volumes: 
+      - ./ddionrails/:/usr/src/app/ddionrails
+
+  postgres:
+    env_file:
+      - docker/environments/database.env.example
+    
