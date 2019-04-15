@@ -17,6 +17,7 @@ services:
       - 8000
     volumes: 
       - static:/usr/src/app/static
+    restart: unless-stopped
 
   postgres:
     image: postgres:11.2-alpine 
