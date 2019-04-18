@@ -28,7 +28,7 @@ class QuestionForm(forms.ModelForm):
 
     class Meta:
         model = Question
-        fields = ["instrument", "name", "label", "description"]
+        fields = ["instrument", "name", "label", "description", "image_url"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

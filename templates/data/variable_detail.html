@@ -27,9 +27,9 @@
       <div id="menu"></div>
       <div id="chart"></div>
       <div id="chart_missings"></div>
-      {% if variable.image_url %}
-        <img src="{{ variable.image_url }}" class="img-responsive">
-      {% endif %}
+      {% for image_url in variable.image_url.split %}
+        <img src="{{ image_url }}" class="img-responsive">
+      {% endfor %}
 
 
 

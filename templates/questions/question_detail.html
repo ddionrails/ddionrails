@@ -23,6 +23,10 @@ $(function(){
       <div class="panel-body">
         <h2 class="text-center">{{ question.get_cs_name }}</h2>
         <p>{{ question.description }}</p>
+        {% for image_url in question.image_url.split %}
+          <hr />
+            <img src="{{ image_url }}" class="img-responsive">
+        {% endfor %}
         <hr />
         {% for item in question.item_array %}
           {% include "questions/item_partial.html" %}
