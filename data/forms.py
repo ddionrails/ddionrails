@@ -9,6 +9,7 @@ class DatasetForm(forms.ModelForm):
         model = Dataset
         fields = (
             "name",
+            "name_cs",
             "label",
             "description",
             "study",
@@ -21,7 +22,7 @@ class DatasetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data["boost"] = float(self.data["boost"])
-        self.data["cs_name"] = self.data["dataset_name"]
+        self.data["name_cs"] = self.data["dataset_name"]
         self.data["name"] = self.data["dataset_name"].lower()
 
 
@@ -30,6 +31,7 @@ class VariableForm(forms.ModelForm):
         model = Variable
         fields = (
             "name",
+            "name_cs",
             "label",
             "description",
             "concept",
@@ -40,7 +42,7 @@ class VariableForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.data["cs_name"] = self.data["variable_name"]
+        self.data["name_cs"] = self.data["variable_name"]
         self.data["name"] = self.data["variable_name"].lower()
         self.data["dataset"] = Dataset.get_or_create(
             dict(name=self.data["dataset_name"].lower(), study=self.data["study_object"])

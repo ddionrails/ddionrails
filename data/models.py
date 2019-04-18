@@ -22,6 +22,7 @@ class Dataset(ElasticMixin, DorMixin, models.Model):
     name = models.CharField(
         max_length=255, validators=[validate_lowercase], db_index=True
     )
+    name_cs = models.CharField(max_length=255, blank=True)
     label = models.CharField(max_length=255, blank=True)
     label_de = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True)
@@ -64,6 +65,13 @@ class Dataset(ElasticMixin, DorMixin, models.Model):
             kwargs={"study_name": self.study.name, "dataset_name": self.name},
         )
 
+    def get_name_cs(self):
+        """Get the case sensitive version of the dataset name, if available"""
+        if self.name_cs:
+            return self.name_cs
+        else:
+            return self.name
+
 
 class Variable(ElasticMixin, DorMixin, models.Model):
     """
@@ -73,6 +81,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     name = models.CharField(
         max_length=255, validators=[validate_lowercase], db_index=True
     )
+    name_cs = models.CharField(max_length=255, blank=True)
     dataset = models.ForeignKey(
         Dataset, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
     )
@@ -122,7 +131,10 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
     def get_name_cs(self):
         """Get the case sensitive version of the variable name, if available"""
-        return self.get_source().get("name_cs", self.name)
+        if self.name_cs:
+            return self.name_cs
+        else:
+            return self.name
 
     def _construct_categories(self):
         try:
@@ -355,7 +367,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         )
 
     def title(self):
-        return self.label if self.label != "" else self.name
+        return self.label if self.label != "" else self.get_name_cs
 
     def title_de(self):
         if self.label_de != "" and self.label_de is not None:
