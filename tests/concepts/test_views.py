@@ -4,32 +4,32 @@ from django.urls import reverse
 
 from ddionrails.concepts.views import ConceptDetail
 from ddionrails.instruments.models import Question
+from tests import status
 
 pytestmark = [pytest.mark.concepts, pytest.mark.views]
 
 
 @pytest.mark.django_db
 class TestConceptDetailView:
-    def test_concept_view_with_existing_concept_pk(self, rf, concept):
-        url = reverse("concepts:concept_detail", kwargs={"pk": 1})
-        request = rf.get(url)
-        response = ConceptDetail.as_view()(request, pk=1)
-        assert response.status_code == 200
+    def test_detail_view_with_valid_pk(self, client, concept):
+        valid_pk = concept.pk
+        url = reverse("concepts:concept_detail", kwargs={"pk": valid_pk})
+        response = client.get(url)
+        assert status.HTTP_200_OK == response.status_code
 
-    def test_concept_view_with_non_existing_concept_pk(self, rf, concept):
-        url = reverse("concepts:concept_detail", kwargs={"pk": 999})
-        request = rf.get(url)
-        view = ConceptDetail.as_view()
-        with pytest.raises(Http404):
-            view(request, pk=999)
+    def test_detail_view_with_invalid_pk(self, client, concept):
+        invalid_pk = 999
+        url = reverse("concepts:concept_detail", kwargs={"pk": invalid_pk})
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
-    def test_concept_view_with_existing_concept_name(self, client, concept):
+    def test_detail_view_with_valid_name(self, client, concept):
         concept_name = "some-concept"
         url = reverse(
             "concepts:concept_detail_name", kwargs={"concept_name": concept_name}
         )
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         template_name = "concepts/concept_detail.html"
         assert template_name in (t.name for t in response.templates)
 
@@ -43,11 +43,10 @@ class TestConceptDetailView:
         output_questions = list(response.context["questions"])
         assert output_questions == expected_questions
 
-    def test_concept_view_with_non_existing_concept_name(self, rf, concept):
-        concept_name = "missing-concept"
+    def test_detail_view_with_invalid_name(self, client, concept):
+        invalid_concept_name = "missing-concept"
         url = reverse(
-            "concepts:concept_detail_name", kwargs={"concept_name": concept_name}
+            "concepts:concept_detail_name", kwargs={"concept_name": invalid_concept_name}
         )
-        request = rf.get(url)
-        with pytest.raises(Http404):
-            ConceptDetail.as_view()(request, concept_name=concept_name)
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code

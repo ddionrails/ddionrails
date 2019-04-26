@@ -57,12 +57,12 @@ urlpatterns = [
     path("variable/<int:id>", VariableRedirectView.as_view()),
     path("dataset/<int:id>", DatasetRedirectView.as_view()),
     path(
-        "instrument/<int:id>",
+        "instrument/<int:pk>",
         instruments_views.InstrumentRedirectView.as_view(),
         name="instrument_redirect",
     ),
     path(
-        "question/<int:id>",
+        "question/<int:pk>",
         instruments_views.QuestionRedirectView.as_view(),
         name="question_redirect",
     ),
