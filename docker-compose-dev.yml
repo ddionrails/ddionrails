@@ -6,7 +6,8 @@ services:
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
-    volumes: 
+      - docker/environments/elasticsearch.env.example
+    volumes:
       - ./:/usr/src/app/
 
   postgres:

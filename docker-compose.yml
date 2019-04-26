@@ -6,11 +6,12 @@ services:
       context: .
       dockerfile: ./docker/ddionrails/Dockerfile
     command: gunicorn config.wsgi --bind 0.0.0.0:8000
-    # Set your own variables, use of the example files at yout own risk.
+    # Set your own variables, use of the example files at your own risk.
     entrypoint: bash /usr/src/app/docker/ddionrails/entrypoint.sh
     #env_file:
     #  - docker/environments/django.env
     #  - docker/environments/database.env
+    #  - docker/environments/elasticsearch.env
     networks:
       ddi_net:
         ipv4_address: 172.16.238.10
