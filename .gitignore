@@ -114,9 +114,6 @@ venv.bak/
 *~
 *.swp
 
-/db/*
-!/db/.gitkeep
-
 /static/repositories/*
 !/static/repositories/.gitkeep
 
@@ -140,8 +137,6 @@ nohup.out
 
 # npm package directory
 node_modules/
-
-secrets.json
 
 # Static files
 /ddionrails/static/background.png
