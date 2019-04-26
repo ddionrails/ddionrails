@@ -23,11 +23,17 @@ In contrast to similar products, DDI on Rails is study-independent and open-sour
 
 ### Prerequisites
 
+Follow the installation instructions for Docker and Docker-Compose:
+
+- <https://docs.docker.com/install/>
+- <https://docs.docker.com/compose/install/>
+
+To verify the installation was successful, you can type:
 ```
-$ sudo apt-get install redis-server
-$ sudo apt-get install git
-$ sudo apt-get install graphviz
-$ sudo apt-get install nodejs
+$ docker --version
+Docker version 18.09.5, ...
+$ docker-compose --version
+docker-compose version 1.24.0, ...
 ```
 
 ### Installing
@@ -39,85 +45,19 @@ $ git clone https://github.com/ddionrails/ddionrails.git
 $ cd ddionrails/
 ```
 
-Install Python 3.6 and 3.6-dev packages.
+Build the Docker images
 
 ```
-$ sudo apt-get install -y python3.6 python3.6-dev python3-pip
-$ pip install --upgrade --user pip wheel pipenv
+$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 ```
 
-### Deployment using pipenv
-
-Install all packages and dev packages in ddionrails.
-
-```
-$ pipenv install --dev
-Installing dependencies from Pipfile.lock (d00398)…
-  🐍   ▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉▉ 85/85 — 00:00:26
-```
-
-Activate the virtual environment
-
-```
-$ pipenv shell
-(ddionrails) $
-```
-
-Verify e.g. Django is installed
-
-```
-(ddionrails) $ django-admin --version
-2.1.7
-```
-
-Install Elasticsearch
-
-```
-(ddionrails) $ paver install_elastic
-```
-
-Install front-end-dependencies
-
-```
-(ddionrails) $ paver setup_frontend
-```
-
-For development: copy default secrets.json
-
-```
-(ddionrails) $ paver copy_secrets_file
-```
-
-Make migrations
-
-```
-(ddionrails) $ paver migrate
-```
-
-Start server, elastic and rqworker each in one terminal with pipenv
-
-```
-$ pipenv shell
-(ddionrails) $ paver server
-```
-
-```
-$ pipenv shell
-(ddionrails) $ paver elastic
-```
-
-```
-$ pipenv shell
-(ddionrails) $ paver rqworker
-```
 
 ## Running the tests
 
 ```
 $ cd ddionrails/
-$ pipenv install --dev
-$ pipenv shell
-(ddionrails) $ pytest
+$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
+$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" exec web pytest
 ```
 
 ## Versioning
