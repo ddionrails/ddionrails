@@ -32,7 +32,6 @@ script:
   - docker-compose exec web pytest -m "functional" tests/functional/test_imports.py --cov-append
   - docker-compose exec web xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
 #  - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
-  - docker-compose exec web python manage.py migrate
 after_success:
   - docker-compose exec web codecov
 after_script:
