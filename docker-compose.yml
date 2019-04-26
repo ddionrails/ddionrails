@@ -64,6 +64,8 @@ services:
 
   redis:
     image: redis:4-alpine3.9
+    networks:
+      - ddi_net
 
 volumes:
   elastic_data:
