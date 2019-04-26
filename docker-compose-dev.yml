@@ -7,7 +7,7 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
     volumes: 
-      - ./ddionrails/:/usr/src/app/ddionrails
+      - ./:/usr/src/app/
 
   postgres:
     env_file:
