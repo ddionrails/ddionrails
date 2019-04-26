@@ -181,11 +181,21 @@ class TestStudyImportManager:
 
         s = Search(using=es_client).doc_type("variable")
         assert 2 == s.count()
+
+        s = Search(using=es_client).doc_type("variable").query("match", name="some-variable")
+        assert 1 == s.count()
         response = s.execute()
         hit = response.hits[0]
         assert study.name == hit.study
-        assert "some-variable" == hit.name
         assert "some-dataset" == hit.dataset
+        assert "some-variable" == hit.name
+
+        s = Search(using=es_client).doc_type("variable").query("match", name="some-other-variable")
+        assert 1 == s.count()
+        hit = response.hits[0]
+        assert study.name == hit.study
+        assert "some-dataset" == hit.dataset
+        assert "some-other-variable" == hit.name
 
     def test_import_csv_datasets(
         self, study_import_manager, dataset, period, analysis_unit, conceptual_dataset
