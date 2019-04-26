@@ -5,8 +5,11 @@ from django.urls import reverse
 from ddionrails.elastic.mixins import ModelMixin
 from ddionrails.instruments.views import InstrumentRedirectView, QuestionRedirectView
 
+from tests import status
 
-@pytest.mark.django_db
+pytestmark = [pytest.mark.django_db]
+
+
 class TestInstrumentDetailView:
     def test_detail_view_with_existing_names(self, mocker, client, instrument):
 
@@ -23,7 +26,7 @@ class TestInstrumentDetailView:
         )
 
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         template = "instruments/instrument_detail.html"
         assert template in (t.name for t in response.templates)
         assert response.context["instrument"] == instrument
@@ -39,31 +42,29 @@ class TestInstrumentDetailView:
         pass
 
 
-@pytest.mark.django_db
 class TestInstrumentRedirectView:
-    def test_redirect_view_with_valid_pk(self, rf, instrument):
-        url = reverse("instrument_redirect", kwargs={"id": 1})
-        request = rf.get(url)
-        response = InstrumentRedirectView.as_view()(request, id=1)
-        assert response.status_code == 302
+    def test_redirect_view_with_valid_pk(self, client, instrument):
+        valid_pk = instrument.pk
+        url = reverse("instrument_redirect", kwargs={"pk": valid_pk})
+        response = client.get(url)
+        assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, db, rf):
+    def test_redirect_view_with_invalid_pk(self, client):
         invalid_pk = 999
-        request = rf.get("instrument_redirect", kwargs={"pk": invalid_pk})
-        with pytest.raises(Http404):
-            InstrumentRedirectView.as_view()(request, id=invalid_pk)
+        url = reverse("instrument_redirect", kwargs={"pk": invalid_pk})
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
-@pytest.mark.django_db
 class TestQuestionRedirectView:
-    def test_redirect_view_with_valid_pk(self, rf, question):
-        url = reverse("question_redirect", kwargs={"id": 1})
-        request = rf.get(url)
-        response = QuestionRedirectView.as_view()(request, id=1)
-        assert response.status_code == 302
+    def test_redirect_view_with_valid_pk(self, client, question):
+        valid_pk = question.pk
+        url = reverse("question_redirect", kwargs={"pk": valid_pk})
+        response = client.get(url)
+        assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, db, rf):
+    def test_redirect_view_with_invalid_pk(self, client):
         invalid_pk = 999
-        request = rf.get("question_redirect", kwargs={"pk": invalid_pk})
-        with pytest.raises(Http404):
-            QuestionRedirectView.as_view()(request, id=invalid_pk)
+        url = reverse("question_redirect", kwargs={"pk": invalid_pk})
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
