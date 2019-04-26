@@ -19,7 +19,7 @@ RUN apk update \
         nodejs \
         nodejs-npm \
         postgresql-dev \
-        # pipenv did not want to build without these 
+        # pipenv did not want to build without these
         gcc \
         libffi-dev \
         make \
@@ -33,6 +33,6 @@ RUN npm install
 # Setup frontend
 RUN cd ./node_modules/ddionrails-elasticsearch \
     && npm install \
-    && ./node_modules/.bin/ng build --prod 
+    && ./node_modules/.bin/ng build --prod
 RUN ./node_modules/.bin/webpack --config webpack.config.js
 ENTRYPOINT [ ${DOCKER_APP_DIRECTORY}"/entrypoint.sh" ]
