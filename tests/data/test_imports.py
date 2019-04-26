@@ -1,5 +1,6 @@
 import pytest
 
+from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
@@ -56,21 +57,24 @@ class TestDatasetImport:
     ):
         """ This import method needs an already existing dataset and study in the database """
         valid_dataset_data = dict(dataset_name="some-dataset")
-        assert Dataset.objects.count() == 1
+        assert 1 == Dataset.objects.count()
         dataset_csv_importer._import_dataset_links(valid_dataset_data)
-        assert Dataset.objects.count() == 1
+        assert 1 == Dataset.objects.count()
         dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
 
+        analysis_unit = AnalysisUnit.objects.get(name="none")
+        conceptual_dataset = ConceptualDataset.objects.get(name="none")
+        period = Period.objects.get(name="none")
+
         # TODO: Is this behaviour intended?
+
+        # check attributes are set correctly
         assert dataset.boost == 1.0
-        assert dataset.analysis_unit_id == 1
-        assert dataset.analysis_unit.name == "none"
 
-        assert dataset.conceptual_dataset_id == 1
-        assert dataset.conceptual_dataset.name == "none"
-
-        assert dataset.period_id == 1
-        assert dataset.period.name == "none"
+        # check relations are set correctly
+        assert dataset.analysis_unit == analysis_unit
+        assert dataset.conceptual_dataset == conceptual_dataset
+        assert dataset.period == period
 
     def test__import_dataset_links_method_with_more_fields(
         self, dataset, mocker, dataset_csv_importer
@@ -177,8 +181,9 @@ class TestTransformationImport:
             target_variable_name=target_variable.name,
         )
         transformation_importer.import_element(element)
-        transformation = Transformation.objects.get(id=1)
-        assert Transformation.objects.count() == 1
+
+        assert 1 == Transformation.objects.count()
+        transformation = Transformation.objects.first()
         assert transformation.origin == origin_variable
         assert transformation.target == target_variable
 
