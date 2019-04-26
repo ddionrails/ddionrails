@@ -30,7 +30,7 @@ services:
       - ddi_net
 
   elasticsearch:
-    image: elasticsearch:2.2.0
+    image: elasticsearch:2.4.6
     # These settings are taken from the elastic search installation guide:
     # https://www.elastic.co/guide/en/elasticsearch/reference/6.7/docker.html
     # I am unclear about their necessity and function, except ES_JAVA_OPTS.
