@@ -9,8 +9,6 @@ TEMPLATE_DEBUG = False
 
 # INSTALLED_APPS.remove("django_extensions")
 
-WSGI_APPLICATION = "config.wsgi.application"
-
 PASSWORD_HASHERS = ["django.contrib.auth.hashers.MD5PasswordHasher"]
 
 MIDDLEWARE = [
