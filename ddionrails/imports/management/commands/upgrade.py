@@ -46,7 +46,8 @@ def command(
         print("upgrade all studies")
         for study in Study.objects.all():
             print("upgrade study", study)
-            update_study(study)
+            if local is False:
+                update_study(study)
             manager = StudyImportManager(study)
             manager.import_all_entities()
         django_rq.enqueue(Concept.index_all)
