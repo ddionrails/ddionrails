@@ -2,7 +2,9 @@ version: '3.7'
 
 services:
   web:
-    build: ./docker/ddionrails/
+    build:
+      context: .
+      dockerfile: ./docker/ddionrails/Dockerfile
     command: gunicorn config.wsgi --bind 0.0.0.0:8000
     # Set your own variables, use of the example files at yout own risk.
     entrypoint: bash /usr/src/app/entrypoint.sh
