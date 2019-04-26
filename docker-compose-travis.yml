@@ -5,6 +5,7 @@ services:
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
+      - docker/environments/elasticsearch.env.example
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
   postgres:

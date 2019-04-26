@@ -139,10 +139,9 @@ IMPORT_REPO_PATH = "static/repositories/"
 IMPORT_SUB_DIRECTORY = "ddionrails/"
 
 # DDI on Rails: index
-
-INDEX_HOST = "elasticsearch"  # not used yet
-INDEX_PORT = "9200"  # not used yet
-INDEX_NAME = "dor"
+INDEX_HOST = os.getenv('ELASTICSEARCH_HOST', default='localhost')
+INDEX_PORT = os.getenv('ELASTICSEARCH_PORT', default=9200)
+INDEX_NAME = os.getenv('ELASTICSEARCH_INDEX', default="dor")
 
 # Django RQ
 RQ_SHOW_ADMIN_LINK = True
