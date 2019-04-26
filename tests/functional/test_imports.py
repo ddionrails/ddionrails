@@ -32,7 +32,7 @@ def es_client(settings):
     mapping_file = "ddionrails/elastic/mapping.json"
     with open(mapping_file, "r") as f:
         mapping = json.loads(f.read())
-    es = Elasticsearch()
+    es = Elasticsearch(hosts=[settings.INDEX_HOST])
     # workaround to delete existing index
 
     # settings.INDEX_NAME = "testing"

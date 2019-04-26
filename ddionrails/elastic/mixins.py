@@ -3,7 +3,7 @@ import json
 from django.conf import settings
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch()
+es = Elasticsearch(hosts=[settings.INDEX_HOST])
 
 
 class ModelMixin:
