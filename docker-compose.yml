@@ -3,7 +3,7 @@ version: '3.7'
 services:
   web:
     build:
-      context: .
+      context: ./
       dockerfile: ./docker/ddionrails/Dockerfile
     command: gunicorn config.wsgi --bind 0.0.0.0:8000
     # Set your own variables, use of the example files at your own risk.
@@ -51,11 +51,11 @@ services:
   nginx:
     image: nginx:1.15-alpine
     ports:
-      - 8000:80
+      - 80:80
     depends_on: 
       - web
     environment:
-      - HOST_NAME=localhost
+      - HOST_NAME=127.0.0.1
     networks:
       - ddi_net
     volumes: 
