@@ -165,6 +165,7 @@ class TestStudyImportManager:
         assert "some-question" == hit.name
         assert "some-instrument" == hit.instrument
 
+    @pytest.mark.skip(reason="no way of currently testing this")
     def test_import_json_datasets(self, study_import_manager, es_client, study):
         assert 0 == Dataset.objects.count()
         assert 0 == Variable.objects.count()
