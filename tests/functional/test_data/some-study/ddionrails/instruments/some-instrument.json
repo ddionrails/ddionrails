@@ -34,13 +34,13 @@
             }
           ],
           "sn": 0,
-          "item": "root",
-          "image_url": "https://paneldata.org/static/repositories/system/ddionrails/background.png"
+          "item": "root"
         }
       ],
       "sn": 0,
       "instrument": "some-instrument",
-      "study": "some-study"
+      "study": "some-study",
+      "image_url": "https://paneldata.org/static/repositories/system/ddionrails/background.png"
     }
   }
 }
