@@ -16,6 +16,9 @@ done
 
 echo "Database started"
 
-python manage.py migrate
+python manage.py migrate && \
+echo "Starting rqworker" && \
+python manage.py rqworker & 
 
+echo "Starting server"
 exec "$@"
