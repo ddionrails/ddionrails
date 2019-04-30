@@ -40,7 +40,7 @@ class DatasetJsonImport(imports.Import):
         variable = Variable.get_or_create(import_dict)
         sort_id += 1
         variable.sort_id = sort_id
-        variable.name_cs = var.get("name_cs")
+        variable.name_cs = var.get("name_cs", name)
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
         variable.save()
