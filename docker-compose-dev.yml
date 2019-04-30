@@ -8,7 +8,10 @@ services:
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
     volumes:
-      - ./:/usr/src/app/
+      - ./ddionrails:/usr/src/app/ddionrails
+      - ./config:/usr/src/app/config
+      - ./local:/usr/src/app/local
+      - ./tests:/usr/src/app/tests
 
   postgres:
     env_file:
