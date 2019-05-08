@@ -45,11 +45,13 @@ $ git clone https://github.com/ddionrails/ddionrails.git
 $ cd ddionrails/
 ```
 
-Build the Docker images
+Build the Docker images and start containers with developement setings
 
 ```
 $ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 ```
+
+:warning: __Warning__ Do not use this in production the settings in `docker-compose-dev.yml` are not secure.
 
 
 ## Running the tests
