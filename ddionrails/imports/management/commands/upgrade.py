@@ -1,8 +1,9 @@
 import django_rq
 import djclick as click
 
-from concepts import Concept
-from config import Study, StudyImportManager
+from ddionrails.concepts.models import Concept
+from ddionrails.imports.manager import StudyImportManager
+from ddionrails.studies.models import Study
 
 from .update import update_study
 

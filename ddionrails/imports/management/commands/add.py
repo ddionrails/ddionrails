@@ -1,7 +1,7 @@
 import djclick as click
 from django.db.utils import IntegrityError
 
-from config import Study
+from ddionrails.studies.models import Study
 
 
 @click.command()
