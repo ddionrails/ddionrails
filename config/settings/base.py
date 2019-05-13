@@ -7,6 +7,7 @@ APPS_DIR = BASE_DIR.joinpath('ddionrails')
 
 DEBUG = os.getenv("DJANGO_DEBUG", False)
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+EMAIL_HOST = 'mail'
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
 

@@ -14,6 +14,8 @@ services:
     #  - docker/environments/elasticsearch.env
     networks:
       ddi_net:
+        # This Address is used in the nginx.example.conf and in the docker/mail/Dockerfile
+        # If you want to change it, you have to also change it there.
         ipv4_address: 172.16.238.10
         ipv6_address: 2001:3984:3989::10
     ports: 
@@ -55,6 +57,13 @@ services:
         hard: -1
     volumes:
       - elastic_data:/usr/share/elasticsearch/data
+
+  mail:
+    build:
+      context: ./docker/postfix/
+    networks:
+      - ddi_net
+
   nginx:
     image: nginx:1.15-alpine
     ports:
