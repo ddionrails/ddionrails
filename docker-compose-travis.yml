@@ -11,3 +11,7 @@ services:
   postgres:
     env_file:
       - docker/environments/database.env.example
+
+  nginx:
+    volumes: 
+      - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
