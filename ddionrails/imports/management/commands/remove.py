@@ -2,7 +2,8 @@ import djclick as click
 from click.exceptions import Abort
 from django.core.exceptions import ObjectDoesNotExist
 
-from config import Study, Variable
+from ddionrails.data.models import Variable
+from ddionrails.studies.models import Study
 
 
 def summary(study):
