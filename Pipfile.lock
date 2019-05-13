@@ -411,10 +411,9 @@
         },
         "rq": {
             "hashes": [
-                "sha256:2ef7de3fa26a4ce41dcd0561bdba12bb62fa5b9b6d21120122d8dbbe44bb6a77",
-                "sha256:c3c6bdf738652b8464e8b32c5e158a5e646ee553711d5a1e9c6c23ab17ef68b1"
+                "sha256:22de332ed7e061634eb893dc8cc9ca96c8641480f46c403cabef8d43a2eca867"
             ],
-            "version": "==0.13.0"
+            "version": "==1.0"
         },
         "six": {
             "hashes": [
