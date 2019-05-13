@@ -4,7 +4,7 @@ import djclick as click
 from django.conf import settings
 from git import Repo
 
-from config import Study
+from ddionrails.studies.models import Study
 
 
 def update_study(study):

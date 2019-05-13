@@ -3,6 +3,7 @@ import djclick as click
 from ddionrails.base.models import System
 from ddionrails.imports.manager import Repository, SystemImportManager
 
+
 @click.command()
 def command():
     """ Import system settings from GitHub
