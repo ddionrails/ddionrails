@@ -78,8 +78,8 @@ class Question(ElasticMixin, DorMixin, models.Model):
     name = models.CharField(
         max_length=255, validators=[validate_lowercase], db_index=True
     )
-    label = models.CharField(max_length=255, blank=True)
-    label_de = models.CharField(max_length=255, blank=True)
+    label = models.TextField(blank=True)
+    label_de = models.TextField(blank=True)
     description = models.TextField(blank=True)
     sort_id = models.IntegerField(blank=True, null=True)
 
