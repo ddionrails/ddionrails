@@ -1,7 +1,5 @@
 from .base import *  # noqa
 
-ALLOWED_HOSTS = ["hewing.soep.de", "ddionrails.soep.de"]
-
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
 
@@ -38,7 +36,7 @@ RQ_QUEUES = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.path("templates")],
+        "DIRS": [BASE_DIR.joinpath("templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
