@@ -5,7 +5,13 @@ from pathlib import Path
 BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY"))
 APPS_DIR = BASE_DIR.joinpath('ddionrails')
 
-DEBUG = os.getenv("DJANGO_DEBUG", False)
+if os.getenv("DJANGO_DEBUG") == 'True':
+    DEBUG = True
+    STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
+else:
+    DEBUG = False
+    STATIC_ROOT = os.getenv("STATIC_ROOT")
+
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 EMAIL_HOST = 'mail'
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
@@ -120,7 +126,6 @@ LOGOUT_REDIRECT_URL = "/"
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
 
 WEBPACK_LOADER = {
     "DEFAULT": {
