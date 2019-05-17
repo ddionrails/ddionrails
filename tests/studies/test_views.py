@@ -31,8 +31,6 @@ class TestStudyDetailView:
         assert response.status_code == 200
         template = "studies/study_detail.html"
         assert template in (t.name for t in response.templates)
-        # # TODO
-        assert "debug_string" in response.context
         assert response.context["study"] == study
         expected_datasets = list(study.datasets.all())
         output_datasets = list(response.context["dataset_list"])
