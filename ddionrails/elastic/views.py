@@ -1,4 +1,5 @@
-import pprint
+# -*- coding: utf-8 -*-
+
 import re
 
 from django.shortcuts import get_object_or_404, render
@@ -32,7 +33,6 @@ def search(request):
         results=results,
         hits=hits,
         has_hits=len(hits) > 0,
-        debug_string=pprint.pformat(results, width=120),
     )
     return render(request, "elastic/search.html", context=context)
 
