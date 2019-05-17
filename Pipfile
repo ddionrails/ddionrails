@@ -6,69 +6,78 @@ name = "pypi"
 
 [packages]
 
-# pin temporarily
+# Temporaliy pinned section
+# ------------------------------------------------------------------------------
 redis = "==3.1"
 
-# Django related libraries
+# Django
+# ------------------------------------------------------------------------------
 django = "*"
+django-click = "*"
+django-crispy-forms = "*"
 django-extensions = "*"
+django-import-export = "*"
 django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
-django-import-export = "*"
-django-click = "*"
-django-crispy-forms = "*"
-
-# wsgi
 gunicorn = "*"
 
-# git
-gitpython = "*"
-
-# Markup related libraries
-pyyaml = "*"
-markdown = "*"
-python-frontmatter = "*"
-
-# Elasticsearch
-elasticsearch-dsl = "==2.2.0"
-
-# Postgres
+# PostgreSQL
+# ------------------------------------------------------------------------------
 psycopg2-binary = "*"
 
-# Project scripting
+# Elasticsearch
+# ------------------------------------------------------------------------------
+elasticsearch-dsl = "==2.2.0" # pin until ElasticSearch service is updated
+
+# Markup
+# ------------------------------------------------------------------------------
+markdown = "*"
+python-frontmatter = "*"
+pyyaml = "*"
+
+# Other
+# ------------------------------------------------------------------------------
+gitpython = "*"
 paver = "*"
 fabric = "*"
 
+
 [dev-packages]
-# Linters and code style
+
+# Code quality
+# ------------------------------------------------------------------------------
 black = "==19.3b0" # pin until black leaves pre-release status
 flake8 = "*"
 isort = "*"
 mypy = "*"
 codecov = "*"
+pre-commit = "*"
 
 # Testing
+# ------------------------------------------------------------------------------
 pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
 pytest-mock = "*"
 pytest-selenium = "*"
+pytest-splinter = "*"
 factory-boy = "*"
 django-coverage-plugin = "*"
 django-test-without-migrations = "*"
 fakeredis = "*"
 splinter = "*"
-pytest-splinter = "*"
 
 # Documentation
+# ------------------------------------------------------------------------------
 sphinx = "*"
 sphinx-rtd-theme = "*"
 
-# Libraries for local development
+# Local
+# ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
 werkzeug = "*"
-pre-commit = "*"
+
 
 [requires]
 python_version = "3.7"
