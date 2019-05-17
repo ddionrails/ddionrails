@@ -12,6 +12,7 @@ services:
       - ./config:/usr/src/app/config
       - ./local:/usr/src/app/local
       - ./tests:/usr/src/app/tests
+      - ./templates:/usr/src/app/templates
 
   postgres:
     env_file:
