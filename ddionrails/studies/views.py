@@ -1,5 +1,4 @@
-import os
-import pprint
+# -*- coding: utf-8 -*-
 
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -70,14 +69,6 @@ class StudyDetailView(DetailView):
                 "period__label",
                 "analysis_unit__name",
                 "analysis_unit__label",
-            )
-        )
-        context["debug_string"] = pprint.pformat(
-            dict(
-                name=self.object.name,
-                config=self.object.get_config(),
-                source=self.object.get_source(),
-                getcwd=os.getcwd(),
             )
         )
         return context
