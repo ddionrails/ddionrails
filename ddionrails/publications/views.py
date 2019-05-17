@@ -1,4 +1,4 @@
-import pprint
+# -*- coding: utf-8 -*-
 
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
@@ -32,7 +32,6 @@ class PublicationDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["publication"] = self.object
-        context["debug_string"] = pprint.pformat(self.object.get_elastic(), width=120)
         context["study"] = self.object.study
         return context
 
