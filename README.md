@@ -38,6 +38,8 @@ docker-compose version 1.24.0, ...
 
 ### Installing
 
+#### Developement Environment
+
 Clone the repository
 
 ```
@@ -53,6 +55,24 @@ $ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 
 :warning: __Warning__ Do not use this in production the settings in `docker-compose-dev.yml` are not secure.
 
+#### Production Environment
+
+Before starting the services via docker-compose:
+
+- Customize the environment files in docker/environments/ and rename them to remove example from their name.
+  - database.env should contain secure password.
+  - django.env should be set up for production or staging
+    - DJANGO_DEBUG should always be False for Production
+    - DJANGO_SECRET_KEY should be long and random
+    - ALLOWED_HOSTS should match your setup
+- Uncomment the environment blocks in the docker-compose file to load the environment files.
+- Or create a docker-compose.override.yml file containing the environment files. 
+- Customize the docker/nginx/nginx.example.conf and rename it to nginx.conf.
+  - Sections that need to be changed are marked with `REPLACE_ME`
+  - For ssl change your docker-compose.yml or docker-compose.override.yml to mount cert and key at the right location.
+   - If you use a ca-chain file add this file to the end of your crt file. This file can then be used by nginx as certificate.
+- Optional: Set up a backup routine for the database.
+  
 
 ## Running the tests
 
