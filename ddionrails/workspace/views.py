@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 import json
-import pprint
 from collections import OrderedDict
 
 from django.contrib import messages
@@ -206,13 +207,6 @@ def basket_detail(request: WSGIRequest, basket_id: int):
         related_variable_table=related_variable_table,
         period_list=period_list,
         concept_list=concept_list,
-        debug_string=pprint.pformat(
-            dict(
-                table_input=related_variable_table,
-                bad_variables=bad_variables,
-                period_list=period_list,
-            )
-        ),
         note=None,
     )
 
@@ -283,7 +277,6 @@ def script_detail(request, basket_id, script_id):
         fields=fields,
         settings=settings_dict,
         s=s,
-        debug_string=pprint.pformat(s),
     )
     return render(request, "workspace/script_detail.html", context=context)
 
