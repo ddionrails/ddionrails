@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 import difflib
-import pprint
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
@@ -83,7 +84,6 @@ def question_detail(request, study_name, instrument_name, question_name):
             question.instrument.study.name
         ],
         row_helper=RowHelper(),
-        debug_string=pprint.pformat(question.get_elastic(), width=120),
     )
     return render(request, "questions/question_detail.html", context=context)
 
