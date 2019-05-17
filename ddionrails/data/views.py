@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
+
 import json
-import pprint
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
@@ -117,7 +118,6 @@ class VariableDetailView(DetailView):
         ) | Question.objects.filter(
             questions_variables__variable__target_variables__target_id=self.object.id
         )
-        context["debug_string"] = pprint.pformat(self.object.get_elastic(), width=120)
         context["concept"] = self.object.get_concept()
         context["row_helper"] = RowHelper()
         context["basket_list"] = (
@@ -152,7 +152,6 @@ def extend_context_for_variable(request, context):
         questions_variables__variable__target_variables__target_id=variable.id
     )
     context["study"] = study
-    context["debug_string"] = pprint.pformat(variable.get_elastic(), width=120)
     context["concept"] = variable.get_concept()
     context["row_helper"] = RowHelper()
     context["basket_list"] = (
