@@ -12,6 +12,7 @@ addons:
 before_install:
   - docker --version
   - docker-compose --version
+  - mkdir codecov # for coverage report
 #  - curl -L -o /tmp/geckodriver.tar.gz https://github.com/mozilla/geckodriver/releases/download/v$GECKODRIVER_VERSION/geckodriver-v$GECKODRIVER_VERSION-linux64.tar.gz
 #  - mkdir $HOME/geckodriver && tar xvf /tmp/geckodriver.tar.gz -C $HOME/geckodriver
 #  - export PATH=$HOME/geckodriver:$PATH
