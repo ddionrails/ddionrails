@@ -1,4 +1,9 @@
+# -*- coding: utf-8 -*-
+""" Test cases for ddionrails.instruments.models """
+
 import pytest
+
+from ddionrails.instruments.models import ConceptQuestion
 
 pytestmark = [pytest.mark.instrument, pytest.mark.models]
 
@@ -35,8 +40,19 @@ class TestQuestionModel:
     def test_next_question_method(self):
         pass
 
-    def test_concept_list_method(self):
-        pass
+    def test_get_concepts_method_no_concept(self, question):
+        """ Test Question.get_concepts() without concept-question-relation """
+        result = question.get_concepts()
+        assert 0 == result.count()
+
+    def test_get_concepts_method_single_concept(self, question, concept):
+        """ Test Question.get_concepts() with concept-question-relation"""
+
+        # create a relation between question and concept
+        ConceptQuestion.objects.create(concept=concept, question=question)
+        result = question.get_concepts()
+        assert 1 == result.count()
+        assert concept == result.first()
 
     def test_get_cs_name_method(self):
         pass
