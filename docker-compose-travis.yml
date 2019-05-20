@@ -8,6 +8,8 @@ services:
       - docker/environments/elasticsearch.env.example
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
+    volumes:
+      - ./codecov:/usr/src/app/codecov
   postgres:
     env_file:
       - docker/environments/database.env.example
