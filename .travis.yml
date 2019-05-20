@@ -4,6 +4,7 @@ services:
   - docker
 env:
   global:
+  - COMPOSE_FILE=docker-compose.yml:docker-compose-travis.yml
   - DISPLAY=:99.0
   - GECKODRIVER_VERSION=0.23.0
 addons:
@@ -16,7 +17,7 @@ before_install:
 #  - export PATH=$HOME/geckodriver:$PATH
 #  - geckodriver --version
 before_script:
-  - docker-compose -f "docker-compose.yml" -f "docker-compose-travis.yml" up --build -d
+  - docker-compose up --build -d
   - docker images
   - docker ps -a
 script:
@@ -28,4 +29,4 @@ script:
 after_success:
   - docker-compose exec web codecov
 after_script:
-  - docker-compose -f "docker-compose.yml" -f "docker-compose-travis.yml" down
+  - docker-compose down
