@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+""" Model definitions for ddionrails.instruments app """
+
 import copy
 import textwrap
 from collections import OrderedDict
 
 from django.db import models
+from django.db.models import QuerySet
 from django.urls import reverse
 from model_utils.managers import InheritanceManager
 
@@ -161,13 +165,13 @@ class Question(ElasticMixin, DorMixin, models.Model):
         else:
             return combined_set
 
-    def get_concepts(self):
-        direct_concepts = Concept.objects.filter(concepts_questions__question_id=self.pk)
-        indirect_concepts = Concept.objects.filter(
-            variables__questions_variables__question_id=self.pk
-        )
-        result = direct_concepts | indirect_concepts
-        return result.distinct()
+    def get_concepts(self) -> QuerySet:
+        """ Retrieve the related Concepts of this Question
+
+            A question and concept are related if
+            their relation is defined in ConceptQuestion.
+        """
+        return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
 
     def concept_list(self):
         """DEPRECATED NAME"""
