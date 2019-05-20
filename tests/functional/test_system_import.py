@@ -1,4 +1,4 @@
-from pathlib import Path
+import pathlib
 
 import pytest
 from click.testing import CliRunner
@@ -11,7 +11,7 @@ pytestmark = [pytest.mark.imports, pytest.mark.functional]
 
 
 class TestSystemImport:
-    def test_import_system(self, db):
+    def test_import_system(self, db, settings):
         """ Tests the functionality of the management command 'system'
 
             it is run via:
@@ -29,7 +29,7 @@ class TestSystemImport:
         result = clirunner.invoke(system.command)
         assert result.exit_code == 0
 
-        path = Path("static/repositories/system")
+        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath("system")
         assert path.exists()
         assert 1 == Study.objects.count()
         assert 1 == System.objects.count()

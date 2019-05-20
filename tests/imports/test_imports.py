@@ -1,3 +1,5 @@
+import pathlib
+
 import pytest
 from django.db import models
 from django.forms import ModelForm
@@ -48,15 +50,23 @@ class TestImport:
         mocked_file_path.assert_called_once()
         mocked_open.assert_called_once_with(filename, "r")
 
-    def test_import_path_method_with_study(self, study):
+    def test_import_path_method_with_study(self, study, settings):
         importer = Import(filename="DUMMY.csv", study=study)
-        import_path = importer.import_path()
-        assert import_path == "static/repositories/some-study/ddionrails/"
+        result = importer.import_path()
+        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+            study.name, settings.IMPORT_SUB_DIRECTORY
+        )
+        expected = str(path) + "/"
+        assert expected == result
 
-    def test_import_path_method_without_study(self, system):
+    def test_import_path_method_without_study(self, system, settings):
         importer = Import(filename="DUMMY.csv", system=system)
-        import_path = importer.import_path()
-        assert import_path == "static/repositories/system/ddionrails/"
+        result = importer.import_path()
+        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+            system.name, settings.IMPORT_SUB_DIRECTORY
+        )
+        expected = str(path) + "/"
+        assert expected == result
 
     # def test_file_path_method(self, mocker):
     #     importer = Import(filename="DUMMY.csv")

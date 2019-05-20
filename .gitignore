@@ -114,9 +114,6 @@ venv.bak/
 *~
 *.swp
 
-/static/repositories/*
-!/static/repositories/.gitkeep
-
 /local/*
 !/local/.gitkeep
 
