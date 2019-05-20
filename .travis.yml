@@ -22,9 +22,10 @@ before_script:
   - docker images
   - docker ps -a
 script:
-  - docker-compose exec web pytest
-  - docker-compose exec web pytest -m "functional" tests/functional/test_system_import.py --cov-append
-  - docker-compose exec web pytest -m "functional" tests/functional/test_imports.py --cov-append
+  - docker-compose exec web pytest --cov-report xml
+  - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/test_system_import.py --cov-append
+  - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/test_imports.py --cov-append
+  - docker-compose exec web mv coverage.xml codecov/ # move coverage report to directory, that is mounted as volume
 #  - docker-compose exec web xvfb-run pytest -m "functional" tests/functional/test_search.py --cov-append
 #  - xvfb-run pytest -s -m "functional" --driver Firefox --cov-append tests/functional/test_browser.py
 after_success:
