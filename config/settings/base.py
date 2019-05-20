@@ -141,7 +141,12 @@ WEBPACK_LOADER = {
 # DDI on Rails: imports
 # Please ensure to include a trailing slash "/" for the path definitions.
 
-IMPORT_REPO_PATH = "static/repositories/"
+IMPORT_REPO_PATH = os.getenv("IMPORT_REPO_PATH", default="/tmp/")
+
+# Create IMPORT_REPO_PATH on disk if it does not exist
+path = Path(IMPORT_REPO_PATH)
+path.mkdir(parents=True, exist_ok=True)
+
 IMPORT_SUB_DIRECTORY = "ddionrails/"
 
 # DDI on Rails: index
