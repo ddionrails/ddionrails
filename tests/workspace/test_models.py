@@ -45,9 +45,11 @@ class TestBasketModel:
         result = basket.get_script_generators()
         assert result is None
 
-    def test_get_script_generators_method_with_config(self, mocker, basket):
-        mocked_get_config = mocker.patch.object(Study, "get_config")
-        mocked_get_config.return_value = {"script_generators": "some-script-generator"}
+    def test_get_script_generators_method_with_config(self, study, basket):
+        # Set script_generators in study.config
+        study.config = {"script_generators": "some-script-generator"}
+        study.save()
+        basket.refresh_from_db()
         result = basket.get_script_generators()
         assert result == "some-script-generator"
 
