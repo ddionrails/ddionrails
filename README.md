@@ -55,7 +55,7 @@ $ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 
 #### Production Environment
 
-Before starting the services via docker-compose:
+__Before__ starting the services via docker-compose:
 
 - Customize the environment files in docker/environments/ and rename them to remove example from their name.
   - database.env should contain secure password.
@@ -70,7 +70,15 @@ Before starting the services via docker-compose:
   - For ssl change your docker-compose.yml or docker-compose.override.yml to mount cert and key at the right location.
    - If you use a ca-chain file add this file to the end of your crt file. This file can then be used by nginx as certificate.
 - Optional: Set up a backup routine for the database.
-  
+
+__After__ starting the services via docker-compose:
+
+- A mapping needs to be loaded into elasticsearch in order for all search interfaces to work. :frowning_face: 
+- Enter the django container via `docker-compose exec web sh`
+- Install curl :frowning_face: via `apk update && apk add curl`
+- Execute `paver create_index`
+- Maybe recreate `web` service to get rid of the manual curl installation.
+- The elasticsearch index is kept in a named volume, meaning that the mapping kept even through container recreaions.
 
 ## Running the tests
 
