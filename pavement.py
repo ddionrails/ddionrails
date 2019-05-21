@@ -96,7 +96,7 @@ def delete_index():
 @task
 def create_index():
     "Create the index from the elastic/mapping.json file."
-    run("curl -s -XPOST '%s' -d@elastic/mapping.json" % elastic_server())
+    run("curl -s -XPOST '%s' -d@ddionrails/elastic/mapping.json" % elastic_server())
     print()
 
 
