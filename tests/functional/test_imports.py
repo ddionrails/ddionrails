@@ -62,7 +62,7 @@ class TestStudyImportManager:
         # refresh
         study = Study.objects.first()
         assert "Some Study" == study.label
-        assert '{"variables": {"label-table": true}}' == study.config
+        assert {"variables": {"label-table": True}} == study.config
 
         s = Search(using=es_client).doc_type("study").query("match", name="some-study")
         assert 1 == s.count()

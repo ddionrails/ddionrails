@@ -56,8 +56,7 @@ class Basket(ElasticMixin, TimeStampedModel):
 
     def get_script_generators(self):
         try:
-            config = self.study.get_config()
-            return config["script_generators"]
+            return self.study.config["script_generators"]
         except (TypeError, KeyError):
             return None
 

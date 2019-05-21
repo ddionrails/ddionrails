@@ -1,5 +1,3 @@
-import json
-
 from ddionrails.imports import imports
 
 from .forms import StudyInitialForm
@@ -10,7 +8,7 @@ class StudyDescriptionImport(imports.JekyllImport):
         study = self.study
         study.description = self.content
         study.label = self.data["label"]
-        study.config = json.dumps(self.data["config"])
+        study.config = self.data["config"]
         study.set_elastic(
             dict(name=study.name, label=study.label, description=study.description)
         )
