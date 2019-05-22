@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 
@@ -11,8 +12,7 @@
       </ul>
     </div>
   {% endif %}
-  <img class="img-responsive"
-       src="/static/repositories/system/ddionrails/background.png">
+  <img class="img-responsive" src="{% static "background.png" %}">
 
   <div class="list-group">
     {% for study in study_list %}

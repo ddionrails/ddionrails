@@ -5,7 +5,6 @@ from config.views import (
     HomePageView,
     bad_request,
     contact_page,
-    elastic_test,
     imprint_page,
     page_not_found,
     permission_denied,
@@ -47,23 +46,6 @@ class TestPageViews:
         assert response.status_code == 200
         content = str(response.content)
         assert "Quick links" in content
-
-
-class TestElasticViews:
-    def test_elastic_test(self, rf, db):
-        url = reverse("elastic_test")
-        request = rf.get(url)
-        response = elastic_test(request)
-        assert response.status_code == 200
-        content = str(response.content)
-        assert "Imprint" in content
-        assert "Loading" in content
-        assert "javascript" in content
-
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_elastic_proxy(self):
-        pytest.fail("Test not implemented yet")
-
 
 class TestErrorTemplates:
     def test_400_template(self, rf, db):

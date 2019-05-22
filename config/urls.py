@@ -9,7 +9,6 @@ from config.views import (
     HomePageView,
     contact_page,
     elastic_proxy,
-    elastic_test,
     imprint_page,
     quick_page,
 )
@@ -27,7 +26,6 @@ urlpatterns = [
     path("imprint/", imprint_page, name="imprint"),
     path("contact/", contact_page, name="contact"),
     path("quick/", quick_page, name="quickpage"),
-    path("e_test/", elastic_test, name="elastic_test"),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
