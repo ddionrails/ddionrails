@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+""" ModelAdmin definitions for ddionrails.workspace app """
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
@@ -14,41 +17,89 @@ from .resources import (
 
 @admin.register(Basket)
 class BasketAdmin(ImportExportModelAdmin):
-    """ The basket admin can import and export script files """
+    """ ModelAdmin for workspace.Basket
+        The BasketAdmin can import and export basket files
+    """
 
-    fields = (
-        "name",
-        "label",
-        "description",
-        "security_token",
-        "user",
-        "study",
-        "created",
-        "modified",
-    )
+    fields = ("name", "label", "description", "user", "study", "created", "modified")
     readonly_fields = ("created", "modified")
-    list_display = ("name", "user", "study", "created", "modified")
+    list_display = ("name", "user", "get_study_name", "created", "modified")
+    list_per_page = 25
     resource_class = BasketResource
+    raw_id_fields = ("user", "study")
+    search_fields = ("name", "label", "description")
+
+    def get_study_name(self, object: Basket):
+        """ Return the name of the related study """
+        try:
+            return object.study.name
+        except AttributeError:
+            return None
+
+    get_study_name.admin_order_field = "study"
+    get_study_name.short_description = "study"
 
 
 @admin.register(BasketVariable)
 class BasketVariableAdmin(ImportMixin, admin.ModelAdmin):
-    """ The basket variable admin can import script files """
+    """ ModelAdmin for workspace.BasketVariable
+        The BasketVariableAdmin can import basket-variable files
+    """
 
     list_display = ("basket", "variable")
-    list_per_page = 10
+    list_per_page = 25
+    list_select_related = ("basket", "variable")
     resource_class = BasketVariableImportResource
+    raw_id_fields = ("basket", "variable")
 
 
 @admin.register(Script)
 class ScriptAdmin(ImportMixin, admin.ModelAdmin):
-    """ The script admin can import script files """
+    """ ModelAdmin for workspace.Script
+        The ScriptAdmin can import script files
+    """
 
-    list_select_related = ("basket",)
-    list_display = ("name", "basket", "created", "modified")
-    list_per_page = 10
+    list_display = (
+        "name",
+        "get_user_name",
+        "get_basket_name",
+        "get_study_name",
+        "created",
+        "modified",
+    )
+    list_per_page = 25
+    list_select_related = ("basket", "basket__user")
+    raw_id_fields = ("basket",)
     readonly_fields = ("created", "modified")
     resource_class = ScriptImportResource
+
+    def get_study_name(self, object: Script):
+        """ Return the name of the related study """
+        try:
+            return object.basket.study.name
+        except AttributeError:
+            return None
+
+    def get_basket_name(self, object: Script):
+        """ Return the name of the related basket """
+        try:
+            return object.basket.name
+        except AttributeError:
+            return None
+
+    def get_user_name(self, object: Script):
+        """ Return the name of the related user """
+        try:
+            return object.basket.user.username
+        except AttributeError:
+            return None
+
+    get_study_name.admin_order_field = "study"
+    get_study_name.short_description = "study"
+    get_user_name.admin_order_field = "user"
+    get_user_name.short_description = "user"
+    get_basket_name.admin_order_field = "basket"
+    get_basket_name.short_description = "basket"
 
 
 class ImportExportUserAdmin(ImportExportMixin, UserAdmin):

@@ -5,9 +5,14 @@ services:
     build:
       context: ./
       dockerfile: ./docker/ddionrails/Dockerfile
-    command: gunicorn config.wsgi --bind 0.0.0.0:8000
+    command: [
+            "gunicorn", "config.wsgi",
+            "--bind", "0.0.0.0:8000",
+            "--error-logfile", "-",
+            "--access-logformat",
+            "'[gunicorn] %(h)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s'",
+            "--access-logfile", "-" ] 
     # Set your own variables, use of the example files at your own risk.
-    entrypoint: bash /usr/src/app/docker/ddionrails/entrypoint.sh
     #env_file:
     #  - docker/environments/django.env
     #  - docker/environments/database.env
@@ -76,7 +81,7 @@ services:
       - ddi_net
     volumes: 
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - static:/usr/src/app/static
+      - static:/usr/src/app/static:ro
 
   redis:
     image: redis:4-alpine3.9

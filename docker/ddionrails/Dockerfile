@@ -3,6 +3,7 @@ FROM python:3.7.3-alpine
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# Hard coded again in entrypoint
 ENV DOCKER_APP_DIRECTORY /usr/src/app
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
@@ -30,9 +31,14 @@ RUN pip install --upgrade pipenv
 RUN pipenv install --system --dev
 RUN npm install
 
-# Setup frontend
+# Collect all files to serve as static files
 RUN cd ./node_modules/ddionrails-elasticsearch \
     && npm install \
     && ./node_modules/.bin/ng build --prod
 RUN ./node_modules/.bin/webpack --config webpack.config.js
-ENTRYPOINT [ ${DOCKER_APP_DIRECTORY}"/entrypoint.sh" ]
+RUN cp webpack-stats.json static/
+
+# Set up entrypoint
+RUN mv docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+
+ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]

@@ -1,6 +1,6 @@
 import pytest
 
-from .factories import ScriptFactory
+from .factories import BasketVariableFactory, ScriptFactory
 
 
 @pytest.fixture
@@ -11,3 +11,9 @@ def script(db):
         label="Some Script",
         settings='{"analysis_unit": "some-analysis-unit"}',
     )
+
+
+@pytest.fixture
+def basket_variable(db):
+    """ A basket_variable in the database """
+    return BasketVariableFactory()
