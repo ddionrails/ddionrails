@@ -13,6 +13,7 @@ services:
       - ./local:/usr/src/app/local
       - ./tests:/usr/src/app/tests
       - ./templates:/usr/src/app/templates
+      - ./htmlcov:/usr/src/app/htmlcov
 
   postgres:
     env_file:

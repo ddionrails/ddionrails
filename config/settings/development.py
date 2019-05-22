@@ -1,6 +1,7 @@
 from .base import *  # noqa
 
 DEBUG = True
+TEMPLATE_DEBUG = True
 
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
@@ -10,6 +11,12 @@ INSTALLED_APPS += ("debug_toolbar",)
 MIDDLEWARE = ("debug_toolbar.middleware.DebugToolbarMiddleware",) + MIDDLEWARE
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
 INTERNAL_IPS = ("127.0.0.1",)
+
+# credit to https://stackoverflow.com/a/50332425
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True
+}
+
 
 SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
