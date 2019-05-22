@@ -1,6 +1,7 @@
 import factory
 
-from ddionrails.workspace.models import Basket, Script
+from ddionrails.workspace.models import Basket, BasketVariable, Script
+from tests.data.factories import VariableFactory
 from tests.factories import UserFactory
 from tests.studies.factories import StudyFactory
 
@@ -24,3 +25,14 @@ class ScriptFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Script
         django_get_or_create = ("name",)
+
+
+class BasketVariableFactory(factory.django.DjangoModelFactory):
+    """BasketVariable factory"""
+
+    basket = factory.SubFactory(BasketFactory, name="some-basket")
+    variable = factory.SubFactory(VariableFactory, name="some-variable")
+
+    class Meta:
+        model = BasketVariable
+        django_get_or_create = ("basket", "variable")

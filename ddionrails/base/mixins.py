@@ -156,3 +156,87 @@ class ModelMixin:
 
     def __str__(self):
         return self.string_id()
+
+
+class AdminMixin:
+    """ A mixin for ModelAdmins to query related models via methods """
+
+    @staticmethod
+    def study_name(obj):
+        """ Return the name of the related study """
+        try:
+            return obj.study.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def period_name(obj):
+        """ Return the name of the related period """
+        try:
+            return obj.period.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def analysis_unit_name(obj):
+        """ Return the name of the related analysis_unit """
+        try:
+            return obj.analysis_unit.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def dataset_name(obj):
+        """ Return the name of the related dataset """
+        try:
+            return obj.dataset.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def dataset_study_name(obj):
+        """ Return the name of the related dataset.study """
+        try:
+            return obj.dataset.study.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def instrument_name(obj):
+        """ Return the name of the related instrument """
+        try:
+            return obj.instrument.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def instrument_study_name(obj):
+        """ Return the name of the related instrument.study """
+        try:
+            return obj.instrument.study.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def basket_name(obj):
+        """ Return the name of the related basket """
+        try:
+            return obj.basket.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def basket_study_name(obj):
+        """ Return the name of the related basket.study """
+        try:
+            return obj.basket.study.name
+        except AttributeError:
+            return None
+
+    @staticmethod
+    def user_name(obj):
+        """ Return the name of the related basket.user """
+        try:
+            return obj.basket.user.username
+        except AttributeError:
+            return None

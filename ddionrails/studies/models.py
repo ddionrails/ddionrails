@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+""" Model definitions for ddionrails.studies app """
+
 import os
 
 from django.conf import settings
@@ -12,6 +15,7 @@ from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 
 class TopicList(ElasticMixin):
 
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "topiclist"
 
     def __init__(self, study):
@@ -25,6 +29,7 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
     :model:`concepts.Period` and :model:`workspace.Basket`.
     """
 
+    # attributes
     name = models.CharField(
         max_length=255, unique=True, db_index=True, help_text="Name of the study"
     )
@@ -58,14 +63,27 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
         default=dict, blank=True, null=True, help_text="Configuration of the study (JSON)"
     )
 
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "study"
 
     class Meta:
+        """ Django's metadata options """
+
         verbose_name_plural = "Studies"
 
     class DOR:
+        """ ddionrails' metadata options """
+
         io_fields = ["name", "label", "description"]
         id_fields = ["name"]
+
+    def __str__(self) -> str:
+        """ Returns a string representation using the "name" field """
+        return f"/{self.name}"
+
+    def get_absolute_url(self) -> str:
+        """ Returns a canonical URL for the model using the "name" field """
+        return reverse("study_detail", kwargs={"study_name": self.name})
 
     def import_path(self):
         path = os.path.join(
@@ -80,12 +98,6 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
             return f"git@{self.repo}.git"
         else:
             raise Exception("Specify a protocol for Git in your settings.")
-
-    def __str__(self):
-        return f"/{self.name}"
-
-    def get_absolute_url(self):
-        return reverse("study_detail", kwargs={"study_name": self.name})
 
     def set_topiclist(self, body):
         t = TopicList(self)

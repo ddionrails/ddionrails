@@ -21,6 +21,10 @@ handler403 = "config.views.permission_denied"
 handler404 = "config.views.page_not_found"
 handler500 = "config.views.server_error"
 
+admin.site.site_header = 'DDI on Rails Admin'
+admin.site.site_title = 'DDI on Rails Admin'
+admin.site.index_title = 'Welcome to DDI on Rails Admin'
+
 urlpatterns = [
     path("", HomePageView.as_view(), name="homepage"),
     path("imprint/", imprint_page, name="imprint"),

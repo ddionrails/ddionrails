@@ -8,7 +8,7 @@ from tests.concepts.factories import (
     PeriodFactory,
     TopicFactory,
 )
-from tests.data.factories import DatasetFactory, VariableFactory
+from tests.data.factories import DatasetFactory, TransformationFactory, VariableFactory
 from tests.factories import UserFactory
 from tests.instruments.factories import InstrumentFactory, QuestionFactory
 from tests.publications.factories import PublicationFactory
@@ -54,6 +54,12 @@ def variable(db):
     return VariableFactory(
         name="some-variable", label="Some Variable", description="This is some variable"
     )
+
+
+@pytest.fixture
+def transformation(db):
+    """ A transformation in the database """
+    return TransformationFactory()
 
 
 @pytest.fixture
