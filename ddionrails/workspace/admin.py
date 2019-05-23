@@ -31,10 +31,7 @@ class BasketAdmin(ImportExportModelAdmin):
 
     def get_study_name(self, object: Basket):
         """ Return the name of the related study """
-        try:
-            return object.study.name
-        except AttributeError:
-            return None
+        return object.study.name
 
     get_study_name.admin_order_field = "study"
     get_study_name.short_description = "study"
@@ -75,24 +72,15 @@ class ScriptAdmin(ImportMixin, admin.ModelAdmin):
 
     def get_study_name(self, object: Script):
         """ Return the name of the related study """
-        try:
-            return object.basket.study.name
-        except AttributeError:
-            return None
+        return object.basket.study.name
 
     def get_basket_name(self, object: Script):
         """ Return the name of the related basket """
-        try:
-            return object.basket.name
-        except AttributeError:
-            return None
+        return object.basket.name
 
     def get_user_name(self, object: Script):
         """ Return the name of the related user """
-        try:
-            return object.basket.user.username
-        except AttributeError:
-            return None
+        return object.basket.user.username
 
     get_study_name.admin_order_field = "study"
     get_study_name.short_description = "study"
