@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+""" Model definitions for ddionrails.workspace app """
+
 import csv
 import io
 import json
+from typing import Dict, Union
 
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -19,39 +23,74 @@ from .scripts import ScriptConfig
 
 class Basket(ElasticMixin, TimeStampedModel):
     """
-    Basket
+    Stores a single basket,
+    related to :model:`studies.Study`, :model:`auth.User` and :model:`data.Variable`.
     """
 
-    name = models.CharField(max_length=255, validators=[validate_lowercase])
-    label = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    study = models.ForeignKey(Study, related_name="baskets", on_delete=models.CASCADE)
-    user = models.ForeignKey(User, related_name="baskets", on_delete=models.CASCADE)
-    variables = models.ManyToManyField(Variable, through="BasketVariable")
+    # attributes
+    name = models.CharField(
+        max_length=255,
+        validators=[validate_lowercase],
+        help_text="Name of the basket (Lowercase)",
+    )
+    label = models.CharField(
+        max_length=255, blank=True, verbose_name="Label", help_text="Label of the basket"
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown)",
+        help_text="Description of the basket (Markdown)",
+    )
 
+    # relations
+    study = models.ForeignKey(
+        Study,
+        related_name="baskets",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to studies.Study",
+    )
+    user = models.ForeignKey(
+        User,
+        related_name="baskets",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to auth.User",
+    )
+    variables = models.ManyToManyField(
+        Variable,
+        through="BasketVariable",
+        help_text="ManyToMany relation to data.Variable",
+    )
+
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "basket"
 
     class Meta:
+        """ Django's metadata options """
+
         unique_together = ("user", "name")
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """ Returns a string representation using the "user.username" and "name" fields """
         return "%s/%s" % (self.user.username, self.name)
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
+        """ Returns a canonical URL for the model using the "id" field """
         return reverse("workspace:basket", kwargs={"basket_id": self.id})
 
-    def html_description(self):
+    def html_description(self) -> str:
+        """ Returns the "description" field as a string containing HTML markup """
         return render_markdown(self.description)
 
-    def title(self):
-        return self.label if self.label != "" else self.name
+    def title(self) -> str:
+        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        return str(self.label) if self.label != "" else str(self.name)
 
     @classmethod
     def get_or_create(cls, name, user):
         name = name.lower()
         if user.__class__ == str:
             user = User.objects.get(username=user)
-        basket, created = cls.objects.get_or_create(name=name, user=user)
+        basket = cls.objects.get_or_create(name=name, user=user)[0]
         return basket
 
     def get_script_generators(self):
@@ -100,19 +139,34 @@ class Basket(ElasticMixin, TimeStampedModel):
             writer.writerow(row)
         return output.getvalue()
 
-    def to_dict(self):
+    def to_dict(self) -> Dict[str, Union[int, str]]:
+        """ Returns a dictionary containing the fields: name, label and id """
         return dict(name=self.name, label=self.label, id=self.id)
 
 
 class BasketVariable(models.Model):
+    """
+    Stores a single basket variable,
+    related to :model:`workspace.Basket` and :model:`data.Variable`
+    """
+
+    # relations
     basket = models.ForeignKey(
-        Basket, related_name="baskets_variables", on_delete=models.CASCADE
+        Basket,
+        related_name="baskets_variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to workspace.Basket",
     )
     variable = models.ForeignKey(
-        Variable, related_name="baskets_variables", on_delete=models.CASCADE
+        Variable,
+        related_name="baskets_variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to data.Variable",
     )
 
     class Meta:
+        """ Django's metadata options """
+
         unique_together = ("basket", "variable")
 
     def clean(self, *args, **kwargs):
@@ -129,11 +183,35 @@ class BasketVariable(models.Model):
 
 
 class Script(TimeStampedModel):
-    basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    generator_name = models.CharField(max_length=255, default="soep-stata")
-    label = models.CharField(max_length=255, blank=True)
-    settings = models.TextField()
+    """
+    Stores a single script, related to :model:`workspace.Basket`.
+    """
+
+    # attributes
+    name = models.CharField(max_length=255, help_text="Name of the script")
+    label = models.CharField(max_length=255, blank=True, help_text="Label of the script")
+    generator_name = models.CharField(
+        max_length=255,
+        default="soep-stata",
+        help_text="Name of the selected Script generator (e.g. soep-stata)",
+    )
+    settings = models.TextField(help_text="Settings of the script")
+
+    # relations
+    basket = models.ForeignKey(
+        Basket, on_delete=models.CASCADE, help_text="Foreign key to workspace.Basket"
+    )
+
+    def __str__(self) -> str:
+        """ Returns a string representation using the "basket.id" and "id" fields """
+        return f"/workspace/baskets/{self.basket.id}/scripts/{self.id}"
+
+    def get_absolute_url(self) -> str:
+        """ Returns a canonical URL for the model using the "basket.id" and "id" fields """
+        return reverse(
+            "workspace:script_detail",
+            kwargs={"basket_id": self.basket.id, "script_id": self.id},
+        )
 
     def get_config(self):
         config_name = self.generator_name
@@ -155,14 +233,6 @@ class Script(TimeStampedModel):
     def get_script_input(self):
         return self.get_config().get_script_input()
 
-    def title(self):
-        return self.label if self.label != "" else self.name
-
-    def __str__(self):
-        return "/workspace/baskets/%s/scripts/%s" % (self.basket.id, self.id)
-
-    def get_absolute_url(self):
-        return reverse(
-            "workspace:script_detail",
-            kwargs={"basket_id": self.basket.id, "script_id": self.id},
-        )
+    def title(self) -> str:
+        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        return str(self.label) if self.label != "" else str(self.name)
