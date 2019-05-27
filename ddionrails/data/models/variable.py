@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+""" Model definitions for ddionrails.data app: Variable """
+
+from __future__ import annotations
+
 import copy
 import json
 from collections import OrderedDict
@@ -9,96 +14,115 @@ from django.urls import reverse
 from config.helpers import render_markdown
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
-from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
-
-class Dataset(ElasticMixin, DorMixin, models.Model):
-    """
-    Representation of a dataset.
-    """
-
-    name = models.CharField(
-        max_length=255, validators=[validate_lowercase], db_index=True
-    )
-    label = models.CharField(max_length=255, blank=True)
-    label_de = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True)
-    boost = models.FloatField(blank=True, null=True)
-    study = models.ForeignKey(
-        Study, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
-    )
-    conceptual_dataset = models.ForeignKey(
-        ConceptualDataset,
-        blank=True,
-        null=True,
-        related_name="datasets",
-        on_delete=models.CASCADE,
-    )
-    period = models.ForeignKey(
-        Period, blank=True, null=True, related_name="datasets", on_delete=models.CASCADE
-    )
-    analysis_unit = models.ForeignKey(
-        AnalysisUnit,
-        blank=True,
-        null=True,
-        related_name="datasets",
-        on_delete=models.CASCADE,
-    )
-
-    DOC_TYPE = "dataset"
-
-    class Meta:
-        unique_together = ("study", "name")
-
-    class DOR(DorMixin.DOR):
-        id_fields = ["study", "name"]
-
-    def __str__(self):
-        return "%s/data/%s" % (self.study, self.name)
-
-    def get_absolute_url(self):
-        return reverse(
-            "data:dataset",
-            kwargs={"study_name": self.study.name, "dataset_name": self.name},
-        )
+from .dataset import Dataset
 
 
 class Variable(ElasticMixin, DorMixin, models.Model):
     """
-    Representation of a variable.
+    Stores a single variable,
+    related to :model:`data.Dataset`, :model:`concepts.Concept` and :model:`concepts.Period`.
     """
 
+    # attributes
     name = models.CharField(
-        max_length=255, validators=[validate_lowercase], db_index=True
+        max_length=255,
+        validators=[validate_lowercase],
+        db_index=True,
+        help_text="Name of the variable (Lowercase)",
     )
+    label = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Label (English)",
+        help_text="Label of the variable (English)",
+    )
+    label_de = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Label (German)",
+        help_text="Label of the variable (German)",
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown)",
+        help_text="Description of the variable (Markdown)",
+    )
+    description_long = models.TextField(
+        blank=True,
+        verbose_name="Extended description (Markdown)",
+        help_text="Extended description of the variable (Markdown)",
+    )
+    sort_id = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Sort ID",
+        help_text="Sort order of variables within one dataset",
+    )
+    image_url = models.TextField(
+        blank=True, verbose_name="Image URL", help_text="URL to a related image"
+    )
+
+    # relations
     dataset = models.ForeignKey(
-        Dataset, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+        Dataset,
+        blank=True,
+        null=True,
+        related_name="variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to data.Dataset",
     )
-    label = models.CharField(max_length=255, blank=True)
-    label_de = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True)
-    description_long = models.TextField(blank=True)
-    sort_id = models.IntegerField(blank=True, null=True)
     concept = models.ForeignKey(
-        Concept, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+        Concept,
+        blank=True,
+        null=True,
+        related_name="variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to concepts.Concept",
     )
     period = models.ForeignKey(
-        Period, blank=True, null=True, related_name="variables", on_delete=models.CASCADE
+        Period,
+        blank=True,
+        null=True,
+        related_name="variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to concepts.Period",
     )
-    image_url = models.TextField(blank=True)
 
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "variable"
 
     class Meta:
+        """ Django's metadata options """
+
         unique_together = ("name", "dataset")
 
     class DOR(DorMixin.DOR):
+        """ ddionrails' metadata options """
+
         id_fields = ["name", "dataset"]
 
+    def __str__(self) -> str:
+        """ Returns a string representation using the "dataset" and "name" fields """
+        return f"{self.dataset}/{self.name}"
+
+    def get_absolute_url(self) -> str:
+        """ Returns a canonical URL for the model using the "dataset" and "name" fields """
+        return reverse(
+            "data:variable",
+            kwargs={
+                "study_name": self.dataset.study.name,
+                "dataset_name": self.dataset.name,
+                "variable_name": self.name,
+            },
+        )
+
     @classmethod
-    def get(cls, x: dict):
+    def get(cls, x: dict) -> Variable:
         study = get_object_or_404(Study, name=x["study_name"])
         dataset = get_object_or_404(Dataset, name=x["dataset_name"], study=study)
         variable = get_object_or_404(cls, name=x["name"], dataset=dataset)
@@ -337,22 +361,8 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             pass
         return x
 
-    def is_categorical(self):
-        is_cat = len(self.get_categories()) > 0
-        return is_cat
-
-    def __str__(self):
-        return "%s/%s" % (self.dataset, self.name)
-
-    def get_absolute_url(self):
-        return reverse(
-            "data:variable",
-            kwargs={
-                "study_name": self.dataset.study.name,
-                "dataset_name": self.dataset.name,
-                "variable_name": self.name,
-            },
-        )
+    def is_categorical(self) -> bool:
+        return len(self.get_categories()) > 0
 
     def title(self):
         return self.label if self.label != "" else self.name
@@ -395,41 +405,3 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
     def to_json(self):
         return json.dumps(self.to_dict())
-
-
-class Transformation(models.Model):
-    """
-    Representation of a variable.
-    """
-
-    origin = models.ForeignKey(
-        Variable, related_name="target_variables", on_delete=models.CASCADE
-    )
-    target = models.ForeignKey(
-        Variable, related_name="origin_variables", on_delete=models.CASCADE
-    )
-
-    class Meta:
-        unique_together = ("origin", "target")
-
-    @classmethod
-    def goc_by_name(
-        cls,
-        origin_study,
-        origin_dataset,
-        origin_variable,
-        target_study,
-        target_dataset,
-        target_variable,
-    ):
-        origin = (
-            Variable.objects.filter(dataset__study__name=origin_study)
-            .filter(dataset__name=origin_dataset)
-            .get(name=origin_variable)
-        )
-        target = (
-            Variable.objects.filter(dataset__study__name=target_study)
-            .filter(dataset__name=target_dataset)
-            .get(name=target_variable)
-        )
-        return cls.objects.get_or_create(origin=origin, target=target)
