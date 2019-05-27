@@ -112,6 +112,7 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         Topic, related_name="concepts", help_text="ManyToMany relation to concepts.Topic"
     )
 
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "concept"
 
     class DOR(ModelMixin.DOR):
