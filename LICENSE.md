@@ -1,4 +1,4 @@
-Copyright: See the [copyright file](./COPYRIGHT.md)
+Copyright: See the [copyright file](./COPYRIGHT.NOTICE.md)
 
                     GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
