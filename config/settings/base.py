@@ -2,10 +2,12 @@ import os
 
 from pathlib import Path
 
+# PROJECT CONFIGURATION
+# ------------------------------------------------------------------------------
 BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY"))
-APPS_DIR = BASE_DIR.joinpath('ddionrails')
+APPS_DIR = BASE_DIR.joinpath("ddionrails")
 
-if os.getenv("DJANGO_DEBUG") == 'True':
+if os.getenv("DJANGO_DEBUG") == "True":
     DEBUG = True
     STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
 else:
@@ -13,11 +15,15 @@ else:
     STATIC_ROOT = os.getenv("STATIC_ROOT")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-EMAIL_HOST = 'mail'
+EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
 
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+IMPORT_BRANCH = os.getenv("IMPORT_BRANCH", default="master")
+SYSTEM_NAME = os.getenv("SYSTEM_NAME", default="system")
+SYSTEM_REPO_URL = os.getenv(
+    "SYSTEM_REPO_URL", default="https://github.com/paneldata/system.git"
+)
 
 
 # APP CONFIGURATION
@@ -94,11 +100,11 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        'NAME': os.getenv('POSTGRES_DB', default=BASE_DIR.joinpath('db.sqlite3')),
-        'USER': os.getenv('POSTGRES_USER', default='user'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='password'),
-        'HOST': os.getenv('POSTGRES_HOST', default='localhost'),
-        "PORT": os.getenv('POSTGRES_PORT', default=5432)
+        "NAME": os.getenv("POSTGRES_DB", default=BASE_DIR.joinpath("db.sqlite3")),
+        "USER": os.getenv("POSTGRES_USER", default="user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="password"),
+        "HOST": os.getenv("POSTGRES_HOST", default="localhost"),
+        "PORT": os.getenv("POSTGRES_PORT", default=5432),
     }
 }
 
@@ -150,9 +156,9 @@ path.mkdir(parents=True, exist_ok=True)
 IMPORT_SUB_DIRECTORY = "ddionrails/"
 
 # DDI on Rails: index
-INDEX_HOST = os.getenv('ELASTICSEARCH_HOST', default='localhost')
-INDEX_PORT = os.getenv('ELASTICSEARCH_PORT', default=9200)
-INDEX_NAME = os.getenv('ELASTICSEARCH_INDEX', default="dor")
+INDEX_HOST = os.getenv("ELASTICSEARCH_HOST", default="localhost")
+INDEX_PORT = os.getenv("ELASTICSEARCH_PORT", default=9200)
+INDEX_NAME = os.getenv("ELASTICSEARCH_INDEX", default="dor")
 
 # Django RQ
 RQ_SHOW_ADMIN_LINK = True

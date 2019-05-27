@@ -1,12 +1,5 @@
 from .base import *  # noqa
 
-ALLOWED_HOSTS = [".paneldata.org", "paneldata.soep.de", "data.soep.de"]
-
-SYSTEM_NAME = "system"
-SYSTEM_REPO_URL = "https://github.com/paneldata/system.git"
-
-IMPORT_BRANCH = "master"
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -24,21 +17,19 @@ LOGGING = {
 }
 
 RQ_QUEUES = {
-    "default": {"HOST": "localhost", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360},
+    "default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360},
     "high": {
-        "URL": os.getenv(
-            "REDISTOGO_URL", "redis://redis:6379/0"
-        ),  # If you're on Heroku
+        "URL": os.getenv("REDISTOGO_URL", "redis://redis:6379/0"),  # If you're on Heroku
         "DEFAULT_TIMEOUT": 500,
     },
-    "low": {"HOST": "localhost", "PORT": 6379, "DB": 0},
+    "low": {"HOST": "redis", "PORT": 6379, "DB": 0},
 }
 
 
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.path("templates")],
+        "DIRS": [BASE_DIR.joinpath("templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
