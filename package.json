@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/ddionrails/ddionrails.git"
   },
-  "license": "AGPL-3.0-or-later",
+  "license": "AGPL-3.0",
   "author": {
     "name": "Marcel Hebing"
   },

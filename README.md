@@ -92,9 +92,10 @@ $ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" exec web py
 
 For the versions available, see the [tags on this repository](https://github.com/ddionrails/ddionrails/tags).
 
-## License
 
-This project is licensed under the GNU AGPLv3 License - see the [LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md) file for details
+## GNU AGPL-3.0
+
+This project is licensed under the GNU AGPL-3.0 License - see the [LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md) file for details
 
 <!-- Markdown link & img dfn's -->
 
