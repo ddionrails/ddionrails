@@ -25,7 +25,8 @@ psycopg2-binary = "*"
 
 # Elasticsearch
 # ------------------------------------------------------------------------------
-elasticsearch-dsl = "==2.2.0" # pin until ElasticSearch service is updated
+ # pin until ElasticSearch service is updated
+elasticsearch-dsl = "==2.2.0" # pyup: ignore
 
 # Markup
 # ------------------------------------------------------------------------------
