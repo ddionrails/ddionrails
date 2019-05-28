@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Model definitions for ddionrails.instruments app """
+""" Model definitions for ddionrails.instruments app: Question """
 
 import copy
 import textwrap
@@ -12,66 +12,48 @@ from model_utils.managers import InheritanceManager
 
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
-from ddionrails.concepts.models import AnalysisUnit, Concept, Period
-from ddionrails.data.models import Variable
+from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
-
-class Instrument(ElasticMixin, DorMixin, models.Model):
-    """
-    Instrument.
-    """
-
-    name = models.CharField(
-        max_length=255, validators=[validate_lowercase], db_index=True
-    )
-    label = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    study = models.ForeignKey(
-        Study, blank=True, null=True, related_name="instruments", on_delete=models.CASCADE
-    )
-    period = models.ForeignKey(
-        Period,
-        blank=True,
-        null=True,
-        related_name="instruments",
-        on_delete=models.CASCADE,
-    )
-    analysis_unit = models.ForeignKey(
-        AnalysisUnit,
-        blank=True,
-        null=True,
-        related_name="instruments",
-        on_delete=models.CASCADE,
-    )
-
-    objects = InheritanceManager()
-
-    DOC_TYPE = "instrument"
-
-    class Meta:
-        unique_together = ("study", "name")
-        ordering = ("study", "name")
-
-    class DOR:
-        id_fields = ["study", "name"]
-        io_fields = ["study", "name", "label", "description", "period", "analysis_unit"]
-
-    def get_absolute_url(self):
-        return reverse(
-            "inst:instrument_detail",
-            kwargs={"study_name": self.study.name, "instrument_name": self.name},
-        )
-
-    def layout_class(self):
-        return "instrument"
-
-    def __str__(self):
-        return "%s/inst/%s" % (self.study, self.name)
+from .instrument import Instrument
 
 
 class Question(ElasticMixin, DorMixin, models.Model):
+    """
+    Stores a single question, related to :model:`instruments.Tnstrument`.
+    """
+
+    # attributes
+    name = models.CharField(
+        max_length=255,
+        validators=[validate_lowercase],
+        db_index=True,
+        help_text="Name of the question (Lowercase)",
+    )
+    label = models.TextField(
+        blank=True,
+        verbose_name="Label (English)",
+        help_text="Label of the question (English)",
+    )
+    label_de = models.TextField(
+        blank=True,
+        verbose_name="Label (German)",
+        help_text="Label of the question (German)",
+    )
+    description = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown)",
+        help_text="Description of the topic (Markdown)",
+    )
+    sort_id = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name="Sort ID",
+        help_text="Sort order of questions within one instrument",
+    )
+
+    # relations
     instrument = models.ForeignKey(
         Instrument,
         blank=True,
@@ -79,26 +61,30 @@ class Question(ElasticMixin, DorMixin, models.Model):
         related_name="questions",
         on_delete=models.CASCADE,
     )
-    name = models.CharField(
-        max_length=255, validators=[validate_lowercase], db_index=True
-    )
-    label = models.TextField(blank=True)
-    label_de = models.TextField(blank=True)
-    description = models.TextField(blank=True)
-    sort_id = models.IntegerField(blank=True, null=True)
 
+    # Custom Manager from model_utils.managers
     objects = InheritanceManager()
 
+    # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
 
     class Meta:
+        """ Django's metadata options """
+
         unique_together = ("instrument", "name")
 
     class DOR:
+        """ ddionrails' metadata options """
+
         id_fields = ["instrument", "name"]
         io_fields = ["name", "label", "description", "instrument"]
 
-    def get_absolute_url(self):
+    def __str__(self) -> str:
+        """ Returns a string representation using the "instrument" and "name" fields """
+        return f"{self.instrument}/{self.name}"
+
+    def get_absolute_url(self) -> str:
+        """ Returns a canonical URL for the model using the "study", "instrument" and "name" fields"""
         return reverse(
             "inst:question_detail",
             kwargs={
@@ -108,7 +94,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             },
         )
 
-    def layout_class(self):
+    def layout_class(self) -> str:
         return "question"
 
     def get_answers(self):
@@ -199,9 +185,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
             return self.items.first().title_de()
         except:
             return self.name
-
-    def __str__(self):
-        return "%s/%s" % (self.instrument, self.name)
 
     def translation_languages(self):
         keys_first_item = copy.deepcopy(self.get_source()["items"])[0].keys()
@@ -295,39 +278,3 @@ class Question(ElasticMixin, DorMixin, models.Model):
             return "\n".join(cs)
         else:
             return cs
-
-
-class QuestionVariable(models.Model):
-    """
-    Linking items in an instrument with related variables.
-    """
-
-    question = models.ForeignKey(
-        Question, related_name="questions_variables", on_delete=models.CASCADE
-    )
-    variable = models.ForeignKey(
-        Variable, related_name="questions_variables", on_delete=models.CASCADE
-    )
-
-    class Meta:
-        unique_together = ("question", "variable")
-
-    class DOR:
-        id_fields = ["question", "variable"]
-        io_fields = ["question", "variable"]
-
-
-class ConceptQuestion(models.Model):
-    """
-    Linking items in an instrument with related variables.
-    """
-
-    question = models.ForeignKey(
-        Question, related_name="concepts_questions", on_delete=models.CASCADE
-    )
-    concept = models.ForeignKey(
-        Concept, related_name="concepts_questions", on_delete=models.CASCADE
-    )
-
-    class Meta:
-        unique_together = ("question", "concept")
