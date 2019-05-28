@@ -139,7 +139,7 @@ note = (
     " which you find in the top-level directory."
     "If you still want to use the script-generator, please note that only the files"
     ' in the "raw" subdirectory can be processed.'
-    'Please specify the complete adress of the "raw" subdirectory'
+    'Please specify the complete address of the "raw" subdirectory'
     ' (e.g. D:\\v35\\raw) as your "Input path".'
 )
 
