@@ -9,7 +9,6 @@
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
 [![PyUp][pyup-badge]](https://pyup.io/repos/github/ddionrails/ddionrails/)
-[![Greenkeeper][greenkeeper-badge]](https://greenkeeper.io/)
 
 The data portal DDI on Rails accompanies researchers throughout the entire course of their research projects from conception to publication/citation.
 
