@@ -35,5 +35,10 @@
     "webpack": "^4.27.1",
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.1.2"
+  },
+  "greenkeeper": {
+    "ignore": [
+      "bootstrap"
+    ]
   }
 }
