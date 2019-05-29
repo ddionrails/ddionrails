@@ -103,8 +103,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v3.1.1...HEAD
-[3.1.1]: https://github.com/ddionrails/ddionrails/compare/v3.1.0...v3.1.1
+[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/ddionrails/ddionrails/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/ddionrails/ddionrails/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/ddionrails/ddionrails/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/ddionrails/ddionrails/compare/v2.1.0...v3.0.0
