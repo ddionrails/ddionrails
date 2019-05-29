@@ -1,6 +1,6 @@
 /*!
- * ddionrails - main.js
- * Copyright 2015-2018
+ * ddionrails - basket_button.js
+ * Copyright 2015-2019
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
  */
 

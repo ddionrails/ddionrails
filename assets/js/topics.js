@@ -1,4 +1,8 @@
-/***
+/*!
+ * ddionrails - topics.js
+ * Copyright 2018-2019
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+ *
  * Topic List
  *
  * This script visualizes a tree structure of topics and their concepts, questions and variables using the fancytree library.
@@ -6,7 +10,20 @@
  *
  * @author cstolpe
  *
+ *
  */
+
+
+import "bootstrap";
+import "datatables.net";
+import "datatables.net-bs";
+import "datatables.net-responsive";
+import "datatables.net-responsive-bs";
+
+// Credit to https://github.com/mar10/fancytree/issues/793
+import "jquery.fancytree";
+import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
+import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
 
 
 $.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
@@ -253,3 +270,11 @@ function copy_url_to_clipboard(el) {
         $(el).attr('title', 'Copy URL').tooltip('fixTitle');
     }, 1000)
 }
+
+
+window.filter = filter;
+window.removeAsyncLoadedData = removeAsyncLoadedData;
+window.removeAllChildren = removeAllChildren;
+window.addToBasket = addToBasket;
+window.addToBasketRequest = addToBasketRequest;
+window.copy_url_to_clipboard = copy_url_to_clipboard;

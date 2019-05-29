@@ -1,8 +1,15 @@
 /*!
- * ddionrails - main.css
- * Copyright 2015-2018
+ * ddionrails - index.scss
+ * Copyright 2015-2019
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 */
+
+
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~bootstrap/dist/css/bootstrap-theme.min.css";
+@import "~datatables.net-bs/css/dataTables.bootstrap.css";
+@import "~datatables.net-responsive-dt/css/responsive.dataTables.min.css";
+
 
 html {
   height: 100%;

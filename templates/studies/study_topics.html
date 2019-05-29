@@ -1,18 +1,20 @@
 {% extends "base_study.html" %}
+{% load render_bundle from webpack_loader %}
 
 {% block styles %}
-<!-- TODO: Load Topic CSS from webpack here -->
+  <!-- Webpack bundle: "topics" CSS -->
+  {% render_bundle 'topics' 'css' %}
 {% endblock styles %}
 
 {% block scripts %}
-<!-- TODO: Load Topic JS from webpack here -->
-<!-- TODO: Load jquery-fancytree from webpack here -->
 
-<script>
-    var study = '{{study.name}}'
-    var language = '{{ language }}'
-</script>
-<script src="{% static "src/js/topic_list.js" %}"></script>
+  <script>
+      var study = '{{study.name}}'
+      var language = '{{ language }}'
+  </script>
+
+  {% render_bundle 'topics' 'js' %}
+
 {% endblock scripts %}
 
 {% block content %}

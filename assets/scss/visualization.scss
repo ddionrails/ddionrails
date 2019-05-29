@@ -1,0 +1,78 @@
+/*!
+ * ddionrails - visualization.scss
+ * Copyright 2015-2019
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+*/
+
+.text {
+  fill: grey;
+  font-size: 11px;
+  font-family: sans-serif;
+  text-anchor: start;
+}
+
+.text_stacked {
+  fill: white;
+  font-size: 11px;
+  font-family: sans-serif;
+  text-anchor: middle;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: grey;
+  stroke-width: 1px;
+  shape-rendering: crispEdge;
+}
+
+.axis text {
+  font-family: sans-serif;
+  font-size: 11px;
+  fill: grey;
+}
+
+.svg {
+  border: solid 1px #ccc;
+  font: 10px sans-serif;
+  shape-rendering: crispEdges;
+}
+
+tip.tooltip {
+  position: absolute;
+  text-align: center;
+  height: 20px;
+  padding: 2px;
+  font-family: sans-serif;
+  font-size: 11px;
+  background: white;
+  border-radius: 8px;
+}
+
+.chart {
+  font-family: sans-serif;
+  fill: grey;
+}
+
+path {
+  stroke: steelblue;
+  stroke-width: 2;
+  fill: none;
+}
+
+.labels {
+  fill: grey;
+  font-size: 11px;
+  font-family: sans-serif;
+}
+
+.axis label {
+  fill: grey;
+  font-size: 11px;
+  font-family: sans-serif;
+}
+
+.chart_nav {
+  font-family: sans-serif;
+  font-size: 11px;
+  color: grey;
+}

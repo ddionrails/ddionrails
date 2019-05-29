@@ -136,8 +136,8 @@ nohup.out
 node_modules/
 
 # Static files
-/ddionrails/static/background.png
-/ddionrails/static/dist/*
+static/*
+!static/.gitkeep
 
 webpack-stats.json
 

@@ -14,6 +14,9 @@ services:
       - ./tests:/usr/src/app/tests
       - ./templates:/usr/src/app/templates
       - ./htmlcov:/usr/src/app/htmlcov
+      - ./assets:/usr/src/app/assets
+      - ./static/dist:/usr/src/app/static/dist
+      - ./webpack.config.js:/usr/src/app/webpack.config.js
 
   postgres:
     env_file:
