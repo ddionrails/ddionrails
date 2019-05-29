@@ -7,14 +7,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Start here with modifications -->
     <title>
       {% block title %}
       paneldata.org
       {% endblock title %}
     </title>
 
-     <!-- Webpack rendered CSS -->
+     <!-- Webpack bundle: "index" CSS -->
     {% render_bundle 'index' 'css' %}
 
     {% block styles %}
@@ -46,7 +45,7 @@
               </div>
             </div>
             {% comment %}
-            {% include "nav/search.html" %}
+              {% include "nav/search.html" %}
             {% endcomment %}
           </div>
         </div>
@@ -65,7 +64,6 @@
         </div>
       {% endfor %}
       {% block content%}
-        Hi
       {% endblock content %}
     </div><!-- /.container -->
 
@@ -86,14 +84,15 @@
     {% include "elastic/help.html" %}
     {% include "tracker.html" %}
 
-    <!-- Webpack rendered JS -->
+    <!-- Webpack bundle: "index" JS -->
     {% render_bundle 'index' 'js' %}
 
     <!-- ddionrails JS search library -->
-    {% render_bundle 'inline' 'js' %}
-    {% render_bundle 'polyfills' 'js' %}
-    {% render_bundle 'vendor' 'js' %}
-    {% render_bundle 'main' 'js' %}
+
+    {% render_bundle 'elasticsearch_inline' 'js' %}
+    {% render_bundle 'elasticsearch_polyfills' 'js' %}
+    {% render_bundle 'elasticsearch_vendor' 'js' %}
+    {% render_bundle 'elasticsearch_main' 'js' %}
 
     {% block scripts %}
     {% endblock scripts %}

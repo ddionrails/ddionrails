@@ -1,3 +1,9 @@
+/*!
+ * ddionrails - webpack configuration
+ * Copyright 2018-2019
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+ */
+
 var path = require("path");
 var webpack = require("webpack");
 var BundleTracker = require("webpack-bundle-tracker");
@@ -10,19 +16,23 @@ module.exports = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
-    index: "./static/src/js/index",
+    index: "./assets/js/index.js",
+    topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
+    visualization: ["./assets/js/visualization.js", "./assets/scss/visualization.scss"],
 
-    /* ddionrails-elasticsearch: search library*/
-    inline: glob.sync(
+    /* Workaround:
+       ddionrails-elasticsearch: search library
+    */
+    elasticsearch_inline: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/inline.*.bundle.js"
     ),
-    polyfills: glob.sync(
+    elasticsearch_polyfills: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/polyfills.*.bundle.js"
     ),
-    vendor: glob.sync(
+    elasticsearch_vendor: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/vendor.*.bundle.js"
     ),
-    main: glob.sync(
+    elasticsearch_main: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/main.*.bundle.js"
     )
   },
