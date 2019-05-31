@@ -26,7 +26,8 @@ Follow the installation instructions for Docker and Docker-Compose:
 - <https://docs.docker.com/compose/install/>
 
 To verify the installation was successful, you can type:
-```
+
+``` bash
 $ docker --version
 Docker version 18.09.5, ...
 $ docker-compose --version
@@ -39,15 +40,15 @@ docker-compose version 1.24.0, ...
 
 Clone the repository
 
-```
-$ git clone https://github.com/ddionrails/ddionrails.git
-$ cd ddionrails/
+``` bash
+git clone https://github.com/ddionrails/ddionrails.git
+cd ddionrails/
 ```
 
 Build the Docker images and start containers with developement setings
 
-```
-$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
+``` bash
+docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 ```
 
 :warning: __Warning__ Do not use this in production the settings in `docker-compose-dev.yml` are not secure.
@@ -63,34 +64,30 @@ __Before__ starting the services via docker-compose:
     - DJANGO_SECRET_KEY should be long and random
     - ALLOWED_HOSTS should match your setup
 - Uncomment the environment blocks in the docker-compose file to load the environment files.
-- Or create a docker-compose.override.yml file containing the environment files. 
+- Or create a docker-compose.override.yml file containing the environment files.
 - Customize the docker/nginx/nginx.example.conf and rename it to nginx.conf.
   - Sections that need to be changed are marked with `REPLACE_ME`
   - For ssl change your docker-compose.yml or docker-compose.override.yml to mount cert and key at the right location.
-   - If you use a ca-chain file add this file to the end of your crt file. This file can then be used by nginx as certificate.
+    - If you use a ca-chain file add this file to the end of your crt file. This file can then be used by nginx as certificate.
 - Optional: Set up a backup routine for the database.
 
 __After__ starting the services via docker-compose:
 
-- A mapping needs to be loaded into elasticsearch in order for all search interfaces to work. :frowning_face: 
-- Enter the django container via `docker-compose exec web sh`
-- Install curl :frowning_face: via `apk update && apk add curl`
-- Execute `paver create_index`
-- Maybe recreate `web` service to get rid of the manual curl installation.
-- The elasticsearch index is kept in a named volume, meaning that the mapping kept even through container recreaions.
+- A mapping needs to be loaded into elasticsearch in order for all search interfaces to work. :frowning_face:
+- Enter the django container via `docker-compose exec web python manage.py index create`
+- The elasticsearch index is kept in a named volume, meaning that the mapping is kept even through container recreations.
 
 ## Running the tests
 
-```
-$ cd ddionrails/
-$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
-$ docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" exec web pytest
+``` bash
+cd ddionrails/
+docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
+docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" exec web pytest
 ```
 
 ## Versioning
 
 For the versions available, see the [tags on this repository](https://github.com/ddionrails/ddionrails/tags).
-
 
 ## GNU AGPL-3.0
 

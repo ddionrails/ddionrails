@@ -3,45 +3,37 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
-
 # Django
 # ------------------------------------------------------------------------------
 django = "*"
 django-click = "*"
 django-crispy-forms = "*"
 django-extensions = "*"
+django-filer = "*"
 django-import-export = "*"
 django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
-
 # PostgreSQL
 # ------------------------------------------------------------------------------
 psycopg2-binary = "*"
-
 # Elasticsearch
 # ------------------------------------------------------------------------------
  # pin until ElasticSearch service is updated
 elasticsearch-dsl = "==2.2.0" # pyup: ignore
-
 # Markup
 # ------------------------------------------------------------------------------
 markdown = "*"
 python-frontmatter = "*"
 pyyaml = "*"
-
 # Other
 # ------------------------------------------------------------------------------
 gitpython = "*"
 paver = "*"
 
-
 [dev-packages]
-
 # Code quality
 # ------------------------------------------------------------------------------
 black = "==19.3b0" # pin until black leaves pre-release status
@@ -49,7 +41,6 @@ flake8 = "*"
 isort = "*"
 mypy = "*"
 pre-commit = "*"
-
 # Testing
 # ------------------------------------------------------------------------------
 pytest = "*"
@@ -63,17 +54,17 @@ django-coverage-plugin = "*"
 django-test-without-migrations = "*"
 fakeredis = "*"
 splinter = "*"
-
 # Documentation
 # ------------------------------------------------------------------------------
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
 # Local
 # ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
 werkzeug = "*"
 
-
 [requires]
 python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

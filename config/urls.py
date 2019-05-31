@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
@@ -21,9 +22,9 @@ handler403 = "config.views.permission_denied"
 handler404 = "config.views.page_not_found"
 handler500 = "config.views.server_error"
 
-admin.site.site_header = 'DDI on Rails Admin'
-admin.site.site_title = 'DDI on Rails Admin'
-admin.site.index_title = 'Welcome to DDI on Rails Admin'
+admin.site.site_header = "DDI on Rails Admin"
+admin.site.site_title = "DDI on Rails Admin"
+admin.site.index_title = "Welcome to DDI on Rails Admin"
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="homepage"),
@@ -70,6 +71,11 @@ urlpatterns = [
     ),
     path("study/<int:id>", StudyRedirectView.as_view()),
 ]
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
 
 
 if settings.DEBUG and ("_hewing" or "_production") not in settings.WSGI_APPLICATION:
