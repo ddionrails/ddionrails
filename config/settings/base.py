@@ -25,6 +25,13 @@ SYSTEM_REPO_URL = os.getenv(
     "SYSTEM_REPO_URL", default="https://github.com/paneldata/system.git"
 )
 
+MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media_root")
+os.makedirs(MEDIA_ROOT, exist_ok=True)
+MEDIA_URL="/media/"
+
+
+# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+
 
 # APP CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -40,9 +47,12 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = (
     "django_extensions",
+    "easy_thumbnails",
     "elasticsearch",
     "elasticsearch_dsl",
+    "filer",
     "markdown",
+    "mptt",
     "django_rq",
     "webpack_loader",
     "import_export",
@@ -107,6 +117,13 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT", default=5432),
     }
 }
+
+THUMBNAIL_PROCESSORS = (
+    'easy_thumbnails.processors.colorspace',
+    'easy_thumbnails.processors.autocrop',
+    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
+    'easy_thumbnails.processors.filters',
+)
 
 
 # Internationalization

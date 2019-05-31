@@ -17,6 +17,7 @@ from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
+from filer.fields.image import FilerImageField
 
 from .dataset import Dataset
 
@@ -66,6 +67,8 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"
     )
+
+    image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
 
     # relations
     dataset = models.ForeignKey(
