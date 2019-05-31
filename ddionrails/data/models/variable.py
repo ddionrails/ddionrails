@@ -10,6 +10,7 @@ from collections import OrderedDict
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
 from config.validators import validate_lowercase
@@ -64,10 +65,20 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         help_text="Sort order of variables within one dataset",
     )
     image_url = models.TextField(
-        blank=True, verbose_name="Image URL", help_text="URL to a related image"
+        blank=True,
+        verbose_name="Image URL",
+        help_text="URL to a related image. Will be deprecated by image field.",
     )
 
     # relations
+    concept = models.ForeignKey(
+        Concept,
+        blank=True,
+        null=True,
+        related_name="variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to concepts.Concept",
+    )
     dataset = models.ForeignKey(
         Dataset,
         blank=True,
@@ -76,13 +87,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to data.Dataset",
     )
-    concept = models.ForeignKey(
-        Concept,
-        blank=True,
+    image = FilerImageField(
         null=True,
-        related_name="variables",
+        blank=True,
         on_delete=models.CASCADE,
-        help_text="Foreign key to concepts.Concept",
+        help_text="Foreign key to image handled by django-filer.",
     )
     period = models.ForeignKey(
         Period,
