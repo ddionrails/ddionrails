@@ -3,9 +3,11 @@
 
 import pytest
 from django.urls import reverse
+
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
+
 
 def test_study_admin_list(admin_client, study):
     """ Test the StudyAdmin changelist """

@@ -13,9 +13,7 @@ MIDDLEWARE = ("debug_toolbar.middleware.DebugToolbarMiddleware",) + MIDDLEWARE
 INTERNAL_IPS = ("127.0.0.1",)
 
 # credit to https://stackoverflow.com/a/50332425
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True
-}
+DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}
 
 
 SYSTEM_NAME = "system"

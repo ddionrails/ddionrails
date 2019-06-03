@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Test cases for ddionrails.api app """
 
+
 class TestObjectRedirectView:
     def test_variable_redirect(self, client, variable):
         url = f"/api/test/redirect/variable/{variable.id}"

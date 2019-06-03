@@ -60,6 +60,8 @@ def test_question_variable_admin_list(admin_client, question_variable):
 
 def test_question_variable_admin_detail(admin_client, question_variable):
     """ Test the QuestionVariableAdmin change_view """
-    url = reverse("admin:instruments_questionvariable_change", args=(question_variable.id,))
+    url = reverse(
+        "admin:instruments_questionvariable_change", args=(question_variable.id,)
+    )
     response = admin_client.get(url)
     assert status.HTTP_200_OK == response.status_code
