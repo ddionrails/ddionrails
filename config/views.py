@@ -56,6 +56,7 @@ def imprint_page(request):
 def contact_page(request):
     return render(request, "pages/contact.html")
 
+
 @csrf_exempt
 def elastic_proxy(request, path):
     r = http.request("GET", "http://elasticsearch:9200/%s" % path, body=request.body)

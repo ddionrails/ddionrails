@@ -47,6 +47,7 @@ class TestPageViews:
         content = str(response.content)
         assert "Quick links" in content
 
+
 class TestErrorTemplates:
     def test_400_template(self, rf, db):
         url = reverse("homepage")

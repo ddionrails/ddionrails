@@ -272,11 +272,7 @@ def script_detail(request, basket_id, script_id):
             field["value"] = script_config.DEFAULT_DICT[field["name"]]
     s = script.get_script_input()
     context = dict(
-        basket=script.basket,
-        script=script,
-        fields=fields,
-        settings=settings_dict,
-        s=s,
+        basket=script.basket, script=script, fields=fields, settings=settings_dict, s=s
     )
     return render(request, "workspace/script_detail.html", context=context)
 

@@ -4,7 +4,6 @@ from django.urls import reverse
 
 from ddionrails.elastic.mixins import ModelMixin
 from ddionrails.instruments.views import InstrumentRedirectView, QuestionRedirectView
-
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
