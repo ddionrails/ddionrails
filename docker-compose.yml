@@ -30,7 +30,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: postgres:11.2-alpine 
+    image: postgres:11.3-alpine 
     # Set your own variables, use of the example files at yout own risk.
     #env_file:
     #  - docker/environments/database.env
