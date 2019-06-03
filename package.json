@@ -22,7 +22,7 @@
     "har-validator": "^5.1.3",
     "jquery": "^3.4.1",
     "jquery.fancytree": "^2.30.1",
-    "popper.js": "^1.14.6",
+    "popper.js": "^1.15.0",
     "spinkit": "^1.2.5"
   },
   "devDependencies": {
