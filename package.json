@@ -36,9 +36,21 @@
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.1.2"
   },
-  "greenkeeper": {
-    "ignore": [
+  "renovate": {
+    "baseBranches": [
+      "master",
+      "develop"
+    ],
+    "extends": [
+      "config:base"
+    ],
+    "ignoreDeps": [
       "bootstrap"
-    ]
+    ],
+    "pipenv": {
+      "enabled": true
+    },
+    "rangeStrategy": "update-lockfile",
+    "statusCheckVerify": true
   }
 }
