@@ -46,10 +46,13 @@
     "ignoreDeps": [
       "bootstrap"
     ],
+    "lockFileMaintenance": {
+      "enabled": true
+    },
     "pipenv": {
       "enabled": true
     },
-    "rangeStrategy": "update-lockfile",
+    "rangeStrategy": "bump",
     "statusCheckVerify": true
   }
 }
