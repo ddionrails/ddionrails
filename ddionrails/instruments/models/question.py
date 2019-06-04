@@ -8,7 +8,6 @@ from collections import OrderedDict
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
-from model_utils.managers import InheritanceManager
 
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
@@ -61,9 +60,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
         related_name="questions",
         on_delete=models.CASCADE,
     )
-
-    # Custom Manager from model_utils.managers
-    objects = InheritanceManager()
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
