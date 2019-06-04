@@ -61,8 +61,12 @@ class TestQuestionModel:
         question.label = ""
         assert question.title() == question.name
 
-    def test_translation_languages_method(self):
-        pass
+    @staticmethod
+    def test_translation_languages_method(question):
+        question.items = [{"text_de": "German text"}]
+        result = question.translation_languages()
+        expected = ["de"]
+        assert expected == result # nosec
 
     def test_translate_item_method(self):
         pass
@@ -70,5 +74,24 @@ class TestQuestionModel:
     def test_translations_method(self):
         pass
 
-    def test_item_array_method(self):
-        pass
+    @staticmethod
+    def test_item_array_method(question):
+        question.items = [{"item": "Item", "scale": "Scale", "text": "Text"}]
+        result = question.item_array()
+        expected = [
+            {
+                "item": "Item",
+                "scale": "Scale",
+                "text": "Text",
+                "sn": 0,
+                "layout": "individual",
+            }
+        ]
+        assert expected == result # nosec
+
+    @staticmethod
+    def test_comparison_string_method(question):
+        question.items = [{"item": "Item", "scale": "Scale", "text": "Text"}]
+        result = question.comparison_string()
+        expected = ["Question: Some Question", "", "Item: Item (scale: Scale)", "Text"]
+        assert expected == result # nosec

@@ -45,6 +45,7 @@ class InstrumentImport(imports.Import):
             question.sort_id = int(q.get("sn", 0))
             question.label = q.get("label", q.get("text", name))
             question.label_de = q.get("label_de", q.get("text_de", ""))
+            question.items = q.get("items", list)
             question.save()
             q["namespace"] = self.study.name
             q["instrument"] = instrument.name
