@@ -70,7 +70,7 @@ services:
       - ddi_net
 
   nginx:
-    image: nginx:1.16-alpine
+    image: nginx:1.17-alpine
     ports:
       - 80:80
     depends_on: 
