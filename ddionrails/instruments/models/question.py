@@ -97,9 +97,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def layout_class(self) -> str:
         return "question"
 
-    def get_answers(self):
-        self.get_attribute["answers"]
-
     def previous_question(self):
         x = self.instrument.questions.get(sort_id=self.sort_id - 1)
         return x
