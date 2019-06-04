@@ -5,6 +5,7 @@ from ddionrails.concepts.imports import (
     ConceptImport,
     ConceptualDatasetImport,
     PeriodImport,
+    TopicJsonImport,
 )
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 
@@ -38,6 +39,12 @@ def conceptual_dataset_importer(db, filename):
 def period_importer(db, filename, study):
     """ A period importer """
     return PeriodImport(filename, study)
+
+
+@pytest.fixture
+def topic_json_importer(db, filename, study):
+    """ A topic json importer """
+    return TopicJsonImport(filename, study)
 
 
 class TestConceptImport:
@@ -88,3 +95,32 @@ class TestPeriodImport:
     def test_import_with_invalid_data(self, period_importer, empty_data):
         response = period_importer.import_element(empty_data)
         assert response is None
+
+
+class TestTopicJsonImport:
+    """ Test cases for TopicJsonImport """
+
+    def test_execute_import_method(self, topic_json_importer, mocker):
+        """ Test that JSON string gets converted to dictionary and "_import_topic_list" gets called """
+        mocked_import_topic_list = mocker.patch.object(
+            TopicJsonImport, "_import_topic_list"
+        )
+        topic_json_importer.content = '[{"language": "en"}]'
+        topic_json_importer.execute_import()
+        assert topic_json_importer.content == [{"language": "en"}]
+        mocked_import_topic_list.assert_called_once()
+
+    def test_import_topic_list_method(self, topic_json_importer, mocker):
+        """ Test that _import_topic_list indexes "topic_languages" and "topiclist" into Elasticsearch"""
+        mocked_set_topiclist = mocker.patch(
+            "ddionrails.studies.models.Study.set_topiclist"
+        )
+        topic_json_importer.content = [
+            {"language": "en", "topics": []},
+            {"language": "de", "topics": []},
+        ]
+        topic_json_importer._import_topic_list()
+        study = topic_json_importer.study
+        assert study.topic_languages == ["de", "en"]
+        topiclist_payload = dict(topiclist=topic_json_importer.content)
+        mocked_set_topiclist.assert_called_once_with(topiclist_payload)

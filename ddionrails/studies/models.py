@@ -2,9 +2,10 @@
 """ Model definitions for ddionrails.studies app """
 
 import os
+from typing import List
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
@@ -63,6 +64,13 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
         default=dict, blank=True, null=True, help_text="Configuration of the study (JSON)"
     )
 
+    topic_languages = ArrayField(
+        models.CharField(max_length=200),
+        blank=True,
+        default=list,
+        help_text="Topic languages of the study (Array)",
+    )
+
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "study"
 
@@ -103,11 +111,9 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
         t = TopicList(self)
         t.set_elastic(body)
 
-    def get_topic_languages(self):
-        return self.get_source().get("topic_languages", [])
-
     def has_topics(self) -> bool:
-        return len(self.get_topic_languages()) > 0
+        """ Returns True if the study has topics False otherwise (evaluates the length of self.topic_languages) """
+        return len(self.topic_languages) > 0
 
     def get_topiclist(self, language="en"):
         t = TopicList(self)
