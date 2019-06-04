@@ -3,7 +3,6 @@
 
 from django.db import models
 from django.urls import reverse
-from model_utils.managers import InheritanceManager
 
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
@@ -62,9 +61,6 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.AnalysisUnit",
     )
-
-    # Custom Manager from model_utils.managers
-    objects = InheritanceManager()
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "instrument"

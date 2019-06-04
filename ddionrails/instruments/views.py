@@ -44,9 +44,8 @@ class InstrumentDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["instrument"] = self.object  # TODO: redundant
         context["study"] = self.object.study
-        context["questions"] = context["instrument"].questions.select_subclasses().all()
+        context["questions"] = context["instrument"].questions.all()
         return context
 
 
