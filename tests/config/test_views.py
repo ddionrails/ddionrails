@@ -8,7 +8,6 @@ from config.views import (
     imprint_page,
     page_not_found,
     permission_denied,
-    quick_page,
     server_error,
 )
 
@@ -38,14 +37,6 @@ class TestPageViews:
         content = str(response.content)
         assert "Imprint" in content
         assert "Privacy policy at DIW Berlin" in content
-
-    def test_quick_page(self, rf, db):
-        url = reverse("quickpage")
-        request = rf.get(url)
-        response = quick_page(request)
-        assert response.status_code == 200
-        content = str(response.content)
-        assert "Quick links" in content
 
 
 class TestErrorTemplates:
