@@ -21,7 +21,7 @@
 
 <p class="text-right">
   Languages:
-  {% for link_language in study.get_topic_languages %}
+  {% for link_language in study.topic_languages %}
     {% if link_language == language %}<b>{% endif %}
     &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
     {% if link_language == language %}</b>{% endif %}

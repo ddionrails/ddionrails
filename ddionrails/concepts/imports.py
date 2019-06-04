@@ -40,10 +40,10 @@ class TopicJsonImport(imports.Import):
 
     def _import_topic_list(self):
         study = self.study
-        body1 = dict(topic_languages=["de", "en"])
-        body2 = dict(topiclist=self.content)
-        study.set_elastic(body1, update=True)
-        study.set_topiclist(body2)
+        study.topic_languages = ["de", "en"]
+        study.save()
+        body = dict(topiclist=self.content)
+        study.set_topiclist(body)
 
 
 class ConceptImport(imports.CSVImport):

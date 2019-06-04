@@ -87,11 +87,6 @@ class TestStudyImportManager:
         time.sleep(1)
         study_import_manager.import_single_entity("topics.json")
         time.sleep(1)
-        s = Search(using=es_client).doc_type("study")
-        assert 1 == s.count()
-        response = s.execute()
-        hit = response.hits[0]
-        assert ["de", "en"] == hit.topic_languages
         s = Search(using=es_client).doc_type("topiclist")
         assert 1 == s.count()
         response = s.execute()

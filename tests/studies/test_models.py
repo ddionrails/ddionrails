@@ -43,6 +43,14 @@ class TestStudyModel:
             study.repo_url()
             assert excinfo.value == "Specify a protocol for Git in your settings."
 
+    def test_has_topics_method(self, study):
+        assert False is study.has_topics()
+
+    def test_has_topics_method_returns_true(self, study):
+        study.topic_languages = ["en"]
+        study.save()
+        assert True is study.has_topics()
+
 
 def test_context_function_with_study(study, rf):
     some_request = rf.get("/")
