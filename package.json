@@ -21,7 +21,7 @@
     "ddionrails-elasticsearch": "git+https://github.com/ddionrails/ddionrails-elasticsearch.git#v0.1.0",
     "har-validator": "^5.1.3",
     "jquery": "^3.4.1",
-    "jquery.fancytree": "^2.30.1",
+    "jquery.fancytree": "^2.31.0",
     "popper.js": "^1.15.0",
     "spinkit": "^1.2.5"
   },
