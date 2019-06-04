@@ -4,7 +4,9 @@
 import copy
 import textwrap
 from collections import OrderedDict
+from typing import List
 
+from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -50,6 +52,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
         null=True,
         verbose_name="Sort ID",
         help_text="Sort order of questions within one instrument",
+    )
+    items = JSONBField(
+        default=list, null=True, blank=True, help_text="Items are elements in a question"
     )
 
     # relations
@@ -179,8 +184,10 @@ class Question(ElasticMixin, DorMixin, models.Model):
         except:
             return self.name
 
-    def translation_languages(self):
-        keys_first_item = copy.deepcopy(self.get_source()["items"])[0].keys()
+    def translation_languages(self) -> List[str]:
+        """ Returns a list of translation languages, e.g. ["de"] """
+        keys = list(self.items[0].keys())
+        keys_first_item = copy.deepcopy(keys)
         return [x.replace("text_", "") for x in keys_first_item if ("text_" in x)]
 
     def translate_item(self, item, language):
@@ -201,7 +208,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
         return results
 
     def item_array(self, language=None):
-        items = copy.deepcopy(self.get_source()["items"])
+        items = copy.deepcopy(self.items)
         items = items.values() if items.__class__ == dict else items
         for item in items:
             if language:
@@ -252,7 +259,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
     def comparison_string(self, to_string=False, wrap=50):
         cs = ["Question: %s" % self.title()]
-        for item in self.get_source().get("items", []):
+        for item in self.items:
             cs += [
                 "",
                 "Item: %s (scale: %s)" % (item.get("item"), item.get("scale")),
