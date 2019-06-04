@@ -21,7 +21,19 @@ services:
   postgres:
     env_file:
       - docker/environments/database.env.example
-    
+
+  elasticsearch:
+    ports:
+      - 9200:9200
+
+# Uncomment these lines, if you want to use Kibana
+#  kibana:
+#    image: kibana:4.6.0
+#    ports:
+#      - 5601:5601
+#    networks:
+#      - ddi_net
+
   nginx:
     volumes: 
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
