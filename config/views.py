@@ -45,10 +45,6 @@ class HomePageView(TemplateView):
         return context
 
 
-def quick_page(request):
-    return render(request, "pages/quick.html")
-
-
 def imprint_page(request):
     return render(request, "pages/imprint.html")
 

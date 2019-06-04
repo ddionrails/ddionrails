@@ -6,13 +6,7 @@ from django.urls import include, path
 
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
-from config.views import (
-    HomePageView,
-    contact_page,
-    elastic_proxy,
-    imprint_page,
-    quick_page,
-)
+from config.views import HomePageView, contact_page, elastic_proxy, imprint_page
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
@@ -30,7 +24,6 @@ urlpatterns = [
     path("", HomePageView.as_view(), name="homepage"),
     path("imprint/", imprint_page, name="imprint"),
     path("contact/", contact_page, name="contact"),
-    path("quick/", quick_page, name="quickpage"),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
