@@ -31,9 +31,6 @@ class TestQuestionModel:
         expected = "question"
         assert question.layout_class() == expected
 
-    def test_get_answers_method(self):
-        pass
-
     def test_previous_question_method(self):
         pass
 
