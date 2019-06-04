@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import pytest
-from django.http.response import Http404
 from django.urls import reverse
 
 from ddionrails.elastic.mixins import ModelMixin
-from ddionrails.instruments.views import InstrumentRedirectView, QuestionRedirectView
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
@@ -30,7 +30,7 @@ class TestInstrumentDetailView:
         assert template in (t.name for t in response.templates)
         assert response.context["instrument"] == instrument
         assert response.context["study"] == instrument.study
-        expected_questions = list(instrument.questions.select_subclasses().all())
+        expected_questions = list(instrument.questions.all())
         output_questions = list(response.context["questions"])
         assert expected_questions == output_questions
 
