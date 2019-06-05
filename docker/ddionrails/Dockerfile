@@ -20,11 +20,6 @@ RUN apk update \
         nodejs \
         nodejs-npm \
         postgresql-dev \
-        # pipenv did not want to build without these
-        gcc \
-        libffi-dev \
-        make \
-        musl-dev \
     && rm -rf /var/cache/apk/*
 
 RUN pip install --upgrade pipenv
