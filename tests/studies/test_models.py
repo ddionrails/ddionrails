@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Test cases for ddionrails.studies.models """
+
 import pathlib
 
 import pytest
