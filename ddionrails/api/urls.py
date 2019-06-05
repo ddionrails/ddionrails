@@ -34,7 +34,7 @@ urlpatterns = [
         object_redirect,
         name="object_redirect",
     ),
-    path("topics/<str:study_name>/<str:language>", topic_list),
+    path("topics/<str:study_name>/<str:language>", topic_list, name="topic_list"),
     path(
         "topics/<str:study_name>/<str:language>/concept_<str:concept_name>",
         concept_by_study,

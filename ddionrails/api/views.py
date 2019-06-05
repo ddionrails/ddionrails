@@ -1,7 +1,7 @@
 import json
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ddionrails.concepts.models import Concept, Topic
@@ -53,10 +53,10 @@ def object_redirect(request: WSGIRequest, object_type: str, object_id: str):
         return redirect("/")
 
 
-def topic_list(request, study_name, language):
+def topic_list(request: WSGIRequest, study_name: str, language: str) -> JsonResponse:
     study = get_object_or_404(Study, name=study_name)
     topics = study.get_topiclist(language)
-    return HttpResponse(json.dumps(topics), content_type="application/json")
+    return JsonResponse(topics, safe=False)
 
 
 def concept_by_study(request, study_name, language, concept_name):

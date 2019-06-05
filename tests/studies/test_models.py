@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#pylint: disable=no-self-use
 
 """ Test cases for ddionrails.studies.models """
 
@@ -6,7 +7,7 @@ import pathlib
 
 import pytest
 
-from ddionrails.studies.models import Study, context
+from ddionrails.studies.models import Study, TopicList, context
 
 pytestmark = [pytest.mark.studies, pytest.mark.models]
 
@@ -54,6 +55,21 @@ class TestStudyModel:
         study.topic_languages = ["en"]
         study.save()
         assert True is study.has_topics()
+
+    def test_set_topiclist_method(self, study):
+        assert 0 == TopicList.objects.count()
+        body = [{"topics": []}]
+        study.set_topiclist(body)
+        assert 1 == TopicList.objects.count()
+        topiclist = TopicList.objects.first()
+        assert study == topiclist.study
+        assert topiclist.topiclist == body
+
+    def test_get_topiclist_method(self, study, topiclist): #pylint: disable=unused-argument
+        study.refresh_from_db()
+        result = study.get_topiclist()
+        expected = [{"title": "some-topic"}]
+        assert expected == result
 
 
 def test_context_function_with_study(study, rf):

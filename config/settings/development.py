@@ -1,4 +1,7 @@
-from .base import *  # noqa
+# -*- coding: utf-8 -*-
+# pylint: disable=wildcard-import
+
+from .base import *
 
 DEBUG = True
 TEMPLATE_DEBUG = True

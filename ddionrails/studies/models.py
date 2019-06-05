@@ -5,6 +5,7 @@ import os
 from typing import List
 
 from django.conf import settings
+from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
 from django.urls import reverse
@@ -14,13 +15,25 @@ from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 
 
-class TopicList(ElasticMixin):
+class TopicList(models.Model):
 
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "topiclist"
+    # attributes
+    topiclist = JSONBField(
+        default=list,
+        null=True,
+        blank=True,
+        help_text="Topics of the related study (JSON)",
+    )
 
-    def __init__(self, study):
-        self.id = study.id
+    # relations
+    study = models.OneToOneField(
+        "Study",
+        blank=True,
+        null=True,
+        related_name="topiclist",
+        on_delete=models.CASCADE,
+        help_text="OneToOneField to studies.Study",
+    )
 
 
 class Study(ElasticMixin, DorMixin, TimeStampedModel):
@@ -107,18 +120,15 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
         else:
             raise Exception("Specify a protocol for Git in your settings.")
 
-    def set_topiclist(self, body):
-        t = TopicList(self)
-        t.set_elastic(body)
+    def set_topiclist(self, body: List) -> None:
+        TopicList.objects.get_or_create(study=self, topiclist=body)
 
     def has_topics(self) -> bool:
         """ Returns True if the study has topics False otherwise (evaluates the length of self.topic_languages) """
         return len(self.topic_languages) > 0
 
-    def get_topiclist(self, language="en"):
-        t = TopicList(self)
-        all_lists = t.get_source().get("topiclist")
-        for topiclist in all_lists:
+    def get_topiclist(self, language: str = "en") -> List:
+        for topiclist in self.topiclist.topiclist:
             if topiclist.get("language", "") == language:
                 return topiclist.get("topics")
 

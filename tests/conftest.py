@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=unused-argument
+
 import pytest
 
 from tests.base.factories import SystemFactory
@@ -12,7 +15,7 @@ from tests.data.factories import DatasetFactory, TransformationFactory, Variable
 from tests.factories import UserFactory
 from tests.instruments.factories import InstrumentFactory, QuestionFactory
 from tests.publications.factories import PublicationFactory
-from tests.studies.factories import StudyFactory
+from tests.studies.factories import StudyFactory, TopicListFactory
 from tests.workspace.factories import BasketFactory
 
 
@@ -133,4 +136,15 @@ def period(db):
 
 @pytest.fixture
 def topic(db):
+    """ A topic in the database """
     return TopicFactory(name="some-topic")
+
+
+@pytest.fixture
+def topiclist(db):
+    """ A topiclist in the database """
+    body = [
+        {"language": "en", "topics": [{"title": "some-topic"}]},
+        {"language": "de", "topics": [{"title": "some-german-topic"}]},
+    ]
+    return TopicListFactory(topiclist=body)

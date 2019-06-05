@@ -5,7 +5,7 @@ from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Count, QuerySet
 
-from .models import Study
+from .models import Study, TopicList
 
 
 class StudyInline(admin.TabularInline):
@@ -60,3 +60,8 @@ class StudyAdmin(admin.ModelAdmin):
     instrument_count.short_description = "Instruments"
     basket_count.admin_order_field = "_basket_count"
     basket_count.short_description = "Baskets"
+
+
+@admin.register(TopicList)
+class TopicListAdmin(admin.ModelAdmin):
+    pass
