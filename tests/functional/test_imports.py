@@ -21,7 +21,7 @@ from ddionrails.instruments.models import (
     QuestionVariable,
 )
 from ddionrails.publications.models import Attachment, Publication
-from ddionrails.studies.models import Study
+from ddionrails.studies.models import Study, TopicList
 from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.functional]
@@ -83,16 +83,19 @@ class TestStudyImportManager:
     def test_import_json_topics(self, study_import_manager, es_client):
         assert 1 == Study.objects.count()
         assert 0 == Topic.objects.count()
+        assert 0 == TopicList.objects.count()
         study_import_manager.import_single_entity("study")
         time.sleep(1)
         study_import_manager.import_single_entity("topics.json")
-        time.sleep(1)
-        s = Search(using=es_client).doc_type("topiclist")
-        assert 1 == s.count()
-        response = s.execute()
-        hit = response.hits[0]
-        assert "en" == hit.topiclist[0]["language"]
-        assert "de" == hit.topiclist[1]["language"]
+        assert 1 == Study.objects.count()
+        assert 1 == TopicList.objects.count()
+        study = Study.objects.first()
+        topiclist = TopicList.objects.first()
+        assert study == topiclist.study
+        english_topics = topiclist.topiclist[0]
+        assert "en" == english_topics["language"]
+        german_topics = topiclist.topiclist[1]
+        assert "de" == german_topics["language"]
 
     def test_import_concepts(self, study_import_manager, es_client, topic):
         assert 0 == Concept.objects.count()

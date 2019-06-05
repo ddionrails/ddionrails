@@ -42,7 +42,7 @@ class TopicJsonImport(imports.Import):
         study = self.study
         study.topic_languages = ["de", "en"]
         study.save()
-        body = dict(topiclist=self.content)
+        body = self.content
         study.set_topiclist(body)
 
 

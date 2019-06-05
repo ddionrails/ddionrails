@@ -8,6 +8,7 @@ from ddionrails.concepts.imports import (
     TopicJsonImport,
 )
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.studies.models import TopicList
 
 pytestmark = [pytest.mark.concepts, pytest.mark.imports]
 
@@ -100,7 +101,8 @@ class TestPeriodImport:
 class TestTopicJsonImport:
     """ Test cases for TopicJsonImport """
 
-    def test_execute_import_method(self, topic_json_importer, mocker):
+    @staticmethod
+    def test_execute_import_method(topic_json_importer, mocker):
         """ Test that JSON string gets converted to dictionary and "_import_topic_list" gets called """
         mocked_import_topic_list = mocker.patch.object(
             TopicJsonImport, "_import_topic_list"
@@ -110,17 +112,19 @@ class TestTopicJsonImport:
         assert topic_json_importer.content == [{"language": "en"}]
         mocked_import_topic_list.assert_called_once()
 
-    def test_import_topic_list_method(self, topic_json_importer, mocker):
-        """ Test that _import_topic_list indexes "topic_languages" and "topiclist" into Elasticsearch"""
-        mocked_set_topiclist = mocker.patch(
-            "ddionrails.studies.models.Study.set_topiclist"
-        )
+    @staticmethod
+    def test_import_topic_list_method(topic_json_importer):
+        """ Test that _import_topic_list adds "topic_languages" to Study object and creates a TopicList object """
+        study = topic_json_importer.study
+        assert [] == study.topic_languages
+        assert 0 == len(study.topic_languages)
+        assert 0 == TopicList.objects.count()
         topic_json_importer.content = [
             {"language": "en", "topics": []},
             {"language": "de", "topics": []},
         ]
         topic_json_importer._import_topic_list()
-        study = topic_json_importer.study
-        assert study.topic_languages == ["de", "en"]
-        topiclist_payload = dict(topiclist=topic_json_importer.content)
-        mocked_set_topiclist.assert_called_once_with(topiclist_payload)
+        study.refresh_from_db()
+        assert ["de", "en"] == study.topic_languages
+        assert 1 == TopicList.objects.count()
+        assert topic_json_importer.content == study.topiclist.topiclist
