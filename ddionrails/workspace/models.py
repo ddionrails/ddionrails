@@ -15,13 +15,12 @@ from model_utils.models import TimeStampedModel
 from config.helpers import render_markdown
 from config.validators import validate_lowercase
 from ddionrails.data.models import Variable
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
 from .scripts import ScriptConfig
 
 
-class Basket(ElasticMixin, TimeStampedModel):
+class Basket(TimeStampedModel):
     """
     Stores a single basket,
     related to :model:`studies.Study`, :model:`auth.User` and :model:`data.Variable`.
@@ -60,9 +59,6 @@ class Basket(ElasticMixin, TimeStampedModel):
         through="BasketVariable",
         help_text="ManyToMany relation to data.Variable",
     )
-
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "basket"
 
     class Meta:
         """ Django's metadata options """

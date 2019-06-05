@@ -9,9 +9,6 @@ class StudyDescriptionImport(imports.JekyllImport):
         study.description = self.content
         study.label = self.data["label"]
         study.config = self.data["config"]
-        study.set_elastic(
-            dict(name=study.name, label=study.label, description=study.description)
-        )
         study.save()
 
 

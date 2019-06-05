@@ -5,13 +5,12 @@ from django.db import models
 from django.urls import reverse
 
 from config.validators import validate_lowercase
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
 
-class Dataset(ElasticMixin, DorMixin, models.Model):
+class Dataset(ModelMixin, models.Model):
     """
     Stores a single dataset,
     related to :model:`studies.Study`, :model:`concepts.ConceptualDataset`,
@@ -83,15 +82,12 @@ class Dataset(ElasticMixin, DorMixin, models.Model):
         help_text="Foreign key to concepts.AnalysisUnit",
     )
 
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "dataset"
-
     class Meta:
         """ Django's metadata options """
 
         unique_together = ("study", "name")
 
-    class DOR(DorMixin.DOR):
+    class DOR(ModelMixin.DOR):
         """ ddionrails' metadata options """
 
         id_fields = ["study", "name"]

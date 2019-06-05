@@ -10,7 +10,7 @@ from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
 
-class Topic(models.Model, ModelMixin, ElasticMixin):
+class Topic(models.Model, ModelMixin):
     """
     Stores a single topic,
     related to :model:`studies.Study` and :model:`concepts.Topic`.

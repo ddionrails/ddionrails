@@ -76,11 +76,7 @@ class Migration(migrations.Migration):
                 "ordering": ("study", "name"),
                 "unique_together": {("study", "name")},
             },
-            bases=(
-                ddionrails.elastic.mixins.ModelMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="Question",

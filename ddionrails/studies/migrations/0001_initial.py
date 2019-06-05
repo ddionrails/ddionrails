@@ -55,7 +55,6 @@ class Migration(migrations.Migration):
             ],
             options={"abstract": False},
             bases=(
-                ddionrails.elastic.mixins.ModelMixin,
                 ddionrails.base.mixins.ModelMixin,
                 models.Model,
             ),
