@@ -10,6 +10,7 @@ from collections import OrderedDict
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
 from config.validators import validate_lowercase
@@ -17,7 +18,6 @@ from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
-from filer.fields.image import FilerImageField
 
 from .dataset import Dataset
 

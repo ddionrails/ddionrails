@@ -5,13 +5,13 @@ import os
 from typing import List
 
 from django.conf import settings
-from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 
 
@@ -36,7 +36,7 @@ class TopicList(models.Model):
     )
 
 
-class Study(ElasticMixin, DorMixin, TimeStampedModel):
+class Study(ModelMixin, TimeStampedModel):
     """
     Stores a single study,
     related to :model:`data.Dataset`, :model:`instruments.Instrument`,
@@ -83,9 +83,6 @@ class Study(ElasticMixin, DorMixin, TimeStampedModel):
         default=list,
         help_text="Topic languages of the study (Array)",
     )
-
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "study"
 
     class Meta:
         """ Django's metadata options """

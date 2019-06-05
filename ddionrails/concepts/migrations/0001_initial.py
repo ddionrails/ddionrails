@@ -108,7 +108,6 @@ class Migration(migrations.Migration):
             bases=(
                 models.Model,
                 ddionrails.base.mixins.ModelMixin,
-                ddionrails.elastic.mixins.ModelMixin,
             ),
         ),
         migrations.CreateModel(

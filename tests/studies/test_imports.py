@@ -43,9 +43,7 @@ class TestStudyDescriptionImport:
         study_description_importer.data = dict(
             name="some-study", label="Some Study", config="some-config"
         )
-        mocked_set_elastic = mocker.patch.object(Study, "set_elastic")
         study_description_importer.execute_import()
-        mocked_set_elastic.assert_called_once()
 
     def test_import_with_invalid_data(self, study_description_importer):
         study_description_importer.content = ""

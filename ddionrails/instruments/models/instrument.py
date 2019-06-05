@@ -5,13 +5,12 @@ from django.db import models
 from django.urls import reverse
 
 from config.validators import validate_lowercase
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import AnalysisUnit, Period
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
 
 
-class Instrument(ElasticMixin, DorMixin, models.Model):
+class Instrument(ModelMixin, models.Model):
     """
     Stores a single instrument,
     related to :model:`studies.Study`, :model:`concepts.Period` and :model:`concepts.AnalysisUnit`.
@@ -61,9 +60,6 @@ class Instrument(ElasticMixin, DorMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.AnalysisUnit",
     )
-
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "instrument"
 
     class Meta:
         """ Django's metadata options """

@@ -81,11 +81,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"unique_together": {("study", "name")}},
-            bases=(
-                ddionrails.elastic.mixins.ModelMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="Variable",

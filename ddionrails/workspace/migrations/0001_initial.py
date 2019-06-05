@@ -7,7 +7,6 @@ from django.conf import settings
 from django.db import migrations, models
 
 import config.validators
-import ddionrails.elastic.mixins
 
 
 class Migration(migrations.Migration):
@@ -74,7 +73,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            bases=(ddionrails.elastic.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="Script",

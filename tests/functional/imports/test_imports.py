@@ -67,12 +67,6 @@ class TestStudyImportManager:
         assert "Some Study" == study.label
         assert {"variables": {"label-table": True}} == study.config
 
-        s = Search(using=es_client).doc_type("study").query("match", name="some-study")
-        assert 1 == s.count()
-        response = s.execute()
-        hit = response.hits[0]
-        assert "some-study" == hit.name
-
     def test_import_csv_topics(self, study_import_manager):
         assert 0 == Topic.objects.count()
         study_import_manager.import_single_entity("topics.csv")
@@ -310,7 +304,6 @@ class TestStudyImportManager:
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        assert Search(using=es_client).doc_type("study").count() == 1
         # Concepts will be indexed when mgmt command "upgrade" is called
         # s = Search(using=es_client).doc_type("concept")
         # assert 1 == s.count()
