@@ -52,19 +52,17 @@ mypy = "*"
 pre-commit = "*"
 pylint-django = "*"
 pylint = "*"
+
 # Testing
 # ------------------------------------------------------------------------------
 pytest = "*"
 pytest-cov = "*"
 pytest-django = "*"
 pytest-mock = "*"
-pytest-selenium = "*"
 pytest-splinter = "*"
 factory-boy = "*"
 django-coverage-plugin = "*"
-django-test-without-migrations = "*"
 fakeredis = "*"
-splinter = "*"
 
 # Documentation
 # ------------------------------------------------------------------------------
