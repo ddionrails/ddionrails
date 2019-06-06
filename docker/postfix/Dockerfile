@@ -1,4 +1,4 @@
-FROM python:3.7.3-alpine
+FROM python:3.8.0b1-alpine
 
 RUN apk update \
     && apk add postfix \
