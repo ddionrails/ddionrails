@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" "Upgrade" management command for ddionrails project """
+
 import django_rq
 import djclick as click
 

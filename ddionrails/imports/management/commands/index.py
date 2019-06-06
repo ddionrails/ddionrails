@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-""" Index management command for ddionrails project """
+
+""" "Index" management command for ddionrails project """
 
 import json
 import pathlib

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-""" Update management command for ddionrails project """
+
+""" "Update" management command for ddionrails project """
 
 import pathlib
 
@@ -45,13 +46,18 @@ def command(study_name: str, _all: bool) -> None:
     """
 
     if _all:
+        # Update all studies
         for study in Study.objects.all():
             update_study(study)
     elif study_name:
+        # Update single study
         try:
             study = Study.objects.get(name=study_name)
             update_study(study)
+            click.secho(f'Study data for "{study_name}" succesfully updated.', fg="green")
         except Study.DoesNotExist:
-            print(f'Study "{study_name}" does not exist.')
+            click.secho(f'Study "{study_name}" does not exist.', fg="red")
+            exit(1)
     else:
-        print("Please enter a valid study name")
+        click.secho("Please enter a study name.", fg="red")
+        exit(1)
