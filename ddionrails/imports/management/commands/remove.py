@@ -1,56 +1,59 @@
+# -*- coding: utf-8 -*-
+
+""" "Remove" management command for ddionrails project """
+
 import djclick as click
 from click.exceptions import Abort
-from django.core.exceptions import ObjectDoesNotExist
 
 from ddionrails.data.models import Variable
 from ddionrails.studies.models import Study
 
 
-def summary(study):
-    num_datasets = study.datasets.count()
-    num_instruments = study.instruments.count()
-    num_periods = study.periods.count()
-    num_baskets = study.baskets.count()
-    num_variables = Variable.objects.filter(dataset__study=study).count()
-    num_publications = study.publications.count()
+def summary(study: Study) -> None:
+    """ Display a summary of all related objects that are going to be removed """
 
-    print(f"{num_datasets} related datasets will be deleted")
-    print(f"{num_variables} related variables will be deleted")
-    print(f"{num_instruments} related instruments will be deleted")
-    print(f"{num_periods} related periods will be deleted")
-    print(f"{num_baskets} related baskets will be deleted")
-    print(f"{num_publications} related publications will be deleted")
+    counts = dict(
+        datasets=study.datasets.count(),
+        instruments=study.instruments.count(),
+        periods=study.periods.count(),
+        baskets=study.baskets.count(),
+        variables=Variable.objects.filter(dataset__study=study).count(),
+        publications=study.publications.count(),
+    )
+    positive_counts = {
+        related_object: count for related_object, count in counts.items() if count > 0
+    }
+    if positive_counts:
+        click.secho(
+            f"The following related objects are going to be deleted:", fg="yellow"
+        )
+        for related_object, count in positive_counts.items():
+            click.secho(f"# {related_object}: {count}", fg="yellow")
 
-    # data.Transformation': 50839,
-    # workspace.BasketVariable': 0,
-    # instruments.QuestionVariable': 0,
-    # publications.Attachment': 0,
-    # workspace.Script': 0,
 
+def remove_from_database(study: Study) -> None:
+    """ Remove the study and all related objects from the database """
 
-def delete(study):
-    print("DELETE", study)
-    # result = study.delete()
-    # print(result)
+    study.delete()
+    click.secho(f'Study "{study.name}" succesfully removed from database.', fg="green")
 
 
 @click.command()
 @click.argument("study_name")
 @click.option("-f", "--force", default=False, is_flag=True)
 def command(study_name: str, force: bool) -> None:
+    study = None
     try:
         study = Study.objects.get(name=study_name)
-    except ObjectDoesNotExist as exception:
-        study = None
-        print(exception)
+    except Study.DoesNotExist:
+        click.secho(f'Study "{study_name}" does not exist.', fg="red")
         exit(1)
-
     if force is True:
-        delete(study)
+        remove_from_database(study)
     else:
         try:
             summary(study)
             click.confirm("Do you want to continue?", abort=True)
-            delete(study)
+            remove_from_database(study)
         except Abort:
-            print("DO NOT DELETE", study)
+            click.secho(f'Study "{study_name}" was not removed.', fg="green")
