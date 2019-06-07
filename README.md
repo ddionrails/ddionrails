@@ -8,7 +8,6 @@
 [![Travis][travis-badge]](https://travis-ci.org/ddionrails/ddionrails/)
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
-[![PyUp][pyup-badge]](https://pyup.io/repos/github/ddionrails/ddionrails/)
 
 The data portal DDI on Rails accompanies researchers throughout the entire course of their research projects from conception to publication/citation.
 
@@ -101,7 +100,6 @@ This project is licensed under the GNU AGPL-3.0 License - see the [LICENSE.md](h
 [reposize-badge]: https://img.shields.io/github/repo-size/badges/shields.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
 [travis-badge]: https://img.shields.io/travis/ddionrails/ddionrails.svg
-[pyup-badge]: https://pyup.io/repos/github/ddionrails/ddionrails/shield.svg
 [greenkeeper-badge]: https://badges.greenkeeper.io/greenkeeperio/badges.svg
 [issues-badge]: https://img.shields.io/github/issues/ddionrails/ddionrails.svg
 [codacy-badge]: https://api.codacy.com/project/badge/Grade/0382ce2fae284b608bfba7bc2da74a4b
