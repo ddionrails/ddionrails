@@ -16,15 +16,10 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
-from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
-from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
-from django.db import models
-from django.db.models import QuerySet
-from django.urls import reverse
 
 from .instrument import Instrument
 
@@ -199,14 +194,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
             their relation is defined in ConceptQuestion.
         """
         return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
-
-    def title(self):
-        if self.label != None and self.label != "":
-            return self.label
-        try:
-            return self.items.first().title()
-        except:
-            return self.name
 
     def set_language(self, language: str = "en") -> None:
         """ Set the current language of the data object. """

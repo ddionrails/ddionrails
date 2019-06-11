@@ -115,6 +115,18 @@ class TestQuestionModel:
         question.label = ""
         assert question.title() == question.name
 
+    def test_title_de_method(self, question):
+        language = "de"
+        question.label_de = "german label"
+        question.set_language(language=language)
+        assert question.title() == question.label_de
+
+    def test_title_de_method_without_label(self, question):
+        language = "de"
+        question.label_de = ""
+        question.set_language(language=language)
+        assert question.title() == question.name
+
     def test_translation_languages_method(self, question):
         question.items = [{"text_de": "German text"}]
         result = question.translation_languages()
