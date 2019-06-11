@@ -4,16 +4,15 @@
 
 import json
 
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Question
 from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 # HELPERS
 
@@ -98,7 +97,10 @@ def concept_by_study(
         context = dict(variables=variable_set.all(), language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        context = dict(questions=question_set.all(), language=language)
+        _questions = [
+            question.set_language(language=language) for question in question_set.all()
+        ]
+        context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
         result = dict(
@@ -140,7 +142,10 @@ def topic_by_study(
         context = dict(variables=variable_set.all(), language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        context = dict(questions=question_set.all(), language=language)
+        _questions = [
+            question.set_language(language=language) for question in question_set.all()
+        ]
+        context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
         result = dict(

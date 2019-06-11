@@ -16,10 +16,15 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
+from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.studies.models import Study
+from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
+from django.db import models
+from django.db.models import QuerySet
+from django.urls import reverse
 
 from .instrument import Instrument
 
@@ -93,6 +98,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
+
+    # Lets views alter the language to be returned
+    language = "en"
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("instrument", "name")
@@ -200,13 +208,23 @@ class Question(ElasticMixin, DorMixin, models.Model):
         except:
             return self.name
 
-    def title_de(self):
-        if self.label_de != None and self.label_de != "":
-            return self.label
-        try:
-            return self.items.first().title_de()
-        except:
-            return self.name
+    def set_language(self, language: str = "en") -> None:
+        """ Set the current language of the data object. """
+
+        if language in ("en", "de"):
+            self.language = language
+
+    def title(self) -> str:
+        """ Returns a title representation using the "label" or "label_de" field,
+            with "name" field as fallback
+        """
+        label = self.label
+        if self.language == "de":
+            label = self.label_de
+        if label != None and label != "":
+            return str(label)
+        else:
+            return str(self.name)
 
     def translation_languages(self) -> List[str]:
         """ Returns a list of translation languages, e.g. ["de"] """
