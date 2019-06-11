@@ -20,10 +20,6 @@ INTERNAL_IPS = ("127.0.0.1",)
 # credit to https://stackoverflow.com/a/50332425
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}
 
-
-SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

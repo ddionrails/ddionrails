@@ -116,8 +116,16 @@ def publication(study):
 
 
 @pytest.fixture
-def question(db):
+def question(db, request):
     """ A question in the database """
+    # To work with unittest
+    if request.instance:
+        request.instance.question = QuestionFactory(
+            name="some-question",
+            label="Some Question",
+            description="This is some question",
+            sort_id=1,
+        )
     return QuestionFactory(
         name="some-question",
         label="Some Question",

@@ -3,6 +3,7 @@
 import difflib
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
@@ -12,7 +13,7 @@ from config.helpers import RowHelper
 from ddionrails.data.models import Variable
 from ddionrails.studies.models import Study
 
-from .models import Instrument, Question
+from .models import Instrument, Question, QuestionImage
 
 
 def study_instrument_list(request: WSGIRequest, study_name: str):
@@ -84,6 +85,20 @@ def question_detail(request, study_name, instrument_name, question_name):
         ],
         row_helper=RowHelper(),
     )
+    #TODO: Language setup is not centralized. There is no global switch.
+    #This would have to be overhauled ff the a global switch is implemented.
+    images = QuestionImage.objects.filter(question_id=question.id).all()
+    image_context = dict()
+    for _image in images:
+        image_context.update({_image.language+"_url": settings.MEDIA_URL+str(_image.image.file)})
+        # English label will be default label without global switch.
+        # German label is the fallback if no english image exists.
+        if _image.language == 'en':
+            image_context.update({"image_label": _image.label})
+        elif "image_label" not in image_context:
+            image_context.update({"image_label": _image.label})
+
+    context.update(image_context)
     return render(request, "questions/question_detail.html", context=context)
 
 
