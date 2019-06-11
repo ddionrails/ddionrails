@@ -3,8 +3,9 @@
 """ Django settings for ddionrails project: Base settings for all environments """
 
 import os
-
+import uuid
 from pathlib import Path
+from uuid import UUID
 
 # PROJECT CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -19,6 +20,7 @@ else:
     STATIC_ROOT = os.getenv("STATIC_ROOT")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+UUID_BASE = UUID(os.getenv("UUID_BASE", default=uuid.NAMESPACE_DNS))
 EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
@@ -31,7 +33,7 @@ SYSTEM_REPO_URL = os.getenv(
 
 MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media_root")
 os.makedirs(MEDIA_ROOT, exist_ok=True)
-MEDIA_URL="/media/"
+MEDIA_URL = "/media/"
 
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -123,10 +125,10 @@ DATABASES = {
 }
 
 THUMBNAIL_PROCESSORS = (
-    'easy_thumbnails.processors.colorspace',
-    'easy_thumbnails.processors.autocrop',
-    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'easy_thumbnails.processors.filters',
+    "easy_thumbnails.processors.colorspace",
+    "easy_thumbnails.processors.autocrop",
+    "filer.thumbnail_processors.scale_and_crop_with_subject_location",
+    "easy_thumbnails.processors.filters",
 )
 
 

@@ -19,6 +19,16 @@
         {{ question.instrument.title }}
       </a>
     </p>
+    <p>{{image_label}}:
+    {% if en_url%}
+      <a href="{{ en_url }}">en</a> 
+    {% endif%}
+    {% if de_url%}
+      <a href="{{ de_url }}">de</a> 
+    {% endif%}
+    {% for lang, url in image_urls.items %}
+    {% endfor %}
+    </p>
     {% include "publications/attachments_partial.html" with attachments=question.attachments %}
   </div>
 </div>

@@ -3,10 +3,17 @@
 
 """ Test cases for ddionrails.instruments.models """
 
-import pytest
+import unittest
+from io import BytesIO
 
-from ddionrails.instruments.models import ConceptQuestion
+import PIL.Image
+import pytest
+from django.core.files import File
+from django.db import models
+from filer.models import Folder, Image
 from tests.instruments.factories import QuestionFactory
+
+from ddionrails.instruments.models import ConceptQuestion, Question, QuestionImage
 
 pytestmark = [pytest.mark.instruments, pytest.mark.models]  # pylint: disable=invalid-name
 
@@ -27,11 +34,19 @@ class TestInstrumentModel:
 
 class TestQuestionModel:
     def test_string_method(self, question):
-        expected = f"/{question.instrument.study.name}/inst/{question.instrument.name}/{question.name}"
+        expected = (
+            f"/{question.instrument.study.name}"
+            f"/inst/{question.instrument.name}"
+            f"/{question.name}"
+        )
         assert expected == str(question)
 
     def test_get_absolute_url_method(self, question):
-        expected = f"/{question.instrument.study.name}/inst/{question.instrument.name}/{question.name}"
+        expected = (
+            f"/{question.instrument.study.name}"
+            f"/inst/{question.instrument.name}"
+            f"/{question.name}"
+        )
         assert expected == question.get_absolute_url()
 
     def test_layout_class_method(self, question):
@@ -113,3 +128,58 @@ class TestQuestionModel:
         result = question.comparison_string()
         expected = ["Question: Some Question", "", "Item: Item (scale: Scale)", "Text"]
         assert expected == result
+
+
+@pytest.mark.usefixtures("image_file", "question")
+class TestQuestionImageModel(unittest.TestCase):
+
+    image_file = BytesIO
+    question = Question
+    _filer_image = Image
+
+    def test_save_with_question_object(self):
+        django_file = File(self.image_file)
+
+        _folder = self.create_folder_structure()
+        self._filer_image, _ = Image.objects.get_or_create(
+            folder=_folder, file=django_file
+        )
+        image = self.create_question_image()
+
+        # Is the content in the correct type?
+        self.assertIsInstance(image.image, Image)
+        self.assertIsInstance(image.image, models.Model)
+        # Was the object correctly inserted?
+        self.assertIn(image, QuestionImage.objects.filter(id=image.id))
+
+    def create_folder_structure(self):
+        """Create folders and subfolders needed for the image storage."""
+        _path = str(self.question).split("/")
+        _path = [folder for folder in _path if folder]
+        _parent, _ = Folder.objects.get_or_create(name=_path[0])
+        for folder in _path[1:]:
+            _parent, _ = Folder.objects.get_or_create(name=folder, parent=_parent)
+        return _parent
+
+    def create_question_image(self):
+        """Create a QuestionImage object, that can be stored. """
+        image = QuestionImage()
+        image.image_id = self._filer_image.id
+        image.question = self.question
+        image.label = "test"
+        image.language = "de"
+        image.save()
+        return image
+
+
+@pytest.fixture()
+def image_file(request) -> BytesIO:
+    _file = BytesIO()
+    _image = PIL.Image.new("RGBA", size=(700, 100))
+    _image.save(_file, "png")
+    _file.name = "test.png"
+    _file.seek(0)
+    if request.instance:
+        request.instance.image_file = _file
+    yield _file
+    _file = None
