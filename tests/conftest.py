@@ -57,7 +57,24 @@ def dataset(db):
 def variable(db):
     """ A variable in the database """
     return VariableFactory(
-        name="some-variable", label="Some Variable", description="This is some variable"
+        name="some-variable",
+        label="Some Variable",
+        label_de="Eine Variable",
+        description="This is some variable",
+        statistics=dict(valid="1", invalid="0"),
+        categories={
+            "frequencies": [1, 0],
+            "labels": [
+                "[-6] Version of questionnaire with modified filtering",
+                "[1] Yes",
+            ],
+            "labels_de": [
+                "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+                "[1] Ja",
+            ],
+            "values": ["-6", "1"],
+            "missings": [True, False],
+        },
     )
 
 

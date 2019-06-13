@@ -8,7 +8,7 @@ from ddionrails.concepts.forms import (
     TopicForm,
 )
 
-pytestmark = [pytest.mark.concepts, pytest.mark.form]
+pytestmark = [pytest.mark.concepts, pytest.mark.forms] #pylint: disable=invalid-name
 
 
 class TestConceptForm:

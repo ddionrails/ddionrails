@@ -5,7 +5,7 @@ import pytest
 
 from ddionrails.instruments.models import ConceptQuestion
 
-pytestmark = [pytest.mark.instrument, pytest.mark.models]
+pytestmark = [pytest.mark.instruments, pytest.mark.models]
 
 
 class TestInstrumentModel:

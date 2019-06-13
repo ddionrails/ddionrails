@@ -3,10 +3,10 @@
 
 from __future__ import annotations
 
-import copy
-import json
 from collections import OrderedDict
+from typing import List, Dict
 
+from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -67,8 +67,17 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"
     )
-
-    image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
+    statistics = JSONBField(
+        default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
+    )
+    scale = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Scale of the variable",
+    )
+    categories = JSONBField(
+        default=list, null=True, blank=True, help_text="Categories of the variable(JSON)"
+    )
 
     # relations
     dataset = models.ForeignKey(
@@ -95,6 +104,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Period",
     )
+    image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "variable"
@@ -142,43 +152,26 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             html = ""
         return html
 
-    def get_categories(self):
-        if not hasattr(self, "category_list_cache"):
-            self.category_list_cache = self._construct_categories()
-        return self.category_list_cache
+    def get_categories(self) -> List:
+        if self.categories:
+            categories = []
+            for index in range(len(self.categories["values"])):
+                categories.append(
+                    dict(
+                        value=self.categories["values"][index],
+                        label=self.categories["labels"][index],
+                        label_de=self.categories["labels_de"][index],
+                        frequency=self.categories["frequencies"][index],
+                        valid=(not self.categories["missings"][index]),
+                    )
+                )
+            return categories
+        else:
+            return []
 
     def get_name_cs(self):
         """Get the case sensitive version of the variable name, if available"""
         return self.get_source().get("name_cs", self.name)
-
-    def _construct_categories(self):
-        try:
-            c = self.get_source().get("uni", None)
-            if not c:
-                c = self.get_source().get("categories", dict())
-            x = []
-            for i in range(len(c["values"])):
-                x.append(
-                    dict(
-                        value=c["values"][i],
-                        label=c["labels"][i],
-                        frequency=c["frequencies"][i],
-                        valid=(not c["missings"][i]),
-                    )
-                )
-            return x
-        except:
-            return []
-
-    def get_statistics(self):
-        try:
-            c = self.get_source()["statistics"]
-            x = []
-            for i in range(len(c["values"])):
-                x.append(dict(name=c["names"][i], value=c["values"][i]))
-            return x
-        except:
-            return []
 
     def get_study(self, default=None, id=False):
         try:
@@ -318,54 +311,34 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def get_origin_questions(self):
         return self.get_origins_by_study_and_period(object_type="question")
 
-    def has_translations(self):
+    def has_translations(self) -> bool:
         return len(self.translation_languages()) > 0
 
-    def translation_languages(self):
+    def translation_languages(self) -> List[str]:
         if not hasattr(self, "languages"):
-            keys = list(self.get_source().keys())
-            self.languages = [x.replace("label_", "") for x in keys if ("label_" in x)]
+            self.languages = [
+                label.replace("label_", "")
+                for label in self.__dict__.keys()
+                if ("label_" in label)
+            ]
         return self.languages
 
-    def translate_item(self, language):
-        """DEPRECATED"""
-        var = copy.deepcopy(self.get_source())
-        var["label"] = var.get("label_%s" % language, var.get("label", ""))
-        try:
-            cat = var["categories"]
-            cat["label"] = cat.get("label_%s" % language, cat.get("label", ""))
-        except:
-            pass
-        return var
-
-    def translations(self):
-        """DEPRECATED"""
-        results = OrderedDict(en=self.get_source())
+    def translation_table(self) -> Dict:
+        translation_table = dict(label=dict(en=self.label))
         for language in self.translation_languages():
-            results[language] = self.translate_item(language=language)
-        return results
+            translation_table["label"][language] = getattr(self, f"label_{language}")
 
-    def translation_table(self):
-        s = self.get_source()
-        x = OrderedDict(label=OrderedDict(en=s.get("label", "")))
+        for category in self.get_categories():
+            translation_table[category["value"]] = dict(en=category["label"])
         for language in self.translation_languages():
-            x["label"][language] = s.get("label_" + language, "")
-        try:
-            for i in range(len(s["categories"]["values"])):
-                x[s["categories"]["values"][i]] = OrderedDict(
-                    en=s["categories"]["labels"][i]
+            for category in self.get_categories():
+                translation_table[category["value"]][language] = category.get(
+                    f"label_{language}"
                 )
-            for language in self.translation_languages():
-                for i in range(len(s["categories"]["values"])):
-                    x[s["categories"]["values"][i]][language] = s["categories"][
-                        "labels_" + language
-                    ][i]
-        except:
-            pass
-        return x
+        return translation_table
 
     def is_categorical(self) -> bool:
-        return len(self.get_categories()) > 0
+        return len(self.categories) > 0
 
     def title(self):
         return self.label if self.label != "" else self.name
@@ -376,13 +349,14 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         else:
             return self.title()
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         return dict(
-            id=self.id,
             name=self.name,
             label=self.label,
             label_de=self.label_de,
             concept_id=self.concept_id,
+            scale=self.scale,
+            uni=self.categories,
         )
 
     def to_topic_dict(self, language="en"):
@@ -405,6 +379,3 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             .prefetch_related("dataset__period")
             .prefetch_related("period")
         )
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

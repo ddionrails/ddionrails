@@ -5,7 +5,7 @@
 
 import pytest
 
-pytestmark = [pytest.mark.functional, pytest.mark.django_db]
+pytestmark = [pytest.mark.functional, pytest.mark.django_db] #pylint: disable=invalid-name
 
 
 def test_get_contact_page_from_home(browser, live_server):

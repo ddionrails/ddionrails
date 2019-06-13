@@ -141,14 +141,8 @@
         </div>
       </div>
       {% include "data/variable_info.html" %}
-      {% include "data/statistics_partial.html" with statistic_list=variable.get_statistics %}
+      {% include "data/statistics_partial.html" %}
     </div>
-    {% if False %}
-      {% if variable.is_categorical %}
-        {% include "data/frequency_partial.html" with category_list=variable.get_categories %}
-      {% endif %}
-    {% endif %}
-
   </div>
 
   {% if label_table %}
