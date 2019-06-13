@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,too-few-public-methods
+
 """ DjangoModelFactories for models in ddionrails.data app """
 
 import factory

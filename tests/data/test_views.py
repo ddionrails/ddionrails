@@ -17,18 +17,18 @@ class TestRowHelper:
         assert row_helper.row() is False
 
     def test_row_method_true(self):
-        """ Everytime row is called, i is incremented.
+        """ Everytime row is called, row_index is incremented.
             If it hits 4, it returns True
         """
         row_helper = RowHelper()
-        row_helper.i = 3
+        row_helper.row_index = 3
         assert row_helper.row() == True
 
     def test_reset_method(self):
         row_helper = RowHelper()
-        row_helper.i = 1
+        row_helper.row_index = 1
         row_helper.reset()
-        assert row_helper.i == 0
+        assert row_helper.row_index == 0
 
 
 class TestExtendContextForVariable:

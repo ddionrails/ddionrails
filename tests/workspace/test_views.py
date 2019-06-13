@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 from django.urls import reverse
 
@@ -47,7 +49,7 @@ class TestAccountOverview:
         assert response.status_code == 401
 
     def test_account_overview_authenticated_user(self, client, user):
-        client.login(username="some-user", password="some-password")
+        client.login(username="some-user", password="some-password") #nosec # ignore B106: hardcoded_password_funcarg
         url = reverse("workspace:account_overview")
         response = client.get(url)
         assert response.status_code == 200

@@ -1,6 +1,10 @@
+# -*- coding: utf-8 -*-
+
+""" Test cases for models in ddionrails.data app """
+
 import pytest
 
-pytestmark = [pytest.mark.data, pytest.mark.models]
+pytestmark = [pytest.mark.data, pytest.mark.models] #pylint: disable=invalid-name
 
 
 class TestVariableModel:

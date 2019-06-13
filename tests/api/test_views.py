@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
 
 """ Test cases for ddionrails.api app """
+
 import pytest
 from django.urls import reverse
 

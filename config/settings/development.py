@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=wildcard-import
+# pylint: disable=wildcard-import,used-before-assignment
+
+""" Django settings for ddionrails project: Settings for development environment """
 
 from .base import *
 
@@ -19,10 +21,8 @@ INTERNAL_IPS = ("127.0.0.1",)
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}
 
 
-SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
 
-IMPORT_BRANCH = "master"
 
 LOGGING = {
     "version": 1,
