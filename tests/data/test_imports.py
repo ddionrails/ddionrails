@@ -139,17 +139,88 @@ class TestDatasetJsonImport:
         mocked_import_variable.assert_called_once()
 
     def test_import_variable_method(self, mocker, dataset_json_importer, dataset):
+        assert 0 == Variable.objects.count()
         mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
         var = dict(
             study="some-study",
             dataset="some-dataset",
             variable="some-variable",
-            categories=dict(frequencies=[], labels=[]),
+            statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
+            categories=dict(
+                frequencies=[1, 0],
+                labels=[
+                    "[-6] Version of questionnaire with modified filtering",
+                    "[1] Yes",
+                ],
+                labels_de=[
+                    "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+                    "[1] Ja",
+                ],
+                values=["-6", "1"],
+                missings=[True, False],
+            ),
         )
         dataset = dataset
         sort_id = 0
         dataset_json_importer._import_variable(var, dataset, sort_id)
+        assert 1 == Variable.objects.count()
+        variable = Variable.objects.first()
+        assert dataset == variable.dataset
+        assert var["variable"] == variable.name
+        assert sort_id + 1 == variable.sort_id
+        assert "1" == variable.statistics["valid"]
+        assert "0" == variable.statistics["invalid"]
+        assert 1 == variable.categories[0]["frequency"]
+        assert (
+            "[-6] Version of questionnaire with modified filtering"
+            == variable.categories[0]["label"]
+        )
+        assert (
+            "[-6] Fragebogenversion mit geaenderter Filterfuehrung"
+            == variable.categories[0]["label_de"]
+        )
+        assert "-6" == variable.categories[0]["value"]
+        assert False is variable.categories[0]["valid"]
         mocked_set_elastic.assert_called_once()
+
+    def test_import_variable_method_without_statistics(
+        self, mocker, dataset_json_importer, dataset
+    ):
+        assert 0 == Variable.objects.count()
+        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
+        var = dict(
+            study="some-study",
+            dataset="some-dataset",
+            variable="some-variable",
+            statistics=dict(names=[], values=[]),
+        )
+        dataset = dataset
+        sort_id = 0
+        dataset_json_importer._import_variable(var, dataset, sort_id)
+        assert 1 == Variable.objects.count()
+        variable = Variable.objects.first()
+        assert dict() == variable.statistics
+
+    def test_import_variable_method_without_categories(
+        self, mocker, dataset_json_importer, dataset
+    ):
+        assert 0 == Variable.objects.count()
+        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
+        var = dict(
+            study="some-study",
+            dataset="some-dataset",
+            variable="some-variable",
+            statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
+            categories=dict(
+                frequencies=[], labels=[], missings=[], values=[], labels_de=[]
+            ),
+        )
+        dataset = dataset
+        sort_id = 0
+        dataset_json_importer._import_variable(var, dataset, sort_id)
+        assert 1 == Variable.objects.count()
+        variable = Variable.objects.first()
+        assert [] == variable.categories
 
     def test_import_variable_method_with_uni_key(
         self, mocker, dataset_json_importer, dataset

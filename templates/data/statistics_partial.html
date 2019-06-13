@@ -10,10 +10,10 @@
       </tr>
     </thead>
     <tbody>
-      {% for statistic in statistic_list %}
+      {% for measure, value in statistics.items %}
         <tr>
-          <td>{{ statistic.name }}</td>
-          <td>{{ statistic.value }}</td>
+          <td>{{ measure }}</td>
+          <td>{{ value }}</td>
         </tr>
       {% endfor %}
     </tbody>

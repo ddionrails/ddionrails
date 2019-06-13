@@ -6,7 +6,8 @@ from django.urls import reverse
 
 from ddionrails.data.models import Variable
 from ddionrails.data.views import DatasetRedirectView, RowHelper, VariableRedirectView
-from ddionrails.elastic.mixins import ModelMixin
+
+from tests import status
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
 
@@ -31,23 +32,14 @@ class TestRowHelper:
         assert row_helper.row_index == 0
 
 
-class TestExtendContextForVariable:
-    pass
-
-
 class TestDatasetDetailView:
-    def test_detail_view_with_existing_names(self, mocker, client, dataset):
-
-        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
-
+    def test_detail_view_with_existing_names(self, client, dataset):
         url = reverse(
             "data:dataset",
             kwargs={"study_name": dataset.study.name, "dataset_name": dataset.name},
         )
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         template = "data/dataset_detail.html"
         assert template in (t.name for t in response.templates)
         assert response.context["dataset"] == dataset
@@ -62,10 +54,8 @@ class TestDatasetDetailView:
             "data:dataset",
             kwargs={"study_name": invalid_study_name, "dataset_name": dataset.name},
         )
-
-        # TODO view returns HttpResponseNotFound instead of raising Http404
         response = client.get(url)
-        assert response.status_code == 404
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
     def test_detail_view_with_invalid_dataset_name(self, client, dataset):
         invalid_dataset_name = "invalid-dataset-name"
@@ -86,7 +76,7 @@ class TestDatasetRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, dataset):
         request = rf.get("dataset", kwargs={"pk": dataset.pk})
         response = DatasetRedirectView.as_view()(request, id=dataset.pk)
-        assert response.status_code == 302
+        assert status.HTTP_302_FOUND == response.status_code
 
     def test_redirect_view_with_invalid_pk(self, rf, dataset):
         invalid_dataset_id = 999
@@ -97,11 +87,6 @@ class TestDatasetRedirectView:
 
 class TestVariableDetailView:
     def test_detail_view_with_existing_names(self, client, mocker, variable):
-
-        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
-
         url = reverse(
             "data:variable",
             kwargs={
@@ -112,11 +97,9 @@ class TestVariableDetailView:
         )
         mocked_get_source = mocker.patch.object(Variable, "get_source")
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         template = "data/variable_detail.html"
         assert template in (t.name for t in response.templates)
-
-        # TODO : Test context. uses extend_context_for_variable()
 
 
 class TestVariableJsonView:
@@ -136,7 +119,7 @@ class TestVariableJsonView:
             variable=variable.name,
         )
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         assert response["Content-Type"] == "application/json"
 
         # content = json.loads(response.content)
@@ -163,7 +146,7 @@ class TestVariablePreviewIdView:
         url = reverse("api:variable_preview", kwargs={"variable_id": variable.pk})
         mocked_get_source = mocker.patch.object(Variable, "get_source")
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
         template = "data/variable_preview.html"
         assert template in (t.name for t in response.templates)
         assert response["Content-Type"] == "text/plain"
@@ -182,14 +165,14 @@ class TestVariablePreviewIdView:
 
         # TODO view returns HttpResponseNotFound instead of raising Http404
         response = client.get(url)
-        assert response.status_code == 404
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
 class TestVariableRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, variable):
         request = rf.get("variable", kwargs={"pk": variable.pk})
         response = VariableRedirectView.as_view()(request, id=variable.pk)
-        assert response.status_code == 302
+        assert status.HTTP_302_FOUND == response.status_code
 
     def test_redirect_view_with_invalid_pk(self, db, rf):
         invalid_pk = 999

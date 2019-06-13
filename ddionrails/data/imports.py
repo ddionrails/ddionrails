@@ -40,12 +40,35 @@ class DatasetJsonImport(imports.Import):
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
+        if "statistics" in var:
+            statistics = {
+                key: value
+                for key, value in zip(
+                    var["statistics"]["names"], var["statistics"]["values"]
+                )
+            }
+            variable.statistics = statistics
+        if "categories" in var:
+            categories = []
+            for index in range(len(var["categories"]["values"])):
+                categories.append(
+                    dict(
+                        value=var["categories"]["values"][index],
+                        label=var["categories"]["labels"][index],
+                        label_de=var["categories"]["labels_de"][index],
+                        frequency=var["categories"]["frequencies"][index],
+                        valid=(not var["categories"]["missings"][index]),
+                    )
+                )
+            if categories:
+                variable.categories = categories
         variable.save()
+        # remove statistics and categories before indexing into elasticsearch
+        var.pop("statistics", None)
+        var.pop("categories", None)
         var["namespace"] = self.study.name
         var["dataset"] = dataset.name
         var["boost"] = dataset.boost
-        if "uni" not in var:
-            var["uni"] = var["categories"]
         variable.set_elastic(var)
 
 

@@ -125,6 +125,22 @@ class VariableDetailView(DetailView):
             .filter(user_id=self.request.user.id)
             .all()
         )  # TODO user!
+
+        # Ordering of keys in statistics dictionary
+        context["statistics"] = dict()
+        ORDERING = (
+            "Min.",
+            "1st Qu.",
+            "Median",
+            "Mean",
+            "3rd Qu.",
+            "Max.",
+            "valid",
+            "invalid",
+        )
+        for measure in ORDERING:
+            if measure in self.object.statistics:
+                context["statistics"][measure] = self.object.statistics[measure]
         return context
 
 
