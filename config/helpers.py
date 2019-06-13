@@ -45,16 +45,16 @@ def lower_dict_names(dictionary):
 
 class RowHelper:
     def __init__(self, number_of_rows=4):
-        self.i = 0
-        self.n = number_of_rows
+        self.row_index = 0
+        self.number_of_rows = number_of_rows
 
     def row(self):
-        self.i += 1
-        if (self.i % self.n) == 0:
+        self.row_index += 1
+        if (self.row_index % self.number_of_rows) == 0:
             return True
         else:
             return False
 
     def reset(self):
-        self.i = 0
+        self.row_index = 0
         return ""

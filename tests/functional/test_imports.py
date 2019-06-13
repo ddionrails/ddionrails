@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
 import json
 import time
 
@@ -24,7 +27,7 @@ from ddionrails.publications.models import Attachment, Publication
 from ddionrails.studies.models import Study, TopicList
 from tests.data.factories import VariableFactory
 
-pytestmark = [pytest.mark.functional]
+pytestmark = [pytest.mark.functional] #pylint: disable=invalid-name
 
 
 @pytest.fixture()
@@ -307,14 +310,9 @@ class TestStudyImportManager:
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        s = Search(using=es_client).doc_type("study")
-        assert 1 == s.count()
-
+        assert Search(using=es_client).doc_type("study").count() == 1
         # Concepts will be indexed when mgmt command "upgrade" is called
-
         # s = Search(using=es_client).doc_type("concept")
         # assert 1 == s.count()
-        s = Search(using=es_client).doc_type("variable")
-        assert 2 == s.count()
-        s = Search(using=es_client).doc_type("publication")
-        assert 1 == s.count()
+        assert Search(using=es_client).doc_type("variable").count() == 2
+        assert Search(using=es_client).doc_type("publication").count() == 1

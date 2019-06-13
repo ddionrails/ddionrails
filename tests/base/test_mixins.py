@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for mixins in ddionrails.base app """
+
 import pytest
 from django.db import models
 from django.forms import ModelForm
@@ -6,7 +11,7 @@ import ddionrails.base
 from ddionrails.base.mixins import AdminMixin, ModelMixin
 from ddionrails.concepts.models import Concept
 
-pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
+pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins] #pylint: disable=invalid-name
 
 
 class MixinChild(ModelMixin, models.Model):
@@ -40,14 +45,14 @@ class TestModelMixin:
             "tests.base.test_mixins.MixinChild.objects.get", return_value=True
         ):
             dictionary = dict(name="some-name")
-            object = MixinChild.get(dictionary)
-            assert object is True
+            obj = MixinChild.get(dictionary)
+            assert obj is True
 
     def test_get_method_failure(self, db):
         dictionary = dict(name="some-name")
         # TODO: Workaround with actual model. Remove this dependency
-        object = Concept.get(dictionary)
-        assert object is None
+        obj = Concept.get(dictionary)
+        assert obj is None
 
     def test_default_form_method(self):
         form = MixinChild.default_form()
@@ -88,7 +93,7 @@ class TestModelMixin:
             mixin.html_description()
             ddionrails.base.mixins.render_markdown.assert_called_once()
 
-    def test_html_description_method_without_description(self, mocker):
+    def test_html_description_method_without_description(self):
         mixin = ModelMixin()
         result = mixin.html_description()
         assert result == ""

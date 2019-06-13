@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=unused-argument
 
+""" Pytest fixtures """
+
 import pytest
 
 from tests.base.factories import SystemFactory
@@ -34,7 +36,7 @@ def study(db):
 @pytest.fixture
 def user(db):
     """ A user in the database """
-    return UserFactory(username="some-user", password="some-password")  # noqa
+    return UserFactory(username="some-user", password="some-password") #nosec # ignore B106: hardcoded_password_funcarg
 
 
 @pytest.fixture

@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=wildcard-import,used-before-assignment
+
+""" Django settings for ddionrails project: Settings for testing environment """
+
 import logging
 
 import django_rq.queues
 from fakeredis import FakeRedis, FakeStrictRedis
 
-from .base import *  # noqa
+from .base import *
 
 TEMPLATE_DEBUG = False
 
@@ -18,10 +23,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
 ]
 
-SYSTEM_NAME = "system"
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
 
-IMPORT_BRANCH = "master"
 INDEX_NAME = (
     "dor"
 )  # This necessary beacuse ddionrails-elasticsearch has the index hardwired. No way to switch index for search.

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Django settings for ddionrails project: Base settings for all environments """
+
 import os
 
 from pathlib import Path

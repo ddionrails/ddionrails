@@ -1,4 +1,9 @@
-from .base import *  # noqa
+# -*- coding: utf-8 -*-
+# pylint: disable=wildcard-import
+
+""" Django settings for ddionrails project: Settings for production environment """
+
+from .base import *
 
 LOGGING = {
     "version": 1,

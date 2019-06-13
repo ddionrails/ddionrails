@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
+
+""" Test cases for forms in ddionrails.workspace app """
+
 import pytest
 
 from ddionrails.workspace.forms import BasketForm, UserCreationForm
 
-pytestmark = [pytest.mark.workspace, pytest.mark.form]
+pytestmark = [pytest.mark.workspace, pytest.mark.form] #pylint: disable=invalid-name
 
 
 @pytest.fixture
@@ -20,7 +24,7 @@ def invalid_basket_csv_data():
 @pytest.fixture
 def valid_user_data():
     """ A valid input for user forms and imports """
-    return dict(username="some-user", password="some-password")  # noqa
+    return dict(username="some-user", password="some-password")  #nosec # ignore B106: hardcoded_password_funcarg
 
 
 @pytest.fixture
