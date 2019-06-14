@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
 
 """ Test cases for models in ddionrails.data app """
 

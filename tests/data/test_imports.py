@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for imports in ddionrails.data app """
+
 import pytest
 
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
@@ -202,6 +207,7 @@ class TestDatasetJsonImport:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert dict() == variable.statistics
+        mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_without_categories(
         self, mocker, dataset_json_importer, dataset
@@ -223,6 +229,7 @@ class TestDatasetJsonImport:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert [] == variable.categories
+        mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_with_uni_key(
         self, mocker, dataset_json_importer, dataset
