@@ -48,24 +48,15 @@ class DatasetJsonImport(imports.Import):
                 )
             }
             variable.statistics = statistics
-        if "categories" in var:
-            categories = []
-            for index in range(len(var["categories"]["values"])):
-                categories.append(
-                    dict(
-                        value=var["categories"]["values"][index],
-                        label=var["categories"]["labels"][index],
-                        label_de=var["categories"]["labels_de"][index],
-                        frequency=var["categories"]["frequencies"][index],
-                        valid=(not var["categories"]["missings"][index]),
-                    )
-                )
-            if categories:
-                variable.categories = categories
+        if "categories" in var and len(var["categories"]["values"]) > 0:
+            variable.categories = var["categories"]
+        variable.scale = var.get("scale", "")
         variable.save()
-        # remove statistics and categories before indexing into elasticsearch
+        # remove statistics and scale before indexing into elasticsearch
         var.pop("statistics", None)
-        var.pop("categories", None)
+        var.pop("scale", None)
+        # Used for searching right now
+        # var.pop("categories", None)
         var["namespace"] = self.study.name
         var["dataset"] = dataset.name
         var["boost"] = dataset.boost

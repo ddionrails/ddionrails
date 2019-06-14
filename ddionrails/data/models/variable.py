@@ -71,6 +71,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     statistics = JSONBField(
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
     )
+    scale = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Scale of the variable",
+    )
     categories = JSONBField(
         default=list, null=True, blank=True, help_text="Categories of the variable(JSON)"
     )
@@ -148,8 +153,22 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             html = ""
         return html
 
-    def get_categories(self):
-        return self.categories
+    def get_categories(self) -> List:
+        if self.categories:
+            categories = []
+            for index in range(len(self.categories["values"])):
+                categories.append(
+                    dict(
+                        value=self.categories["values"][index],
+                        label=self.categories["labels"][index],
+                        label_de=self.categories["labels_de"][index],
+                        frequency=self.categories["frequencies"][index],
+                        valid=(not self.categories["missings"][index]),
+                    )
+                )
+            return categories
+        else:
+            return []
 
     def get_name_cs(self):
         """Get the case sensitive version of the variable name, if available"""
@@ -309,10 +328,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         translation_table = dict(label=dict(en=self.label))
         for language in self.translation_languages():
             translation_table["label"][language] = getattr(self, f"label_{language}")
-        for category in self.categories:
+
+        for category in self.get_categories():
             translation_table[category["value"]] = dict(en=category["label"])
         for language in self.translation_languages():
-            for category in self.categories:
+            for category in self.get_categories():
                 translation_table[category["value"]][language] = category.get(
                     f"label_{language}"
                 )
@@ -330,13 +350,14 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         else:
             return self.title()
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         return dict(
-            id=self.id,
             name=self.name,
             label=self.label,
             label_de=self.label_de,
             concept_id=self.concept_id,
+            scale=self.scale,
+            uni=self.categories,
         )
 
     def to_topic_dict(self, language="en"):
@@ -359,6 +380,3 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             .prefetch_related("dataset__period")
             .prefetch_related("period")
         )
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

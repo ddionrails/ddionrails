@@ -146,6 +146,7 @@ class TestDatasetJsonImport:
             dataset="some-dataset",
             variable="some-variable",
             statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
+            scale="cat",
             categories=dict(
                 frequencies=[1, 0],
                 labels=[
@@ -166,21 +167,22 @@ class TestDatasetJsonImport:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert dataset == variable.dataset
+        assert "cat" == variable.scale
         assert var["variable"] == variable.name
         assert sort_id + 1 == variable.sort_id
         assert "1" == variable.statistics["valid"]
         assert "0" == variable.statistics["invalid"]
-        assert 1 == variable.categories[0]["frequency"]
+        assert 1 == variable.categories["frequencies"][0]
         assert (
             "[-6] Version of questionnaire with modified filtering"
-            == variable.categories[0]["label"]
+            == variable.categories["labels"][0]
         )
         assert (
             "[-6] Fragebogenversion mit geaenderter Filterfuehrung"
-            == variable.categories[0]["label_de"]
+            == variable.categories["labels_de"][0]
         )
-        assert "-6" == variable.categories[0]["value"]
-        assert False is variable.categories[0]["valid"]
+        assert "-6" == variable.categories["values"][0]
+        assert True is variable.categories["missings"][0]
         mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_without_statistics(

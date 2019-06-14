@@ -62,16 +62,19 @@ def variable(db):
         label_de="Eine Variable",
         description="This is some variable",
         statistics=dict(valid="1", invalid="0"),
-        categories=[
-            dict(
-                label="[-6] Version of questionnaire with modified filtering",
-                label_de="[-6] Fragebogenversion mit geaenderter Filterfuehrung",
-                valid=False,
-                value="-6",
-                frequency=0,
-            ),
-            dict(label="[1] Yes", label_de="[1] Ja", valid=True, value="1", frequency=1),
-        ],
+        categories={
+            "frequencies": [1, 0],
+            "labels": [
+                "[-6] Version of questionnaire with modified filtering",
+                "[1] Yes",
+            ],
+            "labels_de": [
+                "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+                "[1] Ja",
+            ],
+            "values": ["-6", "1"],
+            "missings": [True, False],
+        },
     )
 
 

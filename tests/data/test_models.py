@@ -20,6 +20,22 @@ class TestVariableModel:
         )
         assert variable.get_absolute_url() == expected
 
+    def test_get_categories_method_without_categories(self, variable):
+        variable.categories = []
+        variable.save()
+        assert [] == variable.get_categories()
+
+    def test_get_categories_method(self, variable):
+        result = variable.get_categories()
+        expected = {
+            "value": "-6",
+            "label": "[-6] Version of questionnaire with modified filtering",
+            "label_de": "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+            "frequency": 1,
+            "valid": False,
+        }
+        assert expected == result[0]
+
     def test_is_categorical_method(self, variable):
         variable.categories = [dict(label="some-category")]
         variable.save()
@@ -49,6 +65,12 @@ class TestVariableModel:
             "1": {"en": "[1] Yes", "de": "[1] Ja"},
         }
         assert expected == result
+
+    def test_to_dict(self, variable):
+        result = variable.to_dict()
+        assert result["name"] == variable.name
+        assert result["scale"] == variable.scale
+        assert result["uni"] == variable.categories
 
 
 class TestDatasetModel:

@@ -153,8 +153,7 @@ def variable_json(
         dataset__name=dataset_name,
         name=variable_name,
     )
-    var_json = variable.get_source(as_json=False)
-    return JsonResponse(var_json)
+    return JsonResponse(variable.to_dict())
 
 
 def extend_context_for_variable(request, context):

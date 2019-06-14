@@ -103,7 +103,7 @@ class TestVariableDetailView:
 
 
 class TestVariableJsonView:
-    def test_json_view_with_existing_names(self, client, mocker, variable):
+    def test_json_view_with_existing_names(self, client, variable):
         url = reverse(
             "data:variable_json",
             kwargs={
@@ -112,21 +112,14 @@ class TestVariableJsonView:
                 "variable_name": variable.name,
             },
         )
-        mocked_get_source = mocker.patch.object(Variable, "get_source")
-        mocked_get_source.return_value = dict(
-            study=variable.dataset.study.name,
-            dataset=variable.dataset.name,
-            variable=variable.name,
-        )
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
         assert response["Content-Type"] == "application/json"
+        content = response.json()
+        assert content['name'] == variable.name
+        assert content['scale'] == variable.scale
+        assert content['uni'] == variable.categories
 
-        # content = json.loads(response.content)
-        #
-        # assert content['study'] == variable.dataset.study.name
-        # assert content['dataset'] == variable.dataset.name
-        # assert content['variable'] == variable.name
 
     # TODO non existing study => 404
     def test_json_view_with_invalid_study_name(self, client, mocker, variable):
