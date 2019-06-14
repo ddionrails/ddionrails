@@ -117,8 +117,10 @@ class Study(ModelMixin, TimeStampedModel):
         else:
             raise Exception("Specify a protocol for Git in your settings.")
 
-    def set_topiclist(self, body: List) -> None:
-        TopicList.objects.get_or_create(study=self, topiclist=body)
+    def set_topiclist(self, body: List) -> None:                               
+        _topiclist, _ = TopicList.objects.get_or_create(study=self)            
+        _topiclist.topiclist=body                                              
+        _topiclist.save()  
 
     def has_topics(self) -> bool:
         """ Returns True if the study has topics False otherwise (evaluates the length of self.topic_languages) """
