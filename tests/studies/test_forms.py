@@ -2,7 +2,7 @@ import pytest
 
 from ddionrails.studies.forms import StudyForm, StudyInitialForm
 
-pytestmark = [pytest.mark.studies, pytest.mark.form]
+pytestmark = [pytest.mark.studies, pytest.mark.forms] #pylint: disable=invalid-name
 
 
 class TestStudyForm:

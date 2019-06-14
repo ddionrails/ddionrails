@@ -8,7 +8,7 @@ import pytest
 from django.contrib.auth.models import User
 from splinter.exceptions import ElementDoesNotExist
 
-pytestmark = [pytest.mark.functional, pytest.mark.django_db]
+pytestmark = [pytest.mark.functional, pytest.mark.django_db] #pylint: disable=invalid-name
 
 
 def test_login_with_known_user(browser, login_url, known_user):

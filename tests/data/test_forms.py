@@ -2,7 +2,7 @@ import pytest
 
 from ddionrails.data.forms import DatasetForm, VariableForm
 
-pytestmark = [pytest.mark.data, pytest.mark.form]
+pytestmark = [pytest.mark.data, pytest.mark.forms] #pylint: disable=invalid-name
 
 
 class TestDatasetForm:

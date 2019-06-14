@@ -48,8 +48,10 @@ class DatasetJsonImport(imports.Import):
                 )
             }
             variable.statistics = statistics
-        if "categories" in var and len(var["categories"]["values"]) > 0:
-            variable.categories = var["categories"]
+        if "categories" in var:
+            values = var["categories"].get("values")
+            if values and len(values) > 0:
+                variable.categories = var["categories"]
         variable.scale = var.get("scale", "")
         variable.save()
         # remove statistics and scale before indexing into elasticsearch
