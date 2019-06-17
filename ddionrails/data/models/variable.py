@@ -72,6 +72,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     )
     scale = models.CharField(
         max_length=255,
+        null=True,
         blank=True,
         help_text="Scale of the variable",
     )
