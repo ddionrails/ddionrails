@@ -118,7 +118,7 @@ def publication(study):
 def question(db):
     """ A question in the database """
     return QuestionFactory(
-        name="some-question", label="Some Question", description="This is some question"
+        name="some-question", label="Some Question", description="This is some question", sort_id=1
     )
 
 
