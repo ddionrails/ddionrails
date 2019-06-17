@@ -6,7 +6,7 @@ import pytest
 
 from ddionrails.workspace.forms import BasketForm, UserCreationForm
 
-pytestmark = [pytest.mark.workspace, pytest.mark.form] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.workspace, pytest.mark.forms] #pylint: disable=invalid-name
 
 
 @pytest.fixture

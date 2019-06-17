@@ -5,7 +5,10 @@
 
 import pytest
 
-pytestmark = [pytest.mark.data, pytest.mark.models] #pylint: disable=invalid-name
+from ddionrails.data.models import Variable
+
+
+pytestmark = [pytest.mark.data, pytest.mark.models]  # pylint: disable=invalid-name
 
 
 class TestVariableModel:
@@ -20,6 +23,49 @@ class TestVariableModel:
             f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
         )
         assert variable.get_absolute_url() == expected
+
+    def test_get_method(self, variable):
+        select_dictionary = dict(
+            study_name=variable.dataset.study.name,
+            dataset_name=variable.dataset.name,
+            name=variable.name,
+        )
+        result = Variable.get(x=select_dictionary)
+        assert variable == result
+
+    def test_get_study(self, variable):
+        result = variable.get_study()
+        expected = variable.dataset.study
+        assert expected == result
+
+    def test_get_study_with_id(self, variable):
+        result = variable.get_study(id=True)
+        expected = variable.dataset.study.id
+        assert expected == result
+
+    def test_get_concept(self, variable, concept):
+        variable.concept = concept
+        variable.save()
+        result = variable.get_concept()
+        expected = variable.concept
+        assert expected == result
+
+    def test_get_concept_with_id(self, variable, concept):
+        variable.concept = concept
+        variable.save()
+        result = variable.get_concept(id=True)
+        expected = variable.concept.id
+        assert expected == result
+
+    def test_get_period(self, variable):
+        result = variable.get_period()
+        expected = variable.dataset.period
+        assert expected == result
+
+    def test_get_period_without_id(self, variable):
+        result = variable.get_period()
+        expected = variable.dataset.period
+        assert expected == result
 
     def test_get_categories_method_without_categories(self, variable):
         variable.categories = []
