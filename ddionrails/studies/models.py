@@ -2,7 +2,7 @@
 """ Model definitions for ddionrails.studies app """
 
 import os
-from typing import List
+from typing import List, Optional
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField, JSONField
@@ -12,7 +12,6 @@ from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
 from ddionrails.base.mixins import ModelMixin
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 
 
 class TopicList(models.Model):
@@ -117,19 +116,23 @@ class Study(ModelMixin, TimeStampedModel):
         else:
             raise Exception("Specify a protocol for Git in your settings.")
 
-    def set_topiclist(self, body: List) -> None:                               
-        _topiclist, _ = TopicList.objects.get_or_create(study=self)            
-        _topiclist.topiclist=body                                              
-        _topiclist.save()  
+    def set_topiclist(self, body: List) -> None:
+        _topiclist, _ = TopicList.objects.get_or_create(study=self)
+        _topiclist.topiclist = body
+        _topiclist.save()
 
     def has_topics(self) -> bool:
         """ Returns True if the study has topics False otherwise (evaluates the length of self.topic_languages) """
         return len(self.topic_languages) > 0
 
-    def get_topiclist(self, language: str = "en") -> List:
-        for topiclist in self.topiclist.topiclist:
-            if topiclist.get("language", "") == language:
-                return topiclist.get("topics")
+    def get_topiclist(self, language: str = "en") -> Optional[List]:
+        """ Returns the list of topics for a given language or None """
+        try:
+            for topiclist in self.topiclist.topiclist:
+                if topiclist.get("language", "") == language:
+                    return topiclist.get("topics")
+        except TopicList.DoesNotExist:
+            return None
 
 
 def context(request):
