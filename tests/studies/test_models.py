@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-#pylint: disable=no-self-use
+# pylint: disable=no-self-use
 
 """ Test cases for ddionrails.studies.models """
 
@@ -9,15 +9,17 @@ import pytest
 
 from ddionrails.studies.models import Study, TopicList, context
 
-pytestmark = [pytest.mark.studies, pytest.mark.models]
+pytestmark = [pytest.mark.studies, pytest.mark.models] #pylint: disable=invalid-name
 
 
 class TestStudyModel:
     def test_string_method(self, study):
-        assert str(study) == "/" + study.name
+        expected = "/" + study.name
+        assert expected == str(study)
 
     def test_get_absolute_url_method(self, study):
-        assert study.get_absolute_url() == "/" + study.name
+        expected = "/" + study.name
+        assert expected == study.get_absolute_url()
 
     def test_import_path_method(self, study, settings):
         expected = (
@@ -28,7 +30,7 @@ class TestStudyModel:
             )
             + "/"
         )
-        assert study.import_path() == expected
+        assert expected == study.import_path()
 
     def test_repo_url_method_https(self, study, settings):
         settings.GIT_PROTOCOL = "https"
@@ -49,12 +51,14 @@ class TestStudyModel:
             assert excinfo.value == "Specify a protocol for Git in your settings."
 
     def test_has_topics_method(self, study):
-        assert False is study.has_topics()
+        expected = False
+        assert expected is study.has_topics()
 
     def test_has_topics_method_returns_true(self, study):
         study.topic_languages = ["en"]
         study.save()
-        assert True is study.has_topics()
+        expected = True
+        assert expected is study.has_topics()
 
     def test_set_topiclist_method(self, study):
         assert 0 == TopicList.objects.count()
@@ -65,11 +69,19 @@ class TestStudyModel:
         assert study == topiclist.study
         assert topiclist.topiclist == body
 
-    def test_get_topiclist_method(self, study, topiclist): #pylint: disable=unused-argument
-        study.refresh_from_db()
+    def test_get_topiclist_method(
+        self, study, topiclist
+    ):  # pylint: disable=unused-argument
         result = study.get_topiclist()
         expected = [{"title": "some-topic"}]
         assert expected == result
+
+    def test_get_topiclist_method_without_topic_list(
+        self, study
+    ):  # pylint: disable=unused-argument
+        result = study.get_topiclist()
+        expected = None
+        assert expected is result
 
 
 def test_context_function_with_study(study, rf):
