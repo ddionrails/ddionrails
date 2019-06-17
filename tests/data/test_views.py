@@ -11,7 +11,6 @@ from django.urls import reverse
 
 from ddionrails.data.models import Variable
 from ddionrails.data.views import DatasetRedirectView, RowHelper, VariableRedirectView
-
 from tests import status
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
@@ -121,10 +120,9 @@ class TestVariableJsonView:
         assert status.HTTP_200_OK == response.status_code
         assert response["Content-Type"] == "application/json"
         content = response.json()
-        assert content['name'] == variable.name
-        assert content['scale'] == variable.scale
-        assert content['uni'] == variable.categories
-
+        assert content["name"] == variable.name
+        assert content["scale"] == variable.scale
+        assert content["uni"] == variable.categories
 
     # TODO non existing study => 404
     def test_json_view_with_invalid_study_name(self, client, mocker, variable):

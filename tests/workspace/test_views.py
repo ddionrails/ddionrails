@@ -49,7 +49,8 @@ class TestAccountOverview:
         assert response.status_code == 401
 
     def test_account_overview_authenticated_user(self, client, user):
-        client.login(username="some-user", password="some-password") #nosec # ignore B106: hardcoded_password_funcarg
+        # ignore B106: hardcoded_password_funcarg
+        client.login(username="some-user", password="some-password")  # nosec
         url = reverse("workspace:account_overview")
         response = client.get(url)
         assert response.status_code == 200

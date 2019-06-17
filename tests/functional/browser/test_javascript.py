@@ -4,7 +4,10 @@
 
 import pytest
 
-pytestmark = [pytest.mark.functional, pytest.mark.django_db] #pylint: disable=invalid-name
+pytestmark = [
+    pytest.mark.functional,
+    pytest.mark.django_db,
+]  # pylint: disable=invalid-name
 
 
 def test_studies_dropdown_menu(browser, live_server, study):

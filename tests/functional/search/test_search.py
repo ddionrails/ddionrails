@@ -8,7 +8,7 @@ from elasticsearch import Elasticsearch
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.publications.models import Publication
 
-pytestmark = [pytest.mark.functional] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
 
 
 @pytest.fixture()

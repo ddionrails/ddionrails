@@ -7,7 +7,7 @@ from ddionrails.base.models import System
 from ddionrails.imports.management.commands import system
 from ddionrails.studies.models import Study
 
-pytestmark = [pytest.mark.imports, pytest.mark.functional] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.imports, pytest.mark.functional]  # pylint: disable=invalid-name
 
 
 class TestSystemImport:

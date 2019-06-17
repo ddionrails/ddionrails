@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,too-few-public-methods,no-self-use
+
 import pytest
 from django.core.exceptions import ValidationError
 

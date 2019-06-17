@@ -11,19 +11,3 @@ class TestHit:
         assert hit.source == json["_source"]
         assert hit.type == json["_type"]
         assert hit.key == f"{json['_index']}/{json['_type']}/{json['_id']}"
-
-
-class TestResult:
-    def test_init_method(self):
-        pass
-
-    def test_parse_hits_methods(self):
-        pass
-
-
-class TestParseResults:
-    pass
-
-
-class TestSimpleSearch:
-    pass

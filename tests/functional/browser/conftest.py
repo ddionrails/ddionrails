@@ -23,17 +23,13 @@ def splinter_remote_url():
     return SELENIUM_URL
 
 
-@pytest.fixture
-def known_user():
-    return UserFactory(username="some-user", password="some-password") #nosec # ignore B106: hardcoded_password_funcar
-
-
 @pytest.fixture()
-def authenticated_browser(browser, client, live_server, known_user):
+def authenticated_browser(browser, client, live_server, user):
     """Return a browser instance with logged-in user session."""
 
     # credit to https://flowfx.de/blog/test-django-with-selenium-pytest-and-user-authentication/
-    client.login(username=known_user.username, password="some-password") #nosec # ignore B106: hardcoded_password_funcar
+    # ignore B106: hardcoded_password_funcar
+    client.login(username=user.username, password="some-password")  # nosec
     cookie = client.cookies["sessionid"]
     browser.visit(live_server.url)
     browser.cookies.add({"sessionid": cookie.value})

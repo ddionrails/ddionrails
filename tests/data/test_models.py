@@ -7,7 +7,6 @@ import pytest
 
 from ddionrails.data.models import Variable
 
-
 pytestmark = [pytest.mark.data, pytest.mark.models]  # pylint: disable=invalid-name
 
 

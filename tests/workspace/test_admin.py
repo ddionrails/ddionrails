@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """ Test cases for ModelAdmins in ddionrails.workspace app """
 
 import pytest

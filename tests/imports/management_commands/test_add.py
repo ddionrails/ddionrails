@@ -38,7 +38,8 @@ def test_add_command_displays_help(option):
     assert 0 == result.exit_code
 
 
-def test_add_command_creates_study_object(db):
+@pytest.mark.django_db
+def test_add_command_creates_study_object():
     """ Test add management command creates a study """
     assert 0 == Study.objects.count()
     study_name = "some-study"

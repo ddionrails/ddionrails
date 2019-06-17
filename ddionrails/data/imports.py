@@ -84,17 +84,17 @@ class DatasetImport(imports.CSVImport):
             study=self.study, name=element["dataset_name"].lower()
         )
         period_name = element.get("period_name", "none")
-        dataset.period, status = Period.objects.get_or_create(
-            study=self.study, name=period_name
-        )
+        dataset.period = Period.objects.get_or_create(study=self.study, name=period_name)[
+            0
+        ]
         analysis_unit_name = element.get("analysis_unit_name", "none")
-        dataset.analysis_unit, status = AnalysisUnit.objects.get_or_create(
+        dataset.analysis_unit = AnalysisUnit.objects.get_or_create(
             name=analysis_unit_name
-        )
+        )[0]
         conceptual_dataset_name = element.get("conceptual_dataset_name", "none")
-        dataset.conceptual_dataset, status = ConceptualDataset.objects.get_or_create(
+        dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(
             name=conceptual_dataset_name
-        )
+        )[0]
         dataset.boost = float(element.get("boost", 1))
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")

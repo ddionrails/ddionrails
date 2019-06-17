@@ -8,10 +8,13 @@ import pytest
 from django.contrib.auth.models import User
 from splinter.exceptions import ElementDoesNotExist
 
-pytestmark = [pytest.mark.functional, pytest.mark.django_db] #pylint: disable=invalid-name
+pytestmark = [
+    pytest.mark.functional,
+    pytest.mark.django_db,
+]  # pylint: disable=invalid-name
 
 
-def test_login_with_known_user(browser, login_url, known_user):
+def test_login_with_known_user(browser, login_url, user):
     browser.visit(login_url)
     browser.fill("username", "some-user")
     browser.fill("password", "some-password")
@@ -21,7 +24,7 @@ def test_login_with_known_user(browser, login_url, known_user):
     browser.find_link_by_text("Logout").click()
 
 
-def test_login_redirects_to_same_page(browser, live_server, known_user):
+def test_login_redirects_to_same_page(browser, live_server, user):
     """ When a user logs in from any page, after logging in, the system should take
         the user back to the page he was visiting before logging in.
     """

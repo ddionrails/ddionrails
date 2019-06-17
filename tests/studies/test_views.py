@@ -5,7 +5,7 @@ from django.urls import reverse
 from ddionrails.elastic.mixins import ModelMixin
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView
 
-pytestmark = [pytest.mark.studies, pytest.mark.views]
+pytestmark = [pytest.mark.studies, pytest.mark.views]  # pylint: disable=invalid-name
 
 
 class TestStudyRedirectView:
