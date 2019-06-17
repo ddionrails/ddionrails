@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.instruments app: Question """
+from __future__ import annotations
 
 import copy
 import textwrap
 from collections import OrderedDict
-from typing import List
+from typing import List, Optional
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
@@ -98,13 +100,23 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def layout_class(self) -> str:
         return "question"
 
-    def previous_question(self):
-        x = self.instrument.questions.get(sort_id=self.sort_id - 1)
-        return x
+    def previous_question(self) -> Optional[Question]:
+        """ Returns the previous question object or None
+            i.e. the question object with the preceding sort_id
+        """
+        try:
+            return self.instrument.questions.get(sort_id=self.sort_id - 1)
+        except ObjectDoesNotExist:
+            return None
 
-    def next_question(self):
-        x = self.instrument.questions.get(sort_id=self.sort_id + 1)
-        return x
+    def next_question(self) -> Optional[Question]:
+        """ Returns the next question object or None
+            i.e. the question object with the following sort_id
+        """
+        try:
+            return self.instrument.questions.get(sort_id=self.sort_id + 1)
+        except ObjectDoesNotExist:
+            return None
 
     def get_period(self, id=False, default=None):
         try:
