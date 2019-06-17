@@ -121,8 +121,8 @@ class SoepMixin:
                     dataset_name, variable
                 )
             script_dict[dataset_name]["variables"].add(variable.name)
-            for dataset_name, dataset_dict in script_dict.items():
-                self._enrich_dataset_dict(dataset_name, dataset_dict)
+            for dataset_dict in script_dict.values():
+                self._enrich_dataset_dict(dataset_dict)
         return script_dict
 
     def _create_dataset_dict(self, dataset_name, variable):
@@ -136,7 +136,7 @@ class SoepMixin:
         )
         return d
 
-    def _enrich_dataset_dict(self, dataset_name, dataset_dict):
+    def _enrich_dataset_dict(self, dataset_dict):
         d = dataset_dict
         analysis_unit = d["analysis_unit"]
         if analysis_unit == "h":
@@ -718,7 +718,7 @@ class SoepR(SoepStata):
         script += '\nsave(master, file=file.path(path_out, "master.RData"))'
         return script
 
-    def _enrich_dataset_dict(self, dataset_name, dataset_dict):
+    def _enrich_dataset_dict(self, dataset_dict):
         d = dataset_dict
         analysis_unit = d["analysis_unit"]
         if analysis_unit == "h":

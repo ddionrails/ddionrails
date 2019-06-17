@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for forms in ddionrails.concepts app """
+
 import pytest
 
 from ddionrails.concepts.forms import (
@@ -8,7 +13,7 @@ from ddionrails.concepts.forms import (
     TopicForm,
 )
 
-pytestmark = [pytest.mark.concepts, pytest.mark.forms] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.concepts, pytest.mark.forms]  # pylint: disable=invalid-name
 
 
 class TestConceptForm:
@@ -18,13 +23,15 @@ class TestConceptForm:
         expected_errors = {"name": ["This field is required."]}
         assert dict(form.errors) == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_concept_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_concept_data):
         form = ConceptForm(data=valid_concept_data)
         assert form.is_valid() is True
         concept = form.save()
         assert concept.name == valid_concept_data["concept_name"]
 
-    def test_form_with_minimal_valid_data(self, db, minimal_valid_concept_data):
+    @pytest.mark.django_db
+    def test_form_with_minimal_valid_data(self, minimal_valid_concept_data):
         form = ConceptForm(data=minimal_valid_concept_data)
         assert form.is_valid() is True
         concept = form.save()
@@ -41,7 +48,8 @@ class TestPeriodForm:
         }
         assert dict(form.errors) == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_period_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_period_data):
         form = PeriodForm(data=valid_period_data)
         assert form.is_valid() is True
 
@@ -53,7 +61,8 @@ class TestAnalysisUnitForm:
         expected_errors = {"name": ["This field is required."]}
         assert dict(form.errors) == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_analysis_unit_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_analysis_unit_data):
         form = AnalysisUnitForm(data=valid_analysis_unit_data)
         assert form.is_valid() is True
         analysis_unit = form.save()
@@ -67,7 +76,8 @@ class TestConceptualDatasetForm:
         expected_errors = {"name": ["This field is required."]}
         assert dict(form.errors) == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_conceptual_dataset_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_conceptual_dataset_data):
         form = ConceptualDatasetForm(data=valid_conceptual_dataset_data)
         assert form.is_valid() is True
         conceptual_dataset = form.save()
@@ -87,7 +97,8 @@ class TestTopicForm:
         }
         assert dict(form.errors) == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_topic_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_topic_data):
         form = TopicForm(data=valid_topic_data)
         assert form.is_valid() is True
         topic = form.save()

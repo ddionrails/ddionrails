@@ -1,8 +1,13 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for forms in ddionrails.studies app """
+
 import pytest
 
 from ddionrails.studies.forms import StudyForm, StudyInitialForm
 
-pytestmark = [pytest.mark.studies, pytest.mark.forms] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.studies, pytest.mark.forms]  # pylint: disable=invalid-name
 
 
 class TestStudyForm:

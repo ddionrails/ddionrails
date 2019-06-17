@@ -1,7 +1,7 @@
 import pytest
 from django.urls import resolve, reverse
 
-pytestmark = [pytest.mark.concepts, pytest.mark.urlconf]
+pytestmark = [pytest.mark.concepts, pytest.mark.urlconf]  # pylint: disable=invalid-name
 
 
 @pytest.fixture

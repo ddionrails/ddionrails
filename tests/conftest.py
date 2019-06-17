@@ -36,7 +36,8 @@ def study(db):
 @pytest.fixture
 def user(db):
     """ A user in the database """
-    return UserFactory(username="some-user", password="some-password") #nosec # ignore B106: hardcoded_password_funcarg
+    # ignore B106: hardcoded_password_funcarg
+    return UserFactory(username="some-user", password="some-password")  # nosec
 
 
 @pytest.fixture
@@ -118,7 +119,10 @@ def publication(study):
 def question(db):
     """ A question in the database """
     return QuestionFactory(
-        name="some-question", label="Some Question", description="This is some question", sort_id=1
+        name="some-question",
+        label="Some Question",
+        description="This is some question",
+        sort_id=1,
     )
 
 

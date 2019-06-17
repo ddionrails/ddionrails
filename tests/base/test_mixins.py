@@ -11,7 +11,7 @@ import ddionrails.base
 from ddionrails.base.mixins import AdminMixin, ModelMixin
 from ddionrails.concepts.models import Concept
 
-pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]  # pylint: disable=invalid-name
 
 
 class MixinChild(ModelMixin, models.Model):
@@ -48,9 +48,10 @@ class TestModelMixin:
             obj = MixinChild.get(dictionary)
             assert obj is True
 
-    def test_get_method_failure(self, db):
+    @pytest.mark.django_db
+    def test_get_method_failure(self):
         dictionary = dict(name="some-name")
-        # TODO: Workaround with actual model. Remove this dependency
+        # This test case uses an actual subclass of ModelMixin
         obj = Concept.get(dictionary)
         assert obj is None
 

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Pytest fixtures for test cases in ddionrails.concepts app """
+
 import pytest
 
 from .factories import (
@@ -9,31 +13,31 @@ from .factories import (
 
 
 @pytest.fixture
-def concept_without_label(db):
+def concept_without_label(db):  # pylint: disable=invalid-name,unused-argument
     """ A concept without label in the database """
     return ConceptFactory(name="some-concept", description="This is some concept")
 
 
 @pytest.fixture
-def period_without_label(db):
+def period_without_label(db):  # pylint: disable=invalid-name,unused-argument
     """ A period without a label in the database """
     return PeriodFactory(name="some-period", description="This is some period")
 
 
 @pytest.fixture
-def conceptual_dataset_without_label(db):
+def conceptual_dataset_without_label(db):  # pylint: disable=invalid-name,unused-argument
     """ A conceptual_dataset without a label in the database """
     return ConceptualDatasetFactory(name="some-period", description="This is some period")
 
 
 @pytest.fixture
-def analysis_unit_without_label(db):
+def analysis_unit_without_label(db):  # pylint: disable=invalid-name,unused-argument
     """ A analysis_unit without a label in the database """
     return AnalysisUnitFactory(name="some-period", description="This is some period")
 
 
 @pytest.fixture
-def period_with_range_definition(db):
+def period_with_range_definition(db):  # pylint: disable=invalid-name,unused-argument
     """ A period with a range period definition in the database """
     return PeriodFactory(
         name="some-period",

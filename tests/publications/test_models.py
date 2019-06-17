@@ -5,7 +5,10 @@
 
 import pytest
 
-pytestmark = [pytest.mark.publications, pytest.mark.models] #pylint: disable=invalid-name
+pytestmark = [
+    pytest.mark.publications,
+    pytest.mark.models,
+]  # pylint: disable=invalid-name
 
 
 class TestPublicationModel:

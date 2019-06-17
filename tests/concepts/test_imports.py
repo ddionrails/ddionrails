@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for imports in ddionrails.concepts app """
+
 import pytest
 
 from ddionrails.concepts.imports import (
@@ -10,7 +15,7 @@ from ddionrails.concepts.imports import (
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.studies.models import TopicList
 
-pytestmark = [pytest.mark.concepts, pytest.mark.imports]
+pytestmark = [pytest.mark.concepts, pytest.mark.imports]  # pylint: disable=invalid-name
 
 
 @pytest.fixture
@@ -19,31 +24,31 @@ def filename():
 
 
 @pytest.fixture
-def concept_importer(db, filename):
+def concept_importer(db, filename):  # pylint: disable=unused-argument
     """ A concept importer """
     return ConceptImport(filename)
 
 
 @pytest.fixture
-def analysis_unit_importer(db, filename):
+def analysis_unit_importer(db, filename):  # pylint: disable=unused-argument
     """ An analysis unit importer """
     return AnalysisUnitImport(filename)
 
 
 @pytest.fixture
-def conceptual_dataset_importer(db, filename):
+def conceptual_dataset_importer(db, filename):  # pylint: disable=unused-argument
     """ A conceptual dataset importer """
     return ConceptualDatasetImport(filename)
 
 
 @pytest.fixture
-def period_importer(db, filename, study):
+def period_importer(db, filename, study):  # pylint: disable=unused-argument
     """ A period importer """
     return PeriodImport(filename, study)
 
 
 @pytest.fixture
-def topic_json_importer(db, filename, study):
+def topic_json_importer(db, filename, study):  # pylint: disable=unused-argument
     """ A topic json importer """
     return TopicJsonImport(filename, study)
 
@@ -56,7 +61,8 @@ class TestConceptImport:
 
     def test_import_with_invalid_data(self, concept_importer, empty_data):
         response = concept_importer.import_element(empty_data)
-        assert response is None
+        expected = None
+        assert expected is response
 
 
 class TestAnalysisUnitImport:
@@ -69,7 +75,8 @@ class TestAnalysisUnitImport:
 
     def test_import_with_invalid_data(self, analysis_unit_importer, empty_data):
         response = analysis_unit_importer.import_element(empty_data)
-        assert response is None
+        expected = None
+        assert expected is response
 
 
 class TestConceptualDatasetImport:
@@ -84,7 +91,8 @@ class TestConceptualDatasetImport:
 
     def test_import_with_invalid_data(self, conceptual_dataset_importer, empty_data):
         response = conceptual_dataset_importer.import_element(empty_data)
-        assert response is None
+        expected = None
+        assert expected is response
 
 
 class TestPeriodImport:
@@ -95,14 +103,12 @@ class TestPeriodImport:
 
     def test_import_with_invalid_data(self, period_importer, empty_data):
         response = period_importer.import_element(empty_data)
-        assert response is None
+        expected = None
+        assert expected is response
 
 
 class TestTopicJsonImport:
-    """ Test cases for TopicJsonImport """
-
-    @staticmethod
-    def test_execute_import_method(topic_json_importer, mocker):
+    def test_execute_import_method(self, topic_json_importer, mocker):
         """ Test that JSON string gets converted to dictionary and "_import_topic_list" gets called """
         mocked_import_topic_list = mocker.patch.object(
             TopicJsonImport, "_import_topic_list"
@@ -112,8 +118,7 @@ class TestTopicJsonImport:
         assert topic_json_importer.content == [{"language": "en"}]
         mocked_import_topic_list.assert_called_once()
 
-    @staticmethod
-    def test_import_topic_list_method(topic_json_importer):
+    def test_import_topic_list_method(self, topic_json_importer):
         """ Test that _import_topic_list adds "topic_languages" to Study object and creates a TopicList object """
         study = topic_json_importer.study
         assert [] == study.topic_languages

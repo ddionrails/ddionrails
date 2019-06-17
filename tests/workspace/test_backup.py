@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 import tablib
 from click.testing import CliRunner
@@ -24,14 +26,13 @@ class TestUserResource:
         assert user.username == dataset["username"][0]
         assert user.email == dataset["email"][0]
         assert user.password == dataset["password"][0]
-        # assert str(user.date_joined) == dataset["date_joined"][0]
 
     def test_import(self, db):
         assert 0 == User.objects.count()
         now = timezone.now()
         username = "some-user"
         email = "some-email@some-mail.org"
-        password = "md5$salt$hashed-password"
+        password = "md5$salt$hashed-password"  # nosec
         dataset = tablib.Dataset(
             [username, email, password, now],
             headers=["username", "email", "password", "date_joined"],
@@ -207,10 +208,6 @@ class TestBackupManagementCommand:
 
     @pytest.mark.parametrize("argument", ("--baskets", "-b"))
     def test_backup_baskets(self, clirunner, argument):
-        # TODO: Temporary folder
-        # result = clirunner.invoke(
-        #     restore.command, [argument, "-p", "tests/workspace/test_data/"]
-        # )
         pass
 
     def test_backup_scripts(self):
@@ -239,7 +236,9 @@ class TestRestoreManagementCommand:
         assert "some-user@some-mail.org" == user.email
 
         # test user can login
-        logged_in = client.login(username=user.username, password="some-password")
+        logged_in = client.login(
+            username=user.username, password="some-password"
+        )  # nosec
         assert logged_in is True
 
     @pytest.mark.parametrize("argument", ("--baskets", "-b"))

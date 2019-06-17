@@ -18,6 +18,10 @@ script:
   - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/imports/ --cov-append
   - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/browser/ --cov-append
   - docker-compose exec web mv coverage.xml codecov/ # move coverage report to directory, that is mounted as volume
+  # check if migrations can be applied without errors
+  - docker-compose exec web python manage.py migrate
+  # check if production settings file throws warnings
+  - docker-compose exec web python manage.py check --deploy --settings=config.settings.production
 after_success:
   # see: https://docs.codecov.io/docs/testing-with-docker
   - bash <(curl -s https://codecov.io/bash) # send coverage.xml to codecov.io

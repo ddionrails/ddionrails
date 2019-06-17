@@ -1,12 +1,15 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for views in ddionrails.concepts app """
+
 import pytest
-from django.http.response import Http404
 from django.urls import reverse
 
-from ddionrails.concepts.views import ConceptDetail
 from ddionrails.instruments.models import Question
 from tests import status
 
-pytestmark = [pytest.mark.concepts, pytest.mark.views]
+pytestmark = [pytest.mark.concepts, pytest.mark.views]  # pylint: disable=invalid-name
 
 
 @pytest.mark.django_db
@@ -17,7 +20,7 @@ class TestConceptDetailView:
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
 
-    def test_detail_view_with_invalid_pk(self, client, concept):
+    def test_detail_view_with_invalid_pk(self, client):
         invalid_pk = 999
         url = reverse("concepts:concept_detail", kwargs={"pk": invalid_pk})
         response = client.get(url)
@@ -43,7 +46,7 @@ class TestConceptDetailView:
         output_questions = list(response.context["questions"])
         assert output_questions == expected_questions
 
-    def test_detail_view_with_invalid_name(self, client, concept):
+    def test_detail_view_with_invalid_name(self, client):
         invalid_concept_name = "missing-concept"
         url = reverse(
             "concepts:concept_detail_name", kwargs={"concept_name": invalid_concept_name}

@@ -61,8 +61,7 @@ class ModelMixin:
         for key, value in definition.items():
             if value.__class__ == str and lower_strings:
                 definition[key] = value.lower()
-        result, created = cls.objects.get_or_create(**definition)
-        return result
+        return cls.objects.get_or_create(**definition)[0]
 
     @classmethod
     def get(cls, x):

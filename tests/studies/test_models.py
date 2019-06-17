@@ -9,7 +9,7 @@ import pytest
 
 from ddionrails.studies.models import Study, TopicList, context
 
-pytestmark = [pytest.mark.studies, pytest.mark.models] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.studies, pytest.mark.models]  # pylint: disable=invalid-name
 
 
 class TestStudyModel:

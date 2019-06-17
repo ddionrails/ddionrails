@@ -6,10 +6,9 @@
 import pytest
 
 from ddionrails.instruments.models import ConceptQuestion
-
 from tests.instruments.factories import QuestionFactory
 
-pytestmark = [pytest.mark.instruments, pytest.mark.models] #pylint: disable=invalid-name
+pytestmark = [pytest.mark.instruments, pytest.mark.models]  # pylint: disable=invalid-name
 
 
 class TestInstrumentModel:
@@ -20,6 +19,7 @@ class TestInstrumentModel:
         assert (
             instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
         )
+
     def test_layout_class_method(self, instrument):
         expected = "instrument"
         assert expected == instrument.layout_class()

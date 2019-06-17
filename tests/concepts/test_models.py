@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for models in ddionrails.concepts app """
+
 import pytest
 
 from ddionrails.concepts.models import Concept, Topic
@@ -5,11 +10,11 @@ from ddionrails.elastic.mixins import ModelMixin
 
 from .factories import TopicFactory
 
-pytestmark = [pytest.mark.concepts, pytest.mark.models]
+pytestmark = [pytest.mark.concepts, pytest.mark.models]  # pylint: disable=invalid-name
 
 
 class TestConceptModel:
-    def test_string_method(self, concept):
+    def test_string_method(self, concept):  # pylint: disable=unused-argument
         assert str(concept) == "/concept/" + concept.name
 
     def test_get_absolute_url_method(self, concept):
@@ -18,21 +23,23 @@ class TestConceptModel:
     def test_index_method_with_concept_with_label(self, mocker, concept):
         mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
         concept.index()
-        ModelMixin.set_elastic.assert_called_once()
+        ModelMixin.set_elastic.assert_called_once()  # pylint: disable=no-member
 
     def test_index_method_with_concept_without_label(self, mocker, concept_without_label):
         mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
         concept_without_label.index()
-        ModelMixin.set_elastic.assert_called_once()
+        ModelMixin.set_elastic.assert_called_once()  # pylint: disable=no-member
 
-    # TODO: what happens at index_all() without concepts in database
-    def test_index_all_method_with_no_concepts(self, db):
+    @pytest.mark.django_db
+    def test_index_all_method_with_no_concepts(self):
         Concept.index_all()
 
-    def test_index_all_method_with_one_concept(self, mocker, concept):
+    def test_index_all_method_with_one_concept(
+        self, mocker, concept
+    ):  # pylint: disable=unused-argument
         mocker.patch("ddionrails.concepts.models.Concept.index")
         Concept.index_all()
-        Concept.index.assert_called_once()
+        Concept.index.assert_called_once()  # pylint: disable=no-member
 
 
 class TestAnalysisUnitModel:
