@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "223de977e449e2e2dfe9b1d5921d6ba4bd4323e7d364d1e681a72945200acbc0"
+            "sha256": "4e6745ebd5cc3f3fb754f6e1c7b27aeab85efc8df4b266dcc2e070d8159435b9"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -793,6 +793,13 @@
                 "sha256:881c4c157e45f30af185c1ffe8d549d48ac9127433f2c380c24b84572ad66297"
             ],
             "version": "==2.4.2"
+        },
+        "pygraphviz": {
+            "hashes": [
+                "sha256:50a829a305dc5a0fd1f9590748b19fece756093b581ac91e00c2c27c651d319d"
+            ],
+            "index": "pypi",
+            "version": "==1.5"
         },
         "pylint": {
             "hashes": [

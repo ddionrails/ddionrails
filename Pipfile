@@ -74,6 +74,7 @@ sphinx-rtd-theme = "*"
 # Local
 # ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
+pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "*"
 
 
