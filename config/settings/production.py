@@ -21,33 +21,6 @@ LOGGING = {
     },
 }
 
-RQ_QUEUES = {
-    "default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360},
-    "high": {
-        "URL": os.getenv("REDISTOGO_URL", "redis://redis:6379/0"),  # If you're on Heroku
-        "DEFAULT_TIMEOUT": 500,
-    },
-    "low": {"HOST": "redis", "PORT": 6379, "DB": 0},
-}
-
-
-TEMPLATES = [
-    {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.joinpath("templates")],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "ddionrails.studies.models.context",
-            ]
-        },
-    }
-]
-
 # SECURITY
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
