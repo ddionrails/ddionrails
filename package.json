@@ -36,6 +36,9 @@
     "webpack-bundle-tracker": "^0.4.2-beta",
     "webpack-cli": "^3.3.3"
   },
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
   "renovate": {
     "baseBranches": [
       "develop"

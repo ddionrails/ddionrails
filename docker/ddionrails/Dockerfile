@@ -30,8 +30,8 @@ RUN npm install
 RUN cd ./node_modules/ddionrails-elasticsearch \
     && npm install \
     && ./node_modules/.bin/ng build --prod
-RUN ./node_modules/.bin/webpack --config webpack.config.js
-RUN cp webpack-stats.json static/
+# Use webpack to bundle static files
+RUN npm run build
 
 # Set up entrypoint
 RUN mv docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
