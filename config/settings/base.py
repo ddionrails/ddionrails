@@ -96,7 +96,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templates"],
+        "DIRS": [BASE_DIR.joinpath("templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -123,6 +123,10 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT", default=5432),
     }
 }
+
+# DJANGO RQ
+# ------------------------------------------------------------------------------
+RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360}}
 
 THUMBNAIL_PROCESSORS = (
     "easy_thumbnails.processors.colorspace",
