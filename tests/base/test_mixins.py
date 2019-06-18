@@ -99,34 +99,18 @@ class TestModelMixin:
         result = mixin.html_description()
         assert result == ""
 
-    def test_get_attribute_method(self):
+    def test_string_method_single_id_field(self):
         mixin = ModelMixin()
         mixin.name = "some-name"
-        result = mixin.get_attribute("self.name")
-        assert result == mixin.name
+        assert mixin.name == str(mixin)
 
-    def test_get_attribute_method_default(self):
-        mixin = ModelMixin()
-        result = mixin.get_attribute("self.name")
-        assert result is None
-
-    def test_string_id_method_single_id_field(self):
-        mixin = ModelMixin()
-        mixin.name = "some-name"
-        assert mixin.string_id() == mixin.name
-
-    def test_string_id_method_multiple_id_field(self):
+    def test_string_method_multiple_id_field(self):
         mixin = ModelMixin()
         mixin.DOR.id_fields = ["id1", "id2"]
         mixin.id1 = "name-1"
         mixin.id2 = "name-2"
-        assert mixin.string_id() == mixin.id1 + "/" + mixin.id2
-
-    def test_string_method(self, mocker):
-        mixin = ModelMixin()
-        with mocker.patch("ddionrails.base.mixins.ModelMixin.string_id", return_value=""):
-            assert str(mixin) == ""
-            mixin.string_id.assert_called_once()
+        expected = f"{mixin.id1}/{mixin.id2}"
+        assert expected == str(mixin)
 
 
 @pytest.fixture

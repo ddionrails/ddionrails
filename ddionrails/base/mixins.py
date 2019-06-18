@@ -1,6 +1,9 @@
-"""
-Mixins for DDI on Rails.
-"""
+# -*- coding: utf-8 -*-
+
+""" Mixins for ddionrails.base app """
+
+from typing import Dict
+
 from django import forms
 
 from config.helpers import render_markdown
@@ -64,14 +67,14 @@ class ModelMixin:
         return cls.objects.get_or_create(**definition)[0]
 
     @classmethod
-    def get(cls, x):
+    def get(cls, parameters: Dict):
         """
         Default for the get_or_create based on a dict.
 
         The method uses only relevant identifiers based on ``DOR.id_fields``.
         """
         try:
-            definition = {key: x[key] for key in cls.DOR.id_fields}
+            definition = {key: parameters[key] for key in cls.DOR.id_fields}
             result = cls.objects.get(**definition)
         except cls.DoesNotExist:
             result = None
@@ -90,19 +93,19 @@ class ModelMixin:
 
         return DefaultForm
 
-    def to_dict(self):
+    def to_dict(self) -> Dict:
         """
         Uses the ``DOR.io_fields`` attribute to generate a default
         dict object for the current instance.
         """
-        default_dict = {}
-        for field_name in self.DOR.io_fields:
-            field = eval("self.%s" % field_name)
+        dictionary = dict()
+        for field in self.DOR.io_fields:
+            value = getattr(self, field)
             try:
-                default_dict[field_name] = field.pk
+                dictionary[field] = value.pk
             except AttributeError:
-                default_dict[field_name] = field
-        return default_dict
+                dictionary[field] = value
+        return dictionary
 
     def title(self):
         """
@@ -130,31 +133,16 @@ class ModelMixin:
             html = ""
         return html
 
-    def get_attribute(self, attribute, default=None):
-        """
-        Example::
-
-            study_id = variable.get_attribute("self.dataset.study.id")
-        """
-        try:
-            return eval(attribute)
-        except AttributeError:
-            return default
-
-    def string_id(self):
-        a = []
-        for field_name in self.DOR.id_fields:
-            field = eval("self.%s" % field_name)
-            try:
-                s = field.string_id()
-            except AttributeError:
-                s = str(field)
-            a.append(s)
-        a = "/".join(a)
-        return a
-
     def __str__(self):
-        return self.string_id()
+        """ Returns a string reprensentation of the instance, using DOR.id_fields """
+        result = []
+        for field in self.DOR.id_fields:
+            value = getattr(self, field)
+            try:
+                result.append(value.string_id())
+            except AttributeError:
+                result.append(str(value))
+        return "/".join(result)
 
 
 class AdminMixin:
