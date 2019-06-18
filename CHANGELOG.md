@@ -3,11 +3,54 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) from version [3.0.0] on.
+and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html)
+from version [3.0.0] on.
 This Project entered open source status with version 2.1.0.
 Older versions are not not part of this Project.
 
 ## [Unreleased]
+
+## [3.3.0] - 2019-06-18
+
+### Added
+
+- File server using django-filer.
+- Setup for [renovate-bot](https://github.com/apps/renovate).
+- pre-commit hooks for development.
+- QuestionImage Model to store Images for Question Objects.
+- Tests for paver tasks and api.view.
+
+### Changed
+
+- Restructure static file handling.
+
+  - Moved static assets from static/src/ to assets/ directory.
+  - Removed static folder from source tracking.
+  - Update webpack.config.js.
+
+- Update third party dependencies.
+- Renamed media files folder from media_root to media.
+- Move context from ddionrails.studies.models into own module.
+- Move import_path() method from Study and System Models to new ImportPathMixin.
+- Direct use of "/tmp/" replaced with use of tempfile library.
+- imports.manager.Repository now uses GitPython.
+- imports.manager.SystemImportManager now runs without django_rq.
+
+### Removed
+
+- Several unused templates and views.
+- Unused or pre-installed packages from
+  dockerfile package installation section.
+
+- Security issues
+
+  - use of preprocessing
+  - use of os.system
+  - use of eval
+
+- Several outdated paver tasks.
+- Forced storing of only lower cased names for Question and Variable names.
 
 ## [3.2.0] - 2019-05-29
 
@@ -17,7 +60,9 @@ Older versions are not not part of this Project.
 
 ### Changed
 
-- Reword Documentation and LICENSE.md file to let GitHub recognize the Project as AGPL-3.0.
+- Reword Documentation and LICENSE.md file to let GitHub recognize the Project 
+  as AGPL-3.0.
+
 - Combined staging and production settings.
 - Improved admin interface.
 - Improved admin model functionality.
@@ -31,11 +76,14 @@ Older versions are not not part of this Project.
 - This Changelog.
 - Many redundant commits due to unresolveable merge conflicts.
 - Automatic update of stale static files kept in the static_data volume.
-- Section to README to explain the currently hackey way the elastic search index is configured.
+- Section to README to explain the currently hackey way the elastic search index
+  is configured.
 
 ### Changed
 
-- Storage location for data to be imported can now be set via environment variable.
+- Storage location for data to be imported can now be set via environment
+  variable.
+
 - Update dependencies.
 
 ### Fixed
@@ -77,7 +125,8 @@ Older versions are not not part of this Project.
 - Some configuration can now be set via environment variables.
 - Use of PostgreSQL database.
 - Use of dedicated mail server service.
-- Adherence to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for this project.
+- Adherence to [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for
+  this project.
 
 ### Changed
 
@@ -103,7 +152,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v3.2.0...HEAD
+[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/ddionrails/ddionrails/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/ddionrails/ddionrails/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/ddionrails/ddionrails/compare/v3.0.1...v3.1.0
 [3.0.1]: https://github.com/ddionrails/ddionrails/compare/v3.0.0...v3.0.1
