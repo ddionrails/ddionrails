@@ -13,7 +13,6 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
-from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
@@ -29,10 +28,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
     # attributes
     name = models.CharField(
-        max_length=255,
-        validators=[validate_lowercase],
-        db_index=True,
-        help_text="Name of the question (Lowercase)",
+        max_length=255, db_index=True, help_text="Name of the question"
     )
     label = models.TextField(
         blank=True,
@@ -172,13 +168,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def concept_list(self):
         """DEPRECATED NAME"""
         return self.get_concepts()
-
-    def get_cs_name(self):
-        x = self.get_source().get("question", "")
-        if x != "":
-            return x
-        else:
-            return self.name
 
     def title(self):
         if self.label != None and self.label != "":

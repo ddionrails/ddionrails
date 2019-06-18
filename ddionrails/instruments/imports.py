@@ -2,7 +2,6 @@ import json
 import logging
 from collections import OrderedDict
 
-from config.helpers import lower_dict_names
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.data.models import Variable
 from ddionrails.imports import imports
@@ -62,7 +61,6 @@ class QuestionVariableImport(imports.CSVImport):
 
     def _import_link(self, link):
         try:
-            lower_dict_names(link)
             question = self._get_question(link)
             variable = self._get_variable(link)
             qv_link = QuestionVariable.objects.get_or_create(
@@ -102,7 +100,6 @@ class ConceptQuestionImport(imports.CSVImport):
 
     def _import_link(self, link):
         try:
-            lower_dict_names(link)
             question = self._get_question(link)
             concept = self._get_concept(link)
             qv_link = ConceptQuestion.objects.get_or_create(

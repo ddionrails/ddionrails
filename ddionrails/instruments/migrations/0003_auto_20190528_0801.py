@@ -127,10 +127,7 @@ class Migration(migrations.Migration):
             model_name="question",
             name="name",
             field=models.CharField(
-                db_index=True,
-                help_text="Name of the question (Lowercase)",
-                max_length=255,
-                validators=[config.validators.validate_lowercase],
+                db_index=True, help_text="Name of the question", max_length=255
             ),
         ),
         migrations.AlterField(
