@@ -126,7 +126,7 @@ class VariableImport(imports.CSVImport):
         variable = Variable.objects.get(dataset=dataset, name=element["variable_name"])
         concept_name = element.get("concept_name", "").lower()
         if concept_name != "":
-            concept, status = Concept.objects.get_or_create(name=concept_name)
+            concept = Concept.objects.get_or_create(name=concept_name)[0]
             variable.concept = concept
         variable.description = element.get("description", "")
         variable.description_long = element.get("description_long", "")
@@ -140,7 +140,7 @@ class TransformationImport(imports.CSVImport):
 
     def import_element(self, element):
         try:
-            transformation, status = Transformation.goc_by_name(
+            Transformation.goc_by_name(
                 element["origin_study_name"],
                 element["origin_dataset_name"],
                 element["origin_variable_name"],

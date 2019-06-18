@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for views in ddionrails.workspace app """
 
 import pytest
 from django.urls import reverse
 
 from ddionrails.workspace.views import script_detail
+from tests import status
 
 from .factories import UserFactory
 
@@ -14,7 +18,6 @@ class TestOwnBasketOnlyDecorator:
 
     def test_basket_belongs_to_other_user(self, client, basket):
         other_user = UserFactory(username="other-user")
-        pass
 
     def test_basket_does_not_exist(self, client, basket):
         pass
@@ -39,21 +42,21 @@ class TestScriptDetailView:
 
         request = rf.get("script_detail", basket_id=basket.id, script_id=script.id)
         response = script_detail(request, basket.id, script.id)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
 
 
 class TestAccountOverview:
     def test_account_overview_anonymous_user(self, client):
         url = reverse("workspace:account_overview")
         response = client.get(url)
-        assert response.status_code == 401
+        assert status.HTTP_401_UNAUTHORIZED == response.status_code
 
     def test_account_overview_authenticated_user(self, client, user):
         # ignore B106: hardcoded_password_funcarg
         client.login(username="some-user", password="some-password")  # nosec
         url = reverse("workspace:account_overview")
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
 
 
 class TestBasketList:

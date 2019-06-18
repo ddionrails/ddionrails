@@ -1,9 +1,14 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=unused-argument
+
+""" Pytest fixtures """
+
 import pytest
 
 from .factories import AttachmentFactory
 
 
 @pytest.fixture
-def attachment(db): # pylint: disable=unused-argument
+def attachment(db):
     """ An attachment in the database """
     return AttachmentFactory(url="https://some-url.org")

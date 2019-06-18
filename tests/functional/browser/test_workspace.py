@@ -14,7 +14,9 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
-def test_login_with_known_user(browser, login_url, user):
+def test_login_with_known_user(
+    browser, login_url, user
+):  # pylint: disable=unused-argument
     browser.visit(login_url)
     browser.fill("username", "some-user")
     browser.fill("password", "some-password")

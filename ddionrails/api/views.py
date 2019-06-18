@@ -151,7 +151,7 @@ def add_variables_by_concept(request, study_name, language, concept_name, basket
     variable_set = Variable.objects.filter(concept_id=concept.id)
     for variable in variable_set:
         try:
-            relation, status = BasketVariable.objects.get_or_create(
+            BasketVariable.objects.get_or_create(
                 basket_id=basket_id, variable_id=variable.id
             )
         except:
@@ -162,9 +162,7 @@ def add_variables_by_concept(request, study_name, language, concept_name, basket
 def add_variable_by_id(request, study_name, language, variable_id, basket_id):
     variable = get_object_or_404(Variable, pk=variable_id)
     basket = get_object_or_404(Basket, pk=basket_id)
-    relation, status = BasketVariable.objects.get_or_create(
-        basket_id=basket.id, variable_id=variable.id
-    )
+    BasketVariable.objects.get_or_create(basket_id=basket.id, variable_id=variable.id)
     return HttpResponse("DONE")
 
 
@@ -176,7 +174,7 @@ def add_variables_by_topic(request, study_name, language, topic_name, basket_id)
     variable_set = Variable.objects.filter(concept__topics__id__in=topic_id_list)
     for variable in variable_set:
         try:
-            relation, status = BasketVariable.objects.get_or_create(
+            BasketVariable.objects.get_or_create(
                 basket_id=basket_id, variable_id=variable.id
             )
         except:

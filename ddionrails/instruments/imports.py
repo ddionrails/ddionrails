@@ -35,7 +35,7 @@ class InstrumentImport(imports.Import):
             period_name = str(int(period_name))
         except ValueError:
             period_name = str(period_name)
-        period, status = Period.objects.get_or_create(name=period_name, study=self.study)
+        period = Period.objects.get_or_create(name=period_name, study=self.study)[0]
         instrument.period = period
 
         for name, q in content["questions"].items():
@@ -63,7 +63,7 @@ class QuestionVariableImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             variable = self._get_variable(link)
-            qv_link = QuestionVariable.objects.get_or_create(
+            QuestionVariable.objects.get_or_create(
                 question=question, variable=variable
             )
         except:
@@ -102,7 +102,7 @@ class ConceptQuestionImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             concept = self._get_concept(link)
-            qv_link = ConceptQuestion.objects.get_or_create(
+            ConceptQuestion.objects.get_or_create(
                 question=question, concept=concept
             )
         except:
@@ -121,5 +121,4 @@ class ConceptQuestionImport(imports.CSVImport):
         return question
 
     def _get_concept(self, link):
-        concept, status = Concept.objects.get_or_create(name=link["concept_name"])
-        return concept
+        return Concept.objects.get_or_create(name=link["concept_name"])[0]

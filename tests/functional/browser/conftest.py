@@ -6,8 +6,6 @@ from urllib.parse import urljoin
 
 import pytest
 
-from tests.factories import UserFactory
-
 SELENIUM_URL = "http://selenium:4444/wd/hub"
 
 

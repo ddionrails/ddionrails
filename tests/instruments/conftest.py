@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Pytest fixtures """
+
 import pytest
 
 from .factories import ConceptQuestionFactory, QuestionVariableFactory
@@ -28,12 +32,12 @@ def valid_question_data(instrument):
 
 
 @pytest.fixture
-def concept_question(db):
+def concept_question(db):  # pylint: disable=unused-argument
     """ A concept_question in the database """
     return ConceptQuestionFactory()
 
 
 @pytest.fixture
-def question_variable(db):
+def question_variable(db):  # pylint: disable=unused-argument
     """ A question_variable in the database """
     return QuestionVariableFactory()

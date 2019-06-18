@@ -1,6 +1,6 @@
 import pytest
 
-from config.helpers import lower_dict_names, render_markdown
+from config.helpers import RowHelper, lower_dict_names, render_markdown
 
 md_text = """
 # heading
@@ -41,3 +41,26 @@ class TestHelpers:
     @pytest.mark.skip(reason="no way of currently testing this")
     def script_list_output(self):
         pytest.fail("Test not implemented yet")
+
+
+class TestRowHelper:
+    def test_row_method(self):
+        row_helper = RowHelper()
+        expected = False
+        assert expected is row_helper.row()
+
+    def test_row_method_true(self):
+        """ Everytime row is called, row_index is incremented.
+            If it hits 4, it returns True
+        """
+        row_helper = RowHelper()
+        row_helper.row_index = 3
+        expected = True
+        assert expected is row_helper.row()
+
+    def test_reset_method(self):
+        row_helper = RowHelper()
+        row_helper.row_index = 1
+        row_helper.reset()
+        expected = 0
+        assert expected == row_helper.row_index
