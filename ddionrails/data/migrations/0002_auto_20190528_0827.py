@@ -204,10 +204,7 @@ class Migration(migrations.Migration):
             model_name="variable",
             name="name",
             field=models.CharField(
-                db_index=True,
-                help_text="Name of the variable (Lowercase)",
-                max_length=255,
-                validators=[config.validators.validate_lowercase],
+                db_index=True, help_text="Name of the variable", max_length=255
             ),
         ),
         migrations.AlterField(

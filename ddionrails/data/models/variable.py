@@ -13,7 +13,6 @@ from django.urls import reverse
 from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
-from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
@@ -30,10 +29,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
     # attributes
     name = models.CharField(
-        max_length=255,
-        validators=[validate_lowercase],
-        db_index=True,
-        help_text="Name of the variable (Lowercase)",
+        max_length=255, db_index=True, help_text="Name of the variable"
     )
     label = models.CharField(
         max_length=255,
@@ -71,10 +67,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
     )
     scale = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        help_text="Scale of the variable",
+        max_length=255, null=True, blank=True, help_text="Scale of the variable"
     )
     categories = JSONBField(
         default=list, null=True, blank=True, help_text="Categories of the variable(JSON)"
@@ -169,10 +162,6 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             return categories
         else:
             return []
-
-    def get_name_cs(self):
-        """Get the case sensitive version of the variable name, if available"""
-        return self.get_source().get("name_cs", self.name)
 
     def get_study(self, default=None, id=False):
         try:
