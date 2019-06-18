@@ -37,7 +37,8 @@
     "webpack-cli": "^3.3.4"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "webpack_watch": "webpack --config webpack.config.js --watch --debug --devtool source-map"
   },
   "renovate": {
     "baseBranches": [
