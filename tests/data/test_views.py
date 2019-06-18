@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
 
 """ Test cases for views in ddionrails.data app """
 
@@ -9,31 +9,10 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from ddionrails.data.models import Variable
-from ddionrails.data.views import DatasetRedirectView, RowHelper, VariableRedirectView
+from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from tests import status
 
-pytestmark = [pytest.mark.data, pytest.mark.views]
-
-
-class TestRowHelper:
-    def test_row_method(self):
-        row_helper = RowHelper()
-        assert row_helper.row() is False
-
-    def test_row_method_true(self):
-        """ Everytime row is called, row_index is incremented.
-            If it hits 4, it returns True
-        """
-        row_helper = RowHelper()
-        row_helper.row_index = 3
-        assert row_helper.row() == True
-
-    def test_reset_method(self):
-        row_helper = RowHelper()
-        row_helper.row_index = 1
-        row_helper.reset()
-        assert row_helper.row_index == 0
+pytestmark = [pytest.mark.data, pytest.mark.views]  # pylint: disable=invalid-name
 
 
 class TestDatasetDetailView:
@@ -73,7 +52,7 @@ class TestDatasetDetailView:
 
         # TODO view returns HttpResponseNotFound instead of raising Http404
         response = client.get(url)
-        assert response.status_code == 404
+        assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
 class TestDatasetRedirectView:
@@ -90,7 +69,7 @@ class TestDatasetRedirectView:
 
 
 class TestVariableDetailView:
-    def test_detail_view_with_existing_names(self, client, mocker, variable):
+    def test_detail_view_with_existing_names(self, client, variable):
         url = reverse(
             "data:variable",
             kwargs={
@@ -99,7 +78,6 @@ class TestVariableDetailView:
                 "variable_name": variable.name,
             },
         )
-        mocked_get_source = mocker.patch.object(Variable, "get_source")
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
         template = "data/variable_detail.html"
@@ -125,22 +103,21 @@ class TestVariableJsonView:
         assert content["uni"] == variable.categories
 
     # TODO non existing study => 404
-    def test_json_view_with_invalid_study_name(self, client, mocker, variable):
+    def test_json_view_with_invalid_study_name(self, client, variable):
         pass
 
     # TODO non existing dataset => 404
-    def test_json_view_with_invalid_dataset_name(self, client, mocker, variable):
+    def test_json_view_with_invalid_dataset_name(self, client, variable):
         pass
 
     # TODO non existing variable => 404
-    def test_json_view_with_invalid_variable_name(self, client, mocker, variable):
+    def test_json_view_with_invalid_variable_name(self, client, variable):
         pass
 
 
 class TestVariablePreviewIdView:
-    def test_preview_id_view_with_valid_pk(self, client, mocker, variable):
+    def test_preview_id_view_with_valid_pk(self, client, variable):
         url = reverse("api:variable_preview", kwargs={"variable_id": variable.pk})
-        mocked_get_source = mocker.patch.object(Variable, "get_source")
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
         template = "data/variable_preview.html"

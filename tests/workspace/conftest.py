@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=unused-argument
+
+""" Pytest fixtures """
+
 import pytest
 
 from .factories import BasketVariableFactory, ScriptFactory

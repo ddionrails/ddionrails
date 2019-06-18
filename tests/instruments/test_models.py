@@ -11,9 +11,9 @@ import pytest
 from django.core.files import File
 from django.db import models
 from filer.models import Folder, Image
-from tests.instruments.factories import QuestionFactory
 
 from ddionrails.instruments.models import ConceptQuestion, Question, QuestionImage
+from tests.instruments.factories import QuestionFactory
 
 pytestmark = [pytest.mark.instruments, pytest.mark.models]  # pylint: disable=invalid-name
 

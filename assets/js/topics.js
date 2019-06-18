@@ -39,8 +39,8 @@ var filter_options_string = "<span class='btn-group btn-group-sm filter-options'
     "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
 var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>"
 var filter_and_clipboard = filter_options_string.substr(0, 924) + clipboard + filter_options_string.substr(924);
-var api_url = location.protocol + '//' + window.location.host + "/api/topics/" + study + "/" + language
-var base_url = location.protocol + '//' + window.location.host + "/" + study + "/topics/" + language
+var api_url = location.protocol + "//" + window.location.host + "/api/topics/" + study + "/" + language
+var base_url = location.protocol + "//" + window.location.host + "/" + study + "/topics/" + language
 
 // Define what the tree structure will look like, for more information and options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
@@ -93,13 +93,13 @@ $(function () {
         },
         renderNode: function (event, data) {
             var node = data.node;
-            var d = node.data.description || '';
-            var $spanTitle = $(node.span).find('span.fancytree-title');
-            if ($(node.span).find('span.filter-options').length == 0) {
-                if (node.type == 'topic') {
+            var d = node.data.description || "";
+            var $spanTitle = $(node.span).find("span.fancytree-title");
+            if ($(node.span).find("span.filter-options").length == 0) {
+                if (node.type == "topic") {
                     $spanTitle.after(filter_and_clipboard); // insert additional copy_to_clipboard button to button group
                 }
-                if (node.type == 'concept') {
+                if (node.type == "concept") {
                     $spanTitle.after(filter_options_string);
                 }
             }
@@ -116,20 +116,20 @@ $(function () {
 
 
     // Search the tree for search string
-    $('#btn-search').on('click', function () {
-        $("#tree").fancytree("getTree").filterBranches($('#search').val(), {autoExpand: true});
+    $("#btn-search").on("click", function () {
+        $("#tree").fancytree("getTree").filterBranches($("#search").val(), {autoExpand: true});
     });
 
     // Trigger search on enter
-    $('.search-bar').keypress(function (e) {
+    $(".search-bar").keypress(function (e) {
         if (e.which == 13) {//Enter key pressed
-            $('#btn-search').click();
+            $("#btn-search").click();
         }
     });
 
 
     // Activate tooltip for more information about filter buttons, e.g. 'Show all related variables'
-    $('body').tooltip({selector: '[data-tooltip=tooltip]', trigger: "hover"});
+    $("body").tooltip({selector: "[data-tooltip=tooltip]", trigger: "hover"});
 });
 
 
@@ -138,28 +138,28 @@ function filter(node, type) {
 
     // show spinner while loading
     $("#tree_variables").empty();
-    $('.sk-three-bounce').show();
-    $('#tree').find("button[class*='-btn-active']").removeClass("variable-btn-active question-btn-active")
-    $(node).toggleClass(type + '-btn-active')
+    $(".sk-three-bounce").show();
+    $("#tree").find("button[class*='-btn-active']").removeClass("variable-btn-active question-btn-active")
+    $(node).toggleClass(type + "-btn-active")
 
     var activeNode = $.ui.fancytree.getNode(node);
 
     var extraClasses = activeNode.extraClasses || "";
     var url = api_url + "/" + activeNode.key
-    if (type == 'variable') {
-        url += '?variable_html=true';
+    if (type == "variable") {
+        url += "?variable_html=true";
     }
-    if (type == 'question') {
-        url += '?question_html=true';
+    if (type == "question") {
+        url += "?question_html=true";
     }
     var data;
 
     jQuery.get(url, function (data) {
-        $('.sk-three-bounce').hide(); // hide the loading message
+        $(".sk-three-bounce").hide(); // hide the loading message
         $("#tree_variables").html(data);
         $("#variable_table").DataTable();
     }).fail(function () {
-        $('.sk-three-bounce').hide(); // hide the loading message
+        $(".sk-three-bounce").hide(); // hide the loading message
         $("#tree_variables").html("<p><span class='glyphicon glyphicon-alert' aria-hidden='true'></span> Load Error!</p>");
     });
 }
@@ -172,7 +172,7 @@ function removeAsyncLoadedData(activeNode, type) {
         for (var i = 0; i < children.length; i++) {
             var node = $.ui.fancytree.getNode(children[i]);
             var extraClasses = node.extraClasses || "";
-            if (extraClasses.includes('async-data-' + type)) {
+            if (extraClasses.includes("async-data-" + type)) {
                 tmp.push(node);
             }
         }
@@ -201,16 +201,16 @@ function removeAllChildren(activeNode, type) {
 function addToBasket(el) {
     var node = $.ui.fancytree.getNode(el);
     var url = api_url + "/" + node.key + "?variable_list=false";
-    $('#basket_list').empty();
-    var number_of_variables = '?';
-    if (node.type == 'variable') {
+    $("#basket_list").empty();
+    var number_of_variables = "?";
+    if (node.type == "variable") {
         number_of_variables = 1;
-        $('#number_of_variables').text(number_of_variables); // Set number of variables in add to basket modal
+        $("#number_of_variables").text(number_of_variables); // Set number of variables in add to basket modal
 
     } else {
         jQuery.getJSON(url, function (data) {
-            number_of_variables = data.variable_count || '?';
-            $('#number_of_variables').text(number_of_variables); // Set number of variables in add to basket modal
+            number_of_variables = data.variable_count || "?";
+            $("#number_of_variables").text(number_of_variables); // Set number of variables in add to basket modal
         })
     }
 
@@ -218,16 +218,16 @@ function addToBasket(el) {
     jQuery.getJSON(url, function (data) {
         if (data.user_logged_in) {
             if (data.baskets.length == 0) {
-                var redirect_create_basket_url = location.protocol + '//' + window.location.host + "/workspace/baskets";
-                $('#basket_list').append("<p><a class='btn btn-primary' href='" + redirect_create_basket_url + "'>Create a basket</a></p>");
+                var redirect_create_basket_url = location.protocol + "//" + window.location.host + "/workspace/baskets";
+                $("#basket_list").append("<p><a class='btn btn-primary' href='" + redirect_create_basket_url + "'>Create a basket</a></p>");
             }
             for (var i = 0; i < data.baskets.length; i++) {
                 var addToBasketFunction = "addToBasketRequest(\'" + node.key + "\'," + data.baskets[i].id + ")"
-                $('#basket_list').append("<p><button class='btn btn-primary' onclick=" + addToBasketFunction + ">Add to basket <strong>" + data.baskets[i].name + "</strong></button></p>");
+                $("#basket_list").append("<p><button class='btn btn-primary' onclick=" + addToBasketFunction + ">Add to basket <strong>" + data.baskets[i].name + "</strong></button></p>");
             }
         } else {
-            var redirect_login_url = location.protocol + '//' + window.location.host + "/workspace/login";
-            $('#basket_list').append("<p><a class='btn btn-primary' href='" + redirect_login_url + "'>Please log in to use this function.</a></p>");
+            var redirect_login_url = location.protocol + "//" + window.location.host + "/workspace/login";
+            $("#basket_list").append("<p><a class='btn btn-primary' href='" + redirect_login_url + "'>Please log in to use this function.</a></p>");
         }
     });
 }
@@ -238,16 +238,16 @@ function addToBasketRequest(node_key, basket_id) {
     var url = api_url + "/" + node_key + "/add_to_basket/" + basket_id;
     jQuery.get(url, function (data) {
     }).done(function () {
-        $('#basket_success').removeClass('hidden');
+        $("#basket_success").removeClass("hidden");
     }).fail(function () {
-        $('#basket_error').removeClass('hidden');
+        $("#basket_error").removeClass("hidden");
     })
 }
 
 // Remove status alerts from modal after modal was closed
-$('#topic-list-add-to-basket').on('hidden.bs.modal', function () {
-    $('#basket_success').addClass('hidden');
-    $('#basket_error').addClass('hidden');
+$("#topic-list-add-to-basket").on("hidden.bs.modal", function () {
+    $("#basket_success").addClass("hidden");
+    $("#basket_error").addClass("hidden");
 })
 
 
@@ -257,17 +257,17 @@ function copy_url_to_clipboard(el) {
 
     // URL need to be selectable to be copied to clipboard, append temporary element
     url = base_url + "?open=" + activeNode.key
-    const tmp = document.createElement('textarea');
+    const tmp = document.createElement("textarea");
     tmp.value = url;
     document.body.appendChild(tmp);
     tmp.select();
-    document.execCommand('copy');
+    document.execCommand("copy");
     document.body.removeChild(tmp);
 
     // Show feedback message (url copied)
-    $(el).attr('title', 'Copied URL').tooltip('fixTitle').tooltip('show');
+    $(el).attr("title", "Copied URL").tooltip("fixTitle").tooltip("show");
     setTimeout(function () {
-        $(el).attr('title', 'Copy URL').tooltip('fixTitle');
+        $(el).attr("title", "Copy URL").tooltip("fixTitle");
     }, 1000)
 }
 

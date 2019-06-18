@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
 
-""" Test cases for ddionrails.api app """
+""" Test cases for views in ddionrails.api app """
 
 import pytest
 from django.urls import reverse

@@ -50,10 +50,7 @@ class RowHelper:
 
     def row(self):
         self.row_index += 1
-        if (self.row_index % self.number_of_rows) == 0:
-            return True
-        else:
-            return False
+        return bool(self.row_index % self.number_of_rows == 0)
 
     def reset(self):
         self.row_index = 0

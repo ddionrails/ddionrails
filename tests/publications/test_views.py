@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for views in ddionrails.publications app """
+
 import pytest
 from django.http.response import Http404
 from django.urls import reverse

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
 
 """ Test cases for forms in ddionrails.workspace app """
 
@@ -49,7 +50,8 @@ class TestBasketForm:
 
     def test_form_with_valid_data(self, db, valid_basket_data):
         form = BasketForm(data=valid_basket_data)
-        assert form.is_valid() is True
+        expected = True
+        assert expected is form.is_valid()
 
 
 class TestUserCreationForm:
@@ -61,8 +63,10 @@ class TestUserCreationForm:
             "password1": ["This field is required."],
             "password2": ["This field is required."],
         }
-        assert form.errors == expected_errors
+        assert expected_errors == form.errors
 
-    def test_form_with_valid_data(self, db, valid_user_creation_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_user_creation_data):
         form = UserCreationForm(data=valid_user_creation_data)
-        assert form.is_valid() is True
+        expected = True
+        assert expected is form.is_valid()

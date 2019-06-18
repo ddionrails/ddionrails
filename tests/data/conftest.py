@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Pytest fixtures """
+
 import pytest
 
 
@@ -8,7 +12,7 @@ def invalid_dataset_data():
 
 
 @pytest.fixture
-def valid_dataset_data(db):
+def valid_dataset_data(db):  # pylint: disable=unused-argument
     """ A valid input for dataset forms and imports """
     return dict(dataset_name="some-dataset", boost="1")
 

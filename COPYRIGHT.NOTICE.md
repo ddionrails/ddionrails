@@ -20,7 +20,8 @@ along with DDI on Rails.  If not, see <https://www.gnu.org/licenses/>.
   - 2018-2019 Heinz-Alexander Fütterer (DIW Berlin)
   - 2019 Dominique Hansen (DIW Berlin)
 - date      : 2018-11-30
-- copyright : Copyright (c) 2015-2019, Marcel Hebing, DIW Berlin <https://www.diw.de/>. All rights reserved.
+- copyright : Copyright (c) 2015-2019, Marcel Hebing, DIW Berlin
+              <https://www.diw.de/>. All rights reserved.
 - license   : AGPL-3.0 GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) 3.0.  
                See LICENSE at <https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md>.  
                See AGPL License at <https://www.gnu.org/licenses/agpl-3.0.txt>.

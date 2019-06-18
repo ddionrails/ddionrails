@@ -1,26 +1,34 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for models in ddionrails.workspace app """
+
 import pytest
 from django.core.exceptions import ValidationError
 
-from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script, ScriptConfig
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
 
-pytestmark = [pytest.mark.workspace]
+pytestmark = [pytest.mark.workspace]  # pylint: disable=invalid-name
 
 
 @pytest.fixture
-def csv_heading(db):
-    return "name,label,label_de,dataset_name,dataset_label,dataset_label_de,study_name,study_label,study_label_de,concept_name,period_name"
+def csv_heading(db):  # pylint: disable=unused-argument
+    return (
+        "name,label,label_de,dataset_name,dataset_label,dataset_label_de,"
+        "study_name,study_label,study_label_de,concept_name,period_name"
+    )
 
 
 class TestBasketModel:
     def test_string_method(self, basket):
-        assert str(basket) == basket.user.username + "/" + basket.name
+        expected = f"{basket.user.username}/{basket.name}"
+        assert expected == str(basket)
 
     def test_absolute_url_method(self, basket):
         expected = f"/workspace/baskets/{basket.id}"
-        assert basket.get_absolute_url() == expected
+        assert expected == basket.get_absolute_url()
 
     def test_html_description_method(self, mocker, basket):
         mocked_render_markdown = mocker.patch(
@@ -30,11 +38,11 @@ class TestBasketModel:
         mocked_render_markdown.assert_called_once()
 
     def test_title_method(self, basket):
-        assert basket.title() == basket.name
+        assert basket.name == basket.title()
 
     def test_title_method_with_label(self, basket):
         basket.label = "Some basket"
-        assert basket.title() == basket.label
+        assert basket.label == basket.title()
 
     @pytest.mark.skip(reason="no way of currently testing this")
     def test_get_or_create_method(self, user):
@@ -43,7 +51,8 @@ class TestBasketModel:
 
     def test_get_script_generators_method(self, basket):
         result = basket.get_script_generators()
-        assert result is None
+        expected = None
+        assert expected is result
 
     def test_get_script_generators_method_with_config(self, study, basket):
         # Set script_generators in study.config
@@ -51,7 +60,8 @@ class TestBasketModel:
         study.save()
         basket.refresh_from_db()
         result = basket.get_script_generators()
-        assert result == "some-script-generator"
+        expected = "some-script-generator"
+        assert expected == result
 
     def test_to_csv_method_with_empty_basket(self, basket, csv_heading):
         result = basket.to_csv()
@@ -87,7 +97,8 @@ class TestBasketVariableModel:
         basket_variable = BasketVariable(basket_id=basket.id, variable_id=variable.id)
         basket_variable.clean()
         basket_variable.save()
-        assert 1 == BasketVariable.objects.count()
+        expected = 1
+        assert expected == BasketVariable.objects.count()
 
     def test_clean_method_fails(self, basket):
         """ BasketVariable clean method should raise an ValidationError when basket and variable study do not match """
@@ -101,7 +112,8 @@ class TestBasketVariableModel:
         )
         with pytest.raises(ValidationError):
             basket_variable.clean()
-        assert 0 == BasketVariable.objects.count()
+        expected = 0
+        assert expected == BasketVariable.objects.count()
 
 
 class TestScriptModel:
@@ -114,13 +126,13 @@ class TestScriptModel:
 
     def test_get_config_method_with_local_config(self, script):
         script.local_config = "local-config"
-        result = script.get_config()
-        assert result == script.local_config
+        assert script.local_config == script.get_config()
 
     def test_get_settings_method(self, script):
         script.settings_dict = dict(key="value")
         result = script.get_settings()
-        assert result["key"] == "value"
+        expected = "value"
+        assert expected == result["key"]
 
     def test_get_settings_method_without_settings_dict(self, script):
         script.settings = '{"key": "value"}'
@@ -134,15 +146,15 @@ class TestScriptModel:
 
     def test_title_method(self, script):
         script.label = ""
-        assert script.title() == script.name
+        assert script.name == script.title()
 
     def test_title_method_with_label(self, script):
-        assert script.title() == script.label
+        assert script.label == script.title()
 
     def test_string_method(self, script):
         expected = f"/workspace/baskets/{script.basket.id}/scripts/{script.id}"
-        assert str(script) == expected
+        assert expected == str(script)
 
     def test_absolute_url_method(self, script):
         expected = f"/workspace/baskets/{script.basket.id}/scripts/{script.id}"
-        assert script.get_absolute_url() == expected
+        assert expected == script.get_absolute_url()

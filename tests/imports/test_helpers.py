@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for helpers in ddionrails.imports app """
+
 from ddionrails.imports.helpers import read_csv
 
 

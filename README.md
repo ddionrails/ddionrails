@@ -81,7 +81,7 @@ __After__ starting the services via docker-compose:
 ``` bash
 cd ddionrails/
 docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
-docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" exec web pytest
+docker-compose exec web paver test
 ```
 
 ## Versioning
@@ -97,9 +97,7 @@ This project is licensed under the GNU AGPL-3.0 License - see the [LICENSE.md](h
 [python-badge]: https://img.shields.io/badge/Python-3.7.3-blue.svg
 [django-badge]: https://img.shields.io/badge/Django-2.2.2-blue.svg
 [license-badge]: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
-[reposize-badge]: https://img.shields.io/github/repo-size/badges/shields.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
 [travis-badge]: https://img.shields.io/travis/ddionrails/ddionrails.svg
-[greenkeeper-badge]: https://badges.greenkeeper.io/greenkeeperio/badges.svg
 [issues-badge]: https://img.shields.io/github/issues/ddionrails/ddionrails.svg
 [codacy-badge]: https://api.codacy.com/project/badge/Grade/0382ce2fae284b608bfba7bc2da74a4b

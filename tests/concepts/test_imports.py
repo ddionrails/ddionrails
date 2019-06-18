@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use
 
-""" Test cases for imports in ddionrails.concepts app """
+""" Test cases for importer classes in ddionrails.concepts app """
 
 import pytest
 

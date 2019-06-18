@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for importer classes in ddionrails.imports app """
+
 import pathlib
 
 import pytest
@@ -6,7 +11,7 @@ from django.forms import ModelForm
 
 from ddionrails.imports.imports import CSVImport, Import, JekyllImport
 
-pytestmark = pytest.mark.imports
+pytestmark = [pytest.mark.imports]  # pylint: disable=invalid-name
 
 
 @pytest.fixture
@@ -27,7 +32,8 @@ def jekyll_importer(study, filename):
 
 
 class TestImport:
-    def test_run_import_method(self, mocker, db):
+    @pytest.mark.django_db
+    def test_run_import_method(self, mocker):
         """ Need a child of Import, because execute_import is not implemented """
 
         class SampleImport(Import):
@@ -152,5 +158,5 @@ class TestJekyllImport:
         jekyll_importer.data = "some-data"
         jekyll_importer.content = "some-content"
         jekyll_importer.execute_import()
-        out, err = capsys.readouterr()
+        out = capsys.readouterr()[0]
         assert out == "\n".join(["some-data", "some-content", ""])

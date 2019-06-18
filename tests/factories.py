@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,too-few-public-methods
+
+""" DjangoModelFactories for user model """
+
 import factory
 from django.contrib.auth.models import User
 

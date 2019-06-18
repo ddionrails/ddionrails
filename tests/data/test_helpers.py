@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,too-few-public-methods,no-self-use
+
+""" Test cases for helpers in ddionrails.data app """
+
 import pytest
 
 from ddionrails.data.helpers import LabelTable
@@ -7,21 +12,21 @@ from .factories import DatasetFactory, VariableFactory
 
 
 @pytest.fixture
-def variables(db):
+def variables(db):  # pylint: disable=unused-argument
     """ This fixture contains two variables from two datasets from two periods
         they appear in an unsorted order
     """
-    d1 = DatasetFactory(name="d1")
-    d2 = DatasetFactory(name="d2")
-    p1 = PeriodFactory(name="2019")
-    p2 = PeriodFactory(name="2018")
-    v1 = VariableFactory(name="v1")
-    v2 = VariableFactory(name="v2")
-    d1.period = p1
-    d2.period = p2
-    v1.dataset = d1
-    v2.dataset = d2
-    return [v1, v2]
+    dataset = DatasetFactory(name="d1")
+    other_dataset = DatasetFactory(name="d2")
+    period = PeriodFactory(name="2019")
+    other_period = PeriodFactory(name="2018")
+    variable = VariableFactory(name="v1")
+    other_variable = VariableFactory(name="v2")
+    dataset.period = period
+    other_dataset.period = other_period
+    variable.dataset = dataset
+    other_variable.dataset = other_dataset
+    return [variable, other_variable]
 
 
 @pytest.fixture
@@ -47,11 +52,11 @@ class TestLabelTable:
         label_table = LabelTable(variables)
         mocked_fill_header = mocker.patch.object(LabelTable, "_fill_header")
         mocked_fill_body = mocker.patch.object(LabelTable, "_fill_body")
-        label_table_dict = label_table.to_dict()
+        label_table.to_dict()
         mocked_fill_header.assert_called_once()
         mocked_fill_body.assert_called_once()
 
-    def test_to_html_method(self, mocker, variables):
+    def test_to_html_method(self, variables):
         label_table = LabelTable(variables)
         # label_table_html = label_table.to_html()
 

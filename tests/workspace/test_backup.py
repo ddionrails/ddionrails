@@ -19,15 +19,17 @@ from ddionrails.workspace.resources import (
     UserResource,
 )
 
+pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
+
 
 class TestUserResource:
-    def test_export(self, db, user):
+    def test_export(self, user):
         dataset = UserResource().export()
         assert user.username == dataset["username"][0]
         assert user.email == dataset["email"][0]
         assert user.password == dataset["password"][0]
 
-    def test_import(self, db):
+    def test_import(self):
         assert 0 == User.objects.count()
         now = timezone.now()
         username = "some-user"
@@ -50,7 +52,7 @@ class TestUserResource:
 
 
 class TestBasketResource:
-    def test_export(self, db, basket):
+    def test_export(self, basket):
         dataset = BasketResource().export()
 
         # select first row from exported baskets
@@ -66,7 +68,7 @@ class TestBasketResource:
         modified_timestamp = basket.modified.strftime("%Y-%m-%d %H:%M:%S %Z")
         assert modified_timestamp in basket_export["modified"]
 
-    def test_import(self, db, user, study):
+    def test_import(self, user, study):
         assert 0 == Basket.objects.count()
 
         study = study.name
@@ -106,7 +108,7 @@ class TestBasketResource:
 
 
 class TestBasketVariableResource:
-    def test_export(self, db, variable, basket):
+    def test_export(self, variable, basket):
         assert 0 == BasketVariable.objects.count()
         basket_variable = BasketVariable(basket=basket, variable=variable)
         basket_variable.save()
@@ -145,7 +147,7 @@ class TestBasketVariableResource:
 
 
 class TestScriptResource:
-    def test_export(self, db, script):
+    def test_export(self, script):
         dataset = ScriptExportResource().export()
         assert script.basket.user.username == dataset["user"][0]
         assert script.basket.name == dataset["basket"][0]
@@ -200,7 +202,6 @@ def clirunner():
     return CliRunner()
 
 
-@pytest.mark.django_db
 class TestBackupManagementCommand:
     @pytest.mark.parametrize("argument", ("--users", "-u"))
     def test_backup_users(self, clirunner, argument, user):
@@ -220,7 +221,6 @@ class TestBackupManagementCommand:
         pass
 
 
-@pytest.mark.django_db
 class TestRestoreManagementCommand:
     @pytest.mark.parametrize("argument", ("--users", "-u"))
     def test_restore_users(self, clirunner, argument, client):

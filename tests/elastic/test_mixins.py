@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for mixin in ddionrails.elastic app """
+
 import json
 
 from elasticsearch import Elasticsearch

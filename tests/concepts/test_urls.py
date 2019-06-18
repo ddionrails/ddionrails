@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for URLConf in ddionrails.concepts app """
+
 import pytest
 from django.urls import resolve, reverse
 
