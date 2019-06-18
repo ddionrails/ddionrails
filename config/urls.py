@@ -17,10 +17,10 @@ from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
 
 # These variable names are desired by Django
-handler400 = "config.views.bad_request" # pylint: disable=invalid-name
-handler403 = "config.views.permission_denied" # pylint: disable=invalid-name
-handler404 = "config.views.page_not_found"# pylint: disable=invalid-name
-handler500 = "config.views.server_error"# pylint: disable=invalid-name
+handler400 = "config.views.bad_request"  # pylint: disable=invalid-name
+handler403 = "config.views.permission_denied"  # pylint: disable=invalid-name
+handler404 = "config.views.page_not_found"  # pylint: disable=invalid-name
+handler500 = "config.views.server_error"  # pylint: disable=invalid-name
 
 admin.site.site_header = "DDI on Rails Admin"
 admin.site.site_title = "DDI on Rails Admin"
@@ -49,8 +49,10 @@ urlpatterns = [
     path("user/", include("django.contrib.auth.urls")),
     path("accounts/login/", LoginView.as_view()),
     path("elastic<path:path>", elastic_proxy),
+
     # Study by name
     path("<slug:study_name>", StudyDetailView.as_view(), name="study_detail"),
+
     # Study-specific links
     path("<slug:study_name>/data/", include("ddionrails.data.urls", namespace="data")),
     path(
@@ -62,21 +64,22 @@ urlpatterns = [
         include("ddionrails.instruments.urls", namespace="inst"),
     ),
     path("<slug:study_name>/topics/<slug:language>", study_topics, name="study.topics"),
+
     # Redirects for search interface
-    path("publication/<int:id>", publications_views.PublicationRedirectView.as_view()),
-    path("variable/<int:id>", VariableRedirectView.as_view()),
-    path("dataset/<int:id>", DatasetRedirectView.as_view()),
+    path("publication/<uuid:id>", publications_views.PublicationRedirectView.as_view()),
+    path("variable/<uuid:id>", VariableRedirectView.as_view()),
+    path("dataset/<uuid:id>", DatasetRedirectView.as_view()),
     path(
-        "instrument/<int:pk>",
+        "instrument/<uuid:id>",
         instruments_views.InstrumentRedirectView.as_view(),
         name="instrument_redirect",
     ),
     path(
-        "question/<int:pk>",
+        "question/<uuid:id>",
         instruments_views.QuestionRedirectView.as_view(),
         name="question_redirect",
     ),
-    path("study/<int:id>", StudyRedirectView.as_view()),
+    path("study/<uuid:id>", StudyRedirectView.as_view()),
 ]
 
 if settings.DEBUG:

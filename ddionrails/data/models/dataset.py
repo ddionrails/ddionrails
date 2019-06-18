@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.data app: Dataset """
 
+import uuid
+
 from django.db import models
 from django.urls import reverse
 
@@ -17,7 +19,17 @@ class Dataset(ModelMixin, models.Model):
     :model:`concepts.Period` and :model:`concepts.AnalysisUnit`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the dataset. Dependent on the associated study.",
+    )
+
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -48,7 +60,9 @@ class Dataset(ModelMixin, models.Model):
         help_text="Boost factor to be used in search (Elasticsearch)",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study,
         blank=True,
@@ -81,6 +95,18 @@ class Dataset(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.AnalysisUnit",
     )
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     class Meta:
         """ Django's metadata options """

@@ -10,6 +10,6 @@ app_name = "concepts"
 
 urlpatterns = [
     path("", ConceptListView.as_view(), name="concept_list"),
-    path("<int:pk>", ConceptDetailView.as_view(), name="concept_detail"),
+    path("<uuid:id>", ConceptDetailView.as_view(), name="concept_detail"),
     path("<slug:concept_name>", ConceptDetailView.as_view(), name="concept_detail_name"),
 ]

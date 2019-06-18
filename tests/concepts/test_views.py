@@ -3,6 +3,7 @@
 
 """ Test cases for views in ddionrails.concepts app """
 
+
 import pytest
 from django.urls import reverse
 
@@ -14,15 +15,14 @@ pytestmark = [pytest.mark.concepts, pytest.mark.views]
 
 @pytest.mark.django_db
 class TestConceptDetailView:
-    def test_detail_view_with_valid_pk(self, client, concept):
-        valid_pk = concept.pk
-        url = reverse("concepts:concept_detail", kwargs={"pk": valid_pk})
+    def test_detail_view_with_valid_id(self, client, concept):
+        valid_id = concept.id
+        url = reverse("concepts:concept_detail", kwargs={"id": valid_id})
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
 
-    def test_detail_view_with_invalid_pk(self, client):
-        invalid_pk = 999
-        url = reverse("concepts:concept_detail", kwargs={"pk": invalid_pk})
+    def test_detail_view_with_invalid_id(self, client, uuid_identifier):
+        url = reverse("concepts:concept_detail", kwargs={"id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 

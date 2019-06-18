@@ -13,7 +13,9 @@ class Transformation(models.Model):
     Stores a single transformation, related to :model:`data.Variable`.
     """
 
-    # relations
+    #############
+    # relations #
+    #############
     origin = models.ForeignKey(
         Variable,
         related_name="target_variables",

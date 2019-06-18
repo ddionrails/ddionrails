@@ -3,6 +3,7 @@
 
 """ Test cases for views in ddionrails.instruments app """
 
+
 import pytest
 from django.urls import reverse
 
@@ -39,28 +40,26 @@ class TestInstrumentDetailView:
 
 
 class TestInstrumentRedirectView:
-    def test_redirect_view_with_valid_pk(self, client, instrument):
-        valid_pk = instrument.pk
-        url = reverse("instrument_redirect", kwargs={"pk": valid_pk})
+    def test_redirect_view_with_valid_id(self, client, instrument):
+        valid_id = instrument.id
+        url = reverse("instrument_redirect", kwargs={"id": valid_id})
         response = client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, client):
-        invalid_pk = 999
-        url = reverse("instrument_redirect", kwargs={"pk": invalid_pk})
+    def test_redirect_view_with_invalid_id(self, client, uuid_identifier):
+        url = reverse("instrument_redirect", kwargs={"id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
 class TestQuestionRedirectView:
-    def test_redirect_view_with_valid_pk(self, client, question):
-        valid_pk = question.pk
-        url = reverse("question_redirect", kwargs={"pk": valid_pk})
+    def test_redirect_view_with_valid_id(self, client, question):
+        valid_id = question.id
+        url = reverse("question_redirect", kwargs={"id": valid_id})
         response = client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, client):
-        invalid_pk = 999
-        url = reverse("question_redirect", kwargs={"pk": invalid_pk})
+    def test_redirect_view_with_invalid_id(self, client, uuid_identifier):
+        url = reverse("question_redirect", kwargs={"id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code

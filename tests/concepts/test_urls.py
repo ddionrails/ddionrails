@@ -29,8 +29,8 @@ class TestConceptUrls:
         url = reverse(concept_list_url)
         assert resolve(url).view_name == concept_list_url
 
-    def test_concept_detail_url_with_pk(self, concept_detail_url_by_id):
-        url = reverse(concept_detail_url_by_id, kwargs={"pk": 1})
+    def test_concept_detail_url_with_id(self, concept_detail_url_by_id, uuid_identifier):
+        url = reverse(concept_detail_url_by_id, kwargs={"id": uuid_identifier})
         assert resolve(url).view_name == concept_detail_url_by_id
 
     def test_concept_detail_url_with_name(self, concept_detail_url_by_name):

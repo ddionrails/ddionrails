@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.instruments app: Instrument """
 
+import uuid
+
 from django.db import models
 from django.urls import reverse
 
@@ -13,10 +15,21 @@ from ddionrails.studies.models import Study
 class Instrument(ModelMixin, models.Model):
     """
     Stores a single instrument,
-    related to :model:`studies.Study`, :model:`concepts.Period` and :model:`concepts.AnalysisUnit`.
+    related to :model:`studies.Study`,
+    :model:`concepts.Period` and :model:`concepts.AnalysisUnit`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the instrument. Dependent on the associated study.",
+    )
+
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -35,7 +48,9 @@ class Instrument(ModelMixin, models.Model):
         help_text="Description of the topic (Markdown)",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study,
         blank=True,
@@ -61,6 +76,18 @@ class Instrument(ModelMixin, models.Model):
         help_text="Foreign key to concepts.AnalysisUnit",
     )
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     class Meta:
         """ Django's metadata options """
 
@@ -84,4 +111,5 @@ class Instrument(ModelMixin, models.Model):
 
     @staticmethod
     def layout_class() -> str:
+        """ TODO: What does this do? """
         return "instrument"

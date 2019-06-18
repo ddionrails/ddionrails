@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import inspect
+import uuid
 from collections import OrderedDict
 from typing import Dict, List
 
@@ -25,10 +27,21 @@ from .dataset import Dataset
 class Variable(ElasticMixin, DorMixin, models.Model):
     """
     Stores a single variable,
-    related to :model:`data.Dataset`, :model:`concepts.Concept` and :model:`concepts.Period`.
+    related to :model:`data.Dataset`,
+    :model:`concepts.Concept` and :model:`concepts.Period`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the variable. Dependent on the associated dataset.",
+    )
+
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the variable"
     )
@@ -64,6 +77,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"
     )
+    languages = list()
     statistics = JSONBField(
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
     )
@@ -74,7 +88,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         default=list, null=True, blank=True, help_text="Categories of the variable(JSON)"
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     dataset = models.ForeignKey(
         Dataset,
         blank=True,
@@ -101,6 +117,18 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     )
     image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.dataset_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "variable"
 
@@ -117,7 +145,10 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return f"{self.dataset}/{self.name}"
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "dataset" and "name" fields """
+        """ Returns a canonical URL for the model.
+
+        Uses the "dataset" and "name" fields
+        """
         return reverse(
             "data:variable",
             kwargs={
@@ -160,16 +191,15 @@ class Variable(ElasticMixin, DorMixin, models.Model):
                     category["label_de"] = self.categories["labels_de"][index]
                 categories.append(category)
             return categories
-        else:
-            return []
+
+        return []
 
     def get_study(self, default=None, study_id=False):
         """ Returns the related study_id | Study instance | a default """
         try:
             if study_id:
                 return self.dataset.study.id
-            else:
-                return self.dataset.study
+            return self.dataset.study
         except:
             return default
 
@@ -178,8 +208,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         try:
             if concept_id:
                 return self.concept.id
-            else:
-                return self.concept
+            return self.concept
         except:
             return default
 
@@ -191,10 +220,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             period = period_2 if period_2 else period_1
             if period_id is True:
                 return period.id
-            elif period_id == "name":
+            if period_id == "name":
                 return period.name
-            else:
-                return period
+            return period
         except:
             return default
 
@@ -244,9 +272,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         target_variables = [x.target for x in self.target_variables.all()]
-        studies = set(
-            [target_variable.dataset.study for target_variable in target_variables]
-        )
+
+        studies = {target_variable.dataset.study for target_variable in target_variables}
+
         result = OrderedDict()
         for study in studies:
             periods = Period.objects.filter(study_id=study.id).order_by("name").all()
@@ -278,9 +306,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         origin_variables = [x.origin for x in self.origin_variables.all()]
-        studies = set(
-            [origin_variable.dataset.study for origin_variable in origin_variables]
-        )
+
+        studies = {origin_variable.dataset.study for origin_variable in origin_variables}
+
         result = OrderedDict()
         for study in studies:
             periods = Period.objects.filter(study_id=study.id).order_by("name").all()
@@ -309,11 +337,12 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return len(self.translation_languages()) > 0
 
     def translation_languages(self) -> List[str]:
-        if not hasattr(self, "languages"):
+        if not self.languages:
+            members = inspect.getmembers(self)
             self.languages = [
-                label.replace("label_", "")
-                for label in self.__dict__.keys()
-                if ("label_" in label)
+                label[0].replace("label_", "")
+                for label in members
+                if ("label_" in label[0])
             ]
         return self.languages
 
@@ -341,8 +370,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def title_de(self):
         if self.label_de != "" and self.label_de is not None:
             return self.label_de
-        else:
-            return self.title()
+        return self.title()
 
     def to_dict(self) -> Dict:
         """ Returns a dictionary representation of the Variable object """
@@ -369,8 +397,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             type="variable",
         )
 
-    @classmethod
-    def index_prefetch(self, queryset):
+    @staticmethod
+    def index_prefetch(queryset):
+        """ TODO: What does this do? """
         return (
             queryset.prefetch_related("dataset__study")
             .prefetch_related("dataset__period")

@@ -3,6 +3,7 @@
 
 """ Pytest fixtures """
 
+import uuid
 from io import BytesIO
 
 import PIL.Image
@@ -192,3 +193,9 @@ def variable(db):
             "missings": [True, False],
         },
     )
+
+
+@pytest.fixture
+def uuid_identifier():
+    """ A UUID that is used for testing views and URLConfs """
+    return uuid.UUID("12345678123456781234567812345678")

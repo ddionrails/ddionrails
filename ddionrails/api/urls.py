@@ -23,18 +23,18 @@ app_name = "api"
 
 urlpatterns = [
     path(
-        "test/preview/variable/<int:variable_id>",
+        "test/preview/variable/<uuid:variable_id>",
         variable_preview_id,
         name="variable_preview",
     ),
     path(
-        "test/preview/<str:object_type>/<int:object_id>",
+        "test/preview/<str:object_type>/<uuid:object_id>",
         test_preview,
         name="test_preview",
     ),
-    path("questions/compare/<int:from_id>/<int:to_id>", question_comparison_partial),
+    path("questions/compare/<uuid:from_id>/<uuid:to_id>", question_comparison_partial),
     path(
-        "test/redirect/<str:object_type>/<str:object_id>",
+        "test/redirect/<str:object_type>/<uuid:object_id>",
         object_redirect,
         name="object_redirect",
     ),

@@ -21,13 +21,14 @@ class ConceptDetailView(DetailView):
 
     model = Concept
     template_name = "concepts/concept_detail.html"
-    slug_url_kwarg = "concept_name"
+    pk_url_kwarg = "id"  # use "id" in URLConf for lookup
+    slug_url_kwarg = "concept_name"  # use "concept_name" in URLConf for lookup
     query_pk_and_slug = True
     slug_field = "name"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        concept_id = context["concept"].pk
+        concept_id = context["concept"].id
         context["variables"] = Variable.get_by_concept_id(concept_id).select_related(
             "dataset", "dataset__study"
         )
