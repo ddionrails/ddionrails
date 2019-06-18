@@ -10,13 +10,18 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.FILER_IMAGE_MODEL),
-        ('data', '0002_auto_20190528_0827'),
+        ("data", "0002_auto_20190528_0827"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='variable',
-            name='image',
-            field=filer.fields.image.FilerImageField(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.FILER_IMAGE_MODEL),
-        ),
+            model_name="variable",
+            name="image",
+            field=filer.fields.image.FilerImageField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.FILER_IMAGE_MODEL,
+            ),
+        )
     ]

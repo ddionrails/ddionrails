@@ -6,24 +6,34 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('data', '0003_variable_image'),
-    ]
+    dependencies = [("data", "0003_variable_image")]
 
     operations = [
         migrations.AddField(
-            model_name='variable',
-            name='categories',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=list, help_text='Categories of the variable(JSON)', null=True),
+            model_name="variable",
+            name="categories",
+            field=django.contrib.postgres.fields.jsonb.JSONField(
+                blank=True,
+                default=list,
+                help_text="Categories of the variable(JSON)",
+                null=True,
+            ),
         ),
         migrations.AddField(
-            model_name='variable',
-            name='scale',
-            field=models.CharField(blank=True, help_text='Scale of the variable', max_length=255),
+            model_name="variable",
+            name="scale",
+            field=models.CharField(
+                blank=True, help_text="Scale of the variable", max_length=255
+            ),
         ),
         migrations.AddField(
-            model_name='variable',
-            name='statistics',
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, default=dict, help_text='Statistics of the variable(JSON)', null=True),
+            model_name="variable",
+            name="statistics",
+            field=django.contrib.postgres.fields.jsonb.JSONField(
+                blank=True,
+                default=dict,
+                help_text="Statistics of the variable(JSON)",
+                null=True,
+            ),
         ),
     ]
