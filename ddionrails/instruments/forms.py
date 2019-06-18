@@ -28,7 +28,7 @@ class QuestionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.data["name"] = self.data["question_name"].lower()
+        self.data["name"] = self.data["question_name"]
         self._set_instrument()
 
     def _set_instrument(self):

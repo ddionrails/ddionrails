@@ -90,14 +90,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                (
-                    "name",
-                    models.CharField(
-                        db_index=True,
-                        max_length=255,
-                        validators=[config.validators.validate_lowercase],
-                    ),
-                ),
+                ("name", models.CharField(db_index=True, max_length=255)),
                 ("label", models.CharField(blank=True, max_length=255)),
                 ("label_de", models.CharField(blank=True, max_length=255)),
                 ("description", models.TextField(blank=True)),
