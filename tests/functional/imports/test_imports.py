@@ -180,10 +180,14 @@ class TestStudyImportManager:
         assert 1 == Dataset.objects.count()
         assert 2 == Variable.objects.count()
         dataset = Dataset.objects.first()
-        variable = Variable.objects.first()
+
+        name = "some-variable"
+        variable, created = Variable.objects.get_or_create(name=name)
         assert "some-dataset" == dataset.name
         assert study == dataset.study
-        assert "some-variable" == variable.name
+
+        assert not created
+        assert name == variable.name
 
         search = Search(using=elasticsearch_client).doc_type("variable")
         assert 2 == search.count()

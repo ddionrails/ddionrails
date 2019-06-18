@@ -5,8 +5,14 @@ repos:
         name: run test with docker-compose
         entry: docker-compose exec -T web paver test
         language: system
-        files: '.*py'
+        files: '.*\.py'
         pass_filenames: false
+    -   id: pylint
+        name: run pylint
+        entry: pylint --rcfile=setup.cfg
+        language: system
+        files: '.*.py'
+        pass_filenames: true
 -   repo: https://github.com/asottile/seed-isort-config
     rev: 44bc4d3364b054fe7ec1e0a40379b41e44774c46
     hooks:

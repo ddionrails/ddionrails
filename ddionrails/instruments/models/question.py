@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import copy
 import textwrap
+import uuid
 from collections import OrderedDict
 from typing import Dict, List, Optional, Union
 
@@ -28,7 +29,17 @@ class Question(ElasticMixin, DorMixin, models.Model):
     Stores a single question, related to :model:`instruments.Tnstrument`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the question. Dependent on the associated instrument.",
+    )
+
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the question"
     )
@@ -57,7 +68,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
         default=list, null=True, blank=True, help_text="Items are elements in a question"
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     instrument = models.ForeignKey(
         Instrument,
         blank=True,
@@ -65,6 +78,18 @@ class Question(ElasticMixin, DorMixin, models.Model):
         related_name="questions",
         on_delete=models.CASCADE,
     )
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.instrument_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
@@ -81,7 +106,10 @@ class Question(ElasticMixin, DorMixin, models.Model):
         return f"{self.instrument}/{self.name}"
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study", "instrument" and "name" fields"""
+        """ Returns a canonical URL for the model
+
+        Uses the "study", "instrument" and "name" fields
+        """
         return reverse(
             "inst:question_detail",
             kwargs={
@@ -120,10 +148,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
             period = self.instrument.period
             if period_id is True:
                 return period.id
-            elif period_id == "name":
+            if period_id == "name":
                 return period.name
-            else:
-                return period
+            return period
         except AttributeError:
             return default
 
@@ -155,8 +182,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
                     question.get_period(id="name", default="no period")
                 ].append(question)
             return result
-        else:
-            return combined_set
+        return combined_set
 
     def get_concepts(self) -> QuerySet:
         """ Retrieve the related Concepts of this Question
@@ -206,7 +232,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
             for language in self.translation_languages():
                 results[language] = self.item_array(language=language)
         except:
-            pass
+            return {}
         return results
 
     def item_array(self, language=None) -> List:
@@ -265,23 +291,24 @@ class Question(ElasticMixin, DorMixin, models.Model):
     def comparison_string(
         self, to_string: bool = False, wrap: int = 50
     ) -> Union[str, List]:
-        cs = ["Question: %s" % self.title()]
+        comparison_string_array = ["Question: %s" % self.title()]
         for item in self.items:
-            cs += [
+            comparison_string_array += [
                 "",
                 "Item: %s (scale: %s)" % (item.get("item"), item.get("scale")),
                 item.get("text", ""),
             ]
-            cs += ["%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])]
+            comparison_string_array += [
+                "%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])
+            ]
         if wrap:
-            cs_temp = [textwrap.wrap(line, wrap) for line in cs]
-            cs = []
+            cs_temp = [textwrap.wrap(line, wrap) for line in comparison_string_array]
+            comparison_string_array = []
             for line_list in cs_temp:
                 if line_list == []:
-                    cs.append("")
+                    comparison_string_array.append("")
                 else:
-                    cs += line_list
+                    comparison_string_array += line_list
         if to_string:
-            return "\n".join(cs)
-        else:
-            return cs
+            return "\n".join(comparison_string_array)
+        return comparison_string_array

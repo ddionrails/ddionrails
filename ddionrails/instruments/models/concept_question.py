@@ -16,7 +16,9 @@ class ConceptQuestion(models.Model):
     Linking items in an instrument with related variables.
     """
 
-    # relations
+    #############
+    # relations #
+    #############
     question = models.ForeignKey(
         Question,
         related_name="concepts_questions",

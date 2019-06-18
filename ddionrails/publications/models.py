@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.publications app """
 
+import uuid
 from typing import Dict
 
 from django.db import models
@@ -19,7 +20,17 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     Stores a single publication, related to :model:`studies.Study`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the publication. Dependent on the associated study.",
+    )
+
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the publication"
     )
@@ -46,7 +57,9 @@ class Publication(ElasticMixin, DorMixin, models.Model):
         help_text="Description of studies/data sources used in the publication",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study,
         blank=True,
@@ -58,6 +71,18 @@ class Publication(ElasticMixin, DorMixin, models.Model):
 
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "publication"
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     class Meta:
         """ Django's metadata options """
@@ -115,7 +140,9 @@ class Attachment(models.Model):
 
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
     url = models.TextField(
         blank=True, verbose_name="URL", help_text="Link (URL) to the attachment"
     )
@@ -123,7 +150,9 @@ class Attachment(models.Model):
         blank=True, verbose_name="URL text", help_text="Text to be displayed for the link"
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     context_study = models.ForeignKey(
         Study,
         related_name="related_attachments",

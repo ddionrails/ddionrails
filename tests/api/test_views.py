@@ -33,8 +33,8 @@ class TestPreviewView:
         assert status.HTTP_200_OK == response.status_code
 
     @pytest.mark.django_db
-    def test_preview_with_invalid_type(self, client):
-        url = "/api/test/preview/no-model/1"
+    def test_preview_with_invalid_type(self, client, uuid_identifier):
+        url = f"/api/test/preview/no-model/{uuid_identifier}"
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
         content = response.content.decode("utf-8")
@@ -65,8 +65,8 @@ class TestObjectRedirectView:
         assert response.redirect_chain[-1][0] == concept.get_absolute_url()
 
     @pytest.mark.django_db
-    def test_redirect_to_home(self, client):
-        url = f"/api/test/redirect/no-model/1"
+    def test_redirect_to_home(self, client, uuid_identifier):
+        url = f"/api/test/redirect/no-model/{uuid_identifier}"
         response = client.get(url, follow=True)
         assert status.HTTP_200_OK == response.status_code
         expected = "/"

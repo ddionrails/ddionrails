@@ -35,7 +35,7 @@ class InstrumentRedirectView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        instrument = get_object_or_404(Instrument, pk=kwargs["pk"])
+        instrument = get_object_or_404(Instrument, id=kwargs["id"])
         return instrument.get_absolute_url()
 
 
@@ -65,7 +65,7 @@ class QuestionRedirectView(RedirectView):
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
-        question = get_object_or_404(Question, pk=kwargs["pk"])
+        question = get_object_or_404(Question, id=kwargs["id"])
         return question.get_absolute_url()
 
 

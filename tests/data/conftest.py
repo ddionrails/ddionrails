@@ -12,9 +12,9 @@ def invalid_dataset_data():
 
 
 @pytest.fixture
-def valid_dataset_data(db):  # pylint: disable=unused-argument,invalid-name
-    """ A valid input for dataset forms and imports """
-    return dict(dataset_name="some-dataset", boost="1")
+def valid_dataset_data(study):  # pylint: disable=unused-argument
+    """ A valid input for dataset forms and imports, relates to study fixture """
+    return dict(study=study.id, dataset_name="some-dataset", boost="1")
 
 
 @pytest.fixture

@@ -27,7 +27,9 @@ class Basket(TimeStampedModel):
     related to :model:`studies.Study`, :model:`auth.User` and :model:`data.Variable`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -42,7 +44,9 @@ class Basket(TimeStampedModel):
         help_text="Description of the basket (Markdown)",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study,
         related_name="baskets",
@@ -145,7 +149,9 @@ class BasketVariable(models.Model):
     related to :model:`workspace.Basket` and :model:`data.Variable`
     """
 
-    # relations
+    #############
+    # relations #
+    #############
     basket = models.ForeignKey(
         Basket,
         related_name="baskets_variables",
@@ -182,7 +188,9 @@ class Script(TimeStampedModel):
     Stores a single script, related to :model:`workspace.Basket`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
     name = models.CharField(max_length=255, help_text="Name of the script")
     label = models.CharField(max_length=255, blank=True, help_text="Label of the script")
     generator_name = models.CharField(
@@ -192,7 +200,9 @@ class Script(TimeStampedModel):
     )
     settings = models.TextField(help_text="Settings of the script")
 
-    # relations
+    #############
+    # relations #
+    #############
     basket = models.ForeignKey(
         Basket, on_delete=models.CASCADE, help_text="Foreign key to workspace.Basket"
     )

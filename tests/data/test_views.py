@@ -103,7 +103,7 @@ class TestVariableJsonView:
 
 
 class TestVariablePreviewIdView:
-    def test_preview_id_view_with_valid_pk(self, client, variable):
+    def test_preview_id_view_with_valid_id(self, client, variable):
         url = reverse("api:variable_preview", kwargs={"variable_id": variable.pk})
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
@@ -118,9 +118,8 @@ class TestVariablePreviewIdView:
         assert variable.name in content["html"]
 
     @pytest.mark.django_db
-    def test_preview_id_view_with_invalid_pk(self, client):
-        invalid_pk = 999
-        url = reverse("api:variable_preview", kwargs={"variable_id": invalid_pk})
+    def test_preview_id_view_with_invalid_id(self, client, uuid_identifier):
+        url = reverse("api:variable_preview", kwargs={"variable_id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 

@@ -10,6 +10,8 @@ from pathlib import Path
 # PROJECT CONFIGURATION
 # ------------------------------------------------------------------------------
 BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY"))
+BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=str(uuid.NAMESPACE_DNS)))
+
 APPS_DIR = BASE_DIR.joinpath("ddionrails")
 
 if os.getenv("DJANGO_DEBUG") == "True":
@@ -20,9 +22,8 @@ else:
     STATIC_ROOT = os.getenv("STATIC_ROOT")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=uuid.NAMESPACE_DNS))
 EMAIL_HOST = "mail"
-ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
+ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default="").split(","))
 WSGI_APPLICATION = "config.wsgi.application"
 
 IMPORT_BRANCH = os.getenv("IMPORT_BRANCH", default="master")

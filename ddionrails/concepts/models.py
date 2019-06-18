@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.concepts app """
 
+import uuid
+
+from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
@@ -16,7 +19,17 @@ class Topic(models.Model, ModelMixin):
     related to :model:`studies.Study` and :model:`concepts.Topic`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the Topic. Dependent on the associated study",
+    )
+
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -41,7 +54,9 @@ class Topic(models.Model, ModelMixin):
         help_text="Description of the topic (Markdown)",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study, on_delete=models.CASCADE, help_text="Foreign key to studies.Study"
     )
@@ -55,6 +70,18 @@ class Topic(models.Model, ModelMixin):
         help_text="Foreign key to concepts.Topic",
     )
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     class Meta:
         """ Django's metadata options """
 
@@ -66,6 +93,7 @@ class Topic(models.Model, ModelMixin):
 
     @classmethod
     def get_children(cls, topic_id):
+        """ TODO: Refactor this. This implementation is strange. """
         children = list(cls.objects.filter(parent_id=topic_id).all())
         for child in children:
             children += list(cls.get_children(child.id))
@@ -75,10 +103,21 @@ class Topic(models.Model, ModelMixin):
 class Concept(models.Model, ModelMixin, ElasticMixin):
     """
     Stores a single concept,
-    related to :model:`data.Variable`, :model:`concepts.Topic` and :model:`instruments.ConceptQuestion`.
+    related to :model:`data.Variable`,
+    :model:`concepts.Topic` and :model:`instruments.ConceptQuestion`.
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the Concept.",
+    )
+
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -105,7 +144,9 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         help_text="Description of the concept (Markdown)",
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     topics = models.ManyToManyField(
         Topic, related_name="concepts", help_text="ManyToMany relation to concepts.Topic"
     )
@@ -123,6 +164,29 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         """ Returns a string representation using the "name" field """
         return f"/concept/{self.name}"
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save().
+
+        The creation of the value set for the id field is different than
+        for most other models. Concepts are, like studies, not inside the
+        namespace of any other object, meaning the uuid is derived from
+        the overall base uuid. This could cause a collision of uuids, if
+        a Concept shares a name with a study. While this seems unlikely to
+        happen, it is circumvented by concatenating each name with the
+        literal string `concept:`.
+        """
+        self.id = uuid.uuid5(  # pylint: disable=C0103
+            settings.BASE_UUID, "concept:" + self.name
+        )
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "name" field """
         return reverse("concepts:concept_detail_name", kwargs={"concept_name": self.name})
@@ -137,14 +201,12 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
             except AttributeError:
                 label = ""
         study = list(
-            set(
-                [
-                    s.name
-                    for s in Study.objects.filter(
-                        datasets__variables__concept_id=self.id
-                    ).all()
-                ]
-            )
+            {
+                s.name
+                for s in Study.objects.filter(
+                    datasets__variables__concept_id=self.id
+                ).all()
+            }
         )
         self.set_elastic(dict(name=self.name, label=label, study=study))
 
@@ -170,7 +232,16 @@ class Period(models.Model, ModelMixin):
     -   Range: ``2010-01:2011-12``
     """
 
-    # attributes
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the Period. Dependent on the associated Study.",
+    )
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -191,7 +262,9 @@ class Period(models.Model, ModelMixin):
         max_length=255, blank=True, help_text="Definition of the period"
     )
 
-    # relations
+    #############
+    # relations #
+    #############
     study = models.ForeignKey(
         Study,
         related_name="periods",
@@ -212,8 +285,23 @@ class Period(models.Model, ModelMixin):
         """ Returns a string representation using the "name" field """
         return f"/period/{self.name}"
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save(). """
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     def title(self) -> str:
-        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        """ Returns a title representation
+
+        Uses the "label" field, with "name" field as fallback
+        """
         return str(self.label) if self.label != "" else str(self.name)
 
     def is_range(self) -> bool:
@@ -230,6 +318,17 @@ class AnalysisUnit(models.Model, ModelMixin):
     * p = individual (person)
     * h = household
     """
+
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the AnalysisUnit.",
+    )
 
     name = models.CharField(
         max_length=255,
@@ -259,8 +358,34 @@ class AnalysisUnit(models.Model, ModelMixin):
         """ Returns a string representation using the "name" field """
         return f"/analysis_unit/{self.name}"
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save().
+
+        The creation of the value set for the id field is different than
+        for most other models. Analysis units are, like studies, not inside the
+        namespace of any other object, meaning the uuid is derived from
+        the overall base uuid. This could cause a collision of uuids, if
+        a Concept shares a name with a study. While this seems unlikely to
+        happen, it is circumvented by concatenating each name with the
+        literal string `analysis_unit:`.
+        """
+        self.id = uuid.uuid5(  # pylint: disable=C0103
+            settings.BASE_UUID, "analysis_unit:" + self.name
+        )
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     def title(self) -> str:
-        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        """ Returns a title representation.
+
+        Uses the "label" field, with "name" field as fallback
+        """
         return str(self.label) if self.label != "" else str(self.name)
 
 
@@ -270,6 +395,17 @@ class ConceptualDataset(models.Model, ModelMixin):
 
     Conceptual datasets group datasets.
     """
+
+    ##############
+    # attributes #
+    ##############
+    id = models.UUIDField(  # pylint: disable=C0103
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=True,
+        db_index=True,
+        help_text="UUID of the ConceptualDataset.",
+    )
 
     name = models.CharField(
         max_length=255,
@@ -299,6 +435,32 @@ class ConceptualDataset(models.Model, ModelMixin):
         """ Returns a string representation using the "name" field """
         return f"/conceptual_dataset/{self.name}"
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        """"Set id and call parents save().
+
+        The creation of the value set for the id field is different than
+        for most other models. Conceptual datasets are, like studies, not inside the
+        namespace of any other object, meaning the uuid is derived from
+        the overall base uuid. This could cause a collision of uuids, if
+        a Concept shares a name with a study. While this seems unlikely to
+        happen, it is circumvented by concatenating each name with the
+        literal string `conceptual_dataset:`.
+        """
+        self.id = uuid.uuid5(  # pylint: disable=C0103
+            settings.BASE_UUID, "conceptual_dataset:" + self.name
+        )
+        super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
+
     def title(self) -> str:
-        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        """ Returns a title representation
+
+        Uses the "label" field, with "name" field as fallback
+        """
         return str(self.label) if self.label != "" else str(self.name)
