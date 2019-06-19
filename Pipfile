@@ -45,13 +45,15 @@ paver = "*"
 
 # Code quality
 # ------------------------------------------------------------------------------
+autoflake = "*"
 bandit = "*"
 black = "==19.3b0" # pin until black leaves pre-release status
 isort = "*"
 mypy = "*"
 pre-commit = "*"
-pylint-django = "*"
 pylint = "*"
+pylint-django = "*"
+pylint-unittest = "*"
 
 # Testing
 # ------------------------------------------------------------------------------
