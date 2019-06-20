@@ -95,7 +95,7 @@ $(function () {
             var node = data.node;
             var d = node.data.description || "";
             var $spanTitle = $(node.span).find("span.fancytree-title");
-            if ($(node.span).find("span.filter-options").length == 0) {
+            if ($(node.span).find("span.filter-options").length === 0) {
                 if (node.type == "topic") {
                     $spanTitle.after(filter_and_clipboard); // insert additional copy_to_clipboard button to button group
                 }
@@ -122,7 +122,7 @@ $(function () {
 
     // Trigger search on enter
     $(".search-bar").keypress(function (e) {
-        if (e.which == 13) {//Enter key pressed
+        if (e.which === 13) {//Enter key pressed
             $("#btn-search").click();
         }
     });
@@ -217,7 +217,7 @@ function addToBasket(el) {
     var url = api_url + "/baskets";
     jQuery.getJSON(url, function (data) {
         if (data.user_logged_in) {
-            if (data.baskets.length == 0) {
+            if (data.baskets.length === 0) {
                 var redirect_create_basket_url = location.protocol + "//" + window.location.host + "/workspace/baskets";
                 $("#basket_list").append("<p><a class='btn btn-primary' href='" + redirect_create_basket_url + "'>Create a basket</a></p>");
             }

@@ -49,9 +49,8 @@ class TestDatasetImport:
     #     with pytest.raises(KeyError) as excinfo:
     #         dataset_csv_importer.import_element(empty_data)
 
-    def test__import_dataset_links_method_gets_called(
-        self, db, mocker, dataset_csv_importer
-    ):
+    @pytest.mark.django_db
+    def test__import_dataset_links_method_gets_called(self, mocker, dataset_csv_importer):
         valid_dataset_data = dict(dataset_name="some-dataset")
         mocker.patch("ddionrails.data.imports.DatasetImport._import_dataset_links")
         dataset_csv_importer.import_element(valid_dataset_data)
@@ -63,7 +62,9 @@ class TestDatasetImport:
         """ This import method needs an already existing dataset and study in the database """
         valid_dataset_data = dict(dataset_name="some-dataset")
         assert 1 == Dataset.objects.count()
-        dataset_csv_importer._import_dataset_links(valid_dataset_data)
+        dataset_csv_importer._import_dataset_links(
+            valid_dataset_data
+        )  # pylint: disable=protected-access
         assert 1 == Dataset.objects.count()
         dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
 
@@ -82,7 +83,7 @@ class TestDatasetImport:
         assert dataset.period == period
 
     def test__import_dataset_links_method_with_more_fields(
-        self, dataset, mocker, dataset_csv_importer
+        self, dataset, dataset_csv_importer
     ):
         """ This import method needs an already existing dataset and study in the database """
 
@@ -243,7 +244,9 @@ class TestDatasetJsonImport:
         )
         dataset = dataset
         sort_id = 0
-        dataset_json_importer._import_variable(var, dataset, sort_id)
+        dataset_json_importer._import_variable(
+            var, dataset, sort_id
+        )  # pylint: disable=protected-access
         mocked_set_elastic.assert_called_once()
 
 
@@ -293,7 +296,7 @@ class TestVariableImport:
 
     def test_import_element_method_fails(
         self, mocker, capsys, variable_importer, dataset
-    ):
+    ):  # pylint: disable=unused-argument
         mocked_import_variable_links = mocker.patch.object(
             VariableImport, "_import_variable_links"
         )
@@ -307,9 +310,11 @@ class TestVariableImport:
         # assert "ERROR] Failed to import variable" in out
 
     # TODO
-    def test_import_variable_links_method(self, mocker, variable_importer, variable):
+    def test_import_variable_links_method(self, variable_importer, variable):
         element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
-        variable_importer._import_variable_links(element)
+        variable_importer._import_variable_links(
+            element
+        )  # pylint: disable=protected-access
 
     def test_import_variable_links_method_with_concept_name(
         self, variable_importer, variable

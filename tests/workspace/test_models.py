@@ -93,7 +93,9 @@ class TestBasketModel:
 
 
 class TestBasketVariableModel:
-    def test_clean_method(self, study, variable, basket):
+    def test_clean_method(
+        self, study, variable, basket
+    ):  # pylint: disable=unused-argument
         basket_variable = BasketVariable(basket_id=basket.id, variable_id=variable.id)
         basket_variable.clean()
         basket_variable.save()

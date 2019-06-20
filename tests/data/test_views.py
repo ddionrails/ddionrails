@@ -147,7 +147,8 @@ class TestVariableRedirectView:
         response = VariableRedirectView.as_view()(request, id=variable.pk)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, db, rf):
+    @pytest.mark.django_db
+    def test_redirect_view_with_invalid_pk(self, rf):
         invalid_pk = 999
         request = rf.get("variable", kwargs={"pk": invalid_pk})
         with pytest.raises(Http404):

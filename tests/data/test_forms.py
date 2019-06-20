@@ -17,7 +17,8 @@ class TestDatasetForm:
         expected_errors = {"name": ["This field is required."]}
         assert form.errors == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_dataset_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_dataset_data):
         form = DatasetForm(data=valid_dataset_data)
         assert form.is_valid() is True
         dataset = form.save()

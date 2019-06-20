@@ -78,7 +78,7 @@ class TestModelMixin:
         mocked_es_index = mocker.patch.object(Elasticsearch, "index")
         model_mixin = ModelMixin()
         model_mixin.id = 1
-        result = model_mixin.set_elastic(body={"field": "value"})
+        model_mixin.set_elastic(body={"field": "value"})
         mocked_es_index.assert_called_once()
 
     def test_set_elastic_method_with_update(self, mocker):

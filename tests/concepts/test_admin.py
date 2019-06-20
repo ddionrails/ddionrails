@@ -24,7 +24,7 @@ def test_analyis_unit_admin_detail(admin_client, analysis_unit):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_concept_admin_list(admin_client, concept):
+def test_concept_admin_list(admin_client, concept):  # pylint: disable=unused-argument
     """ Test the ConceptAdmin changelist """
     url = reverse("admin:concepts_concept_changelist")
     response = admin_client.get(url)
@@ -38,7 +38,9 @@ def test_concept_admin_detail(admin_client, concept):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_conceptual_dataset_admin_list(admin_client, conceptual_dataset):
+def test_conceptual_dataset_admin_list(
+    admin_client, conceptual_dataset
+):  # pylint: disable=unused-argument
     """ Test the ConceptualDatasetAdmin changelist """
     url = reverse("admin:concepts_conceptualdataset_changelist")
     response = admin_client.get(url)
@@ -54,7 +56,7 @@ def test_conceptual_dataset_admin_detail(admin_client, conceptual_dataset):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_period_admin_list(admin_client, period):
+def test_period_admin_list(admin_client, period):  # pylint: disable=unused-argument
     """ Test the PeriodAdmin changelist """
     url = reverse("admin:concepts_period_changelist")
     response = admin_client.get(url)
@@ -68,7 +70,7 @@ def test_period_admin_detail(admin_client, period):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_topic_admin_list(admin_client, topic):
+def test_topic_admin_list(admin_client, topic):  # pylint: disable=unused-argument
     """ Test the TopicAdmin changelist """
     url = reverse("admin:concepts_topic_changelist")
     response = admin_client.get(url)

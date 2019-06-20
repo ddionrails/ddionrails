@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.concepts app """
+
 from django.urls import path
 
 from .views import ConceptDetail, ConceptList

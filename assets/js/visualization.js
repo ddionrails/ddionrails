@@ -16,7 +16,7 @@ var h_menu = 40;
 var barPadding = 1;
 
 function render(rawData) {
-  if (rawData.scale != "cat") {
+  if (rawData.scale !== "cat") {
     $("#vis_menu").hide();
     return false;
   }
@@ -118,7 +118,7 @@ function render(rawData) {
       d3.select(this).classed("active", true);
     }
 
-    if (options[this.id] == false) {
+    if (options[this.id] === false) {
       options[this.id] = true;
       if (menu2_active == "uni") {
         if (rawData.scale == "cat") {
@@ -183,7 +183,7 @@ function render(rawData) {
     var data = [];
 
     for (var i = 0; i < rData.uni[dataType].length; i++) {
-      if (hideMissings == true && rData.uni.missings[i]) {
+      if (hideMissings === true && rData.uni.missings[i]) {
         continue;
       }
 
@@ -399,8 +399,8 @@ function render(rawData) {
 
     var data = [];
     var indices = [];
-    for (i = 0; i < rData.bi[menu2_active].missings.length; i++) {
-      if (rData.bi[menu2_active].missings[i] == true) {
+    for (var i = 0; i < rData.bi[menu2_active].missings.length; i++) {
+      if (rData.bi[menu2_active].missings[i] === true) {
         indices.unshift(i);
       }
     }
@@ -424,8 +424,8 @@ function render(rawData) {
     var labels = rData.bi[menu2_active].labels;
     var values = rData.bi[menu2_active].values;
 
-    if (hideMissings == true) {
-      for (i in indices) {
+    if (hideMissings === true) {
+      for (var i in indices) {
         labels.splice(indices[i], 1);
       }
     }
@@ -1025,14 +1025,14 @@ function render(rawData) {
         format = d3.format("");
         format_axis = d3.format("");
       }
-      if (options.weighted == true) {
+      if (options.weighted === true) {
         dataType_missings = "weighted";
       } else {
         dataType_missings = "frequencies";
       }
 
       var data = [];
-      for (i in rData.bi[menu2_active].categories) {
+      for (var i in rData.bi[menu2_active].categories) {
         id = rData.bi[menu2_active].categories[i].label;
 
         sumValidCases = d3.sum(rData.bi[menu2_active].categories[i][dataType]);
@@ -1205,7 +1205,7 @@ function render(rawData) {
         });
     }
 
-    if (options.missings == true) {
+    if (options.missings === true) {
       d3.select(".chart_missings").remove();
     }
   }

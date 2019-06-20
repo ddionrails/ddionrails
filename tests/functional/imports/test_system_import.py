@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Functional test cases for "python manage.py system" """
+
 import pathlib
 
 import pytest
@@ -11,7 +16,8 @@ pytestmark = [pytest.mark.imports, pytest.mark.functional]  # pylint: disable=in
 
 
 class TestSystemImport:
-    def test_import_system(self, db, settings):
+    @pytest.mark.django_db
+    def test_import_system(self, settings):
         """ Tests the functionality of the management command 'system'
 
             it is run via:

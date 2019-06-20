@@ -71,7 +71,7 @@ class TestLabelTable:
 
     def test_simplify_label_method(self, label_table):
         label = "some-label"
-        output = label_table._simplify_label(label)
+        output = label_table._simplify_label(label)  # pylint: disable=protected-access
         assert output == label
 
     # TODO: SOEP label

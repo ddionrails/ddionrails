@@ -16,7 +16,7 @@ def filename():
 
 
 @pytest.fixture
-def study_importer(db, filename):
+def study_importer(db, filename):  # pylint: disable=unused-argument
     """ A study importer """
     return StudyImport(filename)
 
@@ -43,7 +43,7 @@ class TestStudyImport:
 
 
 class TestStudyDescriptionImport:
-    def test_import_with_valid_data(self, mocker, study_description_importer):
+    def test_import_with_valid_data(self, study_description_importer):
         study_description_importer.content = "some-study-description"
         study_description_importer.data = dict(
             name="some-study", label="Some Study", config="some-config"

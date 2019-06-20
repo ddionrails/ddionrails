@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.instruments app """
+
 from django.urls import path
 
 from .views import InstrumentDetailView, question_detail, study_instrument_list
