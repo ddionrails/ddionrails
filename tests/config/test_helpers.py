@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for helpers in ddionrails.config app """
+
 import pytest
 
 from config.helpers import RowHelper, lower_dict_names, render_markdown

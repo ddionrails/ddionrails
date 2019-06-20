@@ -10,7 +10,9 @@ from tests import status
 pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 
-def test_analyis_unit_admin_list(admin_client, analysis_unit):
+def test_analyis_unit_admin_list(
+    admin_client, analysis_unit
+):  # pylint: disable=unused-argument
     """ Test the AnalysisUnitAdmin changelist """
     url = reverse("admin:concepts_analysisunit_changelist")
     response = admin_client.get(url)
@@ -40,14 +42,16 @@ def test_concept_admin_detail(admin_client, concept):
 
 def test_conceptual_dataset_admin_list(
     admin_client, conceptual_dataset
-):  # pylint: disable=unused-argument
+):  # pylint: disable=unused-argument,invalid-name
     """ Test the ConceptualDatasetAdmin changelist """
     url = reverse("admin:concepts_conceptualdataset_changelist")
     response = admin_client.get(url)
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_conceptual_dataset_admin_detail(admin_client, conceptual_dataset):
+def test_conceptual_dataset_admin_detail(
+    admin_client, conceptual_dataset
+):  # pylint: disable=invalid-name
     """ Test the ConceptualDatasetAdmin change_view """
     url = reverse(
         "admin:concepts_conceptualdataset_change", args=(conceptual_dataset.id,)
