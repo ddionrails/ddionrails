@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=invalid-name
+
 """ Test cases for ModelAdmins in ddionrails.instruments app """
 
 import pytest

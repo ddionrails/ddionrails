@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+
+""" Test cases for validators in ddionrails.config app """
+
 import pytest
 from django.core.exceptions import ValidationError
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=no-self-use
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
 
 """ Test cases for ddionrails.studies.models """
 

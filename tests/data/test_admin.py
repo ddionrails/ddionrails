@@ -6,10 +6,10 @@ from django.urls import reverse
 
 from tests import status
 
-pytestmark = [pytest.mark.django_db]
+pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 
-def test_dataset_admin_list(admin_client, dataset):
+def test_dataset_admin_list(admin_client, dataset):  # pylint: disable=unused-argument
     """ Test the DatasetAdmin changelist """
     url = reverse("admin:data_dataset_changelist")
     response = admin_client.get(url)
@@ -23,7 +23,7 @@ def test_dataset_admin_detail(admin_client, dataset):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_variable_admin_list(admin_client, variable):
+def test_variable_admin_list(admin_client, variable):  # pylint: disable=unused-argument
     """ Test the VariableAdmin changelist """
     url = reverse("admin:data_variable_changelist")
     response = admin_client.get(url)
@@ -37,7 +37,9 @@ def test_variable_admin_detail(admin_client, variable):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_transformation_admin_list(admin_client, transformation):
+def test_transformation_admin_list(
+    admin_client, transformation
+):  # pylint: disable=unused-argument
     """ Test the TransformationAdmin changelist """
     url = reverse("admin:data_transformation_changelist")
     response = admin_client.get(url)

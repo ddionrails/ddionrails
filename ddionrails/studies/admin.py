@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """ ModelAdmin definitions for ddionrails.studies app """
 
 from django.contrib import admin
@@ -6,12 +7,6 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Count, QuerySet
 
 from .models import Study, TopicList
-
-
-class StudyInline(admin.TabularInline):
-    model = Study
-    extra = 0
-    fields = ["name", "label", "repo"]
 
 
 @admin.register(Study)
@@ -33,26 +28,26 @@ class StudyAdmin(admin.ModelAdmin):
         """ Annotate the queryset with aggregated counts of related models """
         queryset = super().get_queryset(request)
         queryset = queryset.annotate(
-            _dataset_count=Count("datasets", distinct=True),
-            _instrument_count=Count("instruments", distinct=True),
-            _basket_count=Count("baskets", distinct=True),
+            dataset_count=Count("datasets", distinct=True),
+            instrument_count=Count("instruments", distinct=True),
+            basket_count=Count("baskets", distinct=True),
         )
         return queryset
 
     @staticmethod
     def dataset_count(obj: Study) -> int:
         """ Return the number of related datasets from the annotated queryset """
-        return obj._dataset_count
+        return obj.dataset_count
 
     @staticmethod
     def instrument_count(obj: Study) -> int:
         """ Return the number of related instruments from the annotated queryset """
-        return obj._instrument_count
+        return obj.instrument_count
 
     @staticmethod
     def basket_count(obj: Study) -> int:
         """ Return the number of related baskets from the annotated queryset """
-        return obj._basket_count
+        return obj.basket_count
 
     dataset_count.admin_order_field = "_dataset_count"
     dataset_count.short_description = "Datasets"
@@ -64,4 +59,6 @@ class StudyAdmin(admin.ModelAdmin):
 
 @admin.register(TopicList)
 class TopicListAdmin(admin.ModelAdmin):
-    pass
+    """ ModelAdmin for studies.TopicList """
+
+    list_per_page = 25

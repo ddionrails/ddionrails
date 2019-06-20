@@ -95,7 +95,7 @@ def add_concept(request: WSGIRequest, basket_id: int, concept_id: int):
     )
     for variable in variable_list:
         try:
-            relation, status = BasketVariable.objects.get_or_create(
+            BasketVariable.objects.get_or_create(
                 basket_id=basket_id, variable_id=variable.id
             )
         except:

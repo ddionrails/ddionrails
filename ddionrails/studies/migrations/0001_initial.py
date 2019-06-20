@@ -54,9 +54,6 @@ class Migration(migrations.Migration):
                 ("files_url", models.CharField(blank=True, max_length=255)),
             ],
             options={"abstract": False},
-            bases=(
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         )
     ]

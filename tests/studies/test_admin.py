@@ -7,7 +7,7 @@ from django.urls import reverse
 
 from tests import status
 
-pytestmark = [pytest.mark.django_db]
+pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 
 def test_study_admin_list(admin_client, study):  # pylint: disable=unused-argument
