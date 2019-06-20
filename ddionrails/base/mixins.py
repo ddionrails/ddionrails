@@ -52,7 +52,7 @@ class ModelMixin:
         io_fields = ["name", "label", "description"]
 
     @classmethod
-    def get_or_create(cls, x, lower_strings=True):
+    def get_or_create(cls, parameters:Dict, lower_strings: bool = True):
         """
         Default for the get_or_create based on a dict.
 
@@ -60,7 +60,7 @@ class ModelMixin:
 
         By default, all strings are set to lower case (option ``lower_strings``).
         """
-        definition = {key: x[key] for key in cls.DOR.id_fields}
+        definition = {key: parameters[key] for key in cls.DOR.id_fields}
         for key, value in definition.items():
             if value.__class__ == str and lower_strings:
                 definition[key] = value.lower()

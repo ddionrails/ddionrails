@@ -128,7 +128,7 @@ class TestTopicJsonImport:
             {"language": "en", "topics": []},
             {"language": "de", "topics": []},
         ]
-        topic_json_importer._import_topic_list()
+        topic_json_importer._import_topic_list()  # pylint: disable=protected-access
         study.refresh_from_db()
         assert ["de", "en"] == study.topic_languages
         assert 1 == TopicList.objects.count()

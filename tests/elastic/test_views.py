@@ -6,11 +6,13 @@
 import pytest
 from django.urls import reverse
 
+from tests import status
+
 pytestmark = [pytest.mark.elastic, pytest.mark.views]  # pylint: disable=invalid-name
 
 
 class TestSearchView:
-    def test_search_view(self, client, study):
+    def test_search_view(self, client, study):  # pylint: disable=unused-argument
         url = reverse("elastic:search")
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code

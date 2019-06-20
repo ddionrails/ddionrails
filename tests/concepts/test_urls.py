@@ -10,17 +10,17 @@ pytestmark = [pytest.mark.concepts, pytest.mark.urlconf]  # pylint: disable=inva
 
 
 @pytest.fixture
-def concept_list_url(scope="module"):
+def concept_list_url(scope="module"):  # pylint: disable=unused-argument
     return "concepts:concept_list"
 
 
 @pytest.fixture
-def concept_detail_url_by_id(scope="module"):
+def concept_detail_url_by_id(scope="module"):  # pylint: disable=unused-argument
     return "concepts:concept_detail"
 
 
 @pytest.fixture
-def concept_detail_url_by_name(scope="module"):
+def concept_detail_url_by_name(scope="module"):  # pylint: disable=unused-argument
     return "concepts:concept_detail_name"
 
 

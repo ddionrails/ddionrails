@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Importer base classes for ddionrails project """
+
 import logging
 import os
 
@@ -39,8 +43,8 @@ class Import:
         importer.execute_import()
 
     def read_file(self):
-        with open(self.file_path(), "r") as f:
-            self.content = f.read()
+        with open(self.file_path(), "r") as infile:
+            self.content = infile.read()
 
     def import_path(self):
         if self.study:

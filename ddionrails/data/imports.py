@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Importer classes for ddionrails.data app """
+
 import json
 import logging
 from collections import OrderedDict

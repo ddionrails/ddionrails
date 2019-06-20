@@ -128,7 +128,7 @@ class TestScriptConfig:
 
     @pytest.mark.skip(reason="no way of currently testing this")
     def test_get_list_of_configs_method(self):
-        result = ScriptConfig._get_list_of_configs()
+        ScriptConfig._get_list_of_configs()  # pylint: disable=protected-access
 
 
 testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
@@ -137,10 +137,10 @@ testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
 class TestSoepMixin:
     def test_soep_year_method(self, soepmixin):
         year = 2001
-        soepmixin._soep_year(year)
+        soepmixin._soep_year(year)  # pylint: disable=protected-access
 
     def test_soep_letters_method(self, soepmixin, soepletters):
-        result = soepmixin._soep_letters()
+        result = soepmixin._soep_letters()  # pylint: disable=protected-access
         assert result == soepletters
 
     def test_soep_letters_method_page_1(self, soepmixin):
@@ -177,7 +177,7 @@ class TestSoepMixin:
 
     def test_soep_letters_method_page_2(self, soepmixin):
         page = 2
-        result = soepmixin._soep_letters(page)
+        result = soepmixin._soep_letters(page)  # pylint: disable=protected-access
         assert result == ["ba", "bb", "bc", "bd", "be", "bf", "bg"]
 
     @pytest.mark.parametrize("input,expected", testdata_soep_classify_dataset_method)

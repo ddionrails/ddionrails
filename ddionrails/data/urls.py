@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.data app """
+
 from django.urls import path
 
 from .views import DatasetDetailView, VariableDetailView, variable_json

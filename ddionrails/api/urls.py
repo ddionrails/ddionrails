@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.api app """
+
 from django.urls import path
 
 from ddionrails.data.views import variable_preview_id

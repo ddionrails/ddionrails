@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.workspace app """
+
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.urls import path
 

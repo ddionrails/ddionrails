@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
+
+""" Test cases for forms in ddionrails.instruments app """
+
 from ddionrails.instruments.forms import InstrumentForm, QuestionForm
 
 

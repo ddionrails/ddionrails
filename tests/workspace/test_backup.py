@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Test cases for "python manage.py backup" """
+
 import pytest
 import tablib
 from click.testing import CliRunner

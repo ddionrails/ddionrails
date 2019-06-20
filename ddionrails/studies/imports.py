@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Importer classes for ddionrails.studies app """
+
 from ddionrails.imports import imports
 
 from .forms import StudyInitialForm

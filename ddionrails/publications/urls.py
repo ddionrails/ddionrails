@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" URLConf for ddionrails.publications app """
+
 from django.urls import path
 
 from .views import PublicationDetailView, study_publication_list
