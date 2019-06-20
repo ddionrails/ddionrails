@@ -6,7 +6,6 @@
 import unittest
 from io import BytesIO
 
-import PIL.Image
 import pytest
 from django.core.files import File
 from django.db import models
@@ -170,16 +169,3 @@ class TestQuestionImageModel(unittest.TestCase):
         image.language = "de"
         image.save()
         return image
-
-
-@pytest.fixture()
-def image_file(request) -> BytesIO:
-    _file = BytesIO()
-    _image = PIL.Image.new("RGBA", size=(700, 100))
-    _image.save(_file, "png")
-    _file.name = "test.png"
-    _file.seek(0)
-    if request.instance:
-        request.instance.image_file = _file
-    yield _file
-    _file = None
