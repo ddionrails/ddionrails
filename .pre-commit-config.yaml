@@ -1,4 +1,12 @@
 repos:
+-   repo: local
+    hooks:
+    -   id: docker-pytest
+        name: run test with docker-compose
+        entry: docker-compose exec -T web paver test
+        language: system
+        files: '.*py'
+        pass_filenames: false
 -   repo: https://github.com/asottile/seed-isort-config
     rev: 44bc4d3364b054fe7ec1e0a40379b41e44774c46
     hooks:
@@ -14,9 +22,7 @@ repos:
     - id: black
       language_version: python3.6
       args: ["--config", "pyproject.toml"] 
-#TODO:
-# The code base is not ready for bandit
-#-   repo: https://github.com/PyCQA/bandit 
-#    rev: '1.6.0'
-#    hooks:
-#    - id: bandit
+-   repo: https://github.com/PyCQA/bandit 
+    rev: '1.6.0'
+    hooks:
+    - id: bandit
