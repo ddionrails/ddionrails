@@ -6,7 +6,7 @@
     <span class="sr-only">Toggle Dropdown</span>
   </button>
   <ul class="dropdown-menu">
-    {% for study in all_studies %}
+    {% for study in studies %}
         <li><a href="/study/{{ study.id }}">{{ study.title }}</a></li>
     {% endfor %}
   </ul>

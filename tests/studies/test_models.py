@@ -7,7 +7,7 @@ import pathlib
 
 import pytest
 
-from ddionrails.studies.models import Study, TopicList, context
+from ddionrails.studies.models import TopicList
 
 pytestmark = [pytest.mark.studies, pytest.mark.models]  # pylint: disable=invalid-name
 
@@ -82,17 +82,3 @@ class TestStudyModel:
         result = study.get_topiclist()
         expected = None
         assert expected is result
-
-
-def test_context_function_with_study(study, rf):
-    some_request = rf.get("/")
-    response = context(some_request)
-    queryset = Study.objects.filter(id=study.id)
-    assert str(response) == str({"all_studies": queryset})
-
-
-def test_context_function_without_study(rf, db):
-    some_request = rf.get("/")
-    response = context(some_request)
-    empty_queryset = Study.objects.none()
-    assert str(response) == str({"all_studies": empty_queryset})
