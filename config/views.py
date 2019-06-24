@@ -1,4 +1,7 @@
-from django.conf import settings
+# -*- coding: utf-8 -*-
+
+""" Views for ddionrails project """
+
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -11,46 +14,42 @@ http = PoolManager()
 
 
 def bad_request(request, exception):
+    """ Custom HTTP 400 view """
     response = render(request, "400.html")
     response.status_code = 400
     return response
 
 
 def permission_denied(request, exception):
+    """ Custom HTTP 403 view """
     response = render(request, "403.html")
     response.status_code = 403
     return response
 
 
 def page_not_found(request, exception):
+    """ Custom HTTP 404 view """
     response = render(request, "404.html")
     response.status_code = 404
     return response
 
 
 def server_error(request):
+    """ Custom HTTP 500 view """
     response = render(request, "500.html")
     response.status_code = 500
     return response
 
 
 class HomePageView(TemplateView):
+    """ The HomepageView of the ddionrails project renders a list of all available studies. """
+
     template_name = "pages/home.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["study_list"] = Study.objects.all()
-        context["settings"] = settings
-        context["debug_string"] = "Settings: %s" % settings.SETTINGS_MODULE
         return context
-
-
-def imprint_page(request):
-    return render(request, "pages/imprint.html")
-
-
-def contact_page(request):
-    return render(request, "pages/contact.html")
 
 
 @csrf_exempt

@@ -135,7 +135,7 @@ class SystemImportManager:
         self.system = system
         self.repo = Repository(system)
 
-    def run_import(self, import_all=False):
+    def run_import(self):
         """
         Run the system import.
         """

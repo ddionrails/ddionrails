@@ -32,12 +32,12 @@ def valid_question_data(instrument):
 
 
 @pytest.fixture
-def concept_question(db):  # pylint: disable=unused-argument
+def concept_question(db):  # pylint: disable=unused-argument,invalid-name
     """ A concept_question in the database """
     return ConceptQuestionFactory()
 
 
 @pytest.fixture
-def question_variable(db):  # pylint: disable=unused-argument
+def question_variable(db):  # pylint: disable=unused-argument,invalid-name
     """ A question_variable in the database """
     return QuestionVariableFactory()

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.data app """
 
@@ -12,7 +12,7 @@ from django.urls import reverse
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from tests import status
 
-pytestmark = [pytest.mark.data, pytest.mark.views]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.data, pytest.mark.views]
 
 
 class TestDatasetDetailView:
@@ -49,8 +49,6 @@ class TestDatasetDetailView:
                 "dataset_name": invalid_dataset_name,
             },
         )
-
-        # TODO view returns HttpResponseNotFound instead of raising Http404
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 

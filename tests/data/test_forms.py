@@ -24,7 +24,8 @@ class TestDatasetForm:
         dataset = form.save()
         assert dataset.name == valid_dataset_data["dataset_name"]
 
-    def test_form_with_valid_data_uppercase(self, db, valid_dataset_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data_uppercase(self, valid_dataset_data):
         valid_dataset_data["dataset_name"] = "SOME-DATASET"
         form = DatasetForm(data=valid_dataset_data)
         assert form.is_valid() is True
@@ -46,7 +47,7 @@ class TestVariableForm:
         assert variable.name == valid_variable_data["variable_name"]
         assert variable.dataset.name == valid_variable_data["dataset_name"]
 
-    def test_form_with_valid_data_with_concept(self, valid_variable_data):
+    def test_form_with_valid_data_with_concept(self, valid_variable_data):  # pylint: disable=invalid-name
         valid_variable_data["concept_name"] = "some-concept"
         form = VariableForm(data=valid_variable_data)
         assert form.is_valid() is True

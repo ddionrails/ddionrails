@@ -51,7 +51,9 @@ class TestAccountOverview:
         response = client.get(url)
         assert status.HTTP_401_UNAUTHORIZED == response.status_code
 
-    def test_account_overview_authenticated_user(self, client, user): # pylint: disable=unused-argument
+    def test_account_overview_authenticated_user(
+        self, client, user
+    ):  # pylint: disable=unused-argument
         # ignore B106: hardcoded_password_funcarg
         client.login(username="some-user", password="some-password")  # nosec
         url = reverse("workspace:account_overview")

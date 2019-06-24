@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+
+""" ModelForms for ddionrails.instruments app """
+
 import logging
 
 from django import forms

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,invalid-name
 
 """ Test cases for importer classes in ddionrails.imports app """
 
@@ -11,7 +11,7 @@ from django.forms import ModelForm
 
 from ddionrails.imports.imports import CSVImport, Import, JekyllImport
 
-pytestmark = [pytest.mark.imports]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.imports]
 
 
 @pytest.fixture
@@ -68,10 +68,9 @@ class TestImport:
     def test_import_path_method_without_study(self, system, settings):
         importer = Import(filename="DUMMY.csv", system=system)
         result = importer.import_path()
-        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
             system.name, settings.IMPORT_SUB_DIRECTORY
         )
-        expected = str(path) + "/"
         assert expected == result
 
     # def test_file_path_method(self, mocker):

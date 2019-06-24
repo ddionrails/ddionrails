@@ -18,18 +18,18 @@ class TestSystemModel:
 
     def test_import_path_method(self, system, settings):
         result = system.import_path()
-        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
             system.name, settings.IMPORT_SUB_DIRECTORY
         )
-        expected = str(path) + "/"
         assert expected == result
 
     def test_get_method(self, system):  # pylint: disable=unused-argument
         result = System.get()
         assert isinstance(result, System)
 
+    @pytest.mark.django_db
     def test_get_method_with_creation(
-        self, db
+        self
     ):  # pylint: disable=unused-argument,invalid-name
         result = System.get()
         assert isinstance(result, System)

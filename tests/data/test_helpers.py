@@ -12,7 +12,7 @@ from .factories import DatasetFactory, VariableFactory
 
 
 @pytest.fixture
-def variables(db):  # pylint: disable=unused-argument
+def variables(db):  # pylint: disable=unused-argument,invalid-name
     """ This fixture contains two variables from two datasets from two periods
         they appear in an unsorted order
     """
@@ -56,26 +56,10 @@ class TestLabelTable:
         mocked_fill_header.assert_called_once()
         mocked_fill_body.assert_called_once()
 
-    def test_to_html_method(self, variables):
-        label_table = LabelTable(variables)
-        # label_table_html = label_table.to_html()
-
-    def test_fill_header_method(self, label_table):
-        pass
-
-    def test_fill_body_method(self, label_table):
-        pass
-
-    def test_get_all_category_labels_method(self, label_table):
-        pass
-
     def test_simplify_label_method(self, label_table):
         label = "some-label"
         output = label_table._simplify_label(label)  # pylint: disable=protected-access
         assert output == label
-
-    # TODO: SOEP label
-    # TODO: Pairfam label
 
     def test_simplify_label_method_with_non_string_label(self, label_table):
         label = 1

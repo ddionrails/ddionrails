@@ -2,31 +2,37 @@
 
 """ Model definitions for ddionrails.base app """
 
-import os
+from __future__ import annotations
+
+import pathlib
 
 from django.conf import settings
 from django.db import models
 
 
 class System(models.Model):
+    """ Stores a single system instance """
+
     name = settings.SYSTEM_NAME
     current_commit = models.CharField(max_length=255, blank=True)
 
     @staticmethod
-    def repo_url():
+    def repo_url() -> str:
+        """ Returns the system's repo url from the settings """
         return settings.SYSTEM_REPO_URL
 
-    def import_path(self):
-        path = os.path.join(
-            settings.IMPORT_REPO_PATH, self.name, settings.IMPORT_SUB_DIRECTORY
+    def import_path(self) -> pathlib.Path:
+        """ Returns the system's import path """
+        return pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+            self.name, settings.IMPORT_SUB_DIRECTORY
         )
-        return path
 
     @classmethod
-    def get(cls):
+    def get(cls) -> System:
+        """ Returns a single system instance """
         if cls.objects.count() == 0:
-            s = System()
-            s.save()
+            system = System()
+            system.save()
         else:
-            s = System.objects.first()
-        return s
+            system = System.objects.first()
+        return system

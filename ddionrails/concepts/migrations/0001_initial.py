@@ -105,10 +105,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"unique_together": {("study", "name")}},
-            bases=(
-                models.Model,
-                ddionrails.base.mixins.ModelMixin,
-            ),
+            bases=(models.Model, ddionrails.base.mixins.ModelMixin),
         ),
         migrations.CreateModel(
             name="Concept",

@@ -67,9 +67,7 @@ class QuestionVariableImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             variable = self._get_variable(link)
-            QuestionVariable.objects.get_or_create(
-                question=question, variable=variable
-            )
+            QuestionVariable.objects.get_or_create(question=question, variable=variable)
         except:
             variable = (
                 f"{link['study_name']}/{link['dataset_name']}/{link['variable_name']}"
@@ -106,9 +104,7 @@ class ConceptQuestionImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             concept = self._get_concept(link)
-            ConceptQuestion.objects.get_or_create(
-                question=question, concept=concept
-            )
+            ConceptQuestion.objects.get_or_create(question=question, concept=concept)
         except:
             question = (
                 f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"

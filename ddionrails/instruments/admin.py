@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """ ModelAdmin definitions for ddionrails.instruments app """
 
-from ddionrails.base.mixins import AdminMixin
 from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from model_utils.managers import InheritanceQuerySet
 
-from .models import ConceptQuestion, QuestionImage, Instrument, Question, QuestionVariable
+from ddionrails.base.mixins import AdminMixin
+
+from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
 
 
 @admin.register(Instrument)
@@ -81,7 +82,7 @@ class QuestionVariableAdmin(admin.ModelAdmin):
 class QuestionImageAdmin(admin.ModelAdmin):
     """ ModelAdmin for instruments.QuestionImage """
 
-    list_display = ("id","label", "language")
+    list_display = ("id", "label", "language")
     list_per_page = 25
     list_select_related = True
     raw_id_fields = ("question",)

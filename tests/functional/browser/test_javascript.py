@@ -10,7 +10,9 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
-def test_studies_dropdown_menu(browser, live_server, study):
+def test_studies_dropdown_menu(
+    browser, live_server, study
+):  # pylint: disable=unused-argument
     browser.visit(live_server.url)
     studies_dropdown_menu = browser.find_by_xpath(
         '//button[contains(text(), "Studies")]'

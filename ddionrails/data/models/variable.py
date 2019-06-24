@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from collections import OrderedDict
-from typing import List, Dict
+from typing import Dict, List
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models

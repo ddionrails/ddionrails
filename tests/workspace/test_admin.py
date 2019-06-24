@@ -10,7 +10,9 @@ from tests import status
 pytestmark = [pytest.mark.django_db]
 
 
-def test_basket_variable_admin_list(admin_client, basket_variable):
+def test_basket_variable_admin_list(
+    admin_client, basket_variable
+):  # pylint: disable=unused-argument
     """ Test the BasketVariableAdmin changelist """
     url = reverse("admin:workspace_basketvariable_changelist")
     response = admin_client.get(url)
@@ -24,7 +26,7 @@ def test_basket_variable_admin_detail(admin_client, basket_variable):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_basket_admin_list(admin_client, basket):
+def test_basket_admin_list(admin_client, basket):  # pylint: disable=unused-argument
     """ Test the BasketAdmin changelist """
     url = reverse("admin:workspace_basket_changelist")
     response = admin_client.get(url)
@@ -38,7 +40,7 @@ def test_basket_admin_detail(admin_client, basket):
     assert status.HTTP_200_OK == response.status_code
 
 
-def test_script_admin_list(admin_client, script):
+def test_script_admin_list(admin_client, script):  # pylint: disable=unused-argument
     """ Test the ScriptAdmin changelist """
     url = reverse("admin:workspace_script_changelist")
     response = admin_client.get(url)

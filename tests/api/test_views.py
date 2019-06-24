@@ -44,4 +44,5 @@ def test_topic_list(client, topiclist, language, expected):
     response = client.get(url)
     assert status.HTTP_200_OK == response.status_code
     assert expected == response.json()
-    assert "application/json" == response["content-type"]
+    expected_content_type = "application/json"
+    assert expected_content_type == response["content-type"]

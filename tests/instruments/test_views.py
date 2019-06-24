@@ -6,19 +6,13 @@
 import pytest
 from django.urls import reverse
 
-from ddionrails.elastic.mixins import ModelMixin
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
 
 
 class TestInstrumentDetailView:
-    def test_detail_view_with_existing_names(self, mocker, client, instrument):
-
-        # TODO: Template queries elasticsearch for study languages in navbar -> templates/nav/study.html
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
-
+    def test_detail_view_with_existing_names(self, client, instrument):
         url = reverse(
             "inst:instrument_detail",
             kwargs={
