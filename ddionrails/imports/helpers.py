@@ -6,7 +6,9 @@ import csv
 import os
 import uuid
 from functools import lru_cache
+from typing import Dict
 
+import tablib
 from django.conf import settings
 
 
@@ -47,3 +49,46 @@ def hash_with_namespace_uuid(namespace: uuid.UUID, name: str, cache: bool = True
 def _hash_with_namespace_uuid(namespace: uuid.UUID, name: str):
     """ Compute the model instance's UUID from its name and a related object's UUID, caching results """
     return uuid.uuid5(namespace, name)
+
+
+def rename_dataset_headers(dataset: tablib.Dataset, rename_mapping: Dict) -> None:
+    """ Rename the headers of a tablib.Dataset by the keys and values in rename_mapping """
+
+    for old_name, new_name in rename_mapping.items():
+        if old_name in dataset.headers:
+            dataset.headers[dataset.headers.index(old_name)] = new_name
+
+
+def add_id_to_dataset(
+    dataset: tablib.Dataset, column_name: str, namespace_column: str = None
+) -> None:
+    """ Add an ID column into the given dataset
+
+        Computes an UUID using the contents of the given dataset's column (i.e. column name)
+        and optionally the contents of the namespace_column
+    """
+
+    # variable resource can get input from csv or json file: concept might be there or not.
+    if column_name not in dataset.headers:
+        return
+
+    id_list = []
+    id_column_name = f"{column_name}_id"
+
+    for index, name in enumerate(dataset[column_name]):
+        if name:
+            if namespace_column:
+                namespace = dataset[namespace_column][index]
+                computed_id = hash_with_namespace_uuid(namespace, name, cache=True)
+            else:
+                # TODO: Can this be done differently?
+                if column_name == "concept":
+                    name = "concept:" + name
+                computed_id = hash_with_base_uuid(name, cache=True)
+        # if column cell is empty do not compute id -> foreign key is None / Null
+        else:
+            computed_id = None
+        id_list.append(computed_id)
+
+    # add id column to dataset
+    dataset.append_col(id_list, header=id_column_name)

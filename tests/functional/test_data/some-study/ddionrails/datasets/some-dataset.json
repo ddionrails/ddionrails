@@ -2,6 +2,7 @@
   "some-variable": {
     "name": "some-variable",
     "variable": "some-variable",
+    "dataset": "some-dataset",
     "study": "some-study",
     "categories": {
       "frequencies": [
@@ -25,6 +26,25 @@
   "some-other-variable": {
     "name": "some-other-variable",
     "variable": "some-other-variable",
-    "study": "some-study"
+    "dataset": "some-dataset",
+    "study": "some-study",
+    "categories": {
+      "frequencies": [
+        1,
+        0
+      ],
+      "labels": [
+        "[-6] Version of questionnaire with modified filtering",
+        "[1] Yes"
+      ],
+      "labels_de": [
+        "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+        "[1] Ja"
+      ],
+      "missings": [
+        true,
+        false
+      ]
+    }
   }
 }

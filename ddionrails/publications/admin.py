@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=too-few-public-methods
+
 """ ModelAdmin definitions for ddionrails.publications app """
 
 from django.contrib import admin
+from import_export.admin import ImportExportModelAdmin
 
 from ddionrails.base.mixins import AdminMixin
 
-from .models import Attachment, Publication
+from . import models, resources
 
 
-@admin.register(Attachment)
+@admin.register(models.Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
     """ ModelAdmin for publications.Attachment """
 
@@ -45,8 +48,8 @@ class AttachmentAdmin(admin.ModelAdmin):
     )
 
 
-@admin.register(Publication)
-class PublicationAdmin(AdminMixin, admin.ModelAdmin):
+@admin.register(models.Publication)
+class PublicationAdmin(AdminMixin, ImportExportModelAdmin):
     """ ModelAdmin for publications.Publication """
 
     list_display = ("name", "title", "author", "study_name", "sub_type", "year")
@@ -55,6 +58,7 @@ class PublicationAdmin(AdminMixin, admin.ModelAdmin):
     list_select_related = ("study",)
     raw_id_fields = ("study",)
     search_fields = ("name", "title", "author")
+    resource_class = resources.PublicationResource
 
     AdminMixin.study_name.admin_order_field = "study"
     AdminMixin.study_name.short_description = "study"

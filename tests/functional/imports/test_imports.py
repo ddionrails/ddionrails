@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use
 
+import time
 from pathlib import Path
 
 import pytest
+from django.forms.models import model_to_dict
+from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
 from ddionrails.concepts.documents import ConceptDocument
@@ -47,9 +50,11 @@ class TestStudyImportManager:
         study_import_manager.import_single_entity("study")
         assert 1 == Study.objects.count()
         # refresh
-        study = Study.objects.first()
-        assert "Some Study" == study.label
-        assert {"variables": {"label-table": True}} == study.config
+        study_import_manager.study.refresh_from_db()
+        expected = "Some Study"
+        assert expected == study_import_manager.study.label
+        expected = {"variables": {"label-table": True}}
+        assert expected == study_import_manager.study.config
 
     def test_import_csv_topics(self, study_import_manager):
         assert 0 == Topic.objects.count()
@@ -100,47 +105,105 @@ class TestStudyImportManager:
         study_import_manager.import_single_entity("analysis_units")
         assert 1 == AnalysisUnit.objects.count()
         analysis_unit = AnalysisUnit.objects.first()
-        assert "some-analysis-unit" == analysis_unit.name
-        assert "some-analysis-unit" == analysis_unit.label
-        assert "some-analysis-unit" == analysis_unit.description
+        exptected = {
+            "name": "some-analysis-unit",
+            "label": "some-analysis-unit",
+            "label_de": "some-analysis-unit",
+            "description": "some-analysis-unit",
+            "description_de": "some-analysis-unit",
+            "study": study_import_manager.study.id,
+        }
+        result = model_to_dict(
+            analysis_unit,
+            fields=(
+                "name",
+                "label",
+                "label_de",
+                "description",
+                "description_de",
+                "study",
+            ),
+        )
+        assert exptected == result
 
     def test_import_periods(self, study_import_manager, study):
         assert 0 == Period.objects.count()
         study_import_manager.import_single_entity("periods")
         assert 1 == Period.objects.count()
         period = Period.objects.first()
-        assert "some-period" == period.name
-        assert "some-period" == period.label
-        assert study == period.study
+        exptected = {
+            "name": "some-period",
+            "label": "some-period",
+            "label_de": "some-period",
+            "description": "some-period",
+            "description_de": "some-period",
+            "study": study_import_manager.study.id,
+        }
+        result = model_to_dict(
+            period,
+            fields=(
+                "name",
+                "label",
+                "label_de",
+                "description",
+                "description_de",
+                "study",
+            ),
+        )
+        assert exptected == result
 
     def test_import_conceptual_datasets(self, study_import_manager):
         assert 0 == ConceptualDataset.objects.count()
         study_import_manager.import_single_entity("conceptual_datasets")
         assert 1 == ConceptualDataset.objects.count()
         conceptual_dataset = ConceptualDataset.objects.first()
-        assert "some-conceptual-dataset" == conceptual_dataset.name
-        assert "some-conceptual-dataset" == conceptual_dataset.label
-        assert "some-conceptual-dataset" == conceptual_dataset.description
+        exptected = {
+            "name": "some-conceptual-dataset",
+            "label": "some-conceptual-dataset",
+            "label_de": "some-conceptual-dataset",
+            "description": "some-conceptual-dataset",
+            "description_de": "some-conceptual-dataset",
+            "study": study_import_manager.study.id,
+        }
+        result = model_to_dict(
+            conceptual_dataset,
+            fields=(
+                "name",
+                "label",
+                "label_de",
+                "description",
+                "description_de",
+                "study",
+            ),
+        )
+        assert exptected == result
 
     def test_import_instruments(
         self, study_import_manager, study, period, elasticsearch_indices, analysis_unit
     ):
         assert 0 == Instrument.objects.count()
-        assert 0 == Question.objects.count()
         study_import_manager.import_single_entity("instruments")
         assert 1 == Instrument.objects.count()
-        assert 1 == Question.objects.count()
+
         instrument = Instrument.objects.first()
         assert "some-instrument" == instrument.name
         assert study == instrument.study
         assert analysis_unit == instrument.analysis_unit
         assert period == instrument.period
 
+    def test_import_questions(
+        self, study_import_manager, elasticsearch_client, instrument
+    ):
+        assert 1 == Instrument.objects.count()
+        assert 0 == Question.objects.count()
+        study_import_manager.import_single_entity("questions")
+        assert 1 == Question.objects.count()
+
         search = QuestionDocument.search().query("match_all")
         assert 1 == search.count()
         response = search.execute()
         hit = response.hits[0]
-        # assert study.name == hit.study
+        assert instrument.study.name == hit.study
         assert "some-question" == hit.name
         assert "some-instrument" == hit.instrument
         QuestionDocument.search().query("match_all").delete()
@@ -148,19 +211,12 @@ class TestStudyImportManager:
     def test_import_json_datasets(
         self, study_import_manager, elasticsearch_indices, study
     ):
-        assert 0 == Dataset.objects.count()
         assert 0 == Variable.objects.count()
         study_import_manager.import_single_entity("datasets.json")
-        assert 1 == Dataset.objects.count()
         assert 2 == Variable.objects.count()
-        dataset = Dataset.objects.first()
 
         name = "some-variable"
-        variable, created = Variable.objects.get_or_create(name=name)
-        assert "some-dataset" == dataset.name
-        assert study == dataset.study
-
-        assert not created
+        variable = Variable.objects.get(name=name)
         assert name == variable.name
 
         search = VariableDocument.search().query("match_all")
@@ -172,7 +228,7 @@ class TestStudyImportManager:
     ):
         study_import_manager.import_single_entity("datasets.csv")
         assert 1 == Dataset.objects.count()
-        dataset = Dataset.objects.first()
+        dataset.refresh_from_db()
         assert "some-dataset" == dataset.label
         assert "some-dataset" == dataset.description
         assert analysis_unit == dataset.analysis_unit
@@ -182,8 +238,8 @@ class TestStudyImportManager:
     def test_import_variables(self, study_import_manager, variable, concept):
         assert 1 == Variable.objects.count()
         study_import_manager.import_single_entity("variables")
-        assert 1 == Variable.objects.count()
-        variable = Variable.objects.first()
+        assert 2 == Variable.objects.count()
+        variable.refresh_from_db()
         assert "https://variable-image.de" == variable.image_url
         assert concept == variable.concept
 

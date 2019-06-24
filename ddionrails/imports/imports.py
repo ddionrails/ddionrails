@@ -5,7 +5,6 @@
 import logging
 import os
 
-import frontmatter
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.forms import Form
@@ -55,38 +54,6 @@ class Import:
 
     def file_path(self):
         return self.filename
-
-
-class JekyllImport(Import):
-    """
-    This import is based on the design for `Jekyll <http://jekyllrb.com>`__
-    pages, which combine a YAML front matter with Markdown content.
-
-    The front matter is seperated with three dashes (``---``).
-
-    Example::
-
-        ---
-        title: test
-        abstract: Some test document
-        ---
-
-        The *actual* content is using
-        [Markdown](http://daringfireball.net/projects/markdown/).
-    """
-
-    def __init__(self, filename, study=None, system=None):
-        super().__init__(filename, study, system)
-        self.data = None
-
-    def read_file(self):
-        with open(self.file_path(), "r") as infile:
-            jekyll_content = frontmatter.load(infile)
-        self.content = jekyll_content.content
-        self.data = jekyll_content.metadata
-
-    def execute_import(self):
-        raise NotImplementedError
 
 
 class CSVImport(Import):

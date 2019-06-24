@@ -6,13 +6,11 @@ import json
 import logging
 from collections import OrderedDict
 
-from django.core.exceptions import ObjectDoesNotExist
-
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 
 from .forms import DatasetForm, VariableForm
-from .models import Dataset, Transformation, Variable
+from .models import Dataset, Variable
 
 logging.config.fileConfig("logging.conf")
 logger = logging.getLogger(__name__)
@@ -120,25 +118,3 @@ class VariableImport(imports.CSVImport):
         variable.description_long = element.get("description_long", "")
         variable.image_url = element.get("image_url", "")
         variable.save()
-
-
-class TransformationImport(imports.CSVImport):
-    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
-        form = VariableForm
-
-    def import_element(self, element):
-        try:
-            Transformation.goc_by_name(
-                element["origin_study_name"],
-                element["origin_dataset_name"],
-                element["origin_variable_name"],
-                element["target_study_name"],
-                element["target_dataset_name"],
-                element["target_variable_name"],
-            )
-        except ObjectDoesNotExist:
-            origin_variable = f"{element['origin_study_name']}/{element['origin_dataset_name']}/{element['origin_variable_name']}"
-            target_variable = f"{element['target_study_name']}/{element['target_dataset_name']}/{element['target_variable_name']}"
-            logger.error(
-                f'Failed to import transformation from variable"{origin_variable}" to variable "{target_variable}"'
-            )

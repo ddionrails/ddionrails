@@ -3,7 +3,10 @@
 
 """ Test cases for helpers in ddionrails.imports app """
 
-from ddionrails.imports.helpers import read_csv
+import pytest
+import tablib
+
+from ddionrails.imports.helpers import read_csv, rename_dataset_headers
 
 
 class TestHelpers:
@@ -24,3 +27,19 @@ class TestHelpers:
         mocked_open.assert_called_once_with(filename, "r")
         mocked_csv_dict_reader.assert_called_once()
         assert "study_name" in content[0].keys()
+
+
+@pytest.fixture
+def tablib_dataset():
+    headers = ("name", "label")
+    name = "some-concept"
+    label = "Some concept"
+    values = (name, label)
+    return tablib.Dataset(values, headers=headers)
+
+
+def test_rename_dataset_headers(tablib_dataset):
+    rename_mapping = {"label": "new_label"}
+    rename_dataset_headers(tablib_dataset, rename_mapping)
+    expected = ["name", "new_label"]
+    assert expected == tablib_dataset.headers

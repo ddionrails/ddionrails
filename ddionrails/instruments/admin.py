@@ -1,17 +1,20 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=too-few-public-methods
+
 """ ModelAdmin definitions for ddionrails.instruments app """
 
 from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
+from import_export.admin import ImportExportModelAdmin
 from model_utils.managers import InheritanceQuerySet
 
 from ddionrails.base.mixins import AdminMixin
 
-from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
+from . import models, resources
 
 
-@admin.register(Instrument)
-class InstrumentAdmin(AdminMixin, admin.ModelAdmin):
+@admin.register(models.Instrument)
+class InstrumentAdmin(AdminMixin, ImportExportModelAdmin):
     """ ModelAdmin for instruments.Instrument """
 
     list_display = ("name", "label", "study_name", "period_name", "analysis_unit_name")
@@ -20,6 +23,7 @@ class InstrumentAdmin(AdminMixin, admin.ModelAdmin):
     list_select_related = ("study", "period", "analysis_unit")
     raw_id_fields = ("study", "period", "analysis_unit")
     search_fields = ("name", "label")
+    resource_class = resources.InstrumentResource
 
     AdminMixin.study_name.admin_order_field = "study"
     AdminMixin.study_name.short_description = "study"
@@ -29,8 +33,8 @@ class InstrumentAdmin(AdminMixin, admin.ModelAdmin):
     AdminMixin.analysis_unit_name.short_description = "analysis_unit"
 
 
-@admin.register(Question)
-class QuestionAdmin(AdminMixin, admin.ModelAdmin):
+@admin.register(models.Question)
+class QuestionAdmin(AdminMixin, ImportExportModelAdmin):
     """ ModelAdmin for instruments.Question """
 
     list_display = (
@@ -45,6 +49,7 @@ class QuestionAdmin(AdminMixin, admin.ModelAdmin):
     raw_id_fields = ("instrument",)
     search_fields = ("name", "label")
     list_select_related = ("instrument", "instrument__study")
+    resource_class = resources.QuestionResource
 
     def get_queryset(self, request: WSGIRequest) -> InheritanceQuerySet:
         """ Return an ordered queryset of questions """
@@ -58,27 +63,29 @@ class QuestionAdmin(AdminMixin, admin.ModelAdmin):
     AdminMixin.instrument_study_name.short_description = "study"
 
 
-@admin.register(ConceptQuestion)
-class ConceptQuestionAdmin(admin.ModelAdmin):
+@admin.register(models.ConceptQuestion)
+class ConceptQuestionAdmin(ImportExportModelAdmin):
     """ ModelAdmin for instruments.ConceptQuestion """
 
     list_display = ("concept_id", "question_id")
     list_per_page = 25
     list_select_related = ("concept", "question")
     raw_id_fields = ("concept", "question")
+    resource_class = resources.ConceptQuestionResource
 
 
-@admin.register(QuestionVariable)
-class QuestionVariableAdmin(admin.ModelAdmin):
+@admin.register(models.QuestionVariable)
+class QuestionVariableAdmin(ImportExportModelAdmin):
     """ ModelAdmin for instruments.QuestionVariable """
 
     list_display = ("question_id", "variable_id")
     list_per_page = 25
     list_select_related = ("question", "variable")
     raw_id_fields = ("question", "variable")
+    resource_class = resources.QuestionVariableResource
 
 
-@admin.register(QuestionImage)
+@admin.register(models.QuestionImage)
 class QuestionImageAdmin(admin.ModelAdmin):
     """ ModelAdmin for instruments.QuestionImage """
 

@@ -6,15 +6,8 @@
 import pytest
 
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
-from ddionrails.data.imports import (
-    DatasetImport,
-    DatasetJsonImport,
-    TransformationImport,
-    VariableImport,
-)
-from ddionrails.data.models import Dataset, Transformation, Variable
-
-from .factories import VariableFactory
+from ddionrails.data.imports import DatasetImport, DatasetJsonImport, VariableImport
+from ddionrails.data.models import Dataset, Variable
 
 pytestmark = [pytest.mark.data, pytest.mark.imports]
 
@@ -32,11 +25,6 @@ def dataset_json_importer(study):
 @pytest.fixture
 def variable_importer(study):
     return VariableImport("DUMMY.csv", study)
-
-
-@pytest.fixture
-def transformation_importer():
-    return TransformationImport("DUMMY.csv")
 
 
 class TestDatasetImport:
@@ -225,40 +213,6 @@ class TestDatasetJsonImport:
         dataset_json_importer._import_variable(
             var, dataset, sort_id
         )  # pylint: disable=protected-access
-
-
-class TestTransformationImport:
-    def test_import_element_method(self, transformation_importer, study, dataset):
-        origin_variable = VariableFactory(name="origin")
-        target_variable = VariableFactory(name="target")
-        assert Transformation.objects.count() == 0
-        element = dict(
-            origin_study_name=study.name,
-            origin_dataset_name=dataset.name,
-            origin_variable_name=origin_variable.name,
-            target_study_name=study.name,
-            target_dataset_name=dataset.name,
-            target_variable_name=target_variable.name,
-        )
-        transformation_importer.import_element(element)
-
-        assert 1 == Transformation.objects.count()
-        transformation = Transformation.objects.first()
-        assert transformation.origin == origin_variable
-        assert transformation.target == target_variable
-
-    @pytest.mark.django_db
-    def test_import_element_method_fails(self, transformation_importer):
-        element = dict(
-            origin_study_name="",
-            origin_dataset_name="",
-            origin_variable_name="",
-            target_study_name="",
-            target_dataset_name="",
-            target_variable_name="",
-        )
-        transformation_importer.import_element(element)
-        assert Transformation.objects.count() == 0
 
 
 class TestVariableImport:
