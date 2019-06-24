@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.instruments app """
+
 import difflib
 
 from django.core.handlers.wsgi import WSGIRequest

@@ -52,24 +52,22 @@ function render(rawData) {
 
   d3.selectAll(".opt_bi").on("click", function() {
     menu2_active = this.innerHTML;
-    if (menu2_active == "Univariate (default)") {
+    if (menu2_active === "Univariate (default)") {
       menu2_active = "uni";
     }
 
     try {
-      if (menu2_active == "uni") {
-        if (rawData.scale == "cat") {
+      if (menu2_active === "uni") {
+        if (rawData.scale === "cat") {
           cat_uni(options);
-        } else if (rawData.scale == "num") {
+        } else if (rawData.scale === "num") {
           density(options);
-        } else {
-          console.log("Error. Not defined.");
         }
       } else {
-        if (rawData.scale == "cat") {
+        if (rawData.scale === "cat") {
           draw_biCatChart(options, menu2_active);
         }
-        if (rawData.scale == "num") {
+        if (rawData.scale === "num") {
           density_bi(options, menu2_active);
         }
       }
@@ -103,9 +101,9 @@ function render(rawData) {
   };
 
   // Choose diagram type by scale
-  if (rawData.scale == "cat") {
+  if (rawData.scale === "cat") {
     cat_uni(options);
-  } else if (rawData.scale == "num") {
+  } else if (rawData.scale === "num") {
     density(options);
   } else {
     console.log("Error. Not defined.");
@@ -120,35 +118,35 @@ function render(rawData) {
 
     if (options[this.id] === false) {
       options[this.id] = true;
-      if (menu2_active == "uni") {
-        if (rawData.scale == "cat") {
+      if (menu2_active === "uni") {
+        if (rawData.scale === "cat") {
           cat_uni(options);
         }
-        if (rawData.scale == "num") {
+        if (rawData.scale === "num") {
           density(options);
         }
       } else {
-        if (rawData.scale == "cat") {
+        if (rawData.scale === "cat") {
           draw_biCatChart(options, menu2_active);
         }
-        if (rawData.scale == "num") {
+        if (rawData.scale === "num") {
           density_bi(options, menu2_active);
         }
       }
     } else {
       options[this.id] = false;
-      if (menu2_active == "uni") {
-        if (rawData.scale == "cat") {
+      if (menu2_active === "uni") {
+        if (rawData.scale === "cat") {
           cat_uni(options);
         }
-        if (rawData.scale == "num") {
+        if (rawData.scale === "num") {
           density(options);
         }
       } else {
-        if (rawData.scale == "cat") {
+        if (rawData.scale === "cat") {
           draw_biCatChart(options, menu2_active);
         }
-        if (rawData.scale == "num") {
+        if (rawData.scale === "num") {
           density_bi(options, menu2_active);
         }
       }
@@ -168,12 +166,12 @@ function render(rawData) {
     var dataType;
 
     // Flags for options to modify data or not
-    if (options.missings == true) {
+    if (options.missings === true) {
       hideMissings = true;
     } else {
       hideMissings = false;
     }
-    if (options.weighted == true) {
+    if (options.weighted === true) {
       dataType = "weighted";
     } else {
       dataType = "frequencies";
@@ -237,7 +235,7 @@ function render(rawData) {
 
     // Define text labels
     var format;
-    if (options.percent == true) {
+    if (options.percent === true) {
       var sum = d3.sum(
         data.map(function(d) {
           return d[2];
@@ -331,7 +329,7 @@ function render(rawData) {
       .on("mouseover", function(d) {
         tip.transition().style("opacity", 1);
         tip.html(function() {
-          if (options.percent == true) {
+          if (options.percent === true) {
             return "<strong>" + d[1] + ": </strong>" + format(d[2] / sum);
           } else {
             return "<strong>" + d[1] + ": </strong>" + format(d[2]);
@@ -373,14 +371,14 @@ function render(rawData) {
     var colors = d3.scale.category20c().domain(rData.bi[menu2_active].labels);
 
     // Show missings / hide missings
-    if (options.missings == true) {
+    if (options.missings === true) {
       hideMissings = true;
     } else {
       hideMissings = false;
     }
 
     // Show percentages or not
-    if (options.percent == true) {
+    if (options.percent === true) {
       offset = "expand";
       format = d3.format("0.1%");
       format_axis = d3.format("%");
@@ -391,7 +389,7 @@ function render(rawData) {
     }
 
     // unweighted or weighted data
-    if (options.weighted == true) {
+    if (options.weighted === true) {
       dataType = "weighted";
     } else {
       dataType = "frequencies";
@@ -410,7 +408,7 @@ function render(rawData) {
       id = rData.bi[menu2_active].categories[i].label;
       var freqs = rData.bi[menu2_active].categories[i][dataType];
 
-      if (hideMissings == true) {
+      if (hideMissings === true) {
         for (i in indices) {
           freqs.splice(indices[i], 1);
         }
@@ -572,13 +570,13 @@ function render(rawData) {
 
     var rData = JSON.parse(JSON.stringify(rawData));
 
-    if (options.weighted == true) {
+    if (options.weighted === true) {
       dataType = "weighted";
     } else {
       dataType = "density";
     }
 
-    if (options.weighted == true) {
+    if (options.weighted === true) {
       dataType_missings = "weighted";
     } else {
       dataType_missings = "frequencies";
@@ -653,7 +651,7 @@ function render(rawData) {
 
     // Missings Chart //
 
-    if (options.missings == false) {
+    if (options.missings === false) {
       var rData = rawData;
 
       // Prepare data
@@ -723,7 +721,7 @@ function render(rawData) {
         .enter()
         .append("rect")
         .style("fill", function(d, i) {
-          if (d[1] == "valid cases") {
+          if (d[1] === "valid cases") {
             return "steelblue";
           } else {
             return colors[i];
@@ -741,7 +739,7 @@ function render(rawData) {
 
       // Show missings  in % or not
       sumAllData = sumValidData + d3.sum(rData.uni.missings[dataType_missings]);
-      if (options.percent == true) {
+      if (options.percent === true) {
         format = d3.format("0.1%");
         text.text(function(d) {
           return format(d[2] / sumAllData);
@@ -830,7 +828,7 @@ function render(rawData) {
         .on("mouseover", function(d) {
           tip.transition().style("opacity", 1);
           tip.html(function() {
-            if (options.percent == true) {
+            if (options.percent === true) {
               return (
                 "<strong>" + d[1] + ": </strong>" + format(d[2] / sumAllData)
               );
@@ -855,7 +853,7 @@ function render(rawData) {
         });
     }
 
-    if (options.missings == true) {
+    if (options.missings === true) {
       d3.select(".chart_missings").remove();
     }
   }
@@ -874,7 +872,7 @@ function render(rawData) {
     var labels = [];
 
     // Unweighted / weighted
-    if (options.weighted == true) {
+    if (options.weighted === true) {
       dataType = "weighted";
     } else {
       dataType = "density";
@@ -1014,9 +1012,9 @@ function render(rawData) {
 
     // Missings Chart //
 
-    if (options.missings == false) {
+    if (options.missings === false) {
       var format;
-      if (options.percent == true) {
+      if (options.percent === true) {
         offset = "expand";
         format = d3.format("0.1%");
         format_axis = d3.format("%");
@@ -1161,7 +1159,7 @@ function render(rawData) {
         .append("g")
         .attr("class", "layer")
         .style("fill", function(d, i) {
-          if (d[0].label == "valid cases") {
+          if (d[0].label === "valid cases") {
             return "steelblue";
           } else {
             return colors[i];

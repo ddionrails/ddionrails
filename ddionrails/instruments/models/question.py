@@ -93,7 +93,8 @@ class Question(ElasticMixin, DorMixin, models.Model):
             },
         )
 
-    def layout_class(self) -> str:
+    @staticmethod
+    def layout_class() -> str:
         return "question"
 
     def previous_question(self) -> Optional[Question]:
@@ -191,7 +192,8 @@ class Question(ElasticMixin, DorMixin, models.Model):
         keys_first_item = copy.deepcopy(keys)
         return [x.replace("text_", "") for x in keys_first_item if ("text_" in x)]
 
-    def translate_item(self, item, language):
+    @staticmethod
+    def translate_item(item, language):
         item["text"] = item.get("text_%s" % language, item.get("text", ""))
         item["instruction"] = item.get(
             "instruction_%s" % language, item.get("instruction", "")

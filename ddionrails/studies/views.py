@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.studies app """
+
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render

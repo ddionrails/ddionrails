@@ -61,7 +61,8 @@ class TestDatasetRedirectView:
         response = DatasetRedirectView.as_view()(request, id=dataset.pk)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, rf, dataset):
+    @pytest.mark.django_db
+    def test_redirect_view_with_invalid_pk(self, rf):
         invalid_dataset_id = 999
         request = rf.get("study", kwargs={"pk": invalid_dataset_id})
         with pytest.raises(Http404):

@@ -56,7 +56,8 @@ class SoepMixin:
         letters = self._soep_letters()
         return letters[year - self.START_YEAR]
 
-    def _soep_letters(self, page=None):
+    @staticmethod
+    def _soep_letters(page=None):
         a_num = ord("a")
         g_num = ord("g") + 1
         z_num = ord("z") + 1
@@ -136,7 +137,8 @@ class SoepMixin:
         )
         return d
 
-    def _enrich_dataset_dict(self, dataset_dict):
+    @staticmethod
+    def _enrich_dataset_dict(dataset_dict):
         d = dataset_dict
         analysis_unit = d["analysis_unit"]
         if analysis_unit == "h":
@@ -152,7 +154,8 @@ class SoepMixin:
             d["matches"] = []
             d["key"] = ""
 
-    def _validate_datasets(self, script_dict, analysis_unit, valid=True):
+    @staticmethod
+    def _validate_datasets(script_dict, analysis_unit, valid=True):
         valid_list = []
         invalid_list = []
         for dataset_name, dataset_dict in script_dict.items():
@@ -168,7 +171,8 @@ class SoepMixin:
         else:
             return invalid_list
 
-    def _get_selected_years(self, script_dict):
+    @staticmethod
+    def _get_selected_years(script_dict):
         return set([d["prefix"] for d in script_dict.values()])
 
 
@@ -392,7 +396,8 @@ class SoepStata(ScriptConfig, SoepMixin):
         else:
             return heading + "\n/* all genders */"
 
-    def _render_sort_pfad(self):
+    @staticmethod
+    def _render_sort_pfad():
         heading = "\n\n* * * SORT PFAD * * *\n"
         script = ""
         script += '\nsave "${MY_PATH_OUT}pfad.dta", replace'
@@ -441,7 +446,8 @@ class SoepStata(ScriptConfig, SoepMixin):
             )
         return heading + script
 
-    def _render_done(self):
+    @staticmethod
+    def _render_done():
         heading = "\n\n* * * DONE * * *\n"
         script = '\nlabel data "paneldata.org: Magic at work!"'
         script += '\nsave "${MY_FILE_OUT}", replace'
@@ -579,7 +585,8 @@ class SoepSpss(SoepStata):
             script += "\n          /by    = %s." % dataset["key"]
         return script
 
-    def _render_done(self):
+    @staticmethod
+    def _render_done():
         script = "\n* ### DONE ### *.\n"
         script += "\ndataset close all."
         script += "\ndataset name new."
@@ -663,7 +670,8 @@ class SoepR(SoepStata):
         else:
             return heading + "\n# all genders"
 
-    def _render_sort_pfad(self):
+    @staticmethod
+    def _render_sort_pfad():
         script = "\n### SORT [H|P]PFAD ###\n"
         script += "\n# This is R -- no sorting neccessary :-)"
         script += "\n"
@@ -711,14 +719,16 @@ class SoepR(SoepStata):
             )
         return script
 
-    def _render_done(self):
+    @staticmethod
+    def _render_done():
         script = "\n### DONE ###\n"
         script += '\nattr(master, "label") <- "paneldata.org: Magic at work!"'
         script += "\nstr(master)"
         script += '\nsave(master, file=file.path(path_out, "master.RData"))'
         return script
 
-    def _enrich_dataset_dict(self, dataset_dict):
+    @staticmethod
+    def _enrich_dataset_dict(dataset_dict):
         d = dataset_dict
         analysis_unit = d["analysis_unit"]
         if analysis_unit == "h":

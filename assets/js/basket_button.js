@@ -34,7 +34,6 @@ var basketButton = (function() {
   };
 
   var handleButton = function() {
-    console.log("hi");
     var $button = $(this);
     var $count = $("#basket-count").first();
     if ($button.hasClass("btn-success")) {

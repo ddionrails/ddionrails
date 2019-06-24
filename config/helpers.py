@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Helper functions and classes for ddionrails project """
+
 import os
 import subprocess
 

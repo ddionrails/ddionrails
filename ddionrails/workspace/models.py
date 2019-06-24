@@ -165,7 +165,7 @@ class BasketVariable(models.Model):
 
         unique_together = ("basket", "variable")
 
-    def clean(self, *args, **kwargs):
+    def clean(self):
         """ Custom clean method for BasketVariable
             the basket's study and the variable's dataset's study have to be the same.
         """

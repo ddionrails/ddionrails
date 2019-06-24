@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
+""" Helper classes for ddionrails.data app """
+
 import re
 from collections import OrderedDict, defaultdict
-
-# from .models import * # unused?
 
 LABEL_RE_SOEP = re.compile(r"\s*\[[\w\d\-]*\]\s*")
 LABEL_RE_PAIRFAM = re.compile(r"^\s*-*\d*\s*")
@@ -120,7 +122,8 @@ class LabelTable:
         categories = [x[0] for x in categories]
         return categories
 
-    def _simplify_label(self, label):
+    @staticmethod
+    def _simplify_label(label):
         try:
             label = label.lower().strip()
             label = LABEL_RE_SOEP.sub("", label)

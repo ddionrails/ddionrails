@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.publications app """
+
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
