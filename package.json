@@ -34,7 +34,7 @@
     "style-loader": "^0.23.1",
     "webpack": "^4.35.0",
     "webpack-bundle-tracker": "^0.4.2-beta",
-    "webpack-cli": "^3.3.4"
+    "webpack-cli": "^3.3.5"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
