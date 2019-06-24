@@ -101,6 +101,10 @@ class Topic(models.Model, ModelMixin):
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "parent"]
 
+    def __str__(self) -> str:
+        """ Returns a string representation using the "name" field """
+        return f"/topic/{self.name}"
+
     @classmethod
     def get_children(cls, topic_id: int) -> List[Topic]:
         """ Returns a list of all Topics, that have this Topic object as its ancestor """
