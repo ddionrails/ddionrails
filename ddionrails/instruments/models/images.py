@@ -66,8 +66,8 @@ class QuestionImage(models.Model):
 
     """
 
-    #Django wants its identifier field to be named id
-    #pylint: disable=invalid-name
+    # Django wants its identifier field to be named id
+    # pylint: disable=invalid-name
     id = models.UUIDField(primary_key=True, editable=False)
     question = models.ForeignKey(
         Question, blank=True, null=True, related_name="question", on_delete=models.CASCADE
@@ -81,11 +81,7 @@ class QuestionImage(models.Model):
     id_changed = False
 
     def save(
-        self,
-        force_insert=False,
-        force_update=False,
-        using=None,
-        update_fields=None,
+        self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """Adds creation of the value for the id field in front of the actual saving.
 
@@ -106,7 +102,7 @@ class QuestionImage(models.Model):
             self.id = uuid.uuid5(self.question, self.label + self.language)
         elif not self.id_changed and _question_id:
             self.id = uuid.uuid5(
-                settings.UUID_BASE, str(_question_id) + self.label + self.language
+                settings.BASE_UUID, str(_question_id) + self.label + self.language
             )
             LOGGER.warning(
                 "QuestionImage %s:%s was set up without a UUID link to a question",
@@ -114,9 +110,7 @@ class QuestionImage(models.Model):
                 self.label,
             )
         elif not (self.id_changed or self.question):
-            self.id = uuid.uuid5(
-                settings.UUID_BASE, self.label + self.language
-            )
+            self.id = uuid.uuid5(settings.BASE_UUID, self.label + self.language)
             LOGGER.warning(
                 "QuestionImage %s:%s was set up without link to a question",
                 self.image_id,

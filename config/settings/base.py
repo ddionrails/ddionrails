@@ -20,7 +20,7 @@ else:
     STATIC_ROOT = os.getenv("STATIC_ROOT")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-UUID_BASE = UUID(os.getenv("UUID_BASE", default=uuid.NAMESPACE_DNS))
+BASE_UUID = UUID(os.getenv("BASE_UUID", default=uuid.NAMESPACE_DNS))
 EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
