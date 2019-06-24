@@ -83,12 +83,12 @@ class Study(ModelMixin, TimeStampedModel):
         help_text="Topic languages of the study (Array)",
     )
 
-    class Meta: # pylint: disable=too-few-public-methods
+    class Meta:  # pylint: disable=too-few-public-methods
         """ Django's metadata options """
 
         verbose_name_plural = "Studies"
 
-    class DOR: # pylint: disable=too-few-public-methods
+    class DOR:  # pylint: disable=too-few-public-methods
         """ ddionrails' metadata options """
 
         io_fields = ["name", "label", "description"]

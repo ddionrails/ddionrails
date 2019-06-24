@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,no-member
 
 """ Test cases for mixins in ddionrails.base app """
 

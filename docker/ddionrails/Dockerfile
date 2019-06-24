@@ -22,6 +22,8 @@ RUN apk update \
         postgresql-dev \
     && rm -rf /var/cache/apk/*
 
+# install the latest version of pipenv
+# hadolint ignore=DL3013
 RUN pip install --upgrade pipenv
 RUN pipenv install --system --dev
 RUN npm install

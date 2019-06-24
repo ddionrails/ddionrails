@@ -35,18 +35,6 @@ class TestHelpers:
         assert dictionary["_name"] == "name"
         assert dictionary["othername"] == "NAME"
 
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_jekyll_reader(self):
-        pytest.fail("Test not implemented yet")
-
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_script_list(self):
-        pytest.fail("Test not implemented yet")
-
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def script_list_output(self):
-        pytest.fail("Test not implemented yet")
-
 
 class TestRowHelper:
     def test_row_method(self):

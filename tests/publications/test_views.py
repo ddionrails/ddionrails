@@ -7,17 +7,18 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from ddionrails.elastic.mixins import ModelMixin
 from ddionrails.publications.views import PublicationRedirectView
+from tests import status
 
 
 class TestPublicationRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, publication):
         request = rf.get("publication", kwargs={"pk": publication.pk})
         response = PublicationRedirectView.as_view()(request, id=publication.pk)
-        assert response.status_code == 302
+        assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_pk(self, rf, publication):
+    @pytest.mark.django_db
+    def test_redirect_view_with_invalid_pk(self, rf):
         invalid_dataset_id = 999
         request = rf.get("study", kwargs={"pk": invalid_dataset_id})
         with pytest.raises(Http404):
@@ -25,10 +26,7 @@ class TestPublicationRedirectView:
 
 
 class TestPublicationDetailView:
-    def test_detail_view_with_existing_names(self, mocker, client, publication):
-        # TODO return_value
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
+    def test_detail_view_with_existing_names(self, client, publication):
         url = reverse(
             "publ:publication",
             kwargs={
@@ -37,13 +35,9 @@ class TestPublicationDetailView:
             },
         )
         response = client.get(url)
-        assert response.status_code == 200
+        assert status.HTTP_200_OK == response.status_code
 
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_detail_view_with_invalid_study_name(self, mocker, client, publication):
-        # TODO return_value
-        mocked_get_source = mocker.patch.object(ModelMixin, "get_source")
-        mocked_get_source.return_value = dict()
+    def test_detail_view_with_invalid_study_name(self, client, publication):
         url = reverse(
             "publ:publication",
             kwargs={
@@ -51,14 +45,5 @@ class TestPublicationDetailView:
                 "publication_name": publication.name,
             },
         )
-        # TODO raise 404?
         response = client.get(url)
-        assert response.status_code == 404
-        # class 'django.http.response.HttpResponseNotFound'>
-
-    def test_detail_view_with_invalid_dataset_name(self, client, dataset):
-        pass
-
-
-class TestStudyPublicationListView:
-    pass
+        assert status.HTTP_404_NOT_FOUND == response.status_code

@@ -126,10 +126,6 @@ class TestScriptConfig:
         result = ScriptConfig.get_config(config_name)
         assert result == config
 
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_get_list_of_configs_method(self):
-        ScriptConfig._get_list_of_configs()  # pylint: disable=protected-access
-
 
 testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
 

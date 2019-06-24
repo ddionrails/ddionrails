@@ -36,11 +36,11 @@ def _get_object(object_type: str, object_id: str):
 
 # request is a required parameter
 def test_preview(request, object_type, object_id):  # pylint: disable=unused-argument
-    x = _get_object(object_type, object_id)
-    if x:
+    obj = _get_object(object_type, object_id)
+    if obj:
         response = dict(
-            name=x.name,
-            title=x.title(),
+            name=obj.name,
+            title=obj.title(),
             type=object_type.lower(),
             html="<div>This is a %s with the ID %s</div>" % (object_type, object_id),
         )

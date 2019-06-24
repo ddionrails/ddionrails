@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring
+
+""" ModelForms for ddionrails.concepts app """
+
 from django import forms
 
 from config.helpers import lower_dict_names

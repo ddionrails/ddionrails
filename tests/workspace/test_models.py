@@ -44,11 +44,6 @@ class TestBasketModel:
         basket.label = "Some basket"
         assert basket.label == basket.title()
 
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_get_or_create_method(self, user):
-        basket = Basket.get_or_create("some-basket", user.username)
-        assert basket
-
     def test_get_script_generators_method(self, basket):
         result = basket.get_script_generators()
         expected = None

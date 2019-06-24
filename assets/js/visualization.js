@@ -4,7 +4,7 @@
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
  */
 
-import "d3";
+import * as d3 from "d3";
 
 // Global vars
 
@@ -12,7 +12,6 @@ import "d3";
 // Height of chart later set by number of data elements
 var margin = { top: 30, right: 40, bottom: 40, left: 200 };
 var w = 750 - margin.left - margin.right;
-var h_menu = 40;
 var barPadding = 1;
 
 function render(rawData) {
@@ -26,7 +25,7 @@ function render(rawData) {
 
   // Create Array of available options from data modell
   var menu2_data = [];
-  for (i in rawData.bi) {
+  for (var i in rawData.bi) {
     menu2_data.push(i);
   }
 
@@ -105,8 +104,6 @@ function render(rawData) {
     cat_uni(options);
   } else if (rawData.scale === "num") {
     density(options);
-  } else {
-    console.log("Error. Not defined.");
   }
 
   d3.selectAll(".opt").on("click", function() {
@@ -409,7 +406,7 @@ function render(rawData) {
       var freqs = rData.bi[menu2_active].categories[i][dataType];
 
       if (hideMissings === true) {
-        for (i in indices) {
+        for (var i in indices) {
           freqs.splice(indices[i], 1);
         }
       }
@@ -516,7 +513,7 @@ function render(rawData) {
       .append("g")
       .attr("class", "layer")
       .style("fill", function(d) {
-        for (i in d) {
+        for (var i in d) {
           return colors(d[i].label);
         }
       });
@@ -880,7 +877,7 @@ function render(rawData) {
 
     // Prepare Data
     var range = d3.range(rData.uni.min, rData.uni.max + 1, rData.uni.by);
-    for (i in rData.bi[menu2_active].categories) {
+    for (var i in rData.bi[menu2_active].categories) {
       id = rData.bi[menu2_active].categories[i].label;
       freqs = rData.bi[menu2_active].categories[i][dataType];
 
@@ -1224,7 +1221,6 @@ function resize() {
 
 window.margin = margin;
 window.w = w;
-window.h_menu = h_menu;
 window.barPadding = barPadding;
 window.render = render;
 window.resize = resize;

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use
 
 """ Pytest fixtures for browser interaction with the ddionrails project """
 

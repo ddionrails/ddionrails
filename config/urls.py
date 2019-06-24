@@ -7,10 +7,11 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import include, path
+from django.views.generic.base import TemplateView
 
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
-from config.views import HomePageView, contact_page, elastic_proxy, imprint_page
+from config.views import HomePageView, elastic_proxy
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
@@ -26,8 +27,16 @@ admin.site.index_title = "Welcome to DDI on Rails Admin"
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="homepage"),
-    path("imprint/", imprint_page, name="imprint"),
-    path("contact/", contact_page, name="contact"),
+    path(
+        "imprint/",
+        TemplateView.as_view(template_name="pages/imprint.html"),
+        name="imprint",
+    ),
+    path(
+        "contact/",
+        TemplateView.as_view(template_name="pages/contact.html"),
+        name="contact",
+    ),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
     path("admin/", admin.site.urls),
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),

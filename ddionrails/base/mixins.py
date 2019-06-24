@@ -52,7 +52,7 @@ class ModelMixin:
         io_fields = ["name", "label", "description"]
 
     @classmethod
-    def get_or_create(cls, parameters:Dict, lower_strings: bool = True):
+    def get_or_create(cls, parameters: Dict, lower_strings: bool = True):
         """
         Default for the get_or_create based on a dict.
 

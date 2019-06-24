@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument,invalid-name
 
 """ Pytest fixtures """
 

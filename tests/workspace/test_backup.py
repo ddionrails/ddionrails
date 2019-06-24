@@ -123,7 +123,7 @@ class TestBasketVariableResource:
         assert variable.dataset.name == dataset["dataset"][0]
         assert variable.name == dataset["variable"][0]
 
-    def test_import(self, db, basket, variable):
+    def test_import(self, basket, variable):
         assert 0 == BasketVariable.objects.count()
         assert 1 == Variable.objects.count()
         assert 1 == Basket.objects.count()

@@ -17,7 +17,3 @@ class TestSystemImportManager:
 
 class TestStudyImportManager:
     pass
-
-
-class TestLocalImport:
-    pass

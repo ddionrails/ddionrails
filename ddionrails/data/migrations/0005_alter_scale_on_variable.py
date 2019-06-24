@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('data', '0004_auto_20190614_1514'),
-    ]
+    dependencies = [("data", "0004_auto_20190614_1514")]
 
     operations = [
         migrations.AlterField(
-            model_name='variable',
-            name='scale',
-            field=models.CharField(blank=True, help_text='Scale of the variable', max_length=255, null=True),
-        ),
+            model_name="variable",
+            name="scale",
+            field=models.CharField(
+                blank=True, help_text="Scale of the variable", max_length=255, null=True
+            ),
+        )
     ]
