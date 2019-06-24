@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.elastic app """
+
 import re
 
 from django.shortcuts import get_object_or_404, render

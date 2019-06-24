@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Model definitions for ddionrails.base app """
+
 import os
 
 from django.conf import settings
@@ -8,7 +12,8 @@ class System(models.Model):
     name = settings.SYSTEM_NAME
     current_commit = models.CharField(max_length=255, blank=True)
 
-    def repo_url(self):
+    @staticmethod
+    def repo_url():
         return settings.SYSTEM_REPO_URL
 
     def import_path(self):

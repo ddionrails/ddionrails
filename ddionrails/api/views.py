@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Views for ddionrails.api app """
+
 import json
 
 from django.core.handlers.wsgi import WSGIRequest
@@ -30,8 +34,8 @@ def _get_object(object_type: str, object_id: str):
 
 # VIEWS
 
-
-def test_preview(request, object_type, object_id):
+# request is a required parameter
+def test_preview(request, object_type, object_id):  # pylint: disable=unused-argument
     x = _get_object(object_type, object_id)
     if x:
         response = dict(
@@ -45,7 +49,10 @@ def test_preview(request, object_type, object_id):
         return HttpResponse("No valid type.")
 
 
-def object_redirect(request: WSGIRequest, object_type: str, object_id: str):
+# request is a required parameter
+def object_redirect(
+    request: WSGIRequest, object_type: str, object_id: str
+):  # pylint: disable=unused-argument
     obj = _get_object(object_type, object_id)
     if obj:
         return redirect(obj.get_absolute_url())
@@ -53,13 +60,19 @@ def object_redirect(request: WSGIRequest, object_type: str, object_id: str):
         return redirect("/")
 
 
-def topic_list(request: WSGIRequest, study_name: str, language: str) -> JsonResponse:
+# request is a required parameter
+def topic_list(
+    request: WSGIRequest, study_name: str, language: str
+) -> JsonResponse:  # pylint: disable=unused-argument
     study = get_object_or_404(Study, name=study_name)
     topics = study.get_topiclist(language)
     return JsonResponse(topics, safe=False)
 
 
-def concept_by_study(request, study_name, language, concept_name):
+# request is a required parameter
+def concept_by_study(
+    request, study_name, language, concept_name
+):  # pylint: disable=unused-argument
     study = get_object_or_404(Study, name=study_name)
     concept = get_object_or_404(Concept, name=concept_name)
     variable_set = Variable.objects.filter(
@@ -96,7 +109,10 @@ def concept_by_study(request, study_name, language, concept_name):
         return HttpResponse(json.dumps(result), content_type="application/json")
 
 
-def topic_by_study(request, study_name, language, topic_name):
+# request is a required parameter
+def topic_by_study(
+    request, study_name, language, topic_name
+):  # pylint: disable=unused-argument
     study = get_object_or_404(Study, name=study_name)
     topic = get_object_or_404(Topic, name=topic_name, study=study)
     topic_id_list = [topic.id for topic in Topic.get_children(topic.id)]
@@ -136,7 +152,10 @@ def topic_by_study(request, study_name, language, topic_name):
         return HttpResponse(json.dumps(result), content_type="application/json")
 
 
-def baskets_by_study_and_user(request, study_name, language):
+# request is a required parameter
+def baskets_by_study_and_user(
+    request, study_name, language
+):  # pylint: disable=unused-argument
     study = get_object_or_404(Study, name=study_name)
     baskets = Basket.objects.filter(user_id=request.user.id, study_id=study.id).all()
     result = dict(
@@ -146,7 +165,10 @@ def baskets_by_study_and_user(request, study_name, language):
     return HttpResponse(json.dumps(result), content_type="application/json")
 
 
-def add_variables_by_concept(request, study_name, language, concept_name, basket_id):
+# request is a required parameter
+def add_variables_by_concept(
+    request, study_name, language, concept_name, basket_id
+):  # pylint: disable=unused-argument
     concept = get_object_or_404(Concept, name=concept_name)
     variable_set = Variable.objects.filter(concept_id=concept.id)
     for variable in variable_set:
@@ -159,14 +181,20 @@ def add_variables_by_concept(request, study_name, language, concept_name, basket
     return HttpResponse("DONE")
 
 
-def add_variable_by_id(request, study_name, language, variable_id, basket_id):
+# request is a required parameter
+def add_variable_by_id(
+    request, study_name, language, variable_id, basket_id
+):  # pylint: disable=unused-argument
     variable = get_object_or_404(Variable, pk=variable_id)
     basket = get_object_or_404(Basket, pk=basket_id)
     BasketVariable.objects.get_or_create(basket_id=basket.id, variable_id=variable.id)
     return HttpResponse("DONE")
 
 
-def add_variables_by_topic(request, study_name, language, topic_name, basket_id):
+# request is a required parameter
+def add_variables_by_topic(
+    request, study_name, language, topic_name, basket_id
+):  # pylint: disable=unused-argument
     study = get_object_or_404(Study, name=study_name)
     topic = get_object_or_404(Topic, name=topic_name, study=study)
     topic_id_list = [topic.id for topic in Topic.get_children(topic.id)]

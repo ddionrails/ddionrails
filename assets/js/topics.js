@@ -39,8 +39,8 @@ var filter_options_string = "<span class='btn-group btn-group-sm filter-options'
     "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>"
 var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>"
 var filter_and_clipboard = filter_options_string.substr(0, 924) + clipboard + filter_options_string.substr(924);
-var api_url = location.protocol + "//" + window.location.host + "/api/topics/" + study + "/" + language
-var base_url = location.protocol + "//" + window.location.host + "/" + study + "/topics/" + language
+var api_url = location.protocol + "//" + window.location.host + "/api/topics/" + study + "/" + language;
+var base_url = location.protocol + "//" + window.location.host + "/" + study + "/topics/" + language;
 
 // Define what the tree structure will look like, for more information and options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
@@ -96,10 +96,10 @@ $(function () {
             var d = node.data.description || "";
             var $spanTitle = $(node.span).find("span.fancytree-title");
             if ($(node.span).find("span.filter-options").length === 0) {
-                if (node.type == "topic") {
+                if (node.type === "topic") {
                     $spanTitle.after(filter_and_clipboard); // insert additional copy_to_clipboard button to button group
                 }
-                if (node.type == "concept") {
+                if (node.type === "concept") {
                     $spanTitle.after(filter_options_string);
                 }
             }
@@ -140,16 +140,16 @@ function filter(node, type) {
     $("#tree_variables").empty();
     $(".sk-three-bounce").show();
     $("#tree").find("button[class*='-btn-active']").removeClass("variable-btn-active question-btn-active")
-    $(node).toggleClass(type + "-btn-active")
+    $(node).toggleClass(type + "-btn-active");
 
     var activeNode = $.ui.fancytree.getNode(node);
 
     var extraClasses = activeNode.extraClasses || "";
-    var url = api_url + "/" + activeNode.key
-    if (type == "variable") {
+    var url = api_url + "/" + activeNode.key;
+    if (type === "variable") {
         url += "?variable_html=true";
     }
-    if (type == "question") {
+    if (type === "question") {
         url += "?question_html=true";
     }
     var data;
@@ -186,10 +186,10 @@ function removeAsyncLoadedData(activeNode, type) {
 function removeAllChildren(activeNode, type) {
     var tmp = [];
     activeNode.visit(function (node) {
-        if (node.type == type) {
+        if (node.type === type) {
             tmp.push(node);
         }
-    }, true)
+    }, true);
 
     for (var i = 0; i < tmp.length; i++) {
         tmp[i].remove();
@@ -203,7 +203,7 @@ function addToBasket(el) {
     var url = api_url + "/" + node.key + "?variable_list=false";
     $("#basket_list").empty();
     var number_of_variables = "?";
-    if (node.type == "variable") {
+    if (node.type === "variable") {
         number_of_variables = 1;
         $("#number_of_variables").text(number_of_variables); // Set number of variables in add to basket modal
 
@@ -222,7 +222,7 @@ function addToBasket(el) {
                 $("#basket_list").append("<p><a class='btn btn-primary' href='" + redirect_create_basket_url + "'>Create a basket</a></p>");
             }
             for (var i = 0; i < data.baskets.length; i++) {
-                var addToBasketFunction = "addToBasketRequest(\'" + node.key + "\'," + data.baskets[i].id + ")"
+                var addToBasketFunction = "addToBasketRequest(\'" + node.key + "\'," + data.baskets[i].id + ")";
                 $("#basket_list").append("<p><button class='btn btn-primary' onclick=" + addToBasketFunction + ">Add to basket <strong>" + data.baskets[i].name + "</strong></button></p>");
             }
         } else {

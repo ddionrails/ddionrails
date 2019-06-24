@@ -84,5 +84,6 @@ class Instrument(ModelMixin, models.Model):
             kwargs={"study_name": self.study.name, "instrument_name": self.name},
         )
 
-    def layout_class(self) -> str:
+    @staticmethod
+    def layout_class() -> str:
         return "instrument"

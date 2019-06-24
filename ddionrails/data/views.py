@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.data app """
+
 import json
 
 from django.core.handlers.wsgi import WSGIRequest

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Views for ddionrails.concepts app """
+
 from django.views.generic import DetailView, ListView
 
 from ddionrails.data.models import Variable

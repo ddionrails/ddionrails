@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+""" Views for ddionrails.workspace app """
+
 import json
 from collections import OrderedDict
 
@@ -33,8 +35,8 @@ def own_basket_only(view):
 
 # ---------------------------------------------------------
 
-
-def account_overview(request: WSGIRequest):
+# request is a required parameter
+def account_overview(request: WSGIRequest):  # pylint: disable=unused-argument
     if request.user.is_authenticated:
         context = dict(user=request.user)
         return render(request, "workspace/account.html", context=context)
@@ -42,7 +44,8 @@ def account_overview(request: WSGIRequest):
         return HttpResponse("Unauthorized", status=401)
 
 
-def basket_list(request: WSGIRequest):
+# request is a required parameter
+def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
     if request.user.is_authenticated:
         basket_list = request.user.baskets.all()
     else:
@@ -51,8 +54,9 @@ def basket_list(request: WSGIRequest):
     return render(request, "workspace/basket_list.html", context=context)
 
 
+# request is a required parameter
 @own_basket_only
-def render_script(request, basket_id, script_name):
+def render_script(request, basket_id, script_name):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(
         basket=basket, variables=basket.variables.all(), script_name=script_name
@@ -61,8 +65,11 @@ def render_script(request, basket_id, script_name):
     return render(request, template, context=context)
 
 
+# request is a required parameter
 @own_basket_only
-def add_variable(request: WSGIRequest, basket_id: int, variable_id: int):
+def add_variable(
+    request: WSGIRequest, basket_id: int, variable_id: int
+):  # pylint: disable=unused-argument
     try:
         basket_variable = BasketVariable(basket_id=basket_id, variable_id=variable_id)
         basket_variable.clean()
@@ -72,8 +79,11 @@ def add_variable(request: WSGIRequest, basket_id: int, variable_id: int):
     return redirect(request.META.get("HTTP_REFERER"))
 
 
+# request is a required parameter
 @own_basket_only
-def remove_variable(request: WSGIRequest, basket_id: int, variable_id: int):
+def remove_variable(
+    request: WSGIRequest, basket_id: int, variable_id: int
+):  # pylint: disable=unused-argument
     try:
         relation = get_object_or_404(
             BasketVariable, basket_id=basket_id, variable_id=variable_id
@@ -84,8 +94,11 @@ def remove_variable(request: WSGIRequest, basket_id: int, variable_id: int):
     return redirect(request.META.get("HTTP_REFERER"))
 
 
+# request is a required parameter
 @own_basket_only
-def add_concept(request: WSGIRequest, basket_id: int, concept_id: int):
+def add_concept(
+    request: WSGIRequest, basket_id: int, concept_id: int
+):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id
     variable_list = (
@@ -103,8 +116,9 @@ def add_concept(request: WSGIRequest, basket_id: int, concept_id: int):
     return redirect(request.META.get("HTTP_REFERER"))
 
 
+# request is a required parameter
 @own_basket_only
-def remove_concept(request, basket_id, concept_id):
+def remove_concept(request, basket_id, concept_id):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id
     variable_list = (
@@ -123,8 +137,9 @@ def remove_concept(request, basket_id, concept_id):
     return redirect(request.META.get("HTTP_REFERER"))
 
 
+# request is a required parameter
 @own_basket_only
-def basket_to_csv(request, basket_id):
+def basket_to_csv(request, basket_id):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     csv = basket.to_csv()
     response = HttpResponse(csv, content_type="text/csv")
@@ -143,9 +158,11 @@ note = (
     ' (e.g. D:\\v35\\raw) as your "Input path".'
 )
 
-
+# request is a required parameter
 @own_basket_only
-def basket_detail(request: WSGIRequest, basket_id: int):
+def basket_detail(
+    request: WSGIRequest, basket_id: int
+):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
     vars_with_concept, vars_without_concept = list(), list()
@@ -218,7 +235,8 @@ def basket_detail(request: WSGIRequest, basket_id: int):
     return render(request, "workspace/basket_detail.html", context=context)
 
 
-def register(request):
+# request is a required parameter
+def register(request):  # pylint: disable=unused-argument
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -230,7 +248,8 @@ def register(request):
     return render(request, "registration/register.html", context=context)
 
 
-def basket_new(request):
+# request is a required parameter
+def basket_new(request):  # pylint: disable=unused-argument
     if request.method == "POST":
         form = BasketForm(request.POST)
         form.fields["user"].widget = HiddenInput()
@@ -247,8 +266,9 @@ def basket_new(request):
     return render(request, "workspace/basket_create.html", context=context)
 
 
+# request is a required parameter
 @own_basket_only
-def script_detail(request, basket_id, script_id):
+def script_detail(request, basket_id, script_id):  # pylint: disable=unused-argument
     script = get_object_or_404(Script, pk=script_id)
     if request.method == "POST":
         script.name = request.POST.get("field_name", "")
@@ -277,41 +297,57 @@ def script_detail(request, basket_id, script_id):
     return render(request, "workspace/script_detail.html", context=context)
 
 
+# request is a required parameter
 @own_basket_only
-def basket_search(request: WSGIRequest, basket_id: int):
+def basket_search(
+    request: WSGIRequest, basket_id: int
+):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(basket=basket, study_id=basket.study_id)
     return render(request, "workspace/angular.html", context=context)
 
 
+# request is a required parameter
 @own_basket_only
-def script_raw(request: WSGIRequest, basket_id: int, script_id: int):
+def script_raw(
+    request: WSGIRequest, basket_id: int, script_id: int
+):  # pylint: disable=unused-argument
     script = get_object_or_404(Script, pk=script_id)
     text = script.get_script_input()["text"]
     return HttpResponse(text, content_type="text/plain")
 
 
+# request is a required parameter
 @own_basket_only
-def basket_delete(request: WSGIRequest, basket_id: int):
+def basket_delete(
+    request: WSGIRequest, basket_id: int
+):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
     return redirect("/workspace/baskets/")
 
 
+# request is a required parameter
 @own_basket_only
-def script_delete(request: WSGIRequest, basket_id: int, script_id: int):
+def script_delete(
+    request: WSGIRequest, basket_id: int, script_id: int
+):  # pylint: disable=unused-argument
     script = get_object_or_404(Script, pk=script_id)
     script.delete()
     return redirect("/workspace/baskets/%s" % basket_id)
 
 
-def user_delete(request: WSGIRequest):
+# request is a required parameter
+def user_delete(request: WSGIRequest):  # pylint: disable=unused-argument
     request.user.delete()
     return redirect("/workspace/logout/")
 
 
+# request is a required parameter
 @own_basket_only
-def script_new_lang(request: WSGIRequest, basket_id: int, generator_name: str):
+def script_new_lang(
+    request: WSGIRequest, basket_id: int, generator_name: str
+):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
@@ -324,8 +360,9 @@ def script_new_lang(request: WSGIRequest, basket_id: int, generator_name: str):
     return redirect(script.get_absolute_url())
 
 
+# request is a required parameter
 @own_basket_only
-def script_new(request: WSGIRequest, basket_id: int):
+def script_new(request: WSGIRequest, basket_id: int):  # pylint: disable=unused-argument
     basket = get_object_or_404(Basket, pk=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
