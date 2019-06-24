@@ -127,7 +127,3 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
                     return topiclist.get("topics")
         except TopicList.DoesNotExist:
             return None
-
-
-def context(request):
-    return dict(all_studies=Study.objects.all().only("name", "label", "description"))

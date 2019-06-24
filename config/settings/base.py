@@ -104,7 +104,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "ddionrails.studies.models.context",
+                "ddionrails.studies.context_processors.studies_processor",
             ]
         },
     }
