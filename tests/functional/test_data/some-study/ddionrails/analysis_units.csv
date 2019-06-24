@@ -1,2 +1,2 @@
-name,label,label_de,description
-some-analysis-unit,some-analysis-unit,some-analysis-unit,some-analysis-unit
+study,name,label,label_de,description,description_de
+some-study,some-analysis-unit,some-analysis-unit,some-analysis-unit,some-analysis-unit,some-analysis-unit

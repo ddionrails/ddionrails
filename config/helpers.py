@@ -2,7 +2,6 @@
 
 """ Helper functions and classes for ddionrails project """
 
-
 from django.utils.html import escape
 from markdown import markdown
 

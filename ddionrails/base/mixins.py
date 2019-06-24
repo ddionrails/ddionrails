@@ -143,9 +143,13 @@ class ModelMixin:
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
+        """ Custom save method to call full_clean() -> validates fields """
         self.full_clean()
         super().save(
-            force_insert=False, force_update=False, using=None, update_fields=None
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
         )
 
 

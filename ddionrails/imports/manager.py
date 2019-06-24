@@ -3,8 +3,8 @@
 """ Manager classes for imports in ddionrails project """
 
 import logging
-import re
 import shutil
+import types
 from collections import OrderedDict
 from pathlib import Path
 from typing import List
@@ -13,28 +13,9 @@ import django_rq
 import git
 from django.conf import settings
 
-from ddionrails.concepts.imports import (
-    AnalysisUnitImport,
-    ConceptImport,
-    ConceptualDatasetImport,
-    PeriodImport,
-    TopicImport,
-    TopicJsonImport,
-)
-from ddionrails.data.imports import (
-    DatasetImport,
-    DatasetJsonImport,
-    TransformationImport,
-    VariableImport,
-)
-from ddionrails.instruments.imports import (
-    ConceptQuestionImport,
-    InstrumentImport,
-    QuestionVariableImport,
-)
-from ddionrails.publications.imports import AttachmentImport, PublicationImport
-from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
+
+from . import importers
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
@@ -107,29 +88,6 @@ class Repository:
             return self.list_changed_files()
 
 
-class ImportLink:
-    def __init__(self, expression, importer, activate_import=True):
-        self.expression = re.compile(expression)
-        self.importer = importer
-        self.activate_import = activate_import
-
-    def run_import(self, import_files, study=None):
-        if self.activate_import:
-            for import_file in import_files:
-                self._process_import_file(import_file, study=study)
-
-    def _import(self, study, import_file):
-        self.importer.run_import(import_file, study=study)
-
-    def _process_import_file(self, import_file, study=None):
-        # import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
-        if self._match(import_file):
-            django_rq.enqueue(self._import, study, import_file)
-
-    def _match(self, import_file):
-        return True if self.expression.match(import_file) else False
-
-
 class SystemImportManager:
     """Import the files from the system repository."""
 
@@ -141,12 +99,12 @@ class SystemImportManager:
         """
         Run the system import.
         """
-        base_directory = self.system.import_path()
-        studies_file = base_directory.joinpath("studies.csv")
-        StudyImport.run_import(studies_file, self.system)
+        import_path = self.system.import_path()
+        studies_file = import_path.joinpath("studies.csv")
+        importers.import_studies(studies_file)
 
         # Copy background image to static/
-        image_file = base_directory.joinpath("background.png")
+        image_file = import_path.joinpath("background.png")
         shutil.copy(image_file, "static/")
         self.repo.set_commit_id()
 
@@ -155,46 +113,77 @@ class StudyImportManager:
     def __init__(self, study: Study):
         self.study = study
         self.repo = Repository(study)
-        self.base_dir = study.import_path()
+        self.import_path = study.import_path()
         self.import_order = OrderedDict(
             {
-                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
-                "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
-                "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
-                "concepts": (ConceptImport, self.base_dir / "concepts.csv"),
-                "analysis_units": (
-                    AnalysisUnitImport,
-                    self.base_dir / "analysis_units.csv",
+                "study": (
+                    importers.import_study_description,
+                    self.import_path.joinpath("study.md"),
                 ),
-                "periods": (PeriodImport, self.base_dir / "periods.csv"),
+                "topics.csv": (
+                    importers.import_topics_csv,
+                    self.import_path.joinpath("topics.csv"),
+                ),
+                "topics.json": (
+                    importers.import_topics_json,
+                    self.import_path.joinpath("topics.json"),
+                ),
+                "concepts": (
+                    importers.import_concepts,
+                    self.import_path.joinpath("concepts.csv"),
+                ),
+                "analysis_units": (
+                    importers.import_analysis_units,
+                    self.import_path.joinpath("analysis_units.csv"),
+                ),
+                "periods": (
+                    importers.import_periods,
+                    self.import_path.joinpath("periods.csv"),
+                ),
                 "conceptual_datasets": (
-                    ConceptualDatasetImport,
-                    self.base_dir / "conceptual_datasets.csv",
+                    importers.import_conceptual_datasets,
+                    self.import_path.joinpath("conceptual_datasets.csv"),
                 ),
                 "instruments": (
-                    InstrumentImport,
-                    Path(self.base_dir / "instruments/").glob("*.json"),
+                    importers.import_instruments,
+                    self.import_path.joinpath("instruments.csv"),
+                ),
+                "questions": (
+                    importers.import_questions,
+                    self.import_path.joinpath("instruments").glob("*.json"),
+                ),
+                "datasets.csv": (
+                    importers.import_datasets_csv,
+                    self.import_path.joinpath("datasets.csv"),
                 ),
                 "datasets.json": (
-                    DatasetJsonImport,
-                    Path(self.base_dir / "datasets/").glob("*.json"),
+                    importers.import_datasets_json,
+                    self.import_path.joinpath("datasets").glob("*.json"),
                 ),
-                "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
-                "variables": (VariableImport, self.base_dir / "variables.csv"),
+                "variables": (
+                    importers.import_variables,
+                    self.import_path.joinpath("variables.csv"),
+                ),
                 "questions_variables": (
-                    QuestionVariableImport,
-                    self.base_dir / "questions_variables.csv",
+                    importers.import_questions_variables,
+                    self.import_path.joinpath("questions_variables.csv"),
                 ),
                 "concepts_questions": (
-                    ConceptQuestionImport,
-                    self.base_dir / "concepts_questions.csv",
+                    importers.import_concepts_questions,
+                    self.import_path.joinpath("concepts_questions.csv"),
                 ),
                 "transformations": (
-                    TransformationImport,
-                    self.base_dir / "transformations.csv",
+                    importers.import_transformations,
+                    self.import_path.joinpath("transformations.csv"),
                 ),
-                "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
-                "publications": (PublicationImport, self.base_dir / "publications.csv"),
+                "attachments": (
+                    importers.import_attachments,
+                    self.import_path.joinpath("attachments.csv"),
+                ),
+                "publications": (
+                    importers.import_publications,
+                    self.import_path.joinpath("publications.csv"),
+                ),
             }
         )
 
@@ -215,31 +204,40 @@ class StudyImportManager:
 
         """
         LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
-        importer_class, default_file_path = self.import_order.get(entity)
-
+        importer, default_file_path = self.import_order.get(entity)
         # import specific file
         if filename:
-            file = self.base_dir / filename
+            file = self.import_path.joinpath(filename)
             if file.is_file():
                 LOGGER.info(
                     f'Study "{self.study.name}" starts import of file: "{file.name}"'
                 )
-                importer = importer_class(file, self.study)
-                django_rq.enqueue(importer.run_import, file, self.study)
+                # importer is function
+                if isinstance(importer, types.FunctionType):
+                    django_rq.enqueue(importer, file)
+                # importer is class
+                else:
+                    importer_istance = importer(file, self.study)
+                    django_rq.enqueue(importer_istance.run_import, file, self.study)
             else:
                 LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
         else:
-
             # single file import
             if isinstance(default_file_path, Path):
                 if default_file_path.is_file():
-                    importer = importer_class(default_file_path, self.study)
-                    django_rq.enqueue(importer.run_import, default_file_path, self.study)
+                    # importer is function
+                    if isinstance(importer, types.FunctionType):
+                        django_rq.enqueue(importer, default_file_path, self.study)
+                    # importer is class
+                    else:
+                        importer_istance = importer(default_file_path, self.study)
+                        django_rq.enqueue(
+                            importer_istance.run_import, default_file_path, self.study
+                        )
                 else:
                     LOGGER.warning(
                         f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
                     )
-
             # multiple files import, e.g. instruments, datasets
             else:
 
@@ -247,8 +245,13 @@ class StudyImportManager:
                     LOGGER.info(
                         f'Study "{self.study.name}" starts import of file: "{file.name}"'
                     )
-                    importer = importer_class(file, self.study)
-                    django_rq.enqueue(importer.run_import, file, self.study)
+                    # importer is function
+                    if isinstance(importer, types.FunctionType):
+                        django_rq.enqueue(importer, file)
+                    # importer is class
+                    else:
+                        importer_istance = importer(file, self.study)
+                        django_rq.enqueue(importer_istance.run_import, file, self.study)
 
     def import_all_entities(self):
         """

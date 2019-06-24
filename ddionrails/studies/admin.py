@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=too-few-public-methods
 
 """ ModelAdmin definitions for ddionrails.studies app """
 
 from django.contrib import admin
 from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Count, QuerySet
+from import_export.admin import ImportExportModelAdmin
 
-from .models import Study, TopicList
+from . import models, resources
 
 
-@admin.register(Study)
-class StudyAdmin(admin.ModelAdmin):
+@admin.register(models.Study)
+class StudyAdmin(ImportExportModelAdmin):
     """ ModelAdmin for studies.Study """
 
     list_display = (
@@ -23,6 +25,7 @@ class StudyAdmin(admin.ModelAdmin):
         "modified",
     )
     list_per_page = 25
+    resource_class = resources.StudyResource
 
     def get_queryset(self, request: WSGIRequest) -> QuerySet:
         """ Annotate the queryset with aggregated counts of related models """
@@ -35,17 +38,17 @@ class StudyAdmin(admin.ModelAdmin):
         return queryset
 
     @staticmethod
-    def dataset_count(obj: Study) -> int:
+    def dataset_count(obj: models.Study) -> int:
         """ Return the number of related datasets from the annotated queryset """
         return obj.dataset_count
 
     @staticmethod
-    def instrument_count(obj: Study) -> int:
+    def instrument_count(obj: models.Study) -> int:
         """ Return the number of related instruments from the annotated queryset """
         return obj.instrument_count
 
     @staticmethod
-    def basket_count(obj: Study) -> int:
+    def basket_count(obj: models.Study) -> int:
         """ Return the number of related baskets from the annotated queryset """
         return obj.basket_count
 
@@ -57,7 +60,7 @@ class StudyAdmin(admin.ModelAdmin):
     basket_count.short_description = "Baskets"
 
 
-@admin.register(TopicList)
+@admin.register(models.TopicList)
 class TopicListAdmin(admin.ModelAdmin):
     """ ModelAdmin for studies.TopicList """
 

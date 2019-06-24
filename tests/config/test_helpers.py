@@ -3,6 +3,7 @@
 
 """ Test cases for helpers in ddionrails.config app """
 
+
 from config.helpers import RowHelper, lower_dict_names, render_markdown
 
 MD_TEXT = """
@@ -20,18 +21,18 @@ text text
 """
 
 
-class TestHelpers:
-    def test_render_markdown(self):
-        html = render_markdown(MD_TEXT)
-        assert "<h1>" in html
-        assert "<ul>" in html
-        assert 'class="table"' in html
+def test_render_markdown():
+    html = render_markdown(MD_TEXT)
+    assert "<h1>" in html
+    assert "<ul>" in html
+    assert 'class="table"' in html
 
-    def test_lower_dict_names(self):
-        dictionary = dict(_name="NAME", othername="NAME")
-        lower_dict_names(dictionary)
-        assert dictionary["_name"] == "name"
-        assert dictionary["othername"] == "NAME"
+
+def test_lower_dict_names():
+    dictionary = dict(_name="NAME", othername="NAME")
+    lower_dict_names(dictionary)
+    assert dictionary["_name"] == "name"
+    assert dictionary["othername"] == "NAME"
 
 
 class TestRowHelper:

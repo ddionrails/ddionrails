@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=too-few-public-methods
+
 """ ModelAdmin definitions for ddionrails.workspace app """
 
 from django.contrib import admin
@@ -8,16 +10,10 @@ from import_export.admin import ImportExportMixin, ImportExportModelAdmin, Impor
 
 from ddionrails.base.mixins import AdminMixin
 
-from .models import Basket, BasketVariable, Script
-from .resources import (
-    BasketResource,
-    BasketVariableImportResource,
-    ScriptImportResource,
-    UserResource,
-)
+from . import models, resources
 
 
-@admin.register(Basket)
+@admin.register(models.Basket)
 class BasketAdmin(AdminMixin, ImportExportModelAdmin):
     """ ModelAdmin for workspace.Basket
         The BasketAdmin can import and export basket files
@@ -28,7 +24,7 @@ class BasketAdmin(AdminMixin, ImportExportModelAdmin):
     list_display = ("name", "user", "study_name", "created", "modified")
     list_filter = ("study",)
     list_per_page = 25
-    resource_class = BasketResource
+    resource_class = resources.BasketResource
     raw_id_fields = ("user", "study")
     search_fields = ("name", "label", "description")
 
@@ -36,7 +32,7 @@ class BasketAdmin(AdminMixin, ImportExportModelAdmin):
     AdminMixin.study_name.short_description = "study"
 
 
-@admin.register(BasketVariable)
+@admin.register(models.BasketVariable)
 class BasketVariableAdmin(AdminMixin, ImportMixin, admin.ModelAdmin):
     """ ModelAdmin for workspace.BasketVariable
         The BasketVariableAdmin can import basket-variable files
@@ -46,14 +42,14 @@ class BasketVariableAdmin(AdminMixin, ImportMixin, admin.ModelAdmin):
     list_filter = ("basket__study",)
     list_per_page = 25
     list_select_related = ("basket", "variable")
-    resource_class = BasketVariableImportResource
+    resource_class = resources.BasketVariableImportResource
     raw_id_fields = ("basket", "variable")
 
     AdminMixin.basket_study_name.admin_order_field = "study"
     AdminMixin.basket_study_name.short_description = "study"
 
 
-@admin.register(Script)
+@admin.register(models.Script)
 class ScriptAdmin(AdminMixin, ImportMixin, admin.ModelAdmin):
     """ ModelAdmin for workspace.Script
         The ScriptAdmin can import script files
@@ -73,7 +69,7 @@ class ScriptAdmin(AdminMixin, ImportMixin, admin.ModelAdmin):
     list_select_related = ("basket", "basket__user")
     raw_id_fields = ("basket",)
     readonly_fields = ("created", "modified")
-    resource_class = ScriptImportResource
+    resource_class = resources.ScriptImportResource
     search_fields = ("name", "label", "generator_name")
 
     AdminMixin.basket_study_name.admin_order_field = "study"
@@ -87,7 +83,7 @@ class ScriptAdmin(AdminMixin, ImportMixin, admin.ModelAdmin):
 class ImportExportUserAdmin(ImportExportMixin, UserAdmin):
     """ The basket admin can import and export user files """
 
-    resource_class = UserResource
+    resource_class = resources.UserResource
 
 
 admin.site.unregister(User)

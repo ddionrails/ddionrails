@@ -6,7 +6,7 @@
 
 import pytest
 
-from ddionrails.imports.imports import CSVImport, Import, JekyllImport
+from ddionrails.imports.imports import CSVImport, Import
 
 pytestmark = [pytest.mark.imports]
 
@@ -20,12 +20,6 @@ def filename():
 def csv_importer(study, filename):
     """ A csv importer """
     return CSVImport(filename, study=study)
-
-
-@pytest.fixture
-def jekyll_importer(study, filename):
-    """ A jekyll importer """
-    return JekyllImport(filename, study=study)
 
 
 class TestImport:
