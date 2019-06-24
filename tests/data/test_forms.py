@@ -4,6 +4,7 @@
 """ Test cases for forms in ddionrails.data app """
 
 import pytest
+from django.core.exceptions import ValidationError
 
 from ddionrails.data.forms import DatasetForm, VariableForm
 
@@ -35,10 +36,8 @@ class TestDatasetForm:
 
 class TestVariableForm:
     def test_form_with_invalid_data(self, invalid_variable_data):
-        form = VariableForm(data=invalid_variable_data)
-        assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
+        with pytest.raises(ValidationError):
+            VariableForm(data=invalid_variable_data)
 
     def test_form_with_valid_data(self, valid_variable_data):
         form = VariableForm(data=valid_variable_data)

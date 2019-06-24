@@ -138,6 +138,16 @@ class ModelMixin:
                 result.append(str(value))
         return "/".join(result)
 
+    # django-import-export does not validate the models when importing
+    # https://github.com/django-import-export/django-import-export/issues/601
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        self.full_clean()
+        super().save(
+            force_insert=False, force_update=False, using=None, update_fields=None
+        )
+
 
 class ImportPathMixin:
     """ A mixin for models to return an import_path based on their name attribute """
