@@ -1,5 +1,6 @@
 import json
 from collections import defaultdict
+from typing import Dict
 
 
 class ScriptConfig:
@@ -93,11 +94,11 @@ class SoepMixin:
         else:
             return "other"
 
-    def _soep_letter_year(self):
+    def _soep_letter_year(self) -> Dict[str, int]:
         letter_year = dict()
         letters = self._soep_letters()
-        for i in range(len(letters)):
-            letter_year[letters[i]] = self.START_YEAR + i
+        for index, letter in enumerate(letters):
+            letter_year[letter] = self.START_YEAR + index
         letter_year[""] = 0
         return letter_year
 

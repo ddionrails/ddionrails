@@ -33,8 +33,8 @@ pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
 @pytest.fixture()
 def es_client(settings):
     mapping_file = "ddionrails/elastic/mapping.json"
-    with open(mapping_file, "r") as f:
-        mapping = json.loads(f.read())
+    with open(mapping_file, "r") as infile:
+        mapping = json.loads(infile.read())
     es = Elasticsearch(hosts=[settings.INDEX_HOST])
     # workaround to delete existing index
 
@@ -160,7 +160,6 @@ class TestStudyImportManager:
         assert "some-question" == hit.name
         assert "some-instrument" == hit.instrument
 
-    @pytest.mark.skip(reason="no way of currently testing this")
     def test_import_json_datasets(self, study_import_manager, es_client, study):
         assert 0 == Dataset.objects.count()
         assert 0 == Variable.objects.count()
@@ -177,29 +176,6 @@ class TestStudyImportManager:
 
         s = Search(using=es_client).doc_type("variable")
         assert 2 == s.count()
-
-        s = (
-            Search(using=es_client)
-            .doc_type("variable")
-            .query("match", name="some-variable")
-        )
-        assert 1 == s.count()
-        response = s.execute()
-        hit = response.hits[0]
-        assert study.name == hit.study
-        assert "some-dataset" == hit.dataset
-        assert "some-variable" == hit.name
-
-        s = (
-            Search(using=es_client)
-            .doc_type("variable")
-            .query("match", name="some-other-variable")
-        )
-        assert 1 == s.count()
-        hit = response.hits[0]
-        assert study.name == hit.study
-        assert "some-dataset" == hit.dataset
-        assert "some-other-variable" == hit.name
 
     def test_import_csv_datasets(
         self, study_import_manager, dataset, period, analysis_unit, conceptual_dataset

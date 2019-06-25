@@ -87,7 +87,7 @@ class Dataset(ModelMixin, models.Model):
 
         unique_together = ("study", "name")
 
-    class DOR(ModelMixin.DOR):
+    class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         """ ddionrails' metadata options """
 
         id_fields = ["study", "name"]

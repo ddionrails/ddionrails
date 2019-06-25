@@ -6,7 +6,8 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ddionrails.workspace.models import Basket, BasketVariable, Script, ScriptConfig
+from ddionrails.workspace.models import BasketVariable, Script
+from ddionrails.workspace.scripts import SoepStata
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
 
@@ -14,7 +15,7 @@ pytestmark = [pytest.mark.workspace]  # pylint: disable=invalid-name
 
 
 @pytest.fixture
-def csv_heading(db):  # pylint: disable=unused-argument
+def csv_heading():
     return (
         "name,label,label_de,dataset_name,dataset_label,dataset_label_de,"
         "study_name,study_label,study_label_de,concept_name,period_name"
@@ -114,12 +115,9 @@ class TestBasketVariableModel:
 
 
 class TestScriptModel:
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_get_config_method(self, mocker, script):
-        mocked_get_config = mocker.patch.object(ScriptConfig, "get_config")
-        mocked_get_config.return_value = dict(key="value")
+    def test_get_config_method(self, script):
         result = script.get_config()
-        assert result
+        assert isinstance(result, SoepStata)
 
     def test_get_config_method_with_local_config(self, script):
         script.local_config = "local-config"

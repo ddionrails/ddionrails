@@ -89,8 +89,6 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
         verbose_name_plural = "Studies"
 
     class DOR:  # pylint: disable=too-few-public-methods
-        """ ddionrails' metadata options """
-
         io_fields = ["name", "label", "description"]
         id_fields = ["name"]
 

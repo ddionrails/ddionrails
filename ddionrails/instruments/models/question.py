@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 """ Model definitions for ddionrails.instruments app: Question """
+
 from __future__ import annotations
 
 import copy
@@ -72,9 +74,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
         unique_together = ("instrument", "name")
 
-    class DOR:
-        """ ddionrails' metadata options """
-
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["instrument", "name"]
         io_fields = ["name", "label", "description", "instrument"]
 
@@ -190,7 +190,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
         """ Returns a list of translation languages, e.g. ["de"] """
         keys = list(self.items[0].keys())
         keys_first_item = copy.deepcopy(keys)
-        return [x.replace("text_", "") for x in keys_first_item if ("text_" in x)]
+        return [key.replace("text_", "") for key in keys_first_item if "text_" in key]
 
     @staticmethod
     def translate_item(item, language):
@@ -222,24 +222,24 @@ class Question(ElasticMixin, DorMixin, models.Model):
                 item["sn"] = 0
         items = sorted(items, key=lambda x: int(x["sn"]))
         before = None
-        for i in range(len(items)):
+        for index, item in enumerate(items):
             try:
-                current = items[i]["answer_list"]
+                current = item["answer_list"]
             except:
                 current = None
             try:
-                after = items[i + 1]["answer_list"]
+                after = items[index + 1]["answer_list"]
             except:
                 after = None
             if current and current == before:
                 if current == after:
-                    items[i]["layout"] = "matrix_element"
+                    item["layout"] = "matrix_element"
                 else:
-                    items[i]["layout"] = "matrix_footer"
+                    item["layout"] = "matrix_footer"
             elif current and current == after:
-                items[i]["layout"] = "matrix_header"
+                item["layout"] = "matrix_header"
             else:
-                items[i]["layout"] = "individual"
+                item["layout"] = "individual"
             before = current
         return items
 

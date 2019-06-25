@@ -67,9 +67,7 @@ class Instrument(ModelMixin, models.Model):
         unique_together = ("study", "name")
         ordering = ("study", "name")
 
-    class DOR:
-        """ ddionrails' metadata options """
-
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "period", "analysis_unit"]
 

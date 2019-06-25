@@ -17,5 +17,5 @@ class StudyDescriptionImport(imports.JekyllImport):
 
 
 class StudyImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = StudyInitialForm

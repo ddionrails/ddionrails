@@ -49,7 +49,7 @@ class ModelMixin:
 
     """
 
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["name"]
         io_fields = ["name", "label", "description"]
 

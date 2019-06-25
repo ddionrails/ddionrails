@@ -11,7 +11,9 @@ from ddionrails.studies.models import Study
 pytestmark = [pytest.mark.studies]  # pylint: disable=invalid-name
 
 
-def test_studies_processor_with_study(study, rf):  # pylint: disable=invalid-name
+def test_studies_processor_with_study(
+    study, rf
+):  # pylint: disable=unused-argument,invalid-name
     some_request = rf.get("/")
     response = studies_processor(some_request)
     queryset = Study.objects.all()

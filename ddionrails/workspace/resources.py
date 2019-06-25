@@ -12,7 +12,7 @@ from .models import Basket, BasketVariable, Script
 class UserResource(resources.ModelResource):
     """ Import export resource for User model """
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         model = User
         exclude = ("id",)
         import_id_fields = ("username", "email")
@@ -26,7 +26,7 @@ class BasketResource(resources.ModelResource):
     study = Field(attribute="study", widget=ForeignKeyWidget(Study, field="name"))
     user = Field(attribute="user", widget=ForeignKeyWidget(User, field="username"))
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Basket
         import_id_fields = ("user", "name", "study")
         fields = ("name", "label", "description", "user", "study", "created", "modified")
@@ -92,7 +92,7 @@ class BasketVariableExportResource(resources.ModelResource):
     dataset = Field(attribute="variable__dataset__name")
     variable = Field(attribute="variable__name")
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         model = BasketVariable
         exclude = ("id",)
         export_order = ("basket", "user", "email", "study", "dataset", "variable")

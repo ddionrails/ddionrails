@@ -60,9 +60,7 @@ class Topic(models.Model, ModelMixin):
 
         unique_together = ("study", "name")
 
-    class DOR:
-        """ ddionrails' metadata options """
-
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "parent"]
 
@@ -115,7 +113,7 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "concept"
 
-    class DOR(ModelMixin.DOR):
+    class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         """ ddionrails' metadata options """
 
         id_fields = ["name"]
@@ -206,9 +204,7 @@ class Period(models.Model, ModelMixin):
 
         unique_together = ("study", "name")
 
-    class DOR:
-        """ ddionrails' metadata options """
-
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "definition"]
 

@@ -270,7 +270,8 @@ class TestTransformationImport:
         assert transformation.origin == origin_variable
         assert transformation.target == target_variable
 
-    def test_import_element_method_fails(self, db, transformation_importer, caplog):
+    @pytest.mark.django_db
+    def test_import_element_method_fails(self, transformation_importer):
         element = dict(
             origin_study_name="",
             origin_dataset_name="",
@@ -280,8 +281,6 @@ class TestTransformationImport:
             target_variable_name="",
         )
         transformation_importer.import_element(element)
-
-        # TODO assert logging message
         assert Transformation.objects.count() == 0
 
 

@@ -34,8 +34,8 @@ def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     model, resource = determine_model_and_resource(entity, method="restore")
     filename = (path / entity).with_suffix("." + format_)
     try:
-        with open(str(filename), "r") as f:
-            data = f.read()
+        with open(str(filename), "r") as infile:
+            data = infile.read()
     except FileNotFoundError:
         click.secho(f"No backup to restore for {entity}", fg="red")
         return
@@ -55,8 +55,8 @@ def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
                 )
                 output.append(error.row.values())
         log_file = path / "error_log.csv"
-        with open(str(log_file), "w") as f:
-            f.write(output.csv)
+        with open(str(log_file), "w") as outfile:
+            outfile.write(output.csv)
     else:
         # Actually write the data to the database if no errors were encountered in dry run
         resource().import_data(dataset, dry_run=False)

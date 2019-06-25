@@ -94,67 +94,7 @@ class TestCSVImport:
         csv_importer.execute_import()
         mocked_import_element.assert_called_once_with("element")
 
-    @pytest.mark.skip
-    def test_import_element_method(self, mocker, csv_importer):
-        mocked_process_element = mocker.patch.object(CSVImport, "process_element")
-
-        class SampleModel(models.Model):
-            pass
-
-        class SampleForm(ModelForm):
-            class Meta:
-                model = SampleModel
-
-        class SampleImport(CSVImport):
-            class DOR:
-                form = SampleForm
-
-        sample_importer = SampleImport("DUMMY.CSV")
-        element = "element"
-        sample_importer.import_element(element)
-
     def test_process_element_method(self, csv_importer):
         element = "element"
         respone = csv_importer.process_element(element)
         assert respone == element
-
-
-@pytest.mark.skip
-class TestJekyllImport:
-    def test_read_file_method(self, mocker, jekyll_importer):
-        mocked_read_lines = mocker.patch.object(JekyllImport, "read_lines")
-        mocked_open = mocker.patch("builtins.open")
-        jekyll_importer.read_file()
-        mocked_read_lines.assert_called_once()
-        mocked_open.assert_called_once()
-
-    def test_read_lines_method(self, mocker, jekyll_importer):
-        mocked_safe_load = mocker.patch("yaml.safe_load")
-        lines = ["---", "name: some-study", "---", "# Some Study"]
-        jekyll_importer.read_lines(lines)
-        assert jekyll_importer.content == "# Some Study"
-        assert jekyll_importer.yaml_content == "name: some-study"
-        mocked_safe_load.assert_called_once()
-
-    def test_read_lines_method_without_dashed_line(self, mocker, jekyll_importer):
-        mocked_safe_load = mocker.patch("yaml.safe_load")
-        lines = ["name: some-study"]
-        jekyll_importer.read_lines(lines)
-        assert jekyll_importer.content == "name: some-study"
-        assert jekyll_importer.yaml_content == ""
-        mocked_safe_load.assert_called_once()
-
-    def test_read_lines_method_with_only_dashed_line(self, mocker, jekyll_importer):
-        mocked_safe_load = mocker.patch("yaml.safe_load")
-        lines = ["---"]
-        jekyll_importer.read_lines(lines)
-        assert jekyll_importer.content == ""
-        assert jekyll_importer.yaml_content == ""
-        mocked_safe_load.assert_called_once()
-
-    def test_execute_import_method(self, jekyll_importer, capsys):
-        jekyll_importer.data = "some-data"
-        jekyll_importer.content = "some-content"
-        jekyll_importer.execute_import()
-        out = capsys.readouterr()[0]
-        assert out == "\n".join(["some-data", "some-content", ""])

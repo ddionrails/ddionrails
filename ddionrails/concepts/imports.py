@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class TopicImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = TopicForm
 
     def process_element(self, element):
@@ -51,7 +51,7 @@ class TopicJsonImport(imports.Import):
 
 
 class ConceptImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = ConceptForm
 
     def import_element(self, element):
@@ -69,12 +69,12 @@ class ConceptImport(imports.CSVImport):
 
 
 class AnalysisUnitImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = AnalysisUnitForm
 
 
 class PeriodImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = PeriodForm
 
     def process_element(self, element):
@@ -83,5 +83,5 @@ class PeriodImport(imports.CSVImport):
 
 
 class ConceptualDatasetImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = ConceptualDatasetForm

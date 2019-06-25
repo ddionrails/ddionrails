@@ -16,10 +16,11 @@ from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
 
-handler400 = "config.views.bad_request"
-handler403 = "config.views.permission_denied"
-handler404 = "config.views.page_not_found"
-handler500 = "config.views.server_error"
+# These variable names are desired by Django
+handler400 = "config.views.bad_request" # pylint: disable=invalid-name
+handler403 = "config.views.permission_denied" # pylint: disable=invalid-name
+handler404 = "config.views.page_not_found"# pylint: disable=invalid-name
+handler500 = "config.views.server_error"# pylint: disable=invalid-name
 
 admin.site.site_header = "DDI on Rails Admin"
 admin.site.site_title = "DDI on Rails Admin"

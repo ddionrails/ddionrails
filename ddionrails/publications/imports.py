@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class PublicationImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = PublicationForm
 
     def process_element(self, element: OrderedDict) -> OrderedDict:
@@ -34,7 +34,7 @@ class PublicationImport(imports.CSVImport):
 
 
 class AttachmentImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = AttachmentForm
 
     def __init__(self, *args, **kwargs):

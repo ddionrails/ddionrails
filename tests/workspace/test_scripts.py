@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for scripts in ddionrails.workspace app """
 
@@ -111,13 +111,6 @@ class TestScriptConfig:
         assert len(result) == 1
         assert result[variable.dataset.name] == [variable.name]
 
-    @pytest.mark.skip(reason="no way of currently testing this")
-    def test_get_all_configs_method(self, mocker):
-        mocked_get_list_of_configs = mocker.patch.object(
-            ScriptConfig, "_get_list_of_configs"
-        )
-        ScriptConfig.get_all_configs()
-
     def test_get_config_method(self, mocker):
         config_name = "some-config-name"
         config = "some-config"
@@ -188,8 +181,12 @@ class TestSoepMixin:
         )  # pylint: disable=protected-access
         assert result == expected
 
-    def test_soep_letter_year_method(self):
-        pass
+    def test_soep_letter_year_method(self, soepmixin):
+        result = soepmixin._soep_letter_year()
+        assert result.get("") == 0
+        assert result.get("a") == 2001
+        assert result.get("z") == 2026
+        assert result.get("bg") == 2033
 
     def test_soep_get_year_method(self):
         pass

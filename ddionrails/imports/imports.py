@@ -29,7 +29,7 @@ class Import:
         self.name = os.path.splitext(self.basename)[0]
         self.content = None
 
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = None
 
     def execute_import(self):
@@ -79,8 +79,8 @@ class JekyllImport(Import):
         self.data = None
 
     def read_file(self):
-        with open(self.file_path(), "r") as f:
-            jekyll_content = frontmatter.load(f)
+        with open(self.file_path(), "r") as infile:
+            jekyll_content = frontmatter.load(infile)
         self.content = jekyll_content.content
         self.data = jekyll_content.metadata
 

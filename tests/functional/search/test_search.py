@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Functional test cases for search of the ddionrails project """
 
@@ -19,8 +19,8 @@ pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
 @pytest.fixture()
 def es_client():
     mapping_file = "ddionrails/elastic/mapping.json"
-    with open(mapping_file, "r") as f:
-        mapping = json.loads(f.read())
+    with open(mapping_file, "r") as infile:
+        mapping = json.loads(infile.read())
     es = Elasticsearch()
 
     # workaround to delete existing index
