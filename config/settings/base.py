@@ -32,7 +32,7 @@ SYSTEM_REPO_URL = os.getenv(
     "SYSTEM_REPO_URL", default="https://github.com/paneldata/system.git"
 )
 
-MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media_root")
+MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media")
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 MEDIA_URL = "/media/"
 

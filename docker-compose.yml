@@ -27,6 +27,7 @@ services:
       - 8000
     volumes: 
       - static:/usr/src/app/static
+      - media:/var/django/media
     restart: unless-stopped
 
   postgres:
@@ -82,6 +83,7 @@ services:
     volumes: 
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - static:/usr/src/app/static:ro
+      - media:/var/django/media
 
   redis:
     image: redis:4-alpine3.9
@@ -91,6 +93,7 @@ services:
 volumes:
   elastic_data:
   static:
+  media:
   ddi-psql-config:
   ddi-psql-data:
   ddi-psql-logs:
