@@ -21,17 +21,6 @@ class TestStudyModel:
         expected = "/" + study.name
         assert expected == study.get_absolute_url()
 
-    def test_import_path_method(self, study, settings):
-        expected = (
-            str(
-                pathlib.Path(settings.IMPORT_REPO_PATH)
-                / study.name
-                / settings.IMPORT_SUB_DIRECTORY
-            )
-            + "/"
-        )
-        assert expected == study.import_path()
-
     def test_repo_url_method_https(self, study, settings):
         settings.GIT_PROTOCOL = "https"
         repo_url = study.repo_url()

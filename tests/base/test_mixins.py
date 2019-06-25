@@ -3,12 +3,14 @@
 
 """ Test cases for mixins in ddionrails.base app """
 
+import pathlib
+
 import pytest
 from django.db import models
 from django.forms import ModelForm
 
 import ddionrails.base
-from ddionrails.base.mixins import AdminMixin, ModelMixin
+from ddionrails.base.mixins import AdminMixin, ImportPathMixin, ModelMixin
 from ddionrails.concepts.models import Concept
 
 pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]  # pylint: disable=invalid-name
@@ -111,6 +113,17 @@ class TestModelMixin:
         mixin.id2 = "name-2"
         expected = f"{mixin.id1}/{mixin.id2}"
         assert expected == str(mixin)
+
+
+class TestImportPathMixin:
+    def test_import_path_method(self, settings):
+        mixin = ImportPathMixin()
+        mixin.name = "name"
+        result = mixin.import_path()
+        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+            mixin.name, settings.IMPORT_SUB_DIRECTORY
+        )
+        assert expected == result
 
 
 @pytest.fixture

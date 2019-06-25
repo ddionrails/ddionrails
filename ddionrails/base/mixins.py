@@ -2,9 +2,11 @@
 
 """ Mixins for ddionrails.base app """
 
+import pathlib
 from typing import Dict
 
 from django import forms
+from django.conf import settings
 
 from config.helpers import render_markdown
 
@@ -143,6 +145,16 @@ class ModelMixin:
             except AttributeError:
                 result.append(str(value))
         return "/".join(result)
+
+
+class ImportPathMixin:
+    """ A mixin for models to return an import_path based on their name attribute """
+
+    def import_path(self) -> pathlib.Path:
+        """ Returns the instance's import path """
+        return pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+            self.name, settings.IMPORT_SUB_DIRECTORY
+        )
 
 
 class AdminMixin:

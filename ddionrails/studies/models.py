@@ -11,7 +11,7 @@ from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
-from ddionrails.base.mixins import ModelMixin
+from ddionrails.base.mixins import ImportPathMixin, ModelMixin
 
 
 class TopicList(models.Model):
@@ -35,7 +35,7 @@ class TopicList(models.Model):
     )
 
 
-class Study(ModelMixin, TimeStampedModel):
+class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
     """
     Stores a single study,
     related to :model:`data.Dataset`, :model:`instruments.Instrument`,
@@ -101,12 +101,6 @@ class Study(ModelMixin, TimeStampedModel):
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "name" field """
         return reverse("study_detail", kwargs={"study_name": self.name})
-
-    def import_path(self):
-        path = os.path.join(
-            settings.IMPORT_REPO_PATH, self.name, settings.IMPORT_SUB_DIRECTORY
-        )
-        return path
 
     def repo_url(self) -> str:
         if settings.GIT_PROTOCOL == "https":
