@@ -1,14 +1,19 @@
+# -*- coding: utf-8 -*-
+
+""" Manager classes for imports in ddionrails project """
+
 import logging
-import os
+import pathlib
 import re
 import shutil
 from collections import OrderedDict
 from pathlib import Path
+from typing import List
 
 import django_rq
+import git
 from django.conf import settings
 
-from config.helpers import script_list, script_list_output
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
@@ -37,76 +42,73 @@ logger = logging.getLogger(__name__)
 
 
 class Repository:
-    def __init__(self, study_or_system):
-        self.study_or_system = study_or_system
-        self.link = study_or_system.repo_url()
-        self.name = study_or_system.name
-        self.path = os.path.join(settings.IMPORT_REPO_PATH, self.name)
+    """ A helper class to handle git related activities """
 
-    def clone_repo(self):
-        script = [
-            f"cd {settings.IMPORT_REPO_PATH}",
-            f"git clone --depth 1 {self.link} {self.name} -b {settings.IMPORT_BRANCH}",
-            f"cd {self.name}",
-            f"git checkout -b {settings.IMPORT_BRANCH} origin/{settings.IMPORT_BRANCH}",
-            f"git branch --set-upstream-to=origin/{settings.IMPORT_BRANCH} {settings.IMPORT_BRANCH}",
-        ]
-        script_list(script)
+    def __init__(self, study_or_system) -> None:
+        self.study_or_system = study_or_system
+        self.name = study_or_system.name
+        self.link = study_or_system.repo_url()
+        self.path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(self.name)
+        try:
+            self.repo = git.Repo(self.path)
+        except (git.exc.NoSuchPathError, git.exc.InvalidGitRepositoryError):
+            self.repo = None
 
     def set_branch(self, branch=settings.IMPORT_BRANCH):
-        script = ["cd %s" % self.path, "git checkout %s" % branch]
-        script_list(script)
+        self.repo.git.checkout(branch)
 
-    def update_repo(self):
-        script = ["cd %s" % self.path, "git pull"]
-        script_list(script)
-
-    def update_or_clone_repo(self):
-        print("[INFO] Repository path: %s" % self.path)
-        if os.path.isdir(self.path):
-            self.update_repo()
+    def pull_or_clone(self) -> None:
+        """ Clones a repository from remote if it does not exist yet,
+            otherwise pull
+        """
+        if self.path.exists() and self.repo is not None:
+            print(f'Pulling "{self.name}" from "{self.link}"')
+            self.repo.remotes.origin.pull()
         else:
-            self.clone_repo()
+            print(f'Cloning "{self.name}" from "{self.link}"')
+            self.repo = git.Repo.clone_from(
+                self.link, self.path, branch=settings.IMPORT_BRANCH, depth=1
+            )
 
-    def get_commit_id(self):
-        script = ["cd %s" % self.path, "git log --pretty=format:'%H' -n 1"]
-        return script_list_output(script)
+    def set_commit_id(self) -> None:
+        """ Save the current commit hash in the database field "current_commit" of study or system """
+        self.study_or_system.current_commit = str(self.repo.head.commit)
+        self.study_or_system.save()
 
-    def set_commit_id(self):
-        study_or_system = self.study_or_system
-        study_or_system.current_commit = self.get_commit_id()
-        study_or_system.save()
+    def is_import_required(self) -> bool:
+        """ Returns True if the "current_commit" in the database differs from HEAD
+            False otherwise
+        """
+        return self.study_or_system.current_commit != str(self.repo.head.commit)
 
-    def import_required(self):
-        return self.study_or_system.current_commit != self.get_commit_id()
+    def list_changed_files(self) -> List:
+        """ Returns a list of changed files since the "current_commit" in the database """
+        diff = self.repo.git.diff(
+            self.study_or_system.current_commit,
+            "--",
+            settings.IMPORT_SUB_DIRECTORY,
+            name_only=True,
+        )
+        return diff.split()
 
-    def list_changed_files(self):
-        script = [
-            "cd %s" % self.path,
-            "git diff --name-only %s -- %s"
-            % (self.study_or_system.current_commit, settings.IMPORT_SUB_DIRECTORY),
+    def list_all_files(self) -> List:
+        """ Returns a list of all files in the "import_path" """
+        return [
+            file
+            for file in sorted(self.study_or_system.import_path().glob("**/*"))
+            if file.is_file()
         ]
-        return script_list_output(script).split()
 
-    def list_all_files(self):
-        script = ["cd %s" % self.path, "find %s" % settings.IMPORT_SUB_DIRECTORY]
-        return script_list_output(script).split()
-
-    def import_list(self, import_all=False):
+    def import_list(self, import_all: bool = False) -> List:
+        """ Returns a list of files to be imported """
         if import_all:
-            import_files = self.list_all_files()
+            return self.list_all_files()
         else:
-            import_files = self.list_changed_files()
-        return import_files
+            return self.list_changed_files()
 
 
 class ImportLink:
     def __init__(self, expression, importer, activate_import=True):
-
-        print(expression)
-        print(importer)
-        print(activate_import)
-
         self.expression = re.compile(expression)
         self.importer = importer
         self.activate_import = activate_import
@@ -153,10 +155,7 @@ class StudyImportManager:
     def __init__(self, study: Study):
         self.study = study
         self.repo = Repository(study)
-        self.base_dir = Path(
-            f"{settings.IMPORT_REPO_PATH}/{self.study}/{settings.IMPORT_SUB_DIRECTORY}/"
-        )
-
+        self.base_dir = study.import_path()
         self.IMPORT_ORDER = OrderedDict(
             {
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
@@ -200,7 +199,7 @@ class StudyImportManager:
         )
 
     def update_repo(self):
-        self.repo.update_repo()
+        self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
     def import_single_entity(self, entity: str, filename: bool = None):

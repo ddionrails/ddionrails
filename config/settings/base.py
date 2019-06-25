@@ -194,7 +194,7 @@ RQ_SHOW_ADMIN_LINK = True
 # Github (either "https" or "ssh")
 GIT_PROTOCOL = "https"
 
-SHELL_PLUS_PRE_IMPORTS = (("imports.manager", "*"),)
+SHELL_PLUS_PRE_IMPORTS = (("ddionrails.imports.manager", "*"),)
 
 SERVER_EMAIL = "admin@paneldata.org"
 DEFAULT_FROM_EMAIL = "webmaster@paneldata.org"

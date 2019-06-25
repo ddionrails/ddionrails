@@ -13,10 +13,10 @@ pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 
 def test_system_command(mocker):
-    mocked_update_or_clone_repo = mocker.patch.object(Repository, "update_or_clone_repo")
+    mocked_pull_or_clone = mocker.patch.object(Repository, "pull_or_clone")
     mocked_run_import = mocker.patch.object(SystemImportManager, "run_import")
     result = CliRunner().invoke(system.command)
     assert "System settings succesfully imported" in result.output
     assert 0 == result.exit_code
-    mocked_update_or_clone_repo.assert_called_once()
+    mocked_pull_or_clone.assert_called_once()
     mocked_run_import.assert_called_once()

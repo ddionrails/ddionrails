@@ -17,7 +17,7 @@ def command():
     """
     system = System.get()
     repo = Repository(system)
-    repo.update_or_clone_repo()
+    repo.pull_or_clone()
     SystemImportManager(system).run_import()
     click.secho(
         f"System settings succesfully imported from {settings.SYSTEM_REPO_URL}.",

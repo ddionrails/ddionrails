@@ -2,8 +2,6 @@
 
 """ Helper functions and classes for ddionrails project """
 
-import os
-import subprocess
 
 from django.utils.html import escape
 from markdown import markdown
@@ -21,24 +19,6 @@ def render_markdown(text):
     text = markdown(text, extensions=["markdown.extensions.tables"])
     text = text.replace("<table>", '<table class="table">')
     return text
-
-
-def script_list(script):
-    """
-    Takes a list of shell commands and runs them.
-    """
-    script = "\n".join(script)
-    os.system(script)
-
-
-def script_list_output(script):
-    """
-    Takes a list of shell commands and runs them.
-
-    Unlike script_list(), this command returns the output.
-    """
-    result = subprocess.check_output("\n".join(script), shell=True)
-    return result.decode()
 
 
 def lower_dict_names(dictionary):
