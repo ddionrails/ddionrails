@@ -16,13 +16,6 @@ class TestSystemModel:
     def test_repo_url_method(self, system, settings):
         assert system.repo_url() + settings.SYSTEM_REPO_URL
 
-    def test_import_path_method(self, system, settings):
-        result = system.import_path()
-        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
-            system.name, settings.IMPORT_SUB_DIRECTORY
-        )
-        assert expected == result
-
     def test_get_method(self, system):  # pylint: disable=unused-argument
         result = System.get()
         assert isinstance(result, System)

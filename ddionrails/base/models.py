@@ -4,13 +4,13 @@
 
 from __future__ import annotations
 
-import pathlib
-
 from django.conf import settings
 from django.db import models
 
+from .mixins import ImportPathMixin
 
-class System(models.Model):
+
+class System(ImportPathMixin, models.Model):
     """ Stores a single system instance """
 
     name = settings.SYSTEM_NAME
@@ -20,12 +20,6 @@ class System(models.Model):
     def repo_url() -> str:
         """ Returns the system's repo url from the settings """
         return settings.SYSTEM_REPO_URL
-
-    def import_path(self) -> pathlib.Path:
-        """ Returns the system's import path """
-        return pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
-            self.name, settings.IMPORT_SUB_DIRECTORY
-        )
 
     @classmethod
     def get(cls) -> System:
