@@ -9,8 +9,6 @@ from ddionrails.concepts.models import Concept
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 
-from .update import update_study
-
 
 @click.command()
 @click.option("-s", "--study", "study_name", default=False)
@@ -51,9 +49,9 @@ def command(
         print("upgrade all studies")
         for study in Study.objects.all():
             print("upgrade study", study)
-            if local is False:
-                update_study(study)
             manager = StudyImportManager(study)
+            if local is False:
+                manager.update_repo()
             manager.import_all_entities()
         django_rq.enqueue(Concept.index_all)
         exit(0)
@@ -64,10 +62,10 @@ def command(
         except Exception as e:
             print(e)
             exit(1)
-        if local is False:
-            update_study(study)
-
         manager = StudyImportManager(study)
+        if local is False:
+            manager.update_repo()
+
         if (
             any(
                 (
