@@ -28,8 +28,8 @@ def create(mapping_file: str) -> None:
             click.secho(f'Mapping file "{mapping_file}" not found.', fg="red")
             exit(1)
         else:
-            with open(mapping_file, "r") as f:
-                mapping = json.load(f)
+            with open(mapping_file, "r") as infile:
+                mapping = json.load(infile)
             click.secho(
                 f'Creating index "{settings.INDEX_NAME}" with maping from "{mapping_file}"',
                 fg="green",

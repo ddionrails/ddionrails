@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Functional test cases for Javascript interaction with the ddionrails project """
 

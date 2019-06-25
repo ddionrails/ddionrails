@@ -22,8 +22,8 @@ def backup_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     dataset = resource().export()
     formatted = dataset.export(format_)
     filename = (path / entity).with_suffix("." + format_)
-    with open(str(filename), "w") as f:
-        f.write(formatted)
+    with open(str(filename), "w") as outfile:
+        outfile.write(formatted)
 
 
 @click.command()

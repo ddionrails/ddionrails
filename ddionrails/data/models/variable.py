@@ -108,7 +108,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
         unique_together = ("name", "dataset")
 
-    class DOR(DorMixin.DOR):
+    class DOR(DorMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         """ ddionrails' metadata options """
 
         id_fields = ["name", "dataset"]

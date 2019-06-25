@@ -70,7 +70,7 @@ class DatasetJsonImport(imports.Import):
 
 
 class DatasetImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = DatasetForm
 
     def import_element(self, element: OrderedDict):
@@ -106,7 +106,7 @@ class DatasetImport(imports.CSVImport):
 
 
 class VariableImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
 
     def import_element(self, element):
@@ -139,7 +139,7 @@ class VariableImport(imports.CSVImport):
 
 
 class TransformationImport(imports.CSVImport):
-    class DOR:
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
 
     def import_element(self, element):
