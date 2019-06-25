@@ -139,15 +139,12 @@ class SystemImportManager:
         """
         Run the system import.
         """
-
-        base_dir = Path(
-            f"{settings.IMPORT_REPO_PATH}{self.system.name}/{settings.IMPORT_SUB_DIRECTORY}"
-        )
-        studies_file = base_dir / "studies.csv"
-        django_rq.enqueue(StudyImport.run_import, studies_file, self.system)
+        base_directory = self.system.import_path()
+        studies_file = base_directory.joinpath("studies.csv")
+        StudyImport.run_import(studies_file, self.system)
 
         # Copy background image to static/
-        image_file = base_dir / "background.png"
+        image_file = base_directory.joinpath("background.png")
         shutil.copy(image_file, "static/")
         self.repo.set_commit_id()
 
