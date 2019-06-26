@@ -9,11 +9,15 @@
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
 
-The data portal DDI on Rails accompanies researchers throughout the entire course of their research projects from conception to publication/citation.
+The data portal DDI on Rails accompanies researchers throughout the entire
+course of their research projects from conception to publication/citation.
 
-The system offers researchers the possibility to explore the data, to compile personalized datasets, and to publish results on the publication database.
+The system offers researchers the possibility to explore the data, to compile
+personalized datasets, and to publish results on the publication database.
 
-In contrast to similar products, DDI on Rails is study-independent and open-source, is able to document data with multiple versions/distributions and the specific characteristics of a longitudinal study, and is easy to use.
+In contrast to similar products, DDI on Rails is study-independent and
+open-source, is able to document data with multiple versions/distributions and
+the specific characteristics of a longitudinal study, and is easy to use.
 
 ## Getting Started
 
@@ -50,31 +54,46 @@ Build the Docker images and start containers with developement setings
 docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
 ```
 
-:warning: __Warning__ Do not use this in production the settings in `docker-compose-dev.yml` are not secure.
+:warning: __Warning__ Do not use this in production the settings in
+`docker-compose-dev.yml` are not secure.
 
 #### Production Environment
 
 __Before__ starting the services via docker-compose:
 
-- Customize the environment files in docker/environments/ and rename them to remove example from their name.
+- Customize the environment files in docker/environments/
+  and rename them to remove example from their name.
+
   - database.env should contain secure password.
   - django.env should be set up for production or staging
+
     - DJANGO_DEBUG should always be False for Production
     - DJANGO_SECRET_KEY should be long and random
     - ALLOWED_HOSTS should match your setup
-- Uncomment the environment blocks in the docker-compose file to load the environment files.
-- Or create a docker-compose.override.yml file containing the environment files.
+
+- Uncomment the environment blocks in the
+  docker-compose file to load the environment files.
+- Or create a docker-compose.override.yml file containing
+  the environment files.
 - Customize the docker/nginx/nginx.example.conf and rename it to nginx.conf.
+
   - Sections that need to be changed are marked with `REPLACE_ME`
-  - For ssl change your docker-compose.yml or docker-compose.override.yml to mount cert and key at the right location.
-    - If you use a ca-chain file add this file to the end of your crt file. This file can then be used by nginx as certificate.
+  - For ssl change your docker-compose.yml or docker-compose.override.yml
+    to mount cert and key at the right location.
+
+    - If you use a ca-chain file add this file to the end of your crt file.
+      This file can then be used by nginx as certificate.
+
 - Optional: Set up a backup routine for the database.
 
 __After__ starting the services via docker-compose:
 
-- A mapping needs to be loaded into elasticsearch in order for all search interfaces to work. :frowning_face:
-- Enter the django container via `docker-compose exec web python manage.py index create`
-- The elasticsearch index is kept in a named volume, meaning that the mapping is kept even through container recreations.
+- A mapping needs to be loaded into elasticsearch in order
+  for all search interfaces to work. :frowning_face:
+- Enter the django container via
+  `docker-compose exec web python manage.py index create`
+- The elasticsearch index is kept in a named volume,
+  meaning that the mapping is kept even through container recreations.
 
 ## Running the tests
 
@@ -86,11 +105,14 @@ docker-compose exec web paver test
 
 ## Versioning
 
-For the versions available, see the [tags on this repository](https://github.com/ddionrails/ddionrails/tags).
+For the versions available, see the
+[tags on this repository](https://github.com/ddionrails/ddionrails/tags).
 
 ## GNU AGPL-3.0
 
-This project is licensed under the GNU AGPL-3.0 License - see the [LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md) file for details
+This project is licensed under the GNU AGPL-3.0 License -see the
+[LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+file for details
 
 <!-- Markdown link & img dfn's -->
 
