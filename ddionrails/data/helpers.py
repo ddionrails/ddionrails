@@ -26,10 +26,10 @@ class LabelTable:
 
         def sort_helper(variable):
             try:
-                x = variable.dataset.period.name
+                period_name = variable.dataset.period.name
             except AttributeError:
-                x = ""
-            return x
+                period_name = ""
+            return period_name
 
         self.variables = sorted(variables, key=sort_helper)
 
@@ -37,10 +37,10 @@ class LabelTable:
         """
         Returns the label table as a dict.
         """
-        t = dict(header=[], body=OrderedDict())
-        self._fill_header(t)
-        self._fill_body(t)
-        return t
+        table = dict(header=[], body=OrderedDict())
+        self._fill_header(table)
+        self._fill_body(table)
+        return table
 
     def to_html(self):
         try:
@@ -76,11 +76,11 @@ class LabelTable:
             pass
         return "\n".join(result)
 
-    def _fill_header(self, t):
+    def _fill_header(self, table):
         for variable in self.variables:
-            t["header"].append(variable)
+            table["header"].append(variable)
 
-    def _fill_body(self, t):
+    def _fill_body(self, table):
         for category_label in self._get_all_category_labels():
             x = []
             for variable in self.variables:
@@ -95,7 +95,7 @@ class LabelTable:
                     )
                 except:
                     x.append(None)
-            t["body"][category_label] = x
+            table["body"][category_label] = x
 
     def _get_all_category_labels(self):
         categories = defaultdict(list)
@@ -119,7 +119,7 @@ class LabelTable:
                 return 100000000
 
         categories = sorted(list(categories.items()), key=sort_helper)
-        categories = [x[0] for x in categories]
+        categories = [category[0] for category in categories]
         return categories
 
     @staticmethod

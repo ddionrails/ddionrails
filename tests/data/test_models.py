@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,invalid-name
 
 """ Test cases for models in ddionrails.data app """
 
@@ -7,7 +7,7 @@ import pytest
 
 from ddionrails.data.models import Variable
 
-pytestmark = [pytest.mark.data, pytest.mark.models]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.data, pytest.mark.models]
 
 
 class TestVariableModel:

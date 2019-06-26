@@ -6,8 +6,6 @@
 import pathlib
 
 import pytest
-from django.db import models
-from django.forms import ModelForm
 
 from ddionrails.imports.imports import CSVImport, Import, JekyllImport
 

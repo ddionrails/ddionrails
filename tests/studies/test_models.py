@@ -3,7 +3,6 @@
 
 """ Test cases for ddionrails.studies.models """
 
-import pathlib
 
 import pytest
 

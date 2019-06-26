@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+# pylint: disable=too-few-public-methods
+
+""" Import export resources for ddionrails.workspace app """
+
 from django.contrib.auth.models import User
 from import_export import resources
 from import_export.fields import Field
@@ -12,7 +17,7 @@ from .models import Basket, BasketVariable, Script
 class UserResource(resources.ModelResource):
     """ Import export resource for User model """
 
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
+    class Meta:  # pylint: disable=missing-docstring
         model = User
         exclude = ("id",)
         import_id_fields = ("username", "email")
@@ -26,7 +31,7 @@ class BasketResource(resources.ModelResource):
     study = Field(attribute="study", widget=ForeignKeyWidget(Study, field="name"))
     user = Field(attribute="user", widget=ForeignKeyWidget(User, field="username"))
 
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
+    class Meta:  # pylint: disable=missing-docstring
         model = Basket
         import_id_fields = ("user", "name", "study")
         fields = ("name", "label", "description", "user", "study", "created", "modified")
@@ -92,7 +97,7 @@ class BasketVariableExportResource(resources.ModelResource):
     dataset = Field(attribute="variable__dataset__name")
     variable = Field(attribute="variable__name")
 
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
+    class Meta:  # pylint: disable=missing-docstring
         model = BasketVariable
         exclude = ("id",)
         export_order = ("basket", "user", "email", "study", "dataset", "variable")

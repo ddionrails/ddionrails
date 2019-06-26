@@ -5,17 +5,7 @@
 
 import pytest
 
-from pavement import (
-    create_admin,
-    django_setup,
-    docu,
-    erd,
-    full_docu,
-    functional_test,
-    migrate,
-    reset_migrations,
-    test,
-)
+from pavement import django_setup, docu, full_docu
 
 
 @pytest.fixture

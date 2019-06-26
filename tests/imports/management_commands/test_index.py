@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,invalid-name
+
 """ Test cases for index management command for ddionrails project """
 
 import pytest

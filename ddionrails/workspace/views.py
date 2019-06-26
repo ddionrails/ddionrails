@@ -147,7 +147,7 @@ def basket_to_csv(request, basket_id):  # pylint: disable=unused-argument
     return response
 
 
-note = (
+NOTE = (
     "The script-generators help you especially to merge variables from "
     "different year-specific datasets (e.g. bhp, bgp) to one wide file."
     "This (and more) work is already done in the long files (e.g. pl, hl),"
@@ -230,7 +230,7 @@ def basket_detail(
     # Add note about Script generator
     # see: https://github.com/ddionrails/ddionrails/issues/359
     if basket.study.name == "soep-core":
-        context["note"] = note
+        context["note"] = NOTE
 
     return render(request, "workspace/basket_detail.html", context=context)
 

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Helper functions for ddionrails.imports app """
+
 import csv
 import os
 

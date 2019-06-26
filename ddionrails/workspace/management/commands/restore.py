@@ -31,7 +31,7 @@ def determine_import_format(format_: str) -> TextFormat:
 
 def restore_entity(entity: str, path: pathlib.Path, format_: str) -> None:
     """ Restore data from file in given path with given format """
-    model, resource = determine_model_and_resource(entity, method="restore")
+    resource = determine_model_and_resource(entity, method="restore")[1]
     filename = (path / entity).with_suffix("." + format_)
     try:
         with open(str(filename), "r") as infile:

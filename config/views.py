@@ -2,6 +2,7 @@
 
 """ Views for ddionrails project """
 
+from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -10,24 +11,26 @@ from urllib3 import PoolManager
 
 from ddionrails.studies.models import Study
 
-http = PoolManager()
+HTTP = PoolManager()
 
-
-def bad_request(request, exception):
+# exception is a required parameter
+def bad_request(request, exception):  # pylint: disable=unused-argument
     """ Custom HTTP 400 view """
     response = render(request, "400.html")
     response.status_code = 400
     return response
 
 
-def permission_denied(request, exception):
+# exception is a required parameter
+def permission_denied(request, exception):  # pylint: disable=unused-argument
     """ Custom HTTP 403 view """
     response = render(request, "403.html")
     response.status_code = 403
     return response
 
 
-def page_not_found(request, exception):
+# exception is a required parameter
+def page_not_found(request, exception):  # pylint: disable=unused-argument
     """ Custom HTTP 404 view """
     response = render(request, "404.html")
     response.status_code = 404
@@ -53,6 +56,9 @@ class HomePageView(TemplateView):
 
 
 @csrf_exempt
-def elastic_proxy(request, path):
-    r = http.request("GET", "http://elasticsearch:9200/%s" % path, body=request.body)
-    return HttpResponse(r.data)
+def elastic_proxy(request: WSGIRequest, path: str) -> HttpResponse:
+    """ Custom elasticsearch proxy """
+    response = HTTP.request(
+        "GET", "http://elasticsearch:9200/%s" % path, body=request.body
+    )
+    return HttpResponse(response.data)

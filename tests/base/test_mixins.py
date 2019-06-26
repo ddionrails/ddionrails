@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,no-member
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,no-member,invalid-name
 
 """ Test cases for mixins in ddionrails.base app """
 
@@ -13,7 +13,7 @@ import ddionrails.base
 from ddionrails.base.mixins import AdminMixin, ImportPathMixin, ModelMixin
 from ddionrails.concepts.models import Concept
 
-pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
 
 
 class MixinChild(ModelMixin, models.Model):

@@ -23,16 +23,16 @@ module.exports = {
     /* Workaround:
        ddionrails-elasticsearch: search library
     */
-    elasticsearch_inline: glob.sync(
+    elasticsearchInline: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/inline.*.bundle.js"
     ),
-    elasticsearch_polyfills: glob.sync(
+    elasticsearchPolyfills: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/polyfills.*.bundle.js"
     ),
-    elasticsearch_vendor: glob.sync(
+    elasticsearchVendor: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/vendor.*.bundle.js"
     ),
-    elasticsearch_main: glob.sync(
+    elasticsearchMain: glob.sync(
       "./node_modules/ddionrails-elasticsearch/dist/main.*.bundle.js"
     )
   },

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.studies app """
 
-import os
 from typing import List, Optional
 
 from django.conf import settings
