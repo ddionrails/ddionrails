@@ -3,8 +3,6 @@
 
 """ Test cases for models in ddionrails.base app """
 
-import pathlib
-
 import pytest
 
 from ddionrails.base.models import System

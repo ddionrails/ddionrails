@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 """ Model definitions for ddionrails.workspace app """
 
 import csv
@@ -60,9 +61,7 @@ class Basket(TimeStampedModel):
         help_text="ManyToMany relation to data.Variable",
     )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("user", "name")
 
     def __str__(self) -> str:

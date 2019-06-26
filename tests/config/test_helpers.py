@@ -3,11 +3,9 @@
 
 """ Test cases for helpers in ddionrails.config app """
 
-import pytest
-
 from config.helpers import RowHelper, lower_dict_names, render_markdown
 
-md_text = """
+MD_TEXT = """
 # heading
 
 text text
@@ -24,7 +22,7 @@ text text
 
 class TestHelpers:
     def test_render_markdown(self):
-        html = render_markdown(md_text)
+        html = render_markdown(MD_TEXT)
         assert "<h1>" in html
         assert "<ul>" in html
         assert 'class="table"' in html

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring,no-self-use,invalid-name
 
 """ Test cases for "add" management command for ddionrails project """
 
