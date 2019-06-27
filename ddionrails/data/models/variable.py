@@ -163,35 +163,35 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         else:
             return []
 
-    def get_study(self, default=None, id=False):
+    def get_study(self, default=None, study_id=False):
         try:
-            if id:
+            if study_id:
                 return self.dataset.study.id
             else:
                 return self.dataset.study
         except:
             return default
 
-    def get_concept(self, default=None, id=False):
+    def get_concept(self, default=None, concept_id=False):
         try:
-            if id:
+            if concept_id:
                 return self.concept.id
             else:
                 return self.concept
         except:
             return default
 
-    def get_period(self, default=None, id=False):
+    def get_period(self, default=None, period_id=False):
         try:
-            p1 = self.dataset.period
-            p2 = self.period
-            p = p2 if p2 else p1
-            if id == True:
-                return p.id
-            elif id == "name":
-                return p.name
+            period_1 = self.dataset.period
+            period_2 = self.period
+            period = period_2 if period_2 else period_1
+            if period_id is True:
+                return period.id
+            elif period_id == "name":
+                return period.name
             else:
-                return p
+                return period
         except:
             return default
 

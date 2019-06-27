@@ -53,7 +53,7 @@ def test_add_command_creates_study_object():
     assert repo_url == study.repo
 
 
-def test_add_command_with_existing_study_name(study):
+def test_add_command_with_existing_study_name(study):  # pylint: disable=unused-argument
     """ Test add management command with existing study name """
     assert 1 == Study.objects.count()
     study_name = "some-study"

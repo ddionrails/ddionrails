@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,invalid-name
 
 """ Test cases for models in ddionrails.publications app """
 
 import pytest
 
-pytestmark = [
-    pytest.mark.publications,
-    pytest.mark.models,
-]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.publications, pytest.mark.models]
 
 
 class TestPublicationModel:

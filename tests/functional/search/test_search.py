@@ -33,7 +33,9 @@ def es_client():
 
 
 @pytest.fixture()
-def publication_in_search_index(settings, es_client, study):
+def publication_in_search_index(
+    settings, es_client, study  # pylint: disable=unused-argument
+):
     # redirect study data path to test data directory
     settings.IMPORT_REPO_PATH = "tests/functional/test_data/"
     manager = StudyImportManager(study)
@@ -123,24 +125,35 @@ def find_publication_by_query(browser, search_url, query):
 
 
 class TestPublicationSearch:
-    def test_publication_is_indexed(self, es_client, publication_in_search_index):
+    def test_publication_is_indexed(
+        self, es_client, publication_in_search_index  # pylint: disable=unused-argument
+    ):
         assert 1 == Publication.objects.count()
         assert 1 == es_client.count(settings.INDEX_NAME, "publication").get("count")
 
     def test_publication_search_by_title(
-        self, publication_in_search_index, browser, search_url
+        self,
+        publication_in_search_index,  # pylint: disable=unused-argument
+        browser,
+        search_url,
     ):
         query = "Some Publication"
         find_publication_by_query(browser, search_url, query)
 
     def test_publication_search_by_doi(
-        self, publication_in_search_index, browser, search_url
+        self,
+        publication_in_search_index,  # pylint: disable=unused-argument
+        browser,
+        search_url,
     ):
         query = "some-doi"
         find_publication_by_query(browser, search_url, query)
 
     def test_publication_search_by_author(
-        self, publication_in_search_index, browser, search_url
+        self,
+        publication_in_search_index,  # pylint: disable=unused-argument
+        browser,
+        search_url,
     ):
         query = "Surname, Firstname"
         find_publication_by_query(browser, search_url, query)

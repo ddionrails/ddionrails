@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for models in ddionrails.workspace app """
 
@@ -11,7 +11,7 @@ from ddionrails.workspace.scripts import SoepStata
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
 
-pytestmark = [pytest.mark.workspace]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.workspace]
 
 
 @pytest.fixture

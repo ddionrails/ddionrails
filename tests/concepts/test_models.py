@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for models in ddionrails.concepts app """
 
@@ -10,7 +10,7 @@ from ddionrails.elastic.mixins import ModelMixin
 
 from .factories import TopicFactory
 
-pytestmark = [pytest.mark.concepts, pytest.mark.models]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.concepts, pytest.mark.models]
 
 
 class TestConceptModel:

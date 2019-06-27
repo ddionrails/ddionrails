@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.config app """
 
@@ -9,7 +9,7 @@ from django.urls import reverse
 from config.views import bad_request, page_not_found, permission_denied, server_error
 from tests import status
 
-pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.django_db]
 
 
 class TestPageViews:

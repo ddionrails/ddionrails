@@ -31,22 +31,24 @@ pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
 
 
 @pytest.fixture()
-def es_client(settings):
+def elasticsearch_client(settings):
     mapping_file = "ddionrails/elastic/mapping.json"
     with open(mapping_file, "r") as infile:
         mapping = json.loads(infile.read())
-    es = Elasticsearch(hosts=[settings.INDEX_HOST])
+    elasticsearch_client = Elasticsearch(hosts=[settings.INDEX_HOST])
     # workaround to delete existing index
 
     # settings.INDEX_NAME = "testing"
 
-    es.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
-    es.indices.create(index=settings.INDEX_NAME, ignore=400, body=mapping)
+    elasticsearch_client.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
+    elasticsearch_client.indices.create(
+        index=settings.INDEX_NAME, ignore=400, body=mapping
+    )
 
     # wait for elastic search index to be created
     time.sleep(0.1)
-    yield es
-    es.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
+    yield elasticsearch_client
+    elasticsearch_client.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
 
 
 @pytest.fixture
@@ -57,7 +59,9 @@ def study_import_manager(study, settings):
 
 
 class TestStudyImportManager:
-    def test_import_study(self, study_import_manager, es_client):
+    def test_import_study(
+        self, study_import_manager, elasticsearch_client
+    ):  # pylint: disable=unused-argument
         study_import_manager.import_single_entity("study")
         # wait for indexing to complete
         time.sleep(1)
@@ -77,7 +81,9 @@ class TestStudyImportManager:
         assert parent_topic == topic.parent
         assert "some-other-topic" == parent_topic.label
 
-    def test_import_json_topics(self, study_import_manager, es_client):
+    def test_import_json_topics(
+        self, study_import_manager, elasticsearch_client
+    ):  # pylint: disable=unused-argument
         assert 1 == Study.objects.count()
         assert 0 == Topic.objects.count()
         assert 0 == TopicList.objects.count()
@@ -94,7 +100,7 @@ class TestStudyImportManager:
         german_topics = topiclist.topiclist[1]
         assert "de" == german_topics["language"]
 
-    def test_import_concepts(self, study_import_manager, es_client, topic):
+    def test_import_concepts(self, study_import_manager, elasticsearch_client, topic):
         assert 0 == Concept.objects.count()
         study_import_manager.import_single_entity("concepts")
         assert 1 == Concept.objects.count()
@@ -106,9 +112,9 @@ class TestStudyImportManager:
         concept.index()
         # wait for indexing to complete
         time.sleep(1)
-        s = Search(using=es_client).doc_type("concept")
-        assert 1 == s.count()
-        response = s.execute()
+        search = Search(using=elasticsearch_client).doc_type("concept")
+        assert 1 == search.count()
+        response = search.execute()
         hit = response.hits[0]
         assert "some-concept" == hit.name
 
@@ -139,7 +145,9 @@ class TestStudyImportManager:
         assert "some-conceptual-dataset" == conceptual_dataset.label
         assert "some-conceptual-dataset" == conceptual_dataset.description
 
-    def test_import_instruments(self, study_import_manager, es_client, study, period):
+    def test_import_instruments(
+        self, study_import_manager, elasticsearch_client, study, period
+    ):
         assert 0 == Instrument.objects.count()
         assert 0 == Question.objects.count()
         study_import_manager.import_single_entity("instruments")
@@ -152,15 +160,17 @@ class TestStudyImportManager:
         assert study == instrument.study
         assert period == instrument.period
 
-        s = Search(using=es_client).doc_type("question")
-        assert 1 == s.count()
-        response = s.execute()
+        search = Search(using=elasticsearch_client).doc_type("question")
+        assert 1 == search.count()
+        response = search.execute()
         hit = response.hits[0]
         assert study.name == hit.study
         assert "some-question" == hit.name
         assert "some-instrument" == hit.instrument
 
-    def test_import_json_datasets(self, study_import_manager, es_client, study):
+    def test_import_json_datasets(
+        self, study_import_manager, elasticsearch_client, study
+    ):
         assert 0 == Dataset.objects.count()
         assert 0 == Variable.objects.count()
         study_import_manager.import_single_entity("datasets.json")
@@ -174,8 +184,8 @@ class TestStudyImportManager:
         assert study == dataset.study
         assert "some-variable" == variable.name
 
-        s = Search(using=es_client).doc_type("variable")
-        assert 2 == s.count()
+        search = Search(using=elasticsearch_client).doc_type("variable")
+        assert 2 == search.count()
 
     def test_import_csv_datasets(
         self, study_import_manager, dataset, period, analysis_unit, conceptual_dataset
@@ -231,7 +241,7 @@ class TestStudyImportManager:
         assert "https://some-study.de" == attachment.url
         assert "some-study" == attachment.url_text
 
-    def test_import_publications(self, study_import_manager, es_client, study):
+    def test_import_publications(self, study_import_manager, elasticsearch_client, study):
         assert 0 == Publication.objects.count()
         study_import_manager.import_single_entity("publications")
         # wait for indexing to complete
@@ -242,15 +252,15 @@ class TestStudyImportManager:
         assert "Some Publication" == publication.title
         assert "some-doi" == publication.doi
         assert study == publication.study
-        s = Search(using=es_client).doc_type("publication")
-        assert 1 == s.count()
-        response = s.execute()
+        search = Search(using=elasticsearch_client).doc_type("publication")
+        assert 1 == search.count()
+        response = search.execute()
         hit = response.hits[0]
         assert study.name == hit.study
         assert "some-doi" == hit.doi
         assert "2018" == hit.year
 
-    def test_import_all(self, study_import_manager, es_client):
+    def test_import_all(self, study_import_manager, elasticsearch_client):
         assert 1 == Study.objects.count()
 
         assert 0 == Concept.objects.count()
@@ -281,7 +291,7 @@ class TestStudyImportManager:
         assert 1 == ConceptQuestion.objects.count()
 
         # Concepts will be indexed when mgmt command "upgrade" is called
-        # s = Search(using=es_client).doc_type("concept")
+        # s = Search(using=elasticsearch_client).doc_type("concept")
         # assert 1 == s.count()
-        assert Search(using=es_client).doc_type("variable").count() == 2
-        assert Search(using=es_client).doc_type("publication").count() == 1
+        assert Search(using=elasticsearch_client).doc_type("variable").count() == 2
+        assert Search(using=elasticsearch_client).doc_type("publication").count() == 1
