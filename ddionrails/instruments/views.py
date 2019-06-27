@@ -18,7 +18,10 @@ from ddionrails.studies.models import Study
 from .models import Instrument, Question, QuestionImage
 
 
-def study_instrument_list(request: WSGIRequest, study_name: str):
+# request is a required parameter
+def study_instrument_list(
+    request: WSGIRequest, study_name: str  # pylint: disable=unused-argument
+):
     study = get_object_or_404(Study, name=study_name)
     context = dict(
         study=study, instrument_list=Instrument.objects.filter(study__name=study_name)
@@ -60,7 +63,10 @@ class QuestionRedirectView(RedirectView):
         return question.get_absolute_url()
 
 
-def question_detail(request, study_name, instrument_name, question_name):
+# request is a required parameter
+def question_detail(
+    request, study_name, instrument_name, question_name  # pylint: disable=unused-argument
+):
     question = (
         Question.objects.filter(instrument__study__name=study_name)
         .filter(instrument__name=instrument_name)
@@ -106,7 +112,10 @@ def question_detail(request, study_name, instrument_name, question_name):
     return render(request, "questions/question_detail.html", context=context)
 
 
-def question_comparison_partial(request: WSGIRequest, from_id: int, to_id: int):
+# request is a required parameter
+def question_comparison_partial(
+    request: WSGIRequest, from_id: int, to_id: int  # pylint: disable=unused-argument
+):
     from_question = get_object_or_404(Question, pk=from_id)
     to_question = get_object_or_404(Question, pk=to_id)
     diff_text = difflib.HtmlDiff().make_file(

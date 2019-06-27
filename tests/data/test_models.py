@@ -38,7 +38,7 @@ class TestVariableModel:
         assert expected == result
 
     def test_get_study_with_id(self, variable):
-        result = variable.get_study(id=True)
+        result = variable.get_study(study_id=True)
         expected = variable.dataset.study.id
         assert expected == result
 
@@ -52,7 +52,7 @@ class TestVariableModel:
     def test_get_concept_with_id(self, variable, concept):
         variable.concept = concept
         variable.save()
-        result = variable.get_concept(id=True)
+        result = variable.get_concept(concept_id=True)
         expected = variable.concept.id
         assert expected == result
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.workspace app """
 
@@ -76,14 +76,18 @@ class TestAccountOverview:
 
 
 class TestBasketList:
-    def test_basket_list_anonymous_user(self, client, basket):
+    def test_basket_list_anonymous_user(
+        self, client, basket  # pylint: disable=unused-argument
+    ):
         response = client.get("/workspace/baskets/")
         assert status.HTTP_200_OK == response.status_code
         expected = []
         basket_list = response.context["basket_list"]
         assert expected == basket_list
 
-    def test_basket_list_authenticated_user(self, client, basket):
+    def test_basket_list_authenticated_user(
+        self, client, basket  # pylint: disable=unused-argument
+    ):
         assert 1 == Basket.objects.count()
         client.login(username="some-user", password="some-password")  # nosec
         response = client.get("/workspace/baskets/")

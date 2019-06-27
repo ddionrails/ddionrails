@@ -12,8 +12,8 @@ from .models import Study
 
 # request is a required parameter
 def studies_processor(
-    request: WSGIRequest
-) -> Dict[str, QuerySet]:  # pylint: disable=unused-argument
+    request: WSGIRequest  # pylint: disable=unused-argument
+) -> Dict[str, QuerySet]:
     """ Context processor returns all studies in a dictionary """
 
     return dict(studies=Study.objects.all().only("name", "label"))

@@ -347,13 +347,13 @@ class SoepStata(ScriptConfig, SoepMixin):
         script = []
         if self.settings["analysis_unit"] == "p":
             script.append("\nuse hhnr persnr sex gebjahr psample")
-            for y in self.years:
-                script.append("%shhnr %snetto %spop" % (y, y, y))
+            for year in self.years:
+                script.append("%shhnr %snetto %spop" % (year, year, year))
             script.append('using "${MY_PATH_IN}ppfad.dta", clear')
         else:
             script.append("\nuse hhnr hhnrakt hsample")
-            for y in self.years:
-                script.append("%shhnr %shnetto %shpop" % (y, y, y))
+            for year in self.years:
+                script.append("%shhnr %shnetto %shpop" % (year, year, year))
             script.append('using "${MY_PATH_IN}hpfad.dta", clear')
         return heading + " ".join(script)
 
@@ -362,18 +362,18 @@ class SoepStata(ScriptConfig, SoepMixin):
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
             temp = []
-            for y in self.years:
+            for year in self.years:
                 if self.settings["age_group"] == "adult":
-                    temp.append(" (%snetto >= 10 & %snetto < 20) " % (y, y))
+                    temp.append(" (%snetto >= 10 & %snetto < 20) " % (year, year))
                 elif self.settings["age_group"] == "no17":
-                    temp.append(" (%snetto >= 10 & %snetto < 16) " % (y, y))
+                    temp.append(" (%snetto >= 10 & %snetto < 16) " % (year, year))
                 else:
-                    temp.append(" (%snetto > 0 & %snetto < 40) " % (y, y))
+                    temp.append(" (%snetto > 0 & %snetto < 40) " % (year, year))
             return heading + "\nkeep if (" + connector.join(temp) + ")"
         else:
             temp = []
-            for y in self.years:
-                temp.append(" (%shnetto == 1) " % y)
+            for year in self.years:
+                temp.append(" (%shnetto == 1) " % year)
             return heading + "\nkeep if (" + connector.join(temp) + ")"
 
     def _render_private(self):
@@ -381,8 +381,10 @@ class SoepStata(ScriptConfig, SoepMixin):
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
             temp = []
-            for y in self.years:
-                temp.append(" (%s%s == 1 | %s%s == 2) " % (y, set_name, y, set_name))
+            for year in self.years:
+                temp.append(
+                    " (%s%s == 1 | %s%s == 2) " % (year, set_name, year, set_name)
+                )
             return heading + "\nkeep if (" + "|".join(temp) + ")"
         else:
             return heading + "\n/* all households */"
@@ -480,15 +482,15 @@ class SoepSpss(SoepStata):
         if self.settings["analysis_unit"] == "p":
             script += "\nget file = !pathin+'ppfad.sav'"
             script += "\n   /keep = hhnr persnr sex gebjahr psample"
-            for y in self.years:
-                script += "\n %shhnr %snetto %spop" % (y, y, y)
+            for year in self.years:
+                script += "\n %shhnr %snetto %spop" % (year, year, year)
             script += "."
             script += "\ndataset name ppfad window=asis."
         else:
             script += "\nget file = !pathin+'hpfad.sav'"
             script += "\n   /keep = hhnr hhnrakt hsample"
-            for y in self.years:
-                script += "\n %shhnr %shnetto %shpop" % (y, y, y)
+            for year in self.years:
+                script += "\n %shhnr %shnetto %shpop" % (year, year, year)
             script += "."
             script += "\ndataset name hpfad window=asis."
         return script
@@ -498,17 +500,17 @@ class SoepSpss(SoepStata):
         connector = "and" if self.settings["balanced"] == "t" else "or"
         temp = []
         if self.settings["analysis_unit"] == "p":
-            for y in self.years:
+            for year in self.years:
                 if self.settings["age_group"] == "adult":
-                    temp.append(" (%snetto ge 10 & %snetto lt 20)" % (y, y))
+                    temp.append(" (%snetto ge 10 & %snetto lt 20)" % (year, year))
                 elif self.settings["age_group"] == "no17":
-                    temp.append(" (%snetto ge 10 & %snetto lt 16)" % (y, y))
+                    temp.append(" (%snetto ge 10 & %snetto lt 16)" % (year, year))
                 else:
-                    temp.append(" (%snetto gt 0 & %snetto lt 40)" % (y, y))
+                    temp.append(" (%snetto gt 0 & %snetto lt 40)" % (year, year))
             return heading + "\nselect if (" + connector.join(temp) + ")."
         else:
-            for y in self.years:
-                temp.append(" (%shnetto eq 1)" % y)
+            for year in self.years:
+                temp.append(" (%shnetto eq 1)" % year)
             return heading + "\nselect if (" + connector.join(temp) + ")."
 
     def _render_private(self):
@@ -516,8 +518,8 @@ class SoepSpss(SoepStata):
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
             temp = []
-            for y in self.years:
-                temp.append(" (%s%s eq 1 | %s%s eq 2)" % (y, set_name, y, set_name))
+            for year in self.years:
+                temp.append(" (%s%s eq 1 | %s%s eq 2)" % (year, set_name, year, set_name))
             return heading + "\nselect if (" + "|".join(temp) + ")."
         else:
             return heading + "\n* all households *."
@@ -618,15 +620,15 @@ class SoepR(SoepStata):
                 '\npfad <- read.dta(file.path(path_in, "ppfad.dta"), convert.factors=F)'
             )
             temp = ['"hhnr", "persnr", "sex", "gebjahr", "psample"']
-            for y in self.years:
-                temp.append('"%shhnr", "%snetto", "%spop"' % (y, y, y))
+            for year in self.years:
+                temp.append('"%shhnr", "%snetto", "%spop"' % (year, year, year))
         else:
             script += (
                 '\npfad <- read.dta(file.path(path_in, "hpfad.dta"), convert.factors=F)'
             )
             temp = ['"hhnr", "hhnrakt", "hsample"']
-            for y in self.years:
-                temp.append('"%shhnr", "%shnetto", "%shpop"' % (y, y, y))
+            for year in self.years:
+                temp.append('"%shhnr", "%shnetto", "%shpop"' % (year, year, year))
         joined = ",".join(temp)
         script += "\npfad <- pfad[ , c(%s)]" % joined
         return script
@@ -636,18 +638,18 @@ class SoepR(SoepStata):
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
             temp = []
-            for y in self.years:
+            for year in self.years:
                 if self.settings["age_group"] == "adult":
-                    temp.append(" (%snetto >= 10 & %snetto < 20) " % (y, y))
+                    temp.append(" (%snetto >= 10 & %snetto < 20) " % (year, year))
                 elif self.settings["age_group"] == "no17":
-                    temp.append(" (%snetto >= 10 & %snetto < 16) " % (y, y))
+                    temp.append(" (%snetto >= 10 & %snetto < 16) " % (year, year))
                 else:
-                    temp.append(" (%snetto > 0 & %snetto < 40) " % (y, y))
+                    temp.append(" (%snetto > 0 & %snetto < 40) " % (year, year))
             return heading + "\npfad <- with(pfad, pfad[" + connector.join(temp) + ", ])"
         else:
             temp = []
-            for y in self.years:
-                temp.append(" (%shnetto == 1) " % y)
+            for year in self.years:
+                temp.append(" (%shnetto == 1) " % year)
             return heading + "\npfad <- with(pfad, pfad[" + connector.join(temp) + ", ])"
 
     def _render_private(self):
@@ -655,8 +657,8 @@ class SoepR(SoepStata):
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
             temp = []
-            for y in self.years:
-                temp.append(" (%s%s == 1 | %s%s == 2)" % (y, set_name, y, set_name))
+            for year in self.years:
+                temp.append(" (%s%s == 1 | %s%s == 2)" % (year, set_name, year, set_name))
             return heading + "\npfad <- with(pfad, pfad[" + "|".join(temp) + ", ])"
         else:
             return heading + "\n# all households"

@@ -48,7 +48,8 @@ class TestBasketForm:
         }
         assert form.errors == expected_errors
 
-    def test_form_with_valid_data(self, db, valid_basket_data):
+    @pytest.mark.django_db
+    def test_form_with_valid_data(self, valid_basket_data):
         form = BasketForm(data=valid_basket_data)
         expected = True
         assert expected is form.is_valid()

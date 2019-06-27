@@ -51,8 +51,10 @@ def test_preview(request, object_type, object_id):  # pylint: disable=unused-arg
 
 # request is a required parameter
 def object_redirect(
-    request: WSGIRequest, object_type: str, object_id: str
-):  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    object_type: str,
+    object_id: str,
+):
     obj = _get_object(object_type, object_id)
     if obj:
         return redirect(obj.get_absolute_url())
@@ -62,8 +64,10 @@ def object_redirect(
 
 # request is a required parameter
 def topic_list(
-    request: WSGIRequest, study_name: str, language: str
-) -> JsonResponse:  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    study_name: str,
+    language: str,
+) -> JsonResponse:
     study = get_object_or_404(Study, name=study_name)
     topics = study.get_topiclist(language)
     return JsonResponse(topics, safe=False)
@@ -71,8 +75,8 @@ def topic_list(
 
 # request is a required parameter
 def concept_by_study(
-    request, study_name, language, concept_name
-):  # pylint: disable=unused-argument
+    request, study_name, language, concept_name  # pylint: disable=unused-argument
+):
     study = get_object_or_404(Study, name=study_name)
     concept = get_object_or_404(Concept, name=concept_name)
     variable_set = Variable.objects.filter(

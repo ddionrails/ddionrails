@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,invalid-name
 
 """ Test cases for ddionrails.instruments.models """
 
@@ -15,7 +15,7 @@ from filer.models import Folder, Image
 from ddionrails.instruments.models import ConceptQuestion, Question, QuestionImage
 from tests.instruments.factories import QuestionFactory
 
-pytestmark = [pytest.mark.instruments, pytest.mark.models]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.instruments, pytest.mark.models]
 
 
 class TestInstrumentModel:

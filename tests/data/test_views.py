@@ -131,11 +131,10 @@ class TestVariablePreviewIdView:
         # TODO test html content
         assert variable.name in content["html"]
 
-    def test_preview_id_view_with_invalid_pk(self, client, db):
+    @pytest.mark.django_db
+    def test_preview_id_view_with_invalid_pk(self, client):
         invalid_pk = 999
         url = reverse("api:variable_preview", kwargs={"variable_id": invalid_pk})
-
-        # TODO view returns HttpResponseNotFound instead of raising Http404
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
