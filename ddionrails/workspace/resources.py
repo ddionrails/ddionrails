@@ -69,7 +69,7 @@ class VariableWidgket(ForeignKeyWidget):
         - variable name
     """
 
-    def clean(self, value, row=None, *args, **kwargs):
+    def clean(self, value, row=None, *args, **kwargs):  # pylint: disable=unused-argument
         params = {}
         params["name"] = row["variable"]
         params["dataset__name"] = row["dataset"]
@@ -80,7 +80,7 @@ class VariableWidgket(ForeignKeyWidget):
 class BasketWidget(ForeignKeyWidget):
     """ Widget to select basket by name and username """
 
-    def clean(self, value, row=None, *args, **kwargs):
+    def clean(self, value, row=None, *args, **kwargs):  # pylint: disable=unused-argument
         params = {}
         params["name"] = row["basket"]
         params["user__username"] = row["user"]

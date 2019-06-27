@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Management command to backup user data for ddionrails.workspace app """
+
 import pathlib
 from datetime import datetime
 

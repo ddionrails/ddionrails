@@ -10,11 +10,15 @@ from ddionrails.instruments.models import Question
 from .models import Concept
 
 
-class ConceptList(ListView):
+class ConceptListView(ListView):
+    """ ListView for concepts.Concept model """
+
     model = Concept
 
 
-class ConceptDetail(DetailView):
+class ConceptDetailView(DetailView):
+    """ DetailView for concepts.Concept model """
+
     model = Concept
     template_name = "concepts/concept_detail.html"
     slug_url_kwarg = "concept_name"

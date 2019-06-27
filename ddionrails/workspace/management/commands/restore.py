@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Management command to restore user data for ddionrails.workspace app """
+
 import pathlib
 
 import djclick as click

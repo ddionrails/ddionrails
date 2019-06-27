@@ -15,6 +15,8 @@ from .models import Study
 
 
 class StudyRedirectView(RedirectView):
+    """ RedirectView for studies.Study model """
+
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -23,6 +25,8 @@ class StudyRedirectView(RedirectView):
 
 
 class StudyDetailView(DetailView):
+    """ DetailView for studies.Study model """
+
     model = Study
     template_name = "studies/study_detail.html"
     slug_url_kwarg = "study_name"

@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+""" Script generators for ddionrails.workspace app """
+
 import json
 from collections import defaultdict
 from typing import Dict
@@ -119,15 +123,13 @@ class SoepMixin:
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
             if dataset_name not in script_dict.keys():
-                script_dict[dataset_name] = self._create_dataset_dict(
-                    dataset_name, variable
-                )
+                script_dict[dataset_name] = self._create_dataset_dict(dataset_name)
             script_dict[dataset_name]["variables"].add(variable.name)
             for dataset_dict in script_dict.values():
                 self._enrich_dataset_dict(dataset_dict)
         return script_dict
 
-    def _create_dataset_dict(self, dataset_name, variable):
+    def _create_dataset_dict(self, dataset_name):
         analysis_unit = self._soep_classify_dataset(dataset_name)
         d = dict(
             name=dataset_name,
