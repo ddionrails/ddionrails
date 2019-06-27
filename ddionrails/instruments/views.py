@@ -30,6 +30,8 @@ def study_instrument_list(
 
 
 class InstrumentRedirectView(RedirectView):
+    """ RedirectView for instruments.Instrument model """
+
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -38,6 +40,8 @@ class InstrumentRedirectView(RedirectView):
 
 
 class InstrumentDetailView(DetailView):
+    """ DetailView for instruments.Instrument model """
+
     template_name = "instruments/instrument_detail.html"
 
     def get_object(self, queryset=None):
@@ -56,6 +60,8 @@ class InstrumentDetailView(DetailView):
 
 
 class QuestionRedirectView(RedirectView):
+    """ RedirectView for instruments.Question model """
+
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):

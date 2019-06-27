@@ -14,6 +14,9 @@ from ddionrails.base.mixins import ImportPathMixin, ModelMixin
 
 
 class TopicList(models.Model):
+    """
+    Stores a single topiclist, related to :model:`studies.Study`.
+    """
 
     # attributes
     topiclist = JSONBField(

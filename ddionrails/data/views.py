@@ -146,8 +146,12 @@ class VariableDetailView(DetailView):
         return context
 
 
+# request is a required parameter
 def variable_json(
-    request: WSGIRequest, study_name: str, dataset_name: str, variable_name: str
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    study_name: str,
+    dataset_name: str,
+    variable_name: str,
 ):
     variable = get_object_or_404(
         Variable,
@@ -158,7 +162,10 @@ def variable_json(
     return JsonResponse(variable.to_dict())
 
 
-def extend_context_for_variable(request, context):
+# request is a required parameter
+def extend_context_for_variable(
+    request: WSGIRequest, context  # pylint: disable=unused-argument
+):
     variable = context["variable"]
     study = variable.get_study()
     context["related_variables"] = variable.get_related_variables()
@@ -177,8 +184,10 @@ def extend_context_for_variable(request, context):
     return context
 
 
-# TODO
-def variable_preview_id(request, variable_id):
+# request is a required parameter
+def variable_preview_id(
+    request: WSGIRequest, variable_id  # pylint: disable=unused-argument
+):
     variable = get_object_or_404(Variable, pk=variable_id)
     context = extend_context_for_variable(request, dict(variable=variable))
     response = dict(

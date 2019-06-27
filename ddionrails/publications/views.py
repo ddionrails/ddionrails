@@ -12,6 +12,8 @@ from .models import Publication
 
 
 class PublicationRedirectView(RedirectView):
+    """ RedirectView for publications.Publication model """
+
     permanent = False
 
     def get_redirect_url(self, *args, **kwargs):
@@ -20,6 +22,8 @@ class PublicationRedirectView(RedirectView):
 
 
 class PublicationDetailView(DetailView):
+    """ DetailView for publications.Publication model """
+
     model = Publication
     template_name = "publications/publication_detail.html"
 
