@@ -42,6 +42,12 @@ class Instrument(ModelMixin, models.Model):
         verbose_name="Label (English)",
         help_text="Label of the instrument (English)",
     )
+    label_de = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Label (German)",
+        help_text="Label of the instrument (German)",
+    )
     description = models.TextField(
         blank=True,
         verbose_name="Description (Markdown)",
