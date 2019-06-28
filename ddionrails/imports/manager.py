@@ -201,7 +201,7 @@ class StudyImportManager:
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
-    def import_single_entity(self, entity: str, filename: bool = None):
+    def import_single_entity(self, entity: str, filename: str = None):
         """
         Example usage:
 
