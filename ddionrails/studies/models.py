@@ -64,6 +64,12 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
     description = models.TextField(
         blank=True, help_text="Description of the study (Markdown)"
     )
+    doi = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="DOI",
+        help_text="DOI of the study (DOI only, not the URL to the DOI)",
+    )
     repo = models.CharField(
         max_length=255,
         blank=True,
@@ -77,7 +83,6 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
     config = JSONField(
         default=dict, blank=True, null=True, help_text="Configuration of the study (JSON)"
     )
-
     topic_languages = ArrayField(
         models.CharField(max_length=200),
         blank=True,
