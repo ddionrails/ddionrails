@@ -115,16 +115,17 @@ class Question(ElasticMixin, DorMixin, models.Model):
         except ObjectDoesNotExist:
             return None
 
-    def get_period(self, id=False, default=None):
+    def get_period(self, period_id=False, default=None):
+        """ Returns the related period_id | period_name | Period instance | a default """
         try:
-            p = self.instrument.period
-            if id == True:
-                return p.id
-            elif id == "name":
-                return p.name
+            period = self.instrument.period
+            if period_id is True:
+                return period.id
+            elif period_id == "name":
+                return period.name
             else:
-                return p
-        except:
+                return period
+        except AttributeError:
             return default
 
     def get_related_question_set(self, all_studies=False, by_study_and_period=False):

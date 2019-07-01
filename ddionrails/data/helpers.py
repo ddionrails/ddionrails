@@ -111,11 +111,13 @@ class LabelTable:
                 if x and x != "":
                     try:
                         temp_list.append(int(x))
-                    except:
+                    # afuetterer: the int(x) might fail, when x is not castable to an integer?
+                    except ValueError:
                         pass
             try:
                 return sum(temp_list) / len(temp_list)
-            except:
+            # afuetterer: the temp_list might be empty?
+            except ZeroDivisionError:
                 return 100000000
 
         categories = sorted(list(categories.items()), key=sort_helper)

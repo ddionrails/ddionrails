@@ -239,9 +239,9 @@ class TestRestoreManagementCommand:
         assert "some-user@some-mail.org" == user.email
 
         # test user can login
-        logged_in = client.login(
-            username=user.username, password="some-password"
-        )  # nosec
+        username = user.username
+        password = "some-password"  # nosec
+        logged_in = client.login(username=username, password=password)  # nosec
         assert logged_in is True
 
     @pytest.mark.parametrize("argument", ("--baskets", "-b"))
