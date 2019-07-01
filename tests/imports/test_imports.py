@@ -57,7 +57,7 @@ class TestImport:
     def test_import_path_method_with_study(self, study, settings):
         importer = Import(filename="DUMMY.csv", study=study)
         result = importer.import_path()
-        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        expected = settings.IMPORT_REPO_PATH.joinpath(
             study.name, settings.IMPORT_SUB_DIRECTORY
         )
         assert expected == result
@@ -65,7 +65,7 @@ class TestImport:
     def test_import_path_method_without_study(self, system, settings):
         importer = Import(filename="DUMMY.csv", system=system)
         result = importer.import_path()
-        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        expected = settings.IMPORT_REPO_PATH.joinpath(
             system.name, settings.IMPORT_SUB_DIRECTORY
         )
         assert expected == result

@@ -35,7 +35,7 @@ class TestSystemImport:
         result = clirunner.invoke(system.command)
         assert result.exit_code == 0
 
-        path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath("system")
+        path = settings.IMPORT_REPO_PATH.joinpath("system")
         assert path.exists()
         assert 1 == Study.objects.count()
         assert 1 == System.objects.count()

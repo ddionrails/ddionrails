@@ -152,7 +152,7 @@ class ImportPathMixin:
 
     def import_path(self) -> pathlib.Path:
         """ Returns the instance's import path """
-        return pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        return settings.IMPORT_REPO_PATH.joinpath(
             self.name, settings.IMPORT_SUB_DIRECTORY
         )
 

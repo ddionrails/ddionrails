@@ -120,7 +120,7 @@ class TestImportPathMixin:
         mixin = ImportPathMixin()
         mixin.name = "name"
         result = mixin.import_path()
-        expected = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(
+        expected = settings.IMPORT_REPO_PATH.joinpath(
             mixin.name, settings.IMPORT_SUB_DIRECTORY
         )
         assert expected == result
