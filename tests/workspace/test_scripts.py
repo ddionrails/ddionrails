@@ -182,7 +182,7 @@ class TestSoepMixin:
         assert result == expected
 
     def test_soep_letter_year_method(self, soepmixin):
-        result = soepmixin._soep_letter_year()
+        result = soepmixin._soep_letter_year()  # pylint: disable=protected-access
         assert result.get("") == 0
         assert result.get("a") == 2001
         assert result.get("z") == 2026

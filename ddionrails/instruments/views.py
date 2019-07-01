@@ -73,6 +73,7 @@ class QuestionRedirectView(RedirectView):
 def question_detail(
     request, study_name, instrument_name, question_name  # pylint: disable=unused-argument
 ):
+    """ DetailView for instruments.question model """
     question = (
         Question.objects.filter(instrument__study__name=study_name)
         .filter(instrument__name=instrument_name)

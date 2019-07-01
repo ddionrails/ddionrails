@@ -46,6 +46,7 @@ def account_overview(request: WSGIRequest):  # pylint: disable=unused-argument
 
 # request is a required parameter
 def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
+    """ ListView for workspace.Basket model """
     if request.user.is_authenticated:
         basket_list = request.user.baskets.all()
     else:
@@ -163,6 +164,7 @@ NOTE = (
 def basket_detail(
     request: WSGIRequest, basket_id: int
 ):  # pylint: disable=unused-argument
+    """ DetailView for workspace.Basket model """
     basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
     vars_with_concept, vars_without_concept = list(), list()
@@ -237,6 +239,7 @@ def basket_detail(
 
 # request is a required parameter
 def register(request):  # pylint: disable=unused-argument
+    """ Registration view """
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -269,6 +272,7 @@ def basket_new(request):  # pylint: disable=unused-argument
 # request is a required parameter
 @own_basket_only
 def script_detail(request, basket_id, script_id):  # pylint: disable=unused-argument
+    """ DetailView for workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     if request.method == "POST":
         script.name = request.POST.get("field_name", "")
@@ -312,6 +316,7 @@ def basket_search(
 def script_raw(
     request: WSGIRequest, basket_id: int, script_id: int
 ):  # pylint: disable=unused-argument
+    """ View of raw workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     text = script.get_script_input()["text"]
     return HttpResponse(text, content_type="text/plain")
@@ -322,6 +327,7 @@ def script_raw(
 def basket_delete(
     request: WSGIRequest, basket_id: int
 ):  # pylint: disable=unused-argument
+    """ Delete view for workspace.Basket model """
     basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
     return redirect("/workspace/baskets/")
@@ -332,6 +338,7 @@ def basket_delete(
 def script_delete(
     request: WSGIRequest, basket_id: int, script_id: int
 ):  # pylint: disable=unused-argument
+    """ Delete view for workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     script.delete()
     return redirect("/workspace/baskets/%s" % basket_id)
@@ -339,6 +346,7 @@ def script_delete(
 
 # request is a required parameter
 def user_delete(request: WSGIRequest):  # pylint: disable=unused-argument
+    """ Delete view for auth.User model """
     request.user.delete()
     return redirect("/workspace/logout/")
 

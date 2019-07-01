@@ -147,7 +147,7 @@ class ScriptImportResource(resources.ModelResource):
     user = Field(attribute="basket__user", widget=ForeignKeyWidget(User, "username"))
     study = Field(attribute="basket__study", widget=ForeignKeyWidget(Study, "name"))
 
-    class Meta:
+    class Meta:  # pylint: disable=missing-docstring
         model = Script
         import_id_fields = (
             "user",

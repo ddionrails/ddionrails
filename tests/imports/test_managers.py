@@ -96,15 +96,3 @@ class TestRepository:
         mocked_list_all_files = mocker.patch.object(Repository, "list_all_files")
         repository.import_list(import_all=True)
         mocked_list_all_files.assert_called_once()
-
-
-class TestImportLink:
-    pass
-
-
-class TestSystemImportManager:
-    pass
-
-
-class TestStudyImportManager:
-    pass

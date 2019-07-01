@@ -6,7 +6,6 @@ import os
 import tempfile
 import uuid
 from pathlib import Path
-from uuid import UUID
 
 # PROJECT CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -21,7 +20,7 @@ else:
     STATIC_ROOT = os.getenv("STATIC_ROOT")
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-BASE_UUID = UUID(os.getenv("BASE_UUID", default=uuid.NAMESPACE_DNS))
+BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=uuid.NAMESPACE_DNS))
 EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default=[]).split(","))
 WSGI_APPLICATION = "config.wsgi.application"
@@ -175,11 +174,12 @@ WEBPACK_LOADER = {
 # DDI on Rails: imports
 # Please ensure to include a trailing slash "/" for the path definitions.
 
-IMPORT_REPO_PATH = os.getenv("IMPORT_REPO_PATH", default=tempfile.mkdtemp())
+# This tmp folder is reused in .production
+DJANGO_TMP = tempfile.TemporaryDirectory()
+IMPORT_REPO_PATH = Path(os.getenv("IMPORT_REPO_PATH", default=DJANGO_TMP.name))
 
 # Create IMPORT_REPO_PATH on disk if it does not exist
-path = Path(IMPORT_REPO_PATH)
-path.mkdir(parents=True, exist_ok=True)
+IMPORT_REPO_PATH.mkdir(parents=True, exist_ok=True)
 
 IMPORT_SUB_DIRECTORY = "ddionrails/"
 

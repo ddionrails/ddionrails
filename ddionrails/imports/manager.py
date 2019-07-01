@@ -48,7 +48,7 @@ class Repository:
         self.study_or_system = study_or_system
         self.name = study_or_system.name
         self.link = study_or_system.repo_url()
-        self.path = pathlib.Path(settings.IMPORT_REPO_PATH).joinpath(self.name)
+        self.path = settings.IMPORT_REPO_PATH.joinpath(self.name)
         try:
             self.repo = git.Repo(self.path)
         except (git.exc.NoSuchPathError, git.exc.InvalidGitRepositoryError):

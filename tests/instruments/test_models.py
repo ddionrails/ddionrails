@@ -70,6 +70,28 @@ class TestQuestionModel:
         expected = None
         assert expected == question.next_question()
 
+    def test_get_period_method(self, question):
+        result = question.get_period()
+        expected = question.instrument.period
+        assert expected == result
+
+    def test_get_period_id(self, question):
+        result = question.get_period(period_id=True)
+        expected = question.instrument.period.id
+        assert expected == result
+
+    def test_get_period_name(self, question):
+        result = question.get_period(period_id="name")
+        expected = question.instrument.period.name
+        assert expected == result
+
+    def test_get_period_default(self, question):
+        question.instrument.period = None
+        question.instrument.save()
+        result = question.get_period()
+        expected = None
+        assert expected is result
+
     def test_get_concepts_method_no_concept(self, question):
         """ Test Question.get_concepts() without concept-question-relation """
         result = question.get_concepts()
@@ -85,9 +107,6 @@ class TestQuestionModel:
         expected = 1
         assert expected == result.count()
         assert concept == result.first()
-
-    def test_get_cs_name_method(self):
-        pass
 
     def test_title_method(self, question):
         assert question.title() == question.label

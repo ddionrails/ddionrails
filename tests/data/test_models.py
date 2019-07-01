@@ -29,7 +29,7 @@ class TestVariableModel:
             dataset_name=variable.dataset.name,
             name=variable.name,
         )
-        result = Variable.get(x=select_dictionary)
+        result = Variable.get(parameters=select_dictionary)
         assert variable == result
 
     def test_get_study(self, variable):
@@ -49,7 +49,7 @@ class TestVariableModel:
         expected = variable.concept
         assert expected == result
 
-    def test_get_concept_with_id(self, variable, concept):
+    def test_get_concept_id(self, variable, concept):
         variable.concept = concept
         variable.save()
         result = variable.get_concept(concept_id=True)
@@ -61,10 +61,22 @@ class TestVariableModel:
         expected = variable.dataset.period
         assert expected == result
 
-    def test_get_period_without_id(self, variable):
-        result = variable.get_period()
-        expected = variable.dataset.period
+    def test_get_period_id(self, variable):
+        result = variable.get_period(period_id=True)
+        expected = variable.dataset.period.id
         assert expected == result
+
+    def test_get_period_name(self, variable):
+        result = variable.get_period(period_id="name")
+        expected = variable.dataset.period.name
+        assert expected == result
+
+    def test_get_period_default(self, variable):
+        variable.dataset.period = None
+        variable.dataset.save()
+        result = variable.get_period()
+        expected = None
+        assert expected is result
 
     def test_get_categories_method_without_categories(self, variable):
         variable.categories = []

@@ -63,6 +63,6 @@ class TestLabelTable:
 
     def test_simplify_label_method_with_non_string_label(self, label_table):
         label = 1
-        output = label_table._simplify_label(label)
+        output = label_table._simplify_label(label)  # pylint: disable=protected-access
         expected = ""
         assert output == expected

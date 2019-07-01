@@ -8,6 +8,7 @@ from typing import Dict, List
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from filer.fields.image import FilerImageField
@@ -109,8 +110,6 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         unique_together = ("name", "dataset")
 
     class DOR(DorMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
-        """ ddionrails' metadata options """
-
         id_fields = ["name", "dataset"]
 
     def __str__(self) -> str:
@@ -129,14 +128,15 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         )
 
     @classmethod
-    def get(cls, x: dict) -> Variable:
-        study = get_object_or_404(Study, name=x["study_name"])
-        dataset = get_object_or_404(Dataset, name=x["dataset_name"], study=study)
-        variable = get_object_or_404(cls, name=x["name"], dataset=dataset)
+    def get(cls, parameters: Dict) -> Variable:
+        study = get_object_or_404(Study, name=parameters["study_name"])
+        dataset = get_object_or_404(Dataset, name=parameters["dataset_name"], study=study)
+        variable = get_object_or_404(cls, name=parameters["name"], dataset=dataset)
         return variable
 
     @classmethod
-    def get_by_concept_id(cls, concept_id):
+    def get_by_concept_id(cls, concept_id: int) -> QuerySet:
+        """ Return a QuerySet of Variable objects by a given concept id """
         return cls.objects.filter(concept_id=concept_id)
 
     def html_description_long(self):
@@ -164,6 +164,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             return []
 
     def get_study(self, default=None, study_id=False):
+        """ Returns the related study_id | Study instance | a default """
         try:
             if study_id:
                 return self.dataset.study.id
@@ -173,6 +174,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             return default
 
     def get_concept(self, default=None, concept_id=False):
+        """ Returns the related concept_id | Concept instance | a default """
         try:
             if concept_id:
                 return self.concept.id
@@ -182,6 +184,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             return default
 
     def get_period(self, default=None, period_id=False):
+        """ Returns the related period_id | period_name | Period instance | a default """
         try:
             period_1 = self.dataset.period
             period_2 = self.period
@@ -208,7 +211,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             variables = []
         return variables
 
-    def get_related_variables_by_period(self):
+    def get_related_variables_by_period(self) -> OrderedDict:
         results = dict()
         periods = Period.objects.filter(study_id=self.dataset.study.id).all()
         for period in periods:
@@ -218,11 +221,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         for variable in self.get_related_variables():
             try:
                 results[variable.dataset.period.name].append(variable)
-            except:
+            except AttributeError:
                 results["none"].append(variable)
         return OrderedDict(sorted(results.items()))
 
-    def has_origin_variables(self):
+    def has_origin_variables(self) -> bool:
         """
         TEMPORARY / DEPRECATED
 
@@ -302,6 +305,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return self.get_origins_by_study_and_period(object_type="question")
 
     def has_translations(self) -> bool:
+        """ Returns True if Variable has translation_languages """
         return len(self.translation_languages()) > 0
 
     def translation_languages(self) -> List[str]:
@@ -328,6 +332,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return translation_table
 
     def is_categorical(self) -> bool:
+        """ Returns True if the variable has categories """
         return len(self.categories) > 0
 
     def title(self):
@@ -340,6 +345,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             return self.title()
 
     def to_dict(self) -> Dict:
+        """ Returns a dictionary representation of the Variable object """
         return dict(
             name=self.name,
             label=self.label,
@@ -349,16 +355,17 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             uni=self.categories,
         )
 
-    def to_topic_dict(self, language="en"):
+    def to_topic_dict(self, language="en") -> Dict:
+        """ Returns a topic dictionary representation of the Variable object """
         if language == "de":
             title = self.label_de if self.label_de != "" else self.title()
         else:
             title = self.title()
         return dict(
-            key="variable_%s" % self.id,
+            key=f"variable_{self.id}",
             name=self.name,
             title=title,
-            concept_key="concept_%s" % self.concept.name,
+            concept_key=f"concept_{self.concept.name}s",
             type="variable",
         )
 

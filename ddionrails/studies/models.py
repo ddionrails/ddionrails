@@ -85,12 +85,10 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
         help_text="Topic languages of the study (Array)",
     )
 
-    class Meta:  # pylint: disable=too-few-public-methods
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         verbose_name_plural = "Studies"
 
-    class DOR:  # pylint: disable=too-few-public-methods
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         io_fields = ["name", "label", "description"]
         id_fields = ["name"]
 

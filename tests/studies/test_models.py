@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for ddionrails.studies.models """
 
@@ -8,7 +8,7 @@ import pytest
 
 from ddionrails.studies.models import TopicList
 
-pytestmark = [pytest.mark.studies, pytest.mark.models]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.studies, pytest.mark.models]
 
 
 class TestStudyModel:
