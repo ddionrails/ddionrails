@@ -3,6 +3,7 @@
 
 import json
 import time
+from pathlib import Path
 
 import pytest
 from elasticsearch import Elasticsearch
@@ -53,7 +54,7 @@ def elasticsearch_client(settings):
 
 @pytest.fixture
 def study_import_manager(study, settings):
-    settings.IMPORT_REPO_PATH = "tests/functional/test_data/"
+    settings.IMPORT_REPO_PATH = Path("tests/functional/test_data/")
     manager = StudyImportManager(study)
     return manager
 

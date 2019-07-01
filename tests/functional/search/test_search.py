@@ -5,6 +5,7 @@
 
 import json
 import time
+from pathlib import Path
 
 import pytest
 from django.conf import settings
@@ -37,7 +38,7 @@ def publication_in_search_index(
     settings, es_client, study  # pylint: disable=unused-argument
 ):
     # redirect study data path to test data directory
-    settings.IMPORT_REPO_PATH = "tests/functional/test_data/"
+    settings.IMPORT_REPO_PATH = Path("tests/functional/test_data/")
     manager = StudyImportManager(study)
     manager.import_single_entity("study")
     manager.import_single_entity("publications")

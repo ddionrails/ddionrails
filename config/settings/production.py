@@ -3,6 +3,8 @@
 
 """ Django settings for ddionrails project: Settings for production environment """
 
+from pathlib import Path
+
 from .base import *
 
 LOGGING = {
@@ -12,7 +14,7 @@ LOGGING = {
         "file": {
             "level": "DEBUG",
             "class": "logging.FileHandler",
-            "filename": "/tmp/dor-debug.log",
+            "filename": Path(DJANGO_TMP.name).joinpath("debug_logs"),
         }
     },
     "loggers": {
