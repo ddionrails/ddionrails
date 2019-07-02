@@ -7,7 +7,7 @@ from __future__ import annotations
 import copy
 import textwrap
 from collections import OrderedDict
-from typing import List, Optional
+from typing import Dict, List, Optional, Union
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.core.exceptions import ObjectDoesNotExist
@@ -69,9 +69,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("instrument", "name")
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
@@ -95,6 +93,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
 
     @staticmethod
     def layout_class() -> str:
+        """ Returns the layout class (used in templates) """
         return "question"
 
     def previous_question(self) -> Optional[Question]:
@@ -167,10 +166,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
         """
         return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
 
-    def concept_list(self):
-        """DEPRECATED NAME"""
-        return self.get_concepts()
-
     def title(self):
         if self.label != None and self.label != "":
             return self.label
@@ -194,7 +189,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
         return [key.replace("text_", "") for key in keys_first_item if "text_" in key]
 
     @staticmethod
-    def translate_item(item, language):
+    def translate_item(item: Dict, language: str) -> None:
         item["text"] = item.get("text_%s" % language, item.get("text", ""))
         item["instruction"] = item.get(
             "instruction_%s" % language, item.get("instruction", "")
@@ -202,7 +197,10 @@ class Question(ElasticMixin, DorMixin, models.Model):
         for answer in item.get("answers", []):
             answer["label"] = answer.get("label_%s" % language, answer.get("label", ""))
 
-    def translations(self):
+    def translations(self) -> Dict[str, List]:
+        """ Returns a dictionary containing translations
+            of the Question's items for each translation language
+        """
         results = {}
         try:
             for language in self.translation_languages():
@@ -211,7 +209,8 @@ class Question(ElasticMixin, DorMixin, models.Model):
             pass
         return results
 
-    def item_array(self, language=None):
+    def item_array(self, language=None) -> List:
+        """ Returns a list containing the items of this Question object """
         items = copy.deepcopy(self.items)
         items = items.values() if items.__class__ == dict else items
         for item in items:
@@ -244,14 +243,16 @@ class Question(ElasticMixin, DorMixin, models.Model):
             before = current
         return items
 
-    def to_topic_dict(self, language="en"):
+    def to_topic_dict(self, language: str = "en") -> Dict:
+        """ Returns a topic dictionary representation of the Question object """
         if language == "de":
             title = self.label_de if self.label_de != "" else self.title()
         else:
             title = self.title()
         try:
             concept_name = self.questions_variables.first().variable.concept.name
-        except:
+        # afuetterer: there might be no concept?
+        except AttributeError:
             concept_name = ""
         return dict(
             title=title,
@@ -261,7 +262,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
             concept_key="concept_%s" % concept_name,
         )
 
-    def comparison_string(self, to_string=False, wrap=50):
+    def comparison_string(
+        self, to_string: bool = False, wrap: int = 50
+    ) -> Union[str, List]:
         cs = ["Question: %s" % self.title()]
         for item in self.items:
             cs += [

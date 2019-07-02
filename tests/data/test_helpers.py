@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,too-few-public-methods,no-self-use
+# pylint: disable=missing-docstring,too-few-public-methods,no-self-use,invalid-name
 
 """ Test cases for helpers in ddionrails.data app """
 

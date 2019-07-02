@@ -19,6 +19,7 @@ from ddionrails.workspace.models import Basket, BasketVariable
 
 
 def _get_object(object_type: str, object_id: str):
+    """ Returns an object from the database by object_type and object_id """
     redirect_mapping = {
         "concept": Concept,
         "publication": Publication,
@@ -35,7 +36,10 @@ def _get_object(object_type: str, object_id: str):
 # VIEWS
 
 # request is a required parameter
-def test_preview(request, object_type, object_id):  # pylint: disable=unused-argument
+def test_preview(
+    request, object_type: str, object_id: str
+):  # pylint: disable=unused-argument
+    """ View to preview an object """
     obj = _get_object(object_type, object_id)
     if obj:
         response = dict(
@@ -55,6 +59,7 @@ def object_redirect(
     object_type: str,
     object_id: str,
 ):
+    """ RedirectView from object_type and object_id to object.get_absolute_url """
     obj = _get_object(object_type, object_id)
     if obj:
         return redirect(obj.get_absolute_url())

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.studies app """
 
@@ -10,18 +10,18 @@ from django.urls import reverse
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView
 from tests import status
 
-pytestmark = [pytest.mark.studies, pytest.mark.views]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.studies, pytest.mark.views]
 
 
 class TestStudyRedirectView:
-    def test_study_redirect(self, rf, study):  # pylint: disable=invalid-name
+    def test_study_redirect(self, rf, study):
         request = rf.get("study", kwargs={"pk": study.pk})
         response = StudyRedirectView.as_view()(request, id=study.pk)
 
         assert status.HTTP_302_FOUND == response.status_code
 
     @pytest.mark.django_db
-    def test_study_redirect_invalid_id(self, rf):  # pylint: disable=invalid-name
+    def test_study_redirect_invalid_id(self, rf):
         invalid_study_id = 999
         request = rf.get("study", kwargs={"pk": invalid_study_id})
         with pytest.raises(Http404):
@@ -44,9 +44,7 @@ class TestStudyDetailView:
         assert expected_instruments == output_instruments
 
     @pytest.mark.django_db
-    def test_study_detail_view_with_non_existing_study_name(
-        self, rf
-    ):  # pylint: disable=invalid-name
+    def test_study_detail_view_with_non_existing_study_name(self, rf):
         non_existing_study_name = "not-in-database"
         url = reverse("study_detail", kwargs={"study_name": non_existing_study_name})
         request = rf.get(url)

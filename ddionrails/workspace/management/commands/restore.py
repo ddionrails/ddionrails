@@ -11,7 +11,7 @@ from import_export.formats.base_formats import CSV, JSON, YAML, TextFormat
 from ddionrails.workspace.resources import determine_model_and_resource
 
 
-def get_most_recent_backup_directory():
+def get_recent_backup_directory():
     """ Get the most recent backup directory """
     try:
         paths = sorted(
@@ -86,7 +86,7 @@ def command(
 ):
 
     if path == "local/backup":
-        path = get_most_recent_backup_directory()
+        path = get_recent_backup_directory()
 
     path = pathlib.Path(path)
 

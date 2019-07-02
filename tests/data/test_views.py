@@ -101,18 +101,6 @@ class TestVariableJsonView:
         assert content["scale"] == variable.scale
         assert content["uni"] == variable.categories
 
-    # TODO non existing study => 404
-    def test_json_view_with_invalid_study_name(self, client, variable):
-        pass
-
-    # TODO non existing dataset => 404
-    def test_json_view_with_invalid_dataset_name(self, client, variable):
-        pass
-
-    # TODO non existing variable => 404
-    def test_json_view_with_invalid_variable_name(self, client, variable):
-        pass
-
 
 class TestVariablePreviewIdView:
     def test_preview_id_view_with_valid_pk(self, client, variable):
@@ -127,8 +115,6 @@ class TestVariablePreviewIdView:
         assert content["name"] == variable.name
         assert content["title"] == variable.title()
         assert content["type"] == "variable"
-
-        # TODO test html content
         assert variable.name in content["html"]
 
     @pytest.mark.django_db

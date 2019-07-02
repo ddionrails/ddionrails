@@ -3,7 +3,6 @@
 
 """ Functional test cases for "python manage.py system" """
 
-import pathlib
 
 import pytest
 from click.testing import CliRunner

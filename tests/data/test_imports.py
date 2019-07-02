@@ -42,13 +42,6 @@ def transformation_importer():
 class TestDatasetImport:
     """ Tests for csv based dataset imports """
 
-    # def test_dataset_csv_import_with_invalid_data(
-    #     self, db, dataset_csv_importer, empty_data
-    # ):
-    #
-    #     with pytest.raises(KeyError) as excinfo:
-    #         dataset_csv_importer.import_element(empty_data)
-
     @pytest.mark.django_db
     def test__import_dataset_links_method_gets_called(self, mocker, dataset_csv_importer):
         valid_dataset_data = dict(dataset_name="some-dataset")
@@ -71,8 +64,6 @@ class TestDatasetImport:
         analysis_unit = AnalysisUnit.objects.get(name="none")
         conceptual_dataset = ConceptualDataset.objects.get(name="none")
         period = Period.objects.get(name="none")
-
-        # TODO: Is this behaviour intended?
 
         # check attributes are set correctly
         assert dataset.boost == 1.0
@@ -299,16 +290,11 @@ class TestVariableImport:
         mocked_import_variable_links = mocker.patch.object(
             VariableImport, "_import_variable_links"
         )
-        # TODO: Insert real exception
         mocked_import_variable_links.side_effect = KeyError
         element = dict(dataset_name="asdas", variable_name="")
         variable_importer.import_element(element)
         mocked_import_variable_links.assert_called_once()
-        # TODO assert logging message
-        # out, err = capsys.readouterr()
-        # assert "ERROR] Failed to import variable" in out
 
-    # TODO
     def test_import_variable_links_method(self, variable_importer, variable):
         element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
         variable_importer._import_variable_links(

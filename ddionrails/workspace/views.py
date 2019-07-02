@@ -175,7 +175,7 @@ def basket_detail(
             vars_without_concept.append(variable)
     concept_list = sorted(
         Concept.objects.filter(
-            id__in=set([v.concept.id for v in vars_with_concept])
+            id__in=set([variable.concept.id for variable in vars_with_concept])
         ).all(),
         key=lambda x: x.name,
     )
@@ -188,10 +188,11 @@ def basket_detail(
         .all()
     )
     period_list = []
-    for v in related_variable_list:
+    for variable in related_variable_list:
         try:
-            period_list.append(v.dataset.period.name)
-        except:
+            period_list.append(variable.dataset.period.name)
+        # afuetterer: there might be no period?
+        except AttributeError:
             period_list.append("")
     period_list = sorted(set(period_list))
     related_variable_table = OrderedDict()
@@ -199,22 +200,28 @@ def basket_detail(
         related_variable_table[concept.name] = OrderedDict(
             id=concept.id,
             label=concept.label,
-            periods=OrderedDict([(p, list()) for p in period_list]),
+            periods=OrderedDict([(period, list()) for period in period_list]),
         )
     bad_variables = list()
-    for v in related_variable_list:
+    for variable in related_variable_list:
         try:
-            period_name = v.dataset.period.name
-        except:
+            period_name = variable.dataset.period.name
+        # afuetterer: there might be no period?
+        except AttributeError:
             period_name = ""
         try:
-            related_variable_table[v.concept.name]["periods"][period_name].append(
-                dict(name=v.name, link=str(v), active=v in variable_list, id=v.id)
+            related_variable_table[variable.concept.name]["periods"][period_name].append(
+                dict(
+                    name=variable.name,
+                    link=str(variable),
+                    active=variable in variable_list,
+                    id=variable.id,
+                )
             )
-            if related_variable_table[v.concept.name]["label"] == "":
-                related_variable_table[v.concept.name]["label"] = v.label
+            if related_variable_table[variable.concept.name]["label"] == "":
+                related_variable_table[variable.concept.name]["label"] = variable.label
         except:
-            bad_variables.append(v)
+            bad_variables.append(variable)
 
     context = dict(
         basket=basket,
@@ -294,9 +301,13 @@ def script_detail(request, basket_id, script_id):  # pylint: disable=unused-argu
             field["value"] = settings_dict[field["name"]]
         if "value" not in field.keys():
             field["value"] = script_config.DEFAULT_DICT[field["name"]]
-    s = script.get_script_input()
+    script_input = script.get_script_input()
     context = dict(
-        basket=script.basket, script=script, fields=fields, settings=settings_dict, s=s
+        basket=script.basket,
+        script=script,
+        fields=fields,
+        settings=settings_dict,
+        s=script_input,
     )
     return render(request, "workspace/script_detail.html", context=context)
 
