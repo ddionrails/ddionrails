@@ -37,7 +37,7 @@ from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
 
 logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Repository:
@@ -155,7 +155,7 @@ class StudyImportManager:
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
-        self.IMPORT_ORDER = OrderedDict(
+        self.import_order = OrderedDict(
             {
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
@@ -213,20 +213,20 @@ class StudyImportManager:
         manager.import_single_entity("instruments", "instruments/some-instrument.json")
 
         """
-        logger.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
-        importer_class, default_file_path = self.IMPORT_ORDER.get(entity)
+        LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
+        importer_class, default_file_path = self.import_order.get(entity)
 
         # import specific file
         if filename:
             file = self.base_dir / filename
             if file.is_file():
-                logger.info(
+                LOGGER.info(
                     f'Study "{self.study.name}" starts import of file: "{file.name}"'
                 )
                 importer = importer_class(file, self.study)
                 django_rq.enqueue(importer.run_import, file, self.study)
             else:
-                logger.error(f'Study "{self.study.name}" has no file: "{file.name}"')
+                LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
         else:
 
             # single file import
@@ -235,7 +235,7 @@ class StudyImportManager:
                     importer = importer_class(default_file_path, self.study)
                     django_rq.enqueue(importer.run_import, default_file_path, self.study)
                 else:
-                    logger.warning(
+                    LOGGER.warning(
                         f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
                     )
 
@@ -243,7 +243,7 @@ class StudyImportManager:
             else:
 
                 for file in sorted(default_file_path):
-                    logger.info(
+                    LOGGER.info(
                         f'Study "{self.study.name}" starts import of file: "{file.name}"'
                     )
                     importer = importer_class(file, self.study)
@@ -259,6 +259,6 @@ class StudyImportManager:
         manager.import_all_entities()
 
         """
-        logger.info(f'Study "{self.study.name}" starts importing of all entities')
-        for entity in self.IMPORT_ORDER.keys():
+        LOGGER.info(f'Study "{self.study.name}" starts importing of all entities')
+        for entity in self.import_order.keys():
             self.import_single_entity(entity)

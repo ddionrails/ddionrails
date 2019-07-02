@@ -46,36 +46,15 @@ class TestAnalysisUnitModel:
     def test_string_method(self, analysis_unit):
         assert str(analysis_unit) == "/analysis_unit/" + analysis_unit.name
 
-    def test_title_method_with_label(self, analysis_unit):
-        assert analysis_unit.title() == analysis_unit.label
-
-    def test_title_method_without_label(self, analysis_unit_without_label):
-        assert analysis_unit_without_label.title() == analysis_unit_without_label.name
-
 
 class TestConceptualDatasetModel:
     def test_string_method(self, conceptual_dataset):
         assert str(conceptual_dataset) == "/conceptual_dataset/" + conceptual_dataset.name
 
-    def test_title_method_with_label(self, conceptual_dataset):
-        assert conceptual_dataset.title() == conceptual_dataset.label
-
-    def test_title_method_without_label(self, conceptual_dataset_without_label):
-        assert (
-            conceptual_dataset_without_label.title()
-            == conceptual_dataset_without_label.name
-        )
-
 
 class TestPeriodModel:
     def test_string_method(self, period):
         assert str(period) == "/period/" + period.name
-
-    def test_title_method_with_label(self, period):
-        assert period.title() == period.label
-
-    def test_title_method_without_label(self, period_without_label):
-        assert period_without_label.title() == period_without_label.name
 
     def test_is_range_method_with_range(self, period_with_range_definition):
         assert period_with_range_definition.is_range() is True

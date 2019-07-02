@@ -6,12 +6,13 @@ import logging
 import os
 
 import frontmatter
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 
 from .helpers import read_csv
 
 logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Import:
@@ -111,19 +112,21 @@ class CSVImport(Import):
             definition = {
                 key: value for key, value in form(element).data.items() if key in fields
             }
-            x = model.objects.get(**definition)
-        except:
-            x = None
-        form = self.DOR.form(element, instance=x)
+            obj = model.objects.get(**definition)
+        # afuetterer: the object might not be found with "model.objects.get()"
+        # or the model might not have "model.DOR.id_fields"
+        except (AttributeError, ObjectDoesNotExist):
+            obj = None
+        form = self.DOR.form(element, instance=obj)
         form.full_clean()
         if form.is_valid():
             new_object = form.save()
             print(".", end="")
             return new_object
         else:
-            logger.error("Import error in " + str(self.__class__))
-            logger.error(form.data)
-            logger.error(form.errors.as_data())
+            LOGGER.error("Import error in " + str(self.__class__))
+            LOGGER.error(form.data)
+            LOGGER.error(form.errors.as_data())
             return None
 
     def process_element(self, element):

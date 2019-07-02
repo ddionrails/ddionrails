@@ -84,9 +84,7 @@ class Publication(ElasticMixin, DorMixin, models.Model):
             update_fields=update_fields,
         )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
 
     def __str__(self) -> str:

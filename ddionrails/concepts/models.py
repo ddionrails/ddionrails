@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.concepts app """
+from __future__ import annotations
 
 import uuid
+from typing import List
 
 from django.conf import settings
 from django.db import models
@@ -82,9 +84,7 @@ class Topic(models.Model, ModelMixin):
             update_fields=update_fields,
         )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
@@ -92,8 +92,9 @@ class Topic(models.Model, ModelMixin):
         io_fields = ["study", "name", "label", "description", "parent"]
 
     @classmethod
-    def get_children(cls, topic_id):
-        """ TODO: Refactor this. This implementation is strange. """
+    def get_children(cls, topic_id: int) -> List[Topic]:
+        """ Returns a list of all Topics, that have this Topic object as its ancestor """
+        # TODO: Refactor this. This implementation is strange.
         children = list(cls.objects.filter(parent_id=topic_id).all())
         for child in children:
             children += list(cls.get_children(child.id))
@@ -155,8 +156,6 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
     DOC_TYPE = "concept"
 
     class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
-        """ ddionrails' metadata options """
-
         id_fields = ["name"]
         io_fields = ["name", "label", "description"]
 
@@ -272,9 +271,7 @@ class Period(models.Model, ModelMixin):
         help_text="Foreign key to studies.Study",
     )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
@@ -296,13 +293,6 @@ class Period(models.Model, ModelMixin):
             using=using,
             update_fields=update_fields,
         )
-
-    def title(self) -> str:
-        """ Returns a title representation
-
-        Uses the "label" field, with "name" field as fallback
-        """
-        return str(self.label) if self.label != "" else str(self.name)
 
     def is_range(self) -> bool:
         """ Returns if "definition" defines a range """
@@ -381,13 +371,6 @@ class AnalysisUnit(models.Model, ModelMixin):
             update_fields=update_fields,
         )
 
-    def title(self) -> str:
-        """ Returns a title representation.
-
-        Uses the "label" field, with "name" field as fallback
-        """
-        return str(self.label) if self.label != "" else str(self.name)
-
 
 class ConceptualDataset(models.Model, ModelMixin):
     """
@@ -457,10 +440,3 @@ class ConceptualDataset(models.Model, ModelMixin):
             using=using,
             update_fields=update_fields,
         )
-
-    def title(self) -> str:
-        """ Returns a title representation
-
-        Uses the "label" field, with "name" field as fallback
-        """
-        return str(self.label) if self.label != "" else str(self.name)
