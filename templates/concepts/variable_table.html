@@ -1,28 +1,38 @@
 <table class="table datatable" id="variable_table">
-  <thead>
-    <tr>
-      <th>Study</th>
-      <th>Object</th>
-      <th>Label</th>
-      <th>Path</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for variable in variables %}
-    <tr>
-      <td>{{ variable.dataset.study.title }}</th>
-      <td>Variable</td>
-      <td><a href="{{ variable }}">{{ variable.title }}</a></td>
-      <td>{{ variable }}</td>
-    </tr>
-    {% endfor %}
-    {% for question in questions %}
-    <tr>
-      <td>{{ question.instrument.study.title }}</th>
-      <td>Question</td>
-      <td><a href="{{ question }}">{{ question.title }}</a></td>
-      <td>{{ question }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+            <th>Study</th>
+            <th>Object</th>
+            <th>Label</th>
+            <th>Path</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for variable in variables %}
+        <tr>
+            <td>
+                {{ variable.dataset.study.title }}
+            </td>
+            <td>Variable</td>
+            <td><a href="{{ variable }}">{{ variable.title }}</a>
+            </td>
+            <td>
+                {{ variable }}
+            </td>
+        </tr>
+        {% endfor %}
+        {% for question in questions %}
+        <tr>
+            <td>
+                {{ question.instrument.study.title }}
+            </td>
+            <td>Question</td>
+            <td><a href="{{ question }}">{{ question.title }}</a>
+            </td>
+            <td>
+                {{ question }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>

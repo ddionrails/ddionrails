@@ -4,7 +4,7 @@
 {% block content %}
 
   {% if not user.is_authenticated %}
-    <div class="alert alert-success">
+    <div class="alert alert-success mx-auto p-4">
       <b>Update April 2019:</b>
       <ul>
         <li>Welcome German Internet Panel!</li>
@@ -12,11 +12,13 @@
       </ul>
     </div>
   {% endif %}
-  <img class="img-responsive" src="{% static "background.png" %}">
+  <img class="img-fluid mx-auto" src="{% static "background.png" %}">
 
   <div class="list-group">
     {% for study in study_list %}
-      {% include "studies/study_result.html" %}
+      <li class="list-group-item">
+        <b><a href="{{ study }}">{{ study.title }}</a></b>
+      </li>
     {% endfor %}
   </div>
 {% endblock content %}

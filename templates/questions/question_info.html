@@ -1,34 +1,33 @@
-
 {% if question.previous_question %}
-<a href="{{ question.previous_question }}" class="btn btn-default">Previous question</a>
+<a href="{{ question.previous_question }}" class="btn btn-secondary">Previous question</a>
 {% endif %}
 {% if question.next_question %}
-<a href="{{ question.next_question }}" class="btn btn-default pull-right">Next question</a>
+<a href="{{ question.next_question }}" class="btn btn-secondary float-right">Next question</a>
 {% endif %}
-
 <div class="clearfix"></div>
-<hr />
-<div class="panel panel-default">
-  <div class="panel-heading">
-    Info
-  </div>
-  <div class="panel-body">
-    <p><b>Name:</b> {{ question.name }}</p>
-    <p><b>Instrument:</b> This question is at position <b>{{ question.sort_id }}</b> in instrument 
-      <a href="{{ question.instrument }}">
+<hr>
+<div class="card">
+    <div class="card-header">Info</div>
+    <div class="card-body">
+        <p><b>Name:</b> 
+            {{ question.name }}
+        </p>
+        <p><b>Instrument:</b> This question is at position <b>{{ question.sort_id }}</b> in
+            instrument <a href="{{ question.instrument }}">
+
         {{ question.instrument.title }}
+
       </a>
-    </p>
-    <p>{{image_label}}:
-    {% if en_url%}
-      <a href="{{ en_url }}">en</a> 
-    {% endif%}
-    {% if de_url%}
-      <a href="{{ de_url }}">de</a> 
-    {% endif%}
-    {% for lang, url in image_urls.items %}
-    {% endfor %}
-    </p>
-    {% include "publications/attachments_partial.html" with attachments=question.attachments %}
-  </div>
+        </p>
+        <p>
+            {{image_label}}:
+            {% if en_url%} <a href="{{ en_url }}">en</a> 
+            {% endif%}
+            {% if de_url%} <a href="{{ de_url }}">de</a> 
+            {% endif%}
+            {% for lang, url in image_urls.items %}
+            {% endfor %}
+        </p>
+        {% include "publications/attachments_partial.html" with attachments=question.attachments %}
+    </div>
 </div>

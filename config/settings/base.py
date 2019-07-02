@@ -200,7 +200,7 @@ SHELL_PLUS_PRE_IMPORTS = (("ddionrails.imports.manager", "*"),)
 SERVER_EMAIL = "admin@paneldata.org"
 DEFAULT_FROM_EMAIL = "webmaster@paneldata.org"
 
-CRISPY_TEMPLATE_PACK = "bootstrap3"
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # https://django-import-export.readthedocs.io/en/latest/api_widgets.html?highlight=date#import_export.widgets.DateTimeWidget
 DATETIME_INPUT_FORMATS = ("%Y-%m-%d %H:%M:%S %Z",)

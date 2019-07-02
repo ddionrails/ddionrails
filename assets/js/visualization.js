@@ -238,15 +238,14 @@ function render(rawData) {
     });
 
     d3.select("#chart_nav_dropdown").html(
-      "<button type='button' class='btn btn-default dropdown-toggle chart_nav' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>More Options " +
-        "<span class='caret '></span>" +
-        "</button>" +
-        "<ul class='dropdown-menu chart_nav'>" +
-        "<li><a class='opt_bi chart_nav' href='#'>Univariate (default)</a></li>" +
-        "<li role='separator' class='divider'></li>" +
-        "<li class='dropdown-header'>Bivariate Options</li>" +
-        opt_bi +
-        "</ul>"
+      `<button type="button" class="btn btn-secondary dropdown-toggle chart_nav"
+      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More Options <span class="caret "></span>
+      </button>
+      <ul class="dropdown-menu chart_nav">
+          <li class="dropdown-item"><a class="opt_bi chart_nav" href="#">Univariate (default)</a>
+          </li>
+          <li role="separator" class="divider dropdown-item"></li>
+          <li class="dropdown-header dropdown-item">Bivariate Options</li>` + opt_bi +"</ul>"
     );
   }
 

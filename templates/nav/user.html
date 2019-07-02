@@ -1,7 +1,0 @@
-{% if user.is_authenticated %}
-<a class="btn btn-default" href="/workspace/baskets/">My baskets</a>
-<a class="btn btn-default" href="/workspace/account/">My account</a>
-<a class="btn btn-default" href="/workspace/logout/">Logout</a>
-{% else %}
-<a class="btn btn-default" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a> 
-{% endif %}

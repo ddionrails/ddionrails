@@ -1,21 +1,24 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <b>Statistics</b>
-  </div>
-  <table class="table" id="statistics_table">
-    <thead>
-      <tr>
-        <th>Measure</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for measure, value in statistics.items %}
-        <tr>
-          <td>{{ measure }}</td>
-          <td>{{ value }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="card">
+    <div class="card-header"> <b>Statistics</b>
+    </div>
+    <table class="table" id="statistics_table">
+        <thead>
+            <tr>
+                <th>Measure</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for measure, value in statistics.items %}
+            <tr>
+                <td>
+                    {{ measure }}
+                </td>
+                <td>
+                    {{ value }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>

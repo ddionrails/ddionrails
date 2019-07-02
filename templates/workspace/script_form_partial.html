@@ -1,55 +1,55 @@
 <div class="form-group">
-  <label for="id_field_name">Name</label>
-  <input type="text" class="form-control" id="id_field_name"
-         name="field_name"
-         value="{{ script.name }}">
+    <label for="id_field_name">Name</label>
+    <input type="text" class="form-control" id="id_field_name"
+    name="field_name" 
+    value="{{ script.name }}">
 </div>
 <div class="form-group">
-  <label for="id_field_label">Label</label>
-  <input type="text" class="form-control" id="id_field_label"
-         name="field_label"
-         value="{{ script.label }}">
+    <label for="id_field_label">Label</label>
+    <input type="text" class="form-control" id="id_field_label"
+    name="field_label" 
+    value="{{ script.label }}">
 </div>
 <div class="form-group">
-  <label for="generator_name_field_label">
-    Script generator
-  </label>
-  <select class="form-control" id="generator_name_field_label"
-          name="field_generator_name">
-  {% for script_gen in basket.get_script_generators %}
-    <option value="{{ script_gen }}"
-    {% if script_gen == script.generator_name %}
-      selected="selected"
-    {% endif %}
-      >
-      {{ script_gen }}
-    </option>
-  {% endfor %}
-  </select>
+    <label for="generator_name_field_label">
+      Script generator
+    </label>
+    <select class="form-control" id="generator_name_field_label"
+    name="field_generator_name">
+        {% for script_gen in basket.get_script_generators %}
+        <option value="{{ script_gen }}" 
+          {% if script_gen == script.generator_name %}
+          selected="selected"
+            {% endif %}
+          >
+            {{ script_gen }}
+        </option>
+        {% endfor %}
+    </select>
 </div>
-<hr/>
+<hr>
 {% for field in fields %}
 <div class="form-group">
-  <label for="settings_{{ field.name }}">{{ field.label }}</label>
-  {% if field.scale == "text" %}
+    <label for="settings_{{ field.name }}">{{ field.label }}</label>
+    {% if field.scale == "text" %}
     <input type="{{ field.scale }}" class="form-control" id="settings_{{ field.name }}"
-           name="settings_{{ field.name }}"
-           value="{{ field.value }}">
-  {% elif field.scale == "select" %}
+          name="settings_{{ field.name }}" 
+          value="{{ field.value }}">
+    {% elif field.scale == "select" %}
     <select class="form-control" id="settings_{{ field.name }}"
-            name="settings_{{ field.name }}">
-    {% for value, label in field.options.items %}
-      <option value="{{ value }}"
-      {% if value == field.value %}
-        selected="selected"
-      {% endif %}
-        >
-        {{ label }}
-      </option>
-    {% endfor %}
+    name="settings_{{ field.name }}">
+        {% for value, label in field.options.items %}
+        <option value="{{ value }}" 
+        {% if value == field.value %}
+          selected="selected"
+        {% endif %}
+          >
+            {{ label }}
+        </option>
+        {% endfor %}
     </select>
-  {% else %}
+    {% else %}
     <p>Can't render {{ field.scale }}</p>
-  {% endif %}
+    {% endif %}
 </div>
 {% endfor %}

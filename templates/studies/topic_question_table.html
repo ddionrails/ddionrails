@@ -11,12 +11,16 @@
     </tr>
   </thead>
   <tbody>
-    {% for question in questions %}
+    {% for question in questions %} 
     <tr>
+      {% if language == "de" %} 
+      <td>{{ question.title_de }}</td>
+      {% else %} 
       <td>{{ question.title }}</td>
+      {% endif %} 
       <td><a href="{{ question }}">{{ question.name }}</a></td>
       <td><a href="{{ question.instrument }}">{{ question.instrument.name }}</a></td>
     </tr>
-    {% endfor %}
+    {% endfor %} 
   </tbody>
 </table>

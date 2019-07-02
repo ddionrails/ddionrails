@@ -2,87 +2,89 @@
 {% load render_bundle from webpack_loader %}
 
 {% block styles %}
-  <!-- Webpack bundle: "topics" CSS -->
-  {% render_bundle 'topics' 'css' %}
+<!-- Webpack bundle: "topics" CSS -->
+{% render_bundle 'topics' 'css' %}
 {% endblock styles %}
 
 {% block scripts %}
 
-  <script>
-      var study = '{{study.name}}'
-      var language = '{{ language }}'
-  </script>
+    <script>
+        var study = '{{study.name}}'
+        var language = '{{ language }}'
+    </script>
 
-  {% render_bundle 'topics' 'js' %}
+{% render_bundle 'topics' 'js' %}
 
 {% endblock scripts %}
 
 {% block content %}
 
 <p class="text-right">
-  Languages:
-  {% for link_language in study.topic_languages %}
-    {% if link_language == language %}<b>{% endif %}
-    &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
-    {% if link_language == language %}</b>{% endif %}
-  {% endfor %}
-</p>
-
-<h2><span class="small glyphicon glyphicon-folder-close"></span> Topics</h2>
-<a class="anchor" id="topics"></a>
-<div class="row">
-    <div class="col-md-offset-8 col-md-4 col-xs-8 col-xs-offset-4 search-bar">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search node .." id="search">
-            <span class="input-group-btn">
-		<button class="btn btn-default" type="button" aria-pressed="true" id="btn-search"><span
-                class='glyphicon glyphicon-search'
-                aria-hidden='true'></span></button>
-	</span>
-        </div>
-    </div>
-</div>
-<div class="row topic-list-wrapper">
-    <div class="col-md-6 col-xs-6">
-        <div class="topic-list-content">
-            <div id="tree"></div>
-        </div>
-    </div>
-    <div class="col-md-6 col-xs-6">
-        <div class="topic-list-content">
-            <div class="sk-three-bounce" style="display: none">
-                <div class="sk-child sk-bounce1"></div>
-                <div class="sk-child sk-bounce2"></div>
-                <div class="sk-child sk-bounce3"></div>
-            </div>
-            <div id="tree_variables">
+    Languages:
+        {% for link_language in study.topic_languages %}
+        {% if link_language == language %} <b>{% endif %} 
+        &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
+        {% if link_language == language %} </b>{% endif %}
+        {% endfor %}
+    </p>
+    
+    <h2><i class="small fas fa-cogs"></i> Topics</h2>
+    <a class="anchor" id="topics"></a>
+    <div class="row">
+        <div class="offset-md-8 col-lg-4 col-8 offset-4 search-bar">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search node .." id="search"> 
+                <span class="input-group-btn">    
+            <button class="btn btn-secondary" type="button" aria-pressed="true" id="btn-search"><span 
+                class="fas fa-search" 
+                aria-hidden="true"></span></button>
+        </span>
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" id="topic-list-add-to-basket">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Add to basket</h4>
+    <div class="row topic-list-wrapper">
+        <div class="col-lg-6 col-6">
+            <div class="topic-list-content">
+                <div id="tree"></div>
             </div>
-            <div class="modal-body">
-                <div class="alert alert-success hidden" role="alert" id="basket_success">
-                    <strong>Successfully </strong>added to basket.
+        </div>
+        <div class="col-lg-6 col-6">
+            <div class="topic-list-content">
+                <div class="sk-three-bounce" style="display: none">
+                    <div class="sk-child sk-bounce1"></div>
+                    <div class="sk-child sk-bounce2"></div>
+                    <div class="sk-child sk-bounce3"></div>
                 </div>
-                <div class="alert alert-danger hidden" role="alert" id="basket_error">
-                    <strong>An error occured. </strong>Please try again later.
+                <div id="tree_variables">
                 </div>
-                <p>Do you really want to add <span id="number_of_variables"></span> element(s) to your basket?</p>
-                <p>Select a basket:</p>
-                <div id="basket_list"></div>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        </div>
+    </div>
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="topic-list-add-to-basket">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex bg-light">
+                    <h4 class="modal-title">Add to basket</h4>
+                    <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success hidden" role="alert" id="basket_success"> 
+                        <strong>Successfully </strong>added to basket.
+                    </div>
+                    <div class="alert alert-danger hidden" role="alert" id="basket_error"> 
+                        <strong>An error occured. </strong>Please try again later.
+                    </div>
+                    <p>Do you really want to add <span id="number_of_variables"></span> element(s) to your basket?</p>
+                    <p>Select a basket:</p>
+                    <div id="basket_list"></div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
 
-{% endblock content %}
+    {% endblock content %}
+    
