@@ -3,7 +3,6 @@
 """ Manager classes for imports in ddionrails project """
 
 import logging
-import pathlib
 import re
 import shutil
 from collections import OrderedDict

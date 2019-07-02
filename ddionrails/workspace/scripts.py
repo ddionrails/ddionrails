@@ -48,8 +48,8 @@ class ScriptConfig:
     @classmethod
     def _get_list_of_configs(cls):
         list_of_configs = cls.__subclasses__()
-        for x in cls.__subclasses__():
-            list_of_configs += x._get_list_of_configs()
+        for subclass in cls.__subclasses__():
+            list_of_configs += subclass._get_list_of_configs()
         return list_of_configs
 
 
@@ -129,16 +129,15 @@ class SoepMixin:
                 self._enrich_dataset_dict(dataset_dict)
         return script_dict
 
-    def _create_dataset_dict(self, dataset_name):
+    def _create_dataset_dict(self, dataset_name: str) -> Dict:
         analysis_unit = self._soep_classify_dataset(dataset_name)
-        d = dict(
+        return dict(
             name=dataset_name,
             analysis_unit=analysis_unit,
             period=self._soep_get_year(dataset_name, letters=False),
             prefix=self._soep_get_year(dataset_name),
             variables=set(),
         )
-        return d
 
     @staticmethod
     def _enrich_dataset_dict(dataset_dict):

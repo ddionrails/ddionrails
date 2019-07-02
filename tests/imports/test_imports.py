@@ -3,7 +3,6 @@
 
 """ Test cases for importer classes in ddionrails.imports app """
 
-import pathlib
 
 import pytest
 
@@ -69,13 +68,6 @@ class TestImport:
             system.name, settings.IMPORT_SUB_DIRECTORY
         )
         assert expected == result
-
-    # def test_file_path_method(self, mocker):
-    #     importer = Import(filename="DUMMY.csv")
-    #     mocked_import_path = mocker.patch.object(Import, "import_path")
-    #     mocked_import_path.return_value = "path"
-    #     file_path = importer.file_path()
-    #     assert file_path == "path/DUMMY.csv"
 
 
 class TestCSVImport:

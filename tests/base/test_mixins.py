@@ -3,7 +3,6 @@
 
 """ Test cases for mixins in ddionrails.base app """
 
-import pathlib
 
 import pytest
 from django.db import models

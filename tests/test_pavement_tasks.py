@@ -36,23 +36,3 @@ def test_full_docu_task(mocked_sh):
 def test_django_setup(mocked_django_setup):
     django_setup()
     mocked_django_setup.assert_called_once()
-
-
-def test_create_admin():
-    pass
-
-
-def test_erd():
-    pass
-
-
-def test_migrate():
-    pass
-
-
-def test_test():
-    pass
-
-
-def test_functional_test():
-    pass
