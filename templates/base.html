@@ -1,101 +1,100 @@
-{% load render_bundle from webpack_loader %}
+{% load render_bundle from webpack_loader %} 
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
-      {% block title %}
-      paneldata.org
-      {% endblock title %}
+        {% block title %}paneldata.org
+        {% endblock title %}
     </title>
-
-     <!-- Webpack bundle: "index" CSS -->
-    {% render_bundle 'index' 'css' %}
-
-    {% block styles %}
+    <!-- Webpack bundle: "index" CSS -->
+    {% render_bundle 'index' 'css' %} 
+    {% block styles %} 
     {% endblock styles %}
+</head>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-    
-    {% block header %}
+<body>
+    {% block header %} 
     {% endblock header %}
+    <nav id="paneldata-navbar" id="nav-container">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> 
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent">
+            <ul class="navbar-nav container-fluid">
+                <li class="nav-item"> 
+                    <a type="button" class="btn" href="/">paneldata.org</a>
+                </li>
+                <li class="nav-item dropdown"> 
+                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
+                    aria-expanded="false">
+                        Studies
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {% for study in studies %} 
+                        <a class="dropdown-item" href="/study/{{ study.id }}">{{ study.title }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li class="nav-item"> 
+                    <a type="button" class="btn" href="/search/">Search</a>
+                </li>
 
-    <div class="container" id="nav-container">
-      <nav class="navbar navbar-default navbar-fixed-top">
-        <div class="container">
-          <div class="row" style="padding-top: 15px;">
-            <div class="col-md-12">
-              <div class="btn-group">
-                {% include "nav/home.html" %}
-                {% include "nav/angular.html" %}
-              </div>
-              <div class="btn-group pull-right">
-                {% include "nav/user.html" %}
-              </div>
-            </div>
-            {% comment %}
-              {% include "nav/search.html" %}
-            {% endcomment %}
-          </div>
+            </ul>
+            <ul class="navbar-nav container-fluid justify-content-end">
+                {% if user.is_authenticated %}
+                <li class="nav-item text-nowrap"> 
+                    <a type="button" class="btn" href="/workspace/baskets/">My baskets</a>
+                </li>
+                <li class="nav-item text-nowrap"> 
+                    <a type="button" class="btn" href="/workspace/account/">My account</a>
+                </li>
+                <li class="nav-item"> 
+                    <a type="button" class="btn" href="/workspace/logout/">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item"> 
+                    <a type="button" class="btn" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a> 
+                </li>
+                {% endif %}
+            </ul>
         </div>
-        {% block studynav %}
-        <div class="container" style="min-height: 15px;">
-        </div>
+
+        {% block studynav %} 
         {% endblock studynav %}
-      </nav>
-    </div><!-- /.container -->
-
-    <div class="container container-white" id="main-container">
-
-      {% for message in messages %}
-        <div class="alert alert-warning" role="alert">
-          {{ message }}
-        </div>
-      {% endfor %}
-      {% block content%}
-      {% endblock content %}
-    </div><!-- /.container -->
-
-    <div class="container container-white" id="foot-container">
-      <hr />
-      <p><strong><a href="/contact/">Contact / feedback</a></strong></p>
-      <p class='text-muted'>
-      <a href='http://ddionrails.org' target='_blank'>DDI on Rails</a>,
-      designed and built by
-      <a href='http://www.marcelhebing.de' target='_blank'>Marcel Hebing</a>.
-      <br />
-      <a href='https://www.diw.de/en/soep/' target='_blank'>German Socio-economic Panel</a>
-      (SOEP) |
-      <a href='/imprint/'>Imprint</a>
-      </p>
+    </nav>
+    <!-- /.container -->
+    <div class="flex-column d-flex px-5 justify-content-center" id="main-container">
+        {% block content%} 
+        {% endblock content %}
     </div>
-
-    {% include "elastic/help.html" %}
+    <!-- /.container -->
+    <div class="container container-white" id="foot-container">
+        <hr>
+        <p><strong><a href="/contact/">Contact / feedback</a></strong>
+        </p>
+        <p class="text-muted"> <a href="http://ddionrails.org" target="_blank">DDI on Rails</a>, designed
+            and built by <a href="http://www.marcelhebing.de" target="_blank">Marcel Hebing</a>.
+            <br> <a href="https://www.diw.de/en/soep/" target="_blank">German Socio-economic Panel</a>
+(SOEP)
+            | <a href="/imprint/">Imprint</a>
+        </p>
+    </div>
     {% include "tracker.html" %}
-
     <!-- Webpack bundle: "index" JS -->
     {% render_bundle 'index' 'js' %}
-
     <!-- ddionrails JS search library -->
-
-    {% render_bundle 'elasticsearchInline' 'js' %}
-    {% render_bundle 'elasticsearchPolyfills' 'js' %}
-    {% render_bundle 'elasticsearchVendor' 'js' %}
-    {% render_bundle 'elasticsearchMain' 'js' %}
-
-    {% block scripts %}
+    {% render_bundle 'elasticsearchInline' 'js' %} 
+    {% render_bundle 'elasticsearchPolyfills' 'js' %} 
+    {% render_bundle 'elasticsearchVendor' 'js' %} 
+    {% render_bundle 'elasticsearchMain' 'js' %} 
+    {% block scripts %} 
     {% endblock scripts %}
-  </body>
-</html>
+</body>
 
+</html>

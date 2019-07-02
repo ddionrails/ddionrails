@@ -15,10 +15,10 @@
 
 
 import "bootstrap";
-import "datatables.net";
-import "datatables.net-bs";
-import "datatables.net-responsive";
-import "datatables.net-responsive-bs";
+import "datatables.net-bs4";
+import "datatables.net-buttons-bs4";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import "datatables.net-responsive-bs4";
 
 // Credit to https://github.com/mar10/fancytree/issues/793
 import "jquery.fancytree";
@@ -35,10 +35,11 @@ var open = url.searchParams.get("open");
 
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
-var filterOptionsString = "<span class='btn-group btn-group-sm filter-options' data-container='body' role='group'><button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='glyphicon glyphicon-stats' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' data-container='body' title='Show all related questions' onclick='filter(this, \"question\")'><span class='glyphicon glyphicon-question-sign' aria-hidden='true'></span></button>" +
-    "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='glyphicon glyphicon-shopping-cart' aria-hidden='true'></span></button></span>";
-var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copy_url_to_clipboard(this)' class='btn btn-link'><span class='glyphicon glyphicon-copy' aria-hidden='true'></span></button>";
-var filterAndClipboard = filterOptionsString.substr(0, 924) + clipboard + filterOptionsString.substr(924);
+var filterOptionsString = "<span class='btn-group btn-group-sm filter-options' data-container='body' role='group'><button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='fas fa-chart-bar' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' data-container='body' title='Show all related questions' onclick='filter(this, \"question\")'><span class='fas fa-tasks' aria-hidden='true'></span></button>" +
+    "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='fas fa-shopping-cart' aria-hidden='true'></span></button>";
+var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copyUrlToClipboard(this)' class='btn btn-link'><span class='fas fa-copy' aria-hidden='true'></span></button>";
+var filterAndClipboard = filterOptionsString + clipboard + "</span>";
+filterOptionsString = filterOptionsString + "</span>";
 var apiUrl = location.protocol + "//" + window.location.host + "/api/topics/" + study + "/" + language;
 var baseUrl = location.protocol + "//" + window.location.host + "/" + study + "/topics/" + language;
 
@@ -48,10 +49,10 @@ $(function () {
     $("#tree").fancytree({
         extensions: ["filter", "glyph"],
         types: {
-            "topic": {icon: "glyphicon glyphicon-folder-close"},
-            "concept": {icon: "glyphicon glyphicon-asterisk"},
-            "variable": {icon: "glyphicon glyphicon-stats"},
-            "question": {icon: "glyphicon glyphicon-question-sign"},
+            "topic": {icon: "fas fa-cogs"},
+            "concept": {icon: "fas fa-cog"},
+            "variable": {icon: "fas fa-chart-bar"},
+            "question": {icon: "fas fa-tasks"},
         },
         filter: {
             counter: false, // No counter badges
@@ -61,29 +62,30 @@ $(function () {
             return data.typeInfo.icon;
         },
         glyph: {
-            preset: "bootstrap3",
+            preset: "awesome5",
             map: {
-                _addClass: "glyphicon",
-                checkbox: "glyphicon-unchecked",
-                checkboxSelected: "glyphicon-check",
-                checkboxUnknown: "glyphicon-expand",  // "glyphicon-share",
-                dragHelper: "glyphicon-play",
-                dropMarker: "glyphicon-arrow-right",
-                error: "glyphicon-warning-sign",
-                expanderClosed: "glyphicon-menu-right",  // glyphicon-plus-sign
-                expanderLazy: "glyphicon-menu-right",  // glyphicon-plus-sign
-                expanderOpen: "glyphicon-menu-down",  // glyphicon-minus-sign
-                loading: "glyphicon-refresh fancytree-helper-spin",
-                nodata: "glyphicon-info-sign",
+                _addClass: "",
+                checkbox: "fas fa-square",
+                checkboxSelected: "fas fa-check-square",
+                checkboxUnknown: "fas fa-square",
+                radio: "fas fa-circle",
+                radioSelected: "fas fa-circle",
+                radioUnknown: "fas fa-dot-circle",
+                dragHelper: "fas fa-arrow-right",
+                dropMarker: "fas fa-long-arrow-right",
+                error: "fas fa-exclamation-triangle",
+                expanderClosed: "fas fa-caret-right",
+                expanderLazy: "fas fa-angle-right",
+                expanderOpen: "fas fa-caret-down",
+                loading: "fas fa-spinner fa-pulse",
+                nodata: "fas fa-meh",
                 noExpander: "",
-                radio: "glyphicon-remove-circle",  // "glyphicon-unchecked",
-                radioSelected: "glyphicon-ok-circle",  // "glyphicon-check",
                 // Default node icons.
                 // (Use tree.options.icon callback to define custom icons based on node data)
-                doc: "glyphicon-file",
-                docOpen: "glyphicon-file",
-                folder: "glyphicon-folder-close",
-                folderOpen: "glyphicon-folder-open"
+                doc: "fas fa-file",
+                docOpen: "fas fa-file",
+                folder: "fas fa-folder",
+                folderOpen: "fas fa-folder-open"
             }
 
         },
@@ -160,7 +162,7 @@ function filter(node, type) {
         $("#variable_table").DataTable();
     }).fail(function () {
         $(".sk-three-bounce").hide(); // hide the loading message
-        $("#tree_variables").html("<p><span class='glyphicon glyphicon-alert' aria-hidden='true'></span> Load Error!</p>");
+        $("#tree_variables").html("<p><span class='fas fa-exclamation-triangle' aria-hidden='true'></span> Load Error!</p>");
     });
 }
 

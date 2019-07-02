@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
-{% block content %}
+{% block content %} 
   <h1>{{ concept.title }}</h1>
-  <p>[ {{ concept.name }} ]</p>
+  <p>[{{ concept.name }}]</p>
   <p>{{ concept.html_description }}</p>
   <h2>Variables and questions</h2>
-  {% include "concepts/variable_table.html" with variables=variables.all %}
-{% endblock content %}
+  {% include "concepts/variable_table.html" with variables=variables.all %} 
+{% endblock content %} 

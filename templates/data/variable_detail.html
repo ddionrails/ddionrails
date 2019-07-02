@@ -1,171 +1,160 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block title %}
 {{ variable }}
 {% endblock title %}
-
 {% block styles %}
-  <!-- Webpack bundle: "visualization" CSS -->
-  {% render_bundle 'visualization' 'css' %}
+<!-- Webpack bundle: "visualization" CSS -->
+{% render_bundle 'visualization' 'css' %}
 {% endblock styles %}
-
 {% block content %}
-
-  <h1>{{ variable.title }}</h1>
-
-  <div class="row">
-
-    <div class="col-md-8">
-      <div class="btn-toolbar" role="toolbar" aria-label="...">
-        <div class='btn-group btn-group-sm pull-right'
-             id='chart_nav_dropdown' role='group'>
+<h1>{{ variable.title }}</h1>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="btn-toolbar" role="toolbar" aria-label="...">
+            <div class="btn-group btn-group-sm float-right" id="chart_nav_dropdown"
+            role="group"></div>
+            <div class="btn-group btn-group-sm float-right" role="group" aria-label="..."
+            id="vis_menu">
+                <a type="button" class="btn opt chart_nav" id="percent">Percent</a>
+                <a type="button" class="btn opt chart_nav"
+                id="missings">Hide Missings</a>
+            </div>
         </div>
-        <div class="btn-group btn-group-sm pull-right" role="group" aria-label="..." id="vis_menu">
-            <button type="button" class="btn btn-default opt chart_nav"
-                    id="percent">Percent</button>
-            <button type="button" class="btn btn-default opt chart_nav"
-                    id="missings">Hide Missings</button>
-            <button type="button" class="btn btn-default opt chart_nav"
-                    id="weighted">Weighted</button> 
-        </div>  
-      </div>
-      <div id="menu"></div>
-      <div id="chart"></div>
-      <div id="chart_missings"></div>
-      {% if variable.image_url %}
-        <img src="{{ variable.image_url }}" class="img-responsive">
-      {% endif %}
+        <div id="menu"></div>
+        <div id="chart"></div>
+        <div id="chart_missings"></div>
+        {% if variable.image_url %}
+        <img src="{{ variable.image_url }}" class="img-fluid">
+        {% endif %}
+        <div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active nav-item"> <a href="#related_variables" aria-controls="related_variables" role="tab"
+                    data-toggle="tab" class="nav-link">
 
-
-
-<div>
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active">
-      <a href="#related_variables" aria-controls="related_variables"
-         role="tab" data-toggle="tab">
         Related variables
+
         <span class="badge">{{ variable.get_related_variables | length }}</span>
+
       </a>
-    </li>
-    <li role="presentation">
-      <a href="#origin_variables" aria-controls="origin_variables"
-         role="tab" data-toggle="tab">
+                </li>
+                <li role="presentation" class="nav-item"> <a href="#origin_variables" aria-controls="origin_variables" role="tab"
+                    data-toggle="tab" class="nav-link">
+
         Input variables
+
         <span class="badge">{{ variable.origin_variables.count }}</span>
+
       </a>
-    </li>
-    <li role="presentation">
-      <a href="#target_variables" aria-controls="target_variables"
-         role="tab" data-toggle="tab">
+                </li>
+                <li role="presentation" class="nav-item"> <a href="#target_variables" aria-controls="target_variables" role="tab"
+                    data-toggle="tab" class="nav-link">
+
         Output variables
+
         <span class="badge">{{ variable.target_variables.count }}</span>
+
       </a>
-    </li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="related_variables">
-      {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
-    </div>
-    <div role="tabpanel" class="tab-pane" id="origin_variables">
-      {% if variable.get_origin_variables %}
-        {% for study, variable_list in variable.get_origin_variables.items %}
-          {% include "data/related_variables.html" with table_name=study.title %}
-        {% endfor %}
-      {% else %}
-        <div class="well">No input variables</div>
-      {% endif %}
-    </div>
-    <div role="tabpanel" class="tab-pane" id="target_variables">
-      {% if variable.get_target_variables %}
-        {% for study, variable_list in variable.get_target_variables.items %}
-          {% include "data/related_variables.html" with table_name=study.title %}
-        {% endfor %}
-      {% else %}
-        <div class="well">No output variables</div>
-      {% endif %}
-    </div>
-  </div>
-
-</div>
-
-
-
-
-
-      {% if variable.has_translations %}
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="related_variables">
+                    {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="origin_variables">
+                    {% if variable.get_origin_variables %}
+                    {% for study, variable_list in variable.get_origin_variables.items %}
+                    {% include "data/related_variables.html" with table_name=study.title %}
+                    {% endfor %}
+                    {% else %}
+                    <div class="card bg-light card-body mb-3">No input variables</div>
+                    {% endif %}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="target_variables">
+                    {% if variable.get_target_variables %}
+                    {% for study, variable_list in variable.get_target_variables.items %}
+                    {% include "data/related_variables.html" with table_name=study.title %}
+                    {% endfor %}
+                    {% else %}
+                    <div class="card bg-light card-body mb-3">No output variables</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% if variable.has_translations %}
         {% include "data/translation_table.html" %}
-      {% endif %}
+        {% endif %}
     </div>
-  
-    <div class="col-md-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <b>Basket</b>
-        </div>
-        <div class="list-group">
-          {% if user.is_authenticated %}
-            {% for basket in basket_list %}
-              <div class="list-group-item">
-                {% if variable in basket.variables.all %}
-                <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header"> <b>Basket</b>
+            </div>
+            <div class="list-group">
+                {% if user.is_authenticated %}
+                {% for basket in basket_list %}
+                <div class="list-group-item">
+                    {% if variable in basket.variables.all %} <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">
+
                   Remove
+
                 </a> from
-                {% else %}
-                <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">
+                    {% else %} <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">
+
                   Add
+
                 </a> to
-                {% endif %}
-                basket
-                <a href="/workspace/baskets/{{ basket.id }}">
+                    {% endif %}basket <a href="/workspace/baskets/{{ basket.id }}">
+
                   {{ basket.name }}
+
                 </a>
-              </div>
-            {% endfor %}
-            <div class="panel-body text-right">
-            <a href="/workspace/baskets/new" class="btn btn-default">
+                </div>
+                {% endfor %}
+                <div class="card-body text-right"> <a href="/workspace/baskets/new" class="btn btn-secondary">
+
               Create a new basket
+
             </a>
+                </div>
+                {% else %}
+                <div class="card-body">Please <a href="/workspace/login/">login</a>
+or <a href="/workspace/register/">register</a>
+to
+                    use the basket functionality.</div>
+                {% endif %}
             </div>
-          {% else %}
-            <div class="panel-body">
-            Please <a href="/workspace/login/">login</a>
-            or <a href="/workspace/register/">register</a>
-            to use the basket functionality.
-            </div>
-          {% endif %}
         </div>
-      </div>
-      {% include "data/variable_info.html" %}
-      {% include "data/statistics_partial.html" %}
+        {% include "data/variable_info.html" %}
+        {% include "data/statistics_partial.html" %}
     </div>
-  </div>
-
-  {% if label_table %}
-  <h2>Label table</h2>
-  <p>The label table provides you with an overview of label definitions across related variables to identify changes over time in longitudinal variables. The first number indicates the value code, the second number (in brackets) represents the frequency in the data. Please note that labels are simplified and values with frequency = 0 are hidden.</p>
-  </div><!-- End content -->
-  <div class="table-responsive">
+</div>
+{% if label_table %}
+ <h2>Label table</h2>
+<p>The label table provides you with an overview of label definitions across
+    related variables to identify changes over time in longitudinal variables.
+    The first number indicates the value code, the second number (in brackets)
+    represents the frequency in the data. Please note that labels are simplified
+    and values with frequency = 0 are hidden.</p>
+<!-- End content -->
+<div class="table-responsive">
     {{ label_table.to_html | safe }}
-  </div>
-  <div class="content"><!-- Restart content -->
-  {% endif %}
-
-{% endblock content %}
-
-{% block scripts %}
-  <!-- Webpack bundle: "visualization" JS -->
-  {% render_bundle 'visualization' 'js' %}
-  <script>
-    var path = "{{ variable }}.json"
-    var rawData;
-    d3.json(path, function(json) {
-        rawData = json;
-        render(rawData);
-    });
-  </script>
-{% endblock scripts %}
+</div>
+<div class="content">
+    <!-- Restart content -->
+    {% endif %}
+    {% endblock content %}
+    {% block scripts %}
+    <!-- Webpack bundle: "visualization" JS -->
+    {% render_bundle 'visualization' 'js' %}
+    <script>
+      var path = "{{ variable }}.json"
+      var rawData;
+      d3.json(path, function(json) {
+          rawData = json;
+          render(rawData);
+      });
+    </script>
+    {% endblock scripts %}
+</div>

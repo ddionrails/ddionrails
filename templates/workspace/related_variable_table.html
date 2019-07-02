@@ -3,17 +3,17 @@
     <tr>
       <th>Concept</th>
       <th></th>
-      {% for p in period_list %}
+      {% for p in period_list %} 
         <th>{{ p }}</th>
-      {% endfor %}
+      {% endfor %} 
     </tr>
   </thead>
   <tbody>
-    {% for concept_name, concept in related_variable_table.items %}
+    {% for concept_name, concept in related_variable_table.items %} 
       <tr>
         <td>
             <a href="/concept/{{ concept_name }}">{{ concept_name }}</a><br/>
-            {{ concept.label}}
+            {{ concept.label}} 
         </td>
         <td>
           <a href="/workspace/baskets/{{ basket.id }}/add_concept/{{ concept.id }}">
@@ -24,30 +24,30 @@
             Remove all
           </a>
         </td>
-        {% for period_name, period in concept.periods.items %}
+        {% for period_name, period in concept.periods.items %} 
           <td>
-            {% for variable in period %}
+            {% for variable in period %} 
               <span class="btn-group btn-group-xs btn-group-var" role="group">
-              {% if variable.active %}
+              {% if variable.active %} 
                   <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
                      title="Remove variable" class="basket-button btn btn-success">
-                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                    <span class="fas fa-shopping-cart"></span>
                   </button>
-              {% else %}
+              {% else %} 
                 <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
                    title="Add variable" class="basket-button btn btn-default">
-                    <span class="glyphicon glyphicon-shopping-cart"></span>
+                    <span class="fas fa-shopping-cart"></span>
                 </button>
-              {% endif %}
+              {% endif %} 
                 <a href="{{ variable.link }}" class="btn btn-default"
                    title="{{ variable.link }}">
-                  {{ variable.name }}
+                  {{ variable.name }} 
                 </a>
               </span>
-            {% endfor %}
+            {% endfor %} 
           </td>
-        {% endfor %}
+        {% endfor %} 
       </tr>
-    {% endfor %}
+    {% endfor %} 
   </tbody>
 </table>

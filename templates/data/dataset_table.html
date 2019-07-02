@@ -9,7 +9,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for dataset in dataset_list %}
+    {% for dataset in dataset_list %} 
       <tr>
         <td>
           <a href="{{ dataset }}">{{ dataset.name }}</a>
@@ -19,6 +19,6 @@
         <td>{{ dataset.period.title }}</td>
         <td>{{ dataset.analysis_unit.title }}</td>
       </tr>
-    {% endfor %}
+    {% endfor %} 
   </tbody>
 </table>
