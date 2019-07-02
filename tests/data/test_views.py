@@ -107,8 +107,6 @@ class TestVariablePreviewIdView:
         url = reverse("api:variable_preview", kwargs={"variable_id": variable.pk})
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
-        template = "data/variable_preview.html"
-        assert template in (t.name for t in response.templates)
         assert response["Content-Type"] == "text/plain"
 
         content = json.loads(response.content)

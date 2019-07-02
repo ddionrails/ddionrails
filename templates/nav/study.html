@@ -1,23 +1,17 @@
-<div class="container">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
+<div class="container-fluid d-flex justify-content-start mt-2">
     <a class="navbar-brand" href="/study/{{ study.pk }}#">
-      {{ study.title }}
+        {{ study.title }}
     </a>
-  </div>
-  <div id="navbar" class="collapse navbar-collapse">
-    <ul class="nav navbar-nav">
-      <li><a href="/{{ study.name }}#datasets">Data</a></li>
-      <li><a href="/{{ study.name }}#instruments">Instruments</a></li>
-      {% if study.has_topics %}
-        <li><a href="/{{ study.name }}/topics/en">Topics</a></li>
-      {% endif %}
-      <li><a href="/{{ study.name }}/publ/">Publications</a></li>
-    </ul>
-  </div>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a href="/{{ study.name }}#datasets" class="nav-link">Data</a>
+            </li>
+            <li class="nav-item"><a href="/{{ study.name }}#instruments" class="nav-link">Instruments</a>
+            </li>
+            {% if study.has_topics %}
+            <li class="nav-item"><a href="/{{ study.name }}/topics/en" class="nav-link">Topics</a>
+            </li>
+            {% endif %}
+            <li class="nav-item"><a href="/{{ study.name }}/publ/" class="nav-link">Publications</a>
+            </li>
+        </ul>
 </div>

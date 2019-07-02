@@ -1,16 +1,13 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <b>Info</b>
-  </div>
-  <div class="panel-body">
-    <p>
-      <b>Study:</b>
-      {{ study.name }}
-    </p>
-    <p>
-      <b>Dataset:</b>
-      {{ dataset.name }}
-    </p>
-    {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
-  </div>
+<div class="card">
+    <div class="card-header"> <b>Info</b>
+    </div>
+    <div class="card-body">
+        <p> <b>Study:</b>
+            {{ study.name }}
+        </p>
+        <p> <b>Dataset:</b>
+            {{ dataset.name }}
+        </p>
+        {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
+    </div>
 </div>

@@ -5,61 +5,183 @@
 */
 
 
-@import "~bootstrap/dist/css/bootstrap.min.css";
-@import "~bootstrap/dist/css/bootstrap-theme.min.css";
-@import "~datatables.net-bs/css/dataTables.bootstrap.css";
-@import "~datatables.net-responsive-dt/css/responsive.dataTables.min.css";
+@import "~bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/utilities/_spacing.scss";
+$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
+@import "~@fortawesome/fontawesome-free/scss/solid.scss";
+@import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
 
+// General styling
 
-html {
-  height: 100%;
-}
+// This padding seems to be big enough
+// so that the navbar does not overlap with the content
 body {
-  height: 100%;
+	padding-top: 7em;
 }
-#nav-container {
-  padding: 0px;
-}
-.navbar {
-  margin: 0px;
-  background-image: none;
-  box-shadow: none;
-  border: none;
-  margin-bottom: 1px;
-  border-bottom: 1px grey solid;
-}
-.container-white {
-  background-color: white;
-}
-#main-container {
-  padding-top: 120px;
-  min-height: 400px;
-}
+
 #foot-container {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  margin-top: 1px;
-  text-align: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	margin-top: 1px;
+	text-align: center;
 }
-.btn,
-.panel-heading {
-  background-image: none;
+
+#paneldata-navbar {
+	@extend .navbar;
+	@extend .fixed-top;
+	@extend .navbar-light;
+	@extend .flex-column;
+	@extend .navbar-expand-md;
+	padding: 1em 1.5em 1em 2em !important;
+	border-bottom: 1px solid black !important;
+	background-color: #f8f9fa !important;
 }
-.input-group-btn > .btn {
-  box-shadow: none;
+
+h1 {
+	@extend .mb-5;
 }
-.navbar-right {
-  margin-right: 10px;
+
+body>div:first-of-type {
+	@extend .my-5;
+
 }
-.anchor {
-  display: block;
-  position: relative;
-  top: -150px;
-  visibility: hidden;
+
+.search-icon {
+	font-size: 1.3rem !important;
 }
-.info-panel {
-  margin-top: 70px;
+
+.card{
+	margin-top: 1em;
 }
-.btn-group-var {
-  display: flex;
+
+// To display Fontawesome Icons
+i {
+	font-family: "Font Awesome 5 Free";
+}
+
+/**************************
+ Datatables general styling
+**************************/
+
+#dataset_table_filter {
+	display: flex;
+	justify-content: flex-end;
+}
+
+/******************
+ Datatables Sorting
+******************/
+
+table.dataTable thead th {
+	position: relative;
+	background-image: none !important;
+}
+
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:after,
+table.dataTable thead th.sorting_desc:after {
+	position: absolute;
+	top: 12px;
+	right: 8px;
+	display: block;
+	font-family: "Font Awesome 5 Free";
+}
+
+table.dataTable thead th.sorting:after {
+	content: "\f0dc";
+	color: #ddd;
+	font-size: 0.8em;
+	padding-top: 0.12em;
+}
+
+table.dataTable thead th.sorting_asc:after {
+	content: "\f0de";
+}
+
+table.dataTable thead th.sorting_desc:after {
+	content: "\f0dd";
+}
+
+div.dataTables_scrollBody table.dataTable thead th.sorting:after,
+div.dataTables_scrollBody table.dataTable thead th.sorting_asc:after,
+div.dataTables_scrollBody table.dataTable thead th.sorting_desc:after {
+	content: "";
+}
+
+/* In Bootstrap and Foundation the padding top is a little different from the DataTables stylesheet */
+table.table thead th.sorting:after,
+table.table thead th.sorting_asc:after,
+table.table thead th.sorting_desc:after {
+	top: 8px;
+}
+
+/*********************
+ Datatables Pagination
+*********************/
+
+div.dataTables_paginate li.first>a,
+div.dataTables_paginate li.previous>a {
+	position: relative;
+	padding-left: 24px;
+}
+
+div.dataTables_paginate li.next>a,
+div.dataTables_paginate li.last>a {
+	position: relative;
+	padding-right: 24px;
+}
+
+div.dataTables_paginate li.first a:before,
+div.dataTables_paginate li.previous a:before {
+	position: absolute;
+	top: 7px;
+	left: 10px;
+	display: block;
+	font-family: "Font Awesome 5 Free";
+}
+
+div.dataTables_paginate li.next a:after,
+div.dataTables_paginate li.last a:after {
+	position: absolute;
+	top: 7px;
+	right: 10px;
+	display: block;
+	font-family: "Font Awesome 5 Free";
+}
+
+div.dataTables_paginate li.first a:before {
+	content: "\f100";
+}
+
+div.dataTables_paginate li.previous a:before {
+	content: "\f104";
+}
+
+div.dataTables_paginate li.next a:after {
+	content: "\f105";
+}
+
+div.dataTables_paginate li.last a:after {
+	content: "\f101";
+}
+
+/*****************
+ Datatables Pagination colors
+******************/
+
+.page-item.disabled .page-link {
+	color: rgb(161, 159, 159);
+}
+
+.dataTables_paginate a {
+	color: black;
+}
+
+.dataTables_paginate a:hover {
+	color: black;
+}
+
+.page-item.active .page-link {
+	background-color: rgb(151, 150, 150);
+	border-color: rgb(184, 181, 181);
 }

@@ -1,22 +1,14 @@
-<div class="panel panel-default info-panel">
-  <div class="panel-heading">
-    <b>Study info</b>
-  </div>
-  <div class="panel-body">
-    <p>Name: {{ study.name }}</p>
-    <p>Label: {{ study.label }}</p>
-    <p>Datasets: {{ num_datasets }}</p>
-    <p>Variables: {{ num_variables }}</p>
-    <p>Instruments: {{ num_instruments }}</p>
-    <p>Questions: {{ num_questions }}</p>
-    {% if study.organization %}
-      <p>
-        Organization:
-        <a href="/{{ study.organization.name }}">
-          {{ study.organization.name }}
-        </a>
-      </p>
-    {% endif %}
-    {% include "publications/attachments_partial.html" with attachments=study.attachments %}
-  </div>
+<div class="card info-panel">
+    <div class="card-header"> 
+      <b>Study info</b>
+    </div>
+    <div class="card-body">
+        <p>Name: {{ study.name }}</p>
+        <p>Label: {{ study.label }}</p>
+        <p>Datasets: {{ num_datasets }}</p>
+        <p>Variables: {{ num_variables }}</p>
+        <p>Instruments: {{ num_instruments }}</p>
+        <p>Questions: {{ num_questions }}</p>
+        {% include "publications/attachments_partial.html" with attachments=study.attachments %}
+    </div>
 </div>

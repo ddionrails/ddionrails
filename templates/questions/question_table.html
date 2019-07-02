@@ -1,18 +1,23 @@
 <table class="table datatable" id="question_table">
-  <thead>
-    <tr>
-      <th style="color:grey"><small>Sort</small></th>
-      <th>Question</th>
-      <th>Name</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for question in questions %}
-    <tr>
-      <td style="color:grey"><small>{{ question.sort_id }}</small></td>
-      <td><a href="{{ question }}">{{ question.title }}</a></td>
-      <td>{{ question.name }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+    <thead>
+        <tr>
+            <th><small>Sort</small>
+            </th>
+            <th>Question</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for question in questions %}
+        <tr>
+            <td><small>{{ question.sort_id }}</small>
+            </td>
+            <td><a href="{{ question }}">{{ question.title }}</a>
+            </td>
+            <td>
+                {{ question.name }}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>

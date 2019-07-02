@@ -1,60 +1,34 @@
 {% extends "base.html" %}
-
 {% block content %}
-
-
 {% if form.errors %}
-  <div class="alert alert-danger" role="alert">
-    {{ form.errors }}
-  </div>
+<div class="alert alert-danger" role="alert">
+  {{ form.errors }}
+</div>
 {% endif %}
-
 <div class="row">
-  <div class="col-md-4 col-md-offset-4">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <b>User login</b>
+  <div class="col-xl-4 offset-md-4">
+    <div class="card">
+      <div class="card-header"> <b>User login</b>
       </div>
-      <div class="panel-body">
-
-<form method="post" action="/workspace/login/">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="id_username">Username:</label>
-    <input class="form-control" id="id_username" maxlength="254" name="username" type="text" />
-  </div>
-  <div class="form-group">
-    <label for="id_password">Password:</label>
-    <input class="form-control" id="id_password" name="password" type="password" />
-  </div>
-  <input class="btn btn-primary" type="submit" value="Login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
-
-    <hr />
-    <p>New user? Register <a href="/workspace/register/">here</a>.
-    <p>Forgot your password? Create a new one <a href="/workspace/password_reset/">here</a>.
+      <div class="card-body">
+        <form method="post" action="/workspace/login/">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="id_username">Username:</label>
+            <input class="form-control" id="id_username" maxlength="254" name="username" type="text">
+          </div>
+          <div class="form-group">
+            <label for="id_password">Password:</label>
+            <input class="form-control" id="id_password" name="password" type="password">
+          </div>
+          <input class="btn btn-primary" type="submit" value="Login">
+          <input type="hidden" name="next" value="{{ next }}">
+        </form>
+        <hr>
+        <p>New user? Register <a href="/workspace/register/">here</a>.</p>
+        <p>Forgot your password? Create a new one <a href="/workspace/password_reset/">here</a>.</p>
       </div>
     </div>
   </div>
 </div>
-
-{% comment %}
-<form method="post" action="/workspace/login/">
-  {% csrf_token %}
-  <div class="form-group">
-    {{ form.username.label_tag }}
-    {{ form.username }}
-  </div>
-  <div class="form-group">
-    {{ form.password.label_tag }}
-    {{ form.password }}
-  </div>
-  <input type="submit" value="login" />
-  <input type="hidden" name="next" value="{{ next }}" />
-</form>
-{% endcomment %}
-
-
 {% endblock %}
-

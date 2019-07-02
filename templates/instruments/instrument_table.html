@@ -8,7 +8,7 @@
     </tr>
   </thead>
   <tbody>
-    {% for instrument in instrument_list %}
+    {% for instrument in instrument_list %} 
       <tr>
         <td>
           <a href="{{ instrument }}">{{ instrument.name }}</a>
@@ -17,6 +17,6 @@
         <td>{{ instrument.period.title }}</td>
         <td>{{ instrument.analysis_unit.title }}</td>
       </tr>
-    {% endfor %}
+    {% endfor %} 
   </tbody>
 </table>

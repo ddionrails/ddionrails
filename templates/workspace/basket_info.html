@@ -1,20 +1,20 @@
-<div class="panel panel-default">
-  <div class="panel-heading">
-    <b>Info</b>
-  </div>
-  <div class="panel-body">
-    <p>
-      <b>Title:</b>
-      {{ basket.title }}
-    </p>
-    <p>
-      <b>Study:</b>
-      <a href="{{ study }}">
-      {{ study.title }}
+<div class="card">
+    <div class="card-header"> 
+      <b>Info</b>
+        </div>
+    <div class="card-body">
+        <p> 
+          <b>Title:</b>
+            {{ basket.title }}
+        </p>
+        <p> 
+          <b>Study:</b>
+          <a href="{{ study }}">
+      {{ study.title }} 
       </a>
-    </p>
-    {% if note %}
-      <p><b>Note: </b>{{ note }}</p>
-    {% endif %}
-  </div>
+        </p>
+        {% if note %}
+        <p><b>Note: </b>{{ note }}</p>
+        {% endif %}
+    </div>
 </div>

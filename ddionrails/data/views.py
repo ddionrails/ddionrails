@@ -194,8 +194,8 @@ def variable_preview_id(
         name=variable.name,
         title=variable.title(),
         type="variable",
-        html=render(
-            request, "data/variable_preview.html", context=context
-        ).content.decode("utf8"),
+        html=render(request, "data/variable_info.html", context=context).content.decode(
+            "utf8"
+        ),
     )
     return HttpResponse(json.dumps(response), content_type="text/plain")

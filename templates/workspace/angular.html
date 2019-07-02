@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
 
-{% block content %}
+{% block content %} 
   <p>
     <a href="/workspace/baskets/{{ basket.id }}">
     Back to basket <b>{{ basket.name }}</b>.
@@ -11,4 +11,4 @@
     The following search is limited to the related study <b>{{ basket.study.title }}</b>.
   </p>
   <app-root study="{{ basket.study.name }}" type="variable">Loading...</app-root>
-{% endblock content %}
+{% endblock content %} 
