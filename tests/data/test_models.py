@@ -94,6 +94,18 @@ class TestVariableModel:
         }
         assert expected == result[0]
 
+    def test_get_categories_method_without_labels_de(self, variable):
+        variable.categories.pop("labels_de")
+        variable.save()
+        result = variable.get_categories()
+        expected = {
+            "value": "-6",
+            "label": "[-6] Version of questionnaire with modified filtering",
+            "frequency": 1,
+            "valid": False,
+        }
+        assert expected == result[0]
+
     def test_is_categorical_method(self, variable):
         variable.categories = [dict(label="some-category")]
         variable.save()
