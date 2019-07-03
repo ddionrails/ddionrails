@@ -27,7 +27,7 @@ psycopg2-binary = "*"
 # Elasticsearch
 # ------------------------------------------------------------------------------
  # pin until ElasticSearch service is updated
-elasticsearch-dsl = "==2.2.0" # pyup: ignore
+elasticsearch-dsl = "==2.2.0"
 
 # Markup
 # ------------------------------------------------------------------------------
@@ -74,9 +74,9 @@ sphinx-rtd-theme = "*"
 # Local
 # ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
+rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "*"
-rope = "*" # python refactoring tool
 
 
 [requires]
