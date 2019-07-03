@@ -6,7 +6,13 @@ from django.urls import reverse
 
 from tests import status
 
-pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
+# One of the admin views in django itself
+# uses {% load staticfiles %} instead {% load static %}.
+# It throws a "django.utils.deprecation.RemovedInDjango30Warning"
+pytestmark = [  # pylint: disable=invalid-name
+    pytest.mark.django_db,
+    pytest.mark.filterwarnings("ignore::DeprecationWarning"),
+]
 
 
 def test_dataset_admin_list(admin_client, dataset):  # pylint: disable=unused-argument
