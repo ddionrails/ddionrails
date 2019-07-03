@@ -149,16 +149,16 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     def get_categories(self) -> List:
         if self.categories:
             categories = []
-            for index in range(len(self.categories["values"])):
-                categories.append(
-                    dict(
-                        value=self.categories["values"][index],
-                        label=self.categories["labels"][index],
-                        label_de=self.categories["labels_de"][index],
-                        frequency=self.categories["frequencies"][index],
-                        valid=(not self.categories["missings"][index]),
-                    )
+            for index, _ in enumerate(self.categories["values"]):
+                category = dict(
+                    value=self.categories["values"][index],
+                    label=self.categories["labels"][index],
+                    frequency=self.categories["frequencies"][index],
+                    valid=(not self.categories["missings"][index]),
                 )
+                if "labels_de" in self.categories:
+                    category["label_de"] = self.categories["labels_de"][index]
+                categories.append(category)
             return categories
         else:
             return []
