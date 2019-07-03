@@ -9,9 +9,11 @@ services:
             "gunicorn", "config.wsgi",
             "--bind", "0.0.0.0:8000",
             "--error-logfile", "-",
+            "--access-logfile", "-",
+            "--log-level=info",
             "--access-logformat",
-            "'[gunicorn] %(h)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s'",
-            "--access-logfile", "-" ] 
+            "[gunicorn] %(h)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s",
+             ] 
     # Set your own variables, use of the example files at your own risk.
     #env_file:
     #  - docker/environments/django.env
