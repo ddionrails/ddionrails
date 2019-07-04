@@ -94,9 +94,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "question"
 
-    # Lets views alter the language to be returned
-    language = "en"
-
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("instrument", "name")
 
@@ -194,24 +191,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
             their relation is defined in ConceptQuestion.
         """
         return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
-
-    def set_language(self, language: str = "en") -> None:
-        """ Set the current language of the data object. """
-
-        if language in ("en", "de"):
-            self.language = language
-
-    def title(self) -> str:
-        """ Returns a title representation using the "label" or "label_de" field,
-            with "name" field as fallback
-        """
-        label = self.label
-        if self.language == "de":
-            label = self.label_de
-        if label != None and label != "":
-            return str(label)
-        else:
-            return str(self.name)
 
     def translation_languages(self) -> List[str]:
         """ Returns a list of translation languages, e.g. ["de"] """

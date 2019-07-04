@@ -49,6 +49,9 @@ class ModelMixin:
 
     """
 
+    # Lets views alter the language to be returned
+    language = "en"
+
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["name"]
         io_fields = ["name", "label", "description"]
@@ -109,20 +112,23 @@ class ModelMixin:
                 dictionary[field] = value
         return dictionary
 
-    def title(self):
+    def set_language(self, language: str = "en") -> None:
+        """ Set the current language of the data object. """
+
+        if language in ("en", "de"):
+            self.language = language
+
+    def title(self) -> str:
+        """ Returns a title representation using the "label" or "label_de" field,
+            with "name" field as fallback
         """
-        Default for the title. It first looks for a valid label, next for a
-        valid name, and otherwise returns an empty string.
-        """
-        try:
-            name = self.name
-        except AttributeError:
-            name = ""
-        try:
-            label = self.label
-        except AttributeError:
-            label = ""
-        return name if label == "" else label
+        label = self.label
+        if self.language == "de":
+            label = self.label_de
+        if label is not None and label != "":
+            return str(label)
+        else:
+            return str(self.name)
 
     def html_description(self):
         """
