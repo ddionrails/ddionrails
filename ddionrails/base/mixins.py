@@ -122,13 +122,14 @@ class ModelMixin:
         """ Returns a title representation using the "label" or "label_de" field,
             with "name" field as fallback
         """
+        name = getattr(self, "name", "")
         label = getattr(self, "label", "")
         if self.language == "de":
             label = getattr(self, "label_de", "")
         if label is not None and label != "":
             return str(label)
         else:
-            return str(self.name)
+            return str(name)
 
     def html_description(self):
         """
