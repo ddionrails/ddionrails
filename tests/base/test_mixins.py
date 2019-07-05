@@ -15,6 +15,24 @@ from ddionrails.concepts.models import Concept
 pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
 
 
+@pytest.fixture
+def admin_mixin():
+    """ An instantiated AdminMixin """
+    return AdminMixin()
+
+
+@pytest.fixture
+def importpath_mixin():
+    """ An instantiated ImportPathMixin """
+    return ImportPathMixin()
+
+
+@pytest.fixture
+def model_mixin():
+    """ An instantiated ModelMixin """
+    return ModelMixin()
+
+
 class MixinChild(ModelMixin, models.Model):
     name = models.CharField()
     label = models.CharField()
@@ -46,89 +64,122 @@ class TestModelMixin:
             "tests.base.test_mixins.MixinChild.objects.get", return_value=True
         ):
             dictionary = dict(name="some-name")
-            obj = MixinChild.get(dictionary)
-            assert obj is True
+            result = MixinChild.get(dictionary)
+            expected = True
+            assert expected is result
 
     @pytest.mark.django_db
     def test_get_method_failure(self):
         dictionary = dict(name="some-name")
         # This test case uses an actual subclass of ModelMixin
-        obj = Concept.get(dictionary)
-        assert obj is None
+        result = Concept.get(dictionary)
+        expected = None
+        assert expected is result
 
     def test_default_form_method(self):
         form = MixinChild.default_form()
         assert issubclass(form, ModelForm)
         assert list(form.base_fields.keys()) == ModelMixin.DOR.io_fields
 
-    def test_to_dict_method(self):
-        mixin = ModelMixin()
-        mixin.name = "some-name"
-        mixin.label = "some-label"
-        mixin.description = "some-description"
-        dictionary = mixin.to_dict()
+    def test_to_dict_method(self, model_mixin):
+        model_mixin.name = "some-name"
+        model_mixin.label = "some-label"
+        model_mixin.description = "some-description"
+        result = model_mixin.to_dict()
         expected = dict(
             name="some-name", label="some-label", description="some-description"
         )
-        assert dictionary == expected
+        assert expected == result
 
-    def test_title_method(self):
-        mixin = ModelMixin()
-        result = mixin.title()
-        assert result is ""
+    def test_title_method(self, model_mixin):
+        result = model_mixin.title()
+        expected = ""
+        assert expected is result
 
-    def test_title_method_with_name(self):
-        mixin = ModelMixin()
-        mixin.name = "some-name"
-        assert mixin.title() is mixin.name
+    def test_title_method_with_name(self, model_mixin):
+        model_mixin.name = "some-name"
+        result = model_mixin.title()
+        expected = model_mixin.name
+        assert expected == result
 
-    def test_title_method_with_label(self):
-        mixin = ModelMixin()
-        mixin.label = "some-label"
-        assert mixin.title() is mixin.label
+    def test_title_method_with_label(self, model_mixin):
+        model_mixin.label = "some-label"
+        expected = model_mixin.label
+        result = model_mixin.title()
+        assert expected == result
 
-    def test_html_description_method(self, mocker):
+    def test_title_method_with_label_de(self, model_mixin):
+        model_mixin.language = "de"
+        model_mixin.label_de = "some-german-label"
+        result = model_mixin.title()
+        expected = model_mixin.label_de
+        assert expected is result
+
+    def test_set_language_method(self, model_mixin):
+        model_mixin.set_language()
+        expected = "en"
+        result = model_mixin.language
+        assert expected == result
+
+    def test_set_language_method_de(self, model_mixin):
+        model_mixin.set_language("de")
+        expected = "de"
+        result = model_mixin.language
+        assert expected == result
+
+    def test_set_language_method_unsupported_language(self, model_mixin):
+        model_mixin.set_language("fr")
+        expected = "en"
+        result = model_mixin.language
+        assert expected == result
+
+    def test_title_de_method(self, question):
+        language = "de"
+        question.label_de = "german label"
+        question.set_language(language=language)
+        assert question.title() == question.label_de
+
+    def test_title_de_method_without_label(self, question):
+        language = "de"
+        question.label_de = ""
+        question.set_language(language=language)
+        assert question.title() == question.name
+
+    def test_html_description_method(self, mocker, model_mixin):
 
         with mocker.patch("ddionrails.base.mixins.render_markdown"):
-            mixin = ModelMixin()
-            mixin.description = "some-description"
-            mixin.html_description()
+            model_mixin.description = "some-description"
+            model_mixin.html_description()
             ddionrails.base.mixins.render_markdown.assert_called_once()
 
-    def test_html_description_method_without_description(self):
-        mixin = ModelMixin()
-        result = mixin.html_description()
-        assert result == ""
+    def test_html_description_method_without_description(self, model_mixin):
+        result = model_mixin.html_description()
+        expected = ""
+        assert expected == result
 
-    def test_string_method_single_id_field(self):
-        mixin = ModelMixin()
-        mixin.name = "some-name"
-        assert mixin.name == str(mixin)
+    def test_string_method_single_id_field(self, model_mixin):
+        model_mixin.name = "some-name"
+        expected = model_mixin.name
+        result = str(model_mixin)
+        assert expected == result
 
-    def test_string_method_multiple_id_field(self):
-        mixin = ModelMixin()
-        mixin.DOR.id_fields = ["id1", "id2"]
-        mixin.id1 = "name-1"
-        mixin.id2 = "name-2"
-        expected = f"{mixin.id1}/{mixin.id2}"
-        assert expected == str(mixin)
-
-
-class TestImportPathMixin:
-    def test_import_path_method(self, settings):
-        mixin = ImportPathMixin()
-        mixin.name = "name"
-        result = mixin.import_path()
-        expected = settings.IMPORT_REPO_PATH.joinpath(
-            mixin.name, settings.IMPORT_SUB_DIRECTORY
-        )
+    def test_string_method_multiple_id_field(self, model_mixin):
+        model_mixin.DOR.id_fields = ["id1", "id2"]
+        model_mixin.id1 = "name-1"
+        model_mixin.id2 = "name-2"
+        expected = f"{model_mixin.id1}/{model_mixin.id2}"
+        result = str(model_mixin)
         assert expected == result
 
 
-@pytest.fixture
-def admin_mixin():
-    """ An instantiated admin mixin"""
-    return AdminMixin()
+class TestImportPathMixin:
+    def test_import_path_method(self, importpath_mixin, settings):
+        importpath_mixin.name = "name"
+        result = importpath_mixin.import_path()
+        expected = settings.IMPORT_REPO_PATH.joinpath(
+            importpath_mixin.name, settings.IMPORT_SUB_DIRECTORY
+        )
+        assert expected == result
 
 
 class TestAdminMixin:

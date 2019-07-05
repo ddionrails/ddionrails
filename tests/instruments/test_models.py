@@ -108,13 +108,6 @@ class TestQuestionModel:
         assert expected == result.count()
         assert concept == result.first()
 
-    def test_title_method(self, question):
-        assert question.title() == question.label
-
-    def test_title_method_without_label(self, question):
-        question.label = ""
-        assert question.title() == question.name
-
     def test_translation_languages_method(self, question):
         question.items = [{"text_de": "German text"}]
         result = question.translation_languages()

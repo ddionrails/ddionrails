@@ -13,11 +13,7 @@
   <tbody>
     {% for variable in variables %}
     <tr>
-      {% if language == "de" %}
-      <td>{{ variable.title_de }}</td>
-      {% else %}
-      <td>{{ variable.title }}</td>
-      {% endif %}
+       <td>{{ variable.title }}</td>
       <td><a href="{{ variable }}">{{ variable.name }}</a></td>
       <td><a href="{{ variable.dataset }}">{{ variable.dataset.name }}</a></td>
     </tr>

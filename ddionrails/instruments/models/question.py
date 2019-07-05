@@ -179,7 +179,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
                     result[study.name][period.name] = list()
             for question in combined_set:
                 result[question.instrument.study.name][
-                    question.get_period(id="name", default="no period")
+                    question.get_period(period_id="name", default="no period")
                 ].append(question)
             return result
         return combined_set
@@ -191,22 +191,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
             their relation is defined in ConceptQuestion.
         """
         return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
-
-    def title(self):
-        if self.label != None and self.label != "":
-            return self.label
-        try:
-            return self.items.first().title()
-        except:
-            return self.name
-
-    def title_de(self):
-        if self.label_de != None and self.label_de != "":
-            return self.label
-        try:
-            return self.items.first().title_de()
-        except:
-            return self.name
 
     def translation_languages(self) -> List[str]:
         """ Returns a list of translation languages, e.g. ["de"] """

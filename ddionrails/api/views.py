@@ -95,10 +95,18 @@ def concept_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        context = dict(variables=variable_set.all(), language=language)
+        _variables = []
+        for variable in variable_set.all():
+            variable.set_language(language)
+            _variables.append(variable)
+        context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        context = dict(questions=question_set.all(), language=language)
+        _questions = []
+        for question in question_set.all():
+            question.set_language(language)
+            _questions.append(question)
+        context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
         result = dict(
@@ -137,10 +145,18 @@ def topic_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        context = dict(variables=variable_set.all(), language=language)
+        _variables = []
+        for variable in variable_set.all():
+            variable.set_language(language)
+            _variables.append(variable)
+        context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        context = dict(questions=question_set.all(), language=language)
+        _questions = []
+        for question in question_set.all():
+            question.set_language(language)
+            _questions.append(question)
+        context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
         result = dict(
