@@ -364,14 +364,6 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         """ Returns True if the variable has categories """
         return len(self.categories) > 0
 
-    def title(self):
-        return self.label if self.label != "" else self.name
-
-    def title_de(self):
-        if self.label_de != "" and self.label_de is not None:
-            return self.label_de
-        return self.title()
-
     def to_dict(self) -> Dict:
         """ Returns a dictionary representation of the Variable object """
         return dict(
@@ -385,15 +377,20 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
     def to_topic_dict(self, language="en") -> Dict:
         """ Returns a topic dictionary representation of the Variable object """
-        if language == "de":
-            title = self.label_de if self.label_de != "" else self.title()
-        else:
-            title = self.title()
+
+        self.set_language(language)
+
+        # A variable might not have a related concept
+        try:
+            concept_key = f"concept_{self.concept.name}"
+        except AttributeError:
+            concept_key = None
+
         return dict(
             key=f"variable_{self.id}",
             name=self.name,
-            title=title,
-            concept_key=f"concept_{self.concept.name}s",
+            title=self.title(),
+            concept_key=concept_key,
             type="variable",
         )
 

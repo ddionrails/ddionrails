@@ -142,6 +142,29 @@ class TestVariableModel:
         assert result["scale"] == variable.scale
         assert result["uni"] == variable.categories
 
+    def test_to_topic_dict(self, variable):
+        result = variable.to_topic_dict()
+        expected = dict(
+            key=f"variable_{variable.id}",
+            name=variable.name,
+            title=variable.label,
+            concept_key=None,
+            type="variable",
+        )
+        assert expected == result
+
+    def test_to_topic_dict_de(self, variable):
+        result = variable.to_topic_dict("de")["title"]
+        expected = variable.label_de
+        assert expected == result
+
+    def test_to_topic_dict_concept(self, variable, concept):
+        variable.concept = concept
+        variable.save()
+        result = variable.to_topic_dict()["concept_key"]
+        expected = f"concept_{concept.name}"
+        assert expected == result
+
 
 class TestDatasetModel:
     def test_string_method(self, dataset):

@@ -95,7 +95,10 @@ def concept_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        context = dict(variables=variable_set.all(), language=language)
+        _variables = [
+            variable.set_language(language=language) for variable in variable_set.all()
+        ]
+        context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
         _questions = [
@@ -140,7 +143,10 @@ def topic_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        context = dict(variables=variable_set.all(), language=language)
+        _variables = [
+            variable.set_language(language=language) for variable in variable_set.all()
+        ]
+        context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
         _questions = [
