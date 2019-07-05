@@ -32,7 +32,5 @@ class ConceptQuestion(models.Model):
         help_text="Foreign key to concepts.Concept",
     )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("question", "concept")

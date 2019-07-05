@@ -94,9 +94,7 @@ class Instrument(ModelMixin, models.Model):
             update_fields=update_fields,
         )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
         ordering = ("study", "name")
 
@@ -117,5 +115,6 @@ class Instrument(ModelMixin, models.Model):
 
     @staticmethod
     def layout_class() -> str:
-        """ TODO: What does this do? """
+        """ Returns the layout class (used in templates) """
+        # TODO: What does this do?
         return "instrument"
