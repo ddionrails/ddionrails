@@ -60,7 +60,8 @@ def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
 
     This command is used to update study metadata in ddionrails.
 
-    Args:
+    \b
+    Arguments:
         study_name: The name of a study (optional).
         entity: One or more entities to be updated (optional).
         local: Set this flag to suppress updating from GitHub (optional).
