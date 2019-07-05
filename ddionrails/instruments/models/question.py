@@ -179,7 +179,7 @@ class Question(ElasticMixin, DorMixin, models.Model):
                     result[study.name][period.name] = list()
             for question in combined_set:
                 result[question.instrument.study.name][
-                    question.get_period(id="name", default="no period")
+                    question.get_period(period_id="name", default="no period")
                 ].append(question)
             return result
         return combined_set
