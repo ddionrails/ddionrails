@@ -83,7 +83,7 @@ def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
     # if one or more entities are given, validate all are available
     manager = StudyImportManager(study)
     for single_entity in entity:
-        if single_entity not in manager.IMPORT_ORDER:
+        if single_entity not in manager.import_order:
             click.secho(f'Entity "{single_entity}" does not exist.', fg="red")
             exit(1)
 
