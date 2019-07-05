@@ -95,15 +95,17 @@ def concept_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        _variables = [
-            variable.set_language(language=language) for variable in variable_set.all()
-        ]
+        _variables = []
+        for variable in variable_set.all():
+            variable.set_language(language)
+            _variables.append(variable)
         context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        _questions = [
-            question.set_language(language=language) for question in question_set.all()
-        ]
+        _questions = []
+        for question in question_set.all():
+            question.set_language(language)
+            _questions.append(question)
         context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
@@ -143,15 +145,17 @@ def topic_by_study(
         request.GET.get("html", None) == "true"
         or request.GET.get("variable_html", None) == "true"
     ):
-        _variables = [
-            variable.set_language(language=language) for variable in variable_set.all()
-        ]
+        _variables = []
+        for variable in variable_set.all():
+            variable.set_language(language)
+            _variables.append(variable)
         context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
     elif request.GET.get("question_html", None) == "true":
-        _questions = [
-            question.set_language(language=language) for question in question_set.all()
-        ]
+        _questions = []
+        for question in question_set.all():
+            question.set_language(language)
+            _questions.append(question)
         context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
     else:
