@@ -19,7 +19,12 @@ from tests.concepts.factories import (
 )
 from tests.data.factories import DatasetFactory, TransformationFactory, VariableFactory
 from tests.factories import UserFactory
-from tests.instruments.factories import InstrumentFactory, QuestionFactory
+from tests.instruments.factories import (
+    ConceptQuestionFactory,
+    InstrumentFactory,
+    QuestionFactory,
+    QuestionVariableFactory,
+)
 from tests.publications.factories import PublicationFactory
 from tests.studies.factories import StudyFactory, TopicListFactory
 from tests.workspace.factories import BasketFactory
@@ -47,6 +52,12 @@ def concept(db):
     return ConceptFactory(
         name="some-concept", label="Some Concept", description="This is some concept"
     )
+
+
+@pytest.fixture
+def concept_question(db):  # pylint: disable=unused-argument,invalid-name
+    """ A concept_question in the database """
+    return ConceptQuestionFactory()
 
 
 @pytest.fixture
@@ -127,6 +138,12 @@ def question(db, request):
     if request.instance:
         request.instance.question = question
     return question
+
+
+@pytest.fixture
+def question_variable(db):  # pylint: disable=unused-argument,invalid-name
+    """ A question_variable in the database """
+    return QuestionVariableFactory()
 
 
 @pytest.fixture
