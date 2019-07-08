@@ -42,9 +42,18 @@ urlpatterns = [
     path(
         "topics/<str:study_name>/<str:language>/concept_<str:concept_name>",
         concept_by_study,
+        name="concept_by_study",
     ),
-    path("topics/<str:study_name>/<str:language>/topic_<str:topic_name>", topic_by_study),
-    path("topics/<str:study_name>/<str:language>/baskets", baskets_by_study_and_user),
+    path(
+        "topics/<str:study_name>/<str:language>/topic_<str:topic_name>",
+        topic_by_study,
+        name="topic_by_study",
+    ),
+    path(
+        "topics/<str:study_name>/<str:language>/baskets",
+        baskets_by_study_and_user,
+        name="baskets_by_study_and_user",
+    ),
     path(
         "topics/<str:study_name>/<str:language>/concept_<str:concept_name>/add_to_basket/<int:basket_id>",
         add_variables_by_concept,
