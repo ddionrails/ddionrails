@@ -43,7 +43,6 @@ urlpatterns = [
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
     path("workspace/", include("ddionrails.workspace.urls", namespace="workspace")),
     path("search/", angular_search),
-    path("search/", include("ddionrails.elastic.urls", namespace="elastic")),
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
