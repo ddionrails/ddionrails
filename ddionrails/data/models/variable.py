@@ -283,7 +283,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
                 result[study.name][period.name] = list()
         for target_variable in target_variables:
             study_name = target_variable.dataset.study.name
-            period_name = target_variable.get_period(id="name", default="no period")
+            period_name = target_variable.get_period(period_id="name", default="no period")
             if object_type == "variable":
                 result[study_name][period_name].append(target_variable)
             elif object_type == "question":
@@ -317,7 +317,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
                 result[study.name][period.name] = list()
         for origin_variable in origin_variables:
             study_name = origin_variable.dataset.study.name
-            period_name = origin_variable.get_period(id="name", default="no period")
+            period_name = origin_variable.get_period(period_id="name", default="no period")
             if object_type == "variable":
                 result[study_name][period_name].append(origin_variable)
             elif object_type == "question":
