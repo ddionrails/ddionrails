@@ -55,8 +55,13 @@ class Question(ElasticMixin, DorMixin, models.Model):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the topic (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the question (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the question (Markdown, German)",
     )
     sort_id = models.IntegerField(
         blank=True,

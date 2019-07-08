@@ -52,8 +52,13 @@ class Topic(models.Model, ModelMixin):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the topic (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the topic (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the topic (Markdown, German)",
     )
 
     #############
@@ -141,8 +146,13 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the concept (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the concept (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the concept (Markdown, German)",
     )
 
     #############
@@ -340,8 +350,13 @@ class AnalysisUnit(models.Model, ModelMixin):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the analysis unit (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the analysis unit (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the analysis unit (Markdown, German)",
     )
 
     def __str__(self) -> str:
@@ -410,8 +425,13 @@ class ConceptualDataset(models.Model, ModelMixin):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the conceptual dataset (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the conceptual dataset (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the conceptual dataset (Markdown, German)",
     )
 
     def __str__(self) -> str:

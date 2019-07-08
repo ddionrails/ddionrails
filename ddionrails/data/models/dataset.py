@@ -47,12 +47,17 @@ class Dataset(ModelMixin, models.Model):
         blank=True,
         null=True,
         verbose_name="Label (German)",
-        help_text="Label of the dataset (German",
+        help_text="Label of the dataset (German)",
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the dataset (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the dataset (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the dataset (Markdown, German)",
     )
     boost = models.FloatField(
         blank=True,

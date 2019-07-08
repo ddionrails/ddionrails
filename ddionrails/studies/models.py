@@ -76,7 +76,14 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
         help_text="Label of the study (German)",
     )
     description = models.TextField(
-        blank=True, help_text="Description of the study (Markdown)"
+        blank=True,
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the study (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the study (Markdown, German)",
     )
     doi = models.CharField(
         max_length=255,
