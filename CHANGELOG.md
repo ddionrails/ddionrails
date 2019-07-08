@@ -54,7 +54,7 @@ Older versions are not not part of this Project.
 
 ## [3.2.0] - 2019-05-29
 
-## Added
+### Added
 
 - Management commands to work with the elasticsearch index
 
