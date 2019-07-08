@@ -137,7 +137,6 @@ class TestDatasetJsonImport:
 
     def test_import_variable_method(self, mocker, dataset_json_importer, dataset):
         assert 0 == Variable.objects.count()
-        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
         var = dict(
             study="some-study",
             dataset="some-dataset",
@@ -180,13 +179,11 @@ class TestDatasetJsonImport:
         )
         assert "-6" == variable.categories["values"][0]
         assert True is variable.categories["missings"][0]
-        mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_without_statistics(
         self, mocker, dataset_json_importer, dataset
     ):
         assert 0 == Variable.objects.count()
-        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
         var = dict(
             study="some-study",
             dataset="some-dataset",
@@ -199,13 +196,11 @@ class TestDatasetJsonImport:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert dict() == variable.statistics
-        mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_without_categories(
         self, mocker, dataset_json_importer, dataset
     ):
         assert 0 == Variable.objects.count()
-        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
         var = dict(
             study="some-study",
             dataset="some-dataset",
@@ -221,12 +216,10 @@ class TestDatasetJsonImport:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert [] == variable.categories
-        mocked_set_elastic.assert_called_once()
 
     def test_import_variable_method_with_uni_key(
         self, mocker, dataset_json_importer, dataset
     ):
-        mocked_set_elastic = mocker.patch.object(Variable, "set_elastic")
         var = dict(
             study="some-study",
             dataset="some-dataset",
@@ -238,7 +231,6 @@ class TestDatasetJsonImport:
         dataset_json_importer._import_variable(
             var, dataset, sort_id
         )  # pylint: disable=protected-access
-        mocked_set_elastic.assert_called_once()
 
 
 class TestTransformationImport:

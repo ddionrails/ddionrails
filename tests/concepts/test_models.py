@@ -5,8 +5,7 @@
 
 import pytest
 
-from ddionrails.concepts.models import Concept, Topic
-from ddionrails.elastic.mixins import ModelMixin
+from ddionrails.concepts.models import Topic
 
 from .factories import TopicFactory
 
@@ -19,27 +18,6 @@ class TestConceptModel:
 
     def test_get_absolute_url_method(self, concept):
         assert concept.get_absolute_url() == "/concept/" + concept.name
-
-    def test_index_method_with_concept_with_label(self, mocker, concept):
-        mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
-        concept.index()
-        ModelMixin.set_elastic.assert_called_once()  # pylint: disable=no-member
-
-    def test_index_method_with_concept_without_label(self, mocker, concept_without_label):
-        mocker.patch("ddionrails.elastic.mixins.ModelMixin.set_elastic")
-        concept_without_label.index()
-        ModelMixin.set_elastic.assert_called_once()  # pylint: disable=no-member
-
-    @pytest.mark.django_db
-    def test_index_all_method_with_no_concepts(self):
-        Concept.index_all()
-
-    def test_index_all_method_with_one_concept(
-        self, mocker, concept
-    ):  # pylint: disable=unused-argument
-        mocker.patch("ddionrails.concepts.models.Concept.index")
-        Concept.index_all()
-        Concept.index.assert_called_once()  # pylint: disable=no-member
 
 
 class TestAnalysisUnitModel:

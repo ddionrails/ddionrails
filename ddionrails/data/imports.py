@@ -58,15 +58,6 @@ class DatasetJsonImport(imports.Import):
                 variable.categories = var["categories"]
         variable.scale = var.get("scale", "")
         variable.save()
-        # remove statistics and scale before indexing into elasticsearch
-        var.pop("statistics", None)
-        var.pop("scale", None)
-        # Used for searching right now
-        # var.pop("categories", None)
-        var["namespace"] = self.study.name
-        var["dataset"] = dataset.name
-        var["boost"] = dataset.boost
-        variable.set_elastic(var)
 
 
 class DatasetImport(imports.CSVImport):
