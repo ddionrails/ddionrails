@@ -56,6 +56,11 @@ class TestVariableModel:
         expected = variable.concept.id
         assert expected == result
 
+    def test_get_concept_default(self, variable):
+        result = variable.get_concept(default="no-concept", concept_id=True)
+        expected = "no-concept"
+        assert expected == result
+
     def test_get_period(self, variable):
         result = variable.get_period()
         expected = variable.dataset.period
@@ -74,9 +79,9 @@ class TestVariableModel:
     def test_get_period_default(self, variable):
         variable.dataset.period = None
         variable.dataset.save()
-        result = variable.get_period()
-        expected = None
-        assert expected is result
+        result = variable.get_period(default="no-period", period_id="name")
+        expected = "no-period"
+        assert expected == result
 
     def test_get_categories_method_without_categories(self, variable):
         variable.categories = []

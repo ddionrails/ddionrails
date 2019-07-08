@@ -194,7 +194,11 @@ def baskets_by_study_and_user(
 def add_variables_by_concept(
     request, study_name, language, concept_name, basket_id
 ):  # pylint: disable=unused-argument
+    """ Add variables to a basket based on a concept_name """
+
+    # make sure everything is found in the database
     concept = get_object_or_404(Concept, name=concept_name)
+    _ = get_object_or_404(Basket, pk=basket_id)
     variable_set = Variable.objects.filter(concept_id=concept.id)
     for variable in variable_set:
         try:
@@ -210,9 +214,12 @@ def add_variables_by_concept(
 def add_variable_by_id(
     request, study_name, language, variable_id, basket_id
 ):  # pylint: disable=unused-argument
-    variable = get_object_or_404(Variable, pk=variable_id)
-    basket = get_object_or_404(Basket, pk=basket_id)
-    BasketVariable.objects.get_or_create(basket_id=basket.id, variable_id=variable.id)
+    """ Add a variable to a basket """
+
+    # make sure everything is found in the database
+    _ = get_object_or_404(Variable, pk=variable_id)
+    _ = get_object_or_404(Basket, pk=basket_id)
+    BasketVariable.objects.get_or_create(basket_id=basket_id, variable_id=variable_id)
     return HttpResponse("DONE")
 
 
@@ -220,8 +227,12 @@ def add_variable_by_id(
 def add_variables_by_topic(
     request, study_name, language, topic_name, basket_id
 ):  # pylint: disable=unused-argument
+    """ Add variables to a basket based on a topic_name """
+
+    # make sure everything is found in the database
     study = get_object_or_404(Study, name=study_name)
     topic = get_object_or_404(Topic, name=topic_name, study=study)
+    _ = get_object_or_404(Basket, pk=basket_id)
     topic_id_list = [topic.id for topic in Topic.get_children(topic.id)]
     topic_id_list.append(topic.id)
     variable_set = Variable.objects.filter(concept__topics__id__in=topic_id_list)

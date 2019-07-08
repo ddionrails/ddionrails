@@ -87,10 +87,10 @@ def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
             click.secho(f'Entity "{single_entity}" does not exist.', fg="red")
             exit(1)
 
-    # if filename is given, validate that entity is datasets.json or instruments
-    if filename and entity[0] not in ("datasets.json", "instruments"):
+    # if filename is given, validate that entity is "datasets.json" or "instruments"
+    if filename and entity[0] not in {"datasets.json", "instruments"}:
         click.secho(
-            f'Support for single file import not available for entity "{entity}".',
+            f'Support for single file import not available for entity "{entity[0]}".',
             fg="red",
         )
         exit(1)
