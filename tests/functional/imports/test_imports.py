@@ -17,6 +17,7 @@ from ddionrails.concepts.models import (
     Topic,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
+from ddionrails.imports.management.commands import index
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models import (
     ConceptQuestion,
@@ -64,8 +65,6 @@ class TestStudyImportManager:
         self, study_import_manager, elasticsearch_client
     ):  # pylint: disable=unused-argument
         study_import_manager.import_single_entity("study")
-        # wait for indexing to complete
-        time.sleep(1)
         assert 1 == Study.objects.count()
         # refresh
         study = Study.objects.first()
@@ -110,7 +109,7 @@ class TestStudyImportManager:
         assert "Some concept" == concept.label
         assert topic == concept.topics.first()
 
-        concept.index()
+        index.populate()
         # wait for indexing to complete
         time.sleep(1)
         search = Search(using=elasticsearch_client).doc_type("concept")
@@ -152,14 +151,16 @@ class TestStudyImportManager:
         assert 0 == Instrument.objects.count()
         assert 0 == Question.objects.count()
         study_import_manager.import_single_entity("instruments")
-        # wait for indexing to complete
-        time.sleep(1)
         assert 1 == Instrument.objects.count()
         assert 1 == Question.objects.count()
         instrument = Instrument.objects.first()
         assert "some-instrument" == instrument.name
         assert study == instrument.study
         assert period == instrument.period
+
+        index.populate()
+        # wait for indexing to complete
+        time.sleep(1)
 
         search = Search(using=elasticsearch_client).doc_type("question")
         assert 1 == search.count()
@@ -175,8 +176,6 @@ class TestStudyImportManager:
         assert 0 == Dataset.objects.count()
         assert 0 == Variable.objects.count()
         study_import_manager.import_single_entity("datasets.json")
-        # wait for indexing to complete
-        time.sleep(1)
         assert 1 == Dataset.objects.count()
         assert 2 == Variable.objects.count()
         dataset = Dataset.objects.first()
@@ -188,6 +187,10 @@ class TestStudyImportManager:
 
         assert not created
         assert name == variable.name
+
+        index.populate()
+        # wait for indexing to complete
+        time.sleep(1)
 
         search = Search(using=elasticsearch_client).doc_type("variable")
         assert 2 == search.count()
@@ -249,6 +252,8 @@ class TestStudyImportManager:
     def test_import_publications(self, study_import_manager, elasticsearch_client, study):
         assert 0 == Publication.objects.count()
         study_import_manager.import_single_entity("publications")
+
+        index.populate()
         # wait for indexing to complete
         time.sleep(1)
 
@@ -281,6 +286,7 @@ class TestStudyImportManager:
         assert 0 == ConceptQuestion.objects.count()
 
         study_import_manager.import_all_entities()
+        index.populate()
         time.sleep(1)
 
         assert 1 == Concept.objects.count()
@@ -295,8 +301,7 @@ class TestStudyImportManager:
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        # Concepts will be indexed when mgmt command "upgrade" is called
-        # s = Search(using=elasticsearch_client).doc_type("concept")
-        # assert 1 == s.count()
+        assert Search(using=elasticsearch_client).doc_type("concept").count() == 1
         assert Search(using=elasticsearch_client).doc_type("variable").count() == 2
         assert Search(using=elasticsearch_client).doc_type("publication").count() == 1
+        assert Search(using=elasticsearch_client).doc_type("question").count() == 1

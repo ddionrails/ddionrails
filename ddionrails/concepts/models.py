@@ -200,31 +200,6 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         """ Returns a canonical URL for the model using the "name" field """
         return reverse("concepts:concept_detail_name", kwargs={"concept_name": self.name})
 
-    def index(self) -> None:
-        """ Indexes the concept in Elasticsearch (name, label and related study) """
-        if self.label and self.label != "":
-            label = self.label
-        else:
-            try:
-                label = self.variables.first().label
-            except AttributeError:
-                label = ""
-        study = list(
-            {
-                s.name
-                for s in Study.objects.filter(
-                    datasets__variables__concept_id=self.id
-                ).all()
-            }
-        )
-        self.set_elastic(dict(name=self.name, label=label, study=study))
-
-    @classmethod
-    def index_all(cls) -> None:
-        """ Indexes all concepts in Elasticsearch using the index method """
-        for concept in cls.objects.all():
-            concept.index()
-
 
 class Period(models.Model, ModelMixin):
     """

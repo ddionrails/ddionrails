@@ -25,12 +25,7 @@ class PublicationImport(imports.CSVImport):
         return element
 
     def import_element(self, element: OrderedDict) -> Publication:
-        import_object = super().import_element(element)
-        try:
-            import_object.set_elastic(import_object.to_elastic_dict())
-        except:
-            logger.error(f'Failed to import publication "{element["name"]}"')
-        return import_object
+        return super().import_element(element)
 
 
 class AttachmentImport(imports.CSVImport):

@@ -50,9 +50,6 @@ class InstrumentImport(imports.Import):
             question.label_de = q.get("label_de", q.get("text_de", ""))
             question.items = q.get("items", list)
             question.save()
-            q["namespace"] = self.study.name
-            q["instrument"] = instrument.name
-            question.set_elastic(q)
         instrument.label = content.get("label", "")
         instrument.description = content.get("description", "")
         instrument.save()
