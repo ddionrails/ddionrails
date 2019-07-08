@@ -50,8 +50,13 @@ class Instrument(ModelMixin, models.Model):
     )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the topic (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the instrument (Markdown, English)",
+    )
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the instrument (Markdown, German)",
     )
 
     #############
