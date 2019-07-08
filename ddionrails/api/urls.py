@@ -48,13 +48,16 @@ urlpatterns = [
     path(
         "topics/<str:study_name>/<str:language>/concept_<str:concept_name>/add_to_basket/<int:basket_id>",
         add_variables_by_concept,
+        name="add_variables_by_concept",
     ),
     path(
         "topics/<str:study_name>/<str:language>/topic_<str:topic_name>/add_to_basket/<int:basket_id>",
         add_variables_by_topic,
+        name="add_variables_by_topic",
     ),
     path(
-        "topics/<str:study_name>/<str:language>/variable_<int:variable_id>/add_to_basket/<int:basket_id>",
+        "topics/<str:study_name>/<str:language>/variable_<uuid:variable_id>/add_to_basket/<int:basket_id>",
         add_variable_by_id,
+        name="add_variable_by_id",
     ),
 ]

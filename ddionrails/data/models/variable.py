@@ -194,14 +194,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
 
         return []
 
-    def get_study(self, default=None, study_id=False):
-        """ Returns the related study_id | Study instance | a default """
-        try:
-            if study_id:
-                return self.dataset.study.id
-            return self.dataset.study
-        except:
-            return default
+    def get_study(self, study_id=False):
+        """ Returns the related study_id | Study instance """
+        if study_id:
+            return self.dataset.study.id
+        return self.dataset.study
 
     def get_concept(self, default=None, concept_id=False):
         """ Returns the related concept_id | Concept instance | a default """
@@ -209,7 +206,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             if concept_id:
                 return self.concept.id
             return self.concept
-        except:
+        except AttributeError:
             return default
 
     def get_period(self, default=None, period_id=False):
@@ -223,7 +220,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             if period_id == "name":
                 return period.name
             return period
-        except:
+        except AttributeError:
             return default
 
     def get_related_variables(self):

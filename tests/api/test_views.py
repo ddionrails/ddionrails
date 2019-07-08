@@ -6,6 +6,7 @@
 import pytest
 from django.urls import reverse
 
+from ddionrails.workspace.models import BasketVariable
 from tests import status
 
 
@@ -71,6 +72,191 @@ class TestObjectRedirectView:
         assert status.HTTP_200_OK == response.status_code
         expected = "/"
         assert expected == response.redirect_chain[-1][0]
+
+
+class TestAddVariablesByConceptView:
+    def test_with_valid_name_and_id(self, study, client, basket, concept, variable):
+        assert 0 == BasketVariable.objects.count()
+        variable.concept = concept
+        variable.save()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_concept",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "concept_name": concept.name,
+                "basket_id": basket.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_200_OK == response.status_code
+        assert 1 == BasketVariable.objects.count()
+        basket_variable = BasketVariable.objects.first()
+        assert variable == basket_variable.variable
+        assert basket == basket_variable.basket
+
+    def test_with_invalid_name(self, study, client, basket, variable):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_concept",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "concept_name": "concept-not-in-db",
+                "basket_id": basket.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+    def test_with_invalid_id(self, study, client, concept):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_concept",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "concept_name": concept.name,
+                "basket_id": 1,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+
+class TestAddVariablesByTopicView:
+    def test_with_valid_name_and_id(
+        self, study, client, basket, topic, concept, variable
+    ):
+        # set up relations topic -> concept -> variable
+        concept.topics.add(topic)
+        concept.save()
+        variable.concept = concept
+        variable.save()
+
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_topic",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "topic_name": topic.name,
+                "basket_id": basket.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_200_OK == response.status_code
+        assert 1 == BasketVariable.objects.count()
+        basket_variable = BasketVariable.objects.first()
+        assert variable == basket_variable.variable
+        assert basket == basket_variable.basket
+
+    def test_with_invalid_study_name(self, client, basket, topic):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_topic",
+            kwargs={
+                "study_name": "study-not-in-db",
+                "language": language,
+                "topic_name": topic.name,
+                "basket_id": basket.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+    def test_with_invalid_topic_name(self, study, client, basket, topic):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_topic",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "topic_name": "topic-not-in-db",
+                "basket_id": basket.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+    def test_with_invalid_id(self, study, client, topic):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variables_by_topic",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "topic_name": topic.name,
+                "basket_id": 1,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+
+class TestAddVariableByIdView:
+    def test_with_valid_ids(self, study, basket, variable, client):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variable_by_id",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "basket_id": basket.id,
+                "variable_id": variable.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_200_OK == response.status_code
+        assert 1 == BasketVariable.objects.count()
+        basket_variable = BasketVariable.objects.first()
+        assert variable == basket_variable.variable
+        assert basket == basket_variable.basket
+
+    def test_with_invalid_basket_id(self, study, variable, client):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variable_by_id",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "basket_id": 1,
+                "variable_id": variable.id,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
+
+    def test_with_invalid_variable_id(self, study, basket, client, uuid_identifier):
+        assert 0 == BasketVariable.objects.count()
+        language = "en"
+        url = reverse(
+            "api:add_variable_by_id",
+            kwargs={
+                "study_name": study.name,
+                "language": language,
+                "basket_id": basket.id,
+                "variable_id": uuid_identifier,
+            },
+        )
+        response = client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+        assert 0 == BasketVariable.objects.count()
 
 
 @pytest.mark.parametrize(

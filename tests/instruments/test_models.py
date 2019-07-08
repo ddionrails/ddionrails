@@ -88,9 +88,9 @@ class TestQuestionModel:
     def test_get_period_default(self, question):
         question.instrument.period = None
         question.instrument.save()
-        result = question.get_period()
-        expected = None
-        assert expected is result
+        result = question.get_period(default="no-period", period_id="name")
+        expected = "no-period"
+        assert expected == result
 
     def test_get_concepts_method_no_concept(self, question):
         """ Test Question.get_concepts() without concept-question-relation """
