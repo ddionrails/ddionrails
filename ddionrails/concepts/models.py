@@ -252,13 +252,21 @@ class Period(models.Model, ModelMixin):
         verbose_name="Label (English)",
         help_text="Label of the period (English)",
     )
+    label_de = models.CharField(
+        max_length=255,
+        blank=True,
+        verbose_name="Label (German)",
+        help_text="Label of the period (German)",
+    )
     description = models.TextField(
         blank=True,
-        verbose_name="Description (Markdown)",
-        help_text="Description of the period (Markdown)",
+        verbose_name="Description (Markdown, English)",
+        help_text="Description of the period (Markdown, English)",
     )
-    definition = models.CharField(
-        max_length=255, blank=True, help_text="Definition of the period"
+    description_de = models.TextField(
+        blank=True,
+        verbose_name="Description (Markdown, German)",
+        help_text="Description of the period (Markdown, German)",
     )
 
     #############
@@ -293,10 +301,6 @@ class Period(models.Model, ModelMixin):
             using=using,
             update_fields=update_fields,
         )
-
-    def is_range(self) -> bool:
-        """ Returns if "definition" defines a range """
-        return ":" in self.definition
 
 
 class AnalysisUnit(models.Model, ModelMixin):

@@ -56,12 +56,6 @@ class TestPeriodModel:
     def test_string_method(self, period):
         assert str(period) == "/period/" + period.name
 
-    def test_is_range_method_with_range(self, period_with_range_definition):
-        assert period_with_range_definition.is_range() is True
-
-    def test_is_range_method_without_range(self, period):
-        assert period.is_range() is False
-
 
 class TestTopicModel:
     def test_get_children_method(self, topic):

@@ -39,11 +39,7 @@ def analysis_unit_without_label(db):  # pylint: disable=invalid-name,unused-argu
 @pytest.fixture
 def period_with_range_definition(db):  # pylint: disable=invalid-name,unused-argument
     """ A period with a range period definition in the database """
-    return PeriodFactory(
-        name="some-period",
-        description="This is some period",
-        definition="2010-01:2018-12",
-    )
+    return PeriodFactory(name="some-period", description="This is some period")
 
 
 @pytest.fixture
@@ -90,7 +86,6 @@ def valid_period_data(study):
         period_name="some-period",
         label="Some Period",
         description="This is some period",
-        definition="2018",
     )
 
 

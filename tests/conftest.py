@@ -101,10 +101,7 @@ def instrument(db):
 def period(db):
     """ A period in the database """
     return PeriodFactory(
-        name="some-period",
-        label="Some period",
-        description="This is some period",
-        definition="2018",
+        name="some-period", label="Some period", description="This is some period"
     )
 
 
