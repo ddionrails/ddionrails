@@ -26,7 +26,7 @@ class DatasetJsonImport(imports.Import):
         self._import_dataset(self.name, self.content)
 
     def _import_dataset(self, name, content):
-        import_dict = dict(study=self.study, name=name.lower())
+        import_dict = dict(study=self.study, name=name)
         dataset = Dataset.get_or_create(import_dict)
         sort_id = 0
         if content.__class__ == list:
@@ -84,9 +84,7 @@ class DatasetImport(imports.CSVImport):
             logger.error(f'Failed to import dataset "{element["dataset_name"]}"')
 
     def _import_dataset_links(self, element: OrderedDict):
-        dataset = Dataset.objects.get(
-            study=self.study, name=element["dataset_name"].lower()
-        )
+        dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
         period_name = element.get("period_name", "none")
         dataset.period = Period.objects.get_or_create(study=self.study, name=period_name)[
             0
@@ -124,9 +122,7 @@ class VariableImport(imports.CSVImport):
             )
 
     def _import_variable_links(self, element):
-        dataset = Dataset.objects.get(
-            study=self.study, name=element["dataset_name"].lower()
-        )
+        dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
         variable = Variable.objects.get(dataset=dataset, name=element["variable_name"])
         concept_name = element.get("concept_name", "").lower()
         if concept_name != "":

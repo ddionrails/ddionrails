@@ -8,7 +8,6 @@ import filer.fields.image
 from django.conf import settings
 from django.db import migrations, models
 
-import config.validators
 import ddionrails.base.mixins
 import ddionrails.elastic.mixins
 
@@ -30,10 +29,7 @@ class Migration(migrations.Migration):
                 (
                     "name",
                     models.CharField(
-                        db_index=True,
-                        help_text="Name of the dataset (Lowercase)",
-                        max_length=255,
-                        validators=[config.validators.validate_lowercase],
+                        db_index=True, help_text="Name of the dataset", max_length=255
                     ),
                 ),
                 (

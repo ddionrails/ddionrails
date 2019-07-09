@@ -6,7 +6,6 @@ import uuid
 from django.db import models
 from django.urls import reverse
 
-from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.studies.models import Study
@@ -31,10 +30,7 @@ class Dataset(ModelMixin, models.Model):
     )
 
     name = models.CharField(
-        max_length=255,
-        validators=[validate_lowercase],
-        db_index=True,
-        help_text="Name of the dataset (Lowercase)",
+        max_length=255, db_index=True, help_text="Name of the dataset"
     )
     label = models.CharField(
         max_length=255,
@@ -108,14 +104,10 @@ class Dataset(ModelMixin, models.Model):
             update_fields=update_fields,
         )
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
 
     class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
-        """ ddionrails' metadata options """
-
         id_fields = ["study", "name"]
 
     def __str__(self) -> str:

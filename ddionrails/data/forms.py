@@ -26,8 +26,7 @@ class DatasetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data["boost"] = float(self.data["boost"])
-        self.data["cs_name"] = self.data["dataset_name"]
-        self.data["name"] = self.data["dataset_name"].lower()
+        self.data["name"] = self.data["dataset_name"]
 
 
 class VariableForm(forms.ModelForm):
@@ -47,7 +46,7 @@ class VariableForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.data["name"] = self.data["variable_name"]
         self.data["dataset"] = Dataset.get_or_create(
-            dict(name=self.data["dataset_name"].lower(), study=self.data["study_object"])
+            dict(name=self.data["dataset_name"], study=self.data["study_object"])
         ).pk
         if self.data.get("concept_name", "") == "":
             self.data["concept"] = None
