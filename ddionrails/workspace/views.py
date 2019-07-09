@@ -3,6 +3,7 @@
 """ Views for ddionrails.workspace app """
 
 import json
+import uuid
 from collections import OrderedDict
 
 from django.contrib import messages
@@ -10,6 +11,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from django.forms.widgets import HiddenInput
 from django.http import HttpResponse
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ddionrails.concepts.models import Concept
@@ -24,11 +26,10 @@ def own_basket_only(view):
     """Decorator for basket-related views."""
 
     def wrapper(request: WSGIRequest, basket_id: int, *args, **kwargs):
-        basket = get_object_or_404(Basket, pk=basket_id)
+        basket = get_object_or_404(Basket, id=basket_id)
         if basket.user == request.user:
             return view(request, basket_id, *args, **kwargs)
-        else:
-            raise PermissionDenied
+        raise PermissionDenied
 
     return wrapper
 
@@ -37,11 +38,11 @@ def own_basket_only(view):
 
 # request is a required parameter
 def account_overview(request: WSGIRequest):  # pylint: disable=unused-argument
+    """ Account overview """
     if request.user.is_authenticated:
         context = dict(user=request.user)
         return render(request, "workspace/account.html", context=context)
-    else:
-        return HttpResponse("Unauthorized", status=401)
+    return HttpResponse("Unauthorized", status=401)
 
 
 # request is a required parameter
@@ -57,20 +58,14 @@ def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
 
 # request is a required parameter
 @own_basket_only
-def render_script(request, basket_id, script_name):  # pylint: disable=unused-argument
-    basket = get_object_or_404(Basket, pk=basket_id)
-    context = dict(
-        basket=basket, variables=basket.variables.all(), script_name=script_name
-    )
-    template = "scripts/%s.html" % script_name
-    return render(request, template, context=context)
-
-
-# request is a required parameter
-@own_basket_only
 def add_variable(
-    request: WSGIRequest, basket_id: int, variable_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest, basket_id: int, variable_id: uuid.UUID
+) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    """ Add a variable to a basket """
+
+    # make sure everything is found in the database
+    _ = get_object_or_404(Basket, id=basket_id)
+    _ = get_object_or_404(Variable, id=variable_id)
     try:
         basket_variable = BasketVariable(basket_id=basket_id, variable_id=variable_id)
         basket_variable.clean()
@@ -83,23 +78,22 @@ def add_variable(
 # request is a required parameter
 @own_basket_only
 def remove_variable(
-    request: WSGIRequest, basket_id: int, variable_id: int
-):  # pylint: disable=unused-argument
-    try:
-        relation = get_object_or_404(
-            BasketVariable, basket_id=basket_id, variable_id=variable_id
-        )
-        relation.delete()
-    except:
-        pass
+    request: WSGIRequest, basket_id: int, variable_id: uuid.UUID
+) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    """ Remove a variable from a basket """
+    relation = get_object_or_404(
+        BasketVariable, basket_id=basket_id, variable_id=variable_id
+    )
+    relation.delete()
     return redirect(request.META.get("HTTP_REFERER"))
 
 
 # request is a required parameter
 @own_basket_only
 def add_concept(
-    request: WSGIRequest, basket_id: int, concept_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest, basket_id: int, concept_id: uuid.UUID
+) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    """ Add variables to a basket by a given concept id """
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id
     variable_list = (
@@ -119,8 +113,15 @@ def add_concept(
 
 # request is a required parameter
 @own_basket_only
-def remove_concept(request, basket_id, concept_id):  # pylint: disable=unused-argument
-    basket = get_object_or_404(Basket, pk=basket_id)
+def remove_concept(
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    concept_id: uuid.UUID,
+) -> HttpResponseRedirect:
+    """ Remove variables from a basket by a given concept id """
+
+    _ = get_object_or_404(Concept, id=concept_id)
+    basket = get_object_or_404(Basket, id=basket_id)
     study_id = basket.study_id
     variable_list = (
         Variable.objects.filter(dataset__study_id=study_id)
@@ -140,7 +141,10 @@ def remove_concept(request, basket_id, concept_id):  # pylint: disable=unused-ar
 
 # request is a required parameter
 @own_basket_only
-def basket_to_csv(request, basket_id):  # pylint: disable=unused-argument
+def basket_to_csv(
+    request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
+) -> HttpResponse:
+    """ Export a basket to CSV """
     basket = get_object_or_404(Basket, pk=basket_id)
     csv = basket.to_csv()
     response = HttpResponse(csv, content_type="text/csv")
@@ -245,7 +249,7 @@ def basket_detail(
 
 
 # request is a required parameter
-def register(request):  # pylint: disable=unused-argument
+def register(request: WSGIRequest):  # pylint: disable=unused-argument
     """ Registration view """
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -259,7 +263,8 @@ def register(request):  # pylint: disable=unused-argument
 
 
 # request is a required parameter
-def basket_new(request):  # pylint: disable=unused-argument
+def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
+    """ CreateView for a new Basket """
     if request.method == "POST":
         form = BasketForm(request.POST)
         form.fields["user"].widget = HiddenInput()
@@ -278,7 +283,9 @@ def basket_new(request):  # pylint: disable=unused-argument
 
 # request is a required parameter
 @own_basket_only
-def script_detail(request, basket_id, script_id):  # pylint: disable=unused-argument
+def script_detail(
+    request: WSGIRequest, basket_id: int, script_id: int
+):  # pylint: disable=unused-argument
     """ DetailView for workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     if request.method == "POST":
@@ -317,6 +324,7 @@ def script_detail(request, basket_id, script_id):  # pylint: disable=unused-argu
 def basket_search(
     request: WSGIRequest, basket_id: int
 ):  # pylint: disable=unused-argument
+    """ Search view in the context of a basket's study """
     basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(basket=basket, study_id=basket.study_id)
     return render(request, "workspace/angular.html", context=context)
@@ -325,8 +333,10 @@ def basket_search(
 # request is a required parameter
 @own_basket_only
 def script_raw(
-    request: WSGIRequest, basket_id: int, script_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    script_id: int,
+) -> HttpResponse:
     """ View of raw workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     text = script.get_script_input()["text"]
@@ -336,8 +346,8 @@ def script_raw(
 # request is a required parameter
 @own_basket_only
 def basket_delete(
-    request: WSGIRequest, basket_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
+) -> HttpResponseRedirect:
     """ Delete view for workspace.Basket model """
     basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
@@ -347,8 +357,10 @@ def basket_delete(
 # request is a required parameter
 @own_basket_only
 def script_delete(
-    request: WSGIRequest, basket_id: int, script_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    script_id: int,
+) -> HttpResponseRedirect:
     """ Delete view for workspace.Script model """
     script = get_object_or_404(Script, pk=script_id)
     script.delete()
@@ -356,7 +368,9 @@ def script_delete(
 
 
 # request is a required parameter
-def user_delete(request: WSGIRequest):  # pylint: disable=unused-argument
+def user_delete(
+    request: WSGIRequest  # pylint: disable=unused-argument
+) -> HttpResponseRedirect:
     """ Delete view for auth.User model """
     request.user.delete()
     return redirect("/workspace/logout/")
@@ -365,8 +379,11 @@ def user_delete(request: WSGIRequest):  # pylint: disable=unused-argument
 # request is a required parameter
 @own_basket_only
 def script_new_lang(
-    request: WSGIRequest, basket_id: int, generator_name: str
-):  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    generator_name: str,
+):
+    """ CreateView for a new Script """
     basket = get_object_or_404(Basket, pk=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
@@ -382,6 +399,7 @@ def script_new_lang(
 # request is a required parameter
 @own_basket_only
 def script_new(request: WSGIRequest, basket_id: int):  # pylint: disable=unused-argument
+    """ CreateView for a new Script """
     basket = get_object_or_404(Basket, pk=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
