@@ -48,10 +48,8 @@ urlpatterns = [
     path("user/", include("django.contrib.auth.urls")),
     path("accounts/login/", LoginView.as_view()),
     path("elastic<path:path>", elastic_proxy),
-
     # Study by name
     path("<slug:study_name>", StudyDetailView.as_view(), name="study_detail"),
-
     # Study-specific links
     path("<slug:study_name>/data/", include("ddionrails.data.urls", namespace="data")),
     path(
@@ -63,11 +61,14 @@ urlpatterns = [
         include("ddionrails.instruments.urls", namespace="inst"),
     ),
     path("<slug:study_name>/topics/<slug:language>", study_topics, name="study.topics"),
-
     # Redirects for search interface
-    path("publication/<uuid:id>", publications_views.PublicationRedirectView.as_view()),
-    path("variable/<uuid:id>", VariableRedirectView.as_view()),
-    path("dataset/<uuid:id>", DatasetRedirectView.as_view()),
+    path(
+        "publication/<uuid:id>",
+        publications_views.PublicationRedirectView.as_view(),
+        name="publication_redirect",
+    ),
+    path("variable/<uuid:id>", VariableRedirectView.as_view(), name="variable_redirect"),
+    path("dataset/<uuid:id>", DatasetRedirectView.as_view(), name="dataset_redirect"),
     path(
         "instrument/<uuid:id>",
         instruments_views.InstrumentRedirectView.as_view(),

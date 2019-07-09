@@ -2,6 +2,8 @@
 
 """ Views for ddionrails.instruments app """
 
+import uuid
+
 import difflib
 
 from django.conf import settings
@@ -71,7 +73,10 @@ class QuestionRedirectView(RedirectView):
 
 # request is a required parameter
 def question_detail(
-    request, study_name, instrument_name, question_name  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    study_name: str,
+    instrument_name: str,
+    question_name: str,
 ):
     """ DetailView for instruments.question model """
     question = (
@@ -121,8 +126,10 @@ def question_detail(
 
 # request is a required parameter
 def question_comparison_partial(
-    request: WSGIRequest, from_id: int, to_id: int  # pylint: disable=unused-argument
-):
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    from_id: uuid.UUID,
+    to_id: uuid.UUID,
+) -> HttpResponse:
     from_question = get_object_or_404(Question, pk=from_id)
     to_question = get_object_or_404(Question, pk=to_id)
     diff_text = difflib.HtmlDiff().make_file(
