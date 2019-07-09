@@ -33,7 +33,7 @@ class TestBasketModel:
 
     def test_html_description_method(self, mocker, basket):
         mocked_render_markdown = mocker.patch(
-            "ddionrails.workspace.models.render_markdown"
+            "ddionrails.workspace.models.basket.render_markdown"
         )
         basket.html_description()
         mocked_render_markdown.assert_called_once()

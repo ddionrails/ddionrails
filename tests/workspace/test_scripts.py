@@ -8,87 +8,35 @@ import json
 import pytest
 
 from ddionrails.workspace.models import BasketVariable
-from ddionrails.workspace.scripts import (
-    ScriptConfig,
-    SoepMixin,
-    SoepR,
-    SoepSpss,
-    SoepStata,
-)
+from ddionrails.workspace.scripts import ScriptConfig, SoepR, SoepSpss, SoepStata
 
 
 @pytest.fixture
 def soepstata(script, basket):
+    """ An instantiated SoepStata object with related script and basket """
     return SoepStata(script, basket)
 
 
 @pytest.fixture
-def heading_stata():
-    return "* * * GENDER ( male = 1 / female = 2) * * *"
-
-
-@pytest.fixture
 def soepspss(script, basket):
+    """ An instantiated SoepSpss object with related script and basket """
     return SoepSpss(script, basket)
 
 
 @pytest.fixture
-def heading_spss_r():
-    return "### GENDER ( male = 1 / female = 2) ###"
-
-
-@pytest.fixture
 def soepr(script, basket):
+    """ An instantiated SoepR object with related script and basket """
     return SoepR(script, basket)
 
 
 @pytest.fixture
 def script_config(script, basket):
+    """ An instantiated ScriptConfig object with related script and basket """
     return ScriptConfig(script, basket)
 
 
-@pytest.fixture
-def soepmixin():
-    return SoepMixin()
-
-
-@pytest.fixture
-def soepletters():
-    return [
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
-        "ba",
-        "bb",
-        "bc",
-        "bd",
-        "be",
-        "bf",
-        "bg",
-    ]
+STATA_HEADING_GENDER = "* * * GENDER ( male = 1 / female = 2) * * *"
+SPSS_R_HEADING_GENDER = "### GENDER ( male = 1 / female = 2) ###"
 
 
 class TestScriptConfig:
@@ -120,139 +68,107 @@ class TestScriptConfig:
         assert result == config
 
 
-testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
-
-
-class TestSoepMixin:
-    def test_soep_year_method(self, soepmixin):
-        year = 2001
-        soepmixin._soep_year(year)  # pylint: disable=protected-access
-
-    def test_soep_letters_method(self, soepmixin, soepletters):
-        result = soepmixin._soep_letters()  # pylint: disable=protected-access
-        assert result == soepletters
-
-    def test_soep_letters_method_page_1(self, soepmixin):
-        page = 1
-        result = soepmixin._soep_letters(page)  # pylint: disable=protected-access
-        assert result == [
-            "a",
-            "b",
-            "c",
-            "d",
-            "e",
-            "f",
-            "g",
-            "h",
-            "i",
-            "j",
-            "k",
-            "l",
-            "m",
-            "n",
-            "o",
-            "p",
-            "q",
-            "r",
-            "s",
-            "t",
-            "u",
-            "v",
-            "w",
-            "x",
-            "y",
-            "z",
-        ]
-
-    def test_soep_letters_method_page_2(self, soepmixin):
-        page = 2
-        result = soepmixin._soep_letters(page)  # pylint: disable=protected-access
-        assert result == ["ba", "bb", "bc", "bd", "be", "bf", "bg"]
-
-    @pytest.mark.parametrize("input,expected", testdata_soep_classify_dataset_method)
-    def test_soep_classify_dataset_method(
-        self, mocker, soepmixin, soepletters, input, expected
-    ):
-        mocked_soep_letters = mocker.patch.object(SoepMixin, "_soep_letters")
-        mocked_soep_letters.return_value = soepletters
-        dataset_name = input
-        result = soepmixin._soep_classify_dataset(  # pylint: disable=protected-access
-            dataset_name
-        )
-        assert result == expected
-
-    def test_soep_letter_year_method(self, soepmixin):
-        result = soepmixin._soep_letter_year()  # pylint: disable=protected-access
-        assert result.get("") == 0
-        assert result.get("a") == 2001
-        assert result.get("z") == 2026
-        assert result.get("bg") == 2033
-
-
 class TestSoepStataClass:
-    def test_render_gender_method_with_male(self, soepstata, heading_stata):
+    def test_render_gender_method_with_male(self, soepstata):
         soepstata.settings["gender"] = "m"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "keep if (sex == 1)"
-        assert heading_stata in result
+        assert STATA_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepstata, heading_stata):
+    def test_render_gender_method_with_female(self, soepstata):
         soepstata.settings["gender"] = "f"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "keep if (sex == 2)"
-        assert heading_stata in result
+        assert STATA_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepstata, heading_stata):
+    def test_render_gender_method_with_both(self, soepstata):
         soepstata.settings["gender"] = "b"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "\n/* all genders */"
-        assert heading_stata in result
+        assert STATA_HEADING_GENDER in result
         assert command in result
 
+    def test_disclaimer(self, soepstata):
+        result = soepstata._render_disclaimer() # pylint: disable=protected-access
+        expected = (
+            "\n"
+            "* --------------------------------------------------------------------.\n"
+            "* This command file was generated by paneldata.org                    .\n"
+            "* --------------------------------------------------------------------.\n"
+            "* !!! I M P O R T A N T - W A R N I N G !!!                           .\n"
+            "* You alone are responsible for contents and appropriate.             .\n"
+            "* usage by accepting the usage agreement.                             .\n"
+            "* --------------------------------------------------------------------.\n"
+            "* Please report any errors of the code generated here                 .\n"
+            "* to soepmail@diw.de                                                  .\n"
+            "* --------------------------------------------------------------------.\n"
+        )
+        assert expected == result
+
+    def test_render_sort_pfad(self, soepstata):
+        result = soepstata._render_sort_pfad() # pylint: disable=protected-access
+        expected = (
+            "\n\n"
+            "* * * SORT PFAD * * *\n\n"
+            'save "${MY_PATH_OUT}pfad.dta", replace'
+        )
+        assert expected == result
+
+    def test_render_done(self, soepstata):
+        result = soepstata._render_done()  # pylint: disable=protected-access
+        expected = (
+            "\n\n"
+            "* * * DONE * * *\n\n"
+            'label data "paneldata.org: Magic at work!"\n'
+            'save "${MY_FILE_OUT}", replace\n'
+            "desc\n\n"
+            "log close"
+        )
+        assert expected == result
 
 class TestSoepSpssClass:
-    def test_render_gender_method_with_male(self, soepspss, heading_spss_r):
+    def test_render_gender_method_with_male(self, soepspss):
         soepspss.settings["gender"] = "m"
         result = soepspss._render_gender()  # pylint: disable=protected-access
         command = "select if (sex == 1)"
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepspss, heading_spss_r):
+    def test_render_gender_method_with_female(self, soepspss):
         soepspss.settings["gender"] = "f"
         result = soepspss._render_gender()  # pylint: disable=protected-access
         command = "select if (sex == 2)"
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepspss, heading_spss_r):
+    def test_render_gender_method_with_both(self, soepspss):
         soepspss.settings["gender"] = "b"
         result = soepspss._render_gender()  # pylint: disable=protected-access
         command = "\n* all genders *."
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
 
 class TestSoepRClass:
-    def test_render_gender_method_with_male(self, soepr, heading_spss_r):
+    def test_render_gender_method_with_male(self, soepr):
         soepr.settings["gender"] = "m"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "pfad <- pfad[pfad$sex==1,]"
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepr, heading_spss_r):
+    def test_render_gender_method_with_female(self, soepr):
         soepr.settings["gender"] = "f"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "pfad <- pfad[pfad$sex==2,]"
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepr, heading_spss_r):
+    def test_render_gender_method_with_both(self, soepr):
         soepr.settings["gender"] = "b"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "\n# all genders"
-        assert heading_spss_r in result
+        assert SPSS_R_HEADING_GENDER in result
         assert command in result
