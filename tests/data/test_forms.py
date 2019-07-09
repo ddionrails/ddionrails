@@ -30,7 +30,7 @@ class TestDatasetForm:
         form = DatasetForm(data=valid_dataset_data)
         assert form.is_valid() is True
         dataset = form.save()
-        assert dataset.name == "some-dataset"
+        assert dataset.name == "SOME-DATASET"
 
 
 class TestVariableForm:
