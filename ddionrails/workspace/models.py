@@ -74,7 +74,7 @@ class Basket(TimeStampedModel):
 
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "id" field """
-        return reverse("workspace:basket", kwargs={"basket_id": self.id})
+        return reverse("workspace:basket_detail", kwargs={"basket_id": self.id})
 
     def html_description(self) -> str:
         """ Returns the "description" field as a string containing HTML markup """

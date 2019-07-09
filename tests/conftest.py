@@ -196,6 +196,14 @@ def variable(db):
 
 
 @pytest.fixture
+def variable_with_concept(variable, concept):
+    """ A variable in the database with a related concept """
+    variable.concept = concept
+    variable.save()
+    return variable
+
+
+@pytest.fixture
 def uuid_identifier():
     """ A UUID that is used for testing views and URLConfs """
     return uuid.UUID("12345678123456781234567812345678")
