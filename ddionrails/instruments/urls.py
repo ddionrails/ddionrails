@@ -9,7 +9,7 @@ from .views import InstrumentDetailView, question_detail, study_instrument_list
 app_name = "instruments"
 
 urlpatterns = [
-    path("", study_instrument_list),
+    path("", study_instrument_list, name="study_instrument_list"),
     path(
         "<str:instrument_name>", InstrumentDetailView.as_view(), name="instrument_detail"
     ),

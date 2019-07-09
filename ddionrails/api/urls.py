@@ -32,7 +32,11 @@ urlpatterns = [
         test_preview,
         name="test_preview",
     ),
-    path("questions/compare/<uuid:from_id>/<uuid:to_id>", question_comparison_partial),
+    path(
+        "questions/compare/<uuid:from_id>/<uuid:to_id>",
+        question_comparison_partial,
+        name="question_comparison_partial",
+    ),
     path(
         "test/redirect/<str:object_type>/<uuid:object_id>",
         object_redirect,
