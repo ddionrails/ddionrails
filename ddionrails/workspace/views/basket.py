@@ -2,7 +2,6 @@
 
 """ Views for ddionrails.workspace app """
 
-
 import uuid
 from collections import OrderedDict
 
@@ -11,7 +10,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.forms.widgets import HiddenInput
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from ddionrails.concepts.models import Concept
 from ddionrails.data.models import Variable
@@ -46,8 +45,8 @@ NOTE = (
 # request is a required parameter
 @own_basket_only
 def basket_detail(
-    request: WSGIRequest, basket_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
+):
     """ DetailView for workspace.Basket model """
     basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
@@ -139,7 +138,7 @@ def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
             basket.user = request.user
             basket.save()
             messages.info(request, "Basket successfully created.")
-            return redirect("/workspace/baskets/")
+            return redirect(reverse("workspace:basket_list"))
     else:
         form = BasketForm(initial=dict(user=request.user.id))
         form.fields["user"].widget = HiddenInput()
@@ -150,8 +149,8 @@ def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
 # request is a required parameter
 @own_basket_only
 def basket_search(
-    request: WSGIRequest, basket_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
+):
     """ Search view in the context of a basket's study """
     basket = get_object_or_404(Basket, pk=basket_id)
     context = dict(basket=basket, study_id=basket.study_id)
@@ -166,14 +165,16 @@ def basket_delete(
     """ Delete view for workspace.Basket model """
     basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
-    return redirect("/workspace/baskets/")
+    return redirect(reverse("workspace:basket_list"))
 
 
 # request is a required parameter
 @own_basket_only
 def add_variable(
-    request: WSGIRequest, basket_id: int, variable_id: uuid.UUID
-) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    variable_id: uuid.UUID,
+) -> HttpResponseRedirect:
     """ Add a variable to a basket """
 
     # make sure everything is found in the database
@@ -191,8 +192,10 @@ def add_variable(
 # request is a required parameter
 @own_basket_only
 def remove_variable(
-    request: WSGIRequest, basket_id: int, variable_id: uuid.UUID
-) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    variable_id: uuid.UUID,
+) -> HttpResponseRedirect:
     """ Remove a variable from a basket """
     relation = get_object_or_404(
         BasketVariable, basket_id=basket_id, variable_id=variable_id
@@ -204,8 +207,10 @@ def remove_variable(
 # request is a required parameter
 @own_basket_only
 def add_concept(
-    request: WSGIRequest, basket_id: int, concept_id: uuid.UUID
-) -> HttpResponseRedirect:  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,
+    concept_id: uuid.UUID,
+) -> HttpResponseRedirect:
     """ Add variables to a basket by a given concept id """
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id

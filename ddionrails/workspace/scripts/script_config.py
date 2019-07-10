@@ -4,6 +4,7 @@
 
 import json
 from collections import defaultdict
+from typing import Dict
 
 
 class ScriptConfig:
@@ -21,14 +22,14 @@ class ScriptConfig:
         self.basket = basket
         self.script = script
 
-    def get_script_input(self):
+    def get_script_input(self) -> Dict:
         return dict(
             settings=json.loads(self.script.settings),
             data=self.get_datasets_and_variables(),
             template=self.template,
         )
 
-    def get_datasets_and_variables(self):
+    def get_datasets_and_variables(self) -> defaultdict:
         datasets = defaultdict(list)
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
@@ -37,7 +38,7 @@ class ScriptConfig:
         return datasets
 
     @classmethod
-    def get_all_configs(cls):
+    def get_all_configs(cls) -> Dict:
         return {x.NAME: x for x in cls._get_list_of_configs()}
 
     @classmethod

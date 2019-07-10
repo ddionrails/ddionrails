@@ -68,7 +68,7 @@ class TestScriptConfig:
         assert result == config
 
 
-class TestSoepStataClass:
+class TestSoepStata:
     def test_render_gender_method_with_male(self, soepstata):
         soepstata.settings["gender"] = "m"
         result = soepstata._render_gender()  # pylint: disable=protected-access
@@ -150,7 +150,7 @@ class TestSoepSpssClass:
         assert command in result
 
 
-class TestSoepRClass:
+class TestSoepR:
     def test_render_gender_method_with_male(self, soepr):
         soepr.settings["gender"] = "m"
         result = soepr._render_gender()  # pylint: disable=protected-access
@@ -171,3 +171,14 @@ class TestSoepRClass:
         command = "\n# all genders"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
+
+    def test_render_done(self, soepr):
+        result = soepr._render_done()  # pylint: disable=protected-access
+        expected = (
+            "\n"
+            "### DONE ###\n\n"
+            'attr(master, "label") <- "paneldata.org: Magic at work!"\n'
+            "str(master)\n"
+            'save(master, file=file.path(path_out, "master.RData"))'
+        )
+        assert expected == result

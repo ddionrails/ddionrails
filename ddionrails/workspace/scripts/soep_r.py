@@ -2,23 +2,27 @@
 
 """ Script generators for ddionrails.workspace app: SoepR """
 
+from typing import Dict
+
 from .soep_stata import SoepStata
 
 
 class SoepR(SoepStata):
+    """ Script Generator for R scripts """
 
     NAME = "soep-r"
-
     COMMENT = "#"
 
-    def _render_local_variables(self):
+    def _render_local_variables(self) -> str:
+        """ Render a "local variables" section of the script file """
         script = '\nlibrary("foreign")'
         script += "\n### LOCAL VARIABLES ###"
         script += '\npath_in <- "%s"' % self.settings["path_in"].replace("\\", "/")
         script += '\npath_out <- "%s"' % self.settings["path_out"].replace("\\", "/")
         return script
 
-    def _render_pfad(self):
+    def _render_pfad(self) -> str:
+        """ Render a "load pfad" section of the script file """
         script = "\n### LOAD [H|P]PFAD ###\n"
         if self.settings["analysis_unit"] == "p":
             script += (
@@ -38,7 +42,8 @@ class SoepR(SoepStata):
         script += "\npfad <- pfad[ , c(%s)]" % joined
         return script
 
-    def _render_balanced(self):
+    def _render_balanced(self) -> str:
+        """ Render a "balanced" section of the script file """
         heading = "\n### [UN]BALANCED ###\n"
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
@@ -57,7 +62,8 @@ class SoepR(SoepStata):
                 temp.append(" (%shnetto == 1) " % year)
             return heading + "\npfad <- with(pfad, pfad[" + connector.join(temp) + ", ])"
 
-    def _render_private(self):
+    def _render_private(self) -> str:
+        """ Render a "private households" section of the script file """
         heading = "\n### PRIVATE HOUSEHOLDS ###\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
@@ -68,7 +74,8 @@ class SoepR(SoepStata):
         else:
             return heading + "\n# all households"
 
-    def _render_gender(self):
+    def _render_gender(self) -> str:
+        """ Render a "gender" section of the script file """
         heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
         gender = self.settings.get("gender", "b")
         if gender == "m":
@@ -79,13 +86,15 @@ class SoepR(SoepStata):
             return heading + "\n# all genders"
 
     @staticmethod
-    def _render_sort_pfad():
+    def _render_sort_pfad() -> str:
+        """ Render a "sort pfad" section of the script file """
         script = "\n### SORT [H|P]PFAD ###\n"
         script += "\n# This is R -- no sorting neccessary :-)"
         script += "\n"
         return script
 
-    def _render_hrf(self):
+    def _render_hrf(self) -> str:
+        """ Render a "load hrf" section of the script file """
         script = "\n### LOAD [H|P]HRF ###\n"
         if self.settings["analysis_unit"] == "p":
             script += (
@@ -97,13 +106,15 @@ class SoepR(SoepStata):
             )
         return script
 
-    def _render_create_master(self):
+    def _render_create_master(self) -> str:
+        """ Render a "create master" section of the script file """
         key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
         script = "\n### CREATE MASTER ###\n"
         script += '\nmaster <- merge( pfad, hrf, by = "%s")' % key
         return script
 
-    def _render_read_data(self):
+    def _render_read_data(self) -> str:
+        """ Render a "read data" section of the script file """
         heading = "\n### READ DATA ###\n"
         temp = ["\ndata <- list()"]
         for dataset in self.script_dict.values():
@@ -118,7 +129,8 @@ class SoepR(SoepStata):
             temp.append(script)
         return heading + "\n\n".join(temp)
 
-    def _render_merge(self):
+    def _render_merge(self) -> str:
+        """ Render a "merge" section of the script file """
         script = "\n### MERGE ###\n"
         for dataset in self.script_dict.values():
             script += (
@@ -128,15 +140,18 @@ class SoepR(SoepStata):
         return script
 
     @staticmethod
-    def _render_done():
-        script = "\n### DONE ###\n"
-        script += '\nattr(master, "label") <- "paneldata.org: Magic at work!"'
-        script += "\nstr(master)"
-        script += '\nsave(master, file=file.path(path_out, "master.RData"))'
-        return script
+    def _render_done() -> str:
+        """ Render a "done" section of the script file """
+        return (
+            "\n"
+            "### DONE ###\n\n"
+            'attr(master, "label") <- "paneldata.org: Magic at work!"\n'
+            "str(master)\n"
+            'save(master, file=file.path(path_out, "master.RData"))'
+        )
 
     @staticmethod
-    def _enrich_dataset_dict(dataset_dict):
+    def _enrich_dataset_dict(dataset_dict: Dict) -> None:
         d = dataset_dict
         analysis_unit = d["analysis_unit"]
         if analysis_unit == "h":

@@ -36,7 +36,7 @@ urlpatterns = [
     path("password_reset/", PasswordResetView.as_view()),
     path("account/", account_overview, name="account_overview"),
     path("baskets/", basket_list, name="basket_list"),
-    path("baskets/new", basket_new, name="basket_list"),
+    path("baskets/new", basket_new, name="basket_new"),
     path("baskets/<int:basket_id>/csv", basket_to_csv, name="basket_to_csv"),
     path("baskets/<int:basket_id>/search", basket_search, name="basket_search"),
     path("baskets/<int:basket_id>/delete", basket_delete, name="basket_delete"),
@@ -61,8 +61,12 @@ urlpatterns = [
         name="remove_concept",
     ),
     path("baskets/<int:basket_id>", basket_detail, name="basket_detail"),
-    path("baskets/<int:basket_id>/scripts/new/<slug:generator_name>", script_new_lang),
-    path("baskets/<int:basket_id>/scripts/new", script_new),
+    path(
+        "baskets/<int:basket_id>/scripts/new/<slug:generator_name>",
+        script_new_lang,
+        name="script_new_lang",
+    ),
+    path("baskets/<int:basket_id>/scripts/new", script_new, name="script_new"),
     path(
         "baskets/<int:basket_id>/scripts/<int:script_id>/delete",
         script_delete,
