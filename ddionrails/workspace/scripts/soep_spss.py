@@ -6,10 +6,12 @@ from .soep_stata import SoepStata
 
 
 class SoepSpss(SoepStata):
+    """ Script Generator for SPSS scripts """
 
     NAME = "soep-spss"
 
-    def _render_local_variables(self):
+    def _render_local_variables(self) -> str:
+        """ Render a "local variables" section of the script file """
         script = "\nset compression on."
         script += "\nset header off."
         script += "\n"
@@ -22,7 +24,8 @@ class SoepSpss(SoepStata):
         script += '\ndefine !pathout() "%s" !enddefine.' % self.settings["path_out"]
         return script
 
-    def _render_pfad(self):
+    def _render_pfad(self) -> str:
+        """ Render a "load pfad" section of the script file """
         script = "\n* ### LOAD [H|P]PFAD ### *.\n"
         if self.settings["analysis_unit"] == "p":
             script += "\nget file = !pathin+'ppfad.sav'"
@@ -40,7 +43,8 @@ class SoepSpss(SoepStata):
             script += "\ndataset name hpfad window=asis."
         return script
 
-    def _render_balanced(self):
+    def _render_balanced(self) -> str:
+        """ Render a "balanced" section of the script file """
         heading = "\n* ### [UN]BALANCED ### *.\n"
         connector = "and" if self.settings["balanced"] == "t" else "or"
         temp = []
@@ -58,7 +62,8 @@ class SoepSpss(SoepStata):
                 temp.append(" (%shnetto eq 1)" % year)
             return heading + "\nselect if (" + connector.join(temp) + ")."
 
-    def _render_private(self):
+    def _render_private(self) -> str:
+        """ Render a "private households" section of the script file """
         heading = "\n* ### PRIVATE HOUSEHOLDS ### *.\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
@@ -69,7 +74,8 @@ class SoepSpss(SoepStata):
         else:
             return heading + "\n* all households *."
 
-    def _render_gender(self):
+    def _render_gender(self) -> str:
+        """ Render a "gender" section of the script file """
         heading = "\n* ### GENDER ( male = 1 / female = 2) ### *.\n"
         gender = self.settings.get("gender", "b")
         if gender == "m":
@@ -79,7 +85,8 @@ class SoepSpss(SoepStata):
         else:
             return heading + "\n* all genders *."
 
-    def _render_sort_pfad(self):
+    def _render_sort_pfad(self) -> str:
+        """ Render a "sort pfad" section of the script file """
         script = "\n* ### SORT [H|P]PFAD ### *.\n"
         if self.settings["analysis_unit"] == "p":
             script += "\nsort cases by persnr."
@@ -89,7 +96,8 @@ class SoepSpss(SoepStata):
             script += "\nsave outfile = !pathout+'hpfad.sav'."
         return script
 
-    def _render_hrf(self):
+    def _render_hrf(self) -> str:
+        """ Render a "load hrf" section of the script file """
         script = "\n* ### LOAD [H|P]HRF ### *.\n"
         if self.settings["analysis_unit"] == "p":
             script += "\nget file !pathin+'phrf.sav'."
@@ -102,7 +110,8 @@ class SoepSpss(SoepStata):
         script += "\nsave outfile = !pathout+'hrf.sav'."
         return script
 
-    def _render_create_master(self):
+    def _render_create_master(self) -> str:
+        """ Render a "create master" section of the script file """
         key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
         script = "\n* ### CREATE MASTER ### *.\n"
         script += "\nmatch files file  = !pathout+'ppfad.sav'"
@@ -112,7 +121,8 @@ class SoepSpss(SoepStata):
         script += "\nsave outfile = !pathout+'master.sav'."
         return script
 
-    def _render_read_data(self):
+    def _render_read_data(self) -> str:
+        """ Render a "read data" section of the script file """
         script = "\n* ### READ DATA ### *."
         for dataset in self.script_dict.values():
             script += "\n\nget file = !pathin+'%s.sav'" % dataset["name"]
@@ -122,7 +132,8 @@ class SoepSpss(SoepStata):
             script += "\nsave outfile = !pathout+'%s.sav'." % dataset["name"]
         return script
 
-    def _render_merge(self):
+    def _render_merge(self) -> str:
+        """ Render a "merge" section of the script file """
         script = "\n* ### MERGE ### *.\n"
         script += "\nget  file = !pathout+'master.sav'."
         script += "\ndataset name master window=asis."
@@ -134,7 +145,8 @@ class SoepSpss(SoepStata):
         return script
 
     @staticmethod
-    def _render_done():
+    def _render_done() -> str:
+        """ Render a "done" section of the script file """
         script = "\n* ### DONE ### *.\n"
         script += "\ndataset close all."
         script += "\ndataset name new."

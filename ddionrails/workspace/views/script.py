@@ -7,7 +7,7 @@ import json
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from ddionrails.workspace.models import Basket, Script
 from ddionrails.workspace.scripts import SoepStata
@@ -17,22 +17,13 @@ from .decorator import own_basket_only
 
 # request is a required parameter
 @own_basket_only
-def render_script(request, basket_id, script_name):  # pylint: disable=unused-argument
-    basket = get_object_or_404(Basket, pk=basket_id)
-    context = dict(
-        basket=basket, variables=basket.variables.all(), script_name=script_name
-    )
-    template = "scripts/%s.html" % script_name
-    return render(request, template, context=context)
-
-
-# request is a required parameter
-@own_basket_only
 def script_detail(
-    request: WSGIRequest, basket_id: int, script_id: int
-):  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    basket_id: int,  # TODO basket_id is not used
+    script_id: int,
+):
     """ DetailView for workspace.Script model """
-    script = get_object_or_404(Script, pk=script_id)
+    script = get_object_or_404(Script, id=script_id)
     if request.method == "POST":
         script.name = request.POST.get("field_name", "")
         script.label = request.POST.get("field_label", "")
@@ -68,11 +59,11 @@ def script_detail(
 @own_basket_only
 def script_raw(
     request: WSGIRequest,  # pylint: disable=unused-argument
-    basket_id: int,
+    basket_id: int,  # TODO basket_id is not used
     script_id: int,
 ) -> HttpResponse:
     """ View of raw workspace.Script model """
-    script = get_object_or_404(Script, pk=script_id)
+    script = get_object_or_404(Script, id=script_id)
     text = script.get_script_input()["text"]
     return HttpResponse(text, content_type="text/plain")
 
@@ -85,9 +76,9 @@ def script_delete(
     script_id: int,
 ) -> HttpResponseRedirect:
     """ Delete view for workspace.Script model """
-    script = get_object_or_404(Script, pk=script_id)
+    script = get_object_or_404(Script, id=script_id)
     script.delete()
-    return redirect("/workspace/baskets/%s" % basket_id)
+    return redirect(reverse("workspace:basket_detail", kwargs={"basket_id": basket_id}))
 
 
 # request is a required parameter
@@ -98,7 +89,7 @@ def script_new_lang(
     generator_name: str,
 ):
     """ CreateView for a new Script """
-    basket = get_object_or_404(Basket, pk=basket_id)
+    basket = get_object_or_404(Basket, id=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
     script = Script.objects.create(
@@ -114,7 +105,7 @@ def script_new_lang(
 @own_basket_only
 def script_new(request: WSGIRequest, basket_id: int):  # pylint: disable=unused-argument
     """ CreateView for a new Script """
-    basket = get_object_or_404(Basket, pk=basket_id)
+    basket = get_object_or_404(Basket, id=basket_id)
     script_count = basket.script_set.count() + 1
     script_name = f"script-{script_count}"
     script = Script.objects.create(

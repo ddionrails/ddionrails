@@ -3,15 +3,16 @@
 """ Script generators for ddionrails.workspace app: SoepStata """
 
 import json
+from typing import Dict
 
 from ..mixins import SoepMixin
 from .script_config import ScriptConfig
 
 
 class SoepStata(ScriptConfig, SoepMixin):
+    """ Script Generator for Stata scripts """
 
     NAME = "soep-stata"
-
     COMMENT = "*"
 
     DEFAULT_DICT = dict(
@@ -78,7 +79,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         }
         self.years = self._get_selected_years(self.script_dict)
 
-    def get_script_input(self):
+    def get_script_input(self) -> Dict:
         script_input = super().get_script_input()
         script_dict = self.script_dict
         script_input["script_dict"] = script_dict
@@ -111,7 +112,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         )
         return script_input
 
-    def _render_disclaimer(self):
+    def _render_disclaimer(self) -> str:
         """ Render the disclaimer of the script file """
         return (
             "\n"
@@ -127,7 +128,8 @@ class SoepStata(ScriptConfig, SoepMixin):
             f"{self.COMMENT} --------------------------------------------------------------------.\n"
         )
 
-    def _render_local_variables(self):
+    def _render_local_variables(self) -> str:
+        """ Render a "local variables" section of the script file """
         heading = "\n\n* * * LOCAL VARIABLES * * *\n"
         script = '\nglobal MY_PATH_IN   "%s"' % self.settings["path_in"]
         script += '\nglobal MY_PATH_OUT  "%s"' % self.settings["path_out"]
@@ -138,14 +140,16 @@ class SoepStata(ScriptConfig, SoepMixin):
         script += "\nset more off"
         return heading + script
 
-    def _render_not_processed(self, not_processed):
+    def _render_not_processed(self, not_processed) -> str:
+        """ Render a "not processed" section of the script file """
         heading = "\n\n%s* * * NOT PROCESSED * * *.\n" % self.COMMENT
         script = ""
         for key, value in not_processed.items():
             script += "%s From datasets '%s': %s.\n" % (self.COMMENT, key, value)
         return heading + script
 
-    def _render_pfad(self):
+    def _render_pfad(self) -> str:
+        """ Render a "load pfad" section of the script file """
         heading = "\n\n* * * PFAD * * *\n"
         script = []
         if self.settings["analysis_unit"] == "p":
@@ -160,7 +164,8 @@ class SoepStata(ScriptConfig, SoepMixin):
             script.append('using "${MY_PATH_IN}hpfad.dta", clear')
         return heading + " ".join(script)
 
-    def _render_balanced(self):
+    def _render_balanced(self) -> str:
+        """ Render a "balanced" section of the script file """
         heading = "\n\n* * * BALANCED VS UNBALANCED * * *\n"
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
@@ -179,7 +184,8 @@ class SoepStata(ScriptConfig, SoepMixin):
                 temp.append(" (%shnetto == 1) " % year)
             return heading + "\nkeep if (" + connector.join(temp) + ")"
 
-    def _render_private(self):
+    def _render_private(self) -> str:
+        """ Render a "private households" section of the script file """
         heading = "\n\n* * * PRIVATE VS ALL HOUSEHOLDS * * *\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
@@ -192,7 +198,8 @@ class SoepStata(ScriptConfig, SoepMixin):
         else:
             return heading + "\n/* all households */"
 
-    def _render_gender(self):
+    def _render_gender(self) -> str:
+        """ Render a "gender" section of the script file """
         options = {
             "m": "\nkeep if (sex == 1)",
             "f": "\nkeep if (sex == 2)",
@@ -203,10 +210,12 @@ class SoepStata(ScriptConfig, SoepMixin):
         return "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
 
     @staticmethod
-    def _render_sort_pfad():
+    def _render_sort_pfad() -> str:
+        """ Render a "sort pfad" section of the script file """
         return "\n\n" "* * * SORT PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace'
 
-    def _render_hrf(self):
+    def _render_hrf(self) -> str:
+        """ Render a "load hrf" section of the script file """
         heading = "\n\n* * * HRF * * *\n"
         if self.settings["analysis_unit"] == "p":
             script = '\nuse "${MY_PATH_IN}phrf.dta", clear'
@@ -215,7 +224,8 @@ class SoepStata(ScriptConfig, SoepMixin):
         script += '\nsave "${MY_PATH_OUT}hrf.dta", replace'
         return heading + script
 
-    def _render_create_master(self):
+    def _render_create_master(self) -> str:
+        """ Render a "create master" section of the script file """
         heading = "\n\n* * * CREATE MASTER * * *\n"
         key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
         script = '\nuse "${MY_PATH_OUT}pfad.dta", clear'
@@ -225,7 +235,8 @@ class SoepStata(ScriptConfig, SoepMixin):
         script += '\nsave "${MY_PATH_OUT}master.dta", replace'
         return heading + script
 
-    def _render_read_data(self):
+    def _render_read_data(self) -> str:
+        """ Render a "read data" section of the script file """
         heading = "\n\n* * * READ DATA * * *\n"
         temp = []
         for dataset in self.script_dict.values():
@@ -235,7 +246,8 @@ class SoepStata(ScriptConfig, SoepMixin):
             temp.append(script)
         return heading + "\n\n".join(temp)
 
-    def _render_merge(self):
+    def _render_merge(self) -> str:
+        """ Render a "merge" section of the script file """
         heading = "\n\n* * * MERGE DATA * * *\n"
         script = '\nuse   "${MY_PATH_OUT}master.dta", clear'
         for dataset in self.script_dict.values():
@@ -250,7 +262,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         return heading + script
 
     @staticmethod
-    def _render_done():
+    def _render_done() -> str:
         """ Render an end section of the script file """
         return (
             "\n\n"
