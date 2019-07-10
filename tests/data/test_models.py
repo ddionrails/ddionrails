@@ -6,8 +6,20 @@
 import pytest
 
 from ddionrails.data.models import Variable
+from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.data, pytest.mark.models]
+
+
+@pytest.fixture
+def related_variables_by_concept(variable, concept):
+    """ Two variables that are related by concept """
+    variable.concept = concept
+    variable.save()
+    other_variable = VariableFactory(name="other-variable")
+    other_variable.concept = concept
+    other_variable.save()
+    return variable, other_variable
 
 
 class TestVariableModel:
@@ -82,6 +94,37 @@ class TestVariableModel:
         result = variable.get_period(default="no-period", period_id="name")
         expected = "no-period"
         assert expected == result
+
+    def test_get_related_variables_without_concept(self, variable):
+        result = variable.get_related_variables()
+        expected = []
+        assert expected == result
+
+    def test_get_related_variables_with_concept(self, related_variables_by_concept):
+        variable, other_variable = related_variables_by_concept
+        result = list(variable.get_related_variables())
+        # a variable is related to itself?
+        expected = [other_variable, variable]
+        assert expected == result
+
+    def test_get_related_variables_by_period_empty(self, variable):
+        result = variable.get_related_variables_by_period()
+        expected = {"none": [], variable.dataset.period.name: []}
+        assert expected == result
+
+    def test_get_related_variables_by_period(self, related_variables_by_concept):
+        variable, other_variable = related_variables_by_concept
+        result = variable.get_related_variables_by_period()
+        assert [other_variable, variable] == result[other_variable.dataset.period.name]
+
+    def test_get_related_variables_by_period_none_period(
+        self, related_variables_by_concept
+    ):
+        variable, other_variable = related_variables_by_concept
+        other_variable.dataset.period = None
+        other_variable.dataset.save()
+        result = variable.get_related_variables_by_period()
+        assert [other_variable, variable] == result["none"]
 
     def test_get_categories_method_without_categories(self, variable):
         variable.categories = []

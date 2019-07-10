@@ -6,7 +6,7 @@ from __future__ import annotations
 import inspect
 import uuid
 from collections import OrderedDict
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
@@ -223,7 +223,8 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         except AttributeError:
             return default
 
-    def get_related_variables(self):
+    def get_related_variables(self) -> Union[List, QuerySet]:
+        """ Returns the related variables by concept """
         if self.concept:
             variables = (
                 self.__class__.objects.select_related(
@@ -237,6 +238,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return variables
 
     def get_related_variables_by_period(self) -> OrderedDict:
+        """ Returns the related variables by concept, ordered by period """
         results = dict()
         periods = Period.objects.filter(study_id=self.dataset.study.id).all()
         for period in periods:
