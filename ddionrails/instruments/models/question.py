@@ -16,16 +16,15 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .instrument import Instrument
 
 
-class Question(ElasticMixin, DorMixin, models.Model):
+class Question(ModelMixin, models.Model):
     """
     Stores a single question, related to :model:`instruments.Tnstrument`.
     """
@@ -97,9 +96,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
             using=using,
             update_fields=update_fields,
         )
-
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "question"
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("instrument", "name")

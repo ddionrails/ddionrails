@@ -4,40 +4,25 @@
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
  */
 
+"use strict";
+
 const path = require("path");
 const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const glob = require("glob");
-
-entry: glob.sync("./test/**/*Spec.js");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
+    search: "./assets/js/search/src/main.js",
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     visualization: [
       "./assets/js/visualization.js",
       "./assets/scss/visualization.scss"
     ],
-
-    /* Workaround:
-       ddionrails-elasticsearch: search library
-    */
-    elasticsearchInline: glob.sync(
-      "./node_modules/ddionrails-elasticsearch/dist/inline.*.bundle.js"
-    ),
-    elasticsearchPolyfills: glob.sync(
-      "./node_modules/ddionrails-elasticsearch/dist/polyfills.*.bundle.js"
-    ),
-    elasticsearchVendor: glob.sync(
-      "./node_modules/ddionrails-elasticsearch/dist/vendor.*.bundle.js"
-    ),
-    elasticsearchMain: glob.sync(
-      "./node_modules/ddionrails-elasticsearch/dist/main.*.bundle.js"
-    )
   },
   output: {
     path: path.resolve("./static/dist/"),
@@ -55,6 +40,7 @@ module.exports = {
       chunkFilename: "[id].css",
       ignoreOrder: false // Enable to remove warnings about conflicting order
     })
+    new VueLoaderPlugin(),
   ],
 
   module: {
@@ -83,6 +69,7 @@ module.exports = {
           }
         ]
       },
+      /* Loads static files, e.g. images */
       {
         test: /\.(png|jpg|gif)$/,
         use: [
@@ -90,6 +77,19 @@ module.exports = {
             loader: "file-loader",
             options: {}
           }
+        ]
+      },
+      /* Loads vue single file components */
+      {
+        test: /\.vue$/,
+        use: "vue-loader"
+      },
+      /* Loads style block in vue single file components */
+      {
+        test: /\.css$/,
+        use: [
+          "vue-style-loader",
+          "css-loader"
         ]
       }
     ]

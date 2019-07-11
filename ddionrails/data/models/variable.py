@@ -16,16 +16,15 @@ from django.urls import reverse
 from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept, Period
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .dataset import Dataset
 
 
-class Variable(ElasticMixin, DorMixin, models.Model):
+class Variable(ModelMixin, models.Model):
     """
     Stores a single variable,
     related to :model:`data.Dataset`,
@@ -137,13 +136,10 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             update_fields=update_fields,
         )
 
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "variable"
-
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("name", "dataset")
 
-    class DOR(DorMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
+    class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["name", "dataset"]
 
     def __str__(self) -> str:

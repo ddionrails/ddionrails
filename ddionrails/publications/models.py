@@ -2,21 +2,19 @@
 """ Model definitions for ddionrails.publications app """
 
 import uuid
-from typing import Dict
 
 from django.db import models
 from django.urls import reverse
 
 from config.helpers import render_markdown
-from ddionrails.base.mixins import ModelMixin as DorMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.data.models import Dataset, Variable
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models import Instrument, Question
 from ddionrails.studies.models import Study
 
 
-class Publication(ElasticMixin, DorMixin, models.Model):
+class Publication(ModelMixin, models.Model):
     """
     Stores a single publication, related to :model:`studies.Study`.
     """
@@ -69,9 +67,6 @@ class Publication(ElasticMixin, DorMixin, models.Model):
         help_text="Foreign key to studies.Study",
     )
 
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "publication"
-
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
@@ -107,26 +102,6 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     def html_cite(self) -> str:
         """ Returns the "cite" field as a string containing HTML markup """
         return render_markdown(self.cite)
-
-    def to_elastic_dict(self) -> Dict[str, str]:
-        """ Returns a dictionary to be indexed by Elasticsearch """
-        try:
-            study_name = self.study.name
-        except AttributeError:
-            study_name = ""
-        return dict(
-            name=self.name,
-            sub_type=self.sub_type,
-            title=self.title,
-            author=self.author,
-            year=self.year,
-            period=self.year,
-            abstract=self.abstract,
-            cite=self.cite,
-            url=self.url,
-            doi=self.doi,
-            study=study_name,
-        )
 
 
 class Attachment(models.Model):

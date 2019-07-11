@@ -12,7 +12,6 @@ from django.urls import reverse
 
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin
-from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
 from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
@@ -66,7 +65,10 @@ class Topic(models.Model, ModelMixin):
     # relations #
     #############
     study = models.ForeignKey(
-        Study, on_delete=models.CASCADE, help_text="Foreign key to studies.Study"
+        Study,
+        related_name="topics",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to studies.Study",
     )
     parent = models.ForeignKey(
         "self",
@@ -109,7 +111,7 @@ class Topic(models.Model, ModelMixin):
         return children
 
 
-class Concept(models.Model, ModelMixin, ElasticMixin):
+class Concept(ModelMixin, models.Model):
     """
     Stores a single concept,
     related to :model:`data.Variable`,
@@ -163,9 +165,6 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
     topics = models.ManyToManyField(
         Topic, related_name="concepts", help_text="ManyToMany relation to concepts.Topic"
     )
-
-    # Used by ElasticMixin when indexed into Elasticsearch
-    DOC_TYPE = "concept"
 
     class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["name"]

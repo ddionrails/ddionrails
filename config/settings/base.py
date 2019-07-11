@@ -53,24 +53,22 @@ DJANGO_APPS = (
     "django.contrib.staticfiles",
 )
 THIRD_PARTY_APPS = (
+    "crispy_forms",
+    "django_elasticsearch_dsl",
     "django_extensions",
+    "django_rq",
     "easy_thumbnails",
-    "elasticsearch",
-    "elasticsearch_dsl",
     "filer",
+    "import_export",
     "markdown",
     "mptt",
-    "django_rq",
     "webpack_loader",
-    "import_export",
-    "crispy_forms",
 )
 LOCAL_APPS = (
     "ddionrails.api",
     "ddionrails.base",
     "ddionrails.concepts",
     "ddionrails.data",
-    "ddionrails.elastic",
     "ddionrails.imports",
     "ddionrails.instruments",
     "ddionrails.publications",
@@ -184,11 +182,6 @@ IMPORT_REPO_PATH.mkdir(parents=True, exist_ok=True)
 
 IMPORT_SUB_DIRECTORY = "ddionrails/"
 
-# DDI on Rails: index
-INDEX_HOST = os.getenv("ELASTICSEARCH_HOST", default="localhost")
-INDEX_PORT = os.getenv("ELASTICSEARCH_PORT", default=9200)
-INDEX_NAME = os.getenv("ELASTICSEARCH_INDEX", default="dor")
-
 # Django RQ
 RQ_SHOW_ADMIN_LINK = True
 
@@ -204,3 +197,19 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # https://django-import-export.readthedocs.io/en/latest/api_widgets.html?highlight=date#import_export.widgets.DateTimeWidget
 DATETIME_INPUT_FORMATS = ("%Y-%m-%d %H:%M:%S %Z",)
+
+APPEND_SLASH = True
+
+# Django Elasticsearch DSL
+# ------------------------------------------------------------------------------
+ELASTICSEARCH_HOST = os.getenv("ELASTICSEARCH_HOST", "localhost")
+ELASTICSEARCH_PORT = os.getenv("ELASTICSEARCH_PORT", 9200)
+# https://github.com/sabricot/django-elasticsearch-dsl#quickstart
+ELASTICSEARCH_DSL = {"default": {"hosts": f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"}}
+# https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_autosync
+ELASTICSEARCH_DSL_AUTOSYNC = False
+# https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_index_settings
+ELASTICSEARCH_DSL_INDEX_SETTINGS = {"number_of_shards": 1, "number_of_replicas": 0}
+# Prefix for index names.
+# Overwritten in testing settings to separate testings indices which get deleted a lot
+ELASTICSEARCH_DSL_INDEX_PREFIX = ""

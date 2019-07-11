@@ -23,10 +23,6 @@ RUN apk add --no-cache \
     && pip install --upgrade pipenv \
     && pipenv install --system --ignore-pipfile \
     && npm install \
-    && cd ./node_modules/ddionrails-elasticsearch \
-    && npm install \
-    && ./node_modules/.bin/ng build --prod \
-    && cd ../../ \
     && npm run build \
     && apk del nodejs nodejs-npm \
     && pip uninstall -y pipenv \

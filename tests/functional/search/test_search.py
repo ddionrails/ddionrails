@@ -18,35 +18,6 @@ pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
 
 
 @pytest.fixture()
-def es_client():
-    mapping_file = "ddionrails/elastic/mapping.json"
-    with open(mapping_file, "r") as infile:
-        mapping = json.loads(infile.read())
-    es = Elasticsearch()
-
-    # workaround to delete existing index
-    es.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
-    es.indices.create(index=settings.INDEX_NAME, ignore=400, body=mapping)
-    # wait for elastic search index to be created
-    time.sleep(0.1)
-    yield es
-    es.indices.delete(index=settings.INDEX_NAME, ignore=[400, 404])
-
-
-@pytest.fixture()
-def publication_in_search_index(
-    settings, es_client, study  # pylint: disable=unused-argument
-):
-    # redirect study data path to test data directory
-    settings.IMPORT_REPO_PATH = Path("tests/functional/test_data/")
-    manager = StudyImportManager(study)
-    manager.import_single_entity("study")
-    manager.import_single_entity("publications")
-    # wait for indexing to be done
-    time.sleep(1)
-
-
-@pytest.fixture()
 def search_url(live_server):
     return live_server + "/search/"
 
@@ -125,13 +96,8 @@ def find_publication_by_query(browser, search_url, query):
     assert browser.is_text_present("Go to DOI")
 
 
+@pytest.mark.skip
 class TestPublicationSearch:
-    def test_publication_is_indexed(
-        self, es_client, publication_in_search_index  # pylint: disable=unused-argument
-    ):
-        assert 1 == Publication.objects.count()
-        assert 1 == es_client.count(settings.INDEX_NAME, "publication").get("count")
-
     def test_publication_search_by_title(
         self,
         publication_in_search_index,  # pylint: disable=unused-argument

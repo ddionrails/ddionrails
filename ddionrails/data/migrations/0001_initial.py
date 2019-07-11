@@ -13,7 +13,6 @@ from django.conf import settings
 from django.db import migrations, models
 
 import ddionrails.base.mixins
-import ddionrails.elastic.mixins
 
 
 class Migration(migrations.Migration):
@@ -283,11 +282,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"unique_together": {("name", "dataset")}},
-            bases=(
-                ddionrails.elastic.mixins.ModelMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="Transformation",

@@ -2,7 +2,10 @@
 
 """ Views for ddionrails.publications app """
 
-from django.shortcuts import get_object_or_404, render
+from urllib.parse import urlencode
+
+from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
@@ -42,10 +45,13 @@ class PublicationDetailView(DetailView):
         return context
 
 
-def study_publication_list(request, study_name):
+# request is a required parameter
+def study_publication_list(
+    request: WSGIRequest, study_name: str  # pylint: disable=unused-argument,
+):
     study = get_object_or_404(Study, name=study_name)
-    context = dict(
-        study=study,
-        # publications=study.publications.all(),
-    )
-    return render(request, "publications/study_publication_list.html", context=context)
+    # e.g. Studies=["soep-is"]
+    query_string = urlencode({"Studies": f'["{study.title()}"]'})
+    # e.g. http://localhost/search/publications?Studies=["soep-is"]
+    url = f"/search/publications?{query_string}"
+    return redirect(url)

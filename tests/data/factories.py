@@ -6,7 +6,11 @@
 import factory
 
 from ddionrails.data.models import Dataset, Transformation, Variable
-from tests.concepts.factories import PeriodFactory
+from tests.concepts.factories import (
+    AnalysisUnitFactory,
+    ConceptualDatasetFactory,
+    PeriodFactory,
+)
 from tests.studies.factories import StudyFactory
 
 
@@ -14,6 +18,10 @@ class DatasetFactory(factory.django.DjangoModelFactory):
     """Dataset factory"""
 
     study = factory.SubFactory(StudyFactory, name="some-study")
+    analysis_unit = factory.SubFactory(AnalysisUnitFactory, name="some-analysis-unit")
+    conceptual_dataset = factory.SubFactory(
+        ConceptualDatasetFactory, name="some-conceptual-dataset"
+    )
     period = factory.SubFactory(PeriodFactory, name="some-period")
 
     class Meta:
