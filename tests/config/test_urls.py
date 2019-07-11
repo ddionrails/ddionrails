@@ -54,3 +54,28 @@ def test_urlconf_with_debug_false(settings):
 def test_imprint():
     assert "/imprint/" == reverse("imprint")
     assert "imprint" == resolve("/imprint/").view_name
+
+
+def test_search():
+    assert "/search/" == reverse("search")
+    assert "search" == resolve("/search/").view_name
+
+
+def test_search_concepts():
+    assert "search" == resolve("/search/concepts").view_name
+
+
+def test_search_topics():
+    assert "search" == resolve("/search/topics").view_name
+
+
+def test_search_publications():
+    assert "search" == resolve("/search/publications").view_name
+
+
+def test_search_questions():
+    assert "search" == resolve("/search/questions").view_name
+
+
+def test_search_variables():
+    assert "search" == resolve("/search/variables").view_name

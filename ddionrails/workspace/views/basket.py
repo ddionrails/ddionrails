@@ -4,6 +4,7 @@
 
 import uuid
 from collections import OrderedDict
+from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.core.handlers.wsgi import WSGIRequest
@@ -153,8 +154,11 @@ def basket_search(
 ):
     """ Search view in the context of a basket's study """
     basket = get_object_or_404(Basket, pk=basket_id)
-    context = dict(basket=basket, study_id=basket.study_id)
-    return render(request, "workspace/angular.html", context=context)
+    # e.g. Studies=["soep-is"]
+    query_string = urlencode({"Study": f'["{basket.study.title()}"]'})
+    # e.g. http://localhost/search/variables?Study=["soep-is"]
+    url = f"/search/variables?{query_string}"
+    return redirect(url)
 
 
 # request is a required parameter

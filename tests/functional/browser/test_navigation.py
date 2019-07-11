@@ -28,23 +28,10 @@ def test_get_imprint_page_from_home(browser, live_server):
     assert expected == heading.text
 
 
-def test_get_search_page_from_home(browser, live_server):
-    browser.visit(live_server.url)
-    browser.find_link_by_text("Search").first.click()
-    assert "Keep my filters" in browser.html
-
-
 def test_get_login_page_from_home(browser, live_server):
     browser.visit(live_server.url)
     browser.find_link_by_text("Register / log in").first.click()
     assert "User login" in browser.html
-
-
-def test_get_back_home_from_other_page(browser, search_url):
-    browser.visit(search_url)
-    browser.find_link_by_text("paneldata.org").first.click()
-    expected = "paneldata.org"
-    assert expected == browser.title
 
 
 def test_get_register_page_from_login(browser, login_url):

@@ -37,6 +37,18 @@ services:
     env_file:
       - docker/environments/database.env.example
 
+  elasticsearch:
+    environment:
+      - discovery.type=single-node
+      # settings for dejavu-access, see https://hub.docker.com/r/appbaseio/dejavu/
+      # https://opensource.appbase.io/reactive-manual/getting-started/reactivebase.html
+      - http.cors.enabled=true
+      - http.cors.allow-credentials=true
+      - http.cors.allow-origin=* # TODO set host and port of dejavu / reactivesearch
+      - http.cors.allow-headers=Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With
+    ports:
+      - 9200:9200
+
   nginx:
     volumes: 
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf

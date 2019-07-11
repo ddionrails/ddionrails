@@ -88,26 +88,6 @@ class TestVariableJsonView:
         assert content["uni"] == variable.categories
 
 
-class TestVariablePreviewIdView:
-    def test_preview_id_view_with_valid_id(self, client, variable):
-        url = reverse("api:variable_preview", kwargs={"variable_id": variable.pk})
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert response["Content-Type"] == "text/plain"
-
-        content = json.loads(response.content)
-        assert content["name"] == variable.name
-        assert content["title"] == variable.title()
-        assert content["type"] == "variable"
-        assert variable.name in content["html"]
-
-    @pytest.mark.django_db
-    def test_preview_id_view_with_invalid_id(self, client, uuid_identifier):
-        url = reverse("api:variable_preview", kwargs={"variable_id": uuid_identifier})
-        response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-
-
 class TestVariableRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, variable):
         request = rf.get("variable", kwargs={"pk": variable.pk})

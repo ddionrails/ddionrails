@@ -11,7 +11,7 @@ from ddionrails.instruments.models import (
     Question,
     QuestionVariable,
 )
-from tests.concepts.factories import ConceptFactory, PeriodFactory
+from tests.concepts.factories import AnalysisUnitFactory, ConceptFactory, PeriodFactory
 from tests.data.factories import VariableFactory
 from tests.studies.factories import StudyFactory
 
@@ -19,8 +19,9 @@ from tests.studies.factories import StudyFactory
 class InstrumentFactory(factory.django.DjangoModelFactory):
     """Instrument factory"""
 
-    study = factory.SubFactory(StudyFactory, name="some-study")
+    analysis_unit = factory.SubFactory(AnalysisUnitFactory, name="some-analysis-unit")
     period = factory.SubFactory(PeriodFactory, name="some-period")
+    study = factory.SubFactory(StudyFactory, name="some-study")
 
     class Meta:
         model = Instrument

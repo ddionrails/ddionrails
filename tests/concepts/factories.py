@@ -56,7 +56,7 @@ class PeriodFactory(factory.django.DjangoModelFactory):
 class TopicFactory(factory.django.DjangoModelFactory):
     """Topic factory"""
 
-    study = factory.SubFactory(StudyFactory, name="some-study")
+    study = factory.SubFactory(StudyFactory, name="some-study", label="Some Study")
 
     class Meta:
         model = Topic

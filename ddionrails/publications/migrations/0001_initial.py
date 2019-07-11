@@ -10,7 +10,6 @@ import django.db.models.deletion
 from django.db import migrations, models
 
 import ddionrails.base.mixins
-import ddionrails.elastic.mixins
 
 
 class Migration(migrations.Migration):
@@ -207,10 +206,6 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"unique_together": {("study", "name")}},
-            bases=(
-                ddionrails.elastic.mixins.ModelMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
     ]

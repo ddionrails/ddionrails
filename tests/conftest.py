@@ -8,7 +8,12 @@ from io import BytesIO
 
 import PIL.Image
 import pytest
+from django.core.management import call_command
 
+from ddionrails.concepts.documents import ConceptDocument, TopicDocument
+from ddionrails.data.documents import VariableDocument
+from ddionrails.instruments.documents import QuestionDocument
+from ddionrails.publications.documents import PublicationDocument
 from tests.base.factories import SystemFactory
 from tests.concepts.factories import (
     AnalysisUnitFactory,
@@ -52,7 +57,10 @@ def basket(study, user):
 def concept(db):
     """ A concept in the database """
     return ConceptFactory(
-        name="some-concept", label="Some Concept", description="This is some concept"
+        name="some-concept",
+        label="Some Concept",
+        label_de="Some Konzept",
+        description="This is some concept",
     )
 
 
@@ -81,6 +89,24 @@ def dataset(db):
     return DatasetFactory(
         name="some-dataset", label="Some Dataset", description="This is some dataset"
     )
+
+
+@pytest.fixture(scope="session")
+def elasticsearch_indices():
+    """ Fixture that creates elasticsearch indices and cleans up after testing """
+    from django.conf import settings
+
+    # setting ELASTICSEARCH_DSL_AUTOSYNC to True enables indexing when saving model instances
+    settings.ELASTICSEARCH_DSL_AUTOSYNC = True
+
+    # Create search indices
+    call_command("search_index", "--create", force=True)
+
+    # Run tests
+    yield
+
+    # Delete search indices after testing
+    call_command("search_index", "--delete", force=True)
 
 
 @pytest.fixture()
@@ -163,7 +189,13 @@ def system(db):
 @pytest.fixture
 def topic(db):
     """ A topic in the database """
-    return TopicFactory(name="some-topic")
+    return TopicFactory(
+        name="some-topic",
+        label="some-topic",
+        label_de="some-topic",
+        description="some-topic",
+        description_de="some-topic",
+    )
 
 
 @pytest.fixture
@@ -226,3 +258,107 @@ def variable_with_concept(variable, concept):
 def uuid_identifier():
     """ A UUID that is used for testing views and URLConfs """
     return uuid.UUID("12345678123456781234567812345678")
+
+
+@pytest.fixture
+def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-argument
+    """ Fixture that indexes a concept and cleans up after testing
+        uses the indices created by the "elasticsearch_indices" fixture
+    """
+    # saving the concept, will index the concept as well
+    concept.save()
+    expected = 1
+    assert expected == ConceptDocument.search().count()
+
+    # Run tests
+    yield
+
+    # Delete documents in index after testing
+    response = ConceptDocument.search().query("match_all").delete()
+    assert expected == response["deleted"]
+
+
+@pytest.fixture
+def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argument
+    """ Fixture that indexes a topic and cleans up after testing
+        uses the indices created by the "elasticsearch_indices" fixture
+    """
+    # saving the topic, will index the topic as well
+    topic.save()
+    expected = 1
+    assert expected == TopicDocument.search().count()
+
+    # Run tests
+    yield
+
+    # Delete documents in index after testing
+    response = TopicDocument.search().query("match_all").delete()
+    assert expected == response["deleted"]
+
+
+@pytest.fixture
+def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-argument
+    """ Fixture that indexes a question and cleans up after testing
+        uses the indices created by the "elasticsearch_indices" fixture
+    """
+    # saving the question, will index the question as well
+    question.save()
+    expected = 1
+    assert expected == QuestionDocument.search().count()
+
+    # Run tests
+    yield
+
+    # Delete documents in index after testing
+    response = QuestionDocument.search().query("match_all").delete()
+    assert expected == response["deleted"]
+
+
+@pytest.fixture
+def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-argument
+    """ Fixture that indexes a variable and cleans up after testing
+        uses the indices created by the "elasticsearch_indices" fixture
+    """
+    # saving the variable, will index the variable as well
+    variable.save()
+    expected = 1
+    assert expected == VariableDocument.search().count()
+
+    # Run tests
+    yield
+
+    # Delete documents in index after testing
+    response = VariableDocument.search().query("match_all").delete()
+    assert expected == response["deleted"]
+
+
+@pytest.fixture
+def publication_with_umlauts(db):  # pylint: disable=unused-argument
+    return PublicationFactory(
+        name="1",
+        title="Some publication with Umlauts",
+        author="Max Müller",
+        abstract="Ein schönes Buch über Fußball und Ähnliches",
+        year="2019",
+        sub_type="book",
+    )
+
+
+@pytest.fixture
+def publications_index(
+    elasticsearch_indices, publication_with_umlauts  # pylint: disable=unused-argument
+):
+    """ Fixture that indexes a publication and cleans up after testing
+        uses the indices created by the "elasticsearch_indices" fixture
+    """
+    # saving the publication, will index the publication as well
+    publication_with_umlauts.save()
+    expected = 1
+    assert expected == PublicationDocument.search().count()
+
+    # Run tests
+    yield
+
+    # Delete documents in index after testing
+    response = PublicationDocument.search().query("match_all").delete()
+    assert expected == response["deleted"]

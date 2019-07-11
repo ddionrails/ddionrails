@@ -25,10 +25,6 @@ MIDDLEWARE = [
 
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
 
-INDEX_NAME = (
-    "dor"
-)  # This necessary beacuse ddionrails-elasticsearch has the index hardwired. No way to switch index for search.
-
 logging.disable(logging.CRITICAL)
 
 RQ_QUEUES = {
@@ -47,3 +43,7 @@ RQ_QUEUES = {
 django_rq.queues.get_redis_connection = (
     lambda _, strict: FakeStrictRedis() if strict else FakeRedis()
 )
+
+# Django Elasticsearch DSL
+# ------------------------------------------------------------------------------
+ELASTICSEARCH_DSL_INDEX_PREFIX = "testing_"

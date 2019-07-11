@@ -52,8 +52,7 @@ class TestStudyPublicationList:
             "publ:study_publication_list", kwargs={"study_name": publication.study.name}
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert publication.study == response.context["study"]
+        assert status.HTTP_302_FOUND == response.status_code
 
     @pytest.mark.django_db
     def test_with_invalid_name(self, client):

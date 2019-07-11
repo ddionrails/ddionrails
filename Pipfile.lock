@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f5ac60ad07b4334fd114f0d33a42b28289c55b47e778ea8f775e2e84ef8c370a"
+            "sha256": "8c97a91892d047361860adfb0e45e07a3a08b23deb6c192d536fb9bc055a79e3"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -66,6 +66,10 @@
             ],
             "index": "pypi",
             "version": "==1.7.2"
+        },
+        "django-elasticsearch-dsl": {
+            "git": "https://github.com/sabricot/django-elasticsearch-dsl.git",
+            "ref": "9a9e7bf2f037e18bfdedc571eb50968cc4dcf782"
         },
         "django-extensions": {
             "hashes": [
@@ -143,18 +147,18 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:bb8f9a365ba6650d599428538c8aed42033264661d8f7d353da59d5892305f72",
-                "sha256:fead47ebfcaabd1c53dbfc21403eb99ac207eef76de8002fe11a1c8ec9589ce2"
+                "sha256:1f0f633e3b500d5042424f75a505badf8c4b9962c1b4734cdfb3087fb67920be",
+                "sha256:fb5ab15ee283f104b5a7a5695c7e879cb2927e4eb5aed9c530811590b41259ad"
             ],
-            "version": "==2.4.1"
+            "version": "==6.4.0"
         },
         "elasticsearch-dsl": {
             "hashes": [
-                "sha256:99bbb4dcbcfb5db4f57499237f24acf1397543e895e99994a09af2a6fbef93bc",
-                "sha256:c8132c6e1bdfc5c345999d3949dd53a53b59ea73e2ee005f695de78be0552ceb"
+                "sha256:26416f4dd46ceca43d62ef74970d9de4bdd6f4b0f163316f0b432c9e61a08bec",
+                "sha256:f60aea7fd756ac1fbe7ce114bbf4949aefbf495dfe8896640e787c67344f12f6"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==6.4.0"
         },
         "et-xmlfile": {
             "hashes": [

@@ -131,7 +131,7 @@ class TestDatasetJsonImport:
         dataset_json_importer._import_dataset(name, content)
         mocked_import_variable.assert_called_once()
 
-    def test_import_variable_method(self, mocker, dataset_json_importer, dataset):
+    def test_import_variable_method(self, dataset_json_importer, dataset):
         assert 0 == Variable.objects.count()
         var = dict(
             study="some-study",
@@ -177,7 +177,7 @@ class TestDatasetJsonImport:
         assert True is variable.categories["missings"][0]
 
     def test_import_variable_method_without_statistics(
-        self, mocker, dataset_json_importer, dataset
+        self, dataset_json_importer, dataset
     ):
         assert 0 == Variable.objects.count()
         var = dict(
@@ -194,7 +194,7 @@ class TestDatasetJsonImport:
         assert dict() == variable.statistics
 
     def test_import_variable_method_without_categories(
-        self, mocker, dataset_json_importer, dataset
+        self, dataset_json_importer, dataset
     ):
         assert 0 == Variable.objects.count()
         var = dict(
@@ -213,9 +213,7 @@ class TestDatasetJsonImport:
         variable = Variable.objects.first()
         assert [] == variable.categories
 
-    def test_import_variable_method_with_uni_key(
-        self, mocker, dataset_json_importer, dataset
-    ):
+    def test_import_variable_method_with_uni_key(self, dataset_json_importer, dataset):
         var = dict(
             study="some-study",
             dataset="some-dataset",
