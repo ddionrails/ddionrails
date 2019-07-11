@@ -34,11 +34,6 @@ def mocked_update_all_studies_completely(mocker):
 
 
 @pytest.fixture
-def mocked_enqueue(mocker):
-    return mocker.patch("django_rq.enqueue")
-
-
-@pytest.fixture
 def mocked_import_single_entity(mocker):
     return mocker.patch(
         "ddionrails.imports.manager.StudyImportManager.import_single_entity"
@@ -85,9 +80,9 @@ def test_update_single_study_entity_filename(study, mocked_import_single_entity)
     mocked_import_single_entity.assert_called_once_with("instruments", filename)
 
 
-def test_update_all_studies_completely(study, mocked_enqueue):
+def test_update_all_studies_completely(study, mocked_update_single_study):
     update.update_all_studies_completely(True)
-    mocked_enqueue.assert_called_once()
+    mocked_update_single_study.assert_called_once()
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
@@ -173,12 +168,3 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
     result = CliRunner().invoke(update.command, [study.name, "periods", option, filename])
     assert 1 == result.exit_code
     assert "Support for single file import not available for entity" in result.output
-
-
-def test_update_command_with_valid_study_name_and_concepts(
-    study, mocked_update_single_study, mocked_enqueue
-):
-    result = CliRunner().invoke(update.command, [study.name, "concepts"])
-    assert 0 == result.exit_code
-    mocked_update_single_study.assert_called_once_with(study, False, ("concepts",), None)
-    mocked_enqueue.assert_called_once()

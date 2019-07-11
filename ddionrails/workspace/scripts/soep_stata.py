@@ -196,22 +196,15 @@ class SoepStata(ScriptConfig, SoepMixin):
         options = {
             "m": "\nkeep if (sex == 1)",
             "f": "\nkeep if (sex == 2)",
-            "b": "\n/* all genders */"
+            "b": "\n/* all genders */",
         }
         gender = self.settings.get("gender", "b")
         gender_selection = options[gender]
-        return (
-            "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n"
-            f"{gender_selection}"
-        )
+        return "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
 
     @staticmethod
     def _render_sort_pfad():
-        return (
-            "\n\n"
-            "* * * SORT PFAD * * *\n\n"
-            'save "${MY_PATH_OUT}pfad.dta", replace'
-        )
+        return "\n\n" "* * * SORT PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace'
 
     def _render_hrf(self):
         heading = "\n\n* * * HRF * * *\n"

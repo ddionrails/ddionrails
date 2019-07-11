@@ -91,7 +91,7 @@ class TestSoepStataClass:
         assert command in result
 
     def test_disclaimer(self, soepstata):
-        result = soepstata._render_disclaimer() # pylint: disable=protected-access
+        result = soepstata._render_disclaimer()  # pylint: disable=protected-access
         expected = (
             "\n"
             "* --------------------------------------------------------------------.\n"
@@ -108,11 +108,9 @@ class TestSoepStataClass:
         assert expected == result
 
     def test_render_sort_pfad(self, soepstata):
-        result = soepstata._render_sort_pfad() # pylint: disable=protected-access
+        result = soepstata._render_sort_pfad()  # pylint: disable=protected-access
         expected = (
-            "\n\n"
-            "* * * SORT PFAD * * *\n\n"
-            'save "${MY_PATH_OUT}pfad.dta", replace'
+            "\n\n" "* * * SORT PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace'
         )
         assert expected == result
 
@@ -127,6 +125,7 @@ class TestSoepStataClass:
             "log close"
         )
         assert expected == result
+
 
 class TestSoepSpssClass:
     def test_render_gender_method_with_male(self, soepspss):
