@@ -119,7 +119,7 @@ class TestSoepStata:
         expected = (
             "\n\n"
             "* * * DONE * * *\n\n"
-            'label data "paneldata.org: Magic at work!"\n'
+            'label data "paneldata.org"\n'
             'save "${MY_FILE_OUT}", replace\n'
             "desc\n\n"
             "log close"
@@ -149,6 +149,20 @@ class TestSoepSpssClass:
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
+    def test_render_done(self, soepspss):
+        result = soepspss._render_done()  # pylint: disable=protected-access
+        expected = (
+            "\n"
+            "* ### DONE ### *.\n\n"
+            "dataset close all.\n"
+            "dataset name new.\n"
+            "dataset activate new.\n"
+            'file label "paneldata.org".\n'
+            "save outfile = !pathout+'new.sav'.\n"
+            "desc all."
+        )
+        assert expected == result
+
 
 class TestSoepR:
     def test_render_gender_method_with_male(self, soepr):
@@ -177,7 +191,7 @@ class TestSoepR:
         expected = (
             "\n"
             "### DONE ###\n\n"
-            'attr(master, "label") <- "paneldata.org: Magic at work!"\n'
+            'attr(master, "label") <- "paneldata.org"\n'
             "str(master)\n"
             'save(master, file=file.path(path_out, "master.RData"))'
         )

@@ -145,7 +145,7 @@ class SoepR(SoepStata):
         return (
             "\n"
             "### DONE ###\n\n"
-            'attr(master, "label") <- "paneldata.org: Magic at work!"\n'
+            'attr(master, "label") <- "paneldata.org"\n'
             "str(master)\n"
             'save(master, file=file.path(path_out, "master.RData"))'
         )
