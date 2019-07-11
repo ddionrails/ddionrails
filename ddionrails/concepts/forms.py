@@ -30,7 +30,7 @@ class TopicForm(forms.ModelForm):
 class ConceptForm(forms.ModelForm):
     class Meta:
         model = Concept
-        fields = ("name", "label", "description")
+        fields = ("name", "label", "label_de", "description")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

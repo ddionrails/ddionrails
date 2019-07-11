@@ -1,4 +1,4 @@
-{% load render_bundle from webpack_loader %} 
+{% load render_bundle from webpack_loader %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -12,65 +12,65 @@
         {% endblock title %}
     </title>
     <!-- Webpack bundle: "index" CSS -->
-    {% render_bundle 'index' 'css' %} 
-    {% block styles %} 
+    {% render_bundle 'index' 'css' %}
+    {% block styles %}
     {% endblock styles %}
 </head>
 
 <body>
-    {% block header %} 
+    {% block header %}
     {% endblock header %}
     <nav id="paneldata-navbar" id="nav-container">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> 
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent">
             <ul class="navbar-nav container-fluid">
-                <li class="nav-item"> 
+                <li class="nav-item">
                     <a type="button" class="btn" href="/">paneldata.org</a>
                 </li>
-                <li class="nav-item dropdown"> 
-                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" 
+                <li class="nav-item dropdown">
+                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                         Studies
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for study in studies %} 
+                        {% for study in studies %}
                         <a class="dropdown-item" href="/study/{{ study.id }}">{{ study.title }}</a>
                         {% endfor %}
                     </div>
                 </li>
-                <li class="nav-item"> 
+                <li class="nav-item">
                     <a type="button" class="btn" href="/search/">Search</a>
                 </li>
 
             </ul>
             <ul class="navbar-nav container-fluid justify-content-end">
                 {% if user.is_authenticated %}
-                <li class="nav-item text-nowrap"> 
+                <li class="nav-item text-nowrap">
                     <a type="button" class="btn" href="/workspace/baskets/">My baskets</a>
                 </li>
-                <li class="nav-item text-nowrap"> 
+                <li class="nav-item text-nowrap">
                     <a type="button" class="btn" href="/workspace/account/">My account</a>
                 </li>
-                <li class="nav-item"> 
+                <li class="nav-item">
                     <a type="button" class="btn" href="/workspace/logout/">Logout</a>
                 </li>
                 {% else %}
-                <li class="nav-item"> 
-                    <a type="button" class="btn" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a> 
+                <li class="nav-item">
+                    <a type="button" class="btn" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a>
                 </li>
                 {% endif %}
             </ul>
         </div>
 
-        {% block studynav %} 
+        {% block studynav %}
         {% endblock studynav %}
     </nav>
     <!-- /.container -->
     <div class="flex-column d-flex px-5 justify-content-center" id="main-container">
-        {% block content%} 
+        {% block content%}
         {% endblock content %}
     </div>
     <!-- /.container -->
@@ -88,12 +88,8 @@
     {% include "tracker.html" %}
     <!-- Webpack bundle: "index" JS -->
     {% render_bundle 'index' 'js' %}
-    <!-- ddionrails JS search library -->
-    {% render_bundle 'elasticsearchInline' 'js' %} 
-    {% render_bundle 'elasticsearchPolyfills' 'js' %} 
-    {% render_bundle 'elasticsearchVendor' 'js' %} 
-    {% render_bundle 'elasticsearchMain' 'js' %} 
-    {% block scripts %} 
+
+    {% block scripts %}
     {% endblock scripts %}
 </body>
 

@@ -2,7 +2,9 @@
 
 """ Views for ddionrails.concepts app """
 
-from django.views.generic import DetailView, ListView
+from django.core.handlers.wsgi import WSGIRequest
+from django.shortcuts import redirect
+from django.views.generic import DetailView
 
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Question
@@ -10,10 +12,10 @@ from ddionrails.instruments.models import Question
 from .models import Concept
 
 
-class ConceptListView(ListView):
-    """ ListView for concepts.Concept model """
-
-    model = Concept
+def concept_list(request: WSGIRequest):  # pylint: disable=unused-argument
+    """ Redirect to concept search """
+    url = "/search/concepts"
+    return redirect(url)
 
 
 class ConceptDetailView(DetailView):

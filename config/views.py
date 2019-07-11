@@ -4,11 +4,9 @@
 
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
-from urllib3 import PoolManager
 
 from ddionrails.studies.models import Study
 
-HTTP = PoolManager()
 
 # exception is a required parameter
 def bad_request(request, exception):  # pylint: disable=unused-argument

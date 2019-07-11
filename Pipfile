@@ -33,8 +33,10 @@ psycopg2-binary = "*"
 
 # Elasticsearch
 # ------------------------------------------------------------------------------
- # pin until ElasticSearch service is updated
-elasticsearch-dsl = "==2.2.0"
+# see https://github.com/sabricot/django-elasticsearch-dsl#quickstart
+# version 6.4.2 is not available on PyPi at the moment
+django-elasticsearch-dsl = {git = "https://github.com/sabricot/django-elasticsearch-dsl.git",ref = "6.4.2"}
+elasticsearch-dsl = "<=7.*"
 
 # Markup
 # ------------------------------------------------------------------------------

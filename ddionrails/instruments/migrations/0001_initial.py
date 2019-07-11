@@ -14,7 +14,6 @@ from django.db import migrations, models
 
 import config.validators
 import ddionrails.base.mixins
-import ddionrails.elastic.mixins
 
 
 class Migration(migrations.Migration):
@@ -211,11 +210,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"unique_together": {("instrument", "name")}},
-            bases=(
-                ddionrails.elastic.mixins.ModelMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="QuestionImage",

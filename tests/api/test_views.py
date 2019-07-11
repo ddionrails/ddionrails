@@ -28,39 +28,6 @@ def response_is_json(response) -> bool:
     return expected_content_type == response["content-type"]
 
 
-class TestPreviewView:
-    def test_variable_preview(self, client, variable):
-        url = f"/api/test/preview/variable/{variable.id}"
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-    # TODO: Publication has a title field. This breaks the title() method call
-
-    # def test_publication_preview(self, client, publication):
-    #     url = f"/api/test/preview/publication/{publication.id}"
-    #     response = client.get(url)
-    #     assert status.HTTP_200_OK == response.status_code
-
-    def test_question_preview(self, client, question):
-        url = f"/api/test/preview/question/{question.id}"
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-    def test_concept_preview(self, client, concept):
-        url = f"/api/test/preview/concept/{concept.id}"
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-    @pytest.mark.django_db
-    def test_preview_with_invalid_type(self, client, uuid_identifier):
-        url = f"/api/test/preview/no-model/{uuid_identifier}"
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        content = response.content.decode("utf-8")
-        expected = "No valid type."
-        assert expected == content
-
-
 class TestObjectRedirectView:
     def test_variable_redirect(self, client, variable):
         url = f"/api/test/redirect/variable/{variable.id}"

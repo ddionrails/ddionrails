@@ -37,25 +37,6 @@ def _get_object(object_type: str, object_id: str):
 
 # VIEWS
 
-# request is a required parameter
-def test_preview(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    object_type: str,
-    object_id: str,
-):
-    """ View to preview an object """
-    obj = _get_object(object_type, object_id)
-    if obj:
-        response = dict(
-            name=obj.name,
-            title=obj.title(),
-            type=object_type.lower(),
-            html="<div>This is a %s with the ID %s</div>" % (object_type, object_id),
-        )
-        return HttpResponse(json.dumps(response), content_type="text/plain")
-    else:
-        return HttpResponse("No valid type.")
-
 
 # request is a required parameter
 def object_redirect(

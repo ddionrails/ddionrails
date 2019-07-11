@@ -5,14 +5,13 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.views.generic.base import TemplateView
 
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
 from config.views import HomePageView
 from ddionrails.data.views import VariableRedirectView
-from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
 
 # These variable names are desired by Django
@@ -41,7 +40,11 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
     path("workspace/", include("ddionrails.workspace.urls", namespace="workspace")),
-    path("search/", angular_search, name="search"),
+    re_path(
+        "^search/(concepts|publications|questions|topics|variables)?$",
+        TemplateView.as_view(template_name="search/search.html"),
+        name="search",
+    ),
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
@@ -75,7 +78,7 @@ urlpatterns = [
         instruments_views.QuestionRedirectView.as_view(),
         name="question_redirect",
     ),
-    path("study/<uuid:id>", StudyRedirectView.as_view(), name="study_redirect",),
+    path("study/<uuid:id>", StudyRedirectView.as_view(), name="study_redirect"),
 ]
 
 if settings.DEBUG:

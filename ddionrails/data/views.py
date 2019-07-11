@@ -6,7 +6,7 @@ import json
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
-from django.shortcuts import HttpResponse, get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, RedirectView
 
 from config.helpers import RowHelper
@@ -147,42 +147,3 @@ def variable_json(
         name=variable_name,
     )
     return JsonResponse(variable.to_dict())
-
-
-# request is a required parameter
-def extend_context_for_variable(
-    request: WSGIRequest, context  # pylint: disable=unused-argument
-):
-    variable = context["variable"]
-    study = variable.get_study()
-    context["related_variables"] = variable.get_related_variables()
-    context["label_table"] = LabelTable(context["related_variables"])
-    context["questions"] = Question.objects.filter(
-        questions_variables__variable=variable.id
-    ) | Question.objects.filter(
-        questions_variables__variable__target_variables__target_id=variable.id
-    )
-    context["study"] = study
-    context["concept"] = variable.get_concept()
-    context["row_helper"] = RowHelper()
-    context["basket_list"] = (
-        Basket.objects.filter(study_id=study.id).filter(user_id=request.user.id).all()
-    )  # TODO user!
-    return context
-
-
-# request is a required parameter
-def variable_preview_id(
-    request: WSGIRequest, variable_id  # pylint: disable=unused-argument
-):
-    variable = get_object_or_404(Variable, pk=variable_id)
-    context = extend_context_for_variable(request, dict(variable=variable))
-    response = dict(
-        name=variable.name,
-        title=variable.title(),
-        type="variable",
-        html=render(request, "data/variable_info.html", context=context).content.decode(
-            "utf8"
-        ),
-    )
-    return HttpResponse(json.dumps(response), content_type="text/plain")
