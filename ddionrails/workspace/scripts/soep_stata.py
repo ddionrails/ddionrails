@@ -267,7 +267,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         return (
             "\n\n"
             "* * * DONE * * *\n\n"
-            'label data "paneldata.org: Magic at work!"\n'
+            'label data "paneldata.org"\n'
             'save "${MY_FILE_OUT}", replace\n'
             "desc\n\n"
             "log close"

@@ -147,11 +147,13 @@ class SoepSpss(SoepStata):
     @staticmethod
     def _render_done() -> str:
         """ Render a "done" section of the script file """
-        script = "\n* ### DONE ### *.\n"
-        script += "\ndataset close all."
-        script += "\ndataset name new."
-        script += "\ndataset activate new."
-        script += '\nfile label "paneldata.org: Magic at work!".'
-        script += "\nsave outfile = !pathout+'new.sav'."
-        script += "\ndesc all."
-        return script
+        return (
+            "\n"
+            "* ### DONE ### *.\n\n"
+            "dataset close all.\n"
+            "dataset name new.\n"
+            "dataset activate new.\n"
+            'file label "paneldata.org".\n'
+            "save outfile = !pathout+'new.sav'.\n"
+            "desc all."
+        )
