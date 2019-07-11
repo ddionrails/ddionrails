@@ -19,6 +19,18 @@ In contrast to similar products, DDI on Rails is study-independent and
 open-source, is able to document data with multiple versions/distributions and
 the specific characteristics of a longitudinal study, and is easy to use.
 
+## Table of contents
+
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installing](#installing)
+    * [Development Environment](#development-environment)
+    * [Production Environment](#production-environment)
+  * [Importing Data](#importing-data)
+* [Running the tests](#running-the-tests)
+* [Versioning](#versioning)
+* [GNU AGPL-3.0](#gnu-agpl-30)
+
 ## Getting Started
 
 ### Prerequisites
@@ -39,7 +51,7 @@ docker-compose version 1.24.0, ...
 
 ### Installing
 
-#### Developement Environment
+#### Development Environment
 
 Clone the repository
 
@@ -48,7 +60,7 @@ git clone https://github.com/ddionrails/ddionrails.git
 cd ddionrails/
 ```
 
-Build the Docker images and start containers with developement setings
+Build the Docker images and start containers with development setings
 
 ``` bash
 docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
@@ -95,7 +107,41 @@ __After__ starting the services via docker-compose:
 - The elasticsearch index is kept in a named volume,
   meaning that the mapping is kept even through container recreations.
 
+### Importing Data
+
+To import a study's metadata into the system, you need a git repository
+containing a couple of .csv and .json files (e.g. <https://github.com/ddionrails/testsuite/tree/master/ddionrails>).
+
+You need to add your study to the system by invoking the `add` command:
+
+``` bash
+docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
+```
+
+You clone or pull the repository with `update`:
+``` bash
+docker-compose exec web python manage.py update soep-test
+```
+
+Your study's metadata gets inserted into the database by adding import jobs onto
+a Redis queue (this can take some time).
+
+To index your study's metadata into Elasticsearch you use the `index` command:
+``` bash
+docker-compose exec web python manage.py index populate
+```
+
+Summary:
+``` bash
+docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
+docker-compose exec web python manage.py update
+docker-compose exec web python manage.py index populate
+```
+
 ## Running the tests
+
+To run the unit and integration tests you can call `paver test`.
+This does not run functional tests with Selenium.
 
 ``` bash
 cd ddionrails/
