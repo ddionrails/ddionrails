@@ -2,10 +2,8 @@
 
 """ "Update" management command for ddionrails project """
 
-import django_rq
 import djclick as click
 
-from ddionrails.concepts.models import Concept
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 
@@ -36,7 +34,6 @@ def update_all_studies_completely(local: bool) -> None:
     click.secho(f"Updating all studies", fg="green")
     for study in Study.objects.all():
         update_single_study(study, local)
-    django_rq.enqueue(Concept.index_all)
 
 
 @click.command()
@@ -96,8 +93,6 @@ def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
         exit(1)
 
     update_single_study(study, local, entity, filename)
-    if "concepts" in entity:
-        django_rq.enqueue(Concept.index_all)
     exit(0)
 
 

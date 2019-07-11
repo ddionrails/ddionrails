@@ -2,9 +2,8 @@
 
 """ Views for ddionrails.instruments app """
 
-import uuid
-
 import difflib
+import uuid
 
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
