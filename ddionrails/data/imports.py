@@ -88,7 +88,6 @@ class DatasetImport(imports.CSVImport):
         dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(
             name=conceptual_dataset_name
         )[0]
-        dataset.boost = float(element.get("boost", 1))
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")
         dataset.save()
