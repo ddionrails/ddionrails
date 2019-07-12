@@ -122,7 +122,7 @@ def questions():
         try:
             analysis_unit = question.instrument.analysis_unit.name
         except AttributeError:
-            analysis_unit = None
+            analysis_unit = "None"
         yield {
             "_index": settings.INDEX_NAME,
             "_type": question.DOC_TYPE,
@@ -137,7 +137,6 @@ def questions():
                 "sort_id": question.sort_id,
                 "instrument": question.instrument.name,
                 "study": question.instrument.study.name,
-                "namespace": question.instrument.study.name,
             },
         }
 
@@ -157,11 +156,11 @@ def variables():
         try:
             analysis_unit = variable.dataset.analysis_unit.name
         except AttributeError:
-            analysis_unit = None
+            analysis_unit = "None"
         try:
             sub_type = variable.dataset.conceptual_dataset.name
         except AttributeError:
-            sub_type = None
+            sub_type = "None"
 
         yield {
             "_index": settings.INDEX_NAME,
@@ -177,7 +176,6 @@ def variables():
                 "sub_type": sub_type,
                 "analysis_unit": analysis_unit,
                 "study": variable.dataset.study.name,
-                "namespace": variable.dataset.study.name,
                 "categories": variable.categories,
             },
         }
