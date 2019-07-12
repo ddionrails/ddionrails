@@ -80,7 +80,9 @@ def test_update_single_study_entity_filename(study, mocked_import_single_entity)
     mocked_import_single_entity.assert_called_once_with("instruments", filename)
 
 
-def test_update_all_studies_completely(study, mocked_update_single_study):
+def test_update_all_studies_completely(
+    study, mocked_update_single_study  # pylint: disable=unused-argument
+):
     update.update_all_studies_completely(True)
     mocked_update_single_study.assert_called_once()
 
@@ -162,7 +164,7 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
 
 @pytest.mark.parametrize("option", ("-f", "--filename"))
 def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
-    study, option, mocked_update_single_study
+    study, option
 ):
     filename = "tests/imports/test_data/sample.csv"
     result = CliRunner().invoke(update.command, [study.name, "periods", option, filename])

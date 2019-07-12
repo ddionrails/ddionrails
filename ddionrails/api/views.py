@@ -218,8 +218,12 @@ def baskets_by_study_and_user(
 
 # request is a required parameter
 def add_variables_by_concept(
-    request, study_name, language, concept_name, basket_id
-) -> HttpResponse:  # pylint: disable=unused-argument
+    request: WSGIRequest,  # pylint: disable=unused-argument
+    study_name: str,
+    language: str,  # TODO: language is not used
+    concept_name: str,
+    basket_id: int,
+) -> HttpResponse:
     """ Add variables to a basket based on a concept_name """
 
     # make sure everything is found in the database
