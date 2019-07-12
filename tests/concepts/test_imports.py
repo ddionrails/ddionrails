@@ -30,9 +30,9 @@ def concept_importer(db, filename):  # pylint: disable=unused-argument
 
 
 @pytest.fixture
-def analysis_unit_importer(db, filename):  # pylint: disable=unused-argument
+def analysis_unit_importer(db, filename, study):  # pylint: disable=unused-argument
     """ An analysis unit importer """
-    return AnalysisUnitImport(filename)
+    return AnalysisUnitImport(filename, study)
 
 
 @pytest.fixture

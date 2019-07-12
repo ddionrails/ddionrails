@@ -36,7 +36,9 @@ def analysis_unit(db):
     return AnalysisUnitFactory(
         name="some-analysis-unit",
         label="Some analysis unit",
+        label_de="Some analysis unit",
         description="This is some analysis unit",
+        description_de="This is some analysis unit",
     )
 
 

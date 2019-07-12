@@ -72,6 +72,10 @@ class AnalysisUnitImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = AnalysisUnitForm
 
+    def process_element(self, element):
+        element["study"] = self.study.id
+        return element
+
 
 class PeriodImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
