@@ -27,7 +27,9 @@ def period_without_label(db):  # pylint: disable=invalid-name,unused-argument
 @pytest.fixture
 def conceptual_dataset_without_label(db):  # pylint: disable=invalid-name,unused-argument
     """ A conceptual_dataset without a label in the database """
-    return ConceptualDatasetFactory(name="some-period", description="This is some period")
+    return ConceptualDatasetFactory(
+        name="some-conceptual-dataset", description="This is some conceptual dataset"
+    )
 
 
 @pytest.fixture
@@ -69,9 +71,10 @@ def valid_analysis_unit_data():
 
 
 @pytest.fixture
-def valid_conceptual_dataset_data():
-    """ A valid input for conceptual dataset forms and imports """
+def valid_conceptual_dataset_data(study):
+    """ A valid input for conceptual dataset forms and imports, relates to study fixture """
     return dict(
+        study=study.id,
         conceptual_dataset_name="some-conceptual-dataset",
         label="Some conceptual dataset",
         description="This is some conceptual dataset",
@@ -82,7 +85,7 @@ def valid_conceptual_dataset_data():
 def valid_period_data(study):
     """ A valid input for period forms and imports, relates to study fixture """
     return dict(
-        study=study.pk,
+        study=study.id,
         period_name="some-period",
         label="Some Period",
         description="This is some period",
@@ -92,4 +95,4 @@ def valid_period_data(study):
 @pytest.fixture
 def valid_topic_data(study):
     """ A valid input for topic forms and imports """
-    return dict(name="some-topic", study=study.pk)
+    return dict(name="some-topic", study=study.id)
