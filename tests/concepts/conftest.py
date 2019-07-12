@@ -59,9 +59,10 @@ def minimal_valid_concept_data():
 
 
 @pytest.fixture
-def valid_analysis_unit_data():
-    """ A valid input for analysis unit forms and imports """
+def valid_analysis_unit_data(study):
+    """ A valid input for analysis unit forms and imports, relates to study fixture """
     return dict(
+        study=study.id,
         analysis_unit_name="some-analysis-unit",
         label="Some Analysis unit",
         description="This is some analysis unit",

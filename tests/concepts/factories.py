@@ -26,9 +26,11 @@ class ConceptFactory(factory.django.DjangoModelFactory):
 class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     """Analysis Unit factory"""
 
+    study = factory.SubFactory(StudyFactory, name="some-study")
+
     class Meta:
         model = AnalysisUnit
-        django_get_or_create = ("name",)
+        django_get_or_create = ("study", "name")
 
 
 class ConceptualDatasetFactory(factory.django.DjangoModelFactory):

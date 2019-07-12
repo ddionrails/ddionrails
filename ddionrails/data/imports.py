@@ -82,7 +82,7 @@ class DatasetImport(imports.CSVImport):
         ]
         analysis_unit_name = element.get("analysis_unit_name", "none")
         dataset.analysis_unit = AnalysisUnit.objects.get_or_create(
-            name=analysis_unit_name
+            study=self.study, name=analysis_unit_name
         )[0]
         conceptual_dataset_name = element.get("conceptual_dataset_name", "none")
         dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(

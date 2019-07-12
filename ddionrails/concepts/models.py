@@ -308,7 +308,6 @@ class AnalysisUnit(models.Model, ModelMixin):
         db_index=True,
         help_text="UUID of the AnalysisUnit.",
     )
-
     name = models.CharField(
         max_length=255,
         unique=True,
@@ -338,6 +337,19 @@ class AnalysisUnit(models.Model, ModelMixin):
         help_text="Description of the analysis unit (Markdown, German)",
     )
 
+    #############
+    # relations #
+    #############
+    study = models.ForeignKey(
+        Study,
+        related_name="analysis_units",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to studies.Study",
+    )
+
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
+        unique_together = ("study", "name")
+
     def __str__(self) -> str:
         """ Returns a string representation using the "name" field """
         return f"/analysis_unit/{self.name}"
@@ -345,19 +357,8 @@ class AnalysisUnit(models.Model, ModelMixin):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save().
-
-        The creation of the value set for the id field is different than
-        for most other models. Analysis units are, like studies, not inside the
-        namespace of any other object, meaning the uuid is derived from
-        the overall base uuid. This could cause a collision of uuids, if
-        a Concept shares a name with a study. While this seems unlikely to
-        happen, it is circumvented by concatenating each name with the
-        literal string `analysis_unit:`.
-        """
-        self.id = uuid.uuid5(  # pylint: disable=C0103
-            settings.BASE_UUID, "analysis_unit:" + self.name
-        )
+        """"Set id and call parents save()."""
+        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,

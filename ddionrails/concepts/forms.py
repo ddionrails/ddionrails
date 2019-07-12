@@ -55,7 +55,7 @@ class PeriodForm(forms.ModelForm):
 class AnalysisUnitForm(forms.ModelForm):
     class Meta:
         model = AnalysisUnit
-        fields = ("name", "label", "description")
+        fields = ("study", "name", "label", "label_de", "description", "description_de")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
