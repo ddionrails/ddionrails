@@ -41,7 +41,9 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     )
     title = models.TextField(blank=True, help_text="Title of the publication")
     author = models.TextField(blank=True, help_text="Name(s) of the author(s)")
-    year = models.TextField(blank=True, help_text="Year of publication")
+    year = models.PositiveSmallIntegerField(
+        blank=True, null=True, help_text="Year of publication"
+    )
     abstract = models.TextField(blank=True, help_text="Abstract of the publication")
     cite = models.TextField(blank=True, help_text="Suggested citation of the publication")
     url = models.TextField(

@@ -268,7 +268,7 @@ class TestStudyImportManager:
         hit = response.hits[0]
         assert study.name == hit.study
         assert "some-doi" == hit.doi
-        assert "2018" == hit.year
+        assert 2018 == hit.year
 
     def test_import_all(self, study_import_manager, elasticsearch_client):
         assert 1 == Study.objects.count()
