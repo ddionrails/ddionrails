@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./docker/ddionrails/dev.Dockerfile
+    command: python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000
+    entrypoint: ./docker/ddionrails/entrypoint.sh
+    env_file: 
+      - docker/environments/django.env.example
+      - docker/environments/database.env.example
+      - docker/environments/elasticsearch.env.example
+    volumes:
+      - ./:/usr/src/app/
+
+  postgres:
+    env_file:
+      - docker/environments/database.env.example
+
+  elasticsearch:
+    ports:
+      - 9200:9200
+
+# Uncomment these lines, if you want to use Kibana
+#  kibana:
+#    image: kibana:4.6.0
+#    ports:
+#      - 5601:5601
+#    networks:
+#      - ddi_net
+
+  nginx:
+    volumes: 
+      - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
