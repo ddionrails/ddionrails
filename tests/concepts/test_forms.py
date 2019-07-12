@@ -73,7 +73,10 @@ class TestConceptualDatasetForm:
     def test_form_with_invalid_data(self, empty_data):
         form = ConceptualDatasetForm(data=empty_data)
         assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."]}
+        expected_errors = {
+            "name": ["This field is required."],
+            "study": ["This field is required."],
+        }
         assert dict(form.errors) == expected_errors
 
     @pytest.mark.django_db

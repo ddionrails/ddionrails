@@ -36,9 +36,9 @@ def analysis_unit_importer(db, filename):  # pylint: disable=unused-argument
 
 
 @pytest.fixture
-def conceptual_dataset_importer(db, filename):  # pylint: disable=unused-argument
+def conceptual_dataset_importer(db, filename, study):  # pylint: disable=unused-argument
     """ A conceptual dataset importer """
-    return ConceptualDatasetImport(filename)
+    return ConceptualDatasetImport(filename, study)
 
 
 @pytest.fixture

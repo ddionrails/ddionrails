@@ -61,12 +61,15 @@ def concept_question(db):  # pylint: disable=unused-argument,invalid-name
 
 
 @pytest.fixture
-def conceptual_dataset(db):
-    """ A conceptual dataset in the database """
+def conceptual_dataset(study):
+    """ A conceptual dataset in the database, relates to study fixture """
     return ConceptualDatasetFactory(
         name="some-conceptual-dataset",
         label="Some conceptual dataset",
+        label_de="Some conceptual dataset",
         description="This is some conceptualdataset",
+        description_de="This is some conceptualdataset",
+        study=study,
     )
 
 

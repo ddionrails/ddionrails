@@ -85,3 +85,7 @@ class PeriodImport(imports.CSVImport):
 class ConceptualDatasetImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = ConceptualDatasetForm
+
+    def process_element(self, element):
+        element["study"] = self.study.id
+        return element

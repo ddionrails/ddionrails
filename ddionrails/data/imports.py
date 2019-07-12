@@ -86,7 +86,7 @@ class DatasetImport(imports.CSVImport):
         )[0]
         conceptual_dataset_name = element.get("conceptual_dataset_name", "none")
         dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(
-            name=conceptual_dataset_name
+            study=self.study, name=conceptual_dataset_name
         )[0]
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")
