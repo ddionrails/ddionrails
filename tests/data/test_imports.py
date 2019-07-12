@@ -65,9 +65,6 @@ class TestDatasetImport:
         conceptual_dataset = ConceptualDataset.objects.get(name="none")
         period = Period.objects.get(name="none")
 
-        # check attributes are set correctly
-        assert dataset.boost == 1.0
-
         # check relations are set correctly
         assert dataset.analysis_unit == analysis_unit
         assert dataset.conceptual_dataset == conceptual_dataset
@@ -92,7 +89,6 @@ class TestDatasetImport:
         assert Dataset.objects.count() == 1
         dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
 
-        assert dataset.boost == 1.0
         assert dataset.analysis_unit.name == "some-analysis-unit"
         assert dataset.conceptual_dataset.name == "some-conceptual-dataset-name"
         assert dataset.period.name == "some-period-name"

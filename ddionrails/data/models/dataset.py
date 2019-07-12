@@ -55,11 +55,6 @@ class Dataset(ModelMixin, models.Model):
         verbose_name="Description (Markdown, German)",
         help_text="Description of the dataset (Markdown, German)",
     )
-    boost = models.FloatField(
-        blank=True,
-        null=True,
-        help_text="Boost factor to be used in search (Elasticsearch)",
-    )
 
     #############
     # relations #

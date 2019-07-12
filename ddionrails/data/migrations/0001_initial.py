@@ -60,14 +60,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "boost",
-                    models.FloatField(
-                        blank=True,
-                        help_text="Boost factor to be used in search (Elasticsearch)",
-                        null=True,
-                    ),
-                ),
-                (
                     "analysis_unit",
                     models.ForeignKey(
                         blank=True,

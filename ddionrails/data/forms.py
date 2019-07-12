@@ -17,7 +17,6 @@ class DatasetForm(forms.ModelForm):
             "label",
             "description",
             "study",
-            "boost",
             "conceptual_dataset",
             "period",
             "analysis_unit",
@@ -25,7 +24,6 @@ class DatasetForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.data["boost"] = float(self.data["boost"])
         self.data["name"] = self.data["dataset_name"]
 
 
