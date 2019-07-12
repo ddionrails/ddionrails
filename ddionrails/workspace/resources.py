@@ -2,8 +2,8 @@
 # pylint: disable=too-few-public-methods
 
 """ Import export resources for ddionrails.workspace app """
-
 from django.contrib.auth.models import User
+from django.db.models import QuerySet
 from import_export import resources
 from import_export.fields import Field
 from import_export.widgets import ForeignKeyWidget
@@ -45,7 +45,8 @@ class BasketResource(resources.ModelResource):
             "modified",
         )
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
+        """ Return the queryset for this resource's model with select related fields. """
         return (
             self._meta.model.objects.all()
             .select_related("user", "study")
@@ -102,7 +103,8 @@ class BasketVariableExportResource(resources.ModelResource):
         exclude = ("id",)
         export_order = ("basket", "user", "email", "study", "dataset", "variable")
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
+        """ Return the queryset for this resource's model with select related fields. """
         return (
             self._meta.model.objects.all()
             .select_related("basket", "variable")

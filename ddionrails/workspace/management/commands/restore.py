@@ -84,7 +84,7 @@ def command(
     format_: str,
     path: str,
 ):
-
+    """ Restore user generated data """
     if path == "local/backup":
         path = get_recent_backup_directory()
 

@@ -137,9 +137,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
     # Used by ElasticMixin when indexed into Elasticsearch
     DOC_TYPE = "variable"
 
-    class Meta:
-        """ Django's metadata options """
-
+    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("name", "dataset")
 
     class DOR(DorMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
@@ -175,14 +173,16 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         """ Return a QuerySet of Variable objects by a given concept id """
         return cls.objects.filter(concept_id=concept_id)
 
-    def html_description_long(self):
+    def html_description_long(self) -> str:
+        """ Return a markdown rendered version of the "description_long" field """
         try:
             html = render_markdown(self.description_long)
-        except:
+        except:  # TODO: what could happen in render_markdown() ?
             html = ""
         return html
 
     def get_categories(self) -> List:
+        """ Return a list of dictionaries based on the "categories" field """
         if self.categories:
             categories = []
             for index, _ in enumerate(self.categories["values"]):
@@ -299,6 +299,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return result
 
     def get_target_variables(self):
+        """ Return "target variables" i.e. variables that have this variable instance as their "origin" """
         return self.get_targets_by_study_and_period(object_type="variable")
 
     def get_origins_by_study_and_period(self, object_type="variable"):
@@ -335,9 +336,11 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return result
 
     def get_origin_variables(self):
+        """ Return "origin variables" i.e. variables that have this variable instance as their "target" """
         return self.get_origins_by_study_and_period(object_type="variable")
 
     def get_origin_questions(self):
+        """ Return "origin questions" i.e. questions that have this variable instance as their "target" """
         return self.get_origins_by_study_and_period(object_type="question")
 
     def has_translations(self) -> bool:
@@ -345,6 +348,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return len(self.translation_languages()) > 0
 
     def translation_languages(self) -> List[str]:
+        """ Return a list of translation languages """
         if not self.languages:
             members = inspect.getmembers(self)
             self.languages = [
@@ -355,6 +359,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         return self.languages
 
     def translation_table(self) -> Dict:
+        """ Return a dictionary of languages and translated pairs of "labels" and "categories" """
         translation_table = dict(label=dict(en=self.label))
         for language in self.translation_languages():
             translation_table["label"][language] = getattr(self, f"label_{language}")
@@ -400,13 +405,4 @@ class Variable(ElasticMixin, DorMixin, models.Model):
             title=self.title(),
             concept_key=concept_key,
             type="variable",
-        )
-
-    @staticmethod
-    def index_prefetch(queryset):
-        """ TODO: What does this do? """
-        return (
-            queryset.prefetch_related("dataset__study")
-            .prefetch_related("dataset__period")
-            .prefetch_related("period")
         )

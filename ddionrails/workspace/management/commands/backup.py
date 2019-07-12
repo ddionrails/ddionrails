@@ -45,7 +45,7 @@ def command(
     format_: str,
     path: str,
 ):
-
+    """ Backup user generated data """
     path = create_backup_directory(pathlib.Path(path))
 
     if users:

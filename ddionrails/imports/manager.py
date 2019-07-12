@@ -53,7 +53,8 @@ class Repository:
         except (git.exc.NoSuchPathError, git.exc.InvalidGitRepositoryError):
             self.repo = None
 
-    def set_branch(self, branch=settings.IMPORT_BRANCH):
+    def set_branch(self, branch: str = settings.IMPORT_BRANCH) -> None:
+        """ Checkout a branch """
         self.repo.git.checkout(branch)
 
     def pull_or_clone(self) -> None:
