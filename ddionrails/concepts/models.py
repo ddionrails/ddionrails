@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
+
 """ Model definitions for ddionrails.concepts app """
+
 from __future__ import annotations
 
 import uuid
 from typing import List
 
-from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 
@@ -31,7 +33,6 @@ class Topic(models.Model, ModelMixin):
         db_index=True,
         help_text="UUID of the Topic. Dependent on the associated study",
     )
-
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -81,7 +82,9 @@ class Topic(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -123,7 +126,6 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         db_index=True,
         help_text="UUID of the Concept.",
     )
-
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
@@ -186,9 +188,9 @@ class Concept(models.Model, ModelMixin, ElasticMixin):
         happen, it is circumvented by concatenating each name with the
         literal string `concept:`.
         """
-        self.id = uuid.uuid5(  # pylint: disable=C0103
-            settings.BASE_UUID, "concept:" + self.name
-        )
+        self.id = hash_with_base_uuid(
+            "concept:" + self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -279,7 +281,9 @@ class Period(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -358,7 +362,9 @@ class AnalysisUnit(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save()."""
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -434,7 +440,9 @@ class ConceptualDataset(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """Set id and call parents save()."""
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,

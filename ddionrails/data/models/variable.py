@@ -19,6 +19,7 @@ from config.helpers import render_markdown
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .dataset import Dataset
@@ -126,7 +127,9 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.dataset_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.dataset_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,

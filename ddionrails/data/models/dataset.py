@@ -8,6 +8,7 @@ from django.urls import reverse
 
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 
@@ -96,7 +97,9 @@ class Dataset(ModelMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,

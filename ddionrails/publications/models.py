@@ -11,6 +11,7 @@ from config.helpers import render_markdown
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models import Instrument, Question
 from ddionrails.studies.models import Study
 
@@ -30,7 +31,6 @@ class Publication(ElasticMixin, DorMixin, models.Model):
         db_index=True,
         help_text="UUID of the publication. Dependent on the associated study.",
     )
-
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the publication"
     )
@@ -76,7 +76,9 @@ class Publication(ElasticMixin, DorMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.study_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.study_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,

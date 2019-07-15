@@ -35,6 +35,7 @@ import uuid
 from django.db import models
 from filer.fields.image import FilerImageField
 
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models.question import Question
 
 LOGGER = logging.getLogger("django")
@@ -88,7 +89,9 @@ class QuestionImage(models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.question_id, self.label + self.language)
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
+            self.question_id, self.label + self.language, cache=False
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
