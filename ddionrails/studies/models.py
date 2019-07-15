@@ -11,6 +11,7 @@ from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
+from ddionrails.base.helpers import hash_with_base_uuid
 from ddionrails.base.mixins import ImportPathMixin, ModelMixin
 
 
@@ -134,7 +135,8 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(settings.BASE_UUID, self.name)  # pylint: disable=C0103
+        self.id = hash_with_base_uuid(self.name, cache=False)  # pylint: disable=C0103
+
         super().save(
             force_insert=force_insert,
             force_update=force_update,

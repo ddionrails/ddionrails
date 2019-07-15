@@ -16,6 +16,7 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
+from ddionrails.base.helpers import hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
@@ -39,7 +40,6 @@ class Question(ElasticMixin, DorMixin, models.Model):
         db_index=True,
         help_text="UUID of the question. Dependent on the associated instrument.",
     )
-
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the question"
     )
@@ -88,7 +88,9 @@ class Question(ElasticMixin, DorMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = uuid.uuid5(self.instrument_id, self.name)  # pylint: disable=C0103
+        self.id = hash_with_namespace_uuid(
+            self.instrument_id, self.name, cache=False
+        )  # pylint: disable=C0103
         super().save(
             force_insert=force_insert,
             force_update=force_update,
