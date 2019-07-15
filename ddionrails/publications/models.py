@@ -62,8 +62,6 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     #############
     study = models.ForeignKey(
         Study,
-        blank=True,
-        null=True,
         related_name="publications",
         on_delete=models.CASCADE,
         help_text="Foreign key to studies.Study",
