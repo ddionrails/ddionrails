@@ -186,9 +186,7 @@ class Migration(migrations.Migration):
                 (
                     "study",
                     models.ForeignKey(
-                        blank=True,
                         help_text="Foreign key to studies.Study",
-                        null=True,
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="publications",
                         to="studies.Study",
