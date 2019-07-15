@@ -1,16 +1,17 @@
 #!/bin/bash
 # Update static files if needed.
 WEBPACK_STATS=webpack-stats.json
-BUILD_DEPENDENCIES=$(ls ${WEBPACK_STATS})
-LIVE_DEPENDENCIES=$(ls static/${WEBPACK_STATS})
+BUILD_DEPENDENCIES=/usr/src/app/${WEBPACK_STATS}
+LIVE_DEPENDENCIES=/usr/src/app/static/${WEBPACK_STATS}
 
 echo "Check for old dependencies"
 cmp "${BUILD_DEPENDENCIES}" "${LIVE_DEPENDENCIES}"
 DEPENDENCY_DIFF=$?
 
-if [ ${DEPENDENCY_DIFF} -gt 0 ]; then
+if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ]; then
     echo "Image dependencies have changed."
     echo "Overwriting old dependencies."
+    rm -rf /usr/src/app/static/dist/*
     ./node_modules/.bin/webpack --config webpack.config.js
     cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES}
 fi
