@@ -2,7 +2,7 @@ version: '2.4'
 
 services:
   web:
-    command: python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000
+    command: bash -c "while [ 1 ]; do python /usr/src/app/manage.py runserver_plus --print-sql 0.0.0.0:8000; test $$? -gt 128 && break; done"
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
