@@ -12,6 +12,7 @@ COPY ./ ${DOCKER_APP_DIRECTORY}/
 
 RUN  apt-get update \
     && apt-get install -y --no-install-recommends \
+        bash-completion=1:2.1-4.3 \
         build-essential=12.3 \
         curl=7.52.1-5+deb9u9 \
         git=1:2.11.0-3+deb9u4 \
