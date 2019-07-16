@@ -16,25 +16,6 @@ if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ]; then
     cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES}
 fi
 
-# The Database container may not be there yet
-echo "Waiting for Database"
-
-if [ -z "${POSTGRES_HOST}" ]; then
-    echo "Error: POSTGRES_HOST is not set"
-    exit 0
-fi
-
-if [ -z "${POSTGRES_PORT}" ]; then
-    echo "Error: POSTGRES_PORT is not set"
-    exit 0
-fi
-
-while ! nc -z "${POSTGRES_HOST}" "${POSTGRES_PORT}"; do
-    sleep 0.1
-done
-
-echo "Database started"
-
 
 # Collect Admin stiling etc.
 python manage.py collectstatic --noinput
