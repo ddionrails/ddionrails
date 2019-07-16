@@ -13,12 +13,12 @@ COPY ./ ${DOCKER_APP_DIRECTORY}/
 RUN  apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential=12.3 \
+        curl=7.52.1-5+deb9u9 \
         git=1:2.11.0-3+deb9u4 \
         graphviz=2.38.0-17 \
         graphviz-dev=2.38.0-17 \
-        curl=7.52.1-5+deb9u9 \
-        python-psycopg2=2.6.2-1 \
         netcat=1.10-41 \
+        python-psycopg2=2.6.2-1 \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.6.0-1nodesource1 \
     && rm -rf /var/lib/apt/lists/* 
