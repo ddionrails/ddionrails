@@ -8,10 +8,15 @@ echo "Check for old dependencies"
 cmp "${BUILD_DEPENDENCIES}" "${LIVE_DEPENDENCIES}"
 DEPENDENCY_DIFF=$?
 
-if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ]; then
+if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ] || [ ! -f "${BUILD_DEPENDENCIES}" ]; then
     echo "Image dependencies have changed."
     echo "Overwriting old dependencies."
     rm -rf /usr/src/app/static/dist/*
+    npm install
+    cd ./node_modules/ddionrails-elasticsearch \
+        && npm install \
+        && ./node_modules/.bin/ng build --prod
+    cd /usr/src/app
     npm run build
     cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES}
 fi
@@ -21,7 +26,7 @@ fi
 python manage.py collectstatic --noinput
 
 echo "Initialising System"
-python manage.py system || echo "Initialising System failed."
+python manage.py system || echo "Initialising System failed." &
 
 echo "Running migrations."
 python manage.py migrate && \
