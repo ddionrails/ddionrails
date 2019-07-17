@@ -3,8 +3,8 @@
 """ Search document definitions for ddionrails.publications app """
 
 from django.conf import settings
-from django_elasticsearch_dsl import fields
-from django_elasticsearch_dsl.documents import Document
+from django.db.models import QuerySet
+from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
 from .models import Publication
@@ -39,7 +39,7 @@ class PublicationDocument(Document):
         # The fields of the model you want to be indexed in Elasticsearch
         fields = ("abstract", "author", "cite", "doi", "name", "title", "url")
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
         Return the queryset that should be indexed by this doc type,
         with select related study.

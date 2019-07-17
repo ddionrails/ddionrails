@@ -51,7 +51,7 @@ def study_publication_list(
 ):
     study = get_object_or_404(Study, name=study_name)
     # e.g. Studies=["soep-is"]
-    query_string = urlencode({"Studies": f'["{study.title()}"]'})
-    # e.g. http://localhost/search/publications?Studies=["soep-is"]
+    query_string = urlencode({"Study": f'["{study.title()}"]'})
+    # e.g. http://localhost/search/publications?Study=["soep-is"]
     url = f"/search/publications?{query_string}"
     return redirect(url)

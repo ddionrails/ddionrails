@@ -26,7 +26,6 @@ services:
 
   elasticsearch:
     environment:
-      - discovery.type=single-node
       # settings for dejavu-access, see https://hub.docker.com/r/appbaseio/dejavu/
       # https://opensource.appbase.io/reactive-manual/vue/getting-started/reactivebase.html
       - http.cors.enabled=true

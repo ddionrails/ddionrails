@@ -14,6 +14,12 @@ def test_search_url(client):
 
 
 @pytest.mark.django_db
-def test_search_p_url(client):
+def test_search_concepts_url(client):
+    response = client.get("/search/concepts")
+    assert status.HTTP_200_OK == response.status_code
+
+
+@pytest.mark.django_db
+def test_search_publications_url(client):
     response = client.get("/search/publications")
     assert status.HTTP_200_OK == response.status_code

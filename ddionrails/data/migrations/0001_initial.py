@@ -233,7 +233,7 @@ class Migration(migrations.Migration):
                     "categories",
                     django.contrib.postgres.fields.jsonb.JSONField(
                         blank=True,
-                        default=list,
+                        default=dict,
                         help_text="Categories of the variable(JSON)",
                         null=True,
                     ),

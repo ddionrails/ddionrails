@@ -31,7 +31,9 @@ def test_concept_search_document_fields(
     assert "testing_concepts" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
-    expected = model_to_dict(concept, fields=ConceptDocument.Django.fields)
+    expected = model_to_dict(
+        concept, fields=("name", "label", "label_de", "description", "description_de")
+    )
     # add relations to expected dictionary
     expected["study"] = [variable.dataset.study.name]
     # generate result dictionary from search document
@@ -60,7 +62,9 @@ def test_topic_search_document_fields(
     assert "testing_topics" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
-    expected = model_to_dict(topic, fields=TopicDocument.Django.fields)
+    expected = model_to_dict(
+        topic, fields=("name", "label", "label_de", "description", "description_de")
+    )
     # add relations to expected dictionary
     expected["study"] = topic.study.title()
     # generate result dictionary from search document

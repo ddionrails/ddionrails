@@ -5,8 +5,6 @@ from urllib.parse import urljoin
 
 import pytest
 
-from ddionrails.publications.documents import PublicationDocument
-
 pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.functional,
     pytest.mark.search,

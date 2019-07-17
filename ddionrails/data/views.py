@@ -2,8 +2,6 @@
 
 """ Views for ddionrails.data app """
 
-import json
-
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404

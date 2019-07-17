@@ -11,6 +11,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
       DJANGO_LIVE_TEST_SERVER_ADDRESS: web:9000 # bind live server to a fixed port
+      ELASTICSEARCH_DSL_INDEX_PREFIX: testing_
     pids_limit: -1
     volumes:
       - ./codecov:/usr/src/app/codecov
@@ -28,26 +29,16 @@ services:
       - ./package-lock.json:/usr/src/app/package-lock.json
       - ./package.json:/usr/src/app/package.json
       - ./pavement.py:/usr/src/app/pavement.py
+      - ./setup.cfg:/usr/src/app/setup.cfg
       - ./Pipfile:/usr/src/app/Pipfile
       - ./Pipfile.lock:/usr/src/app/Pipfile.lock
       - ./webpack.config.js:/usr/src/app/webpack.config.js
     ports:
       - 9000 # used for live server test
+
   postgres:
     env_file:
       - docker/environments/database.env.example
-
-  elasticsearch:
-    environment:
-      - discovery.type=single-node
-      # settings for dejavu-access, see https://hub.docker.com/r/appbaseio/dejavu/
-      # https://opensource.appbase.io/reactive-manual/getting-started/reactivebase.html
-      - http.cors.enabled=true
-      - http.cors.allow-credentials=true
-      - http.cors.allow-origin=* # TODO set host and port of dejavu / reactivesearch
-      - http.cors.allow-headers=Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With
-    ports:
-      - 9200:9200
 
   nginx:
     volumes: 

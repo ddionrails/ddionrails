@@ -26,7 +26,9 @@ def test_question_search_document_fields(
     assert "testing_questions" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
-    expected = model_to_dict(question, fields=QuestionDocument.Django.fields)
+    expected = model_to_dict(
+        question, fields=("name", "label", "label_de", "description", "description_de")
+    )
     expected["label"] = question.label
     # add facets to expected dictionary
     expected["analysis_unit"] = question.instrument.analysis_unit.title()

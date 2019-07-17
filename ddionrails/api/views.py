@@ -2,54 +2,20 @@
 
 """ Views for ddionrails.api app """
 
-import json
 import uuid
 from typing import Union
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Question
-from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 
-# HELPERS
-
-
-def _get_object(object_type: str, object_id: str):
-    """ Returns an object from the database by object_type and object_id """
-    redirect_mapping = {
-        "concept": Concept,
-        "publication": Publication,
-        "question": Question,
-        "variable": Variable,
-    }
-    model = redirect_mapping.get(object_type)
-    if model:
-        return get_object_or_404(model, pk=object_id)
-    else:
-        return None
-
-
 # VIEWS
-
-
-# request is a required parameter
-def object_redirect(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    object_type: str,
-    object_id: str,
-):
-    """ RedirectView from object_type and object_id to object.get_absolute_url """
-    obj = _get_object(object_type, object_id)
-    if obj:
-        return redirect(obj.get_absolute_url())
-    else:
-        return redirect("/")
 
 
 # request is a required parameter

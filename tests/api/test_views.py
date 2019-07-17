@@ -28,37 +28,6 @@ def response_is_json(response) -> bool:
     return expected_content_type == response["content-type"]
 
 
-class TestObjectRedirectView:
-    def test_variable_redirect(self, client, variable):
-        url = f"/api/test/redirect/variable/{variable.id}"
-        response = client.get(url)
-        assert status.HTTP_302_FOUND == response.status_code
-
-    def test_publication_redirect(self, client, publication):
-        url = f"/api/test/redirect/publication/{publication.id}"
-        response = client.get(url)
-        assert status.HTTP_302_FOUND == response.status_code
-
-    def test_question_redirect(self, client, question):
-        url = f"/api/test/redirect/question/{question.id}"
-        response = client.get(url)
-        assert status.HTTP_302_FOUND == response.status_code
-
-    def test_concept_redirect(self, client, concept):
-        url = f"/api/test/redirect/concept/{concept.id}"
-        response = client.get(url, follow=True)
-        assert status.HTTP_200_OK == response.status_code
-        assert response.redirect_chain[-1][0] == concept.get_absolute_url()
-
-    @pytest.mark.django_db
-    def test_redirect_to_home(self, client, uuid_identifier):
-        url = f"/api/test/redirect/no-model/{uuid_identifier}"
-        response = client.get(url, follow=True)
-        assert status.HTTP_200_OK == response.status_code
-        expected = "/"
-        assert expected == response.redirect_chain[-1][0]
-
-
 class TestConceptByStudy:
     def test_json_response(self, study, client, concept, variable):
         variable.concept = concept

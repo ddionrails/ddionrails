@@ -124,18 +124,13 @@ docker-compose exec web python manage.py update soep-test
 ```
 
 Your study's metadata gets inserted into the database by adding import jobs onto
-a Redis queue (this can take some time).
-
-To index your study's metadata into Elasticsearch you use the `index` command:
-``` bash
-docker-compose exec web python manage.py index populate
-```
+a Redis queue (this can take some time). The last job includes indexing all
+metadata into the Elasticsearch indices.
 
 Summary:
 ``` bash
 docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
 docker-compose exec web python manage.py update
-docker-compose exec web python manage.py index populate
 ```
 
 ## Running the tests
