@@ -2,9 +2,11 @@
 
 """ Search document definitions for ddionrails.concepts app """
 
+from typing import List
+
 from django.conf import settings
-from django_elasticsearch_dsl import fields
-from django_elasticsearch_dsl.documents import Document
+from django.db.models import QuerySet
+from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
 from ddionrails.studies.models import Study
@@ -16,11 +18,18 @@ from .models import Concept, Topic
 class ConceptDocument(Document):
     """ Search document for concepts.Concept """
 
+    # attributes
+    name = fields.TextField()
+    label = fields.TextField(analyzer="english")
+    label_de = fields.TextField(analyzer="german")
+    description = fields.TextField(analyzer="english")
+    description_de = fields.TextField(analyzer="german")
+
     # facets
     study = fields.ListField(fields.KeywordField())
 
     @staticmethod
-    def prepare_study(concept: Concept):
+    def prepare_study(concept: Concept) -> List[str]:
         """ Return a list of related studies """
         studies_by_topic = Study.objects.filter(
             topics__concepts__id=concept.id
@@ -47,15 +56,28 @@ class ConceptDocument(Document):
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Concept
-        fields = ("name", "label", "label_de", "description", "description_de")
+
+    def get_queryset(self) -> QuerySet:
+        """
+        Return the queryset that should be indexed by this doc type,
+        with select related objects.
+        """
+        return super().get_queryset().prefetch_related("variables", "concepts_questions")
 
 
 @registry.register_document
 class TopicDocument(Document):
     """ Search document for concepts.Topic """
 
+    # attributes
+    name = fields.TextField()
+    label = fields.TextField(analyzer="english")
+    label_de = fields.TextField(analyzer="german")
+    description = fields.TextField(analyzer="english")
+    description_de = fields.TextField(analyzer="german")
+
     # facets
-    study = fields.TextField(fields={"raw": fields.KeywordField()})
+    study = fields.KeywordField()
 
     @staticmethod
     def prepare_study(topic: Topic) -> str:
@@ -71,9 +93,8 @@ class TopicDocument(Document):
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Topic
-        fields = ("name", "label", "label_de", "description", "description_de")
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
         Return the queryset that should be indexed by this doc type,
         with select related study.

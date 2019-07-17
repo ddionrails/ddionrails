@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """ Search document definitions for ddionrails.data app """
+from typing import Dict, List, Optional
 
 from django.conf import settings
-from django_elasticsearch_dsl import fields
-from django_elasticsearch_dsl.documents import Document
+from django.db.models import QuerySet
+from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
 from .models import Variable
@@ -15,6 +16,27 @@ class VariableDocument(Document):
     """ Search document data.Variable """
 
     # attributes
+    name = fields.TextField()
+    label = fields.TextField(analyzer="english")
+    label_de = fields.TextField(analyzer="german")
+    description = fields.TextField(analyzer="english")
+    description_long = fields.TextField(analyzer="english")
+    description_de = fields.TextField(analyzer="german")
+    categories = fields.ObjectField(
+        properties={
+            "labels": fields.ListField(fields.TextField(analyzer="english")),
+            "labels_de": fields.ListField(fields.TextField(analyzer="german")),
+        }
+    )
+
+    # relations as attributes
+    concept = fields.ObjectField(
+        properties={
+            "name": fields.TextField(),
+            "label": fields.TextField(analyzer="english"),
+            "label_de": fields.TextField(analyzer="german"),
+        }
+    )
     dataset = fields.TextField()
 
     # facets
@@ -34,28 +56,33 @@ class VariableDocument(Document):
         return variable.dataset.study.title()
 
     @staticmethod
-    def prepare_analysis_unit(variable: Variable) -> str:
-        """ Return the related analysis_unit's or "None" """
+    def prepare_analysis_unit(variable: Variable) -> Optional[str]:
+        """ Return the related analysis_unit's or None """
         try:
             return variable.dataset.analysis_unit.title()
         except AttributeError:
             return None
 
     @staticmethod
-    def prepare_conceptual_dataset(variable: Variable) -> str:
-        """ Return the related conceptual_dataset' title or "None" """
+    def prepare_conceptual_dataset(variable: Variable) -> Optional[str]:
+        """ Return the related conceptual_dataset' title or None """
         try:
             return variable.dataset.conceptual_dataset.title()
         except AttributeError:
             return None
 
     @staticmethod
-    def prepare_period(variable: Variable) -> str:
-        """ Return the related period's title or "None" """
+    def prepare_period(variable: Variable) -> Optional[str]:
+        """ Return the related period's title or None """
         try:
             return variable.dataset.period.title()
         except AttributeError:
             return None
+
+    @staticmethod
+    def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
+        """ Return the variable's categories, only labels and labels_de """
+        return {key: variable.categories.get(key) for key in ("labels", "labels_de")}
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         doc_type = "variable"
@@ -65,16 +92,8 @@ class VariableDocument(Document):
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Variable
-        fields = (
-            "name",
-            "label",
-            "label_de",
-            "description",
-            "description_de",
-            "description_long",
-        )
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         """
         Return the queryset that should be indexed by this doc type,
         with select related
@@ -84,6 +103,7 @@ class VariableDocument(Document):
             super()
             .get_queryset()
             .select_related(
+                "concept",
                 "dataset",
                 "dataset__analysis_unit",
                 "dataset__conceptual_dataset",

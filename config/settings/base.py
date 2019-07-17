@@ -204,12 +204,12 @@ APPEND_SLASH = True
 # ------------------------------------------------------------------------------
 ELASTICSEARCH_HOST = os.getenv("ELASTICSEARCH_HOST", "localhost")
 ELASTICSEARCH_PORT = os.getenv("ELASTICSEARCH_PORT", 9200)
+# Prefix for index names.
+# Overwritten in testing settings to separate testings indices which get deleted a lot
+ELASTICSEARCH_DSL_INDEX_PREFIX = os.getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 # https://github.com/sabricot/django-elasticsearch-dsl#quickstart
 ELASTICSEARCH_DSL = {"default": {"hosts": f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"}}
 # https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_autosync
 ELASTICSEARCH_DSL_AUTOSYNC = False
 # https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_index_settings
 ELASTICSEARCH_DSL_INDEX_SETTINGS = {"number_of_shards": 1, "number_of_replicas": 0}
-# Prefix for index names.
-# Overwritten in testing settings to separate testings indices which get deleted a lot
-ELASTICSEARCH_DSL_INDEX_PREFIX = ""

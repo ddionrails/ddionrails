@@ -127,7 +127,7 @@ class TestVariableModel:
         assert [other_variable, variable] == result["none"]
 
     def test_get_categories_method_without_categories(self, variable):
-        variable.categories = []
+        variable.categories = {}
         variable.save()
         assert [] == variable.get_categories()
 
@@ -155,14 +155,14 @@ class TestVariableModel:
         assert expected == result[0]
 
     def test_is_categorical_method(self, variable):
-        variable.categories = [dict(label="some-category")]
+        variable.categories = dict(labels="some-category")
         variable.save()
-        assert True is variable.is_categorical()
+        assert variable.is_categorical()
 
     def test_is_categorical_method_fails(self, variable):
         variable.categories = dict()
         variable.save()
-        assert False is variable.is_categorical()
+        assert not variable.is_categorical()
 
     def test_has_translations(self, variable):
         result = variable.has_translations()

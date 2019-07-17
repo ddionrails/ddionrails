@@ -26,7 +26,20 @@ def test_variable_search_document_fields(
     assert "testing_variables" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
-    expected = model_to_dict(variable, fields=VariableDocument.Django.fields)
+    expected = model_to_dict(
+        variable,
+        fields=(
+            "name",
+            "label",
+            "label_de",
+            "description",
+            "description_de",
+            "description_long",
+        ),
+    )
+    expected["categories"] = {
+        key: variable.categories.get(key) for key in ("labels", "labels_de")
+    }
     # add facets to expected dictionary
     expected["analysis_unit"] = variable.dataset.analysis_unit.title()
     expected["conceptual_dataset"] = variable.dataset.conceptual_dataset.title()

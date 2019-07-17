@@ -11,7 +11,6 @@ from django.db import migrations, models
 
 import config.validators
 import ddionrails.base.mixins
-import ddionrails.elastic.mixins
 
 
 class Migration(migrations.Migration):
@@ -168,11 +167,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            bases=(
-                models.Model,
-                ddionrails.base.mixins.ModelMixin,
-                ddionrails.elastic.mixins.ModelMixin,
-            ),
+            bases=(models.Model, ddionrails.base.mixins.ModelMixin),
         ),
         migrations.CreateModel(
             name="Period",

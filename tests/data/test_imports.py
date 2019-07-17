@@ -211,7 +211,7 @@ class TestDatasetJsonImport:
         dataset_json_importer._import_variable(var, dataset, sort_id)
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
-        assert [] == variable.categories
+        assert {} == variable.categories
 
     def test_import_variable_method_with_uni_key(self, dataset_json_importer, dataset):
         var = dict(

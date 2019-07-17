@@ -1,8 +1,8 @@
 <template>
   <multi-list
-    componentId="ConceptualDatasets"
+    componentId="ConceptualDataset"
     data-field="conceptual_dataset"
-    title="Conceptual Datasets"
+    title="Conceptual Dataset"
     :showSearch="false"
     selectAllLabel="Select all"
     :URLParams="true"
@@ -15,6 +15,7 @@
     missingLabel="None"
   />
 </template>
+
 <script>
 export default {
   name: "ConceptualDatasetFacet",

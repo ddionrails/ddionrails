@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 from elasticsearch_dsl import Search
 
+from ddionrails.concepts.documents import ConceptDocument
 from ddionrails.concepts.models import (
     AnalysisUnit,
     Concept,
@@ -13,14 +14,17 @@ from ddionrails.concepts.models import (
     Period,
     Topic,
 )
+from ddionrails.data.documents import VariableDocument
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
+from ddionrails.instruments.documents import QuestionDocument
 from ddionrails.instruments.models import (
     ConceptQuestion,
     Instrument,
     Question,
     QuestionVariable,
 )
+from ddionrails.publications.documents import PublicationDocument
 from ddionrails.publications.models import Attachment, Publication
 from ddionrails.studies.models import Study, TopicList
 from tests.data.factories import VariableFactory
@@ -86,6 +90,7 @@ class TestStudyImportManager:
         response = search.execute()
         hit = response.hits[0]
         assert "some-concept" == hit.name
+        ConceptDocument.search().query("match_all").delete()
 
     def test_import_analysis_units(self, study_import_manager):
         assert 0 == AnalysisUnit.objects.count()
@@ -135,6 +140,7 @@ class TestStudyImportManager:
         # assert study.name == hit.study
         assert "some-question" == hit.name
         assert "some-instrument" == hit.instrument
+        QuestionDocument.search().query("match_all").delete()
 
     def test_import_json_datasets(
         self, study_import_manager, elasticsearch_indices, study
@@ -156,6 +162,7 @@ class TestStudyImportManager:
 
         search = Search().doc_type("variable")
         assert 2 == search.count()
+        VariableDocument.search().query("match_all").delete()
 
     def test_import_csv_datasets(
         self, study_import_manager, dataset, period, analysis_unit, conceptual_dataset
@@ -229,6 +236,7 @@ class TestStudyImportManager:
         assert study.title() == hit.study
         assert "some-doi" == hit.doi
         assert 2018 == hit.year
+        PublicationDocument.search().query("match_all").delete()
 
     def test_import_all(self, study_import_manager, elasticsearch_indices):
         assert 1 == Study.objects.count()
@@ -262,3 +270,8 @@ class TestStudyImportManager:
         assert Search().doc_type("variable").count() == 2
         assert Search().doc_type("publication").count() == 1
         assert Search().doc_type("question").count() == 1
+
+        ConceptDocument.search().query("match_all").delete()
+        VariableDocument.search().query("match_all").delete()
+        PublicationDocument.search().query("match_all").delete()
+        QuestionDocument.search().query("match_all").delete()

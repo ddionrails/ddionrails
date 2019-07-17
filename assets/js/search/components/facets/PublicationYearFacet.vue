@@ -1,18 +1,22 @@
 <template>
   <multi-list
-    componentId="Types"
-    data-field="sub_type"
-    class="filter"
+    componentId="Year"
+    data-field="year"
+    title="Year"
     :showSearch="false"
-    title="Types"
     selectAllLabel="Select all"
     :URLParams="true"
     :react="react"
+    class="card facet"
+    :innerClass="{
+        title: 'card-header',
+    }"
   />
 </template>
+
 <script>
 export default {
-  name: "PublicationTypeFacet",
+  name: "PublicationYearFacet",
   props: ["react"]
 };
 </script>
