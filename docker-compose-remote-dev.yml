@@ -19,6 +19,8 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
+    environment:
+      - TERM=xterm-256color
     volumes:
       - ./:/usr/src/app/
       - static:/usr/src/app/static
