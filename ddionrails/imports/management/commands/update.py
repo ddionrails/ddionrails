@@ -2,7 +2,9 @@
 
 """ "Update" management command for ddionrails project """
 
+import django_rq
 import djclick as click
+from django.core.management import call_command
 
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
@@ -93,6 +95,9 @@ def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
         exit(1)
 
     update_single_study(study, local, entity, filename)
+
+    # Populate the search index from the database (indexes everything)
+    django_rq.enqueue(call_command, "search_index", "--populate")
     exit(0)
 
 

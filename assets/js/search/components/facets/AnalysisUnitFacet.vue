@@ -1,8 +1,8 @@
 <template>
   <multi-list
-    componentId="AnalysisUnits"
+    componentId="AnalysisUnit"
     data-field="analysis_unit"
-    title="Analysis Units"
+    title="Analysis Unit"
     :showSearch="false"
     selectAllLabel="Select all"
     :URLParams="true"

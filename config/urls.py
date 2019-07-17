@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateView
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
 from config.views import HomePageView
+from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import VariableRedirectView
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
 
@@ -41,7 +42,10 @@ urlpatterns = [
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
     path("workspace/", include("ddionrails.workspace.urls", namespace="workspace")),
     re_path(
-        "^search/(concepts|publications|questions|topics|variables)?$",
+        (
+            r"^search/((?:all|variables|concepts|questions|publications|topics)"
+            r"\?{0,1}.*){0,1}$"
+        ),
         TemplateView.as_view(template_name="search/search.html"),
         name="search",
     ),
@@ -68,6 +72,7 @@ urlpatterns = [
         name="publication_redirect",
     ),
     path("variable/<uuid:id>", VariableRedirectView.as_view(), name="variable_redirect"),
+    path("topic/<uuid:id>", TopicRedirectView.as_view(), name="topic_redirect"),
     path(
         "instrument/<uuid:id>",
         instruments_views.InstrumentRedirectView.as_view(),

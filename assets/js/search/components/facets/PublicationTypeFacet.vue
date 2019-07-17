@@ -1,18 +1,22 @@
 <template>
   <multi-list
-    componentId="Studies"
-    data-field="study"
-    class="filter"
+    componentId="Type"
+    data-field="sub_type"
+    title="Type"
     :showSearch="false"
-    title="Studies"
     selectAllLabel="Select all"
     :URLParams="true"
     :react="react"
+    class="card facet"
+    :innerClass="{
+        title: 'card-header',
+    }"
   />
 </template>
+
 <script>
 export default {
-  name: "StudyFacet",
+  name: "PublicationTypeFacet",
   props: ["react"]
 };
 </script>

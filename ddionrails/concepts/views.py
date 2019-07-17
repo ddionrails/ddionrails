@@ -3,13 +3,13 @@
 """ Views for ddionrails.concepts app """
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.shortcuts import redirect
-from django.views.generic import DetailView
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import DetailView, RedirectView
 
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Question
 
-from .models import Concept
+from .models import Concept, Topic
 
 
 def concept_list(request: WSGIRequest):  # pylint: disable=unused-argument
@@ -40,3 +40,9 @@ class ConceptDetailView(DetailView):
             .select_related("instrument")
         )
         return context
+
+
+class TopicRedirectView(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        topic = get_object_or_404(Topic.objects.select_related("study"), id=kwargs["id"])
+        return f"/{topic.study.name}/topics/en?open=topic_{topic.name}"

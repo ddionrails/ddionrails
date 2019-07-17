@@ -1,4 +1,4 @@
-/*!
+/* !
  * ddionrails - webpack configuration
  * Copyright 2018-2019
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
@@ -17,30 +17,34 @@ module.exports = {
   entry: {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
-    search: "./assets/js/search/src/main.js",
+    search: "./assets/js/search/main.js",
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     visualization: [
       "./assets/js/visualization.js",
-      "./assets/scss/visualization.scss"
+      "./assets/scss/visualization.scss",
     ],
   },
   output: {
     path: path.resolve("./static/dist/"),
-    filename: "[name]-[hash].js"
+    filename: "[name]-[hash].js",
   },
 
   plugins: [
     new webpack.ProvidePlugin({
       $: "jquery",
-      jQuery: "jquery"
+      jQuery: "jquery",
     }),
-    new BundleTracker({ filename: "./webpack-stats.json" }),
+    new BundleTracker({filename: "./webpack-stats.json"}),
     new MiniCssExtractPlugin({
       filename: "[name].css",
       chunkFilename: "[id].css",
-      ignoreOrder: false // Enable to remove warnings about conflicting order
-    })
+      ignoreOrder: false, // Enable to remove warnings about conflicting order
+    }),
     new VueLoaderPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX":
+        JSON.stringify(process.env.ELASTICSEARCH_DSL_INDEX_PREFIX),
+    }),
   ],
 
   module: {
@@ -50,11 +54,11 @@ module.exports = {
         test: /\.scss$/,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader
+            loader: MiniCssExtractPlugin.loader,
           },
           "css-loader",
-          "sass-loader"
-        ]
+          "sass-loader",
+        ],
       },
       /* Loads fonts, used for Bootstrap */
       {
@@ -64,10 +68,10 @@ module.exports = {
             loader: "file-loader",
             options: {
               name: "[name].[ext]",
-              outputPath: "fonts/"
-            }
-          }
-        ]
+              outputPath: "fonts/",
+            },
+          },
+        ],
       },
       /* Loads static files, e.g. images */
       {
@@ -75,27 +79,28 @@ module.exports = {
         use: [
           {
             loader: "file-loader",
-            options: {}
-          }
-        ]
+            options: {},
+          },
+        ],
       },
       /* Loads vue single file components */
       {
         test: /\.vue$/,
-        use: "vue-loader"
+        use: "vue-loader",
       },
       /* Loads style block in vue single file components */
       {
         test: /\.css$/,
         use: [
           "vue-style-loader",
-          "css-loader"
-        ]
-      }
-    ]
+          "css-loader",
+          "sass-loader",
+        ],
+      },
+    ],
   },
   resolve: {
     extensions: [".js", ".jsx"],
-    modules: [path.resolve(__dirname, "node_modules")]
-  }
+    modules: [path.resolve(__dirname, "node_modules")],
+  },
 };

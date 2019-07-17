@@ -2,20 +2,15 @@
 
 """ Search document definitions for ddionrails.instruments app """
 
+from typing import Dict, Optional
+
 from django.conf import settings
 from django.db.models.query import QuerySet
 from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.documents import Document
 from django_elasticsearch_dsl.registries import registry
-from elasticsearch_dsl import analyzer
 
 from .models import Question
-
-my_analyzer = analyzer(
-    "my_analyzer",
-    # tokenizer=tokenizer('trigram', 'nGram', min_gram=3, max_gram=3),
-    filter=["lowercase"],
-)
 
 
 @registry.register_document
@@ -23,19 +18,28 @@ class QuestionDocument(Document):
     """ Search document instruments.Question """
 
     # attributes
-    items = fields.ObjectField(properties={"text": fields.TextField()})
+    name = fields.TextField()
     label = fields.TextField(analyzer="english")
+    label_de = fields.TextField(analyzer="german")
+    description = fields.TextField(analyzer="english")
+    description_de = fields.TextField(analyzer="german")
+    items = fields.ObjectField(
+        properties={
+            "en": fields.ListField(fields.TextField(analyzer="english")),
+            "de": fields.ListField(fields.TextField(analyzer="german")),
+        }
+    )
 
     # relations
     analysis_unit = fields.KeywordField()
     instrument = fields.TextField(fields={"raw": fields.KeywordField()})
     period = fields.KeywordField()
-    study = fields.TextField(fields={"raw": fields.KeywordField()})
+    study = fields.KeywordField()
 
     # lookup methods
     @staticmethod
-    def prepare_analysis_unit(question: Question) -> str:
-        """ Return the related analysis_unit's or "None" """
+    def prepare_analysis_unit(question: Question) -> Optional[str]:
+        """ Return the related analysis_unit's or None """
         try:
             return question.instrument.analysis_unit.title()
         except AttributeError:
@@ -47,8 +51,8 @@ class QuestionDocument(Document):
         return question.instrument.title()
 
     @staticmethod
-    def prepare_period(question: Question) -> str:
-        """ Return the related period's title or "None" """
+    def prepare_period(question: Question) -> Optional[str]:
+        """ Return the related period's title or None """
         try:
             return question.instrument.period.title()
         except AttributeError:
@@ -60,17 +64,24 @@ class QuestionDocument(Document):
         return question.instrument.study.title()
 
     @staticmethod
-    def prepare_items(question: Question):
-        items = []
+    def prepare_items(question: Question) -> Dict:
+        """ Return the question's items, containing text, text_de and answers """
+        items = {"en": [], "de": []}
         for item in question.items:
-            items.append(
-                dict(
-                    text=item.get("text"),
-                    text_de=item.get("text_de"),
-                    instruction=item.get("instruction"),
-                    instruction_de=item.get("instruction_de"),
-                )
-            )
+            text = item.get("text")
+            text_de = item.get("text_de")
+            if text:
+                items["en"].append(text)
+            if text_de:
+                items["de"].append(text_de)
+            answers = item.get("answers", list())
+            for answer in answers:
+                label = answer.get("label")
+                label_de = answer.get("label_de")
+                if label:
+                    items["en"].append(label)
+                if label_de:
+                    items["de"].append(label_de)
         return items
 
     class Meta:  # pylint: disable=too-few-public-methods
@@ -81,7 +92,6 @@ class QuestionDocument(Document):
 
     class Django:  # pylint: disable=too-few-public-methods
         model = Question
-        fields = ("name", "label_de", "description", "description_de")
 
     def get_queryset(self) -> QuerySet:
         """

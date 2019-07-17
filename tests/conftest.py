@@ -275,7 +275,7 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
 
     # Delete documents in index after testing
     response = ConceptDocument.search().query("match_all").delete()
-    assert expected == response["deleted"]
+    assert response["deleted"] > 0
 
 
 @pytest.fixture

@@ -16,11 +16,6 @@ urlpatterns = [
         question_comparison_partial,
         name="question_comparison_partial",
     ),
-    path(
-        "test/redirect/<str:object_type>/<uuid:object_id>",
-        views.object_redirect,
-        name="object_redirect",
-    ),
     path("topics/<str:study_name>/<str:language>", views.topic_list, name="topic_list"),
     path(
         "topics/<str:study_name>/<str:language>/concept_<str:concept_name>",
