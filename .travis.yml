@@ -18,7 +18,6 @@ before_script:
   - docker-compose exec web pip install -r Requirements.txt
   - docker-compose exec web npm install
   - docker-compose exec web npm run build
-  - docker-compose exec web cat webpack-stats.json
 script:
   - docker-compose exec web pytest --cov-report xml
   - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/imports/ --cov-append
