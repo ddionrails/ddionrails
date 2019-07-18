@@ -11,8 +11,22 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings.testing
       DJANGO_LIVE_TEST_SERVER_ADDRESS: web:9000 # bind live server to a fixed port
     volumes:
-      - ./:/usr/src/app
       - ./codecov:/usr/src/app/codecov
+      - ./assets:/usr/src/app/assets
+      - ./config:/usr/src/app/config
+      - ./ddionrails:/usr/src/app/ddionrails
+      - ./docker:/usr/src/app/docker
+      - ./local:/usr/src/app/local
+      - ./static:/usr/src/app/static
+      - ./templates:/usr/src/app/templates
+      - ./tests:/usr/src/app/tests
+      - ./manage.py:/usr/src/app/manage.py
+      - ./logging.conf:/usr/src/app/logging.conf
+      - ./package-lock.json:/usr/src/app/package-lock.json
+      - ./package.json:/usr/src/app/package.json
+      - ./pavement.py:/usr/src/app/pavement.py
+      - ./Pipfile:/usr/src/app/Pipfile
+      - ./Pipfile.lock:/usr/src/app/Pipfile.lock 
     ports:
       - 9000 # used for live server test
   postgres:

@@ -15,9 +15,6 @@ before_script:
   - docker images
   - docker ps -a
   - docker-compose exec web pipenv install --system --dev
-  - docker-compose exec web sh -c "cd ./node_modules/ddionrails-elasticsearch \
-      && npm install \
-      && ./node_modules/.bin/ng build --prod"
   - docker-compose exec web npm run build
 script:
   - docker-compose exec web pytest --cov-report xml
