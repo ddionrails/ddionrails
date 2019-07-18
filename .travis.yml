@@ -10,6 +10,7 @@ before_install:
   - docker-compose --version
   - mkdir codecov # create directory for coverage report, that is mounted as volume
 before_script:
+  - docker-compose config
   - docker-compose up --build -d
   - docker images
   - docker ps -a
