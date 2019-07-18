@@ -6,12 +6,24 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
+    command: >
+      sh -c "
+        pipenv install --system --dev &
+        npm run build && \
+        gunicorn config.wsgi \
+        --bind 0.0.0.0:8000 \
+        --error-logfile - \
+        --access-logfile - \
+        --log-level=info \
+        --access-logformat \
+        [gunicorn] %(h)s %(l)s %(u)s %(t)s %(r)s %(s)s %(b)s %(f)s %(a)s"
+    entrypoint: ./docker/ddionrails/entrypoint.sh
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
       DJANGO_LIVE_TEST_SERVER_ADDRESS: web:9000 # bind live server to a fixed port
     volumes:
+      - ./:/usr/src/app
       - ./codecov:/usr/src/app/codecov
-      - ./tests:/usr/src/app/tests
     ports:
       - 9000 # used for live server test
   postgres:
