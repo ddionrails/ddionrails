@@ -12,19 +12,17 @@ services:
           python /usr/src/app/manage.py runserver_plus \
             --print-sql 0.0.0.0:8000;
           test $$? -gt 128 && break;
-        done
-      "
+        done"
     entrypoint: ./docker/ddionrails/entrypoint.sh
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
-    environment:
-      - TERM=xterm-256color
     volumes:
       - ./:/usr/src/app/
       - static:/usr/src/app/static
       - media:/var/django/media
+      - ~/.ssh/docker-dev/:/root/.ssh
 
   postgres:
     env_file:

@@ -19,7 +19,9 @@ RUN  apt-get update \
         graphviz=2.38.0-17 \
         graphviz-dev=2.38.0-17 \
         netcat=1.10-41 \
+        openssh-client=1:7.4p1-10+deb9u6 \
         python-psycopg2=2.6.2-1 \
+        vim-tiny=2:8.0.0197-4+deb9u3 \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.6.0-1nodesource1 \
     && rm -rf /var/lib/apt/lists/* 
@@ -42,5 +44,8 @@ RUN npm run build
 
 # Set up entrypoint
 RUN mv docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+
+# Some dev creature comforts for bash work
+ADD ./docker/ddionrails/dev/dev.bashrc /root/.bashrc
 
 ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]
