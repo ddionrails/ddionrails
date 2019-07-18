@@ -6,15 +6,6 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
-    command: >
-      sh -c "
-        pipenv install --system --dev &
-        npm run build && \
-        gunicorn config.wsgi \
-        --bind 0.0.0.0:8000 \
-        --error-logfile - \
-        --access-logfile - \
-        --log-level=info"
     entrypoint: ./docker/ddionrails/entrypoint.sh
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
