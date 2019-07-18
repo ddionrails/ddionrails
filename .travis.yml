@@ -15,7 +15,9 @@ before_script:
   - docker images
   - docker ps -a
   - docker-compose exec web pipenv install --system --dev
+  - docker-compose exec web npm install
   - docker-compose exec web npm run build
+  - docker-compose exec web cat webpack-stats.json
 script:
   - docker-compose exec web pytest --cov-report xml
   - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/imports/ --cov-append
