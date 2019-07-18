@@ -1,9 +1,9 @@
 repos:
 -   repo: local
     hooks:
-    -   id: docker-pytest
-        name: run test with docker-compose
-        entry: docker-compose exec -T web paver test
+    -   id: pytest-func
+        name: run functional tests with pytest
+        entry: DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'
         language: system
         files: '.*\.py'
         pass_filenames: false
@@ -26,7 +26,7 @@ repos:
     rev: stable
     hooks:
     - id: black
-      language_version: python3.6
+      language_version: python3.7
       args: ["--config", "pyproject.toml"] 
 -   repo: https://github.com/PyCQA/bandit 
     rev: '1.6.0'
