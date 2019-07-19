@@ -1,9 +1,9 @@
 repos:
 -   repo: local
     hooks:
-    -   id: pytest-func
-        name: run functional tests with pytest
-        entry: DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'
+    -   id: unittest
+        name: run non functional tests with pytest
+        entry: bash -c "DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'"
         language: system
         files: '.*\.py'
         pass_filenames: false
