@@ -43,12 +43,12 @@ class VariableForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.data["name"] = self.data["variable_name"]
-        self.data["dataset"] = Dataset.get_or_create(
-            dict(name=self.data["dataset_name"], study=self.data["study_object"])
-        ).pk
+        _dataset, _ = Dataset.objects.get_or_create(
+            name=self.data["dataset_name"], study=self.data["study_object"]
+        )
+        self.data["dataset"] = _dataset.id
         if self.data.get("concept_name", "") == "":
             self.data["concept"] = None
         else:
-            self.data["concept"] = Concept.get_or_create(
-                dict(name=self.data["concept_name"].lower())
-            ).pk
+            _concept, _ = Concept.objects.get_or_create(name=self.data["concept_name"])
+            self.data["concept"] = _concept.id

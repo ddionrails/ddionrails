@@ -57,21 +57,6 @@ class ModelMixin:
         io_fields = ["name", "label", "description"]
 
     @classmethod
-    def get_or_create(cls, parameters: Dict, lower_strings: bool = True):
-        """
-        Default for the get_or_create based on a dict.
-
-        The method uses only relevant identifiers based on ``DOR.id_fields``.
-
-        By default, all strings are set to lower case (option ``lower_strings``).
-        """
-        definition = {key: parameters[key] for key in cls.DOR.id_fields}
-        for key, value in definition.items():
-            if value.__class__ == str and lower_strings:
-                definition[key] = value.lower()
-        return cls.objects.get_or_create(**definition)[0]
-
-    @classmethod
     def get(cls, parameters: Dict):
         """
         Default for the get_or_create based on a dict.
