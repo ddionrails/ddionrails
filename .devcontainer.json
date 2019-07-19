@@ -31,5 +31,8 @@
 		"waderyan.gitblame",
 		"yzhang.markdown-all-in-one",
 		"felixrieseberg.vsc-travis-ci-status",
+		"aaron-bond.better-comments",
+		"christian-kohler.path-intellisense",
+		"visualstudioexptteam.vscodeintellicode",
 	]
 }
