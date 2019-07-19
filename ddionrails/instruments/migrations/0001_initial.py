@@ -22,10 +22,10 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("filer", "__first__"),
+        migrations.swappable_dependency(settings.FILER_IMAGE_MODEL),
         ("data", "0001_initial"),
-        ("concepts", "0001_initial"),
         ("studies", "0001_initial"),
+        ("concepts", "0001_initial"),
     ]
 
     operations = [
@@ -38,8 +38,7 @@ class Migration(migrations.Migration):
                         db_index=True,
                         default=uuid.uuid4,
                         help_text=(
-                            "UUID of the instrument. "
-                            "Dependent on the associated study."
+                            "UUID of the instrument. Dependent on the associated study."
                         ),
                         primary_key=True,
                         serialize=False,
@@ -64,11 +63,28 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "label_de",
+                    models.CharField(
+                        blank=True,
+                        help_text="Label of the instrument (German)",
+                        max_length=255,
+                        verbose_name="Label (German)",
+                    ),
+                ),
+                (
                     "description",
                     models.TextField(
                         blank=True,
-                        help_text="Description of the topic (Markdown)",
-                        verbose_name="Description (Markdown)",
+                        help_text="Description of the instrument (Markdown, English)",
+                        verbose_name="Description (Markdown, English)",
+                    ),
+                ),
+                (
+                    "description_de",
+                    models.TextField(
+                        blank=True,
+                        help_text="Description of the instrument (Markdown, German)",
+                        verbose_name="Description (Markdown, German)",
                     ),
                 ),
                 (
@@ -102,15 +118,6 @@ class Migration(migrations.Migration):
                         on_delete=django.db.models.deletion.CASCADE,
                         related_name="instruments",
                         to="studies.Study",
-                    ),
-                ),
-                (
-                    "label_de",
-                    models.CharField(
-                        blank=True,
-                        help_text="Label of the instrument (German)",
-                        max_length=255,
-                        verbose_name="Label (German)",
                     ),
                 ),
             ],
@@ -162,8 +169,16 @@ class Migration(migrations.Migration):
                     "description",
                     models.TextField(
                         blank=True,
-                        help_text="Description of the topic (Markdown)",
-                        verbose_name="Description (Markdown)",
+                        help_text="Description of the question (Markdown, English)",
+                        verbose_name="Description (Markdown, English)",
+                    ),
+                ),
+                (
+                    "description_de",
+                    models.TextField(
+                        blank=True,
+                        help_text="Description of the question (Markdown, German)",
+                        verbose_name="Description (Markdown, German)",
                     ),
                 ),
                 (
@@ -176,6 +191,15 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
+                    "items",
+                    django.contrib.postgres.fields.jsonb.JSONField(
+                        blank=True,
+                        default=list,
+                        help_text="Items are elements in a question",
+                        null=True,
+                    ),
+                ),
+                (
                     "instrument",
                     models.ForeignKey(
                         blank=True,
@@ -185,15 +209,6 @@ class Migration(migrations.Migration):
                         to="instruments.Instrument",
                     ),
                 ),
-                (
-                    "items",
-                    django.contrib.postgres.fields.jsonb.JSONField(
-                        blank=True,
-                        default=list,
-                        help_text="Items are elements in a question",
-                        null=True,
-                    ),
-                ),
             ],
             options={"unique_together": {("instrument", "name")}},
             bases=(
@@ -201,72 +216,6 @@ class Migration(migrations.Migration):
                 ddionrails.base.mixins.ModelMixin,
                 models.Model,
             ),
-        ),
-        migrations.CreateModel(
-            name="ConceptQuestion",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "concept",
-                    models.ForeignKey(
-                        help_text="Foreign key to concepts.Concept",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="concepts_questions",
-                        to="concepts.Concept",
-                    ),
-                ),
-                (
-                    "question",
-                    models.ForeignKey(
-                        help_text="Foreign key to instruments.Question",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="concepts_questions",
-                        to="instruments.Question",
-                    ),
-                ),
-            ],
-            options={"unique_together": {("question", "concept")}},
-        ),
-        migrations.CreateModel(
-            name="QuestionVariable",
-            fields=[
-                (
-                    "id",
-                    models.AutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                (
-                    "question",
-                    models.ForeignKey(
-                        help_text="Foreign key to instruments.Question",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="questions_variables",
-                        to="instruments.Question",
-                    ),
-                ),
-                (
-                    "variable",
-                    models.ForeignKey(
-                        help_text="Foreign key to data.Variable",
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="questions_variables",
-                        to="data.Variable",
-                    ),
-                ),
-            ],
-            options={"unique_together": {("question", "variable")}},
         ),
         migrations.CreateModel(
             name="QuestionImage",
@@ -306,5 +255,71 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
+        ),
+        migrations.CreateModel(
+            name="QuestionVariable",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        help_text="Foreign key to instruments.Question",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions_variables",
+                        to="instruments.Question",
+                    ),
+                ),
+                (
+                    "variable",
+                    models.ForeignKey(
+                        help_text="Foreign key to data.Variable",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="questions_variables",
+                        to="data.Variable",
+                    ),
+                ),
+            ],
+            options={"unique_together": {("question", "variable")}},
+        ),
+        migrations.CreateModel(
+            name="ConceptQuestion",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "concept",
+                    models.ForeignKey(
+                        help_text="Foreign key to concepts.Concept",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="concepts_questions",
+                        to="concepts.Concept",
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        help_text="Foreign key to instruments.Question",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="concepts_questions",
+                        to="instruments.Question",
+                    ),
+                ),
+            ],
+            options={"unique_together": {("question", "concept")}},
         ),
     ]
