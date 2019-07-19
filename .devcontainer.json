@@ -1,0 +1,34 @@
+// See https://aka.ms/vscode-remote/devcontainer.json for format details.
+{
+	"dockerComposeFile": [
+		"docker-compose.yml",
+		"docker-compose-remote-dev.yml"
+	],
+	"service": "web",
+	"workspaceFolder": "/usr/src/app",
+	"extensions": [
+		"abusaidm.html-snippets",
+		"angelo-breuer.license-header-manager",
+		"batisteo.vscode-django",
+		"bibhasdn.django-html",
+		"Cameron.vscode-pytest",
+		"eamodio.gitlens",
+		"hbenl.vscode-test-explorer",
+		"HookyQR.beautify",
+		"hoovercj.vscode-settings-cycler",
+		"KnisterPeter.vscode-github",
+		"kylebarron.stata-enhanced",
+		"mervin.markdown-formatter",
+		"mohsen1.prettify-json",
+		"ms-azuretools.vscode-docker",
+		"ms-python.python",
+		"p1c2u.docker-compose",
+		"PKief.material-icon-theme",
+		"redhat.vscode-yaml",
+		"streetsidesoftware.code-spell-checker",
+		"trentrand.git-commit-helper-vscode",
+		"vscodevim.vim",
+		"waderyan.gitblame",
+		"yzhang.markdown-all-in-one",
+	]
+}
