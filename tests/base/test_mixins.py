@@ -43,22 +43,6 @@ class MixinChild(ModelMixin, models.Model):
 
 
 class TestModelMixin:
-    def test_get_or_create_method(self, mocker):
-        with mocker.patch(
-            "tests.base.test_mixins.MixinChild.objects.get_or_create", return_value=(1, 1)
-        ):
-            dictionary = dict(name="some-name")
-            MixinChild.get_or_create(dictionary)
-            MixinChild.objects.get_or_create.assert_called_once()
-
-    def test_get_or_create_method_without_lower_strings(self, mocker):
-        with mocker.patch(
-            "tests.base.test_mixins.MixinChild.objects.get_or_create", return_value=(1, 1)
-        ):
-            dictionary = dict(name="SOME-NAME")
-            MixinChild.get_or_create(dictionary, lower_strings=False)
-            MixinChild.objects.get_or_create.assert_called_once()
-
     def test_get_method_success(self, mocker):
         with mocker.patch(
             "tests.base.test_mixins.MixinChild.objects.get", return_value=True

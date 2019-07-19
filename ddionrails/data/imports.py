@@ -26,8 +26,7 @@ class DatasetJsonImport(imports.Import):
         self._import_dataset(self.name, self.content)
 
     def _import_dataset(self, name, content):
-        import_dict = dict(study=self.study, name=name)
-        dataset = Dataset.get_or_create(import_dict)
+        dataset, _ = Dataset.objects.get_or_create(study=self.study, name=name)
         sort_id = 0
         if content.__class__ == list:
             for var in content:
@@ -38,8 +37,7 @@ class DatasetJsonImport(imports.Import):
 
     def _import_variable(self, var, dataset, sort_id):
         name = var["variable"]
-        import_dict = dict(name=var["variable"].lower(), dataset=dataset)
-        variable = Variable.get_or_create(import_dict)
+        variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
         sort_id += 1
         variable.sort_id = sort_id
         variable.label = var.get("label", name)

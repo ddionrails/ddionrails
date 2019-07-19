@@ -24,8 +24,7 @@ class InstrumentImport(imports.Import):
         self._import_instrument(self.name, self.content)
 
     def _import_instrument(self, name, content):
-        import_dict = dict(study=self.study, name=name)
-        instrument = Instrument.get_or_create(import_dict)
+        instrument, _ = Instrument.objects.get_or_create(study=self.study, name=name)
 
         # add period relation to instrument
         period_name = content.get("period", "none")
@@ -43,8 +42,9 @@ class InstrumentImport(imports.Import):
         instrument.period = period
 
         for name, q in content["questions"].items():
-            import_dict = dict(name=q["question"], instrument=instrument)
-            question = Question.get_or_create(import_dict)
+            question, _ = Question.objects.get_or_create(
+                name=q["question"], instrument=instrument
+            )
             question.sort_id = int(q.get("sn", 0))
             question.label = q.get("label", q.get("text", name))
             question.label_de = q.get("label_de", q.get("text_de", ""))
