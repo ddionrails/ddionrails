@@ -27,7 +27,7 @@ psycopg2-binary = "*"
 # Elasticsearch
 # ------------------------------------------------------------------------------
  # pin until ElasticSearch service is updated
-elasticsearch-dsl = "==2.2.0"
+elasticsearch-dsl = "==7.0.0"
 
 # Markup
 # ------------------------------------------------------------------------------
