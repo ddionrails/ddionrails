@@ -10,6 +10,7 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.testing
       DJANGO_LIVE_TEST_SERVER_ADDRESS: web:9000 # bind live server to a fixed port
+    pids_limit: 20
     volumes:
       - ./codecov:/usr/src/app/codecov
       - ./assets:/usr/src/app/assets
