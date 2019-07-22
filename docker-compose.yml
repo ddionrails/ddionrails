@@ -26,7 +26,7 @@ services:
         # If you want to change it, you have to also change it there.
         ipv4_address: 172.16.238.10
         ipv6_address: 2001:3984:3989::10
-    pids_limit: 4
+    pids_limit: 30
     ports: 
       - 8000
     restart: on-failure:5
@@ -88,7 +88,7 @@ services:
       context: ./docker/postfix/
     networks:
       - ddi_net
-    pids_limit: 3
+    pids_limit: 10
     restart: on-failure:5
     security_opt: 
       - no-new-privileges
@@ -116,7 +116,7 @@ services:
     image: redis:4-alpine3.9
     networks:
       - ddi_net
-    pids_limit: 1
+    pids_limit: 30
     restart: on-failure:5
     security_opt: 
       - no-new-privileges
