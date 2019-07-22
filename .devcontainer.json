@@ -30,5 +30,6 @@
 		"vscodevim.vim",
 		"waderyan.gitblame",
 		"yzhang.markdown-all-in-one",
+		"felixrieseberg.vsc-travis-ci-status",
 	]
 }
