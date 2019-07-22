@@ -16,10 +16,10 @@ from django.db import models
 from django.db.models import QuerySet
 from django.urls import reverse
 
-from ddionrails.base.helpers import hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .instrument import Instrument

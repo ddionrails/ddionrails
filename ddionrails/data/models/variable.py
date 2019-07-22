@@ -16,10 +16,10 @@ from django.urls import reverse
 from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
-from ddionrails.base.helpers import hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .dataset import Dataset

@@ -6,9 +6,9 @@ import uuid
 from django.db import models
 from django.urls import reverse
 
-from ddionrails.base.helpers import hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 

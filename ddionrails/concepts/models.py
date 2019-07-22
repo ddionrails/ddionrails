@@ -11,9 +11,9 @@ from django.db import models
 from django.urls import reverse
 
 from config.validators import validate_lowercase
-from ddionrails.base.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 

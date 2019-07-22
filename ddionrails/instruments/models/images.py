@@ -35,7 +35,7 @@ import uuid
 from django.db import models
 from filer.fields.image import FilerImageField
 
-from ddionrails.base.helpers import hash_with_namespace_uuid
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models.question import Question
 
 LOGGER = logging.getLogger("django")

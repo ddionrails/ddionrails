@@ -8,10 +8,10 @@ from django.db import models
 from django.urls import reverse
 
 from config.helpers import render_markdown
-from ddionrails.base.helpers import hash_with_namespace_uuid
 from ddionrails.base.mixins import ModelMixin as DorMixin
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.elastic.mixins import ModelMixin as ElasticMixin
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models import Instrument, Question
 from ddionrails.studies.models import Study
 

@@ -11,8 +11,8 @@ from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
-from ddionrails.base.helpers import hash_with_base_uuid
 from ddionrails.base.mixins import ImportPathMixin, ModelMixin
+from ddionrails.imports.helpers import hash_with_base_uuid
 
 
 class TopicList(models.Model):
