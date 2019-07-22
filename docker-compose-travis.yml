@@ -27,7 +27,8 @@ services:
       - ./package.json:/usr/src/app/package.json
       - ./pavement.py:/usr/src/app/pavement.py
       - ./Pipfile:/usr/src/app/Pipfile
-      - ./Pipfile.lock:/usr/src/app/Pipfile.lock 
+      - ./Pipfile.lock:/usr/src/app/Pipfile.lock
+      - ./webpack.config.js:/usr/src/app/webpack.config.js
     ports:
       - 9000 # used for live server test
   postgres:

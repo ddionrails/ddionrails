@@ -4,11 +4,11 @@
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
  */
 
-var path = require("path");
-var webpack = require("webpack");
-var BundleTracker = require("webpack-bundle-tracker");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var glob = require("glob");
+const path = require("path");
+const webpack = require("webpack");
+const BundleTracker = require("webpack-bundle-tracker");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const glob = require("glob");
 
 entry: glob.sync("./test/**/*Spec.js");
 
@@ -18,7 +18,10 @@ module.exports = {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
-    visualization: ["./assets/js/visualization.js", "./assets/scss/visualization.scss"],
+    visualization: [
+      "./assets/js/visualization.js",
+      "./assets/scss/visualization.scss"
+    ],
 
     /* Workaround:
        ddionrails-elasticsearch: search library
@@ -47,17 +50,24 @@ module.exports = {
       jQuery: "jquery"
     }),
     new BundleTracker({ filename: "./webpack-stats.json" }),
-    new ExtractTextPlugin({ filename: "[name]-[hash].css" })
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: "[id].css",
+      ignoreOrder: false // Enable to remove warnings about conflicting order
+    })
   ],
 
   module: {
     rules: [
+      /* Loads scss files, e.g. Bootstrap */
       {
         test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
-          use: ["css-loader", "sass-loader"]
-        })
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          "css-loader"
+        ]
       },
       /* Loads fonts, used for Bootstrap */
       {
