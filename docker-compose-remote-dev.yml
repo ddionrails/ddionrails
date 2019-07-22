@@ -18,7 +18,7 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
-    pids_limit: 40
+    pids_limit: -1
     volumes:
       - ./:/usr/src/app/
       - static:/usr/src/app/static

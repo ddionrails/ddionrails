@@ -18,6 +18,7 @@ services:
       - ./assets:/usr/src/app/assets
       - ./static/dist:/usr/src/app/static/dist
       - ./webpack.config.js:/usr/src/app/webpack.config.js
+    pids_limit: -1
 
   postgres:
     env_file:

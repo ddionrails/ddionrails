@@ -48,7 +48,7 @@ services:
       retries: 5
     networks:
       - ddi_net
-    pids_limit: 10
+    pids_limit: 30
     security_opt: 
       - no-new-privileges
     restart: on-failure:5
@@ -72,7 +72,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - ddi_net
-    pids_limit: 1
+    pids_limit: 30
     restart: on-failure:5
     security_opt: 
       - no-new-privileges
