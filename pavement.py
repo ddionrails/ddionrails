@@ -76,11 +76,11 @@ def migrate():
 @consume_args
 def test(args):
     """ Test the project without functional tests """
-    sh(f"DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional' {' '.join(args)}")
+    sh(f"DJANGO_SETTINGS_MODULE=config.settings.testing pytest -rf -m 'not functional' {' '.join(args)}")
 
 
 @task
 @needs("django_setup")
 def functional_test():
     """ Test the project with functional tests """
-    sh("DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m functional")
+    sh("DJANGO_SETTINGS_MODULE=config.settings.testing pytest -rf -m functional")
