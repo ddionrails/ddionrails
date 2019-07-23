@@ -72,7 +72,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
       - ddi_net
-    pids_limit: 100
+    pids_limit: 5000
     restart: on-failure:5
     security_opt: 
       - no-new-privileges
