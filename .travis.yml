@@ -17,6 +17,10 @@ before_script:
   - docker-compose exec web sh -c "pipenv lock -r --dev > Requirements.txt"
   - docker-compose exec web pip install -r Requirements.txt
   - docker-compose exec web npm install
+  - >-
+    docker-compose
+    exec -w /usr/src/app/node_modules/ddionrails-elasticsearch -u root
+    web bash -c "npm install && ./node_modules/.bin/ng build --prod"
   - docker-compose exec web npm run build
 script:
   - docker-compose exec web pytest --cov-report xml
