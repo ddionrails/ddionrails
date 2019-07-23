@@ -16,6 +16,7 @@ before_script:
   - docker ps -a
   - docker-compose exec web sh -c "pipenv lock -r --dev > Requirements.txt"
   - docker-compose exec web pip install -r Requirements.txt
+  - docker-compose exec web rm -rf node_modules/*
   - docker-compose exec web npm install
   - >-
     docker-compose
