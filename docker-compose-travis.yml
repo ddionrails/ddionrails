@@ -2,6 +2,7 @@ version: '2.4'
 
 services:
   web:
+    image: paneldata/ddionrails:latest-dev
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
@@ -13,6 +14,8 @@ services:
     pids_limit: -1
     volumes:
       - ./codecov:/usr/src/app/codecov
+      - ./node_modules:/usr/src/app/node_modules
+      - ./dist:/usr/src/app/static/dist
       - ./assets:/usr/src/app/assets
       - ./config:/usr/src/app/config
       - ./ddionrails:/usr/src/app/ddionrails
