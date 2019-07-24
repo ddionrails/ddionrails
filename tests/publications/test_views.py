@@ -25,7 +25,7 @@ class TestPublicationRedirectView:
 class TestPublicationDetailView:
     def test_detail_view_with_existing_names(self, client, publication):
         url = reverse(
-            "publ:publication",
+            "publ:publication_detail",
             kwargs={
                 "study_name": publication.study.name,
                 "publication_name": publication.name,
@@ -36,7 +36,7 @@ class TestPublicationDetailView:
 
     def test_detail_view_with_invalid_study_name(self, client, publication):
         url = reverse(
-            "publ:publication",
+            "publ:publication_detail",
             kwargs={
                 "study_name": "invalid-study-name",
                 "publication_name": publication.name,

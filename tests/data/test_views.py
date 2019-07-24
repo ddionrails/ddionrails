@@ -18,7 +18,7 @@ pytestmark = [pytest.mark.data, pytest.mark.views]
 class TestDatasetDetailView:
     def test_detail_view_with_existing_names(self, client, dataset):
         url = reverse(
-            "data:dataset",
+            "data:dataset_detail",
             kwargs={"study_name": dataset.study.name, "dataset_name": dataset.name},
         )
         response = client.get(url)
@@ -34,7 +34,7 @@ class TestDatasetDetailView:
     def test_detail_view_with_invalid_study_name(self, client, dataset):
         invalid_study_name = "invalid-study-name"
         url = reverse(
-            "data:dataset",
+            "data:dataset_detail",
             kwargs={"study_name": invalid_study_name, "dataset_name": dataset.name},
         )
         response = client.get(url)
@@ -43,7 +43,7 @@ class TestDatasetDetailView:
     def test_detail_view_with_invalid_dataset_name(self, client, dataset):
         invalid_dataset_name = "invalid-dataset-name"
         url = reverse(
-            "data:dataset",
+            "data:dataset_detail",
             kwargs={
                 "study_name": dataset.study.name,
                 "dataset_name": invalid_dataset_name,
@@ -70,7 +70,7 @@ class TestDatasetRedirectView:
 class TestVariableDetailView:
     def test_detail_view_with_existing_names(self, client, variable):
         url = reverse(
-            "data:variable",
+            "data:variable_detail",
             kwargs={
                 "study_name": variable.dataset.study.name,
                 "dataset_name": variable.dataset.name,
