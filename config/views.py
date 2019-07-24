@@ -2,10 +2,7 @@
 
 """ Views for ddionrails project """
 
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import HttpResponse
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.base import TemplateView
 from urllib3 import PoolManager
 
@@ -45,7 +42,7 @@ def server_error(request):
 
 
 class HomePageView(TemplateView):
-    """ The HomepageView of the ddionrails project renders a list of all available studies. """
+    """ Renders a list of all available studies. """
 
     template_name = "pages/home.html"
 
@@ -53,12 +50,3 @@ class HomePageView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["study_list"] = Study.objects.all()
         return context
-
-
-@csrf_exempt
-def elastic_proxy(request: WSGIRequest, path: str) -> HttpResponse:
-    """ Custom elasticsearch proxy """
-    response = HTTP.request(
-        "GET", "http://elasticsearch:9200/%s" % path, body=request.body
-    )
-    return HttpResponse(response.data)

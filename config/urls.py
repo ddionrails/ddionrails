@@ -10,7 +10,7 @@ from django.views.generic.base import TemplateView
 
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
-from config.views import HomePageView, elastic_proxy
+from config.views import HomePageView
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
@@ -45,7 +45,6 @@ urlpatterns = [
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
-    path("elastic<path:path>", elastic_proxy, name="elastic_proxy"),
     # Study by name
     path("<slug:study_name>", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links
