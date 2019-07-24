@@ -10,11 +10,7 @@
     <tbody>
     {% for question in questions %}
         <tr>
-            {% if language == "de" %}
-                <td>{{ question.title_de }}</td>
-            {% else %}
-                <td>{{ question.title }}</td>
-            {% endif %}
+            <td>{{ question.title }}</td>
             <td><a href="{{ question.get_absolute_url }}">{{ question.name }}</a></td>
             <td><a href="{{ question.instrument.get_absolute_url }}">{{ question.instrument.name }}</a></td>
         </tr>
