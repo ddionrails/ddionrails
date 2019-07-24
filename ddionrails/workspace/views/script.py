@@ -99,16 +99,3 @@ def script_new_lang(
         generator_name=generator_name,
     )
     return redirect(script.get_absolute_url())
-
-
-# request is a required parameter
-@own_basket_only
-def script_new(request: WSGIRequest, basket_id: int):  # pylint: disable=unused-argument
-    """ CreateView for a new Script """
-    basket = get_object_or_404(Basket, id=basket_id)
-    script_count = basket.script_set.count() + 1
-    script_name = f"script-{script_count}"
-    script = Script.objects.create(
-        name=script_name, basket_id=basket_id, settings=SoepStata.DEFAULT_CONFIG
-    )
-    return redirect(script.get_absolute_url())

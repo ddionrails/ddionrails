@@ -47,7 +47,6 @@ urlpatterns = [
         views.script_new_lang,
         name="script_new_lang",
     ),
-    path("baskets/<int:basket_id>/scripts/new", views.script_new, name="script_new"),
     path(
         "baskets/<int:basket_id>/scripts/<int:script_id>/delete",
         views.script_delete,
