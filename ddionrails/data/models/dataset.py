@@ -120,6 +120,6 @@ class Dataset(ModelMixin, models.Model):
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "study" and "name" fields """
         return reverse(
-            "data:dataset",
+            "data:dataset_detail",
             kwargs={"study_name": self.study.name, "dataset_name": self.name},
         )

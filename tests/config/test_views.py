@@ -23,7 +23,7 @@ class TestPageViews:
         assert "GitHub" in content
 
     def test_home_page(self, client):
-        url = reverse("homepage")
+        url = reverse("home")
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
 
@@ -37,30 +37,29 @@ class TestPageViews:
 
 
 class TestErrorTemplates:
+
+    url = reverse("home")
+
     def test_400_template(self, rf):
-        url = reverse("homepage")
-        request = rf.get(url)
+        request = rf.get(self.url)
         response = bad_request(request, exception="")
         assert status.HTTP_400_BAD_REQUEST == response.status_code
         assert "Bad Request (400)" in str(response.content)
 
     def test_403_template(self, rf):
-        url = reverse("homepage")
-        request = rf.get(url)
+        request = rf.get(self.url)
         response = permission_denied(request, exception="")
         assert status.HTTP_403_FORBIDDEN == response.status_code
         assert "Forbidden (403)" in str(response.content)
 
     def test_404_template(self, rf):
-        url = reverse("homepage")
-        request = rf.get(url)
+        request = rf.get(self.url)
         response = page_not_found(request, exception="")
         assert status.HTTP_404_NOT_FOUND == response.status_code
         assert "Page not found (404)" in str(response.content)
 
     def test_500_template(self, rf):
-        url = reverse("homepage")
-        request = rf.get(url)
+        request = rf.get(self.url)
         response = server_error(request)
         assert status.HTTP_500_INTERNAL_SERVER_ERROR == response.status_code
         assert "Internal Server Error (500)" in str(response.content)

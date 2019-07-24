@@ -4,18 +4,20 @@
 
 from django.urls import path
 
-from .views import InstrumentDetailView, question_detail, study_instrument_list
+from . import views
 
 app_name = "instruments"
 
 urlpatterns = [
-    path("", study_instrument_list, name="study_instrument_list"),
+    path("", views.study_instrument_list, name="study_instrument_list"),
     path(
-        "<str:instrument_name>", InstrumentDetailView.as_view(), name="instrument_detail"
+        "<str:instrument_name>",
+        views.InstrumentDetailView.as_view(),
+        name="instrument_detail",
     ),
     path(
         "<str:instrument_name>/<str:question_name>",
-        question_detail,
+        views.question_detail,
         name="question_detail",
     ),
 ]

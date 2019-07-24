@@ -96,7 +96,7 @@ class Publication(ElasticMixin, DorMixin, models.Model):
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "study" and "name" fields """
         return reverse(
-            "publ:publication",
+            "publ:publication_detail",
             kwargs={"study_name": self.study.name, "publication_name": self.name},
         )
 
