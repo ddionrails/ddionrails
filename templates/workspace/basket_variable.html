@@ -1,13 +1,13 @@
 <div class="list-group-item">
-  <button class="btn btn-default btn-xs basket-button"
-          variable_id="{{ variable.id }}"
-          basket_id="{{ basket.id }}">
-    <span class="fas fa-shopping-cart"></span>
-  </button>
-  <b><a href="{{ variable }}">{{ variable.title }}</a></b>
-  [variable: {{ variable.name }} ]
-  <br/>
-  <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">add</a>
-  |
-  <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">remove</a>
+    <button class="btn btn-default btn-xs basket-button"
+            variable_id="{{ variable.id }}"
+            basket_id="{{ basket.id }}">
+        <span class="fas fa-shopping-cart"></span>
+    </button>
+    <b><a href="{{ variable }}">{{ variable.title }}</a></b>
+    [variable: {{ variable.name }} ]
+    <br/>
+    <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">add</a>
+    |
+    <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">remove</a>
 </div>

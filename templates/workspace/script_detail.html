@@ -1,39 +1,39 @@
 {% extends "base_basket.html" %}
 
 {% block title %}
-{{ basket.name }}/{{ script.name }} (script in paneldata.org)
+    {{ basket.name }}/{{ script.name }} (script in paneldata.org)
 {% endblock %}
 
 {% block content %}
 
-<h1>Script: {{ basket.name }}</h1>
-<hr>
-<div class="row">
-    <div class="col-lg-4">
-        <div class="card">
-            <div class="card-header"> 
-              <b>Configure basket</b>
-            </div>
-            <div class="card-body">
+    <h1>Script: {{ basket.name }}</h1>
+    <hr>
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <b>Configure basket</b>
+                </div>
+                <div class="card-body">
 
-<form method="post" 
-      action="/workspace/baskets/{{ basket.id}}/scripts/{{ script.id }}">
-  {% csrf_token %}
-  {% include "workspace/script_form_partial.html" %}
-  <input class="btn btn-primary" type="submit" value="Update script">
-</form>
+                    <form method="post"
+                          action="/workspace/baskets/{{ basket.id }}/scripts/{{ script.id }}">
+                        {% csrf_token %}
+                        {% include "workspace/script_form_partial.html" %}
+                        <input class="btn btn-primary" type="submit" value="Update script">
+                    </form>
 
+                </div>
             </div>
         </div>
+        <div class="col-lg-8">
+            <div class="text-right">
+                <p><a href="{{ script }}/raw" class="btn btn-primary">
+                    raw script
+                </a></p>
+            </div>
+            <pre>{{ s.text }}</pre>
+        </div>
     </div>
-    <div class="col-lg-8">
-        <div class="text-right">
-            <p><a href="{{ script }}/raw" class="btn btn-primary">
-          raw script
-        </a></p>
-        </div> 
-        <pre>{{ s.text }}</pre>
-    </div>
-</div>
 
 {% endblock content %}

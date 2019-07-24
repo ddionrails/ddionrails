@@ -1,27 +1,27 @@
 {{ row_helper.reset }}
 <div class="card">
-    <div class="card-header"> <b>{{ table_name }}</b>
+    <div class="card-header"><b>{{ table_name }}</b>
     </div>
     <div class="card-body">
         <div class="row">
             {% for period_name, questions in question_list.items %}
-            <div class="col-xl-3">
-                {{ period_name }}:
-                <br>
-                {% for q in questions %}<a href="{{ q }}">{{ q.instrument.name }}/{{ q.name }}</a>
-                <br> <a href="#question_comparison" from_id="{{ question.id }}"
-                to_id="{{ q.id }}" class="compare-btn">&#x2014;compare&#x2014;</a>
-                <br>
-                {% endfor %}
-            </div>
-            {% if row_helper.row %}
-        </div>
-        <div class="row" style="margin-top: 15px">
-            {% endif %}
+                <div class="col-xl-3">
+                    {{ period_name }}:
+                    <br>
+                    {% for q in questions %}<a href="{{ q }}">{{ q.instrument.name }}/{{ q.name }}</a>
+                        <br> <a href="#question_comparison" from_id="{{ question.id }}"
+                                to_id="{{ q.id }}" class="compare-btn">&#x2014;compare&#x2014;</a>
+                        <br>
+                    {% endfor %}
+                </div>
+                {% if row_helper.row %}
+                    </div>
+                    <div class="row" style="margin-top: 15px">
+                {% endif %}
             {% endfor %}
-        </div>
+            </div>
     </div>
-    <div class="card-header"> <b>Question comparison</b>
+    <div class="card-header"><b>Question comparison</b>
     </div>
     <div id="question_comparison" class="card-body">
         <p>Please select a question above to compare.</p>

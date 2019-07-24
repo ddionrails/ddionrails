@@ -2,29 +2,29 @@
     <div class="card-header">Label translations</div>
     <table class="table">
         <thead>
-            <tr>
-                <th></th>
-                <th>en</th>
-                {% for language in variable.translation_languages %}
+        <tr>
+            <th></th>
+            <th>en</th>
+            {% for language in variable.translation_languages %}
                 <th>
                     {{ language }}
                 </th>
-                {% endfor %}
-            </tr>
+            {% endfor %}
+        </tr>
         </thead>
         <tbody>
-            {% for key, cat in variable.translation_table.items %}
+        {% for key, cat in variable.translation_table.items %}
             <tr>
                 <th>
                     {{ key }}
                 </th>
                 {% for x in cat.values %}
-                <td>
-                    {{ x }}
-                </td>
+                    <td>
+                        {{ x }}
+                    </td>
                 {% endfor %}
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 </div>

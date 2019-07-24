@@ -2,67 +2,67 @@
 {% block scripts %}
 {% endblock %}
 {% block content %}
-<div class="row">
-    <div class="col-xl-9">
-        <div class="card">
-            <div class="card-body">
-                 <h2 class="text-center">{{ question.name }}</h2>
-                <p>
-                    {{ question.description }}
-                </p>
-                <hr>
-                {% for item in question.item_array %}
-                {% include "questions/item_partial.html" %}
-                {% endfor %}
+    <div class="row">
+        <div class="col-xl-9">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="text-center">{{ question.name }}</h2>
+                    <p>
+                        {{ question.description }}
+                    </p>
+                    <hr>
+                    {% for item in question.item_array %}
+                        {% include "questions/item_partial.html" %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% for language, translated_question in question.translations.items %}
+                <div class="card">
+                    <div class="card-header">
+                        {{ language }}
+                    </div>
+                    <div class="card-body">
+                        {% for item in translated_question %}
+                            {% include "questions/item_partial.html" %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            {% include "questions/related_questions.html" with question_list=related_questions2 table_name="Related questions" %}
+        </div>
+        <div class="col-xl-3">
+            {% include "questions/question_info.html" %}
+            <div class="card">
+                <div class="card-header"><b>Variables</b>
+                </div>
+                {% if variables %}
+                    <div class="list-group">
+                        {% for variable in variables %}
+                            {% include "data/variable_result.html" %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <p>no related variables found</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card">
+                <div class="card-header"><b>Concepts</b>
+                </div>
+                <div class="list-group"></div>
+                {% if concept_list %}
+                    <div class="list-group">
+                        {% for concept in concept_list %}
+                            {% include "concepts/concept_result.html" %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="card-body">
+                        <p>no related concepts found</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
-        {% for language, translated_question in question.translations.items %}
-        <div class="card">
-            <div class="card-header">
-                {{ language }}
-            </div>
-            <div class="card-body">
-                {% for item in translated_question %}
-                {% include "questions/item_partial.html" %}
-                {% endfor %}
-            </div>
-        </div>
-        {% endfor %}
-        {% include "questions/related_questions.html" with question_list=related_questions2 table_name="Related questions" %}
     </div>
-    <div class="col-xl-3">
-        {% include "questions/question_info.html" %}
-        <div class="card">
-            <div class="card-header"> <b>Variables</b>
-            </div>
-            {% if variables %}
-            <div class="list-group">
-                {% for variable in variables %}
-                {% include "data/variable_result.html" %}
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="card-body">
-                <p>no related variables found</p>
-            </div>
-            {% endif %}
-        </div>
-        <div class="card">
-            <div class="card-header"> <b>Concepts</b>
-            </div>
-            <div class="list-group"></div>
-            {% if concept_list %}
-            <div class="list-group">
-                {% for concept in concept_list %}
-                {% include "concepts/concept_result.html" %}
-                {% endfor %}
-            </div>
-            {% else %}
-            <div class="card-body">
-                <p>no related concepts found</p>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
 {% endblock content %}

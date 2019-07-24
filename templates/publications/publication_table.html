@@ -1,16 +1,16 @@
 <table class="table datatable" id="publication_table">
-  <thead>
+    <thead>
     <tr>
-      <th>Label</th>
-      <th>Publ. ID</th>
+        <th>Label</th>
+        <th>Publ. ID</th>
     </tr>
-  </thead>
-  <tbody>
-    {% for publication in publications %} 
-    <tr>
-      <td><a href="{{ publication }}">{{ publication.title }}</a></td>
-      <td>{{ publication.name }}</td>
-    </tr>
-    {% endfor %} 
-  </tbody>
+    </thead>
+    <tbody>
+    {% for publication in publications %}
+        <tr>
+            <td><a href="{{ publication }}">{{ publication.title }}</a></td>
+            <td>{{ publication.name }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>

@@ -1,14 +1,14 @@
 <table class="table datatable" id="variable_table">
     <thead>
-        <tr>
-            <th>Study</th>
-            <th>Object</th>
-            <th>Label</th>
-            <th>Path</th>
-        </tr>
+    <tr>
+        <th>Study</th>
+        <th>Object</th>
+        <th>Label</th>
+        <th>Path</th>
+    </tr>
     </thead>
     <tbody>
-        {% for variable in variables %}
+    {% for variable in variables %}
         <tr>
             <td>
                 {{ variable.dataset.study.title }}
@@ -20,8 +20,8 @@
                 {{ variable }}
             </td>
         </tr>
-        {% endfor %}
-        {% for question in questions %}
+    {% endfor %}
+    {% for question in questions %}
         <tr>
             <td>
                 {{ question.instrument.study.title }}
@@ -33,6 +33,6 @@
                 {{ question }}
             </td>
         </tr>
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>

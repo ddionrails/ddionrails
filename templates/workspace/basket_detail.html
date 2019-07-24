@@ -1,32 +1,32 @@
 {% extends "base_basket.html" %}
 
 {% block title %}
-{{ basket.name }}  (basket on paneldata.org)
+    {{ basket.name }}  (basket on paneldata.org)
 {% endblock %}
 
 {% block content %}
 
-<h1>Basket:{{ basket.name }}</h1>
+    <h1>Basket:{{ basket.name }}</h1>
 
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-lg-12">
-        {% include "workspace/basket_info.html" %}
+        <div class="col-lg-12">
+            {% include "workspace/basket_info.html" %}
 
-        {% comment %}
+            {% comment %}
         <app-root study="{{ basket.study.name }}" basket="{{ basket.id }}">Loading...</app-root>
         <app-root study="{{ study.name }}" basket="{{ basket.id }}">Loading...</app-root>
         {% endcomment %}
-        
-    </div>
-    <div class="col-lg-6">
-        {% include "workspace/basket_actions_partial.html" %}
-    </div>
 
-    <div class="col-lg-6">
-        {% include "workspace/script_list_partial.html" %}
-        {% comment %}
+        </div>
+        <div class="col-lg-6">
+            {% include "workspace/basket_actions_partial.html" %}
+        </div>
+
+        <div class="col-lg-6">
+            {% include "workspace/script_list_partial.html" %}
+            {% comment %}
         <div class="card">
             <div class="card-header"> 
               <b>Variables</b>
@@ -39,39 +39,39 @@
             </div>
         </div>
         {% endcomment %}
+        </div>
     </div>
-</div>
 
-<!-- close container -->
-</div>
+    <!-- close container -->
+    </div>
 
-{% include "workspace/related_variable_table.html" %}
+    {% include "workspace/related_variable_table.html" %}
 
-{% if has_vars_without_concept %}
-<p> 
-  <strong>Variables without concept reference:</strong>
-</p>
+    {% if has_vars_without_concept %}
+        <p>
+            <strong>Variables without concept reference:</strong>
+        </p>
 
-<ul>
-    {% for variable in vars_without_concept %}
-    <li>{{ variable.title }} 
-      <span class="btn-group btn-group-xs btn-group-var" role="group">
-        <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}" 
-          title="Remove variable" class="basket-button btn btn-success">
+        <ul>
+            {% for variable in vars_without_concept %}
+                <li>{{ variable.title }}
+                    <span class="btn-group btn-group-xs btn-group-var" role="group">
+        <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
+                title="Remove variable" class="basket-button btn btn-success">
           <span class="fas fa-shopping-cart"></span>
         </button> 
-        <a href="{{ variable }}" class="btn btn-secondary" 
-          title="{{ variable }}">
+        <a href="{{ variable }}" class="btn btn-secondary"
+           title="{{ variable }}">
             {{ variable.name }} 
           </a>
         </span>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-<div class="container">
+    <div class="container">
     <!-- reopen container -->
 
-    {% endblock content %}
+{% endblock content %}
     

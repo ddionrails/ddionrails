@@ -1,42 +1,42 @@
 <div class="card">
-    <div class="card-header"> <b>Info</b>
+    <div class="card-header"><b>Info</b>
     </div>
     <div class="card-body">
-        <p> <b>Variable name:</b>
- <a href="{{ variable }}">{{ variable.name }}</a>
+        <p><b>Variable name:</b>
+            <a href="{{ variable }}">{{ variable.name }}</a>
         </p>
-        <p> <b>Dataset:</b>
- <a href="{{ variable.dataset }}">
+        <p><b>Dataset:</b>
+            <a href="{{ variable.dataset }}">
 
-        {{ variable.dataset.name }}
+                {{ variable.dataset.name }}
 
-        <small>&#x2013; {{ variable.dataset.label }}</small>
+                <small>&#x2013; {{ variable.dataset.label }}</small>
 
-      </a>
+            </a>
         </p>
-        <p> <b>Study:</b>
- <a href="{{ study }}">{{ study.title }}</a>
+        <p><b>Study:</b>
+            <a href="{{ study }}">{{ study.title }}</a>
         </p>
         {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
         <hr>
-        <p> <b>Description:</b>
+        <p><b>Description:</b>
             {{ variable.html_description | safe }}
         </p>
         <p>
             {{ variable.html_description_long | safe }}
         </p>
         <hr>
-        <p> <b>Analysis unit:</b>
+        <p><b>Analysis unit:</b>
             {{ variable.dataset.analysis_unit.title }}
         </p>
-        <p> <b>Period:</b>
+        <p><b>Period:</b>
             {{ variable.dataset.period.title }}
         </p>
-        <p> <b>Conceptual Dataset:</b>
+        <p><b>Conceptual Dataset:</b>
             {{ variable.dataset.conceptual_dataset.title }}
         </p>
         <hr>
-        <p> <b>Concept:</b>
+        <p><b>Concept:</b>
             {% if concept %} <a href="{{ concept }}">{{ concept.title }}</a>
             {% else %}
                 No concept available.
@@ -46,8 +46,8 @@
         </p>
         <ul>
             {% for question in questions %}
-            <li><a href="{{ question }}">{{ question.title }}</a>
-            </li>
+                <li><a href="{{ question }}">{{ question.title }}</a>
+                </li>
             {% endfor %}
         </ul>
     </div>

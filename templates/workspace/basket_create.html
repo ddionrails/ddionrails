@@ -1,22 +1,22 @@
-{% extends "base.html" %} 
-{% load crispy_forms_tags %} 
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-{% block content %} 
+{% block content %}
 
-<h1 class="col-md-6 mx-auto">Create basket</h1>
+    <h1 class="col-md-6 mx-auto">Create basket</h1>
 
-{% if form.errors %} 
-  <div class="alert alert-danger" role="alert">
-    {{ form.errors }} 
-  </div>
-{% endif %} 
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.errors }}
+        </div>
+    {% endif %}
 
-<form class="col-md-6 mx-auto" method="post" action="/workspace/baskets/new">
-{% csrf_token %} 
-{{ form|crispy }} 
-<input type="submit" value="Create basket" />
-<input type="hidden" name="next" value="{{ next }}" />
-</form>
+    <form class="col-md-6 mx-auto" method="post" action="/workspace/baskets/new">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="submit" value="Create basket"/>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
 
 {% endblock %} 
 

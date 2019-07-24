@@ -1,22 +1,22 @@
 {% if basket.get_script_generators %}
-<div class="card">
-    <div class="card-header"> 
-      <b>Created scripts</b>
-    </div>
-    <div class="list-group">
-        {% for script in basket.script_set.all %}
-        <div class="list-group-item"> 
-          <a href="/workspace/baskets/{{ basket.id }}/scripts/{{ script.id }}">
-            {{ script.name }}
-          </a>
- <a href="/workspace/baskets/{{ basket.id }}/scripts/{{ script.id }}/delete"
-            onclick="return confirm('Are you sure you want to delete script {{ script.name}}?')"
-            class="badge"
-          >
-            <span class="fas fa-trash"></span>
-          </a>
+    <div class="card">
+        <div class="card-header">
+            <b>Created scripts</b>
         </div>
-        {% endfor %}
+        <div class="list-group">
+            {% for script in basket.script_set.all %}
+                <div class="list-group-item">
+                    <a href="/workspace/baskets/{{ basket.id }}/scripts/{{ script.id }}">
+                        {{ script.name }}
+                    </a>
+                    <a href="/workspace/baskets/{{ basket.id }}/scripts/{{ script.id }}/delete"
+                       onclick="return confirm('Are you sure you want to delete script {{ script.name }}?')"
+                       class="badge"
+                    >
+                        <span class="fas fa-trash"></span>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-</div>
-{% endif%}
+{% endif %}

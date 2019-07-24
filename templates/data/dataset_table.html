@@ -1,24 +1,24 @@
 <table class="table datatable" id="{{ table_id }}">
-  <thead>
+    <thead>
     <tr>
-      <th>Name</th>
-      <th>Label</th>
-      <th>Conceptual</th>
-      <th>Period</th>
-      <th>Analysis unit</th>
+        <th>Name</th>
+        <th>Label</th>
+        <th>Conceptual</th>
+        <th>Period</th>
+        <th>Analysis unit</th>
     </tr>
-  </thead>
-  <tbody>
-    {% for dataset in dataset_list %} 
-      <tr>
-        <td>
-          <a href="{{ dataset }}">{{ dataset.name }}</a>
-        </td>
-        <td>{{ dataset.title }}</td>
-        <td>{{ dataset.conceptual_dataset.title }}</td>
-        <td>{{ dataset.period.title }}</td>
-        <td>{{ dataset.analysis_unit.title }}</td>
-      </tr>
-    {% endfor %} 
-  </tbody>
+    </thead>
+    <tbody>
+    {% for dataset in dataset_list %}
+        <tr>
+            <td>
+                <a href="{{ dataset }}">{{ dataset.name }}</a>
+            </td>
+            <td>{{ dataset.title }}</td>
+            <td>{{ dataset.conceptual_dataset.title }}</td>
+            <td>{{ dataset.period.title }}</td>
+            <td>{{ dataset.analysis_unit.title }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>
