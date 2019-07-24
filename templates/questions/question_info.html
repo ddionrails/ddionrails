@@ -13,7 +13,7 @@
             {{ question.name }}
         </p>
         <p><b>Instrument:</b> This question is at position <b>{{ question.sort_id }}</b> in
-            instrument <a href="{{ question.instrument }}">
+            instrument <a href="{{ question.instrument.get_absolute_url }}">
 
                 {{ question.instrument.title }}
 

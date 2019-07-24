@@ -12,15 +12,15 @@
     {% for concept_name, concept in related_variable_table.items %}
         <tr>
             <td>
-                <a href="/concept/{{ concept_name }}">{{ concept_name }}</a><br/>
+                <a href="{{ concept.get_absolute_url }}">{{ concept_name }}</a><br/>
                 {{ concept.label }}
             </td>
             <td>
-                <a href="/workspace/baskets/{{ basket.id }}/add_concept/{{ concept.id }}">
+                <a href="{% url 'workspace:add_concept' basket_id=basket.id concept_id=concept.id %}">
                     Add all
                 </a>
                 <br/>
-                <a href="/workspace/baskets/{{ basket.id }}/remove_concept/{{ concept.id }}">
+                <a href="{% url 'workspace:remove_concept' basket_id=basket.id concept_id=concept.id %}">
                     Remove all
                 </a>
             </td>

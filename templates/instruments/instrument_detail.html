@@ -11,8 +11,20 @@
             {% include "questions/question_table.html" %}
         </div>
         <div class="col-md-3">
-            {% include "instruments/instrument_info.html" %}
+            <div class="card">
+                <div class="card-header"><b>Instrument info</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Name:</b>
+                        {{ instrument.name }}
+                    </p>
+                    <p><b>Label:</b>
+                        {{ instrument.label }}
+                    </p>
+                    {% include "publications/attachments_partial.html" with attachments=instrument.attachments %}
+                </div>
+            </div>
         </div>
     </div>
 
-{% endblock content %} 
+{% endblock content %}

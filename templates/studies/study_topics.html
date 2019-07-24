@@ -23,7 +23,7 @@
         Languages:
         {% for link_language in study.topic_languages %}
             {% if link_language == language %} <b>{% endif %}
-        &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
+        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}">{{ link_language }}</a>
         {% if link_language == language %} </b>{% endif %}
         {% endfor %}
     </p>
@@ -81,10 +81,8 @@
                     <p>Select a basket:</p>
                     <div id="basket_list"></div>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
+            </div>
+        </div>
+    </div>
 
 {% endblock content %}
-    

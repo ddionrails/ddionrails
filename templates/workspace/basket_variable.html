@@ -4,10 +4,10 @@
             basket_id="{{ basket.id }}">
         <span class="fas fa-shopping-cart"></span>
     </button>
-    <b><a href="{{ variable }}">{{ variable.title }}</a></b>
+    <b><a href="{{ variable.get_absolute_url }}">{{ variable.title }}</a></b>
     [variable: {{ variable.name }} ]
     <br/>
-    <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">add</a>
+    <a href="{% url 'workspace:add_variable' basket_id=basket.id variable_id=variable.id %}">add</a>
     |
-    <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">remove</a>
+    <a href="{% url 'workspace:remove_variable' basket_id=basket.id variable_id=variable.id %}">remove</a>
 </div>

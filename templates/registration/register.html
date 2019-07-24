@@ -2,7 +2,6 @@
 
 {% block content %}
 
-
     {% if form.errors %}
         <div class="alert alert-danger" role="alert">
             {{ form.errors }}
@@ -15,7 +14,7 @@
                 <div class="card-header"><b>User registration</b>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="/workspace/register/">
+                    <form method="post" action="{% url 'workspace:register' %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="id_username">Username:</label>
@@ -44,8 +43,4 @@
         </div>
     </div>
 
-
-
-
 {% endblock %}
-

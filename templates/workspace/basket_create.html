@@ -11,12 +11,11 @@
         </div>
     {% endif %}
 
-    <form class="col-md-6 mx-auto" method="post" action="/workspace/baskets/new">
+    <form class="col-md-6 mx-auto" method="post" action="{% url 'workspace:basket_new' %}">
         {% csrf_token %}
         {{ form|crispy }}
         <input type="submit" value="Create basket"/>
         <input type="hidden" name="next" value="{{ next }}"/>
     </form>
 
-{% endblock %} 
-
+{% endblock %}

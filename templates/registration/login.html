@@ -11,7 +11,7 @@
                 <div class="card-header"><b>User login</b>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="/workspace/login/">
+                    <form method="post" action="{% url 'workspace:login' %}">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="id_username">Username:</label>
@@ -25,8 +25,8 @@
                         <input type="hidden" name="next" value="{{ next }}">
                     </form>
                     <hr>
-                    <p>New user? Register <a href="/workspace/register/">here</a>.</p>
-                    <p>Forgot your password? Create a new one <a href="/workspace/password_reset/">here</a>.</p>
+                    <p>New user? Register <a href="{% url 'workspace:register' %}">here</a>.</p>
+                    <p>Forgot your password? Create a new one <a href="{% url 'workspace:password_reset' %}">here</a>.</p>
                 </div>
             </div>
         </div>

@@ -1,17 +1,17 @@
 <div class="container-fluid d-flex justify-content-start mt-2">
-    <a class="navbar-brand" href="/study/{{ study.pk }}#">
+    <a class="navbar-brand" href="{{ study..get_absolute_url }}">
         {{ study.title }}
     </a>
     <ul class="navbar-nav">
-        <li class="nav-item"><a href="/{{ study.name }}#datasets" class="nav-link">Data</a>
+        <li class="nav-item"><a href="#datasets" class="nav-link">Data</a>
         </li>
-        <li class="nav-item"><a href="/{{ study.name }}#instruments" class="nav-link">Instruments</a>
+        <li class="nav-item"><a href="#instruments" class="nav-link">Instruments</a>
         </li>
         {% if study.has_topics %}
-            <li class="nav-item"><a href="/{{ study.name }}/topics/en" class="nav-link">Topics</a>
+            <li class="nav-item"><a href="{% url 'study_topics' study_name=study.name language='en' %}" class="nav-link">Topics</a>
             </li>
         {% endif %}
-        <li class="nav-item"><a href="/{{ study.name }}/publ/" class="nav-link">Publications</a>
+        <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
         </li>
     </ul>
 </div>

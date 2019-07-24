@@ -14,8 +14,20 @@
             {% include "data/variable_table.html" %}
         </div>
         <div class="col-lg-3">
-            {% include "data/dataset_info.html" %}
+            <div class="card">
+                <div class="card-header"><b>Info</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Study:</b>
+                        {{ study.name }}
+                    </p>
+                    <p><b>Dataset:</b>
+                        {{ dataset.name }}
+                    </p>
+                    {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
+                </div>
+            </div>
         </div>
     </div>
 
-{% endblock content %} 
+{% endblock content %}

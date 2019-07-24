@@ -11,7 +11,7 @@
     {% for instrument in instrument_list %}
         <tr>
             <td>
-                <a href="{{ instrument }}">{{ instrument.name }}</a>
+                <a href="{{ instrument.get_absolute_url }}">{{ instrument.name }}</a>
             </td>
             <td>{{ instrument.label }}</td>
             <td>{{ instrument.period.title }}</td>

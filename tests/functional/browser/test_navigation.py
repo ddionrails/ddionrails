@@ -34,6 +34,13 @@ def test_get_login_page_from_home(browser, live_server):
     assert "User login" in browser.html
 
 
+def test_get_back_home_from_other_page(browser, search_url):
+    browser.visit(search_url)
+    browser.find_link_by_text("paneldata.org").first.click()
+    expected = "Home | paneldata.org"
+    assert expected == browser.title
+
+
 def test_get_register_page_from_login(browser, login_url):
     browser.visit(login_url)
     browser.find_link_by_partial_href("register").first.click()

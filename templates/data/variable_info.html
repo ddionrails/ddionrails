@@ -3,10 +3,10 @@
     </div>
     <div class="card-body">
         <p><b>Variable name:</b>
-            <a href="{{ variable }}">{{ variable.name }}</a>
+            <a href="{{ variable.get_absolute_url }}">{{ variable.name }}</a>
         </p>
         <p><b>Dataset:</b>
-            <a href="{{ variable.dataset }}">
+            <a href="{{ variable.dataset.get_absolute_url }}">
 
                 {{ variable.dataset.name }}
 
@@ -15,7 +15,7 @@
             </a>
         </p>
         <p><b>Study:</b>
-            <a href="{{ study }}">{{ study.title }}</a>
+            <a href="{{ study.get_absolute_url }}">{{ study.title }}</a>
         </p>
         {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
         <hr>
@@ -37,7 +37,7 @@
         </p>
         <hr>
         <p><b>Concept:</b>
-            {% if concept %} <a href="{{ concept }}">{{ concept.title }}</a>
+            {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
             {% else %}
                 No concept available.
             {% endif %}
@@ -46,7 +46,7 @@
         </p>
         <ul>
             {% for question in questions %}
-                <li><a href="{{ question }}">{{ question.title }}</a>
+                <li><a href="{{ question.get_absolute_url }}">{{ question.title }}</a>
                 </li>
             {% endfor %}
         </ul>

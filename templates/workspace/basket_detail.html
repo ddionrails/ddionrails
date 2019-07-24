@@ -8,17 +8,10 @@
 
     <h1>Basket:{{ basket.name }}</h1>
 
-
     <div class="row">
 
         <div class="col-lg-12">
             {% include "workspace/basket_info.html" %}
-
-            {% comment %}
-        <app-root study="{{ basket.study.name }}" basket="{{ basket.id }}">Loading...</app-root>
-        <app-root study="{{ study.name }}" basket="{{ basket.id }}">Loading...</app-root>
-        {% endcomment %}
-
         </div>
         <div class="col-lg-6">
             {% include "workspace/basket_actions_partial.html" %}
@@ -26,19 +19,6 @@
 
         <div class="col-lg-6">
             {% include "workspace/script_list_partial.html" %}
-            {% comment %}
-        <div class="card">
-            <div class="card-header"> 
-              <b>Variables</b>
-            </div> 
-            <a class="anchor" id="variables"></a>
-            <div class="list-group">
-                {% for variable in basket.variables.all %}
-                {% include "workspace/basket_variable.html" %}
-                {% endfor %}
-            </div>
-        </div>
-        {% endcomment %}
         </div>
     </div>
 
@@ -60,7 +40,7 @@
                 title="Remove variable" class="basket-button btn btn-success">
           <span class="fas fa-shopping-cart"></span>
         </button> 
-        <a href="{{ variable }}" class="btn btn-secondary"
+        <a href="{{ variable.get_absolute_url }}" class="btn btn-secondary"
            title="{{ variable }}">
             {{ variable.name }} 
           </a>
@@ -71,7 +51,6 @@
     {% endif %}
 
     <div class="container">
-    <!-- reopen container -->
+        <!-- reopen container -->
 
 {% endblock content %}
-    

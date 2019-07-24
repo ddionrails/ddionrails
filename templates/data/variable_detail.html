@@ -99,32 +99,32 @@
                         {% for basket in basket_list %}
                             <div class="list-group-item">
                                 {% if variable in basket.variables.all %}
-                                    <a href="/workspace/baskets/{{ basket.id }}/remove/{{ variable.id }}">
+                                    <a href="{% url 'workspace:remove_variable' basket_id=basket.id variable_id=variable.id %}">
 
                                         Remove
 
                                     </a> from
-                                {% else %} <a href="/workspace/baskets/{{ basket.id }}/add/{{ variable.id }}">
+                                {% else %} <a href="{% url 'workspace:add_variable' basket_id=basket.id variable_id=variable.id %}">
 
                                     Add
 
                                 </a> to
-                                {% endif %}basket <a href="/workspace/baskets/{{ basket.id }}">
+                                {% endif %}basket <a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
 
                                 {{ basket.name }}
 
                             </a>
                             </div>
                         {% endfor %}
-                        <div class="card-body text-right"><a href="/workspace/baskets/new" class="btn btn-secondary">
+                        <div class="card-body text-right"><a href="{% url 'workspace:basket_new' %}" class="btn btn-secondary">
 
                             Create a new basket
 
                         </a>
                         </div>
                     {% else %}
-                        <div class="card-body">Please <a href="/workspace/login/">login</a>
-                            or <a href="/workspace/register/">register</a>
+                        <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>
+                            or <a href="{% url 'workspace:register' %">register</a>
                             to
                             use the basket functionality.
                         </div>

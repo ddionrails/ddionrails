@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-
 {% block content %}
+
     <p>
-        <a href="/workspace/baskets/{{ basket.id }}">
+        <a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
             Back to basket <b>{{ basket.name }}</b>.
         </a>
     </p>
@@ -11,4 +11,5 @@
         The following search is limited to the related study <b>{{ basket.study.title }}</b>.
     </p>
     <app-root study="{{ basket.study.name }}" type="variable">Loading...</app-root>
-{% endblock content %} 
+
+{% endblock content %}

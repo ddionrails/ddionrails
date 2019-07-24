@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block title %}Home | paneldata.org{% endblock title %}
+
 {% block content %}
 
     {% if not user.is_authenticated %}
@@ -12,12 +14,12 @@
             </ul>
         </div>
     {% endif %}
-    <img class="img-fluid mx-auto" src="{% static "background.png" %}">
+    <img class="img-fluid mx-auto" src="{% static 'background.png' %}">
 
     <div class="list-group">
         {% for study in study_list %}
             <li class="list-group-item">
-                <b><a href="{{ study }}">{{ study.title }}</a></b>
+                <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
             </li>
         {% endfor %}
     </div>

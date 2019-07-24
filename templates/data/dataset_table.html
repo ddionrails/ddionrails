@@ -12,7 +12,7 @@
     {% for dataset in dataset_list %}
         <tr>
             <td>
-                <a href="{{ dataset }}">{{ dataset.name }}</a>
+                <a href="{{ dataset.get_absolute_url }}">{{ dataset.name }}</a>
             </td>
             <td>{{ dataset.title }}</td>
             <td>{{ dataset.conceptual_dataset.title }}</td>
