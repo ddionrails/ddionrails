@@ -156,7 +156,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         Uses the "dataset" and "name" fields
         """
         return reverse(
-            "data:variable",
+            "data:variable_detail",
             kwargs={
                 "study_name": self.dataset.study.name,
                 "dataset_name": self.dataset.name,

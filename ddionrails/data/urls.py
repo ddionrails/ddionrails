@@ -4,20 +4,20 @@
 
 from django.urls import path
 
-from .views import DatasetDetailView, VariableDetailView, variable_json
+from . import views
 
 app_name = "data"
 
 urlpatterns = [
-    path("<slug:dataset_name>", DatasetDetailView.as_view(), name="dataset"),
+    path("<slug:dataset_name>", views.DatasetDetailView.as_view(), name="dataset_detail"),
     path(
         "<slug:dataset_name>/<slug:variable_name>",
-        VariableDetailView.as_view(),
-        name="variable",
+        views.VariableDetailView.as_view(),
+        name="variable_detail",
     ),
     path(
         "<slug:dataset_name>/<slug:variable_name>.json",
-        variable_json,
+        views.variable_json,
         name="variable_json",
     ),
 ]
