@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <h1>Basket:{{ basket.name }}</h1>
+    <h1>Basket: {{ basket.name }}</h1>
 
     <div class="row">
 
@@ -20,9 +20,6 @@
         <div class="col-lg-6">
             {% include "workspace/script_list_partial.html" %}
         </div>
-    </div>
-
-    <!-- close container -->
     </div>
 
     {% include "workspace/related_variable_table.html" %}
@@ -49,8 +46,5 @@
             {% endfor %}
         </ul>
     {% endif %}
-
-    <div class="container">
-        <!-- reopen container -->
 
 {% endblock content %}
