@@ -45,9 +45,6 @@
     "extends": [
       "config:base"
     ],
-    "ignoreDeps": [
-      "bootstrap"
-    ],
     "lockFileMaintenance": {
       "enabled": true
     },
