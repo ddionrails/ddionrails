@@ -18,3 +18,7 @@ alias ls='ls $LS_OPTIONS'
 export force_color_prompt=yes
 export TERM=xterm-256color
 color_prompt=yes
+PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;30m\]@\[\033[01;30m\]\h\[\033[00m\]:\[\033[001;34m\]\w\[\033[00m\]\$ '
+
+bind -m vi-insert "\C-l":clear-screen
+bind -m vi-command "\C-l":clear-screen
