@@ -1,6 +1,6 @@
 # DDI on Rails
 
-[![Python version][python-badge]](https://www.python.org/downloads/release/python-373releases/)
+[![Python version][python-badge]](https://www.python.org/downloads/release/python-374/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.2/releases/2.2.3/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
@@ -162,7 +162,7 @@ file for details
 
 <!-- Markdown link & img dfn's -->
 
-[python-badge]: https://img.shields.io/badge/Python-3.7.3-blue.svg
+[python-badge]: https://img.shields.io/badge/Python-3.7.4-blue.svg
 [django-badge]: https://img.shields.io/badge/Django-2.2.3-blue.svg
 [license-badge]: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
