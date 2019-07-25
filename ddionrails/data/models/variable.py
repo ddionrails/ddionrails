@@ -91,7 +91,7 @@ class Variable(ElasticMixin, DorMixin, models.Model):
         max_length=255, null=True, blank=True, help_text="Scale of the variable"
     )
     categories = JSONBField(
-        default=list, null=True, blank=True, help_text="Categories of the variable(JSON)"
+        default=dict, null=True, blank=True, help_text="Categories of the variable(JSON)"
     )
 
     #############

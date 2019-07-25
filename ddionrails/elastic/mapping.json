@@ -66,6 +66,16 @@
             }
           }
         },
+        "categories": {
+          "properties": {
+            "labels": {
+              "type": "string"
+            },
+            "labels_de": {
+              "type": "string"
+            }
+          }
+        },
         "study": {
           "type": "string",
           "fields": {

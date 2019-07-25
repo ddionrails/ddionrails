@@ -15,7 +15,7 @@ from ddionrails.instruments.models import Question
 from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 
-elasticsearch_client = Elasticsearch(hosts=[settings.INDEX_HOST])
+ELASTICSEARCH_CLIENT = Elasticsearch(hosts=[settings.INDEX_HOST])
 
 
 def create(mapping_file: str) -> None:
@@ -26,7 +26,7 @@ def create(mapping_file: str) -> None:
             - settings.INDEX_NAME
             - mapping_file
     """
-    if elasticsearch_client.indices.exists(settings.INDEX_NAME):
+    if ELASTICSEARCH_CLIENT.indices.exists(settings.INDEX_NAME):
         click.secho(f'Index "{settings.INDEX_NAME}" already exists.', fg="red")
         exit(1)
     else:
@@ -37,10 +37,13 @@ def create(mapping_file: str) -> None:
             with open(mapping_file, "r") as infile:
                 mapping = json.load(infile)
             click.secho(
-                f'Creating index "{settings.INDEX_NAME}" with maping from "{mapping_file}"',
+                (
+                    f'Creating index "{settings.INDEX_NAME}" '
+                    f'with maping from "{mapping_file}"'
+                ),
                 fg="green",
             )
-            result = elasticsearch_client.indices.create(
+            result = ELASTICSEARCH_CLIENT.indices.create(
                 index=settings.INDEX_NAME, body=mapping
             )
             click.secho(str(result), fg="green")
@@ -53,9 +56,9 @@ def delete() -> None:
             - settings.INDEX_HOST
             - settings.INDEX_NAME
     """
-    if elasticsearch_client.indices.exists(settings.INDEX_NAME):
+    if ELASTICSEARCH_CLIENT.indices.exists(settings.INDEX_NAME):
         click.secho(f'Deleting index "{settings.INDEX_NAME}"', fg="green")
-        result = elasticsearch_client.indices.delete(index=settings.INDEX_NAME)
+        result = ELASTICSEARCH_CLIENT.indices.delete(index=settings.INDEX_NAME)
         click.secho(str(result), fg="green")
     else:
         click.secho(f'Index "{settings.INDEX_NAME}" does not exist.', fg="red")
@@ -162,6 +165,11 @@ def variables():
         except AttributeError:
             sub_type = "None"
 
+        # categories contains numeric data, which we do not want to index.
+        _categories = {
+            key: variable.categories.get(key, None) for key in ("label", "label_de")
+        }
+
         yield {
             "_index": settings.INDEX_NAME,
             "_type": variable.DOC_TYPE,
@@ -176,7 +184,7 @@ def variables():
                 "sub_type": sub_type,
                 "analysis_unit": analysis_unit,
                 "study": variable.dataset.study.name,
-                "categories": variable.categories,
+                "categories": _categories,
             },
         }
 
@@ -184,19 +192,19 @@ def variables():
 def populate():
     """ Workaround """
     print(f"Indexing {Publication.objects.count()} publications into Elasticsearch")
-    result = helpers.bulk(elasticsearch_client, publications())
+    result = helpers.bulk(ELASTICSEARCH_CLIENT, publications())
     print(result)
 
     print(f"Indexing {Concept.objects.count()} concepts into Elasticsearch")
-    result = helpers.bulk(elasticsearch_client, concepts())
+    result = helpers.bulk(ELASTICSEARCH_CLIENT, concepts())
     print(result)
 
     print(f"Indexing {Question.objects.count()} questions into Elasticsearch")
-    result = helpers.bulk(elasticsearch_client, questions())
+    result = helpers.bulk(ELASTICSEARCH_CLIENT, questions())
     print(result)
 
     print(f"Indexing {Variable.objects.count()} variables into Elasticsearch")
-    result = helpers.bulk(elasticsearch_client, variables())
+    result = helpers.bulk(ELASTICSEARCH_CLIENT, variables())
     print(result)
 
 
@@ -207,14 +215,20 @@ def command():
 
 @command.command(
     "create",
-    short_help='Create the index defined in "settings.INDEX_NAME" and the given "mapping_file"',
+    short_help=(
+        "Create the index defined in "
+        '"settings.INDEX_NAME" and the given "mapping_file"'
+    ),
 )
 @click.option(
     "-f",
     "--file",
     "mapping_file",
     default="ddionrails/elastic/mapping.json",
-    help='Elasticsearch mapping file in JSON format (defaults to "ddionrails/elastic/mapping.json")',
+    help=(
+        "Elasticsearch mapping file in JSON format "
+        '(defaults to "ddionrails/elastic/mapping.json")'
+    ),
 )
 def create_command(mapping_file: str) -> None:
     """ Create an Elasticsearch index
@@ -240,15 +254,20 @@ def delete_command():
 
 @command.command(
     "reset",
-    short_help='Reset the index defined in "settings.INDEX_NAME" and the given "mapping_file"',
+    short_help=(
+        "Reset the index defined in " '"settings.INDEX_NAME" and the given "mapping_file"'
+    ),
 )
 @click.option(
     "-f",
     "--file",
     "mapping_file",
     default="ddionrails/elastic/mapping.json",
-    help='Elasticsearch mapping file in JSON format (defaults to "ddionrails/elastic/mapping.json")',
-)
+    help=(
+        "Elasticsearch mapping file in JSON format "
+        '(defaults to "ddionrails/elastic/mapping.json")'
+    ),
+)  # pylint: disable=function-redefined
 def reset(mapping_file: str) -> None:
     """ Reset an Elasticsearch index
 
@@ -267,5 +286,6 @@ def populate_command() -> None:
     populate()
 
 
-# remove "verbosity", "settings", "pythonpath", "traceback", "color" options from django-click
+# remove "verbosity", "settings",
+# "pythonpath", "traceback", "color" options from django-click
 command.params = command.params[:2] + command.params[7:]
