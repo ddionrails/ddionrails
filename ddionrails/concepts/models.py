@@ -314,7 +314,6 @@ class AnalysisUnit(models.Model, ModelMixin):
     )
     name = models.CharField(
         max_length=255,
-        unique=True,
         validators=[validate_lowercase],
         help_text="Name of the analysis unit (Lowercase)",
     )
@@ -354,6 +353,9 @@ class AnalysisUnit(models.Model, ModelMixin):
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
 
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
+        id_fields = ("study", "name")
+
     def __str__(self) -> str:
         """ Returns a string representation using the "name" field """
         return f"/analysis_unit/{self.name}"
@@ -392,7 +394,6 @@ class ConceptualDataset(models.Model, ModelMixin):
     )
     name = models.CharField(
         max_length=255,
-        unique=True,
         validators=[validate_lowercase],
         help_text="Name of the conceptual dataset (Lowercase)",
     )
@@ -431,6 +432,9 @@ class ConceptualDataset(models.Model, ModelMixin):
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("study", "name")
+
+    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
+        id_fields = ("study", "name")
 
     def __str__(self) -> str:
         """ Returns a string representation using the "name" field """

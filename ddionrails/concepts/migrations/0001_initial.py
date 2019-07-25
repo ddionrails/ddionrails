@@ -262,7 +262,6 @@ class Migration(migrations.Migration):
                     models.CharField(
                         help_text="Name of the conceptual dataset (Lowercase)",
                         max_length=255,
-                        unique=True,
                         validators=[config.validators.validate_lowercase],
                     ),
                 ),
@@ -335,7 +334,6 @@ class Migration(migrations.Migration):
                     models.CharField(
                         help_text="Name of the analysis unit (Lowercase)",
                         max_length=255,
-                        unique=True,
                         validators=[config.validators.validate_lowercase],
                     ),
                 ),
