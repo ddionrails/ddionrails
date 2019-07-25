@@ -9,12 +9,17 @@ from .models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
 
 
 @admin.register(AnalysisUnit)
-class AnalysisUnitAdmin(admin.ModelAdmin):
+class AnalysisUnitAdmin(AdminMixin, admin.ModelAdmin):
     """ ModelAdmin for concepts.AnalysisUnit """
 
-    list_display = ("name", "label", "label_de")
+    list_display = ("name", "label", "label_de", "study_name")
+    list_filter = ("study__name",)
     list_per_page = 25
+    list_select_related = ("study",)
     search_fields = ("name", "label", "label_de")
+
+    AdminMixin.study_name.admin_order_field = "study"
+    AdminMixin.study_name.short_description = "study"
 
 
 @admin.register(Concept)
@@ -28,12 +33,17 @@ class ConceptAdmin(admin.ModelAdmin):
 
 
 @admin.register(ConceptualDataset)
-class ConceptualDatasetAdmin(admin.ModelAdmin):
+class ConceptualDatasetAdmin(AdminMixin, admin.ModelAdmin):
     """ ModelAdmin for concepts.ConceptualDataset """
 
-    list_display = ("name", "label", "label_de")
+    list_display = ("name", "label", "label_de", "study_name")
+    list_filter = ("study__name",)
     list_per_page = 25
+    list_select_related = ("study",)
     search_fields = ("name", "label", "label_de")
+
+    AdminMixin.study_name.admin_order_field = "study"
+    AdminMixin.study_name.short_description = "study"
 
 
 @admin.register(Period)
