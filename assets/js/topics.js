@@ -28,9 +28,23 @@ var open = url.searchParams.get("open");
 
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
-var filterOptionsString = "<span class='btn-group btn-group-sm filter-options' data-container='body' role='group'><button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' ><span class='fas fa-chart-bar' aria-hidden='true'></span></button><button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' data-container='body' title='Show all related questions' onclick='filter(this, \"question\")'><span class='fas fa-tasks' aria-hidden='true'></span></button>" +
-    "<button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'><span class='fas fa-shopping-cart' aria-hidden='true'></span></button>";
-var clipboard = "<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copyUrlToClipboard(this)' class='btn btn-link'><span class='fas fa-copy' aria-hidden='true'></span></button>";
+var filterOptionsString = `
+<span class='btn-group btn-group-sm filter-options' data-container='body' role='group'>
+    <button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' >
+        <span class='fas fa-chart-bar' aria-hidden='true'></span>
+    </button>
+    <button type='button' class='btn btn-link filter-option-question' data-tooltip='tooltip' data-container='body' title='Show all related questions' onclick='filter(this, \"question\")'>
+        <span class='fas fa-tasks' aria-hidden='true'></span>
+    </button>
+    <button type='button' data-tooltip='tooltip' data-container='body' title='Add all related variables to one of your baskets' onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal' data-target='#topic-list-add-to-basket'>
+        <span class='fas fa-shopping-cart' aria-hidden='true'></span>
+    </button>
+`;
+var clipboard = `
+<button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copyUrlToClipboard(this)' class='btn btn-link'>
+    <span class='fas fa-copy' aria-hidden='true'></span>
+</button>
+`;
 var filterAndClipboard = filterOptionsString + clipboard + "</span>";
 filterOptionsString = filterOptionsString + "</span>";
 var apiUrl = location.protocol + "//" + window.location.host + "/api/topics/" + study + "/" + language;
@@ -42,10 +56,10 @@ $(function () {
     $("#tree").fancytree({
         extensions: ["filter", "glyph"],
         types: {
-            "topic": {icon: "fas fa-cogs"},
-            "concept": {icon: "fas fa-cog"},
-            "variable": {icon: "fas fa-chart-bar"},
-            "question": {icon: "fas fa-tasks"},
+            "topic": { icon: "fas fa-cogs" },
+            "concept": { icon: "fas fa-cog" },
+            "variable": { icon: "fas fa-chart-bar" },
+            "question": { icon: "fas fa-tasks" },
         },
         filter: {
             counter: false, // No counter badges
@@ -112,7 +126,7 @@ $(function () {
 
     // Search the tree for search string
     $("#btn-search").on("click", function () {
-        $("#tree").fancytree("getTree").filterBranches($("#search").val(), {autoExpand: true});
+        $("#tree").fancytree("getTree").filterBranches($("#search").val(), { autoExpand: true });
     });
 
     // Trigger search on enter
@@ -124,7 +138,7 @@ $(function () {
 
 
     // Activate tooltip for more information about filter buttons, e.g. 'Show all related variables'
-    $("body").tooltip({selector: "[data-tooltip=tooltip]", trigger: "hover"});
+    $("body").tooltip({ selector: "[data-tooltip=tooltip]", trigger: "hover" });
 });
 
 
