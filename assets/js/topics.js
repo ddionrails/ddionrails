@@ -13,13 +13,6 @@
  *
  */
 
-
-import "bootstrap";
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
-import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
-
 // Credit to https://github.com/mar10/fancytree/issues/793
 import "jquery.fancytree";
 import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
