@@ -13,6 +13,18 @@ repos:
         language: system
         files: '.*.py'
         pass_filenames: true
+    -   id: js-format
+        name: run eslint --fix
+        entry: npm run format --silent
+        language: system
+        files: '.*.js$'
+        pass_filenames: true
+    -   id: eslint
+        name: run eslint
+        entry: npm run lint --silent
+        language: system
+        files: '.*.js$'
+        pass_filenames: true
 -   repo: https://github.com/asottile/seed-isort-config
     rev: 44bc4d3364b054fe7ec1e0a40379b41e44774c46
     hooks:
