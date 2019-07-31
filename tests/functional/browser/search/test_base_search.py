@@ -22,39 +22,3 @@ def test_base_search(
     assert expected == heading
     expected = "Search | paneldata.org"
     assert expected == browser.title
-
-
-@pytest.mark.skip
-def test_concepts_search(
-    browser, live_server, search_test_case  # pylint: disable=unused-argument
-):
-
-    concepts_search_url = urljoin(live_server.url, "search/concepts")
-    browser.visit(concepts_search_url)
-
-
-@pytest.mark.skip
-def test_topics_search(
-    browser, live_server, search_test_case  # pylint: disable=unused-argument
-):
-
-    topics_search_url = urljoin(live_server.url, "search/topics")
-    browser.visit(topics_search_url)
-
-
-@pytest.mark.skip
-def test_variables_search(
-    browser, live_server, search_test_case  # pylint: disable=unused-argument
-):
-
-    variables_search_url = urljoin(live_server.url, "search/variables")
-    browser.visit(variables_search_url)
-
-
-@pytest.mark.skip
-def test_questions_search(
-    browser, live_server, search_test_case  # pylint: disable=unused-argument
-):
-
-    questions_search_url = urljoin(live_server.url, "search/questions")
-    browser.visit(questions_search_url)

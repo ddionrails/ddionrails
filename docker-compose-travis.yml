@@ -3,6 +3,7 @@ version: '2.4'
 services:
   web:
     image: paneldata/ddionrails:latest-dev
+    command: tail -f /dev/null
     env_file: 
       - docker/environments/django.env.example
       - docker/environments/database.env.example
