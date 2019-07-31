@@ -6,7 +6,7 @@ import json
 import logging
 from collections import OrderedDict
 
-from ddionrails.concepts.models import Concept, Period
+from ddionrails.concepts.models import AnalysisUnit, Concept, Period
 from ddionrails.data.models import Variable
 from ddionrails.imports import imports
 
@@ -41,6 +41,15 @@ class InstrumentImport(imports.Import):
         period = Period.objects.get_or_create(name=period_name, study=self.study)[0]
         instrument.period = period
 
+        # add analysis_unit relation to instrument
+        analysis_unit_name = content.get("analysis_unit", "none")
+        if analysis_unit_name == "none":
+            analysis_unit_name = content.get("analysis_unit_name", "none")
+        analysis_unit = AnalysisUnit.objects.get_or_create(
+            name=analysis_unit_name, study=self.study
+        )[0]
+        instrument.analysis_unit = analysis_unit
+
         for name, q in content["questions"].items():
             question, _ = Question.objects.get_or_create(
                 name=q["question"], instrument=instrument
@@ -48,10 +57,15 @@ class InstrumentImport(imports.Import):
             question.sort_id = int(q.get("sn", 0))
             question.label = q.get("label", q.get("text", name))
             question.label_de = q.get("label_de", q.get("text_de", ""))
+            question.description = q.get("description", "")
+            question.description_de = q.get("description_de", "")
             question.items = q.get("items", list)
             question.save()
+
         instrument.label = content.get("label", "")
+        instrument.label_de = content.get("label_de", "")
         instrument.description = content.get("description", "")
+        instrument.description_de = content.get("description_de", "")
         instrument.save()
 
 
