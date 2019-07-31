@@ -6,8 +6,7 @@ from typing import Dict, Optional
 
 from django.conf import settings
 from django.db.models.query import QuerySet
-from django_elasticsearch_dsl import fields
-from django_elasticsearch_dsl.documents import Document
+from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
 from .models import Question

@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.search]
 def test_publication_search_document_fields(
     publications_index, publication_with_umlauts  # pylint: disable=unused-argument
 ):
-    search = PublicationDocument.search().query("match", author="müller")
+    search = PublicationDocument.search().query("match_all")
     expected = 1
     assert expected == search.count()
     response = search.execute()

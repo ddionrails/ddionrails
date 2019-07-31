@@ -8,7 +8,10 @@ from django.forms.models import model_to_dict
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 
-pytestmark = [pytest.mark.search]
+pytestmark = [
+    pytest.mark.search,
+    pytest.mark.filterwarnings("ignore::DeprecationWarning"),
+]
 
 
 def test_concept_search_document_fields(
@@ -18,7 +21,7 @@ def test_concept_search_document_fields(
     concept = variable.concept
     concept.save()
 
-    search = ConceptDocument.search().query("match", name="some-concept")
+    search = ConceptDocument.search().query("match_all")
 
     expected = 1
     assert expected == search.count()
@@ -50,7 +53,7 @@ def test_search_concept_by_label_de(concepts_index):  # pylint: disable=unused-a
 def test_topic_search_document_fields(
     topics_index, topic  # pylint: disable=unused-argument
 ):
-    search = TopicDocument.search().query("match", name="some-topic")
+    search = TopicDocument.search().query("match_all")
     expected = 1
     assert expected == search.count()
 
