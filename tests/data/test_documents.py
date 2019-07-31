@@ -14,7 +14,7 @@ pytestmark = [pytest.mark.search]
 def test_variable_search_document_fields(
     variables_index, variable  # pylint: disable=unused-argument
 ):
-    search = VariableDocument.search().query("match", name="some-concept")
+    search = VariableDocument.search().query("match_all")
 
     expected = 1
     assert expected == search.count()
@@ -62,10 +62,11 @@ def test_variable_search_document_fields_missing_related_objects(
     variable.dataset.save()
     variable.save()
 
-    search = VariableDocument.search().query("match", name="some-concept")
+    search = VariableDocument.search().query("match_all")
     response = search.execute()
     document = response.hits[0]
 
-    assert "None" == document.analysis_unit
-    assert "None" == document.conceptual_dataset
-    assert "None" == document.period
+    expected = None
+    assert expected is document.analysis_unit
+    assert expected is document.conceptual_dataset
+    assert expected is document.period

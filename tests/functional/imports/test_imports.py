@@ -29,7 +29,10 @@ from ddionrails.publications.models import Attachment, Publication
 from ddionrails.studies.models import Study, TopicList
 from tests.data.factories import VariableFactory
 
-pytestmark = [pytest.mark.functional]  # pylint: disable=invalid-name
+pytestmark = [  # pylint: disable=invalid-name
+    pytest.mark.functional,
+    pytest.mark.filterwarnings("ignore::DeprecationWarning"),
+]
 
 
 @pytest.fixture

@@ -13,9 +13,6 @@ if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ] || [ ! -f "
     echo "Overwriting old dependencies."
     rm -rf /usr/src/app/static/dist/*
     npm install
-    cd ./node_modules/ddionrails-elasticsearch \
-        && npm install \
-        && ./node_modules/.bin/ng build --prod
     cd /usr/src/app
     npm run build
     cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES}

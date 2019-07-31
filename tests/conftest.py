@@ -3,6 +3,7 @@
 
 """ Pytest fixtures """
 
+import time
 import uuid
 from io import BytesIO
 
@@ -293,7 +294,7 @@ def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argume
 
     # Delete documents in index after testing
     response = TopicDocument.search().query("match_all").delete()
-    assert expected == response["deleted"]
+    assert response["deleted"] > 0
 
 
 @pytest.fixture
@@ -311,7 +312,7 @@ def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-
 
     # Delete documents in index after testing
     response = QuestionDocument.search().query("match_all").delete()
-    assert expected == response["deleted"]
+    assert response["deleted"] > 0
 
 
 @pytest.fixture
@@ -319,9 +320,12 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
     """ Fixture that indexes a variable and cleans up after testing
         uses the indices created by the "elasticsearch_indices" fixture
     """
+    VariableDocument.search().query("match_all").delete()
+    time.sleep(0.1)
     # saving the variable, will index the variable as well
     variable.save()
     expected = 1
+
     assert expected == VariableDocument.search().count()
 
     # Run tests
@@ -329,7 +333,7 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
 
     # Delete documents in index after testing
     response = VariableDocument.search().query("match_all").delete()
-    assert expected == response["deleted"]
+    assert response["deleted"] > 0
 
 
 @pytest.fixture
@@ -339,7 +343,7 @@ def publication_with_umlauts(db):  # pylint: disable=unused-argument
         title="Some publication with Umlauts",
         author="Max Müller",
         abstract="Ein schönes Buch über Fußball und Ähnliches",
-        year="2019",
+        year=2019,
         sub_type="book",
     )
 
@@ -351,9 +355,13 @@ def publications_index(
     """ Fixture that indexes a publication and cleans up after testing
         uses the indices created by the "elasticsearch_indices" fixture
     """
+    PublicationDocument.search().query("match_all").delete()
+    time.sleep(0.1)
+
     # saving the publication, will index the publication as well
     publication_with_umlauts.save()
     expected = 1
+
     assert expected == PublicationDocument.search().count()
 
     # Run tests
@@ -361,4 +369,4 @@ def publications_index(
 
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
-    assert expected == response["deleted"]
+    assert response["deleted"] > 0
