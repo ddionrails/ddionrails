@@ -146,7 +146,7 @@ class TestStudyImportManager:
         assert "some-conceptual-dataset" == conceptual_dataset.description
 
     def test_import_instruments(
-        self, study_import_manager, elasticsearch_client, study, period
+        self, study_import_manager, elasticsearch_client, study, period, analysis_unit
     ):
         assert 0 == Instrument.objects.count()
         assert 0 == Question.objects.count()
@@ -156,6 +156,7 @@ class TestStudyImportManager:
         instrument = Instrument.objects.first()
         assert "some-instrument" == instrument.name
         assert study == instrument.study
+        assert analysis_unit == instrument.analysis_unit
         assert period == instrument.period
 
         index.populate()

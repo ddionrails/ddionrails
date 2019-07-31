@@ -3,6 +3,7 @@
   "questionnaire": "some-instrument",
   "label": "Some Instrument",
   "period_name": "some-period",
+  "analysis_unit_name": "some-analysis-unit",
   "label_de": "Some Fragebogen",
   "description_de": "",
   "instrument": "some-instrument",
