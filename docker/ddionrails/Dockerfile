@@ -10,32 +10,30 @@ WORKDIR ${DOCKER_APP_DIRECTORY}
 
 COPY ./ ${DOCKER_APP_DIRECTORY}/
 
-RUN apk update \
-    && apk add \
+# hadolint ignore=DL3003,DL3018
+RUN apk add --no-cache \
         bash \
         build-base \
         git \
-        graphviz \
-        graphviz-dev \
+        jpeg-dev \
         nodejs \
         nodejs-npm \
         postgresql-dev \
-    && rm -rf /var/cache/apk/*
-
-# install the latest version of pipenv
-# hadolint ignore=DL3013
-RUN pip install --upgrade pipenv
-RUN pipenv install --system --dev
-RUN npm install
-
-# Collect all files to serve as static files
-RUN cd ./node_modules/ddionrails-elasticsearch \
+        zlib-dev \
+    && pip install --upgrade pipenv \
+    && pipenv install --system --ignore-pipfile \
     && npm install \
-    && ./node_modules/.bin/ng build --prod
-# Use webpack to bundle static files
-RUN npm run build
+    && cd ./node_modules/ddionrails-elasticsearch \
+    && npm install \
+    && ./node_modules/.bin/ng build --prod \
+    && cd ../../ \
+    && npm run build \
+    && apk del nodejs nodejs-npm \
+    && pip uninstall -y pipenv \
+    && rm -rf /var/cache/apk/* \
+    && rm -rf node_modules 
 
 # Set up entrypoint
-RUN mv docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
 ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]
