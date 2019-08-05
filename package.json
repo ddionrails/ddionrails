@@ -10,7 +10,7 @@
     "name": "Marcel Hebing"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.9.0",
+    "@fortawesome/fontawesome-free": "^5.10.1",
     "bootstrap": "^4.3.1",
     "d3": "^3.5.17",
     "datatables.net-bs4": "1.10.19",
