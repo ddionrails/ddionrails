@@ -10,7 +10,9 @@ WORKDIR ${DOCKER_APP_DIRECTORY}
 
 COPY ./ ${DOCKER_APP_DIRECTORY}/
 
-RUN  apt-get update \
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         bash-completion=1:2.1-4.3 \
         build-essential=12.3 \
@@ -23,29 +25,32 @@ RUN  apt-get update \
         python-psycopg2=2.6.2-1 \
         vim-tiny=2:8.0.0197-4+deb9u3 \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs=12.6.0-1nodesource1 \
+    && apt-get install -y --no-install-recommends nodejs=12.* \
     && rm -rf /var/lib/apt/lists/* 
 
 # install the latest version of pipenv
 # hadolint ignore=DL3013
 RUN pip install --upgrade pipenv
 RUN pipenv install --system --dev
-RUN npm install
+RUN pipenv install --dev
 
-# Collect all files to serve as static files
-WORKDIR ${DOCKER_APP_DIRECTORY}/node_modules/ddionrails-elasticsearch
+# hadolint ignore=DL3003
 RUN npm install \
-    && ./node_modules/.bin/ng build --prod
+    && cd "${DOCKER_APP_DIRECTORY}"/node_modules/ddionrails-elasticsearch \
+    && npm install \
+    && ./node_modules/.bin/ng build --prod \
+    && cd "${DOCKER_APP_DIRECTORY}" \
+    && npm run build \
+    && rm -rf ./node_modules/
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
 # Use webpack to bundle static files
-RUN npm run build
 
 # Set up entrypoint
-RUN mv docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+COPY ./docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
 # Some dev creature comforts for bash work
-ADD ./docker/ddionrails/dev/dev.bashrc /root/.bashrc
+COPY ./docker/ddionrails/dev/dev.bashrc /root/.bashrc
 
 ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]

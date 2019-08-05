@@ -14,7 +14,6 @@ services:
     pids_limit: -1
     volumes:
       - ./codecov:/usr/src/app/codecov
-      - ./node_modules:/usr/src/app/node_modules
       - ./dist:/usr/src/app/static/dist
       - ./assets:/usr/src/app/assets
       - ./config:/usr/src/app/config
