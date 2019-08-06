@@ -98,15 +98,6 @@ __Before__ starting the services via docker-compose:
 
 - Optional: Set up a backup routine for the database.
 
-__After__ starting the services via docker-compose:
-
-- A mapping needs to be loaded into elasticsearch in order
-  for all search interfaces to work. :frowning_face:
-- Enter the django container via
-  `docker-compose exec web python manage.py index create`
-- The elasticsearch index is kept in a named volume,
-  meaning that the mapping is kept even through container recreations.
-
 ### Importing Data
 
 To import a study's metadata into the system, you need a git repository
