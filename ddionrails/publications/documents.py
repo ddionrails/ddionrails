@@ -1,6 +1,18 @@
 # -*- coding: utf-8 -*-
 
-""" Search document definitions for ddionrails.publications app """
+""" Search documents for indexing models from ddionrails.publications app into Elasticsearch
+
+
+Authors:
+    * 2019 Heinz-Alexander Fütterer (DIW Berlin)
+
+License:
+    | **AGPL-3.0 GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) 3.0**.
+    | See LICENSE at the GitHub
+      `repository <https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md>`_
+    | or at
+      `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
+"""
 
 from django.conf import settings
 from django.db.models import QuerySet

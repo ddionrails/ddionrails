@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=unused-argument,invalid-name
+# pylint: disable=unused-argument,invalid-name,redefined-outer-name
 
 """ Pytest fixtures """
 
@@ -10,6 +10,7 @@ from io import BytesIO
 import PIL.Image
 import pytest
 from django.core.management import call_command
+from elasticsearch.exceptions import RequestError
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.data.documents import VariableDocument
@@ -97,11 +98,15 @@ def elasticsearch_indices():
     """ Fixture that creates elasticsearch indices and cleans up after testing """
     from django.conf import settings
 
-    # setting ELASTICSEARCH_DSL_AUTOSYNC to True enables indexing when saving model instances
+    # setting ELASTICSEARCH_DSL_AUTOSYNC to
+    # True enables indexing when saving model instances
     settings.ELASTICSEARCH_DSL_AUTOSYNC = True
 
-    # Create search indices
-    call_command("search_index", "--create", force=True)
+    # Create search indices if they do not exist
+    try:
+        call_command("search_index", "--create", force=True)
+    except RequestError:
+        pass
 
     # Run tests
     yield
@@ -266,6 +271,7 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     """ Fixture that indexes a concept and cleans up after testing
         uses the indices created by the "elasticsearch_indices" fixture
     """
+    ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
     concept.save()
     expected = 1
@@ -284,6 +290,7 @@ def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argume
     """ Fixture that indexes a topic and cleans up after testing
         uses the indices created by the "elasticsearch_indices" fixture
     """
+    TopicDocument.search().query("match_all").delete()
     # saving the topic, will index the topic as well
     topic.save()
     expected = 1
@@ -302,6 +309,7 @@ def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-
     """ Fixture that indexes a question and cleans up after testing
         uses the indices created by the "elasticsearch_indices" fixture
     """
+    QuestionDocument.search().query("match_all").delete()
     # saving the question, will index the question as well
     question.save()
     expected = 1
@@ -338,6 +346,7 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
 
 @pytest.fixture
 def publication_with_umlauts(db):  # pylint: disable=unused-argument
+    """ Provides a Publication containing Umlauts. """
     return PublicationFactory(
         name="1",
         title="Some publication with Umlauts",
