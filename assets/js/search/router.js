@@ -1,3 +1,15 @@
+/**
+ * Router for search user interface.
+ *
+ * @author: Heinz-Alexander Fütterer, Dominique Hansen
+ * @copyright: 2019 Heinz-Alexander Fütterer, Dominique Hansen (DIW Berlin)
+ * @license: AGPL-3.0 GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) 3.0.
+ *  See LICENSE at the Github
+ *  [reporitory](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+ *  or at
+ *  https://www.gnu.org/licenses/agpl-3.0.txt
+ */
+
 import Vue from "vue";
 import Router from "vue-router";
 import BaseSearch from "./components/searches/BaseSearch.vue";
