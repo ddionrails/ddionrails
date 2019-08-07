@@ -17,19 +17,6 @@ from .helpers import LabelTable
 from .models import Dataset, Variable
 
 
-class DatasetRedirectView(RedirectView):
-    """ The Dataset redirect view redirects
-        from
-        /dataset/<int:id>
-        to
-        /<str:study_name>/data/<str:dataset_name>
-    """
-
-    def get_redirect_url(self, *args, **kwargs):
-        dataset = get_object_or_404(Dataset, id=kwargs["id"])
-        return dataset.get_absolute_url()
-
-
 class DatasetDetailView(DetailView):
     """ Dataset detail view
         ---

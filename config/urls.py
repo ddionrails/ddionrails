@@ -11,7 +11,7 @@ from django.views.generic.base import TemplateView
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
 from config.views import HomePageView
-from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
+from ddionrails.data.views import VariableRedirectView
 from ddionrails.elastic.views import angular as angular_search
 from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
 
@@ -65,7 +65,6 @@ urlpatterns = [
         name="publication_redirect",
     ),
     path("variable/<uuid:id>", VariableRedirectView.as_view(), name="variable_redirect"),
-    path("dataset/<uuid:id>", DatasetRedirectView.as_view(), name="dataset_redirect"),
     path(
         "instrument/<uuid:id>",
         instruments_views.InstrumentRedirectView.as_view(),
