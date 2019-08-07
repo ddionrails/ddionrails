@@ -9,7 +9,7 @@ import pytest
 from django.http.response import Http404
 from django.urls import reverse
 
-from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
+from ddionrails.data.views import VariableRedirectView
 from tests import status
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
@@ -51,20 +51,6 @@ class TestDatasetDetailView:
         )
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
-
-
-class TestDatasetRedirectView:
-    def test_redirect_view_with_valid_pk(self, rf, dataset):
-        request = rf.get("dataset", kwargs={"pk": dataset.pk})
-        response = DatasetRedirectView.as_view()(request, id=dataset.pk)
-        assert status.HTTP_302_FOUND == response.status_code
-
-    @pytest.mark.django_db
-    def test_redirect_view_with_invalid_pk(self, rf):
-        invalid_dataset_id = 999
-        request = rf.get("study", kwargs={"pk": invalid_dataset_id})
-        with pytest.raises(Http404):
-            DatasetRedirectView.as_view()(request, id=invalid_dataset_id)
 
 
 class TestVariableDetailView:
