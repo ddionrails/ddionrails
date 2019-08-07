@@ -1,7 +1,19 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-few-public-methods,no-self-use,unused-argument
 
-""" Import resources for ddionrails.instruments app """
+""" Import resources for importing models from ddionrails.instruments app into PostgreSQL
+
+
+Authors:
+    * 2019 Heinz-Alexander Fütterer (DIW Berlin)
+
+License:
+    | **AGPL-3.0 GNU AFFERO GENERAL PUBLIC LICENSE (AGPL) 3.0**.
+    | See LICENSE at the GitHub
+      `repository <https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md>`_
+    | or at
+      `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
+"""
 
 from import_export.fields import Field
 from import_export.resources import ModelResource
