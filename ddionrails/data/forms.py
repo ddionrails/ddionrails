@@ -9,24 +9,6 @@ from ddionrails.concepts.models import Concept
 from ddionrails.data.models import Dataset, Variable
 
 
-class DatasetForm(forms.ModelForm):
-    class Meta:
-        model = Dataset
-        fields = (
-            "name",
-            "label",
-            "description",
-            "study",
-            "conceptual_dataset",
-            "period",
-            "analysis_unit",
-        )
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.data["name"] = self.data["dataset_name"]
-
-
 class VariableForm(forms.ModelForm):
     class Meta:
         model = Variable
