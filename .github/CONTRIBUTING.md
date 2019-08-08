@@ -85,7 +85,7 @@ Imports should be sorted in accordance with isort.
 
 Javascript should be checked with ESLint.
 
-Please comment your code in accordance with the google style guides for
+Please comment your code in accordance with the Google style guides for
 [Python](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html)
 and [Javascript](https://google.github.io/styleguide/jsguide.html#jsdoc).
 Use Python [type hints](https://www.python.org/dev/peps/pep-0484/) wherever possible
