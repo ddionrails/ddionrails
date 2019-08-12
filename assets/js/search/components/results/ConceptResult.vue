@@ -2,7 +2,7 @@
   <div class="card-body">
     <p class="card-title">
       <i class="fa fa-cog"></i>
-      <a :href="baseUrl + '/' + item._type + '/' + item._id">
+      <a :href="baseUrl + '/' + item.type + '/' + item._id">
         [
         <span v-html="item.name"></span>]
         <span v-html="item.label"></span>

@@ -39,6 +39,7 @@ def test_concept_search_document_fields(
     )
     # add relations to expected dictionary
     expected["study"] = [variable.dataset.study.name]
+    expected["type"] = "concept"
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result
@@ -70,6 +71,7 @@ def test_topic_search_document_fields(
     )
     # add relations to expected dictionary
     expected["study"] = topic.study.title()
+    expected["type"] = "topic"
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result

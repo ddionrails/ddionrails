@@ -28,6 +28,13 @@ from .models import Question
 class QuestionDocument(Document):
     """ Search document instruments.Question """
 
+    # doc_type was removed in Elasticsearch 7
+    type = fields.KeywordField()
+
+    @staticmethod
+    def prepare_type(question: Question) -> str:
+        return "question"
+
     # attributes
     name = fields.TextField()
     label = fields.TextField(analyzer="english")
@@ -94,9 +101,6 @@ class QuestionDocument(Document):
                 if label_de:
                     items["de"].append(label_de)
         return items
-
-    class Meta:  # pylint: disable=too-few-public-methods
-        doc_type = "question"
 
     class Index:  # pylint: disable=too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}questions"

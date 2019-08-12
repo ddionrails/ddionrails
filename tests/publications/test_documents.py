@@ -33,6 +33,7 @@ def test_publication_search_document_fields(
     expected["year"] = publication_with_umlauts.year
     # add relations to expected dictionary
     expected["study"] = publication_with_umlauts.study.title()
+    expected["type"] = "publication"
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result

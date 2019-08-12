@@ -48,6 +48,7 @@ def test_variable_search_document_fields(
 
     # add relations to expected dictionary
     expected["dataset"] = variable.dataset.name
+    expected["type"] = "variable"
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result
