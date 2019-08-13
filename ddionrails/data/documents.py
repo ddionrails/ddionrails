@@ -28,6 +28,13 @@ from .models import Variable
 class VariableDocument(Document):
     """ Search document data.Variable """
 
+    # doc_type was removed in Elasticsearch 7
+    type = fields.KeywordField()
+
+    @staticmethod
+    def prepare_type(variable: Variable) -> str:
+        return "variable"
+
     # attributes
     name = fields.TextField()
     label = fields.TextField(analyzer="english")
@@ -96,9 +103,6 @@ class VariableDocument(Document):
     def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
         """ Return the variable's categories, only labels and labels_de """
         return {key: variable.categories.get(key) for key in ("labels", "labels_de")}
-
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
-        doc_type = "variable"
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}variables"

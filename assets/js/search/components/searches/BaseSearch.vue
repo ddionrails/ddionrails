@@ -34,19 +34,19 @@
           renderNoResults="No Concepts found. Try to change your search query or filter options."
         >
           <div slot="renderData" class="card" slot-scope="{ item }">
-            <div v-if="item._type === 'variable'">
+            <div v-if="item.type === 'variable'">
               <variable-result :item="item" />
             </div>
-            <div v-else-if="item._type === 'concept'">
+            <div v-else-if="item.type === 'concept'">
               <concept-result :item="item" />
             </div>
-            <div v-else-if="item._type === 'question'">
+            <div v-else-if="item.type === 'question'">
               <question-result :item="item" />
             </div>
-            <div v-else-if="item._type === 'publication'">
+            <div v-else-if="item.type === 'publication'">
               <publication-result :item="item" />
             </div>
-            <div v-else-if="item._type === 'topic'">
+            <div v-else-if="item.type === 'topic'">
               <topic-result :item="item" />
             </div>
           </div>
