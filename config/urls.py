@@ -13,7 +13,7 @@ import ddionrails.publications.views as publications_views
 from config.views import HomePageView
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import VariableRedirectView
-from ddionrails.studies.views import StudyDetailView, StudyRedirectView, study_topics
+from ddionrails.studies.views import StudyDetailView, study_topics
 
 # These variable names are desired by Django
 handler400 = "config.views.bad_request"  # pylint: disable=invalid-name
@@ -83,7 +83,6 @@ urlpatterns = [
         instruments_views.QuestionRedirectView.as_view(),
         name="question_redirect",
     ),
-    path("study/<uuid:id>", StudyRedirectView.as_view(), name="study_redirect"),
 ]
 
 if settings.DEBUG:

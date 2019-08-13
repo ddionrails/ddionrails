@@ -6,22 +6,11 @@ from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
-from django.views.generic.base import RedirectView
 
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.instruments.models import Instrument, Question
 
 from .models import Study
-
-
-class StudyRedirectView(RedirectView):
-    """ RedirectView for studies.Study model """
-
-    permanent = False
-
-    def get_redirect_url(self, *args, **kwargs):
-        study = get_object_or_404(Study, id=kwargs["id"])
-        return study.get_absolute_url()
 
 
 class StudyDetailView(DetailView):
