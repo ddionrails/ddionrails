@@ -10,7 +10,7 @@
     </p>
     <p class="card-text">
       Variable in study: {{ item.study }} | 
-      dataset: {{ item.dataset }} | 
+      dataset: <span v-html="item.dataset"></span> |
       period: 
       <span v-if="item.period">{{ item.period }}</span>
       <span v-else>None</span> |
