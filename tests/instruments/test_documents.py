@@ -36,6 +36,7 @@ def test_question_search_document_fields(
     expected["study"] = question.instrument.study.title()
 
     expected["instrument"] = question.instrument.title()
+    expected["type"] = "question"
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result

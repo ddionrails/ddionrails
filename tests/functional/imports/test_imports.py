@@ -88,7 +88,7 @@ class TestStudyImportManager:
         assert "Some concept" == concept.label
         assert topic == concept.topics.first()
 
-        search = Search().doc_type("concept")
+        search = ConceptDocument.search().query("match_all")
         assert 1 == search.count()
         response = search.execute()
         hit = response.hits[0]
@@ -136,7 +136,7 @@ class TestStudyImportManager:
         assert analysis_unit == instrument.analysis_unit
         assert period == instrument.period
 
-        search = Search().doc_type("question")
+        search = QuestionDocument.search().query("match_all")
         assert 1 == search.count()
         response = search.execute()
         hit = response.hits[0]
@@ -163,7 +163,7 @@ class TestStudyImportManager:
         assert not created
         assert name == variable.name
 
-        search = Search().doc_type("variable")
+        search = VariableDocument.search().query("match_all")
         assert 2 == search.count()
         VariableDocument.search().query("match_all").delete()
 
@@ -232,7 +232,7 @@ class TestStudyImportManager:
         assert "Some Publication" == publication.title
         assert "some-doi" == publication.doi
         assert study == publication.study
-        search = Search().doc_type("publication")
+        search = PublicationDocument.search().query("match_all")
         assert 1 == search.count()
         response = search.execute()
         hit = response.hits[0]
@@ -269,10 +269,10 @@ class TestStudyImportManager:
         assert 1 == QuestionVariable.objects.count()
         assert 1 == ConceptQuestion.objects.count()
 
-        assert Search().doc_type("concept").count() == 1
-        assert Search().doc_type("variable").count() == 2
-        assert Search().doc_type("publication").count() == 1
-        assert Search().doc_type("question").count() == 1
+        assert ConceptDocument.search().query("match_all").count() == 1
+        assert VariableDocument.search().query("match_all").count() == 2
+        assert PublicationDocument.search().query("match_all").count() == 1
+        assert QuestionDocument.search().query("match_all").count() == 1
 
         ConceptDocument.search().query("match_all").delete()
         VariableDocument.search().query("match_all").delete()

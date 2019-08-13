@@ -30,6 +30,13 @@ from .models import Concept, Topic
 class ConceptDocument(Document):
     """ Search document for concepts.Concept """
 
+    # doc_type was removed in Elasticsearch 7
+    type = fields.KeywordField()
+
+    @staticmethod
+    def prepare_type(concept: Concept) -> str:
+        return "concept"
+
     # attributes
     name = fields.TextField()
     label = fields.TextField(analyzer="english")
@@ -59,10 +66,6 @@ class ConceptDocument(Document):
         )
         return [study.title() for study in studies]
 
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
-        # Set the "_type" attribute in Elasticsearch
-        doc_type = "concept"
-
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}concepts"
 
@@ -81,6 +84,13 @@ class ConceptDocument(Document):
 class TopicDocument(Document):
     """ Search document for concepts.Topic """
 
+    # doc_type was removed in Elasticsearch 7
+    type = fields.KeywordField()
+
+    @staticmethod
+    def prepare_type(topic: Topic) -> str:
+        return "topic"
+
     # attributes
     name = fields.TextField()
     label = fields.TextField(analyzer="english")
@@ -95,10 +105,6 @@ class TopicDocument(Document):
     def prepare_study(topic: Topic) -> str:
         """ Return the related study """
         return topic.study.title()
-
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
-        # Set the "_type" attribute in Elasticsearch
-        doc_type = "topic"
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}topics"

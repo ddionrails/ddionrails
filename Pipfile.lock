@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8c97a91892d047361860adfb0e45e07a3a08b23deb6c192d536fb9bc055a79e3"
+            "sha256": "68ceb55e24e4ac1d8ae5c9def35cc61b13f4cd9c04f6cc07f8b138980c4024fd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -76,7 +76,7 @@
         },
         "django-elasticsearch-dsl": {
             "git": "https://github.com/sabricot/django-elasticsearch-dsl.git",
-            "ref": "9a9e7bf2f037e18bfdedc571eb50968cc4dcf782"
+            "ref": "8b8dc5bbbc9715742c6cea61c891e96ae07e8f64"
         },
         "django-extensions": {
             "hashes": [
@@ -154,18 +154,18 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:1f0f633e3b500d5042424f75a505badf8c4b9962c1b4734cdfb3087fb67920be",
-                "sha256:fb5ab15ee283f104b5a7a5695c7e879cb2927e4eb5aed9c530811590b41259ad"
+                "sha256:cbc73831c63fa2824538df76fcb2c4be007b43dbd9e7788ae70ea6d24109925b",
+                "sha256:d1b176b87a7fb75dca82978c82a4023e8b21cbc98f4018cb51190fb0b8b43764"
             ],
-            "version": "==6.4.0"
+            "version": "==7.0.2"
         },
         "elasticsearch-dsl": {
             "hashes": [
-                "sha256:26416f4dd46ceca43d62ef74970d9de4bdd6f4b0f163316f0b432c9e61a08bec",
-                "sha256:f60aea7fd756ac1fbe7ce114bbf4949aefbf495dfe8896640e787c67344f12f6"
+                "sha256:2aedc2a4dbba9870249a57d1798ec29e44404619bded66ac920f5d6a1cbb6f22",
+                "sha256:763fb28add254f2c3a1d071cd114466d8a27f640e02a874afba7b8a04147c094"
             ],
             "index": "pypi",
-            "version": "==6.4.0"
+            "version": "==7.0.0"
         },
         "et-xmlfile": {
             "hashes": [
@@ -266,7 +266,6 @@
                 "sha256:ef6be704ae2bc8ad0ebc5cb850ee9139493b0fc4e81abcc240fb392a63ebc808",
                 "sha256:f8dc19d92896558f9c4317ee365729ead9d7bbcf2052a9a19a3ef17abbb8ac5b"
             ],
-            "markers": "python_version >= '2.7'",
             "version": "==6.1.0"
         },
         "psycopg2-binary": {
@@ -668,6 +667,14 @@
                 "sha256:80d2de76188eabfbfcf27e6a37342c2827801e59c4cc14b0371c56fed43820e3"
             ],
             "version": "==0.19"
+        },
+        "importlib-resources": {
+            "hashes": [
+                "sha256:6e2783b2538bd5a14678284a3962b0660c715e5a0f10243fd5e00a4b5974f50b",
+                "sha256:d3279fd0f6f847cced9f7acc19bd3e5df54d34f93a2e7bb5f238f81545787078"
+            ],
+            "markers": "python_version < '3.7'",
+            "version": "==1.0.2"
         },
         "isort": {
             "hashes": [

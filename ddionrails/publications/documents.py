@@ -26,6 +26,13 @@ from .models import Publication
 class PublicationDocument(Document):
     """ Search document for publications.Publication """
 
+    # doc_type was removed in Elasticsearch 7
+    type = fields.KeywordField()
+
+    @staticmethod
+    def prepare_type(publication: Publication) -> str:
+        return "publication"
+
     # facets
     sub_type = fields.KeywordField()
     study = fields.KeywordField()
@@ -36,10 +43,6 @@ class PublicationDocument(Document):
     def prepare_study(publication: Publication) -> str:
         """ Return the related study """
         return publication.study.title()
-
-    class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
-        # Set the "_type" attribute in Elasticsearch
-        doc_type = "publication"
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         # Name of the Elasticsearch index

@@ -34,9 +34,9 @@ psycopg2-binary = "*"
 # Elasticsearch
 # ------------------------------------------------------------------------------
 # see https://github.com/sabricot/django-elasticsearch-dsl#quickstart
-# version 6.4.2 is not available on PyPi at the moment
-django-elasticsearch-dsl = {git = "https://github.com/sabricot/django-elasticsearch-dsl.git",ref = "6.4.2"}
-elasticsearch-dsl = "<=7.*"
+# version 7.0.0 is not available on PyPi at the moment
+django-elasticsearch-dsl = {git = "https://github.com/sabricot/django-elasticsearch-dsl.git",ref = "7.0.0"}
+elasticsearch-dsl = "<=8.*"
 
 # Markup
 # ------------------------------------------------------------------------------
