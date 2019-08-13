@@ -1,27 +1,27 @@
 {{ row_helper.reset }}
 <div class="card">
     {% if table_name %}
-    <div class="card-header"> <b>{{ table_name }}</b>
-    </div>
+        <div class="card-header"><b>{{ table_name }}</b>
+        </div>
     {% endif %}
     <div class="card-body">
         <div class="row">
             {% for period_name, variables in variable_list.items %}
-            <div class="col-lg-3">
-                {{ period_name }}:
-                <br>
-                {% for variable in variables %}
-                    <a href="{{ variable }}">
-                    {{ variable.dataset.name }}/{{ variable.name }}
-                    </a>
+                <div class="col-lg-3">
+                    {{ period_name }}:
                     <br>
-                {% endfor %}
-            </div>
-            {% if row_helper.row %}
-        </div>
-        <div class="row" style="margin-top: 15px">
-            {% endif %}
+                    {% for variable in variables %}
+                        <a href="{{ variable.get_absolute_url }}">
+                            {{ variable.dataset.name }}/{{ variable.name }}
+                        </a>
+                        <br>
+                    {% endfor %}
+                </div>
+                {% if row_helper.row %}
+                    </div>
+                    <div class="row" style="margin-top: 15px">
+                {% endif %}
             {% endfor %}
-        </div>
+            </div>
     </div>
 </div>

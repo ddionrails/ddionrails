@@ -1,38 +1,38 @@
 <table class="table datatable" id="variable_table">
     <thead>
-        <tr>
-            <th>Study</th>
-            <th>Object</th>
-            <th>Label</th>
-            <th>Path</th>
-        </tr>
+    <tr>
+        <th>Study</th>
+        <th>Object</th>
+        <th>Label</th>
+        <th>Path</th>
+    </tr>
     </thead>
     <tbody>
-        {% for variable in variables %}
+    {% for variable in variables %}
         <tr>
             <td>
                 {{ variable.dataset.study.title }}
             </td>
             <td>Variable</td>
-            <td><a href="{{ variable }}">{{ variable.title }}</a>
+            <td><a href="{{ variable.get_absolute_url }}">{{ variable.title }}</a>
             </td>
             <td>
                 {{ variable }}
             </td>
         </tr>
-        {% endfor %}
-        {% for question in questions %}
+    {% endfor %}
+    {% for question in questions %}
         <tr>
             <td>
                 {{ question.instrument.study.title }}
             </td>
             <td>Question</td>
-            <td><a href="{{ question }}">{{ question.title }}</a>
+            <td><a href="{{ question.get_absolute_url }}">{{ question.title }}</a>
             </td>
             <td>
                 {{ question }}
             </td>
         </tr>
-        {% endfor %}
+    {% endfor %}
     </tbody>
 </table>

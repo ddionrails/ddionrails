@@ -14,5 +14,5 @@ from .basket import (
     remove_concept,
     remove_variable,
 )
-from .script import script_delete, script_detail, script_new, script_new_lang, script_raw
+from .script import script_delete, script_detail, script_new_lang, script_raw
 from .user import account_overview, register, user_delete

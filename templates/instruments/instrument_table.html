@@ -1,22 +1,22 @@
 <table class="table datatable" id="{{ table_id }}">
-  <thead>
+    <thead>
     <tr>
-      <th>Name</th>
-      <th>Label</th>
-      <th>Period</th>
-      <th>Analysis Unit</th>
+        <th>Name</th>
+        <th>Label</th>
+        <th>Period</th>
+        <th>Analysis Unit</th>
     </tr>
-  </thead>
-  <tbody>
-    {% for instrument in instrument_list %} 
-      <tr>
-        <td>
-          <a href="{{ instrument }}">{{ instrument.name }}</a>
-        </td>
-        <td>{{ instrument.label }}</td>
-        <td>{{ instrument.period.title }}</td>
-        <td>{{ instrument.analysis_unit.title }}</td>
-      </tr>
-    {% endfor %} 
-  </tbody>
+    </thead>
+    <tbody>
+    {% for instrument in instrument_list %}
+        <tr>
+            <td>
+                <a href="{{ instrument.get_absolute_url }}">{{ instrument.name }}</a>
+            </td>
+            <td>{{ instrument.label }}</td>
+            <td>{{ instrument.period.title }}</td>
+            <td>{{ instrument.analysis_unit.title }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>

@@ -1,24 +1,24 @@
 <div class="card">
-    <div class="card-header"> 
-      <b>Actions</b>
+    <div class="card-header">
+        <b>Actions</b>
     </div>
     <div class="list-group">
-        <div class="list-group-item"> 
-          <a href="/workspace/baskets/{{ basket.id }}/csv">
-            Export to CSV
-          </a>
+        <div class="list-group-item">
+            <a href="{% url 'workspace:basket_to_csv' basket_id=basket.id %}">
+                Export to CSV
+            </a>
         </div>
-        {% for script in basket.get_script_generators %}
-        <div class="list-group-item"> 
-          <a href="/workspace/baskets/{{ basket.id }}/scripts/new/{{ script }}">
-            New script using the <b>{{ script }}</b> generator
-          </a>
-        </div>
+        {% for generator_name in basket.get_script_generators %}
+            <div class="list-group-item">
+                <a href="{% url 'workspace:script_new_lang' basket_id=basket.id generator_name=generator_name%}">
+                    New script using the <b>{{ generator_name }}</b> generator
+                </a>
+            </div>
         {% endfor %}
-        <div class="list-group-item"> 
-          <a href="/workspace/baskets/{{ basket.id }}/search">
-          <b>Add variables</b>
-        </a>
+        <div class="list-group-item">
+            <a href="{% url 'workspace:basket_search' basket_id=basket.id %}">
+                <b>Add variables</b>
+            </a>
         </div>
     </div>
 </div>

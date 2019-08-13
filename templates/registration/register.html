@@ -2,50 +2,45 @@
 
 {% block content %}
 
+    {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.errors }}
+        </div>
+    {% endif %}
 
-{% if form.errors %}
-<div class="alert alert-danger" role="alert">
-    {{ form.errors }}
-</div>
-{% endif %}
+    <div class="row">
+        <div class="col-lg-4 offset-md-4">
+            <div class="card">
+                <div class="card-header"><b>User registration</b>
+                </div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'workspace:register' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="id_username">Username:</label>
+                            <input class="form-control" id="id_username" maxlength="30" name="username" type="text">
+                            <span class="small">Required. 30 characters or fewer.<br>Letters, digits and @/./+/-/_ only.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_email">Email address:</label>
+                            <input class="form-control" id="id_email" maxlength="254" name="email" type="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password1">Password:</label>
+                            <input class="form-control" id="id_password1" name="password1" type="password">
+                        </div>
+                        <div class="form-group">
+                            <label for="id_password2">Password confirmation:</label>
+                            <input class="form-control" id="id_password2" name="password2" type="password">
+                            <span class="small">Enter the same password as above, for verification.</span>
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Register">
+                        <input type="hidden" name="next" value="{{ next }}">
+                    </form>
 
-<div class="row">
-    <div class="col-lg-4 offset-md-4">
-        <div class="card">
-            <div class="card-header"> <b>User registration</b>
-            </div>
-            <div class="card-body">
-                <form method="post" action="/workspace/register/">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="id_username">Username:</label>
-                        <input class="form-control" id="id_username" maxlength="30" name="username" type="text"> 
-                        <span class="small">Required. 30 characters or fewer.<br>Letters, digits and @/./+/-/_ only.</span>
-                    </div>
-                    <div class="form-group">
-                        <label for="id_email">Email address:</label>
-                        <input class="form-control" id="id_email" maxlength="254" name="email" type="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="id_password1">Password:</label>
-                        <input class="form-control" id="id_password1" name="password1" type="password">
-                    </div>
-                    <div class="form-group">
-                        <label for="id_password2">Password confirmation:</label>
-                        <input class="form-control" id="id_password2" name="password2" type="password"> 
-                        <span class="small">Enter the same password as above, for verification.</span>
-                    </div>
-                    <input class="btn btn-primary" type="submit" value="Register">
-                    <input type="hidden" name="next" value="{{ next }}">
-                </form>
-
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-
-
 
 {% endblock %}
-

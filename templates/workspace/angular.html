@@ -1,14 +1,15 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
+{% block content %}
 
-{% block content %} 
-  <p>
-    <a href="/workspace/baskets/{{ basket.id }}">
-    Back to basket <b>{{ basket.name }}</b>.
-    </a>
-  </p>
-  <p>
-    The following search is limited to the related study <b>{{ basket.study.title }}</b>.
-  </p>
-  <app-root study="{{ basket.study.name }}" type="variable">Loading...</app-root>
-{% endblock content %} 
+    <p>
+        <a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
+            Back to basket <b>{{ basket.name }}</b>.
+        </a>
+    </p>
+    <p>
+        The following search is limited to the related study <b>{{ basket.study.title }}</b>.
+    </p>
+    <app-root study="{{ basket.study.name }}" type="variable">Loading...</app-root>
+
+{% endblock content %}

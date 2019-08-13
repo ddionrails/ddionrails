@@ -38,3 +38,8 @@ def authenticated_browser(browser, client, live_server, user):
 @pytest.fixture
 def login_url(live_server):
     return urljoin(live_server.url, "workspace/login/")
+
+
+@pytest.fixture
+def search_url(live_server):
+    return urljoin(live_server.url, "search/")
