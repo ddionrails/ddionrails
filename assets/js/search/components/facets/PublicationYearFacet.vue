@@ -1,22 +1,25 @@
 <template>
-  <multi-list
+  <dynamic-range-slider
+    dataField="year"
     componentId="Year"
-    data-field="year"
     title="Year"
-    :showSearch="false"
-    selectAllLabel="Select all"
+    :showFilter="true"
     :URLParams="true"
-    :react="react"
+    :rangeLabels="function(min, max){
+      return {
+        start: min,
+        end: max,
+      }
+    }"
     class="card facet"
     :innerClass="{
-        title: 'card-header',
+      title: 'card-header'
     }"
-  />
+/>
 </template>
 
 <script>
 export default {
-  name: "PublicationYearFacet",
-  props: ["react"]
+  name: "PublicationYearFacet"
 };
 </script>
