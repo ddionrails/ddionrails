@@ -1,18 +1,22 @@
 <table class="table datatable" id="variable_table">
-  <thead>
+    <thead>
     <tr>
-      <th style="color:grey"><small>Sort</small></th>
-      <th>Variable</th>
-      <th>Name</th>
+        <th style="color:grey">
+            <small>Sort</small>
+        </th>
+        <th>Variable</th>
+        <th>Name</th>
     </tr>
-  </thead>
-  <tbody>
-    {% for variable in variables %} 
-    <tr>
-      <td style="color:grey"><small>{{ variable.sort_id }}</small></td>
-      <td><a href="{{ variable }}">{{ variable.title }}</a></td>
-      <td>{{ variable.name }}</td>
-    </tr>
-    {% endfor %} 
-  </tbody>
+    </thead>
+    <tbody>
+    {% for variable in variables %}
+        <tr>
+            <td style="color:grey">
+                <small>{{ variable.sort_id }}</small>
+            </td>
+            <td><a href="{{ variable.get_absolute_url }}">{{ variable.title }}</a></td>
+            <td>{{ variable.name }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>

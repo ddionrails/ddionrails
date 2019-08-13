@@ -1,21 +1,33 @@
-{% extends "base_study.html" %} 
+{% extends "base_study.html" %}
 
-{% block title %} 
-{{ dataset }}
-{% endblock %} 
+{% block title %}
+    {{ dataset }}
+{% endblock %}
 
-{% block content %} 
+{% block content %}
 
-  <h1>{{ dataset.title }}</h1>
-  <div class="row">
-    <div class="col-lg-9">
-      {{ dataset.html_description | safe }}
-      <h2>Variables</h2>
-      {% include "data/variable_table.html" %} 
+    <h1>{{ dataset.title }}</h1>
+    <div class="row">
+        <div class="col-lg-9">
+            {{ dataset.html_description | safe }}
+            <h2>Variables</h2>
+            {% include "data/variable_table.html" %}
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header"><b>Info</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Study:</b>
+                        {{ study.name }}
+                    </p>
+                    <p><b>Dataset:</b>
+                        {{ dataset.name }}
+                    </p>
+                    {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-lg-3">
-      {% include "data/dataset_info.html" %} 
-    </div>
-  </div>
 
-{% endblock content %} 
+{% endblock content %}

@@ -1,11 +1,20 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
-{% block content %} 
-  <h1>Instruments</h1>
-  <h2>Result table</h2>
-  {% include "instruments/instrument_table.html" %} 
-  <h2>Result list</h2>
-  {% for instrument in instrument_list %} 
-    {% include "instruments/instrument_result.html" %} 
-  {% endfor %} 
-{% endblock content %} 
+{% block content %}
+
+    <h1>Instruments</h1>
+    <h2>Result table</h2>
+    {% include "instruments/instrument_table.html" %}
+    <h2>Result list</h2>
+    {% for instrument in instrument_list %}
+        <div class="list-group-item">
+            <b><a href="{{ instrument.get_absolute_url }}">
+                {{ instrument.title }}
+            </a></b>
+            [instrument: {{ instrument.name }}]
+            <br/>
+            {{ instrument }}
+        </div>
+    {% endfor %}
+
+{% endblock content %}

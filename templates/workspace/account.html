@@ -1,18 +1,18 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
-{% block content %} 
+{% block content %}
 
-  <h1>Account details</h1>
+    <div class="mx-auto d-flex flex-column">
+            <h1>Account details</h1>
+            <p><b>User name: </b>{{ user.username }}</p>
+            <p><b>User email: </b>{{ user.email }}</p>
 
-  <p><b>User name: </b>{{ user.username }}</p>
-  <p><b>User email: </b>{{ user.email }}</p>
-
-  <h2>Dangerous zone</h2>
-
-  <a class="btn btn-danger"
-     href="/workspace/delete_account/"
-     onclick="return confirm('Are you sure you want to delete your user account?')">
-    Delete account
-  </a>
+            <h2 class="pt-4 mx-auto">Dangerous zone</h2>
+            <a class="btn btn-danger mx-auto"
+            href="{% url 'workspace:user_delete' %}"
+            onclick="return confirm('Are you sure you want to delete your user account?')">
+                Delete account
+            </a>
+    </div>
 
 {% endblock content %} 

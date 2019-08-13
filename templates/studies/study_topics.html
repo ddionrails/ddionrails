@@ -2,8 +2,8 @@
 {% load render_bundle from webpack_loader %}
 
 {% block styles %}
-<!-- Webpack bundle: "topics" CSS -->
-{% render_bundle 'topics' 'css' %}
+    <!-- Webpack bundle: "topics" CSS -->
+    {% render_bundle 'topics' 'css' %}
 {% endblock styles %}
 
 {% block scripts %}
@@ -13,31 +13,31 @@
         var language = '{{ language }}'
     </script>
 
-{% render_bundle 'topics' 'js' %}
+    {% render_bundle 'topics' 'js' %}
 
 {% endblock scripts %}
 
 {% block content %}
 
-<p class="text-right">
-    Languages:
+    <p class="text-right">
+        Languages:
         {% for link_language in study.topic_languages %}
-        {% if link_language == language %} <b>{% endif %} 
-        &nbsp;<a href="/{{ study.name }}/topics/{{ link_language }}">{{ link_language }}</a>
+            {% if link_language == language %} <b>{% endif %}
+        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}">{{ link_language }}</a>
         {% if link_language == language %} </b>{% endif %}
         {% endfor %}
     </p>
-    
+
     <h2><i class="small fas fa-cogs"></i> Topics</h2>
     <a class="anchor" id="topics"></a>
     <div class="row">
         <div class="offset-md-8 col-lg-4 col-8 offset-4 search-bar">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search node .." id="search"> 
+                <input type="text" class="form-control" placeholder="Search node .." id="search">
                 <span class="input-group-btn">    
-            <button class="btn btn-secondary" type="button" aria-pressed="true" id="btn-search"><span 
-                class="fas fa-search" 
-                aria-hidden="true"></span></button>
+            <button class="btn btn-secondary" type="button" aria-pressed="true" id="btn-search"><span
+                    class="fas fa-search"
+                    aria-hidden="true"></span></button>
         </span>
             </div>
         </div>
@@ -71,20 +71,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-success hidden" role="alert" id="basket_success"> 
+                    <div class="alert alert-success hidden" role="alert" id="basket_success">
                         <strong>Successfully </strong>added to basket.
                     </div>
-                    <div class="alert alert-danger hidden" role="alert" id="basket_error"> 
+                    <div class="alert alert-danger hidden" role="alert" id="basket_error">
                         <strong>An error occured. </strong>Please try again later.
                     </div>
                     <p>Do you really want to add <span id="number_of_variables"></span> element(s) to your basket?</p>
                     <p>Select a basket:</p>
                     <div id="basket_list"></div>
                 </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
-
-    {% endblock content %}
-    
+{% endblock content %}

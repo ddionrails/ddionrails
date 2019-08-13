@@ -1,44 +1,44 @@
 {% extends "base_study.html" %}
 {% block content %}
-<div class="card">
-    <div class="card-body">
-        <div class="text-center">
-            <p class="lead">
-                {{ publication.author }}(
-                {{ publication.year }})</p>
-             <h1>{{ publication.title }}</h1>
-            {% if publication.sub_type %}
-            <p>[
-                {{ publication.sub_type }}]</p>
+    <div class="card">
+        <div class="card-body">
+            <div class="text-center">
+                <p class="lead">
+                    {{ publication.author }}(
+                    {{ publication.year }})</p>
+                <h1>{{ publication.title }}</h1>
+                {% if publication.sub_type %}
+                    <p>[
+                        {{ publication.sub_type }}]</p>
+                {% endif %}
+            </div>
+            {{ publication.html_abstract | safe }}
+            {% if publication.url %}
+                <div class="text-right">
+                    <p><a href="{{ publication.url }}" class="btn btn-primary">Go to publication</a>
+                    </p>
+                </div>
+            {% endif %}
+            {% if publication.doi %}
+                <div class="text-right">
+                    <p><a href="https://doi.org/{{ publication.doi }}" class="btn btn-primary">
+
+                        Go to DOI {{ publication.doi }}
+
+                    </a>
+                    </p>
+                </div>
             {% endif %}
         </div>
-        {{ publication.html_abstract | safe }}
-        {% if publication.url %}
-        <div class="text-right">
-            <p><a href="{{ publication.url }}" class="btn btn-primary">Go to publication</a>
-            </p>
-        </div>
-        {% endif %}
-        {% if publication.doi %}
-        <div class="text-right">
-            <p><a href="https://doi.org/{{ publication.doi }}" class="btn btn-primary">
-
-            Go to DOI {{ publication.doi }}
-
-        </a>
-            </p>
-        </div>
-        {% endif %}
     </div>
-</div>
-{% if publication.studies %}
-<p><b>This publication uses the following data sources:</b>
-</p>
-<p>
-    {{ publication.studies }}
-</p>
-{% endif %}
-<p><b>Please cite as:</b>
-</p>
-{{ publication.html_cite | safe }}
+    {% if publication.studies %}
+        <p><b>This publication uses the following data sources:</b>
+        </p>
+        <p>
+            {{ publication.studies }}
+        </p>
+    {% endif %}
+    <p><b>Please cite as:</b>
+    </p>
+    {{ publication.html_cite | safe }}
 {% endblock content %}

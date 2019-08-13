@@ -1,26 +1,19 @@
-<!--
-<table class="table datatable" id="variable_table">
--->
 <h2>Questions</h2>
 <table class="table">
-  <thead>
+    <thead>
     <tr>
-      <th>Question (label)</th>
-      <th>Question</th>
-      <th>Instrument</th>
+        <th>Question (label)</th>
+        <th>Question</th>
+        <th>Instrument</th>
     </tr>
-  </thead>
-  <tbody>
-    {% for question in questions %} 
-    <tr>
-      {% if language == "de" %} 
-      <td>{{ question.title_de }}</td>
-      {% else %} 
-      <td>{{ question.title }}</td>
-      {% endif %} 
-      <td><a href="{{ question }}">{{ question.name }}</a></td>
-      <td><a href="{{ question.instrument }}">{{ question.instrument.name }}</a></td>
-    </tr>
-    {% endfor %} 
-  </tbody>
+    </thead>
+    <tbody>
+    {% for question in questions %}
+        <tr>
+            <td>{{ question.title }}</td>
+            <td><a href="{{ question.get_absolute_url }}">{{ question.name }}</a></td>
+            <td><a href="{{ question.instrument.get_absolute_url }}">{{ question.instrument.name }}</a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>

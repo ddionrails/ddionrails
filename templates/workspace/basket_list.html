@@ -1,15 +1,31 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 
-{% block content %} 
+{% block content %}
 
-  <p class="pull-right">
-    <a class="btn btn-success" href="/workspace/baskets/new">Create basket</a>
-  </p>
 
-  <h1>Baskets</h1>
+    <div class="container d-flex flex-column">
 
-  {% for basket in basket_list %} 
-    {% include "workspace/basket_result.html" %} 
-  {% endfor %} 
+      <h1 class="mb-1" >Baskets</h1>
+      <p>
+          <a class="btn btn-success" href="{% url 'workspace:basket_new' %}">Create basket</a>
+      </p>
 
-{% endblock content %} 
+      {% for basket in basket_list %}
+          <div class="list-group-item d-flex">
+            <div class="float-left mr-auto">
+              <b><a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">{{ basket.title }}</a></b>
+              <p>[basket: {{ basket.name }}]</p>
+              <p>{{ basket }}</p>
+            </div>
+
+            <a type="button" href="{% url 'workspace:basket_delete' basket_id=basket.id %}"
+              onclick="return confirm('Are you sure you want to delete basket {{ basket.name }}?')"
+              class="btn btn-default mb-auto float-right">
+              <span class="fas fa-trash"></span>
+            </a>
+          </div>
+
+      {% endfor %}
+    </div>
+
+{% endblock content %}

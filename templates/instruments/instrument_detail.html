@@ -1,18 +1,30 @@
-{% extends "base_study.html" %} 
+{% extends "base_study.html" %}
 
-{% block content %} 
+{% block content %}
 
-  <h1>{{ instrument.title }}[instrument]</h1>
+    <h1>{{ instrument.title }}[instrument]</h1>
 
-  <div class="row">
-    <div class="col-md-9">
-      {{ instrument.html_description | safe }}
-      <h2>Questions</h2>
-      {% include "questions/question_table.html" %} 
+    <div class="row">
+        <div class="col-md-9">
+            {{ instrument.html_description | safe }}
+            <h2>Questions</h2>
+            {% include "questions/question_table.html" %}
+        </div>
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-header"><b>Instrument info</b>
+                </div>
+                <div class="card-body">
+                    <p><b>Name:</b>
+                        {{ instrument.name }}
+                    </p>
+                    <p><b>Label:</b>
+                        {{ instrument.label }}
+                    </p>
+                    {% include "publications/attachments_partial.html" with attachments=instrument.attachments %}
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="col-md-3">
-      {% include "instruments/instrument_info.html" %} 
-    </div>
-  </div>
 
-{% endblock content %} 
+{% endblock content %}

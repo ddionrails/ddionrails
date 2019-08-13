@@ -1,15 +1,15 @@
 <div class="container">
     <button type="button" class="navbar-toggler collapsed" data-toggle="collapse"
-    data-target="#navbar" aria-expanded="false" aria-controls="navbar"> <span class="sr-only">Toggle navigation</span>
-&#x2630;</button> <a class="navbar-brand"
-    href="/workspace/baskets/{{ basket.pk }}#">
-
-      {{ basket.title }}
-
+            data-target="#navbar" aria-expanded="false" aria-controls="navbar"><span
+            class="sr-only">Toggle navigation</span>
+        &#x2630;
+    </button>
+    <a class="navbar-brand"
+       href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
+        {{ basket.title }}
     </a>
     <div id="navbar" class="collapse navbar-collapse">
         <ul class="nav navbar-nav"></ul>
         <p class="navbar-text ml-auto"></p>
     </div>
-    <!--/.nav-collapse -->
 </div>

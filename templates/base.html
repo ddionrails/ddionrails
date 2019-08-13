@@ -3,64 +3,65 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>
-        {% block title %}paneldata.org
-        {% endblock title %}
-    </title>
-    <!-- Webpack bundle: "index" CSS -->
-    {% render_bundle 'index' 'css' %}
-    {% block styles %}
-    {% endblock styles %}
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>
+            {% block title %}paneldata.org
+            {% endblock title %}
+        </title>
+        <!-- Webpack bundle: "index" CSS -->
+        {% render_bundle 'index' 'css' %}
+        {% block styles %}
+        {% endblock styles %}
+    </head>
 
-<body>
+    <body>
     {% block header %}
     {% endblock header %}
     <nav id="paneldata-navbar" id="nav-container">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent">
             <ul class="navbar-nav container-fluid">
                 <li class="nav-item">
-                    <a type="button" class="btn" href="/">paneldata.org</a>
+                    <a type="button" class="btn" href="{% url 'home' %}">paneldata.org</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
+                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true"
+                       aria-expanded="false">
                         Studies
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% for study in studies %}
-                        <a class="dropdown-item" href="/study/{{ study.id }}">{{ study.title }}</a>
+                            <a class="dropdown-item" href="{{ study.get_absolute_url }}">{{ study.title }}</a>
                         {% endfor %}
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a type="button" class="btn" href="/search/">Search</a>
+                    <a type="button" class="btn" href="{% url 'search' %}">Search</a>
                 </li>
 
             </ul>
             <ul class="navbar-nav container-fluid justify-content-end">
                 {% if user.is_authenticated %}
-                <li class="nav-item text-nowrap">
-                    <a type="button" class="btn" href="/workspace/baskets/">My baskets</a>
-                </li>
-                <li class="nav-item text-nowrap">
-                    <a type="button" class="btn" href="/workspace/account/">My account</a>
-                </li>
-                <li class="nav-item">
-                    <a type="button" class="btn" href="/workspace/logout/">Logout</a>
-                </li>
+                    <li class="nav-item text-nowrap">
+                        <a type="button" class="btn" href="{% url 'workspace:basket_list' %}">My baskets</a>
+                    </li>
+                    <li class="nav-item text-nowrap">
+                        <a type="button" class="btn" href="{% url 'workspace:account_overview' %}">My account</a>
+                    </li>
+                    <li class="nav-item">
+                        <a type="button" class="btn" href="{% url 'workspace:logout' %}">Logout</a>
+                    </li>
                 {% else %}
-                <li class="nav-item">
-                    <a type="button" class="btn" href="/workspace/login/?next={% firstof request.path '/' %}">Register / log in</a>
-                </li>
+                    <li class="nav-item">
+                        <a type="button" class="btn" href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">Register / log in</a>
+                    </li>
                 {% endif %}
             </ul>
         </div>
@@ -70,19 +71,19 @@
     </nav>
     <!-- /.container -->
     <div class="flex-column d-flex px-5 justify-content-center" id="main-container">
-        {% block content%}
+        {% block content %}
         {% endblock content %}
     </div>
     <!-- /.container -->
     <div class="container container-white" id="foot-container">
         <hr>
-        <p><strong><a href="/contact/">Contact / feedback</a></strong>
+        <p><strong><a href="{% url 'contact' %}">Contact / feedback</a></strong>
         </p>
-        <p class="text-muted"> <a href="http://ddionrails.org" target="_blank">DDI on Rails</a>, designed
+        <p class="text-muted"><a href="http://ddionrails.org" target="_blank">DDI on Rails</a>, designed
             and built by <a href="http://www.marcelhebing.de" target="_blank">Marcel Hebing</a>.
             <br> <a href="https://www.diw.de/en/soep/" target="_blank">German Socio-economic Panel</a>
-(SOEP)
-            | <a href="/imprint/">Imprint</a>
+            (SOEP)
+            | <a href="{% url 'imprint' %}">Imprint</a>
         </p>
     </div>
     {% include "tracker.html" %}
@@ -91,6 +92,6 @@
 
     {% block scripts %}
     {% endblock scripts %}
-</body>
+    </body>
 
 </html>
