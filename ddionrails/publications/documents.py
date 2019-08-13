@@ -36,7 +36,7 @@ class PublicationDocument(Document):
     # facets
     sub_type = fields.KeywordField()
     study = fields.KeywordField()
-    year = fields.KeywordField()
+    year = fields.IntegerField()
 
     # prepare_FIELD will be executed while indexing FIELD
     @staticmethod

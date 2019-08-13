@@ -19,8 +19,8 @@
       <div class="facet-container col-lg-3 my-2 float-left">
         <!-- begin facets -->
         <study-facet :react="{ and: ['Search', 'Type', 'Year'] }" />
+        <publication-year-facet />
         <publication-type-facet :react="{ and: ['Search', 'Study', 'Year'] }" />
-        <publication-year-facet :react="{ and: ['Search', 'Study', 'Type'] }" />
         <!-- end facets -->
       </div>
       <div class="col-lg-8 m-0 p-0 float-right">
