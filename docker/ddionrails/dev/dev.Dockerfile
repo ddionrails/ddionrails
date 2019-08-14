@@ -26,26 +26,18 @@ RUN apt-get update \
         vim-tiny=2:8.0.0197-4+deb9u3 \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.* \
+    && npm install \
+    && npm run build \
+    && rm -rf ./node_modules/ \
     && rm -rf /var/lib/apt/lists/* 
 
-# install the latest version of pipenv
 # hadolint ignore=DL3013
 RUN pip install --upgrade pipenv
-RUN pipenv install --system --dev
+# It turned out to be easier to work with the dev dependencies in a venv
+RUN pipenv install --system
 RUN pipenv install --dev
 
-# hadolint ignore=DL3003
-RUN npm install \
-    && cd "${DOCKER_APP_DIRECTORY}"/node_modules/ddionrails-elasticsearch \
-    && npm install \
-    && ./node_modules/.bin/ng build --prod \
-    && cd "${DOCKER_APP_DIRECTORY}" \
-    && npm run build \
-    && rm -rf ./node_modules/
-
 WORKDIR ${DOCKER_APP_DIRECTORY}
-
-# Use webpack to bundle static files
 
 # Set up entrypoint
 COPY ./docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
