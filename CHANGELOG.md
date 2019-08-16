@@ -11,6 +11,16 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.0.1] - 2019-08-16
+
+### Fixed
+
+* Adjust variable_detail.html django template to Bootstrap 4.
+* Further separated dev and production setup to keep content of static/dist in production.
+ 
+  + Dockerfile and dev.Dockerfile use different entrypoint.sh.
+  + Dockerfile entrypoint no longer contains rebuilding section for npm packages.
+
 ## [4.0.0] - 2019-08-13
 
 ### Added<a id="4.0.0_added"></a>
@@ -219,8 +229,10 @@ Older versions are not not part of this Project.
 * Moved Project into Open Source and onto GitHub.:rocket:
 * Codestyle to work with flake8
 
-[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...HEAD
+[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...HEAD
+[4.0.1]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/ddionrails/ddionrails/compare/v3.3.0...v4.0.0
+llte
 [3.3.0]: https://github.com/ddionrails/ddionrails/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/ddionrails/ddionrails/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/ddionrails/ddionrails/compare/v3.0.1...v3.1.0
