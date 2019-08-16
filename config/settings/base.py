@@ -115,17 +115,17 @@ TEMPLATES = [
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("POSTGRES_DB", default=BASE_DIR.joinpath("db.sqlite3")),
+        "NAME": os.getenv("POSTGRES_DB", default=str(BASE_DIR.joinpath("db.sqlite3"))),
         "USER": os.getenv("POSTGRES_USER", default="user"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="password"),
         "HOST": os.getenv("POSTGRES_HOST", default="localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", default=5432),
+        "PORT": os.getenv("POSTGRES_PORT", default="5432"),
     }
 }
 
 # DJANGO RQ
 # ------------------------------------------------------------------------------
-RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 360}}
+RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 1000}}
 
 THUMBNAIL_PROCESSORS = (
     "easy_thumbnails.processors.colorspace",
@@ -203,7 +203,7 @@ APPEND_SLASH = True
 # Django Elasticsearch DSL
 # ------------------------------------------------------------------------------
 ELASTICSEARCH_HOST = os.getenv("ELASTICSEARCH_HOST", "localhost")
-ELASTICSEARCH_PORT = os.getenv("ELASTICSEARCH_PORT", 9200)
+ELASTICSEARCH_PORT = os.getenv("ELASTICSEARCH_PORT", "9200")
 # Prefix for index names.
 # Overwritten in testing settings to separate testings indices which get deleted a lot
 ELASTICSEARCH_DSL_INDEX_PREFIX = os.getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
