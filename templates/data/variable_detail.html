@@ -30,34 +30,40 @@
             <div>
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="active nav-item"><a href="#related_variables"
-                                                                       aria-controls="related_variables" role="tab"
-                                                                       data-toggle="tab" class="nav-link">
-
-                        Related variables
-
-                        <span class="badge">{{ variable.get_related_variables | length }}</span>
-
+                    <li role="presentation" class="nav-item">
+                        <a href="#related_variables"
+                        aria-controls="related_variables"
+                            data-toggle="tab"
+                            class="nav-link active"
+                        >
+                            Related variables
+                            <span class="badge badge-secondary">
+                                {{ variable.get_related_variables | length }}
+                            </span>
+                        </a>
+                    </li>
+                    <li role="presentation" class="nav-item">
+                        <a href="#origin_variables"
+                           aria-controls="origin_variables"
+                           data-toggle="tab"
+                           class="nav-link"
+                        >
+                            Input variables
+                            <span class="badge badge-secondary">
+                                {{ variable.origin_variables.count }}
+                            </span>
                     </a>
                     </li>
-                    <li role="presentation" class="nav-item"><a href="#origin_variables"
-                                                                aria-controls="origin_variables" role="tab"
-                                                                data-toggle="tab" class="nav-link">
-
-                        Input variables
-
-                        <span class="badge">{{ variable.origin_variables.count }}</span>
-
-                    </a>
-                    </li>
-                    <li role="presentation" class="nav-item"><a href="#target_variables"
-                                                                aria-controls="target_variables" role="tab"
-                                                                data-toggle="tab" class="nav-link">
-
-                        Output variables
-
-                        <span class="badge">{{ variable.target_variables.count }}</span>
-
+                    <li role="presentation" class="nav-item">
+                        <a href="#target_variables"
+                           aria-controls="target_variables"
+                           data-toggle="tab"
+                           class="nav-link"
+                        >
+                            Output variables
+                            <span class="badge badge-secondary">
+                                {{ variable.target_variables.count }}
+                            </span>
                     </a>
                     </li>
                 </ul>
