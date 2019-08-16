@@ -192,3 +192,8 @@ div.dataTables_paginate li.last a:after {
   background-color: rgb(151, 150, 150);
   border-color: rgb(184, 181, 181);
 }
+
+/* Stops facet checkbox from shrinking when facet text is long.*/
+.css-1x5fnvc + label::before {
+  min-width: 15px;
+}
