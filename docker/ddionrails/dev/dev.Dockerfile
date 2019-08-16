@@ -40,7 +40,7 @@ RUN pipenv install --dev
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
 # Set up entrypoint
-COPY ./docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+COPY ./docker/ddionrails/dev/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
 # Some dev creature comforts for bash work
 COPY ./docker/ddionrails/dev/dev.bashrc /root/.bashrc
