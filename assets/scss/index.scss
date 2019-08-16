@@ -26,11 +26,9 @@ body {
 }
 
 #paneldata-navbar {
-  @extend .navbar;
   @extend .fixed-top;
   @extend .navbar-light;
-  @extend .flex-column;
-  @extend .navbar-expand-md;
+  flex-direction: column;
   padding: 1em 1.5em 1em 2em !important;
   border-bottom: 1px solid black !important;
   background-color: #f8f9fa !important;
