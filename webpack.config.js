@@ -42,8 +42,9 @@ module.exports = {
     }),
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
-      "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX":
-        JSON.stringify(process.env.ELASTICSEARCH_DSL_INDEX_PREFIX),
+      "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
+          process.env.ELASTICSEARCH_DSL_INDEX_PREFIX,
+      ),
     }),
   ],
 
@@ -91,11 +92,11 @@ module.exports = {
       /* Loads style block in vue single file components */
       {
         test: /\.css$/,
-        use: [
-          "vue-style-loader",
-          "css-loader",
-          "sass-loader",
-        ],
+        use: ["vue-style-loader", "css-loader", "sass-loader"],
+      },
+      {
+        test: /\.ico$/,
+        loader: "file-loader?name=[name].[ext]",
       },
     ],
   },
