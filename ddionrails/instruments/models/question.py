@@ -32,7 +32,7 @@ class Question(ModelMixin, models.Model):
     ##############
     # attributes #
     ##############
-    id = models.UUIDField(  # pylint: disable=C0103
+    id = models.UUIDField(  # pylint: disable=invalid-name
         primary_key=True,
         default=uuid.uuid4,
         editable=True,
@@ -87,9 +87,10 @@ class Question(ModelMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+
+        self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
             self.instrument_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -158,6 +159,10 @@ class Question(ModelMixin, models.Model):
             return default
 
     def get_related_question_set(self, all_studies=False, by_study_and_period=False):
+        """
+        pylint: disable=fixme
+        TODO: instruments.models.question.get_related_question_set needs docstring
+        """
         concept_list = self.get_concepts()
         if all_studies:
             study_list = Study.objects.all()
@@ -203,6 +208,10 @@ class Question(ModelMixin, models.Model):
 
     @staticmethod
     def translate_item(item: Dict, language: str) -> None:
+        """
+        pylint: disable=fixme
+        TODO: instruments.models.question.translate_item needs documentation
+        """
         item["text"] = item.get("text_%s" % language, item.get("text", ""))
         item["instruction"] = item.get(
             "instruction_%s" % language, item.get("instruction", "")
@@ -215,6 +224,8 @@ class Question(ModelMixin, models.Model):
             of the Question's items for each translation language
         """
         results = {}
+        # pylint: disable=fixme
+        # TODO: instruments.models.question.translations add missing exception Type
         try:
             for language in self.translation_languages():
                 results[language] = self.item_array(language=language)
@@ -222,6 +233,11 @@ class Question(ModelMixin, models.Model):
             return {}
         return results
 
+    # pylint: disable=fixme
+    # TODO Refactor instruments.models.question.item array and associated
+    # BODY item_array method is used to create a data structure intended
+    # BODY for display purposes. This function is overly comlex and its the return
+    # BODY value still needs to be processed in the template.
     def item_array(self, language=None) -> List:
         """ Returns a list containing the items of this Question object """
         items = copy.deepcopy(self.items)
@@ -236,10 +252,8 @@ class Question(ModelMixin, models.Model):
         items = sorted(items, key=lambda x: int(x["sn"]))
         before = None
         for index, item in enumerate(items):
-            try:
-                current = item["answer_list"]
-            except:
-                current = None
+
+            current = item.get("answer_list", None)
             try:
                 after = items[index + 1]["answer_list"]
             except:
@@ -278,6 +292,10 @@ class Question(ModelMixin, models.Model):
     def comparison_string(
         self, to_string: bool = False, wrap: int = 50
     ) -> Union[str, List]:
+        """
+        pylint: disable=fixme
+        TODO: instruments.models.question.comparison_string needs docstring
+        """
         comparison_string_array = ["Question: %s" % self.title()]
         for item in self.items:
             comparison_string_array += [

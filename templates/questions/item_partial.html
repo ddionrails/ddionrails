@@ -20,12 +20,12 @@
         </div>
     {% endfor %}
     <p></p>
-    {% if item.scale != " cat" and item.scale != " txt" %}
+    {% if item.scale != "cat" and item.scale != "txt" %}
         <input type="text" class="form-control" disabled="disabled" placeholder="Response scale: {{ item.scale }}">
     {% endif %}
     <hr>
 {% endif %}
-{% if item.layout == " matrix_header" %}
+{% if item.layout == "matrix_header" %}
     <table class="table">
     <thead>
     <tr>
@@ -54,7 +54,7 @@
         </td>
     </tr>
 {% endif %}
-{% if item.layout == " matrix_element" %}
+{% if item.layout == "matrix_element" %}
     <tr>
         <th>
             {{ item.text }}
@@ -70,7 +70,7 @@
         </td>
     </tr>
 {% endif %}
-{% if item.layout == " matrix_footer" %}
+{% if item.layout == "matrix_footer" %}
     <tr>
         <th>
             {{ item.text }}
