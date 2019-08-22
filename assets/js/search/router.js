@@ -74,7 +74,7 @@ router.beforeEach((to, _from, next) => {
 
   // We don't want to go where we are already going.
   // This would cause an infinite regress.
-  if (to.fullPath != reroute) {
+  if (to.fullPath !== reroute) {
     next(reroute);
     return null;
   }
