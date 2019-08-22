@@ -62,26 +62,19 @@ const router = new Router({
   ],
 });
 
+/**
+ * beforeEach is implemented to retain query parameters between routes.
+ */
 router.beforeEach((to, _from, next) => {
-  const isEqual = require("lodash.isequal");
-  const clone = require("lodash.clone");
+  // window.location.search has spaces encoded using +
+  // to.fullPath has them encoded with %20.
+  // To avoid chaining decode encode, we just replace + with the proper
+  // encoding.
+  const reroute = to.path + window.location.search.replace(/\+/g, "%20");
 
-  const urlParams = new URLSearchParams(window.location.search);
-
-  const query = {};
-
-  // Save the current query and pass it to the next search
-  for (const key of urlParams.keys()) {
-    // eslint-disable-next-line security/detect-object-injection
-    query[key] = urlParams.get(key);
-  }
-
-  const reroute = clone(to);
-  reroute.query = query;
-
-  if (
-    !isEqual(to, reroute)
-  ) {
+  // We don't want to go where we are already going.
+  // This would cause an infinite regress.
+  if (to.fullPath !== reroute) {
     next(reroute);
     return null;
   }
