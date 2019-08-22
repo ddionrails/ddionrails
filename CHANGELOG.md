@@ -11,6 +11,25 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.0.2] - 2019-08-22
+
+### Added
+
+* Favicon and webpack setup.
+
+### Changed
+
+* Raised rqworker default Timeout.
+* Refactored Vue router.
+* Revised update section in home.html template.
+* Update dependencies.
+
+### Fixed
+
+* Creation of answer tables on question views works again.
+* Facet checkbox does no longer shrink when facet text gets to long.
+* Responsive mobile menu now collapses correctly. 
+
 ## [4.0.1] - 2019-08-16
 
 ### Fixed
@@ -229,7 +248,8 @@ Older versions are not not part of this Project.
 * Moved Project into Open Source and onto GitHub.:rocket:
 * Codestyle to work with flake8
 
-[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...HEAD
+[Unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.0.2...develop
+[4.0.2]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/ddionrails/ddionrails/compare/v3.3.0...v4.0.0
 llte
