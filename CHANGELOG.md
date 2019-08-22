@@ -28,6 +28,7 @@ Older versions are not not part of this Project.
 
 * Creation of answer tables on question views works again.
 * Facet checkbox does no longer shrink when facet text gets to long.
+* Hyperrefs at the end of the CHANGELOG.md.
 * Responsive mobile menu now collapses correctly. 
 
 ## [4.0.1] - 2019-08-16
@@ -252,7 +253,6 @@ Older versions are not not part of this Project.
 [4.0.2]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/ddionrails/ddionrails/compare/v3.3.0...v4.0.0
-llte
 [3.3.0]: https://github.com/ddionrails/ddionrails/compare/v3.2.0...v3.3.0
 [3.2.0]: https://github.com/ddionrails/ddionrails/compare/v3.1.0...v3.2.0
 [3.1.0]: https://github.com/ddionrails/ddionrails/compare/v3.0.1...v3.1.0
