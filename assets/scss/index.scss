@@ -12,6 +12,10 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 
 // General styling
 
+.hidden {
+  display: none;
+}
+
 // This padding seems to be big enough
 // so that the navbar does not overlap with the content
 body {

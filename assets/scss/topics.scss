@@ -4,56 +4,50 @@
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 */
 
-
 @import "~jquery.fancytree/dist/skin-bootstrap/ui.fancytree.css";
 @import "~spinkit/css/spinners/7-three-bounce.css";
 
-
 .filter-options {
-    visibility: hidden;
+  visibility: hidden;
 }
 
 span.fancytree-node:hover > span.filter-options {
-    visibility: visible;
-}
-
-.hidden {
-    display: none;
+  visibility: visible;
 }
 
 .search-bar {
-    margin-top: 20px;
-    margin-bottom: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 ul.fancytree-container {
-    border: none !important;
+  border: none !important;
 }
 
 .description {
-    display: block;
+  display: block;
 }
 
 span.fancytree-expander:hover {
-    color: steelblue !important;
+  color: steelblue !important;
 }
 
 .topic-list-wrapper {
-    margin-top: 20px;
-    display: flex;
+  margin-top: 20px;
+  display: flex;
 }
 
-.topic-list-content{
-    height: calc(100vh - 250px);
-    width: auto;
-    overflow-y: auto;
+.topic-list-content {
+  height: calc(100vh - 250px);
+  width: auto;
+  overflow-y: auto;
 }
 
 .flex {
-    display:flex;
+  display: flex;
 }
 
 html,
 body {
-    height: 100%;
+  height: 100%;
 }

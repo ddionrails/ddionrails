@@ -70,21 +70,45 @@
         {% block studynav %}
         {% endblock studynav %}
     </nav>
-    <!-- /.container -->
+
+    <!-- Main Content -->
     <div class="flex-column d-flex px-5 justify-content-center" id="main-container">
+
+        <!-- Nobody should use IE anymore -->
+        <div id="windowsWarning" class="hidden alert alert-danger" align="center">
+            <h1>Attention</h1>
+            <p>
+            You are using Internet Explorer.</br>
+            Content will likely not be displayed correctly.</br>
+            Please switch to a different Browser to use this site.
+            </p>
+        </div>
+        <!--[if IE]>
+        <div class="hidden alert alert-danger" align="center">
+            <h1>Attention</h1>
+            <p>
+            You are using Internet Explorer.</br>
+            Content will likely not be displayed correctly.</br>
+            Please switch to a different Browser to use this site.
+            </p>
+        </div>
+        <![endif]-->
+
         {% block content %}
         {% endblock content %}
     </div>
-    <!-- /.container -->
+    <div>
+    <!-- Page Footer -->
     <div class="container container-white" id="foot-container">
         <hr>
         <p><strong><a href="{% url 'contact' %}">Contact / feedback</a></strong>
         </p>
-        <p class="text-muted"><a href="http://ddionrails.org" target="_blank">DDI on Rails</a>, designed
-            and built by <a href="http://www.marcelhebing.de" target="_blank">Marcel Hebing</a>.
-            <br> <a href="https://www.diw.de/en/soep/" target="_blank">German Socio-economic Panel</a>
+        <p class="text-muted">
+            <a href="https://www.diw.de/en/soep/" target="_blank">
+                German Socio-economic Panel
+            </a>
             (SOEP)
-            | <a href="{% url 'imprint' %}">Imprint</a>
+            <a href="{% url 'imprint' %}">Imprint</a>
         </p>
     </div>
     {% include "tracker.html" %}
