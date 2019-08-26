@@ -18,3 +18,13 @@ window["jQuery"] = window["$"] = require("jquery");
 
 import {basketButton} from "./basket_button.js";
 window.basketButton = basketButton;
+
+// Unhide Warning when using Internet Explorer
+const userAgent = window.navigator.userAgent;
+const ieTen = userAgent.indexOf("MSIE");
+const ieEleven = userAgent.indexOf("Trident/");
+
+if (ieTen > 0 || ieEleven > 0) {
+  const warning = document.getElementById("windowsWarning");
+  warning.classList.remove("hidden");
+}

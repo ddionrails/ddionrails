@@ -3,7 +3,6 @@
 
 """ Functional test cases for browser interaction with the ddionrails project """
 
-
 import pytest
 
 pytestmark = [
@@ -13,19 +12,19 @@ pytestmark = [
 
 
 def test_get_contact_page_from_home(browser, live_server):
+    expected = "Contact / feedback"
     browser.visit(live_server.url)
     browser.find_link_by_text("Contact / feedback").first.click()
-    heading = browser.find_by_tag("h1").first
-    expected = "Contact / feedback"
-    assert expected == heading.text
+    headers = browser.find_by_tag("h1")
+    assert expected in (header.text for header in headers)
 
 
 def test_get_imprint_page_from_home(browser, live_server):
+    expected = "Imprint"
     browser.visit(live_server.url)
     browser.find_link_by_text("Imprint").first.click()
-    heading = browser.find_by_tag("h1").first
-    expected = "Imprint"
-    assert expected == heading.text
+    headers = browser.find_by_tag("h1")
+    assert expected in (header.text for header in headers)
 
 
 def test_get_login_page_from_home(browser, live_server):
@@ -48,16 +47,16 @@ def test_get_register_page_from_login(browser, login_url):
 
 
 def test_get_password_reset_page_from_login(browser, login_url):
+    expected = "Django administration"
     browser.visit(login_url)
     browser.find_link_by_partial_href("password_reset").first.click()
-    heading = browser.find_by_tag("h1").first
-    expected = "Django administration"
-    assert expected == heading.text
+    headers = browser.find_by_tag("h1")
+    assert expected in (header.text for header in headers)
     assert "Forgotten your password?" in browser.html
 
 
 def test_study_link_from_home_page_list(browser, live_server, study):
     browser.visit(live_server.url)
-    browser.find_by_xpath('//*[@id="main-container"]/div[2]/li[1]/b/a').first.click()
+    browser.find_by_css("#study_list:nth-child(1)>b>a").click()
     assert study.get_absolute_url() in browser.url
     assert study.name in browser.html
