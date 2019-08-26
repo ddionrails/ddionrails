@@ -57,6 +57,6 @@ def test_get_password_reset_page_from_login(browser, login_url):
 
 def test_study_link_from_home_page_list(browser, live_server, study):
     browser.visit(live_server.url)
-    browser.find_by_css_selector("#study_list:nth-child(1)>b>a").first_click()
+    browser.find_element_by_css_selector("#study_list:nth-child(1)>b>a").click()
     assert study.get_absolute_url() in browser.url
     assert study.name in browser.html
