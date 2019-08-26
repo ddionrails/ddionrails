@@ -3,7 +3,6 @@
 
 """ Functional test cases for browser interaction with the ddionrails project """
 
-
 import pytest
 
 pytestmark = [
@@ -58,7 +57,6 @@ def test_get_password_reset_page_from_login(browser, login_url):
 
 def test_study_link_from_home_page_list(browser, live_server, study):
     browser.visit(live_server.url)
-    _study_list = browser.find_by_id("study_list")
-    _study_page = _study_list.find_element_by_link_text(study.label).first_click()
+    browser.find_by_css_selector("#study_list:nth-child(1)>b>a").first_click()
     assert study.get_absolute_url() in browser.url
     assert study.name in browser.html
