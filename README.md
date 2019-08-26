@@ -21,15 +21,17 @@ the specific characteristics of a longitudinal study, and is easy to use.
 
 ## Table of contents
 
-* [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
-  * [Installing](#installing)
-    * [Development Environment](#development-environment)
-    * [Production Environment](#production-environment)
-  * [Importing Data](#importing-data)
-* [Running the tests](#running-the-tests)
-* [Versioning](#versioning)
-* [GNU AGPL-3.0](#gnu-agpl-30)
+- [DDI on Rails](#ddi-on-rails)
+  - [Table of contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installing](#installing)
+      - [Development Environment](#development-environment)
+      - [Production Environment](#production-environment)
+    - [Importing Data](#importing-data)
+  - [Running the tests](#running-the-tests)
+  - [Versioning](#versioning)
+  - [GNU AGPL-3.0](#gnu-agpl-30)
 
 ## Getting Started
 
@@ -42,7 +44,7 @@ Follow the installation instructions for Docker and Docker-Compose:
 
 To verify the installation was successful, you can type:
 
-``` bash
+```bash
 $ docker --version
 Docker version 18.09.5, ...
 $ docker-compose --version
@@ -55,23 +57,48 @@ docker-compose version 1.24.0, ...
 
 Clone the repository
 
-``` bash
+```bash
 git clone https://github.com/ddionrails/ddionrails.git
 cd ddionrails/
 ```
 
-Build the Docker images and start containers with development setings
+If you want to save yourself some typing you can create a symbolic link
+docker-compose.override.yml
 
-``` bash
-docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" build
+```bash
+ln -s  docker-compose-remote-dev.yml docker-compose.override.yml
 ```
 
-:warning: __Warning__ Do not use this in production the settings in
-`docker-compose-dev.yml` are not secure.
+Now you can start your services with
+
+```bash
+docker-compose up -d
+```
+
+Without the link you would need to specify all docker-compose files
+
+```bash
+docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
+```
+
+If you are using Visual Studio Code with the
+[remote development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+plugin, you will just need to open the project.
+VSCode will prompt you to reopen it in the
+development container.
+When confirmed, VSCode will set up all services for development through docker-compose.
+
+With the basic setup the development container will be available at `localhost`.
+
+:warning: **Warning** Do not use this in production the settings used by
+the dev compose files are not secure.
+This is also the reason why there is no docker-compose.override.yml
+provided with the repository. These settings should not accidentally find their
+way into production.
 
 #### Production Environment
 
-__Before__ starting the services via docker-compose:
+**Before** starting the services via docker-compose:
 
 - Customize the environment files in docker/environments/
   and rename them to remove example from their name.
@@ -85,7 +112,7 @@ __Before__ starting the services via docker-compose:
 
 - Uncomment the environment blocks in the
   docker-compose file to load the environment files.
-- Or create a docker-compose.override.yml file containing
+- Or create a docker-compose.override.yml file that sets
   the environment files.
 - Customize the docker/nginx/nginx.example.conf and rename it to nginx.conf.
 
@@ -93,7 +120,7 @@ __Before__ starting the services via docker-compose:
   - For ssl change your docker-compose.yml or docker-compose.override.yml
     to mount cert and key at the right location.
 
-    - If you use a ca-chain file add this file to the end of your crt file.
+    - If you use a ca-chain file, add this file to the end of your crt file.
       This file can then be used by nginx as certificate.
 
 - Optional: Set up a backup routine for the database.
@@ -105,12 +132,13 @@ containing a couple of .csv and .json files (e.g. <https://github.com/ddionrails
 
 You need to add your study to the system by invoking the `add` command:
 
-``` bash
+```bash
 docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
 ```
 
 You clone or pull the repository with `update`:
-``` bash
+
+```bash
 docker-compose exec web python manage.py update soep-test
 ```
 
@@ -119,7 +147,8 @@ a Redis queue (this can take some time). The last job includes indexing all
 metadata into the Elasticsearch indices.
 
 Summary:
-``` bash
+
+```bash
 docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
 docker-compose exec web python manage.py update
 ```
@@ -129,7 +158,7 @@ docker-compose exec web python manage.py update
 To run the unit and integration tests you can call `paver test`.
 This does not run functional tests with Selenium.
 
-``` bash
+```bash
 cd ddionrails/
 docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
 docker-compose exec web paver test
@@ -137,8 +166,11 @@ docker-compose exec web paver test
 
 ## Versioning
 
-For the versions available, see the
-[tags on this repository](https://github.com/ddionrails/ddionrails/tags).
+For the versions available, either look at the
+[tags of this repository](https://github.com/ddionrails/ddionrails/tags)
+or at the [changelog](CHANGELOG.md).
+
+This project adheres to [Semantic Versioning 2.0.0](https://semver.org/).
 
 ## GNU AGPL-3.0
 
