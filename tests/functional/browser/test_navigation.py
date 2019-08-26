@@ -21,11 +21,11 @@ def test_get_contact_page_from_home(browser, live_server):
 
 
 def test_get_imprint_page_from_home(browser, live_server):
+    expected = "Imprint"
     browser.visit(live_server.url)
     browser.find_link_by_text("Imprint").first.click()
-    heading = browser.find_by_tag("h1").first
-    expected = "Imprint"
-    assert expected == heading.text
+    headers = browser.find_by_tag("h1")
+    assert expected in (header.text for header in headers)
 
 
 def test_get_login_page_from_home(browser, live_server):
@@ -48,11 +48,11 @@ def test_get_register_page_from_login(browser, login_url):
 
 
 def test_get_password_reset_page_from_login(browser, login_url):
+    expected = "Django administration"
     browser.visit(login_url)
     browser.find_link_by_partial_href("password_reset").first.click()
-    heading = browser.find_by_tag("h1").first
-    expected = "Django administration"
-    assert expected == heading.text
+    headers = browser.find_by_tag("h1")
+    assert expected in (header.text for header in headers)
     assert "Forgotten your password?" in browser.html
 
 
