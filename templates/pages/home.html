@@ -20,7 +20,7 @@
 
     <div class="list-group">
         {% for study in study_list %}
-            <li class="list-group-item">
+            <li class="list-group-item" id="study_list">
                 <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
             </li>
         {% endfor %}
