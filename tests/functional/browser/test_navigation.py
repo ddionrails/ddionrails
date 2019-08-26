@@ -17,7 +17,7 @@ def test_get_contact_page_from_home(browser, live_server):
     browser.visit(live_server.url)
     browser.find_link_by_text("Contact / feedback").first.click()
     headers = browser.find_by_tag("h1")
-    assert expected in headers
+    assert expected in (header.text for header in headers)
 
 
 def test_get_imprint_page_from_home(browser, live_server):
