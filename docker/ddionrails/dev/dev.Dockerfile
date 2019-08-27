@@ -34,8 +34,7 @@ RUN apt-get update \
 # hadolint ignore=DL3013
 RUN pip install --upgrade pipenv
 # It turned out to be easier to work with the dev dependencies in a venv
-RUN pipenv install --system
-RUN pipenv install --dev
+RUN pipenv install --dev --system
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 

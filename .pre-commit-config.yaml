@@ -1,46 +1,53 @@
+default_language_version:
+  python: python3.7
 repos:
--   repo: local
+  - repo: local
     hooks:
-    -   id: unittest
-        name: run non functional tests with pytest
+      - id: isort
+        name: sort python imports
+        entry: isort --settings-path setup.cfg
+        language: system
+        files: '.*\.py'
+        pass_filenames: true
+      - id: black
+        name: black (format)
+        entry: black --config pyproject.toml
+        language: system
+        files: '.*\.py'
+        pass_filenames: true
+      - id: unittest
+        name: run unittests
         entry: bash -c "DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'"
         language: system
         files: '.*\.py'
         pass_filenames: false
-    -   id: pylint
-        name: run pylint
-        entry: pylint --rcfile=setup.cfg
-        language: system
-        files: '.*.py'
-        pass_filenames: true
-    -   id: js-format
-        name: run eslint --fix
+      - id: eslint--fix
+        name: format javascript (eslint --fix)
         entry: npm run format --silent
         language: system
-        files: '.*.js$'
+        files: '.*\.js$'
         pass_filenames: true
-    -   id: eslint
-        name: run eslint
+      - id: eslint
+        name: lint javascript (eslint)
         entry: npm run lint --silent
         language: system
-        files: '.*.js$'
+        files: '.*\.js$'
         pass_filenames: true
--   repo: https://github.com/asottile/seed-isort-config
-    rev: 44bc4d3364b054fe7ec1e0a40379b41e44774c46
-    hooks:
-    -   id: seed-isort-config
--   repo: https://github.com/pre-commit/mirrors-isort
-    rev: dc9ed979dce682545bca4023312d028662744eab
-    hooks:
-    - id: isort
-      args: ["--settings-path", "setup.cfg"]
--   repo: https://github.com/ambv/black
-    rev: stable
-    hooks:
-    - id: black
-      language_version: python3.7
-      args: ["--config", "pyproject.toml"] 
--   repo: https://github.com/PyCQA/bandit 
-    rev: '1.6.0'
-    hooks:
-    - id: bandit
+      - id: pylint
+        name: lint python code (pylint)
+        entry: pylint --rcfile=setup.cfg
+        language: system
+        files: '.*\.py'
+        pass_filenames: true
+      - id: bandit
+        name: check python security (bandit)
+        entry: bandit
+        language: system
+        files: '.*\.py'
+        pass_filenames: true
+      - id: cspell-commit
+        name: Spellcheck commit message before push
+        stages: [push]
+        entry: bash -c "git log -1 --pretty=%B | npm run cspell -- -c .vscode/cSpell.json stdin"
+        language: system
+        pass_filenames: false
