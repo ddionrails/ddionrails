@@ -25,6 +25,7 @@
     "vue-router": "^3.1.2"
   },
   "devDependencies": {
+    "cspell": "^4.0.28",
     "css-loader": "^3.2.0",
     "eslint": "^6.2.2",
     "eslint-config-google": "^0.13.0",
@@ -45,10 +46,11 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "build_dev": "webpack --mode=development --config webpack.config.js --watch --debug --devtool source-map",
+    "build_dev": "webpack --mode=development --config webpack.config.js --debug --devtool source-map",
     "webpack_watch": "webpack --mode=development --config webpack.config.js --watch --debug --devtool source-map",
     "lint": "eslint",
-    "format": "eslint --fix"
+    "format": "eslint --fix",
+    "cspell": "cspell"
   },
   "renovate": {
     "baseBranches": [
