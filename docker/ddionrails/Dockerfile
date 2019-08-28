@@ -20,12 +20,14 @@ RUN apk add --no-cache \
         nodejs-npm \
         postgresql-dev \
         zlib-dev \
-    && pip install --upgrade pipenv \
-    && pipenv install --system --ignore-pipfile \
+    && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
+    && pipfile2req Pipfile.lock > Requirements.txt \
+    && pip install --no-cache-dir -r Requirements.txt \
+    && pip uninstall -y pipfile-requirements \
+    && rm Requirements.txt \
     && npm install \
     && npm run build \
     && apk del nodejs nodejs-npm \
-    && pip uninstall -y pipenv \
     && rm -rf /var/cache/apk/* \
     && rm -rf node_modules 
 
