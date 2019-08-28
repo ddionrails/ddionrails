@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "30974626a051d3b9790d1ddedec969b37048df34ed8656a7270108e305830202"
+            "sha256": "fd0aff2059f6766d2784042acc192ef1b09703795a4a0ae637afdf7fb46f2d77"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -68,8 +68,12 @@
             "version": "==1.7.2"
         },
         "django-elasticsearch-dsl": {
-            "git": "https://github.com/sabricot/django-elasticsearch-dsl.git",
-            "ref": "8b8dc5bbbc9715742c6cea61c891e96ae07e8f64"
+            "hashes": [
+                "sha256:7ef03bfc1a2162c0626c8059a16dbfcbb1d69dfc4680ea96a0747f7c6eb6ae3c",
+                "sha256:9285d0ff8ad266a9fed60b570f683de98d2a1fdffe2ea24e1efe3325a13586b8"
+            ],
+            "index": "pypi",
+            "version": "==7.0.0"
         },
         "django-extensions": {
             "hashes": [
@@ -162,7 +166,8 @@
         },
         "et-xmlfile": {
             "hashes": [
-                "sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b"
+                "sha256:614d9722d572f6246302c4491846d2c393c199cfa4edc9af593437691683335b",
+                "sha256:de2b67c48d8e2b5f96f00cf1ea86b553539f3024991ba8b993306443c721a609"
             ],
             "version": "==1.0.1"
         },
@@ -253,6 +258,7 @@
                 "sha256:ef6be704ae2bc8ad0ebc5cb850ee9139493b0fc4e81abcc240fb392a63ebc808",
                 "sha256:f8dc19d92896558f9c4317ee365729ead9d7bbcf2052a9a19a3ef17abbb8ac5b"
             ],
+            "markers": "python_version >= '2.7'",
             "version": "==6.1.0"
         },
         "psycopg2-binary": {
@@ -635,14 +641,6 @@
             ],
             "markers": "python_version < '3.8'",
             "version": "==0.19"
-        },
-        "importlib-resources": {
-            "hashes": [
-                "sha256:6e2783b2538bd5a14678284a3962b0660c715e5a0f10243fd5e00a4b5974f50b",
-                "sha256:d3279fd0f6f847cced9f7acc19bd3e5df54d34f93a2e7bb5f238f81545787078"
-            ],
-            "markers": "python_version < '3.7'",
-            "version": "==1.0.2"
         },
         "isort": {
             "hashes": [
