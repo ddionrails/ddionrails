@@ -9,10 +9,6 @@ name = "pypi"
 
 # Temporarily pinned
 # ------------------------------------------------------------------------------
-# Updating to redis 3.30 and rq 1.1.0 breaks the fakeredis connection
-# => AttributeError: 'FakeConnection' object has no attribute 'health_check_interval'
-redis = "==3.2.1"
-rq == "==1.0"
 
 # Django
 # ------------------------------------------------------------------------------
