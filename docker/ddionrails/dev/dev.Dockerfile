@@ -24,6 +24,10 @@ RUN apt-get update \
         openssh-client=1:7.4p1-10+deb9u6 \
         python-psycopg2=2.6.2-1 \
         vim-tiny=2:8.0.0197-4+deb9u3 \
+    && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
+    && pipfile2req --dev Pipfile.lock > Requirements.txt \
+    && pip install --no-cache-dir -r Requirements.txt \
+    && rm Requirements.txt \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.* \
     && npm install \
@@ -34,7 +38,6 @@ RUN apt-get update \
 # hadolint ignore=DL3013
 RUN pip install --upgrade pipenv
 # It turned out to be easier to work with the dev dependencies in a venv
-RUN pipenv install --dev --system
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
