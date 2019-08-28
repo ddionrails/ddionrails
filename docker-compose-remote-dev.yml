@@ -1,9 +1,9 @@
-version: '2.4'
+version: "2.4"
 
 services:
   web:
     image: paneldata/ddionrails:latest-dev
-    command: > 
+    command: >
       bash -c "
         pipenv install --system --dev &
         npm run build &
@@ -14,14 +14,13 @@ services:
           test $$? -gt 128 && break;
         done"
     entrypoint: ./docker/ddionrails/entrypoint.sh
-    env_file: 
+    env_file:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
     pids_limit: -1
     volumes:
       - ./:/usr/src/app/
-      - static:/usr/src/app/static
       - media:/var/django/media
       - ~/.ssh/docker-dev/:/root/.ssh
 
@@ -29,14 +28,14 @@ services:
     env_file:
       - docker/environments/database.env.example
 
-# Uncomment these lines, if you want to use Kibana
-#  kibana:
-#    image: kibana:4.6.0
-#    ports:
-#      - 5601:5601
-#    networks:
-#      - ddi_net
+  # Uncomment these lines, if you want to use Kibana
+  #  kibana:
+  #    image: kibana:4.6.0
+  #    ports:
+  #      - 5601:5601
+  #    networks:
+  #      - ddi_net
 
   nginx:
-    volumes: 
+    volumes:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
