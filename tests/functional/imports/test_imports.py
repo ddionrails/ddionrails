@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use
 
-import time
 from pathlib import Path
 
 import pytest
 from django.forms.models import model_to_dict
-from elasticsearch import Elasticsearch
-from elasticsearch_dsl import Search
 
 from ddionrails.concepts.documents import ConceptDocument
 from ddionrails.concepts.models import (
@@ -192,7 +189,7 @@ class TestStudyImportManager:
         assert period == instrument.period
 
     def test_import_questions(
-        self, study_import_manager, elasticsearch_client, instrument
+        self, study_import_manager, elasticsearch_indices, instrument
     ):
         assert 1 == Instrument.objects.count()
         assert 0 == Question.objects.count()
