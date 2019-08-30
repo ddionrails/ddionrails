@@ -25,7 +25,8 @@ RUN apt-get update \
         python-psycopg2=2.6.2-1 \
         vim-tiny=2:8.0.0197-4+deb9u3 \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
-    && pipfile2req --dev Pipfile.lock > Requirements.txt \
+    && pipfile2req Pipfile.lock > Requirements.txt \
+    && pipfile2req --dev Pipfile.lock >> Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \

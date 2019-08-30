@@ -1,5 +1,6 @@
 dist: xenial
 sudo: required
+language: python
 services:
   - docker
 env:
@@ -15,7 +16,9 @@ before_script:
   - docker images
   - docker ps -a
   - docker-compose exec web pip install pipfile-requirements==0.1.0.post0
-  - docker-compose exec web bash -c "pipfile2req -d Pipfile.lock > Requirements.txt"
+  - >-
+    docker-compose exec web bash -c 
+    '{ pipfile2req Pipfile.lock & pipfile2req -d Pipfile.lock; } > Requirements.txt'
   - docker-compose exec web pip install -r Requirements.txt
   - docker-compose exec web npm install
   - docker-compose exec web npm run build
