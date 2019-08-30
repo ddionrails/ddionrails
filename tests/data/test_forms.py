@@ -6,32 +6,9 @@
 import pytest
 from django.core.exceptions import ValidationError
 
-from ddionrails.data.forms import DatasetForm, VariableForm
+from ddionrails.data.forms import VariableForm
 
 pytestmark = [pytest.mark.data, pytest.mark.forms]  # pylint: disable=invalid-name
-
-
-class TestDatasetForm:
-    def test_form_with_invalid_data(self, invalid_dataset_data):
-        form = DatasetForm(data=invalid_dataset_data)
-        assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
-
-    @pytest.mark.django_db
-    def test_form_with_valid_data(self, valid_dataset_data):
-        form = DatasetForm(data=valid_dataset_data)
-        assert form.is_valid() is True
-        dataset = form.save()
-        assert dataset.name == valid_dataset_data["dataset_name"]
-
-    @pytest.mark.django_db
-    def test_form_with_valid_data_uppercase(self, valid_dataset_data):
-        valid_dataset_data["dataset_name"] = "SOME-DATASET"
-        form = DatasetForm(data=valid_dataset_data)
-        assert form.is_valid() is True
-        dataset = form.save()
-        assert dataset.name == "SOME-DATASET"
 
 
 class TestVariableForm:
