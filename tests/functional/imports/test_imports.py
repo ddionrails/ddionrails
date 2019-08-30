@@ -202,7 +202,7 @@ class TestStudyImportManager:
         hit = response.hits[0]
         assert instrument.study.title() == hit.study
         assert "some-question" == hit.name
-        assert "some-instrument" == hit.instrument
+        assert instrument.title() == hit.instrument
         QuestionDocument.search().query("match_all").delete()
 
     def test_import_json_datasets(
