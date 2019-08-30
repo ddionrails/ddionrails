@@ -6,10 +6,8 @@ import json
 import logging
 from collections import OrderedDict
 
-from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 
-from .forms import DatasetForm, VariableForm
 from .models import Dataset, Variable
 
 logging.config.fileConfig("logging.conf")
