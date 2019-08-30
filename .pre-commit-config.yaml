@@ -17,7 +17,7 @@ repos:
         pass_filenames: true
       - id: unittest
         name: run unittests
-        entry: bash -c "DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'"
+        entry: bash -c "DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v --cov-report=  -m 'not functional'"
         language: system
         files: '.*\.py'
         pass_filenames: false

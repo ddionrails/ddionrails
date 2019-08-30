@@ -23,6 +23,10 @@ django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
 
+# To extend Django functionality
+# ------------------------------------------------------------------------------
+yattag = "*"
+
 # PostgreSQL
 # ------------------------------------------------------------------------------
 psycopg2-binary = "*"
