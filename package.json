@@ -27,7 +27,7 @@
   "devDependencies": {
     "cspell": "^4.0.28",
     "css-loader": "^3.2.0",
-    "eslint": "^6.2.2",
+    "eslint": "^6.3.0",
     "eslint-config-google": "^0.13.0",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-vue": "^5.2.3",
