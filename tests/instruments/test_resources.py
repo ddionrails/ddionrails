@@ -174,28 +174,6 @@ class TestConceptQuestionResource:
         assert concept == concept_question.concept
         assert question == concept_question.question
 
-    @pytest.mark.skip
-    def test_resource_import_creates_concept(
-        self, question, concept_question_tablib_dataset
-    ):
-        assert 0 == ConceptQuestion.objects.count()
-        assert 0 == Concept.objects.count()
-        assert 1 == Question.objects.count()
-        result = ConceptQuestionResource().import_data(concept_question_tablib_dataset)
-        assert False is result.has_errors()
-        assert 1 == ConceptQuestion.objects.count()
-        assert 1 == Concept.objects.count()
-
-        # test that a concept was created
-        concept_name = concept_question_tablib_dataset["concept_name"][0]
-        concept = Concept.objects.first()
-        assert concept_name == concept.name
-
-        concept_question = ConceptQuestion.objects.first()
-        # test relations
-        assert concept == concept_question.concept
-        assert question == concept_question.question
-
 
 class TestQuestionVariableResource:
     def test_resource_import_succeeds(
