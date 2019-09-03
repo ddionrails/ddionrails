@@ -18,7 +18,11 @@ License:
 from import_export.fields import Field
 from import_export.resources import ModelResource
 
-from ddionrails.imports.helpers import add_id_to_dataset, rename_dataset_headers
+from ddionrails.imports.helpers import (
+    add_concept_id_to_dataset,
+    add_id_to_dataset,
+    rename_dataset_headers,
+)
 
 from .models import Dataset, Transformation, Variable
 
@@ -109,7 +113,7 @@ class VariableResource(ModelResource):
         dataset.append_col(list(range(len(dataset))), header="sort_id")
 
         # add dataset_ids and concept_ids to dataset
-        add_id_to_dataset(dataset, "concept")
+        add_concept_id_to_dataset(dataset, "concept")
         add_id_to_dataset(dataset, "dataset", "study_id")
 
     class Meta:  # pylint: disable=missing-docstring

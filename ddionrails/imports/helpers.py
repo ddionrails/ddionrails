@@ -27,8 +27,7 @@ def hash_with_base_uuid(name: str, cache: bool = True):
     """ Compute the model instance's UUID from its name and the base UUID """
     if cache:
         return _hash_with_base_uuid(name)
-    else:
-        return uuid.uuid5(settings.BASE_UUID, name)
+    return uuid.uuid5(settings.BASE_UUID, name)
 
 
 @lru_cache(maxsize=1000)
@@ -41,8 +40,7 @@ def hash_with_namespace_uuid(namespace: uuid.UUID, name: str, cache: bool = True
     """ Compute the model instance's UUID from its name and a related object's UUID """
     if cache:
         return _hash_with_namespace_uuid(namespace, name)
-    else:
-        return uuid.uuid5(namespace, name)
+    return uuid.uuid5(namespace, name)
 
 
 @lru_cache(maxsize=1000)
@@ -64,7 +62,8 @@ def add_id_to_dataset(
 ) -> None:
     """ Add an ID column into the given dataset
 
-        Computes an UUID using the contents of the given dataset's column (i.e. column name)
+        Computes an UUID using the contents of the given dataset's column
+        (i.e. column name)
         and optionally the contents of the namespace_column
     """
 
@@ -77,14 +76,8 @@ def add_id_to_dataset(
 
     for index, name in enumerate(dataset[column_name]):
         if name:
-            if namespace_column:
-                namespace = dataset[namespace_column][index]
-                computed_id = hash_with_namespace_uuid(namespace, name, cache=True)
-            else:
-                # TODO: Can this be done differently?
-                if column_name == "concept":
-                    name = "concept:" + name
-                computed_id = hash_with_base_uuid(name, cache=True)
+            namespace = dataset[namespace_column][index]
+            computed_id = hash_with_namespace_uuid(namespace, name, cache=True)
         # if column cell is empty do not compute id -> foreign key is None / Null
         else:
             computed_id = None
@@ -92,3 +85,20 @@ def add_id_to_dataset(
 
     # add id column to dataset
     dataset.append_col(id_list, header=id_column_name)
+
+
+def add_concept_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None:
+    """ Add Concept ID column into the given dataset.
+
+        Like add_id_to_dataset but concepts are hashed with the base UUID.
+        Since Studies are also hashed with the base UUID, concepts need
+        to be differentiate if we want to guarantee unique UUIDs.
+        This is done by concatenating their name with the string "concept:".
+    """
+    id_column = []
+    id_column_name = f"{column_name}_id"
+    _prefix = "concept:{}"
+    for name in dataset[column_name]:
+        id_column.append(hash_with_base_uuid(_prefix.format(name)))
+
+    dataset.append_col(id_column, header=id_column_name)

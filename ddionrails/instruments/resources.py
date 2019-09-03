@@ -18,7 +18,11 @@ License:
 from import_export.fields import Field
 from import_export.resources import ModelResource
 
-from ddionrails.imports.helpers import add_id_to_dataset, rename_dataset_headers
+from ddionrails.imports.helpers import (
+    add_concept_id_to_dataset,
+    add_id_to_dataset,
+    rename_dataset_headers,
+)
 
 from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
 
@@ -100,7 +104,7 @@ class ConceptQuestionResource(ModelResource):
         add_id_to_dataset(dataset, "study")
 
         # add ids to dataset
-        add_id_to_dataset(dataset, "concept")
+        add_concept_id_to_dataset(dataset, "concept")
         add_id_to_dataset(dataset, "instrument", "study_id")
         add_id_to_dataset(dataset, "question", "instrument_id")
 
