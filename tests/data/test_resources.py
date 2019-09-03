@@ -159,52 +159,6 @@ class TestDatasetResource:
         assert analysis_unit == dataset.analysis_unit
         # assert conceptual_dataset == dataset.conceptual_dataset
 
-    @pytest.mark.skip
-    def test_resource_import_creates_related_objects(self, study, dataset_tablib_dataset):
-        assert 0 == AnalysisUnit.objects.count()
-        assert 0 == ConceptualDataset.objects.count()
-        assert 0 == Period.objects.count()
-        assert 0 == Dataset.objects.count()
-
-        result = DatasetResource().import_data(dataset_tablib_dataset)
-
-        assert False is result.has_errors()
-        assert 1 == AnalysisUnit.objects.count()
-        assert 1 == ConceptualDataset.objects.count()
-        assert 1 == Period.objects.count()
-        assert 1 == Dataset.objects.count()
-
-        analysis_unit = AnalysisUnit.objects.first()
-        conceptual_dataset = ConceptualDataset.objects.first()
-        period = Period.objects.first()
-        dataset = Dataset.objects.first()
-
-        # test relations
-        assert period == dataset.period
-        assert analysis_unit == dataset.analysis_unit
-        assert conceptual_dataset == dataset.conceptual_dataset
-
-    @pytest.mark.skip
-    def test_resource_import_lowercases_dataset_name(
-        self, study, period, analysis_unit, conceptual_dataset, dataset_tablib_dataset
-    ):
-        assert 0 == Dataset.objects.count()
-
-        # create dataset with uppercased dataset name
-        row = dataset_tablib_dataset.lpop()
-        row = list(row)
-        row[1] = "SOME-DATASET"
-        dataset_tablib_dataset.lpush(row)
-
-        result = DatasetResource().import_data(dataset_tablib_dataset)
-        assert False is result.has_errors()
-        assert 1 == Dataset.objects.count()
-
-        dataset = Dataset.objects.first()
-
-        expected = "some-dataset"
-        assert expected == dataset.name
-
 
 class TestVariableResource:
     def test_resource_import_succeeds_from_json(
@@ -233,25 +187,6 @@ class TestVariableResource:
         assert categories == variable.categories
         assert statistics == variable.statistics
         assert sort_id == variable.sort_id
-
-        # test relations
-        assert dataset == variable.dataset
-
-    @pytest.mark.skip
-    def test_resource_import_creates_related_dataset_from_json(
-        self, study, variable_json_tablib_dataset
-    ):
-
-        assert 0 == Variable.objects.count()
-        assert 0 == Dataset.objects.count()
-        result = VariableResource().import_data(variable_json_tablib_dataset)
-
-        assert False is result.has_errors()
-        assert 1 == Variable.objects.count()
-        assert 1 == Dataset.objects.count()
-
-        variable = Variable.objects.first()
-        dataset = Dataset.objects.first()
 
         # test relations
         assert dataset == variable.dataset
@@ -289,23 +224,6 @@ class TestVariableResource:
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert None is variable.concept
-
-    @pytest.mark.skip
-    def test_resource_import_creates_related_concept_from_csv(
-        self, dataset, variable_csv_tablib_dataset  # pylint: disable=unused-argument
-    ):
-        assert 0 == Variable.objects.count()
-        assert 0 == Concept.objects.count()
-        result = VariableResource().import_data(variable_csv_tablib_dataset)
-
-        assert False is result.has_errors()
-        assert 1 == Variable.objects.count()
-
-        variable = Variable.objects.first()
-        concept = Concept.objects.first()
-
-        # test relations
-        assert concept == variable.concept
 
 
 class TestTransformationResource:
