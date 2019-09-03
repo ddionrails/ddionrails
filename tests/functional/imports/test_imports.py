@@ -206,7 +206,7 @@ class TestStudyImportManager:
         QuestionDocument.search().query("match_all").delete()
 
     def test_import_json_datasets(
-        self, study_import_manager, elasticsearch_indices, study
+        self, study_import_manager, elasticsearch_indices, dataset
     ):
         assert 0 == Variable.objects.count()
         study_import_manager.import_single_entity("datasets.json")
