@@ -1,9 +1,8 @@
-{
-  "some-variable": {
-    "name": "some-variable",
-    "variable": "some-variable",
-    "dataset": "some-dataset",
+[
+  {
     "study": "some-study",
+    "dataset": "some-dataset",
+    "name": "some-variable",
     "categories": {
       "frequencies": [
         1,
@@ -23,11 +22,10 @@
       ]
     }
   },
-  "some-other-variable": {
-    "name": "some-other-variable",
-    "variable": "some-other-variable",
-    "dataset": "some-dataset",
+  {
     "study": "some-study",
+    "dataset": "some-dataset",
+    "name": "some-other-variable",
     "categories": {
       "frequencies": [
         1,
@@ -47,4 +45,4 @@
       ]
     }
   }
-}
+]

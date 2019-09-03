@@ -185,18 +185,7 @@ def import_datasets_csv(filename: Path) -> Dict[str, int]:
 
 
 def import_datasets_json(filename: Path) -> Dict[str, int]:
-    with open(filename, "r") as infile:
-        data = json.load(infile)
-    if isinstance(data, dict):
-        data = list(data.values())
-    elif isinstance(data, list):
-        pass
-    else:
-        pass
-    dataset = tablib.Dataset()
-    dataset.json = json.dumps(data)
-    # attach filename to dataset, for logging errors
-    dataset.filename = filename
+    dataset = create_dataset(filename)
     return import_dataset(VariableResource, dataset)
 
 
