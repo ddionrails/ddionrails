@@ -4,7 +4,6 @@
 
 import logging
 import shutil
-import types
 from collections import OrderedDict
 from pathlib import Path
 from typing import List
@@ -204,7 +203,7 @@ class StudyImportManager:
 
         """
         LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
-        importer, default_file_path = self.import_order.get(entity)
+        import_function, default_file_path = self.import_order.get(entity)
         # import specific file
         if filename:
             file = self.import_path.joinpath(filename)
@@ -212,46 +211,31 @@ class StudyImportManager:
                 LOGGER.info(
                     f'Study "{self.study.name}" starts import of file: "{file.name}"'
                 )
-                # importer is function
-                if isinstance(importer, types.FunctionType):
-                    django_rq.enqueue(importer, file)
-                # importer is class
-                else:
-                    importer_istance = importer(file, self.study)
-                    django_rq.enqueue(importer_istance.run_import, file, self.study)
+                django_rq.enqueue(import_function, file)
             else:
                 LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
         else:
             # single file import
             if isinstance(default_file_path, Path):
                 if default_file_path.is_file():
-                    # importer is function
-                    if isinstance(importer, types.FunctionType):
-                        django_rq.enqueue(importer, default_file_path, self.study)
-                    # importer is class
-                    else:
-                        importer_istance = importer(default_file_path, self.study)
+                    # TODO: Workaround for topics.json import: It needs the study.
+                    if default_file_path.name == "topics.json":
                         django_rq.enqueue(
-                            importer_istance.run_import, default_file_path, self.study
+                            import_function, default_file_path, study=self.study
                         )
+                    else:
+                        django_rq.enqueue(import_function, default_file_path)
                 else:
                     LOGGER.warning(
                         f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
                     )
             # multiple files import, e.g. instruments, datasets
             else:
-
                 for file in sorted(default_file_path):
                     LOGGER.info(
                         f'Study "{self.study.name}" starts import of file: "{file.name}"'
                     )
-                    # importer is function
-                    if isinstance(importer, types.FunctionType):
-                        django_rq.enqueue(importer, file)
-                    # importer is class
-                    else:
-                        importer_istance = importer(file, self.study)
-                        django_rq.enqueue(importer_istance.run_import, file, self.study)
+                    django_rq.enqueue(import_function, file)
 
     def import_all_entities(self):
         """
