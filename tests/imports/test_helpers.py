@@ -16,7 +16,7 @@ from ddionrails.imports.helpers import (
 )
 
 
-@pytest.mark.usefixtures("tablib_dataset")
+@pytest.mark.usefixtures("tablib_dataset", "unittest_mock")
 class TestHelpers(unittest.TestCase):
     dataset = tablib.Dataset()
 
@@ -27,9 +27,9 @@ class TestHelpers(unittest.TestCase):
         print(csv)
         assert "study_name" in csv[0].keys()
 
-    def test_read_csv_without_path(self, mocker):
-        mocked_open = mocker.patch("builtins.open")
-        mocked_csv_dict_reader = mocker.patch("csv.DictReader")
+    def test_read_csv_without_path(self):
+        mocked_open = self.mocker.patch("builtins.open")
+        mocked_csv_dict_reader = self.mocker.patch("csv.DictReader")
         return_value = [dict(study_name="soep-core", dataset_name="abroad")]
         mocked_csv_dict_reader.return_value = return_value
         filename = "sample.csv"
@@ -72,3 +72,8 @@ def tablib_dataset(request):
     else:
         return dataset
     return None
+
+
+@pytest.fixture
+def unittest_mock(request, mocker):
+    request.instance.mocker = mocker
