@@ -18,7 +18,11 @@ License:
 from import_export.fields import Field
 from import_export.resources import ModelResource
 
-from ddionrails.imports.helpers import add_id_to_dataset, rename_dataset_headers
+from ddionrails.imports.helpers import (
+    add_base_id_to_dataset,
+    add_id_to_dataset,
+    rename_dataset_headers,
+)
 
 from .models import AnalysisUnit, Concept, ConceptualDataset, Period, Topic
 
@@ -35,7 +39,7 @@ class TopicResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "parent", "study_id")
 
     class Meta:  # pylint: disable=missing-docstring
@@ -61,7 +65,7 @@ class ConceptResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "topic", "study_id")
 
     class Meta:  # pylint: disable=missing-docstring
@@ -83,7 +87,7 @@ class PeriodResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
     class Meta:  # pylint: disable=missing-docstring
         model = Period
@@ -104,7 +108,7 @@ class AnalysisUnitResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
     class Meta:  # pylint: disable=missing-docstring
         model = AnalysisUnit
@@ -125,7 +129,7 @@ class ConceptualDatasetResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
     class Meta:  # pylint: disable=missing-docstring
         model = ConceptualDataset

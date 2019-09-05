@@ -19,6 +19,7 @@ from import_export.fields import Field
 from import_export.resources import ModelResource
 
 from ddionrails.imports.helpers import (
+    add_base_id_to_dataset,
     add_concept_id_to_dataset,
     add_id_to_dataset,
     rename_dataset_headers,
@@ -46,7 +47,7 @@ class InstrumentResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "analysis_unit", "study_id")
         add_id_to_dataset(dataset, "period", "study_id")
 
@@ -71,7 +72,7 @@ class QuestionResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "instrument", "study_id")
 
     class Meta:  # pylint: disable=missing-docstring
@@ -101,7 +102,7 @@ class ConceptQuestionResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
         # add ids to dataset
         add_concept_id_to_dataset(dataset, "concept")
@@ -136,7 +137,7 @@ class QuestionVariableResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
         # add instrument and question id, based on study id
         add_id_to_dataset(dataset, "instrument", "study_id")
@@ -165,7 +166,7 @@ class QuestionImageResource(ModelResource):
         """ Preprocess the whole dataset """
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "instrument", "study_id")
         add_id_to_dataset(dataset, "question", "instrument_id")
 

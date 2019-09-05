@@ -19,6 +19,7 @@ from import_export.fields import Field
 from import_export.resources import ModelResource
 
 from ddionrails.imports.helpers import (
+    add_base_id_to_dataset,
     add_concept_id_to_dataset,
     add_id_to_dataset,
     rename_dataset_headers,
@@ -50,7 +51,7 @@ class DatasetResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
         # add id to dataset
         add_id_to_dataset(dataset, "analysis_unit", "study_id")
@@ -107,7 +108,7 @@ class VariableResource(ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
         # add sort_id to dataset
         dataset.append_col(list(range(len(dataset))), header="sort_id")
@@ -145,11 +146,11 @@ class TransformationResource(ModelResource):
         }
         rename_dataset_headers(dataset, rename_mapping)
 
-        add_id_to_dataset(dataset, "origin_study")
+        add_base_id_to_dataset(dataset, "origin_study")
         add_id_to_dataset(dataset, "origin_dataset", "origin_study_id")
         add_id_to_dataset(dataset, "origin_variable", "origin_dataset_id")
 
-        add_id_to_dataset(dataset, "target_study")
+        add_base_id_to_dataset(dataset, "target_study")
         add_id_to_dataset(dataset, "target_dataset", "target_study_id")
         add_id_to_dataset(dataset, "target_variable", "target_dataset_id")
 

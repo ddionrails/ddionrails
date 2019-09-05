@@ -65,6 +65,7 @@ def variable_json_tablib_dataset():
         "label_de",
         "categories",
         "statistics",
+        "concept",
     )
     study = "some-study"
     dataset = "some-dataset"
@@ -72,9 +73,10 @@ def variable_json_tablib_dataset():
     label = "some-variable"
     label_de = "some-variable"
     categories = {"values": [1, 0]}
-    statistics = {"names": ["max"], "values": [1]}
+    statistics = [{"names": ["max"], "values": [1]}]
+    concept = ""
 
-    values = (study, dataset, name, label, label_de, categories, statistics)
+    values = (study, dataset, name, label, label_de, categories, statistics, concept)
     return tablib.Dataset(values, headers=headers)
 
 
