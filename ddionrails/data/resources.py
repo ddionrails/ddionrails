@@ -114,7 +114,8 @@ class VariableResource(ModelResource):
         dataset.append_col(list(range(len(dataset))), header="sort_id")
 
         # add dataset_ids and concept_ids to dataset
-        add_concept_id_to_dataset(dataset, "concept")
+        if "concept" in dataset.headers:
+            add_concept_id_to_dataset(dataset, "concept")
         add_id_to_dataset(dataset, "dataset", "study_id")
 
     class Meta:  # pylint: disable=missing-docstring
