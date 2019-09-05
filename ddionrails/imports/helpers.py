@@ -104,7 +104,13 @@ def add_id_to_dataset(
 
 
 def add_base_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None:
-    """ A """
+    """ Add ID column UUIDs created with the systems base UUID
+
+    This is only used to get the UUIDs from a study column.
+    We do not test if all rows inside the column are filled.
+    A row without a value for study shows that the data is faulty and should
+    fail to be imported.
+    """
     id_column = []
     id_column_name = f"{column_name}_id"
     for name in dataset[column_name]:
@@ -125,9 +131,9 @@ def add_concept_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None
     id_column_name = f"{column_name}_id"
     _prefix = "concept:{}"
     for name in dataset[column_name]:
-        if not name:
-            id_column.append(None)
-        else:
+        if name:
             id_column.append(hash_with_base_uuid(_prefix.format(name)))
+        else:
+            id_column.append(None)
 
     dataset.append_col(id_column, header=id_column_name)
