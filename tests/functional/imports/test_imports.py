@@ -194,6 +194,7 @@ class TestStudyImportManager:
         assert 1 == Instrument.objects.count()
         assert 0 == Question.objects.count()
         study_import_manager.import_single_entity("questions")
+
         assert 1 == Question.objects.count()
 
         search = QuestionDocument.search().query("match_all")
