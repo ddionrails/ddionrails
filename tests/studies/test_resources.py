@@ -68,7 +68,10 @@ class TestStudyResource:
         expected = True
         assert expected is result.has_validation_errors()
         invalid_row = result.invalid_rows[0]
-        expected_error = {"name": ["This field cannot be blank."]}
+        expected_error = {
+            "id": ["This field cannot be null."],
+            "name": ["This field cannot be blank."],
+        }
         assert expected_error == invalid_row.error_dict
         assert 0 == Study.objects.count()
 

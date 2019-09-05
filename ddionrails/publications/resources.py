@@ -19,7 +19,7 @@ from import_export import resources
 from import_export.fields import Field
 
 from ddionrails.imports.helpers import (
-    add_id_to_dataset,
+    add_base_id_to_dataset,
     hash_with_namespace_uuid,
     rename_dataset_headers,
 )
@@ -39,7 +39,7 @@ class PublicationResource(resources.ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
 
     class Meta:  # pylint: disable=missing-docstring
         model = Publication
@@ -104,7 +104,7 @@ class AttachmentResource(resources.ModelResource):
         rename_dataset_headers(dataset, rename_mapping)
 
         # add study_id to dataset
-        add_id_to_dataset(dataset, "study")
+        add_base_id_to_dataset(dataset, "study")
         # set context_study_id
         dataset.append_col(dataset["study_id"], header="context_study_id")
         # prepare empty columns
