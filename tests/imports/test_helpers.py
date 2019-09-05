@@ -7,6 +7,7 @@ import unittest
 
 import pytest
 import tablib
+from pytest_mock import MockFixture
 
 from ddionrails.imports.helpers import (
     add_concept_id_to_dataset,
@@ -19,6 +20,7 @@ from ddionrails.imports.helpers import (
 @pytest.mark.usefixtures("tablib_dataset", "unittest_mock")
 class TestHelpers(unittest.TestCase):
     dataset = tablib.Dataset()
+    mocker = MockFixture
 
     def test_read_csv(self):
         filename = "sample.csv"
@@ -28,8 +30,10 @@ class TestHelpers(unittest.TestCase):
         assert "study_name" in csv[0].keys()
 
     def test_read_csv_without_path(self):
-        mocked_open = self.mocker.patch("builtins.open")
-        mocked_csv_dict_reader = self.mocker.patch("csv.DictReader")
+        mocked_open = self.mocker.patch("builtins.open")  # pylint: disable=no-member
+        mocked_csv_dict_reader = self.mocker.patch(  # pylint: disable=no-member
+            "csv.DictReader"
+        )
         return_value = [dict(study_name="soep-core", dataset_name="abroad")]
         mocked_csv_dict_reader.return_value = return_value
         filename = "sample.csv"
@@ -59,8 +63,8 @@ class TestHelpers(unittest.TestCase):
         self.assertEqual(expected, self.dataset.headers)
 
 
-@pytest.fixture
-def tablib_dataset(request):
+@pytest.fixture(name="tablib_dataset")
+def _tablib_dataset(request):
     headers = ("name", "label")
     name = "some-concept"
     label = "Some concept"
@@ -74,6 +78,6 @@ def tablib_dataset(request):
     return None
 
 
-@pytest.fixture
-def unittest_mock(request, mocker):
+@pytest.fixture(name="unittest_mock")
+def _unittest_mock(request, mocker):
     request.instance.mocker = mocker

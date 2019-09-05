@@ -20,8 +20,8 @@ from .factories import VariableFactory
 pytestmark = [pytest.mark.django_db, pytest.mark.resources]
 
 
-@pytest.fixture
-def dataset_tablib_dataset():
+@pytest.fixture(name="dataset_tablib_dataset")
+def _dataset_tablib_dataset():
     """ A tablib.Dataset containing a dataset """
 
     headers = (
@@ -53,8 +53,8 @@ def dataset_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def variable_json_tablib_dataset():
+@pytest.fixture(name="variable_json_tablib_dataset")
+def _variable_json_tablib_dataset():
     """ A tablib.Dataset containing a variable """
 
     headers = (
@@ -78,8 +78,8 @@ def variable_json_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def variable_csv_tablib_dataset():
+@pytest.fixture(name="variable_csv_tablib_dataset")
+def _variable_csv_tablib_dataset():
     """ A tablib.Dataset containing a variable """
 
     headers = ("study_name", "dataset_name", "variable_name", "concept_name", "image_url")
@@ -93,8 +93,8 @@ def variable_csv_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def transformation_tablib_dataset():
+@pytest.fixture(name="transformation_tablib_dataset")
+def _transformation_tablib_dataset():
     """ A tablib.Dataset containing a tranformation """
 
     headers = (
@@ -123,8 +123,8 @@ def transformation_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def origin_target_variables():
+@pytest.fixture(name="origin_target_variables")
+def _origin_target_variables():
     return (
         VariableFactory(name="some-variable"),
         VariableFactory(name="some-other-variable"),
