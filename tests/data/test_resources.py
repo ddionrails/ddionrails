@@ -5,9 +5,9 @@
 
 import pytest
 import tablib
-from django.db.utils import IntegrityError
+from django.db import IntegrityError
 
-from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.data.resources import (
     DatasetResource,
@@ -245,7 +245,7 @@ class TestTransformationResource:
         assert origin_variable == transformation.origin
         assert target_variable == transformation.target
 
-    @pytest.mark.skip
+    @pytest.mark.django_db(transaction=True)
     def test_resource_import_fails(
         self, origin_target_variables, transformation_tablib_dataset
     ):
@@ -254,6 +254,6 @@ class TestTransformationResource:
         row[row.index("some-other-variable")] = "some-non-existing-variable"
         transformation_tablib_dataset.rpush(row)
 
-        # TODO: IntegrityError is raised earlier?
-        with pytest.raises(IntegrityError):
-            result = TransformationResource().import_data(transformation_tablib_dataset)
+        with pytest.raises(IntegrityError) as error:
+            TransformationResource().import_data(transformation_tablib_dataset)
+        assert "target_id" in error.value
