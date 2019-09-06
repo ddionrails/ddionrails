@@ -5,12 +5,12 @@
 import logging
 import shutil
 from collections import OrderedDict
-from pathlib import Path
 from typing import List
 
 import django_rq
 import git
 from django.conf import settings
+from git import InvalidGitRepositoryError, NoSuchPathError
 
 from ddionrails.studies.models import Study
 
@@ -30,7 +30,7 @@ class Repository:
         self.path = settings.IMPORT_REPO_PATH.joinpath(self.name)
         try:
             self.repo = git.Repo(self.path)
-        except (git.exc.NoSuchPathError, git.exc.InvalidGitRepositoryError):
+        except (NoSuchPathError, InvalidGitRepositoryError):
             self.repo = None
 
     def set_branch(self, branch: str = settings.IMPORT_BRANCH) -> None:
@@ -51,7 +51,10 @@ class Repository:
             )
 
     def set_commit_id(self) -> None:
-        """ Save the current commit hash in the database field "current_commit" of study or system """
+        """ Save the current commit hash inside the database
+
+        Saves to the database field "current_commit" of study or system
+        """
         self.study_or_system.current_commit = str(self.repo.head.commit)
         self.study_or_system.save()
 
@@ -83,11 +86,11 @@ class Repository:
         """ Returns a list of files to be imported """
         if import_all:
             return self.list_all_files()
-        else:
-            return self.list_changed_files()
+
+        return self.list_changed_files()
 
 
-class SystemImportManager:
+class SystemImportManager:  # pylint: disable=too-few-public-methods
     """Import the files from the system repository."""
 
     def __init__(self, system):
@@ -108,6 +111,7 @@ class SystemImportManager:
         self.repo.set_commit_id()
 
 
+# Todo: Document StudyImportManager of ddionrails.imports.manager pylint: disable=fixme
 class StudyImportManager:
     def __init__(self, study: Study):
         self.study = study
@@ -117,76 +121,78 @@ class StudyImportManager:
             {
                 "study": (
                     importers.import_study_description,
-                    self.import_path.joinpath("study.md"),
+                    self.import_path.glob("study.md"),
                 ),
                 "topics.csv": (
                     importers.import_topics_csv,
-                    self.import_path.joinpath("topics.csv"),
+                    self.import_path.glob("topics.csv"),
                 ),
                 "topics.json": (
                     importers.import_topics_json,
-                    self.import_path.joinpath("topics.json"),
+                    self.import_path.glob("topics.json"),
                 ),
                 "concepts": (
                     importers.import_concepts,
-                    self.import_path.joinpath("concepts.csv"),
+                    self.import_path.glob("concepts.csv"),
                 ),
                 "analysis_units": (
                     importers.import_analysis_units,
-                    self.import_path.joinpath("analysis_units.csv"),
+                    self.import_path.glob("analysis_units.csv"),
                 ),
                 "periods": (
                     importers.import_periods,
-                    self.import_path.joinpath("periods.csv"),
+                    self.import_path.glob("periods.csv"),
                 ),
                 "conceptual_datasets": (
                     importers.import_conceptual_datasets,
-                    self.import_path.joinpath("conceptual_datasets.csv"),
+                    self.import_path.glob("conceptual_datasets.csv"),
                 ),
                 "instruments": (
                     importers.import_instruments,
-                    self.import_path.joinpath("instruments.csv"),
+                    self.import_path.glob("instruments.csv"),
                 ),
                 "questions": (
                     importers.import_questions,
-                    self.import_path.joinpath("instruments").glob("*.json"),
+                    self.import_path.glob("instruments/*.json"),
                 ),
                 "datasets.csv": (
                     importers.import_datasets_csv,
-                    self.import_path.joinpath("datasets.csv"),
+                    self.import_path.glob("datasets.csv"),
                 ),
                 "datasets.json": (
                     importers.import_datasets_json,
-                    self.import_path.joinpath("datasets").glob("*.json"),
+                    self.import_path.glob("datasets/*.json"),
                 ),
                 "variables": (
                     importers.import_variables,
-                    self.import_path.joinpath("variables.csv"),
+                    self.import_path.glob("variables.csv"),
                 ),
                 "questions_variables": (
                     importers.import_questions_variables,
-                    self.import_path.joinpath("questions_variables.csv"),
+                    self.import_path.glob("questions_variables.csv"),
                 ),
                 "concepts_questions": (
                     importers.import_concepts_questions,
-                    self.import_path.joinpath("concepts_questions.csv"),
+                    self.import_path.glob("concepts_questions.csv"),
                 ),
                 "transformations": (
                     importers.import_transformations,
-                    self.import_path.joinpath("transformations.csv"),
+                    self.import_path.glob("transformations.csv"),
                 ),
                 "attachments": (
                     importers.import_attachments,
-                    self.import_path.joinpath("attachments.csv"),
+                    self.import_path.glob("attachments.csv"),
                 ),
                 "publications": (
                     importers.import_publications,
-                    self.import_path.joinpath("publications.csv"),
+                    self.import_path.glob("publications.csv"),
                 ),
             }
         )
 
     def update_repo(self):
+        """ `git pull` changes and update current commit """
+
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
@@ -202,40 +208,27 @@ class StudyImportManager:
         manager.import_single_entity("instruments", "instruments/some-instrument.json")
 
         """
-        LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
+        LOGGER.info('Study "%s" starts import of entity: "%s"', self.study.name, entity)
         import_function, default_file_path = self.import_order.get(entity)
-        # import specific file
+
+        # import with custom file path/name
         if filename:
-            file = self.import_path.joinpath(filename)
-            if file.is_file():
-                LOGGER.info(
-                    f'Study "{self.study.name}" starts import of file: "{file.name}"'
-                )
+            default_file_path = self.import_path.glob(filename)
+        default_file_path = [_file for _file in default_file_path]
+
+        if not default_file_path:
+            LOGGER.warning(
+                'Study "%s" has no file for the "%s" import.', self.study.name, entity
+            )
+
+        for file in sorted(default_file_path):
+            if file.name == "topics.json":
+                django_rq.enqueue(import_function, file, study=self.study)
+            else:
                 django_rq.enqueue(import_function, file)
-            else:
-                LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
-        else:
-            # single file import
-            if isinstance(default_file_path, Path):
-                if default_file_path.is_file():
-                    # TODO: Workaround for topics.json import: It needs the study.
-                    if default_file_path.name == "topics.json":
-                        django_rq.enqueue(
-                            import_function, default_file_path, study=self.study
-                        )
-                    else:
-                        django_rq.enqueue(import_function, default_file_path)
-                else:
-                    LOGGER.warning(
-                        f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
-                    )
-            # multiple files import, e.g. instruments, datasets
-            else:
-                for file in sorted(default_file_path):
-                    LOGGER.info(
-                        f'Study "{self.study.name}" starts import of file: "{file.name}"'
-                    )
-                    django_rq.enqueue(import_function, file)
+            LOGGER.info(
+                'Study "%s" starts import of file: "%s"', self.study.name, file.name
+            )
 
     def import_all_entities(self):
         """
@@ -247,6 +240,6 @@ class StudyImportManager:
         manager.import_all_entities()
 
         """
-        LOGGER.info(f'Study "{self.study.name}" starts importing of all entities')
+        LOGGER.info('Study "%s" starts importing of all entities', self.study.name)
         for entity in self.import_order.keys():
             self.import_single_entity(entity)
