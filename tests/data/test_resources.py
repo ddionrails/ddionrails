@@ -256,4 +256,4 @@ class TestTransformationResource:
 
         with pytest.raises(IntegrityError) as error:
             TransformationResource().import_data(transformation_tablib_dataset)
-        assert "target_id" in error.value
+        assert "Key (target_id)" in str(error.value)
