@@ -6,8 +6,10 @@ import csv
 import os
 import uuid
 from functools import lru_cache
+from io import BytesIO
 from typing import Dict, Optional
 
+import requests
 import tablib
 from django.conf import settings
 
@@ -137,3 +139,10 @@ def add_concept_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None
             id_column.append(None)
 
     dataset.append_col(id_column, header=id_column_name)
+
+
+def download_image(url) -> BytesIO:
+    """ Load data from a web address into a BytesIO object. """
+    _data = requests.get(url).content
+    _output = BytesIO(_data)
+    return _output

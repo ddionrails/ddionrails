@@ -4,13 +4,16 @@
 """ Test cases for helpers in ddionrails.imports app """
 
 import unittest
+from typing import Callable
 
 import pytest
+import requests_mock
 import tablib
 from pytest_mock import MockFixture
 
 from ddionrails.imports.helpers import (
     add_concept_id_to_dataset,
+    download_image,
     hash_with_base_uuid,
     read_csv,
     rename_dataset_headers,
@@ -54,6 +57,15 @@ class TestHelpers(unittest.TestCase):
 
         # Do we have expected column name and value for the id?
         result = self.dataset["name_id"][0]
+        self.assertEqual(expected, result)
+
+    def test_download_image(self):
+        self.assertIsInstance(download_image, Callable)
+        _url = "http://test.de"
+        expected = b"data"
+        with requests_mock.mock() as mocked_request:
+            mocked_request.get(_url, content=expected)
+            result = download_image(_url).getvalue()
         self.assertEqual(expected, result)
 
     def test_rename_dataset_headers(self):
