@@ -1,9 +1,21 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
+# We subscribe to the conventional ordering of (expected, result) in tests.
+# Meaning, if possible, the expected value come first in a comparison.
+# Pylint wants constants in a comparison to be at the end.
+# To allow testing against contants we disable misplaced-comparison-constant.
+# Another solution for this would be to use unittest assert functions, since they
+# are not treated as comparisons(obviously, they are function calls) by pylint.
+# pylint: disable=misplaced-comparison-constant
+
 """ Test cases for ddionrails.publications.resources """
 
+import unittest
+from io import BytesIO
+
 import pytest
+import requests_mock
 import tablib
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, Period
@@ -12,11 +24,13 @@ from ddionrails.instruments.models import (
     ConceptQuestion,
     Instrument,
     Question,
+    QuestionImage,
     QuestionVariable,
 )
 from ddionrails.instruments.resources import (
     ConceptQuestionResource,
     InstrumentResource,
+    QuestionImageResource,
     QuestionResource,
     QuestionVariableResource,
 )
@@ -25,8 +39,8 @@ from ddionrails.studies.models import Study
 pytestmark = [pytest.mark.django_db, pytest.mark.resources]
 
 
-@pytest.fixture
-def instrument_tablib_dataset():
+@pytest.fixture(name="instrument_tablib_dataset")
+def _instrument_tablib_dataset():
     """ A tablib.Dataset containing an instrument """
 
     headers = ("study", "name", "label", "label_de", "period", "analysis_unit")
@@ -40,8 +54,8 @@ def instrument_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def question_tablib_dataset():
+@pytest.fixture(name="question_tablib_dataset")
+def _question_tablib_dataset():
     """ A tablib.Dataset containing an question """
 
     headers = (
@@ -66,8 +80,8 @@ def question_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def concept_question_tablib_dataset():
+@pytest.fixture(name="concept_question_tablib_dataset")
+def _concept_question_tablib_dataset():
     """ A tablib.Dataset containing a concept_question """
 
     headers = ("study_name", "instrument_name", "question_name", "concept_name")
@@ -80,8 +94,8 @@ def concept_question_tablib_dataset():
     return tablib.Dataset(values, headers=headers)
 
 
-@pytest.fixture
-def question_variable_tablib_dataset():
+@pytest.fixture(name="question_variable_tablib_dataset")
+def _question_variable_tablib_dataset():
     """ A tablib.Dataset containing a question_variable """
 
     headers = (
@@ -192,3 +206,35 @@ class TestQuestionVariableResource:
         # test relations
         assert variable == question_variable.variable
         assert question == question_variable.question
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("variable_image_file", "question_image_dataset")
+class TestQuestionImageResource(unittest.TestCase):
+
+    variable_image_file = lambda file_type, size=1: BytesIO()
+    question_image_dataset = tablib.Dataset()
+
+    def test_import(self):
+        url = {
+            "en": self.question_image_dataset["url"][0],
+            "de": self.question_image_dataset["url_de"][0],
+        }
+        image = {
+            "en": self.variable_image_file("png", 1).getvalue(),
+            "de": self.variable_image_file("png", 2).getvalue(),
+        }
+        _ressource = QuestionImageResource()
+        with requests_mock.mock() as mocked_request:
+            mocked_request.get(url["en"], content=image["en"])
+            mocked_request.get(url["de"], content=image["de"])
+            _ressource.import_data(self.question_image_dataset, raise_errors=True)
+
+        result_image, image_created = QuestionImage.objects.get_or_create(
+            label=self.question_image_dataset["label"][0]
+        )
+        self.assertFalse(image_created)
+        self.assertEqual(
+            image[result_image.language], result_image.image.file.open().read()
+        )
+        result_image.image.file.close()
