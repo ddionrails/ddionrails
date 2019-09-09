@@ -22,6 +22,7 @@ from ddionrails.imports.helpers import (
     add_base_id_to_dataset,
     add_concept_id_to_dataset,
     add_id_to_dataset,
+    add_image_to_dataset,
     rename_dataset_headers,
 )
 
@@ -169,12 +170,7 @@ class QuestionImageResource(ModelResource):
         add_base_id_to_dataset(dataset, "study")
         add_id_to_dataset(dataset, "instrument", "study_id")
         add_id_to_dataset(dataset, "question", "instrument_id")
-
-        # TODO: Download / Upload images from URLs
-        # - image_url
-        # - image_url_de
-        # - image_label
-        # - image_label_de
+        add_image_to_dataset(dataset)
 
     class Meta:  # pylint: disable=missing-docstring
         model = QuestionImage

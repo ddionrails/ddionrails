@@ -6,9 +6,11 @@
 import time
 import uuid
 from io import BytesIO
+from typing import Callable, Generator
 
 import PIL.Image
 import pytest
+import tablib
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
@@ -122,17 +124,35 @@ def empty_data():
 
 
 @pytest.fixture()
-def image_file(request) -> BytesIO:
+def image_file(request) -> Generator[BytesIO, None, None]:
     """ Provides an in memory image file. """
     _file = BytesIO()
-    _image = PIL.Image.new("RGBA", size=(700, 100))
+    _image = PIL.Image.new("RGBA", size=(1, 1))
     _image.save(_file, "png")
     _file.name = "test.png"
     _file.seek(0)
     if request.instance:
         request.instance.image_file = _file
     yield _file
-    _file = None
+    del _file
+
+
+@pytest.fixture(name="variable_image_file")
+def _variable_image_file(request) -> Generator[Callable, None, None]:
+    """ Provides a function to create an in memory image file of chosen type. """
+
+    def _image_file(file_type: str, size: int = 1) -> BytesIO:
+        _file = BytesIO()
+        _image = PIL.Image.new("1", size=(size, size))
+        _image.save(_file, file_type)
+        _file.name = f"test.{file_type}"
+        _file.seek(0)
+        return _file
+
+    if request.instance:
+        request.instance.variable_image_file = _image_file
+    yield _image_file
+    del _image_file
 
 
 @pytest.fixture
@@ -379,3 +399,36 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+@pytest.fixture(name="question_image_dataset")
+def _question_image_dataset(request, question):
+    question.name = "some_question"
+    question.save()
+    headers = (
+        "study",
+        "instrument",
+        "question",
+        "question_id",
+        "url",
+        "url_de",
+        "label",
+        "label_de",
+    )
+    values = (
+        "some_study",
+        "some_instrument",
+        question.name,
+        question.pk,
+        "http://some_url.com/image",
+        "http://some_url.de/image",
+        "english_label",
+        "deutsches_label",
+    )
+    dataset = tablib.Dataset(values, headers=headers)
+
+    if request.instance:
+        request.instance.question_image_dataset = dataset
+    else:
+        return dataset
+    return None

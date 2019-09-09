@@ -5,7 +5,7 @@
 from typing import Dict
 
 
-class SoepMixin:
+class SoepMixin:  # pylint: disable=too-few-public-methods
 
     START_YEAR = 2001
 
@@ -22,10 +22,9 @@ class SoepMixin:
         letters2 = ["b" + chr(x) for x in range(a_num, g_num)]
         if page == 1:
             return letters1
-        elif page == 2:
+        if page == 2:
             return letters2
-        else:
-            return letters1 + letters2
+        return letters1 + letters2
 
     def _soep_classify_dataset(self, dataset_name):
         letters = self._soep_letters()
@@ -45,10 +44,9 @@ class SoepMixin:
         p_files = p_files + ["%sppage17" % l for l in letters]
         if dataset_name in h_files:
             return "h"
-        elif dataset_name in p_files:
+        if dataset_name in p_files:
             return "p"
-        else:
-            return "other"
+        return "other"
 
     def _soep_letter_year(self) -> Dict[str, int]:
         letter_year = dict()
@@ -67,10 +65,9 @@ class SoepMixin:
             letter = ""
         if letters:
             return letter
-        else:
-            return self._soep_letter_year()[letter]
+        return self._soep_letter_year()[letter]
 
-    def _generate_script_dict(self):
+    def _generate_script_dict(self) -> dict:
         script_dict = dict()
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
@@ -93,20 +90,20 @@ class SoepMixin:
 
     @staticmethod
     def _enrich_dataset_dict(dataset_dict):
-        d = dataset_dict
-        analysis_unit = d["analysis_unit"]
+        dataset = dataset_dict
+        analysis_unit = dataset["analysis_unit"]
         if analysis_unit == "h":
-            d["matches"] = ["p", "h"]
-            d["key"] = "%shhnr" % d["prefix"]
-            d["variables"].add(d["key"])
+            dataset["matches"] = ["p", "h"]
+            dataset["key"] = "%shhnr" % dataset["prefix"]
+            dataset["variables"].add(dataset["key"])
         elif analysis_unit == "p":
-            d["matches"] = ["p"]
-            d["key"] = "persnr"
-            d["variables"].add(d["key"])
-            d["variables"].add("%shhnr" % d["prefix"])
+            dataset["matches"] = ["p"]
+            dataset["key"] = "persnr"
+            dataset["variables"].add(dataset["key"])
+            dataset["variables"].add("%shhnr" % dataset["prefix"])
         else:
-            d["matches"] = []
-            d["key"] = ""
+            dataset["matches"] = []
+            dataset["key"] = ""
 
     @staticmethod
     def _validate_datasets(script_dict, analysis_unit, valid=True):
@@ -117,14 +114,13 @@ class SoepMixin:
                 valid_list.append(dataset_name)
             else:
                 invalid_list.append(dataset_name)
-            for n in ["phrf", "ppfad"]:
-                if n in invalid_list:
-                    invalid_list.remove(n)
+            for element in ["phrf", "ppfad"]:
+                if element in invalid_list:
+                    invalid_list.remove(element)
         if valid:
             return valid_list
-        else:
-            return invalid_list
+        return invalid_list
 
     @staticmethod
     def _get_selected_years(script_dict):
-        return set([d["prefix"] for d in script_dict.values()])
+        return {d["prefix"] for d in script_dict.values()}

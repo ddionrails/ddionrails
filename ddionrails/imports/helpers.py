@@ -6,10 +6,14 @@ import csv
 import os
 import uuid
 from functools import lru_cache
-from typing import Dict, Optional
+from io import BytesIO
+from typing import BinaryIO, Dict, List, Optional, Tuple, Union
 
+import requests
 import tablib
 from django.conf import settings
+from filer.fields.folder import Folder
+from filer.models import Image
 
 
 def read_csv(filename, path=None):
@@ -103,6 +107,80 @@ def add_id_to_dataset(
     dataset.append_col(id_list, header=id_column_name)
 
 
+def add_image_to_dataset(dataset: tablib.Dataset):
+    """ Creates the datastructure for the image import.
+
+    Replaces the content of the passed dataset.
+    This new dataset, contains a row for every image with a calculated UUID,
+    language information and label text linked to the associated language.
+
+    Args:
+        dataset: Contains a row with metadata for
+                 the english and the german Image of a question
+    """
+    new_dataset = tablib.Dataset()
+    new_dataset.headers = (
+        "question_id",
+        "question_image_id",
+        "image",
+        "label",
+        "language",
+    )
+    _headers = dataset.headers
+    for row in dataset:
+        if row[_headers.index("url")]:
+            image = download_image(row[_headers.index("url")])
+            stored_image, _ = store_image(
+                image,
+                path=[
+                    row[_headers.index("study")],
+                    row[_headers.index("instrument")],
+                    row[_headers.index("question")],
+                ],
+                name=row[_headers.index("label")] + "_en",
+            )
+            new_dataset.append(
+                (
+                    row[_headers.index("question_id")],
+                    hash_with_namespace_uuid(
+                        row[_headers.index("question_id")],
+                        row[_headers.index("label")] + "en",
+                    ),
+                    stored_image,
+                    row[_headers.index("label")],
+                    "en",
+                )
+            )
+        if row[_headers.index("url_de")]:
+            image = download_image(row[_headers.index("url_de")])
+            stored_image, _ = store_image(
+                image,
+                path=[
+                    row[_headers.index("study")],
+                    row[_headers.index("instrument")],
+                    row[_headers.index("question")],
+                ],
+                name=row[_headers.index("label_de")] + "_de",
+            )
+            new_dataset.append(
+                (
+                    row[_headers.index("question_id")],
+                    hash_with_namespace_uuid(
+                        row[_headers.index("question_id")],
+                        row[_headers.index("label_de")] + "de",
+                    ),
+                    stored_image,
+                    row[_headers.index("label_de")],
+                    "de",
+                )
+            )
+
+    dataset.wipe()
+    dataset.headers = new_dataset.headers
+    for row in new_dataset:
+        dataset.append(row)
+
+
 def add_base_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None:
     """ Add ID column UUIDs created with the systems base UUID
 
@@ -137,3 +215,65 @@ def add_concept_id_to_dataset(dataset: tablib.Dataset, column_name: str) -> None
             id_column.append(None)
 
     dataset.append_col(id_column, header=id_column_name)
+
+
+def download_image(url: str) -> BytesIO:
+    """ Load data from a web address into a BytesIO object.
+
+    Args:
+        url: Web address in a form, that is retrievable by requests.get()
+
+    Returns:
+        The ressource located at the address.
+    """
+    _data = requests.get(url).content
+    _output = BytesIO(_data)
+    return _output
+
+
+def store_image(
+    file: BinaryIO, name: str, path: Union[List, str]
+) -> Tuple[Image, uuid.UUID]:
+    """ Store an image for this QuestionImage.
+
+    Args
+        file: The image file to be stored.
+        name: The name associated with the image.
+        path: The folder path where the image should be stored.
+
+    Returns:
+        The Image model object in the first place of the tuple.
+        The objects database key/id.
+    """
+    file.seek(0)
+
+    _folder = _create_folder_structure(path)
+    _filer_image = Image(folder=_folder, name=name)
+    _filer_image.folder = _folder
+    _filer_image.file.save(name=name, content=file)
+    _filer_image.save()
+    _image_id = _filer_image.pk
+    return (_filer_image, _image_id)
+
+
+def _create_folder_structure(path: Union[List, str]) -> Folder:
+    """Create folders and subfolders needed for the image storage.
+
+    Args:
+        path: Will be split into a list at the / characters if it is a string.
+              It will not be altered if a list ist passed.
+              path represents a folder structure. An element is in a
+              parent(folder)-child(folder)-relation with the next element in the list.
+    Returns:
+        The leaf of the structure, i.e. the folder without a child.
+    """
+    if isinstance(path, str):
+        _path = path.split("/")
+    else:
+        _path = path
+    # Filter out the possible "" because a folder needs a name
+    _path = [folder for folder in _path if folder]
+    _parent, _ = Folder.objects.get_or_create(name=_path[0])
+    for folder in _path[1:]:
+        _parent, _ = Folder.objects.get_or_create(name=folder, parent=_parent)
+    return _parent
