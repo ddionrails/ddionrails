@@ -70,11 +70,12 @@ router.beforeEach((to, _from, next) => {
   // to.fullPath has them encoded with %20.
   // To avoid chaining decode encode, we just replace + with the proper
   // encoding.
-  const reroute = to.path + window.location.search.replace(/\+/g, "%20");
+  const reroute = to.path + window.location.search
+      .replace(/\+/g, "%20").replace(/%2C/g, ",");
 
   // We don't want to go where we are already going.
   // This would cause an infinite regress.
-  if (to.fullPath !== reroute) {
+  if (decodeURI(to.fullPath) !== decodeURI(reroute)) {
     next(reroute);
     return null;
   }
