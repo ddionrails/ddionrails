@@ -39,11 +39,19 @@ repos:
         language: system
         files: '.*\.py'
         pass_filenames: true
-      - id: bandit
+      - id: bandit-code
         name: check python security (bandit)
         entry: bandit
         language: system
         files: '.*\.py'
+        exclude: ".*tests.*"
+        pass_filenames: true
+      - id: bandit-tests
+        name: check python security (bandit)
+        entry: bandit
+        args: [--skip, B101]
+        language: system
+        files: '.*tests.*\.py'
         pass_filenames: true
       - id: cspell-commit
         name: Spellcheck commit message before push
