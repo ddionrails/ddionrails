@@ -18,7 +18,7 @@ Vue.use(ReactiveSearch);
 Vue.config.productionTip = false;
 
 /**
- * The result list in of a search contains a p note with text like:
+ * The result-list container of a search page contains a p node with text like:
  * "x results found in yms". Elasticsearch 7 by default only returns
  * 10,000 as result count if the number of results exceeds 10,000.
  * To avoid confusion for users, it should be indicated, that the actual number
