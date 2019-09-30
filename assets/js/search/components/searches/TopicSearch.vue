@@ -32,6 +32,7 @@
           :from="0"
           :size="10"
           :showResultStats="true"
+          :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study'] }"
           renderNoResults="No Topics found. Try to change your search query or filter options."
@@ -61,6 +62,11 @@ export default {
   components: {
     StudyFacet,
     TopicResult
+  },
+  methods: {
+    customRenderStats(stats) {
+      return helpers.customRenderStats(this, stats);
+    }
   }
 };
 </script>
