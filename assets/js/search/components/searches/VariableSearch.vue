@@ -20,12 +20,8 @@
         <!-- begin facets -->
         <study-facet :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search'] }" />
         <conceptual-dataset-facet :react="{ and: ['AnalysisUnit', 'Period','Search', 'Study'] }" />
-        <analysis-unit-facet
-          :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }"
-        />
-        <period-facet
-          :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study'] }"
-        />
+        <analysis-unit-facet :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }" />
+        <period-facet :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study'] }" />
         <!-- end facets -->
       </div>
       <div class="col-lg-8 m-0 p-0 float-right">
@@ -37,6 +33,7 @@
           :from="0"
           :size="10"
           :showResultStats="true"
+          :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search', 'Study'] }"
           renderNoResults="No Variables found. Try to change your search query or filter options."
@@ -87,6 +84,11 @@ export default {
     PeriodFacet,
     StudyFacet,
     VariableResult
+  },
+  methods: {
+    customRenderStats(stats) {
+      return helpers.customRenderStats(this, stats);
+    }
   }
 };
 </script>

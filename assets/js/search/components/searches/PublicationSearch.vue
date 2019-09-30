@@ -32,6 +32,7 @@
           :from="0"
           :size="10"
           :showResultStats="true"
+          :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study', 'Type', 'Year'] }"
           renderNoResults="No Publications found. Try to change your search query or filter options."
@@ -70,6 +71,11 @@ export default {
     PublicationTypeFacet,
     PublicationYearFacet,
     PublicationResult
+  },
+  methods: {
+    customRenderStats(stats) {
+      return helpers.customRenderStats(this, stats);
+    }
   }
 };
 </script>
