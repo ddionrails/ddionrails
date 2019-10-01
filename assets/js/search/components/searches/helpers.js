@@ -38,13 +38,18 @@ export function indexNameSwitch(baseName) {
  * is customized here to say "More than 10000 results found ...", instead of
  * "10000 results found ...".
  *
+ * The Vue instance passes itself to this function in order to create a VueNode.
+ * This is needed since the content returned by this function is left as is.
+ * It's not wrapped into the same DOM, element the standard text is wrapped in.
+ * So we need to create this VueNode ourselves to keep the original styling
+ * given to the class `css-1e7votj`.
+ *
  * @param {object} vueInstance Vue instance from which this function is called.
  * @param {object} stats Contains quantitative data about the search results.
  * @return {VNode} A paragraph VNode with the result text.
  */
 export function customRenderStats(vueInstance, stats) {
-  const h = vueInstance.$createElement;
-  return h("p", {
+  return vueInstance.$createElement("p", {
     "class": "css-1e7votj",
   },
   [
