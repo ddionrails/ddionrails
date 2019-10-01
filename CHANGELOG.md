@@ -11,6 +11,25 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.1.1] - 2019-10-01
+
+### Added 
+
+- Function to alter result text above search results (x results found in yms)
+
+  - Now adds "More than " if result count is higher than the elasticsearch 7 scroll limit
+    of 10000. Meaning it will display "More than 10000 results found in yms".
+
+### Changed
+
+- Update several dependencies.
+
+### Fixed
+
+- Installation of dependencies for the dev container and travis setup.
+
+  - Setup only installed dev dependencies without the applications dependencies.
+
 ## [4.1.0] - 2019-08-28
 
 ### Added
@@ -269,7 +288,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...develop
+[4.1.1]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/ddionrails/ddionrails/compare/v4.0.2...v4.1.0
 [4.0.2]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...v4.0.1
