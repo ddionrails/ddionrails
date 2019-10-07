@@ -11,9 +11,17 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.1.2] - 2019-10-07
+
+### Fixed
+
+- Version pin of postfix for docker postfix image is less strict.
+
+  - apk was not able to install pinned version for the newest alpine version.
+
 ## [4.1.1] - 2019-10-01
 
-### Added 
+### Added
 
 - Function to alter result text above search results (x results found in yms)
 
@@ -288,7 +296,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.2...develop
+[4.1.2]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/ddionrails/ddionrails/compare/v4.0.2...v4.1.0
 [4.0.2]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...v4.0.2
