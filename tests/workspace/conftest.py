@@ -18,7 +18,10 @@ def script(db):
     )
 
 
-@pytest.fixture
-def basket_variable(db):
+@pytest.fixture(name="basket_variable")
+def _basket_variable(request, db):
     """ A basket_variable in the database """
-    return BasketVariableFactory()
+    _factory = BasketVariableFactory()
+    if request.instance:
+        request.instance.basket_variable_factory = _factory
+    return _factory

@@ -3,10 +3,14 @@
 
 """ Test cases for models in ddionrails.workspace app """
 
+import unittest
+
 import pytest
 from django.core.exceptions import ValidationError
 
-from ddionrails.workspace.models import BasketVariable, Script
+from ddionrails.data.models import Variable
+from ddionrails.studies.models import Study
+from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.scripts import SoepStata
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
@@ -14,8 +18,8 @@ from tests.studies.factories import StudyFactory
 pytestmark = [pytest.mark.workspace]
 
 
-@pytest.fixture
-def csv_heading():
+@pytest.fixture(name="csv_heading")
+def _csv_heading():
     return (
         "name,label,label_de,dataset_name,dataset_label,dataset_label_de,"
         "study_name,study_label,study_label_de,concept_name,period_name"
@@ -88,30 +92,56 @@ class TestBasketModel:
         assert variable.concept.name in result
 
 
-class TestBasketVariableModel:
-    def test_clean_method(
-        self, study, variable, basket
-    ):  # pylint: disable=unused-argument
-        basket_variable = BasketVariable(basket_id=basket.id, variable_id=variable.id)
+@pytest.mark.usefixtures("study", "basket", "variable")
+class TestBasketVariableModel(unittest.TestCase):
+    """ TODO """
+
+    study: Study
+    basket: Basket
+    variable: Variable
+
+    def test_clean_method(self):
+        basket_variable = BasketVariable(
+            basket_id=self.basket.id, variable_id=self.variable.id
+        )
         basket_variable.clean()
         basket_variable.save()
-        expected = 1
-        assert expected == BasketVariable.objects.count()
+        self.assertEqual(1, BasketVariable.objects.count())
 
-    def test_clean_method_fails(self, basket):
-        """ BasketVariable clean method should raise an ValidationError when basket and variable study do not match """
+    def test_variable_deletion_behaviour(self):
+        """Does the BasketVariable keep existing and can we clean it up?
+
+        Is a BasketVariable kept if we delete its variable?
+        Can we clean up BasketVariables, that link to non existing variables?
+        """
+        basket_variable = BasketVariable(
+            basket_id=self.basket.id, variable_id=self.variable.id
+        )
+        basket_variable.clean()
+        basket_variable.save()
+        basket_variable.variable.delete()
+        self.assertEqual(1, BasketVariable.objects.count())
+        basket_variable.remove_dangling_basket_variables()
+        self.assertEqual(0, BasketVariable.objects.count())
+
+    def test_clean_method_fails(self):
+        """Ensure the correct error raising of the BasketVariable clean method.
+
+        BasketVariable clean method should raise a ValidationError
+        when basket and variable study do not match.
+        """
         other_study = StudyFactory(name="some-other-study")
         other_dataset = DatasetFactory(name="some-other-dataset", study=other_study)
         other_variable = VariableFactory(
             name="some-other-variable", dataset=other_dataset
         )
         basket_variable = BasketVariable(
-            basket_id=basket.id, variable_id=other_variable.id
+            basket_id=self.basket.id, variable_id=other_variable.id
         )
         with pytest.raises(ValidationError):
             basket_variable.clean()
         expected = 0
-        assert expected == BasketVariable.objects.count()
+        self.assertEqual(expected, BasketVariable.objects.count())
 
 
 class TestScriptModel:
