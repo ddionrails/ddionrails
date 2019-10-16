@@ -94,7 +94,6 @@ class TestBasketModel:
 
 @pytest.mark.usefixtures("study", "basket", "variable")
 class TestBasketVariableModel(unittest.TestCase):
-    """ TODO """
 
     study: Study
     basket: Basket
