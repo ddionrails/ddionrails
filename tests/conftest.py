@@ -9,6 +9,7 @@ from io import BytesIO
 
 import PIL.Image
 import pytest
+from _pytest.fixtures import FixtureRequest
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
@@ -49,10 +50,13 @@ def analysis_unit(db):
     )
 
 
-@pytest.fixture
-def basket(study, user):
+@pytest.fixture(name="basket")
+def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory):
     """ A basket in the database, relates to study and user fixture """
-    return BasketFactory(name="some-basket", study=study, user=user)
+    _factory = BasketFactory(name="some-basket", study=study, user=user)
+    if request.instance:
+        request.instance.basket = _factory
+    return _factory
 
 
 @pytest.fixture
@@ -180,10 +184,13 @@ def question_variable(db):  # pylint: disable=unused-argument,invalid-name
     return QuestionVariableFactory()
 
 
-@pytest.fixture
-def study(db):
+@pytest.fixture(name="study")
+def _study(request: FixtureRequest, db: pytest.fixture):
     """ A study in the database """
-    return StudyFactory(name="some-study", label="Some Study")
+    _factory = StudyFactory(name="some-study", label="Some Study")
+    if request.instance:
+        request.instance.study = _factory
+    return _factory
 
 
 @pytest.fixture
@@ -227,10 +234,10 @@ def user(db):
     return UserFactory(username="some-user", password="some-password")  # nosec
 
 
-@pytest.fixture
-def variable(db):
+@pytest.fixture(name="variable")
+def _variable(request: FixtureRequest, db: pytest.fixture):
     """ A variable in the database """
-    return VariableFactory(
+    _factory = VariableFactory(
         name="some-variable",
         label="Some Variable",
         label_de="Eine Variable",
@@ -250,6 +257,9 @@ def variable(db):
             "missings": [True, False],
         },
     )
+    if request.instance:
+        request.instance.variable = _factory
+    return _factory
 
 
 @pytest.fixture
