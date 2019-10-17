@@ -6,7 +6,9 @@
         </div>
     {% endif %}
     <div class="row">
-        <div class="col-xl-4 offset-md-4">
+        <div class="d-flex row col-xl-4 offset-md-4 justify-content-center">
+            {% block password_reset_done %}
+            {% endblock password_reset_done %}
             <div class="card">
                 <div class="card-header"><b>User login</b>
                 </div>
