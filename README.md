@@ -180,7 +180,7 @@ file for details
 
 <!-- Markdown link & img dfn's -->
 
-[python-badge]: https://img.shields.io/badge/Python-3.7.4-blue.svg
+[python-badge]: https://img.shields.io/badge/Python-3.8-blue.svg
 [django-badge]: https://img.shields.io/badge/Django-2.2.4-blue.svg
 [license-badge]: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
