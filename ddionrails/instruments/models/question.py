@@ -215,15 +215,13 @@ class Question(ModelMixin, models.Model):
     @staticmethod
     def overwrite_item_values_by_language(item: QuestionItem, language: str) -> None:
         """
-        pylint: disable=fixme
-        TODO: instruments.models.question.translate_item needs documentation
         """
-        item["text"] = item.get("text_%s" % language, item.get("text", ""))
+        item["text"] = item.get(f"text_{language}", item.get("text", ""))
         item["instruction"] = item.get(
-            "instruction_%s" % language, item.get("instruction", "")
+            f"instruction_{language}", item.get("instruction", "")
         )
         for answer in item.get("answers", []):
-            answer["label"] = answer.get("label_%s" % language, answer.get("label", ""))
+            answer["label"] = answer.get(f"label_{language}", answer.get("label", ""))
 
     def translations(self) -> Dict[str, List]:
         """ Returns a dictionary containing translations
