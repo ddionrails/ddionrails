@@ -16,8 +16,8 @@ along with DDI on Rails.  If not, see <https://www.gnu.org/licenses/>.
 - authors :
 
   - 2015-2019 Marcel Hebing (DIW Berlin)
-  - ?-2018 Marius Pahl (DIW Berlin)
-  - ?-2018 Carolin Stolpe (DIW Berlin)
+  - 2015-2019 Marius Pahl (DIW Berlin)
+  - 2015-2018 Carolin Stolpe (DIW Berlin)
   - 2018-2019 Heinz-Alexander Fütterer (DIW Berlin)
   - 2019 Dominique Hansen (DIW Berlin)
 
