@@ -16,6 +16,7 @@ from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
 from django.urls import reverse
 
+from ddionrails.base.helpers.ddionrails_typing import QuestionItem
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.imports.helpers import hash_with_namespace_uuid
@@ -212,7 +213,7 @@ class Question(ModelMixin, models.Model):
         return [key.replace("text_", "") for key in keys_first_item if "text_" in key]
 
     @staticmethod
-    def translate_item(item: Dict, language: str) -> None:
+    def overwrite_item_values_by_language(item: QuestionItem, language: str) -> None:
         """
         pylint: disable=fixme
         TODO: instruments.models.question.translate_item needs documentation
@@ -245,11 +246,17 @@ class Question(ModelMixin, models.Model):
     # BODY value still needs to be processed in the template.
     def item_array(self, language=None) -> List:
         """ Returns a list containing the items of this Question object """
-        items = copy.deepcopy(self.items)
-        items = items.values() if items.__class__ == dict else items
+        items_file = Union[List[QuestionItem], Dict[str, QuestionItem]]
+        items_file_content: items_file = copy.deepcopy(self.items)
+        items: List[QuestionItem]
+
+        if isinstance(items_file_content, dict):
+            items = list(items_file_content.values())
+        else:
+            items = items_file_content
         for item in items:
             if language:
-                self.translate_item(item, language)
+                self.overwrite_item_values_by_language(item, language)
             if "item" not in item:
                 item["item"] = "root"
             if "sn" not in item:
