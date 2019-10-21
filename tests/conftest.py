@@ -6,6 +6,7 @@
 import time
 import uuid
 from io import BytesIO
+from typing import Callable, Generator
 
 import PIL.Image
 import pytest
@@ -126,17 +127,35 @@ def empty_data():
 
 
 @pytest.fixture()
-def image_file(request) -> BytesIO:
+def image_file(request) -> Generator[BytesIO, None, None]:
     """ Provides an in memory image file. """
     _file = BytesIO()
-    _image = PIL.Image.new("RGBA", size=(700, 100))
+    _image = PIL.Image.new("RGBA", size=(1, 1))
     _image.save(_file, "png")
     _file.name = "test.png"
     _file.seek(0)
     if request.instance:
         request.instance.image_file = _file
     yield _file
-    _file = None
+    del _file
+
+
+@pytest.fixture(name="variable_image_file")
+def _variable_image_file(request) -> Generator[Callable, None, None]:
+    """ Provides a function to create an in memory image file of chosen type. """
+
+    def _image_file(file_type: str, size: int = 1) -> BytesIO:
+        _file = BytesIO()
+        _image = PIL.Image.new("1", size=(size, size))
+        _image.save(_file, file_type)
+        _file.name = f"test.{file_type}"
+        _file.seek(0)
+        return _file
+
+    if request.instance:
+        request.instance.variable_image_file = _image_file
+    yield _image_file
+    del _image_file
 
 
 @pytest.fixture

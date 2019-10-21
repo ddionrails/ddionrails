@@ -3,13 +3,9 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
-
 # Temporarily pinned
 # ------------------------------------------------------------------------------
-
 # Django
 # ------------------------------------------------------------------------------
 django = "*"
@@ -22,29 +18,24 @@ django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
-
 # PostgreSQL
 # ------------------------------------------------------------------------------
 psycopg2-binary = "*"
-
 # Elasticsearch
 # ------------------------------------------------------------------------------
 django-elasticsearch-dsl = "*"
 elasticsearch-dsl = "<=8.*"
-
 # Markup
 # ------------------------------------------------------------------------------
 markdown = "*"
 python-frontmatter = "*"
-
 # Other
 # ------------------------------------------------------------------------------
 gitpython = "*"
 paver = "*"
-
+requests-mock = "*"
 
 [dev-packages]
-
 # Code quality
 # ------------------------------------------------------------------------------
 autoflake = "*"
@@ -56,7 +47,6 @@ pre-commit = "*"
 pylint = "*"
 pylint-django = "*"
 pylint-unittest = "*"
-
 # Testing
 # ------------------------------------------------------------------------------
 pytest = "*"
@@ -67,19 +57,16 @@ pytest-splinter = "*"
 factory-boy = "*"
 django-coverage-plugin = "*"
 fakeredis = "*"
-
 # Documentation
 # ------------------------------------------------------------------------------
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
 # Local
 # ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
 rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "*"
-
 
 [requires]
 python_version = "3.8"
