@@ -1,4 +1,4 @@
-FROM python:3.7.4-slim-stretch
+FROM python:3.8.0-slim-buster
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -14,16 +14,20 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        bash-completion=1:2.1-4.3 \
-        build-essential=12.3 \
-        curl=7.52.1-5+deb9u9 \
-        git=1:2.11.0-3+deb9u4 \
-        graphviz=2.38.0-17 \
-        graphviz-dev=2.38.0-17 \
-        netcat=1.10-41 \
-        openssh-client=1:7.4p1-10+deb9u6 \
-        python-psycopg2=2.6.2-1 \
-        vim-tiny=2:8.0.0197-4+deb9u3 \
+    bash-completion>=1:2 \
+    build-essential>=12.3 \
+    curl>=7 \
+    git>=1:2 \
+    graphviz>=2.38 \
+    graphviz-dev>=2.38 \
+    netcat>=1 \
+    openssh-client>=1:7 \
+    python-psycopg2>=2 \
+    libpq-dev>=11.5 \
+    gcc>=4:8 \
+    libjpeg-dev>=1:1.5 \
+    zlib1g-dev>=1:1.2 \
+    vim-tiny>=2:8 \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
     && pipfile2req Pipfile.lock > Requirements.txt \
     && pipfile2req --dev Pipfile.lock >> Requirements.txt \
