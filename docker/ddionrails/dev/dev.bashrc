@@ -22,3 +22,5 @@ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;30m\]@\[\033[0
 
 bind -m vi-insert "\C-l":clear-screen
 bind -m vi-command "\C-l":clear-screen
+
+export GPG_TTY=$(tty)
