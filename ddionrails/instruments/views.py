@@ -4,6 +4,7 @@
 
 import difflib
 import uuid
+from typing import TypedDict
 
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
@@ -40,7 +41,8 @@ class InstrumentRedirectView(RedirectView):
         return instrument.get_absolute_url()
 
 
-class InstrumentDetailView(DetailView):
+# Disable pylint warning since DetailView comes from django.
+class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
     """ DetailView for instruments.Instrument model """
 
     template_name = "instruments/instrument_detail.html"
@@ -105,21 +107,25 @@ def question_detail(
         row_helper=RowHelper(),
     )
     # TODO: Language setup is not centralized. There is no global switch.
-    # This would have to be overhauled ff the a global switch is implemented.
+    # This would have to be overhauled if the a global switch is implemented.
     images = QuestionImage.objects.filter(question_id=question.id).all()
-    image_context = dict()
+
+    class ImageContextMapping(TypedDict):
+        image_label: str  # One label for both languages
+        en: str  # URL of english image
+        de: str  # URL of german image
+
+    image_context: ImageContextMapping = dict()
     for _image in images:
-        image_context.update(
-            {_image.language + "_url": settings.MEDIA_URL + str(_image.image.file)}
-        )
+        image_context[_image.language] = settings.MEDIA_URL + str(_image.image.file)
         # English label will be default label without global switch.
         # German label is the fallback if no english image exists.
         if _image.language == "en":
-            image_context.update({"image_label": _image.label})
+            image_context["image_label"] = _image.label
         elif "image_label" not in image_context:
-            image_context.update({"image_label": _image.label})
+            image_context["image_label"] = _image.label
 
-    context.update(image_context)
+    context["image_urls"] = image_context
     return render(request, "questions/question_detail.html", context=context)
 
 
