@@ -5,8 +5,9 @@ from __future__ import annotations
 
 import inspect
 import uuid
-from collections import OrderedDict
-from typing import Dict, List, Union
+from collections import OrderedDict, defaultdict
+from functools import lru_cache
+from typing import Any, Dict, List, Union
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
@@ -129,6 +130,7 @@ class Variable(ModelMixin, models.Model):
         self.id = hash_with_namespace_uuid(
             self.dataset_id, self.name, cache=False
         )  # pylint: disable=C0103
+        self.period_id = self.dataset.period_id
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -227,16 +229,13 @@ class Variable(ModelMixin, models.Model):
         except AttributeError:
             return default
 
+    @lru_cache(maxsize=1)
     def get_related_variables(self) -> Union[List, QuerySet]:
         """ Returns the related variables by concept """
         if self.concept:
-            variables = (
-                self.__class__.objects.select_related(
-                    "dataset", "dataset__study", "dataset__period"
-                )
-                .filter(concept_id=self.concept.id)
-                .filter(dataset__study_id=self.dataset.study.id)
-            )
+            variables = Variable.objects.select_related(
+                "dataset", "dataset__study"
+            ).filter(concept=self.concept, dataset__study=self.dataset.study)
         else:
             variables = []
         return variables
@@ -245,16 +244,21 @@ class Variable(ModelMixin, models.Model):
         """ Returns the related variables by concept, ordered by period """
         results = dict()
         periods = Period.objects.filter(study_id=self.dataset.study.id).all()
-        for period in periods:
-            results[period.name] = list()
-        if "none" not in results:
-            results["none"] = list()
+        period_names = self._period_model_to_name_dict(periods)
+        results = {period_name: list() for period_name in period_names.values()}
+        results["none"] = list()
         for variable in self.get_related_variables():
             try:
-                results[variable.dataset.period.name].append(variable)
-            except AttributeError:
+                results[period_names[variable.period_id]].append(variable)
+            except KeyError:
                 results["none"].append(variable)
+        if not results["none"]:
+            del results["none"]
         return OrderedDict(sorted(results.items()))
+
+    @staticmethod
+    def _period_model_to_name_dict(instances: List[Period]) -> Dict[Dict[str, Any]]:
+        return {instance.id: instance.name for instance in instances}
 
     def has_origin_variables(self) -> bool:
         """
