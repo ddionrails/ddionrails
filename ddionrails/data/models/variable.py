@@ -5,9 +5,8 @@ from __future__ import annotations
 
 import inspect
 import uuid
-from collections import OrderedDict, defaultdict
-from functools import lru_cache
-from typing import Any, Dict, List, Union
+from collections import OrderedDict
+from typing import Any, Dict, List, NamedTuple, Optional, Union
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
@@ -25,7 +24,7 @@ from ddionrails.studies.models import Study
 from .dataset import Dataset
 
 
-class Variable(ModelMixin, models.Model):
+class Variable(ModelMixin, models.Model):  # type: ignore
     """
     Stores a single variable,
     related to :model:`data.Dataset`,
@@ -83,7 +82,6 @@ class Variable(ModelMixin, models.Model):
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"
     )
-    languages = list()
     statistics = JSONBField(
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
     )
@@ -97,7 +95,7 @@ class Variable(ModelMixin, models.Model):
     #############
     # relations #
     #############
-    dataset = models.ForeignKey(
+    dataset: Dataset = models.ForeignKey(
         Dataset,
         blank=True,
         null=True,
@@ -105,7 +103,7 @@ class Variable(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to data.Dataset",
     )
-    concept = models.ForeignKey(
+    concept: Concept = models.ForeignKey(
         Concept,
         blank=True,
         null=True,
@@ -113,7 +111,7 @@ class Variable(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Concept",
     )
-    period = models.ForeignKey(
+    period: Period = models.ForeignKey(
         Period,
         blank=True,
         null=True,
@@ -123,13 +121,23 @@ class Variable(ModelMixin, models.Model):
     )
     image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
 
-    def save(
+    # Non database attributes
+    class Cache(NamedTuple):
+        """Cache data received from database."""
+
+        id: uuid.UUID
+        content: List[Variable]
+
+    related_cache: Optional[Cache] = None
+    languages: List[str] = list()
+
+    def save(  # type: ignore
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.dataset_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         self.period_id = self.dataset.period_id
         super().save(
             force_insert=force_insert,
@@ -153,17 +161,19 @@ class Variable(ModelMixin, models.Model):
 
         Uses the "dataset" and "name" fields
         """
-        return reverse(
-            "data:variable_detail",
-            kwargs={
-                "study_name": self.dataset.study.name,
-                "dataset_name": self.dataset.name,
-                "variable_name": self.name,
-            },
+        return str(
+            reverse(
+                "data:variable_detail",
+                kwargs={
+                    "study_name": self.dataset.study.name,
+                    "dataset_name": self.dataset.name,
+                    "variable_name": self.name,
+                },
+            )
         )
 
     @classmethod
-    def get(cls, parameters: Dict) -> Variable:
+    def get(cls, parameters: Dict[str, str]) -> Variable:
         study = get_object_or_404(Study, name=parameters["study_name"])
         dataset = get_object_or_404(Dataset, name=parameters["dataset_name"], study=study)
         variable = get_object_or_404(cls, name=parameters["name"], dataset=dataset)
@@ -182,7 +192,7 @@ class Variable(ModelMixin, models.Model):
             html = ""
         return html
 
-    def get_categories(self) -> List:
+    def get_categories(self) -> List[Dict[str, str]]:
         """ Return a list of dictionaries based on the "categories" field """
         if self.categories:
             categories = []
@@ -200,7 +210,7 @@ class Variable(ModelMixin, models.Model):
 
         return []
 
-    def get_study(self, study_id=False):
+    def get_study(self, study_id: bool = False) -> Union[Study, uuid.UUID]:
         """ Returns the related study_id | Study instance """
         if study_id:
             return self.dataset.study.id
@@ -215,30 +225,28 @@ class Variable(ModelMixin, models.Model):
         except AttributeError:
             return default
 
-    def get_period(self, default=None, period_id=False):
-        """ Returns the related period_id | period_name | Period instance | a default """
-        try:
-            period_1 = self.dataset.period
-            period_2 = self.period
-            period = period_2 if period_2 else period_1
-            if period_id is True:
-                return period.id
-            if period_id == "name":
-                return period.name
-            return period
-        except AttributeError:
-            return default
+    @property
+    def period_fallback(self):
+        """Retrieve period from dataset if variable period is not set yet."""
+        if self.period:
+            return self.period
+        return self.dataset.period
 
-    @lru_cache(maxsize=1)
     def get_related_variables(self) -> Union[List, QuerySet]:
         """ Returns the related variables by concept """
-        if self.concept:
-            variables = Variable.objects.select_related(
-                "dataset", "dataset__study"
-            ).filter(concept=self.concept, dataset__study=self.dataset.study)
-        else:
-            variables = []
-        return variables
+        # Only update if cache is empty or
+        # if concept has changed.
+        if self.related_cache is None or self.related_cache.id != getattr(
+            self.concept, "id", None
+        ):
+            if self.concept:
+                variables = Variable.objects.select_related(
+                    "dataset", "dataset__study"
+                ).filter(concept=self.concept, dataset__study=self.dataset.study)
+                self.related_cache = self.Cache(id=self.concept.id, content=variables)
+            else:
+                self.related_cache = None
+        return getattr(self.related_cache, "content", list())
 
     def get_related_variables_by_period(self) -> OrderedDict:
         """ Returns the related variables by concept, ordered by period """
@@ -290,9 +298,8 @@ class Variable(ModelMixin, models.Model):
                 result[study.name][period.name] = list()
         for target_variable in target_variables:
             study_name = target_variable.dataset.study.name
-            period_name = target_variable.get_period(
-                period_id="name", default="no period"
-            )
+            period = getattr(target_variable, "period_fallback", None)
+            period_name = getattr(period, "name", "no period")
             if object_type == "variable":
                 result[study_name][period_name].append(target_variable)
             elif object_type == "question":
@@ -302,7 +309,11 @@ class Variable(ModelMixin, models.Model):
         return result
 
     def get_target_variables(self):
-        """ Return "target variables" i.e. variables that have this variable instance as their "origin" """
+        """Return "target variables"
+
+        Target variables are those,
+        that that have this variable instance as their "origin"
+        """
         return self.get_targets_by_study_and_period(object_type="variable")
 
     def get_origins_by_study_and_period(self, object_type="variable"):
@@ -327,9 +338,8 @@ class Variable(ModelMixin, models.Model):
                 result[study.name][period.name] = list()
         for origin_variable in origin_variables:
             study_name = origin_variable.dataset.study.name
-            period_name = origin_variable.get_period(
-                period_id="name", default="no period"
-            )
+            period = getattr(origin_variable, "period_fallback", None)
+            period_name = getattr(period, "name", "no period")
             if object_type == "variable":
                 result[study_name][period_name].append(origin_variable)
             elif object_type == "question":
@@ -339,11 +349,17 @@ class Variable(ModelMixin, models.Model):
         return result
 
     def get_origin_variables(self):
-        """ Return "origin variables" i.e. variables that have this variable instance as their "target" """
+        """ Return "origin variables"
+
+        Origin variables are those that have this variable instance as their "target"
+        """
         return self.get_origins_by_study_and_period(object_type="variable")
 
     def get_origin_questions(self):
-        """ Return "origin questions" i.e. questions that have this variable instance as their "target" """
+        """ Return "origin questions"
+
+        Origin Questions are those that have this variable instance as their "target"
+        """
         return self.get_origins_by_study_and_period(object_type="question")
 
     def has_translations(self) -> bool:
@@ -362,7 +378,7 @@ class Variable(ModelMixin, models.Model):
         return self.languages
 
     def translation_table(self) -> Dict:
-        """ Return a dictionary of languages and translated pairs of "labels" and "categories" """
+        """Get labels and categories in their available languages."""
         translation_table = dict(label=dict(en=self.label))
         for language in self.translation_languages():
             translation_table["label"][language] = getattr(self, f"label_{language}")
@@ -409,3 +425,12 @@ class Variable(ModelMixin, models.Model):
             concept_key=concept_key,
             type="variable",
         )
+
+    def __lt__(self, variable: Variable) -> bool:
+        if not isinstance(variable, Variable):
+            raise TypeError(
+                "'<' not supported between instances of {} and {}".format(
+                    type(self), type(variable)
+                )
+            )
+        return self.name < variable.name
