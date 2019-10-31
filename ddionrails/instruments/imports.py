@@ -64,7 +64,8 @@ class InstrumentImport(imports.Import):
             question.items = q.get("items", list)
             question.save()
             image_data = q.get("image", None)
-            self.question_image_import(question.id, image_data)
+            if image_data:
+                self.question_image_import(question.id, image_data)
 
         instrument.label = content.get("label", "")
         instrument.label_de = content.get("label_de", "")
