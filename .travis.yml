@@ -23,10 +23,15 @@ before_script:
   - docker-compose exec web npm install
   - docker-compose exec web npm run build
 script:
-  - docker-compose exec web pytest --cov-report xml
-  - docker-compose exec web pytest --cov-report xml -m "functional" tests/functional/imports/ --cov-append
-  - docker-compose exec web pytest --cov-report xml -m "functional and not search" tests/functional/browser --cov-append
-  - docker-compose exec web mv coverage.xml codecov/ # move coverage report to directory, that is mounted as volume
+  - docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch
+  - >-
+    docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch
+    -m "functional" tests/functional/imports/ --cov-append
+  - >-
+    docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch
+    -m "functional and not search" tests/functional/browser --cov-append
+  # move coverage report to directory, that is mounted as volume
+  - docker-compose exec web mv coverage.xml codecov/
   # check if migrations can be applied without errors
   - docker-compose exec web python manage.py migrate
   # check if production settings file throws warnings

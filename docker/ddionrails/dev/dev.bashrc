@@ -23,4 +23,7 @@ PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u\[\033[01;30m\]@\[\033[0
 bind -m vi-insert "\C-l":clear-screen
 bind -m vi-command "\C-l":clear-screen
 
-export GPG_TTY=$(tty)
+if [ -d "${HOME}/.gnupg" ]; then
+  git config --global user.signingkey $(gpg --list-secret-keys --keyid-format LONG | sed -En "s/^sec.*\/([A-Z0-9]*)\s.*$/\1/p")
+  export GPG_TTY=$(tty)
+fi
