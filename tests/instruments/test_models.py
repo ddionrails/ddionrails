@@ -70,26 +70,10 @@ class TestQuestionModel:
         expected = None
         assert expected == question.next_question()
 
-    def test_get_period_method(self, question):
-        result = question.get_period()
+    def test_period_fallback(self, question: Question):
+        question.period = None
+        result = question.period_fallback
         expected = question.instrument.period
-        assert expected == result
-
-    def test_get_period_id(self, question):
-        result = question.get_period(period_id=True)
-        expected = question.instrument.period.id
-        assert expected == result
-
-    def test_get_period_name(self, question):
-        result = question.get_period(period_id="name")
-        expected = question.instrument.period.name
-        assert expected == result
-
-    def test_get_period_default(self, question):
-        question.instrument.period = None
-        question.instrument.save()
-        result = question.get_period(default="no-period", period_id="name")
-        expected = "no-period"
         assert expected == result
 
     def test_get_concepts_method_no_concept(self, question):
