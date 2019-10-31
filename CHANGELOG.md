@@ -11,6 +11,38 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.2.0] - 2019-10-31
+
+### Changed
+
+- BasketVariables are no longer deleted when their corresponding variables
+  are deleted.
+
+  - Function was implemented to clean up stale BaketVariables if the need arises.
+
+- Copyright notice to include former contributors.
+- dev: NGINX now set up for debugging long requests.
+- dev: Setup now better supports commit signing.
+- Landing page for successful password reset was changed.
+  
+  - It now extends the standard registration template.
+  - This extension adds a badge with a success message.
+
+- Switch to Python 3.8 from 3.7.
+ 
+### Fixed
+
+- dev: Move pytest coverage flags from setup.cfg to .travis.yml.
+- 
+  + Coverage Reports in Pytest versions newer than 5.0.1
+    did cause issues with the vscode debugger.
+   
+- dev: Pylint Pre-commit hook properly uses pylint_django plugin.
+- sort_id for variable imports is now incremented for each variable.
+
+  - Before it was only set to 1 for each variable.
+
+
 ## [4.1.2] - 2019-10-07
 
 ### Fixed
@@ -296,7 +328,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.2.0...develop
+[4.2.0]: https://github.com/ddionrails/ddionrails/compare/v4.1.2...v4.2.0
 [4.1.2]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/ddionrails/ddionrails/compare/v4.0.2...v4.1.0
