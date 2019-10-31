@@ -35,7 +35,10 @@ repos:
         pass_filenames: true
       - id: pylint
         name: lint python code (pylint)
-        entry: pylint --rcfile=setup.cfg
+        entry: >-
+          pylint
+          --load-plugins=pylint_django,pylint_django.checkers.db_performance
+          --rcfile=setup.cfg
         language: system
         files: '.*\.py'
         pass_filenames: true
