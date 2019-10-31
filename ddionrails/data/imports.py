@@ -5,6 +5,7 @@
 import json
 import logging
 from collections import OrderedDict
+from typing import Dict, List, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -25,20 +26,18 @@ class DatasetJsonImport(imports.Import):
         )
         self._import_dataset(self.name, self.content)
 
-    def _import_dataset(self, name, content):
+    def _import_dataset(self, name, content: Union[Dict, List]):
         dataset, _ = Dataset.objects.get_or_create(study=self.study, name=name)
         sort_id = 0
-        if content.__class__ == list:
-            for var in content:
-                self._import_variable(var, dataset, sort_id)
-        else:
-            for name, var in content.items():
-                self._import_variable(var, dataset, sort_id)
+        if isinstance(content, dict):
+            content = [value for value in content.values()]
+        for var in content:
+            self._import_variable(var, dataset, sort_id)
+            sort_id += 1
 
     def _import_variable(self, var, dataset, sort_id):
         name = var["variable"]
         variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
-        sort_id += 1
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)

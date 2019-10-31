@@ -1,4 +1,4 @@
-FROM python:3.7.4-alpine
+FROM python:3.8.0-alpine3.10
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -12,14 +12,14 @@ COPY ./ ${DOCKER_APP_DIRECTORY}/
 
 # hadolint ignore=DL3003,DL3018
 RUN apk add --no-cache \
-        bash \
-        build-base \
-        git \
-        jpeg-dev \
-        nodejs \
-        nodejs-npm \
-        postgresql-dev \
-        zlib-dev \
+    bash \
+    build-base \
+    git \
+    jpeg-dev \
+    nodejs \
+    nodejs-npm \
+    postgresql-dev \
+    zlib-dev \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
     && pipfile2req Pipfile.lock > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \

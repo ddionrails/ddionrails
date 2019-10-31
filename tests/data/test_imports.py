@@ -161,7 +161,7 @@ class TestDatasetJsonImport:
         assert dataset == variable.dataset
         assert "cat" == variable.scale
         assert var["variable"] == variable.name
-        assert sort_id + 1 == variable.sort_id
+        assert sort_id == variable.sort_id
         assert "1" == variable.statistics["valid"]
         assert "0" == variable.statistics["invalid"]
         assert 1 == variable.categories["frequencies"][0]
