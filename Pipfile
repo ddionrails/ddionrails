@@ -67,6 +67,7 @@ pytest-splinter = "*"
 factory-boy = "*"
 django-coverage-plugin = "*"
 fakeredis = "*"
+requests-mock = "*"
 
 # Documentation
 # ------------------------------------------------------------------------------
