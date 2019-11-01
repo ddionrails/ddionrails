@@ -13,6 +13,7 @@ import requests
 from django.conf import settings
 from filer.fields.folder import Folder
 from filer.models import Image
+from requests.exceptions import RequestException
 
 
 def read_csv(filename, path=None):
@@ -61,7 +62,7 @@ def _hash_with_namespace_uuid(namespace: uuid.UUID, name: str) -> uuid.UUID:
     return uuid.uuid5(namespace, name)
 
 
-def download_image(url: str) -> BytesIO:
+def download_image(url: str) -> Optional[BytesIO]:
     """ Load data from a web address into a BytesIO object.
 
     Args:
@@ -70,8 +71,22 @@ def download_image(url: str) -> BytesIO:
     Returns:
         The ressource located at the address.
     """
-    _data = requests.get(url).content
-    _output = BytesIO(_data)
+    max_size = 200000
+    _data = b""
+    try:
+        response = requests.get(url, timeout=10, stream=True)
+    except RequestException:
+        return None
+    else:
+        if response.status_code != 200:
+            return None
+        for chunk in response.iter_content(chunk_size=50000):
+            _data = _data + chunk
+            if len(_data) > max_size:
+                response.close()
+                return None
+        response.close()
+        _output = BytesIO(_data)
     return _output
 
 

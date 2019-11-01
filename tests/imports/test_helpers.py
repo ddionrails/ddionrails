@@ -4,7 +4,7 @@
 """ Test cases for helpers in ddionrails.imports app """
 
 import unittest
-from io import BytesIO
+from typing import Dict, TypedDict
 
 import pytest
 import requests_mock
@@ -12,6 +12,7 @@ from filer.models import Folder, Image
 from pytest_mock import MockFixture
 
 from ddionrails.imports.helpers import download_image, read_csv, store_image
+from tests.conftest import VariableImageFile
 
 
 @pytest.mark.django_db
@@ -19,7 +20,7 @@ from ddionrails.imports.helpers import download_image, read_csv, store_image
 class TestHelpers(unittest.TestCase):
     mocker = MockFixture
     # This is overwritten by a fixture function
-    variable_image_file = lambda file_type, size=1: BytesIO()
+    variable_image_file: VariableImageFile
 
     def test_read_csv(self):
         filename = "sample.csv"
@@ -49,10 +50,25 @@ class TestHelpers(unittest.TestCase):
             result = download_image(url).getvalue()
         self.assertEqual(expected, result)
 
+    def test_download_image_too_large(self):
+        """ The download function should load anything above 200KB. """
+        url = "http://test.de"
+        # This is one byte too large.
+        image = b"A" * 200001
+        with requests_mock.mock() as mocked_request:
+            mocked_request.get(url, content=image)
+            result = download_image(url)
+        self.assertEqual(None, result)
+
     def test_store_image(self):
         """ Can the QuestionImage store an image file? """
         image_file = self.variable_image_file(file_type="png", size=1)
-        image_info = {
+
+        class ImageTestInfo(TypedDict):
+            name: str
+            folders: Dict[str, str]
+
+        image_info: ImageTestInfo = {
             "name": "test_image",
             "folders": {"child": "test", "parent": "images"},
         }

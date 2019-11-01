@@ -6,7 +6,7 @@
 import time
 import uuid
 from io import BytesIO
-from typing import Callable, Generator
+from typing import Callable, Generator, Protocol
 
 import PIL.Image
 import pytest
@@ -66,7 +66,7 @@ def concept(db):
     return ConceptFactory(
         name="some-concept",
         label="Some Concept",
-        label_de="Some Konzept",
+        label_de="Ein Konzept",
         description="This is some concept",
     )
 
@@ -291,7 +291,7 @@ def variable_with_concept(variable, concept):
 
 @pytest.fixture
 def uuid_identifier():
-    """ A UUID that is used for testing views and URLConfs """
+    """ A UUID that is used for testing views and URLConfigs """
     return uuid.UUID("12345678123456781234567812345678")
 
 
@@ -408,3 +408,10 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+class VariableImageFile(Protocol):  # pylint disable:too-few-public-methods
+    """Type for variable Image file factory."""
+
+    def __call__(self, file_type: str, size: int = 1) -> BytesIO:
+        ...
