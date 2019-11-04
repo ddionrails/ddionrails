@@ -63,9 +63,6 @@
     "lockFileMaintenance": {
       "enabled": true
     },
-    "pipenv": {
-      "enabled": true
-    },
     "rangeStrategy": "bump",
     "schedule": "before 3am on Monday",
     "statusCheckVerify": true
