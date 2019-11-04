@@ -11,6 +11,7 @@ from typing import Callable, Generator, Protocol
 import PIL.Image
 import pytest
 from _pytest.fixtures import FixtureRequest
+from django.conf import settings
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
@@ -101,7 +102,6 @@ def dataset(db):
 @pytest.fixture(scope="session")
 def elasticsearch_indices():
     """ Fixture that creates elasticsearch indices and cleans up after testing """
-    from django.conf import settings
 
     # setting ELASTICSEARCH_DSL_AUTOSYNC to
     # True enables indexing when saving model instances
@@ -410,8 +410,9 @@ def publications_index(
     assert response["deleted"] > 0
 
 
-class VariableImageFile(Protocol):  # pylint disable:too-few-public-methods
+# pragma: no cover
+class VariableImageFile(Protocol):  # pylint: disable=too-few-public-methods
     """Type for variable Image file factory."""
 
     def __call__(self, file_type: str, size: int = 1) -> BytesIO:
-        ...
+        ...  # pylint: disable=pointless-statement
