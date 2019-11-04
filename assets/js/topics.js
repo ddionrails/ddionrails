@@ -1,4 +1,4 @@
-/*!
+/* !
  * ddionrails - topics.js
  * Copyright 2018-2019
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
@@ -21,14 +21,14 @@ import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
 $.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
 
 // Get current URL to read 'open' Parameter for opening specified node
-var urlString = window.location.href;
-var url = new URL(urlString);
-var open = url.searchParams.get("open");
+const urlString = window.location.href;
+let url = new URL(urlString);
+const open = url.searchParams.get("open");
 
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
 // TODO: Change this string nightmare to something that uses proper DOM elements
-var filterOptionsString = `
+let filterOptionsString = `
 <span class='btn-group btn-group-sm filter-options' data-container='body' role='group'>
     <button type='button' data-tooltip='tooltip' data-container='body' title='Show all related variables' onclick='filter(this, \"variable\")' class='btn btn-link filter-option-variable' >
         <span class='fas fa-chart-bar' aria-hidden='true'></span>
@@ -40,14 +40,14 @@ var filterOptionsString = `
         <span class='fas fa-shopping-cart' aria-hidden='true'></span>
     </button>
 `;
-var clipboard = `
+const clipboard = `
 <button type='button' data-tooltip='tooltip' data-container='body' title='Copy URL' onclick='copyUrlToClipboard(this)' class='btn btn-link'>
     <span class='fas fa-copy' aria-hidden='true'></span>
 </button>
 `;
-var filterAndClipboard = filterOptionsString + clipboard + "</span>";
+const filterAndClipboard = filterOptionsString + clipboard + "</span>";
 filterOptionsString = filterOptionsString + "</span>";
-var apiUrl =
+const apiUrl =
   location.protocol +
   "//" +
   window.location.host +
@@ -55,7 +55,7 @@ var apiUrl =
   study +
   "/" +
   language;
-var baseUrl =
+const baseUrl =
   location.protocol +
   "//" +
   window.location.host +
@@ -70,14 +70,14 @@ $(function() {
   $("#tree").fancytree({
     extensions: ["filter", "glyph"],
     types: {
-      topic: { icon: "fas fa-cogs" },
-      concept: { icon: "fas fa-cog" },
-      variable: { icon: "fas fa-chart-bar" },
-      question: { icon: "fas fa-tasks" }
+      topic: {icon: "fas fa-cogs"},
+      concept: {icon: "fas fa-cog"},
+      variable: {icon: "fas fa-chart-bar"},
+      question: {icon: "fas fa-tasks"},
     },
     filter: {
       counter: false, // No counter badges
-      mode: "hide" // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
+      mode: "hide", // "dimm": Grayout unmatched nodes, "hide": remove unmatched nodes
     },
     icon: function(event, data) {
       return data.typeInfo.icon;
@@ -106,17 +106,17 @@ $(function() {
         doc: "fas fa-file",
         docOpen: "fas fa-file",
         folder: "fas fa-folder",
-        folderOpen: "fas fa-folder-open"
-      }
+        folderOpen: "fas fa-folder-open",
+      },
     },
     source: {
       url: apiUrl, // load data from api (topic and concepts only)
-      cache: false
+      cache: false,
     },
     renderNode: function(event, data) {
-      var node = data.node;
-      var d = node.data.description || "";
-      var $spanTitle = $(node.span).find("span.fancytree-title");
+      const node = data.node;
+      const d = node.data.description || "";
+      const $spanTitle = $(node.span).find("span.fancytree-title");
       if ($(node.span).find("span.filter-options").length === 0) {
         if (node.type === "topic") {
           $spanTitle.after(filterAndClipboard); // insert additional copy_to_clipboard button to button group
@@ -129,76 +129,76 @@ $(function() {
     // When tree fully loaded: if parameter 'open' is set in URL open specified node
     init: function(event, data) {
       if (open != null) {
-        var node = $("#tree").fancytree("getNodeByKey", open);
+        const node = $("#tree").fancytree("getNodeByKey", open);
         node.makeVisible();
         node.setActive(true);
       }
-    }
+    },
   });
 
   // Search the tree for search string
   $("#btn-search").on("click", function() {
     $("#tree")
-      .fancytree("getTree")
-      .filterBranches($("#search").val(), { autoExpand: true });
+        .fancytree("getTree")
+        .filterBranches($("#search").val(), {autoExpand: true});
   });
 
   // Trigger search on enter
   $(".search-bar").keypress(function(e) {
     if (e.which === 13) {
-      //Enter key pressed
+      // Enter key pressed
       $("#btn-search").click();
     }
   });
 
   // Activate tooltip for more information about filter buttons, e.g. 'Show all related variables'
-  $("body").tooltip({ selector: "[data-tooltip=tooltip]", trigger: "hover" });
+  $("body").tooltip({selector: "[data-tooltip=tooltip]", trigger: "hover"});
 });
 
 // On click on a topic or concept show all variables oder questions
 function filter(node, type) {
   // show spinner while loading
   $("#tree_variables").empty();
-  $(".sk-three-bounce").show();
+  $(".sk-flow").show();
   $("#tree")
-    .find("button[class*='-btn-active']")
-    .removeClass("variable-btn-active question-btn-active");
+      .find("button[class*='-btn-active']")
+      .removeClass("variable-btn-active question-btn-active");
   $(node).toggleClass(type + "-btn-active");
 
-  var activeNode = $.ui.fancytree.getNode(node);
+  const activeNode = $.ui.fancytree.getNode(node);
 
-  var extraClasses = activeNode.extraClasses || "";
-  var url = apiUrl + "/" + activeNode.key;
+  const extraClasses = activeNode.extraClasses || "";
+  let url = apiUrl + "/" + activeNode.key;
   if (type === "variable") {
     url += "?variable_html=true";
   }
   if (type === "question") {
     url += "?question_html=true";
   }
-  var data;
+  let data;
   // TODO: Change this to something that uses proper DOM elements
   jQuery
-    .get(url, function(data) {
-      $(".sk-three-bounce").hide(); // hide the loading message
-      $("#tree_variables").html(data);
-      $("#variable_table").DataTable();
-    })
-    .fail(function() {
-      $(".sk-three-bounce").hide(); // hide the loading message
-      $("#tree_variables").html(
-        "<p><span class='fas fa-exclamation-triangle' aria-hidden='true'></span> Load Error!</p>"
-      );
-    });
+      .get(url, function(data) {
+        $(".sk-flow").hide(); // hide the loading message
+        $("#tree_variables").html(data);
+        $("#variable_table").DataTable();
+      })
+      .fail(function() {
+        $(".sk-flow").hide(); // hide the loading message
+        $("#tree_variables").html(
+            "<p><span class='fas fa-exclamation-triangle' aria-hidden='true'></span> Load Error!</p>",
+        );
+      });
 }
 
 // Remove all variables and questions from active node
 function removeAsyncLoadedData(activeNode, type) {
-  var children = activeNode.getChildren();
-  var tmp = [];
+  const children = activeNode.getChildren();
+  const tmp = [];
   if (children) {
     for (var i = 0; i < children.length; i++) {
-      var node = $.ui.fancytree.getNode(children[i]);
-      var extraClasses = node.extraClasses || "";
+      const node = $.ui.fancytree.getNode(children[i]);
+      const extraClasses = node.extraClasses || "";
       if (extraClasses.includes("async-data-" + type)) {
         tmp.push(node);
       }
@@ -211,14 +211,14 @@ function removeAsyncLoadedData(activeNode, type) {
 
 // Remove all child nodes from active node
 function removeAllChildren(activeNode, type) {
-  var tmp = [];
+  const tmp = [];
   activeNode.visit(function(node) {
     if (node.type === type) {
       tmp.push(node);
     }
   }, true);
 
-  for (var i = 0; i < tmp.length; i++) {
+  for (let i = 0; i < tmp.length; i++) {
     tmp[i].remove();
   }
 }
@@ -226,10 +226,10 @@ function removeAllChildren(activeNode, type) {
 // Show more information for adding an elment to the basket (how many variables will be added to the basket) and render
 // a list of the user's baskets
 function addToBasket(el) {
-  var node = $.ui.fancytree.getNode(el);
-  var url = apiUrl + "/" + node.key + "?variable_list=false";
+  const node = $.ui.fancytree.getNode(el);
+  let url = apiUrl + "/" + node.key + "?variable_list=false";
   $("#basket_list").empty();
-  var numVariables = "?";
+  let numVariables = "?";
   if (node.type === "variable") {
     numVariables = 1;
     $("#number_of_variables").text(numVariables); // Set number of variables in add to basket modal
@@ -245,35 +245,35 @@ function addToBasket(el) {
   jQuery.getJSON(url, function(data) {
     if (data.user_logged_in) {
       if (data.baskets.length === 0) {
-        var redirectCreateBasketUrl =
+        const redirectCreateBasketUrl =
           location.protocol +
           "//" +
           window.location.host +
           "/workspace/baskets";
         $("#basket_list").append(
-          "<p><a class='btn btn-primary' href='" +
+            "<p><a class='btn btn-primary' href='" +
             redirectCreateBasketUrl +
-            "'>Create a basket</a></p>"
+            "'>Create a basket</a></p>",
         );
       }
-      for (var i = 0; i < data.baskets.length; i++) {
-        var addToBasketFunction =
+      for (let i = 0; i < data.baskets.length; i++) {
+        const addToBasketFunction =
           "addToBasketRequest('" + node.key + "'," + data.baskets[i].id + ")";
         $("#basket_list").append(
-          "<p><button class='btn btn-primary' onclick=" +
+            "<p><button class='btn btn-primary' onclick=" +
             addToBasketFunction +
             ">Add to basket <strong>" +
             data.baskets[i].name +
-            "</strong></button></p>"
+            "</strong></button></p>",
         );
       }
     } else {
-      var redirectLoginUrl =
+      const redirectLoginUrl =
         location.protocol + "//" + window.location.host + "/workspace/login";
       $("#basket_list").append(
-        "<p><a class='btn btn-primary' href='" +
+          "<p><a class='btn btn-primary' href='" +
           redirectLoginUrl +
-          "'>Please log in to use this function.</a></p>"
+          "'>Please log in to use this function.</a></p>",
       );
     }
   });
@@ -282,15 +282,15 @@ function addToBasket(el) {
 // Call API to add an element (identified by nodeKey) to a basket (identified by basketId)
 // On success show success message else error message
 function addToBasketRequest(nodeKey, basketId) {
-  var url = apiUrl + "/" + nodeKey + "/add_to_basket/" + basketId;
+  const url = apiUrl + "/" + nodeKey + "/add_to_basket/" + basketId;
   jQuery
-    .get(url, function(data) {})
-    .done(function() {
-      $("#basket_success").removeClass("hidden");
-    })
-    .fail(function() {
-      $("#basket_error").removeClass("hidden");
-    });
+      .get(url, function(data) {})
+      .done(function() {
+        $("#basket_success").removeClass("hidden");
+      })
+      .fail(function() {
+        $("#basket_error").removeClass("hidden");
+      });
 }
 
 // Remove status alerts from modal after modal was closed
@@ -301,7 +301,7 @@ $("#topic-list-add-to-basket").on("hidden.bs.modal", function() {
 
 // Copy the URL of selected topic to clipboard
 function copyUrlToClipboard(el) {
-  var activeNode = $.ui.fancytree.getNode(el);
+  const activeNode = $.ui.fancytree.getNode(el);
 
   // URL need to be selectable to be copied to clipboard, append temporary element
   url = baseUrl + "?open=" + activeNode.key;
@@ -314,13 +314,13 @@ function copyUrlToClipboard(el) {
 
   // Show feedback message (url copied)
   $(el)
-    .attr("title", "Copied URL")
-    .tooltip("fixTitle")
-    .tooltip("show");
+      .attr("title", "Copied URL")
+      .tooltip("fixTitle")
+      .tooltip("show");
   setTimeout(function() {
     $(el)
-      .attr("title", "Copy URL")
-      .tooltip("fixTitle");
+        .attr("title", "Copy URL")
+        .tooltip("fixTitle");
   }, 1000);
 }
 
