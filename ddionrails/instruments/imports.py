@@ -14,11 +14,14 @@ from ddionrails.imports.helpers import download_image, store_image
 
 from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
 
-logging.config.fileConfig("logging.conf")
+logging.config.fileConfig("logging.conf")  # type: ignore
 logger = logging.getLogger(__name__)
 
 
 class InstrumentImport(imports.Import):
+
+    content: str
+
     def execute_import(self):
         self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(
             self.content
