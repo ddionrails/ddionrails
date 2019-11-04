@@ -6,11 +6,12 @@
 import time
 import uuid
 from io import BytesIO
-from typing import Callable, Generator
+from typing import Callable, Generator, Protocol
 
 import PIL.Image
 import pytest
 from _pytest.fixtures import FixtureRequest
+from django.conf import settings
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
@@ -66,7 +67,7 @@ def concept(db):
     return ConceptFactory(
         name="some-concept",
         label="Some Concept",
-        label_de="Some Konzept",
+        label_de="Ein Konzept",
         description="This is some concept",
     )
 
@@ -101,7 +102,6 @@ def dataset(db):
 @pytest.fixture(scope="session")
 def elasticsearch_indices():
     """ Fixture that creates elasticsearch indices and cleans up after testing """
-    from django.conf import settings
 
     # setting ELASTICSEARCH_DSL_AUTOSYNC to
     # True enables indexing when saving model instances
@@ -291,7 +291,7 @@ def variable_with_concept(variable, concept):
 
 @pytest.fixture
 def uuid_identifier():
-    """ A UUID that is used for testing views and URLConfs """
+    """ A UUID that is used for testing views and URLConfigs """
     return uuid.UUID("12345678123456781234567812345678")
 
 
@@ -408,3 +408,11 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+# pragma: no cover
+class VariableImageFile(Protocol):  # pylint: disable=too-few-public-methods
+    """Type for variable Image file factory."""
+
+    def __call__(self, file_type: str, size: int = 1) -> BytesIO:
+        ...  # pylint: disable=pointless-statement

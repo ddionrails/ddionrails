@@ -3,6 +3,8 @@
 
 """ Test cases for documents in ddionrails.concepts app """
 
+from typing import Any
+
 import pytest
 from django.forms.models import model_to_dict
 
@@ -23,7 +25,7 @@ def test_concept_search_document_fields(
 
     search = ConceptDocument.search().query("match_all")
 
-    expected = 1
+    expected: Any = 1
     assert expected == search.count()
 
     response = search.execute()
@@ -35,7 +37,8 @@ def test_concept_search_document_fields(
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
-        concept, fields=("name", "label", "label_de", "description", "description_de")
+        instance=concept,
+        fields=("name", "label", "label_de", "description", "description_de"),
     )
     # add relations to expected dictionary
     expected["study"] = [variable.dataset.study.name]
@@ -55,7 +58,7 @@ def test_topic_search_document_fields(
     topics_index, topic  # pylint: disable=unused-argument
 ):
     search = TopicDocument.search().query("match_all")
-    expected = 1
+    expected: Any = 1
     assert expected == search.count()
 
     response = search.execute()
