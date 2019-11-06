@@ -5,6 +5,7 @@
 import json
 import logging
 from collections import OrderedDict
+from pathlib import Path
 from typing import Dict, Optional
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, Period
@@ -68,7 +69,7 @@ class InstrumentImport(imports.Import):
             question.save()
             image_data = q.get("image", None)
             if image_data:
-                self.question_image_import(question.id, image_data)
+                self.question_image_import(question, image_data)
 
         instrument.label = content.get("label", "")
         instrument.label_de = content.get("label_de", "")
@@ -133,11 +134,14 @@ class InstrumentImport(imports.Import):
         instrument = question.instrument
         path = [instrument.study.name, instrument.name, question.name]
         _image = download_image(url)
+        suffix = Path(url).suffix
+        if label is None:
+            label = "Screenshot"
         if _image is None:
             return None
-        _, image_id = store_image(file=_image, name=label, path=path)
+        image, _ = store_image(file=_image, name=label + suffix, path=path)
         question_image.question = question
-        question_image.image = image_id
+        question_image.image = image
         question_image.label = label
         question_image.language = language
         return question_image

@@ -30,7 +30,7 @@ class DatasetJsonImport(imports.Import):
         dataset, _ = Dataset.objects.get_or_create(study=self.study, name=name)
         sort_id = 0
         if isinstance(content, dict):
-            content = [value for value in content.values()]
+            content = list(content.values())
         for var in content:
             self._import_variable(var, dataset, sort_id)
             sort_id += 1

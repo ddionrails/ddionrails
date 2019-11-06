@@ -22,9 +22,9 @@
         <p>
             {% if image_urls.items %}
                 {{ image_urls.image_label }}:
-                {% if "en" in image_urls %} <a href="{{ image_urls.en }}">en</a>
+                {% if "en" in image_urls %} <a href="{{ image_urls.en }}" target="_blank">en</a>
                 {% endif %}
-                {% if "de" in image_urls %} <a href="{{ image_urls.de }}">de</a>
+                {% if "de" in image_urls %} <a href="{{ image_urls.de }}" target="_blank">de</a>
                 {% endif %}
             {% endif %}
         </p>
