@@ -6,6 +6,7 @@
         <data-search
           componentId="Search"
           :dataField="dataField"
+          :fieldWeights="fieldWeights"
           iconPosition="left"
           :autosuggest="true"
           :highlight="true"
@@ -75,6 +76,17 @@ export default {
         "categories.labels",
         "categories.labels_de",
         "dataset"
+      ],
+      fieldWeights: [
+        10,
+        10,
+        10,
+        5,
+        5,
+        5,
+        3,
+        3,
+        3
       ]
     };
   },
