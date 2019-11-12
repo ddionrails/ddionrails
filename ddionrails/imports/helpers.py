@@ -3,10 +3,12 @@
 """ Helper functions for ddionrails.imports app """
 
 import csv
+import glob
 import os
 import uuid
 from functools import lru_cache
 from io import BytesIO
+from pathlib import Path
 from typing import BinaryIO, List, Optional, Tuple, Union
 
 import requests
@@ -136,3 +138,11 @@ def _create_folder_structure(path: Union[List, str]) -> Folder:
     for folder in _path[1:]:
         _parent, _ = Folder.objects.get_or_create(name=folder, parent=_parent)
     return _parent
+
+
+def patch_instruments(repository_dir: Path, instruments_dir: Path):
+    """Temporary patch of instrument json files for the import of question images."""
+    with open(f"{repository_dir}/metadata/questions_images.csv", "r") as csv_file:
+        images = csv_file.read()
+
+    instruments = glob.glob(f"{instruments_dir}/*")

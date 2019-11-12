@@ -6,7 +6,8 @@
 import time
 import uuid
 from io import BytesIO
-from typing import Callable, Generator, Protocol
+from typing import Callable, Dict, Generator, Protocol, Set
+from unittest.mock import mock_open
 
 import PIL.Image
 import pytest
@@ -408,6 +409,47 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+class MockOpener:
+    """Wrapper to use mock_open with variable paths.
+
+    Register paths and associate content with them.
+    When patching builtin.open with MockOpener, open will
+    return content dependent on the path, that is passed.
+    A path that is not registered will Raise a FileNotFoundError.
+
+    Attributes:
+        files: Registered paths and their content.
+        call_history: The registered pathes, that were called at least once.
+    """
+
+    call_history: Set[str]
+    files: Dict[str, str]
+
+    def __init__(self):
+        self.call_history = set()
+        self.files = dict()
+        super().__init__()
+
+    def register_file(self, path: str, content: str):
+        """Register file paths and their associated content."""
+        self.files[path] = content
+
+    def __call__(self, *args, **kwargs):
+        """Initiate mock open with given path and let it handle the rest.
+
+        Raises:
+            FileNotFoundError: The passed path is not registered.
+            TypeError: Like open, the `file` argument is required.
+        """
+        file_path = kwargs.get("file") or args[0]
+        if file_path:
+            if file_path in self.files:
+                self.call_history.add(file_path)
+                return mock_open(read_data=self.files[args[0]]).__call__()
+            raise FileNotFoundError("2", f" No such file or directory: {file_path}")
+        raise TypeError("Required argument 'file' (pos 1) not found")
 
 
 # pragma: no cover
