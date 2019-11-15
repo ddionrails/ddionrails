@@ -5,10 +5,12 @@
 
 import csv
 import glob
+import json
 import unittest
 from io import StringIO
+from pathlib import Path
 from random import choices
-from typing import Callable, Dict, List, Optional, Tuple, TypedDict
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -107,31 +109,65 @@ class TestHelpers(unittest.TestCase):
 
 
 @pytest.mark.usefixtures("questions_images_csv")
-class TestTemporaryHelper(unittest.TestCase):
+class TestTemporaryHelper(unittest.TestCase):  # pylint: disable=R0902
 
+    json_file: Path
+    json_folder: Path
     questions_images_csv: str
     questions_images: List[QuestionsImages]
 
     def setUp(self):
-        self.csv_path = "/test/metadata"
-        self.json_path = "/test/ddionrails/instruments"
-        self.csv_file = f"{self.csv_path}/questions_images.csv"
-        self.json_file = f"{self.json_path}/test_instruments.json"
+        self.test_study = self.questions_images[0]["study"]
+        self.test_instrument = self.questions_images[0]["instrument"]
+
+        self.repo: Path = Path("/test-repository")
+        self.csv_path = self.repo.joinpath("metadata")
+        self.json_folder: Path = self.repo.joinpath("ddionrails/instruments")
+        self.csv_file = self.csv_path.joinpath("questions_images.csv")
+
+        self.json_file = self.json_folder.joinpath(self.test_instrument)
+        self.json_file = self.json_file.with_suffix(".json")
+        original_content = self._build_test_json()
+        self.json_content = json.dumps(original_content)
+        self.expected = self._build_expected(original_content)
 
         return super().setUp()
 
+    def _build_test_json(self) -> Dict[str, Any]:
+        file_base = {"study": self.test_study, "questions": {}}
+        for question in self.questions_images:
+            question_json = {"question": question["question"]}
+            file_base["questions"][question["question"]] = question_json
+        return file_base
+
+    def _build_expected(self, instrument: Dict[str, Any]):
+        _questions_images: Dict[str, QuestionsImages] = {
+            question["question"]: question for question in self.questions_images
+        }
+        for question, data in instrument["questions"].items():
+            data["image"] = {
+                "url": _questions_images[question]["url"],
+                "url_de": _questions_images[question]["url_de"],
+                "label": _questions_images[question]["label"],
+                "label_de": _questions_images[question]["label_de"],
+            }
+        return instrument
+
+    @patch("pathlib.Path.is_file", new_callable=MagicMock, return_value=True)
     @patch("glob.glob", new_callable=MagicMock, spec=glob)
     @patch("builtins.open", new_callable=MockOpener)
-    def test_patch_instruments(self, mocked_open, mocked_glob):
+    def test_patch_instruments(self, mocked_open: MockOpener, mocked_glob, *_):
 
         mocked_glob.return_value = [self.json_file]
         mocked_open.register_file(self.csv_file, self.questions_images_csv)
-        mocked_open.register_file(f"{self.json_path}/test_instrument.json", "json")
+        mocked_open.register_file(self.json_file, self.json_content)
 
-        patch_instruments(repository_dir="/test", instruments_dir=self.json_path)
+        patch_instruments(repository_dir=self.repo, instruments_dir=self.json_folder)
 
         self.assertIn(self.csv_file, mocked_open.call_history)
-        mocked_glob.assert_called_with(f"{self.json_path}/*")
+        mocked_glob.assert_called_with(f"{self.json_folder}/*")
+        result = mocked_open.get_content_written_in_path(self.json_file)
+        self.assertEqual(json.dumps(self.expected), result)
 
 
 @pytest.fixture(name="unittest_mock")
@@ -181,7 +217,7 @@ def _questions_images_data_factory() -> Callable[[], QuestionsImages]:
             self._content = QuestionsImages
 
         def __call__(self):
-            content: Dict[str] = dict()
+            content: Dict[str, str] = dict()
             content.update(dict(self._constant_pairs))
             for field in self._variable_headers:
                 content[field] = "".join(choices(self._characters, k=10))
