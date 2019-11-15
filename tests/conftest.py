@@ -6,7 +6,9 @@
 import time
 import uuid
 from io import BytesIO
-from typing import Callable, Generator, Protocol
+from pathlib import Path
+from typing import Any, Callable, Dict, Generator, List, Protocol, Set, Union
+from unittest.mock import mock_open
 
 import PIL.Image
 import pytest
@@ -408,6 +410,79 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+class MockOpener:
+    """Wrapper to use mock_open with variable paths.
+
+    Register paths and associate content with them.
+    When patching builtin.open with MockOpener, open will
+    return content dependent on the path, that is passed.
+    A path that is not registered will Raise a FileNotFoundError.
+
+    Attributes:
+        files: Registered paths and their content.
+        call_history: The registered pathes, that were called at least once.
+    """
+
+    call_history: Set[Path]
+    mocker_instances: List[Any]
+    files: Dict[Path, Dict[str, Any]]
+
+    def __init__(self):
+        self.call_history = set()
+        self.files = dict()
+        super().__init__()
+
+    def content_written_in_path(self, path: Union[Path, str], content: str):
+        """Check if content was written to a specific mock_open instance."""
+        if content == self.get_content_written_in_path(Path(path)):
+            return True
+        return False
+
+    def get_content_written_in_path(self, path: Path):
+        """Get everything that was written to a mocked file path."""
+        try:
+            return self._stitch_together_write_output(self.files[Path(path)]["mocker"])
+        except KeyError:
+            return None
+
+    @staticmethod
+    def _stitch_together_write_output(mocker):
+        written_string = ""
+        for part in mocker.write.call_args_list:
+            written_string += part.args[0]
+        return written_string
+
+    def content_written(self, content: str):
+        """Check if content was written to any mock_open instance."""
+        for path, _ in self.files.items():
+            if content == self.get_content_written_in_path(Path(path)):
+                return True
+        return False
+
+    def register_file(self, path: Union[Path, str], content: str):
+        """Register file paths and their associated content."""
+        self.files[Path(path)] = {"content": content, "mocker": None}
+
+    def __call__(self, *args, **kwargs):
+        """Initiate mock open with given path and let it handle the rest.
+
+        Raises:
+            FileNotFoundError: The passed path is not registered.
+            TypeError: Like open, the `file` argument is required.
+        """
+        file_path = Path(kwargs.get("file") or args[0])
+        if file_path:
+            if file_path in self.files:
+                self.call_history.add(file_path)
+                _mocker_instance = mock_open(
+                    read_data=self.files[file_path]["content"]
+                ).__call__()
+                self.files[file_path]["mocker"] = _mocker_instance
+                return _mocker_instance
+            raise FileNotFoundError("2", f" No such file or directory: {file_path}")
+        raise TypeError("Required argument 'file' (pos 1) not found")
 
 
 # pragma: no cover
