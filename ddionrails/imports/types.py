@@ -1,4 +1,5 @@
 """Type definitions for the import App."""
+# pragma: no cover
 from typing import TypedDict
 
 
