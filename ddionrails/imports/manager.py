@@ -12,7 +12,9 @@ from typing import List
 import django_rq
 import git
 from django.conf import settings
+from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
+from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
@@ -27,6 +29,7 @@ from ddionrails.data.imports import (
     TransformationImport,
     VariableImport,
 )
+from ddionrails.imports.helpers import patch_instruments
 from ddionrails.instruments.imports import (
     ConceptQuestionImport,
     InstrumentImport,
@@ -50,7 +53,7 @@ class Repository:
         self.path = settings.IMPORT_REPO_PATH.joinpath(self.name)
         try:
             self.repo = git.Repo(self.path)
-        except (git.exc.NoSuchPathError, git.exc.InvalidGitRepositoryError):
+        except (NoSuchPathError, InvalidGitRepositoryError):
             self.repo = None
 
     def set_branch(self, branch: str = settings.IMPORT_BRANCH) -> None:
@@ -71,18 +74,16 @@ class Repository:
             )
 
     def set_commit_id(self) -> None:
-        """ Save the current commit hash in the database field "current_commit" of study or system """
+        """Save the current commit hash in the database."""
         self.study_or_system.current_commit = str(self.repo.head.commit)
         self.study_or_system.save()
 
     def is_import_required(self) -> bool:
-        """ Returns True if the "current_commit" in the database differs from HEAD
-            False otherwise
-        """
+        """Check if current commit is still the newest or of new import is required."""
         return self.study_or_system.current_commit != str(self.repo.head.commit)
 
     def list_changed_files(self) -> List:
-        """ Returns a list of changed files since the "current_commit" in the database """
+        """Returns a list of changed files since the "current_commit" in the database."""
         diff = self.repo.git.diff(
             self.study_or_system.current_commit,
             "--",
@@ -92,7 +93,7 @@ class Repository:
         return diff.split()
 
     def list_all_files(self) -> List:
-        """ Returns a list of all files in the "import_path" """
+        """Returns a list of all files in the `import_path`."""
         return [
             file
             for file in sorted(self.study_or_system.import_path().glob("**/*"))
@@ -100,11 +101,11 @@ class Repository:
         ]
 
     def import_list(self, import_all: bool = False) -> List:
-        """ Returns a list of files to be imported """
+        """Returns a list of files to be imported."""
         if import_all:
             return self.list_all_files()
-        else:
-            return self.list_changed_files()
+
+        return self.list_changed_files()
 
 
 class ImportLink:
@@ -127,20 +128,18 @@ class ImportLink:
             django_rq.enqueue(self._import, study, import_file)
 
     def _match(self, import_file):
-        return True if self.expression.match(import_file) else False
+        return bool(self.expression.match(import_file))
 
 
 class SystemImportManager:
     """Import the files from the system repository."""
 
-    def __init__(self, system):
+    def __init__(self, system: System):
         self.system = system
         self.repo = Repository(system)
 
     def run_import(self):
-        """
-        Run the system import.
-        """
+        """Run the system import."""
         base_directory = self.system.import_path()
         studies_file = base_directory.joinpath("studies.csv")
         StudyImport.run_import(studies_file, self.system)
@@ -156,6 +155,12 @@ class StudyImportManager:
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
+
+        repositories_base_dir: Path = settings.IMPORT_REPO_PATH
+        repository_dir = repositories_base_dir.joinpath(self.study.name)
+        instruments_dir = repository_dir.joinpath("ddionrails/instruments")
+        patch_instruments(repository_dir, instruments_dir)
+
         self.import_order = OrderedDict(
             {
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
@@ -237,7 +242,10 @@ class StudyImportManager:
                     django_rq.enqueue(importer.run_import, default_file_path, self.study)
                 else:
                     LOGGER.warning(
-                        f'Study "{self.study.name}" has no file: "{default_file_path.name}"'
+                        (
+                            f'Study "{self.study.name}" '
+                            f'has no file: "{default_file_path.name}"'
+                        )
                     )
 
             # multiple files import, e.g. instruments, datasets
