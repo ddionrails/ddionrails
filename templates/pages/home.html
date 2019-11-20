@@ -6,14 +6,8 @@
 {% block content %}
 
     {% if not user.is_authenticated %}
+        <!-- TODO: Add some form of content loading to edit the content of this -->
         <div class="alert alert-success mx-auto p-4">
-            <b>Update April 2019:</b>
-            <ul>
-                <li>Newest version of TwinLife data now available.</li>
-                <li>Renewed user interface.</li>
-                <li>Whole new and improved search experience.</li>
-                <li>Modernized underlying architecture.</li>
-            </ul>
         </div>
     {% endif %}
     <img class="img-fluid mx-auto" src="{% static 'background.png' %}">
