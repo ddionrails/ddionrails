@@ -47,4 +47,10 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["study_list"] = Study.objects.all()
+        context["news"] = self.get_news()
         return context
+
+    @staticmethod
+    def get_news():
+        news:str = ""
+        return news
