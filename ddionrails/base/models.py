@@ -24,9 +24,7 @@ class System(ImportPathMixin, models.Model):
     @classmethod
     def get(cls) -> System:
         """ Returns a single system instance """
-        if cls.objects.count() == 0:
+        if (system := System.objects.first()) is None:
             system = System()
             system.save()
-        else:
-            system = System.objects.first()
         return system
