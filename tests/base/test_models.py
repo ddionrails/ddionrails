@@ -3,9 +3,13 @@
 
 """ Test cases for models in ddionrails.base app """
 
-import pytest
+import unittest
+from datetime import datetime
 
-from ddionrails.base.models import System
+import pytest
+from dateutil import tz
+
+from ddionrails.base.models import News, Singleton, System
 
 pytestmark = [pytest.mark.ddionrails, pytest.mark.models]  # pylint: disable=invalid-name
 
@@ -20,7 +24,20 @@ class TestSystemModel:
 
     @pytest.mark.django_db
     def test_get_method_with_creation(
-        self
+        self,
     ):  # pylint: disable=unused-argument,invalid-name
         result = System.get()
         assert isinstance(result, System)
+
+
+class TestNewsModel(unittest.TestCase):
+    def test_news_ancestry(self):
+        self.assertIsInstance(News(), Singleton)
+
+    @pytest.mark.django_db
+    def test_news_date(self):
+        _news = News.objects.create()
+        _news.content = ""
+        _news.save()
+        timedelta = datetime.now(tz=tz.gettz("UTC")) - _news.date
+        self.assertAlmostEqual(timedelta.seconds, 0, delta=1)
