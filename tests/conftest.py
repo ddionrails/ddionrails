@@ -7,7 +7,7 @@ import time
 import uuid
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Callable, Dict, Generator, List, Protocol, Set, Union
+from typing import Any, Callable, Dict, Generator, List, Protocol, Set, TypedDict, Union
 from unittest.mock import mock_open
 
 import PIL.Image
@@ -17,6 +17,7 @@ from django.conf import settings
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
+from config.views import News
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.data.documents import VariableDocument
 from ddionrails.instruments.documents import QuestionDocument
@@ -410,6 +411,28 @@ def publications_index(
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
     assert response["deleted"] > 0
+
+
+class NewsFixture(TypedDict):
+    """Describe news fixture output."""
+
+    news: News
+    bullet_points: List[str]
+
+
+@pytest.mark.django_db
+@pytest.fixture(name="news")
+def _news(request) -> NewsFixture:
+    """Provide a News object with its content in a separate list for easier testing."""
+    the_news = News()
+    bullet_points = ["test content", "more test content", "even more test content"]
+    content_string = "\r\n".join(["* " + point for point in bullet_points])
+    the_news.content = content_string
+    the_news.save()
+    if request.instance:
+        request.instance.news = the_news
+        request.instance.news_bullets = bullet_points
+    return {"news": the_news, "bullet_points": bullet_points}
 
 
 class MockOpener:

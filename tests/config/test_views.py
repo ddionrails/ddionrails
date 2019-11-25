@@ -3,10 +3,21 @@
 
 """ Test cases for views in ddionrails.config app """
 
+import unittest
+from datetime import datetime
+from typing import Dict, List
+
 import pytest
 from django.urls import reverse
 
-from config.views import bad_request, page_not_found, permission_denied, server_error
+from config.views import (
+    HomePageView,
+    bad_request,
+    page_not_found,
+    permission_denied,
+    server_error,
+)
+from ddionrails.base.models import News
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
@@ -34,6 +45,25 @@ class TestPageViews:
         content = str(response.content)
         assert "Imprint" in content
         assert "Privacy policy at DIW Berlin" in content
+
+
+@pytest.mark.usefixtures("news")
+class TestViewFunctions(unittest.TestCase):
+
+    news: News = News()
+    news_bullets: List[str] = []
+
+    def test_news(self):
+        news_date: datetime = self.news.date
+        news_data: Dict[str, str] = {}
+        news_data["news_month"] = news_date.strftime("%B")
+        news_data["news_year"] = news_date.strftime("%Y")
+        news_html = str(HomePageView().news)
+        for date_content in news_data.values():
+            self.assertIn(date_content, news_html)
+
+        for point in self.news_bullets:
+            self.assertIn(point, news_html)
 
 
 class TestErrorTemplates:

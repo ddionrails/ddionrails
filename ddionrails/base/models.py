@@ -58,6 +58,7 @@ class News(Singleton):
 
     class Meta:
         abstract = False
+        verbose_name_plural = "news"
 
     date = models.DateTimeField(auto_now=True)
     content = models.TextField()
