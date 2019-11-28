@@ -447,6 +447,15 @@ class MockOpener:
         except KeyError:
             return None
 
+    def called_with_path(self, path: Union[str, Path]) -> bool:
+        """Check if given path was opened at least once."""
+        try:
+            _file = self.files[Path(path)]
+        except KeyError:
+            raise ValueError("Path is not registered.")
+        else:
+            return bool(_file["mocker"])
+
     @staticmethod
     def _stitch_together_write_output(mocker):
         written_string = ""
