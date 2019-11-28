@@ -15,20 +15,20 @@ from ddionrails.concepts.models import Concept
 pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
 
 
-@pytest.fixture
-def admin_mixin():
+@pytest.fixture(name="admin_mixin")
+def _admin_mixin():
     """ An instantiated AdminMixin """
     return AdminMixin()
 
 
-@pytest.fixture
-def importpath_mixin():
+@pytest.fixture(name="importpath_mixin")
+def _importpath_mixin():
     """ An instantiated ImportPathMixin """
     return ImportPathMixin()
 
 
-@pytest.fixture
-def model_mixin():
+@pytest.fixture(name="model_mixin")
+def _model_mixin():
     """ An instantiated ModelMixin """
     return ModelMixin()
 
@@ -44,13 +44,11 @@ class MixinChild(ModelMixin, models.Model):
 
 class TestModelMixin:
     def test_get_method_success(self, mocker):
-        with mocker.patch(
-            "tests.base.test_mixins.MixinChild.objects.get", return_value=True
-        ):
-            dictionary = dict(name="some-name")
-            result = MixinChild.get(dictionary)
-            expected = True
-            assert expected is result
+        mocker.patch("tests.base.test_mixins.MixinChild.objects.get", return_value=True)
+        dictionary = dict(name="some-name")
+        result = MixinChild.get(dictionary)
+        expected = True
+        assert expected is result
 
     @pytest.mark.django_db
     def test_get_method_failure(self):
@@ -131,10 +129,10 @@ class TestModelMixin:
 
     def test_html_description_method(self, mocker, model_mixin):
 
-        with mocker.patch("ddionrails.base.mixins.render_markdown"):
-            model_mixin.description = "some-description"
-            model_mixin.html_description()
-            ddionrails.base.mixins.render_markdown.assert_called_once()
+        mocker.patch("ddionrails.base.mixins.render_markdown")
+        model_mixin.description = "some-description"
+        model_mixin.html_description()
+        ddionrails.base.mixins.render_markdown.assert_called_once()
 
     def test_html_description_method_without_description(self, model_mixin):
         result = model_mixin.html_description()

@@ -11,6 +11,77 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.2.1] - 2019-11-20
+
+### Changed
+
+- Image Import
+
+  - Handle urls, where no image can be retrieved.
+  - Do not load images larger than 200KB.
+
+- Patch old import to work with questions_images.csv
+
+### Fixed
+
+- Instrument import passed wrong object to image import.
+
+## [4.2.0] - 2019-10-31
+
+### Changed
+
+- BasketVariables are no longer deleted when their corresponding variables
+  are deleted.
+
+  - Function was implemented to clean up stale BaketVariables if the need arises.
+
+- Copyright notice to include former contributors.
+- dev: NGINX now set up for debugging long requests.
+- dev: Setup now better supports commit signing.
+- Landing page for successful password reset was changed.
+
+  - It now extends the standard registration template.
+  - This extension adds a badge with a success message.
+
+- Switch to Python 3.8 from 3.7.
+
+### Fixed
+
+- dev: Move pytest coverage flags from setup.cfg to .travis.yml.
+- - Coverage Reports in Pytest versions newer than 5.0.1
+    did cause issues with the vscode debugger.
+- dev: Pylint Pre-commit hook properly uses pylint_django plugin.
+- sort_id for variable imports is now incremented for each variable.
+
+  - Before it was only set to 1 for each variable.
+
+## [4.1.2] - 2019-10-07
+
+### Fixed
+
+- Version pin of postfix for docker postfix image is less strict.
+
+  - apk was not able to install pinned version for the newest alpine version.
+
+## [4.1.1] - 2019-10-01
+
+### Added
+
+- Function to alter result text above search results (x results found in yms)
+
+  - Now adds "More than " if result count is higher than the elasticsearch 7 scroll limit
+    of 10000. Meaning it will display "More than 10000 results found in yms".
+
+### Changed
+
+- Update several dependencies.
+
+### Fixed
+
+- Installation of dependencies for the dev container and travis setup.
+
+  - Setup only installed dev dependencies without the applications dependencies.
+
 ## [4.1.0] - 2019-08-28
 
 ### Added
@@ -269,7 +340,11 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.2.0...develop
+[4.2.1]: https://github.com/ddionrails/ddionrails/compare/v4.2.0...v4.2.1
+[4.2.0]: https://github.com/ddionrails/ddionrails/compare/v4.1.2...v4.2.0
+[4.1.2]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...v4.1.2
+[4.1.1]: https://github.com/ddionrails/ddionrails/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/ddionrails/ddionrails/compare/v4.0.2...v4.1.0
 [4.0.2]: https://github.com/ddionrails/ddionrails/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/ddionrails/ddionrails/compare/v4.0.0...v4.0.1

@@ -32,6 +32,7 @@
           :from="0"
           :size="10"
           :showResultStats="true"
+          :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
           renderNoResults="No Results found. Try to change your search query or filter options."
@@ -78,6 +79,11 @@ export default {
     PeriodFacet,
     StudyFacet,
     QuestionResult
+  },
+  methods: {
+    customRenderStats(stats) {
+      return helpers.customRenderStats(this, stats);
+    }
   }
 };
 </script>

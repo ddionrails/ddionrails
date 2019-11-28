@@ -30,6 +30,7 @@
           :from="0"
           :size="10"
           :showResultStats="true"
+          :renderResultStats="customRenderStats"
           :react="{ and: ['Search', 'Study'] }"
           renderNoResults="No Concepts found. Try to change your search query or filter options."
           class="result-list-container m-0 p-0 col-12"
@@ -59,6 +60,11 @@ export default {
   components: {
     StudyFacet,
     ConceptResult
+  },
+  methods: {
+    customRenderStats(stats) {
+      return helpers.customRenderStats(this, stats);
+    }
   }
 };
 </script>
