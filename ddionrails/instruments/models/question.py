@@ -79,9 +79,18 @@ class Question(ModelMixin, models.Model):
     instrument = models.ForeignKey(
         Instrument,
         blank=True,
+        null=False,
+        related_name="questions",
+        on_delete=models.CASCADE,
+    )
+
+    period = models.ForeignKey(
+        Period,
+        blank=True,
         null=True,
         related_name="questions",
         on_delete=models.CASCADE,
+        help_text="Foreign key to concepts.Period",
     )
 
     period = models.ForeignKey(
@@ -183,7 +192,7 @@ class Question(ModelMixin, models.Model):
         combined_set = direct_questions | indirect_questions
         combined_set = combined_set.distinct()
         if by_study_and_period:
-            result = OrderedDict()
+            result: OrderedDict = OrderedDict()
             for study in study_list:
                 result[study.name] = OrderedDict()
                 result[study.name]["no period"] = list()
@@ -214,8 +223,7 @@ class Question(ModelMixin, models.Model):
 
     @staticmethod
     def overwrite_item_values_by_language(item: QuestionItem, language: str) -> None:
-        """
-        """
+        """Switch values with their counterparts in the specified language."""
         item["text"] = item.get(f"text_{language}", item.get("text", ""))
         item["instruction"] = item.get(
             f"instruction_{language}", item.get("instruction", "")
