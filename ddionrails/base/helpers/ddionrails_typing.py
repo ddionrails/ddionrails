@@ -2,6 +2,14 @@
 from typing import List, TypedDict
 
 
+class QuestionAnswer(TypedDict):
+    """Represents an answer to a QuestionItem."""
+
+    label: str
+    label_de: str
+    value: int
+
+
 class QuestionItem(TypedDict):
     """Define structure of a question item Dict.
 
@@ -9,13 +17,6 @@ class QuestionItem(TypedDict):
     This is a json field with a list of json objects.
     Every one of these objects is a question item.
     """
-
-    class QuestionAnswer(TypedDict):
-        """Represents an answer to a QuestionItem."""
-
-        label: str
-        label_de: str
-        value: int
 
     answers: List[QuestionAnswer]
     concept: str

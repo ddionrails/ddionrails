@@ -13,11 +13,11 @@ from tests.instruments.factories import QuestionFactory
 pytestmark = [pytest.mark.django_db]
 
 
-@pytest.fixture
-def compare_questions():
+@pytest.fixture(name="compare_questions")
+def _compare_questions():
     return (
-        QuestionFactory(name="some-question"),
-        QuestionFactory(name="some-other-question"),
+        QuestionFactory(name="some-question", sort_id=1),
+        QuestionFactory(name="some-other-question", sort_id=2),
     )
 
 

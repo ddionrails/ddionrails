@@ -42,7 +42,7 @@ class ConceptQuestionFactory(factory.django.DjangoModelFactory):
     """ConceptQuestion factory"""
 
     concept = factory.SubFactory(ConceptFactory, name="some-concept")
-    question = factory.SubFactory(QuestionFactory, name="some-question")
+    question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
 
     class Meta:
         model = ConceptQuestion
@@ -51,7 +51,7 @@ class ConceptQuestionFactory(factory.django.DjangoModelFactory):
 class QuestionVariableFactory(factory.django.DjangoModelFactory):
     """QuestionVariable factory"""
 
-    question = factory.SubFactory(QuestionFactory, name="some-question")
+    question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
     variable = factory.SubFactory(VariableFactory, name="some-variable")
 
     class Meta:
