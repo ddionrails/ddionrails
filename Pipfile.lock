@@ -598,11 +598,11 @@
         },
         "fakeredis": {
             "hashes": [
-                "sha256:1993b88bd629b1d651312757aa091a93612ae8772777e1a441bae81e7b013e25",
-                "sha256:3e1bfb9de5a5ab5796b6101fbe7927fe1456fa8e72cbcd3625c9437e278bf581"
+                "sha256:169598943dc10aadd62871a34b2867bb5e24f9da7ebc97a2058c3f35c760241e",
+                "sha256:1db27ec3a5c964b9fb9f36ec1b9770a81204c54e84f83c763f36689eef4a5fd4"
             ],
             "index": "pypi",
-            "version": "==1.0.5"
+            "version": "==1.1.0"
         },
         "gitdb2": {
             "hashes": [
