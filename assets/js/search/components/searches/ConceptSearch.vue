@@ -35,7 +35,7 @@
           renderNoResults="No Concepts found. Try to change your search query or filter options."
           class="result-list-container m-0 p-0 col-12"
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <concept-result :item="item" />
           </div>
         </reactive-list>

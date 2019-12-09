@@ -18,10 +18,22 @@
       <!-- navbar -->
       <div class="facet-container col-lg-3 my-2 float-left">
         <!-- begin facets -->
-        <study-facet :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search'] }" />
-        <conceptual-dataset-facet :react="{ and: ['AnalysisUnit', 'Period','Search', 'Study'] }" />
-        <analysis-unit-facet :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }" />
-        <period-facet :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study'] }" />
+        <study-facet
+          :react="{
+            and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search']
+          }"
+        />
+        <conceptual-dataset-facet
+          :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
+        />
+        <analysis-unit-facet
+          :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }"
+        />
+        <period-facet
+          :react="{
+            and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study']
+          }"
+        />
         <!-- end facets -->
       </div>
       <div class="col-lg-8 m-0 p-0 float-right">
@@ -35,15 +47,27 @@
           :showResultStats="true"
           :renderResultStats="customRenderStats"
           class="result-list-container"
-          :react="{ and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search', 'Study'] }"
+          :react="{
+            and: [
+              'AnalysisUnit',
+              'ConceptualDataset',
+              'Period',
+              'Search',
+              'Study'
+            ]
+          }"
           renderNoResults="No Variables found. Try to change your search query or filter options."
           :sortOptions="[
-              {'label': 'Relevance', 'dataField': '_score', 'sortBy': 'desc'},
-              {'label': 'Period (descending)', 'dataField': 'period', 'sortBy': 'desc'},
-              {'label': 'Period (ascending)', 'dataField': 'period', 'sortBy': 'asc'}
+            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
+            {
+              label: 'Period (descending)',
+              dataField: 'period',
+              sortBy: 'desc'
+            },
+            { label: 'Period (ascending)', dataField: 'period', sortBy: 'asc' }
           ]"
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <variable-result :item="item" />
           </div>
         </reactive-list>

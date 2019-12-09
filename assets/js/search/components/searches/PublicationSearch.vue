@@ -37,12 +37,12 @@
           :react="{ and: ['Search', 'Study', 'Type', 'Year'] }"
           renderNoResults="No Publications found. Try to change your search query or filter options."
           :sortOptions="[
-              {'label': 'Relevance', 'dataField': '_score', 'sortBy': 'desc'},
-              {'label': 'Year (descending)', 'dataField': 'year', 'sortBy': 'desc'},
-              {'label': 'Year (ascending)', 'dataField': 'year', 'sortBy': 'asc'}
+            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
+            { label: 'Year (descending)', dataField: 'year', sortBy: 'desc' },
+            { label: 'Year (ascending)', dataField: 'year', sortBy: 'asc' }
           ]"
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <publication-result :item="item" />
           </div>
         </reactive-list>
