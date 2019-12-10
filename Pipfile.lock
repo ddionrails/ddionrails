@@ -1055,10 +1055,10 @@
         },
         "splinter": {
             "hashes": [
-                "sha256:170d21d4f04f8c5c076a34716e36779f07f3533d3b3d8a82523993b21b40bb35",
-                "sha256:c5d40b8ee480d1c1c33f085c3fdfe9fd32b9ce22515f46cfde179966452d020a"
+                "sha256:96bfb1e8a1fbc48f5d507ed8f6a87dca2d7b973093d09a668abb57caff57365d",
+                "sha256:df74fa5a0916e05026d8d8ed997577e18a14d5d45e920a4895e87dc86e813241"
             ],
-            "version": "==0.11.0"
+            "version": "==0.12.0"
         },
         "sqlparse": {
             "hashes": [
