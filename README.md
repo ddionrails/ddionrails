@@ -32,6 +32,7 @@ the specific characteristics of a longitudinal study, and is easy to use.
   - [Running the tests](#running-the-tests)
   - [Versioning](#versioning)
   - [GNU AGPL-3.0](#gnu-agpl-30)
+  - [Contributions](#contributions)
 
 ## Getting Started
 
@@ -177,6 +178,10 @@ This project adheres to [Semantic Versioning 2.0.0](https://semver.org/).
 This project is licensed under the GNU AGPL-3.0 License -see the
 [LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 file for details
+
+## Contributions
+
+Please see our [CONTRIBUTING.md](.github/CONTRIBUTING.md), if you want to contribute to this project.
 
 <!-- Markdown link & img dfn's -->
 
