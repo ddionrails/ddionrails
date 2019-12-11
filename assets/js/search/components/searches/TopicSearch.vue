@@ -37,7 +37,7 @@
           :react="{ and: ['Search', 'Study'] }"
           renderNoResults="No Topics found. Try to change your search query or filter options."
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <topic-result :item="item" />
           </div>
         </reactive-list>
