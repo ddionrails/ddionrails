@@ -23,6 +23,7 @@ the specific characteristics of a longitudinal study, and is easy to use.
 
 - [DDI on Rails](#ddi-on-rails)
   - [Table of contents](#table-of-contents)
+  - [Contributions](#contributions)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
     - [Installing](#installing)
@@ -32,7 +33,12 @@ the specific characteristics of a longitudinal study, and is easy to use.
   - [Running the tests](#running-the-tests)
   - [Versioning](#versioning)
   - [GNU AGPL-3.0](#gnu-agpl-30)
-  - [Contributions](#contributions)
+
+
+## Contributions
+
+Please see our [CONTRIBUTING.md](.github/CONTRIBUTING.md),
+if you want to contribute to this project.
 
 ## Getting Started
 
@@ -63,7 +69,7 @@ git clone https://github.com/ddionrails/ddionrails.git
 cd ddionrails/
 ```
 
-If you want to save yourself some typing you can create a symbolic link
+If you want to save yourself some typing you can create a symbolic link from
 docker-compose.override.yml
 
 ```bash
@@ -76,18 +82,21 @@ Now you can start your services with
 docker-compose up -d
 ```
 
-Without the link you would need to specify all docker-compose files
+docker-compose implicitly uses the `docker-compose.override.yml` in addition to
+the `docker-compose.yml` if it is present.
+Without the symbolic link you would need to specify all docker-compose files:
 
 ```bash
-docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
+docker-compose -f "docker-compose.yml" -f "docker-compose-remote-dev.yml" up -d
 ```
 
-If you are using Visual Studio Code with the
+Using Visual Studio Code will make the process even simpler.
+Just open the project after installing the
 [remote development](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
-plugin, you will just need to open the project.
+plugin.
 VSCode will prompt you to reopen it in the
 development container.
-When confirmed, VSCode will set up all services for development through docker-compose.
+When confirmed, VSCode will set up all services for development through `docker-compose`.
 
 With the basic setup the development container will be available at `localhost`.
 
@@ -100,6 +109,13 @@ way into production.
 #### Production Environment
 
 **Before** starting the services via docker-compose:
+
+- \[Optional\] Benchmark your docker setup with
+  [docker-bench-security](https://github.com/docker/docker-bench-security).
+
+  - Some of the changes needed to secure your docker setup might lead 
+    to loss of containers and volumes. It would be better to make the
+    changes before creating any containers on the system.
 
 - Customize the environment files in docker/environments/
   and rename them to remove example from their name.
@@ -124,7 +140,7 @@ way into production.
     - If you use a ca-chain file, add this file to the end of your crt file.
       This file can then be used by nginx as certificate.
 
-- Optional: Set up a backup routine for the database.
+- \[Optional\] Set up a backup routine for the database.
 
 ### Importing Data
 
@@ -178,10 +194,6 @@ This project adheres to [Semantic Versioning 2.0.0](https://semver.org/).
 This project is licensed under the GNU AGPL-3.0 License -see the
 [LICENSE.md](https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 file for details
-
-## Contributions
-
-Please see our [CONTRIBUTING.md](.github/CONTRIBUTING.md), if you want to contribute to this project.
 
 <!-- Markdown link & img dfn's -->
 
