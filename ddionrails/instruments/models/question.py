@@ -146,17 +146,12 @@ class Question(ModelMixin, models.Model):
         except ObjectDoesNotExist:
             return None
 
-    def get_period(self, period_id=False, default=None):
-        """ Returns the related period_id | period_name | Period instance | a default """
-        try:
-            period = self.instrument.period
-            if period_id is True:
-                return period.id
-            if period_id == "name":
-                return period.name
-            return period
-        except AttributeError:
-            return default
+    @property
+    def period_fallback(self):
+        """Retrieve period from instrument if dataset period is not set yet."""
+        if self.period:
+            return self.period
+        return self.instrument.period
 
     def get_related_question_set(self, all_studies=False, by_study_and_period=False):
         """
@@ -187,7 +182,9 @@ class Question(ModelMixin, models.Model):
                     result[study.name][period.name] = list()
             for question in combined_set:
                 result[question.instrument.study.name][
-                    question.get_period(period_id="name", default="no period")
+                    getattr(
+                        getattr(question, "period_fallback", None), "name", "no period"
+                    )
                 ].append(question)
             return result
         return combined_set

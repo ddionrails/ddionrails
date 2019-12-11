@@ -4,6 +4,7 @@
 
 import logging
 import os
+from typing import Iterable, Union
 
 import frontmatter
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,7 +13,7 @@ from django.forms import Form
 
 from .helpers import read_csv
 
-logging.config.fileConfig("logging.conf")
+logging.config.fileConfig("logging.conf")  # type: ignore
 LOGGER = logging.getLogger(__name__)
 
 
@@ -22,6 +23,8 @@ class Import:
 
     To use it, implement the ``execute_import()`` method.
     """
+
+    content: Union[None, str, Iterable]
 
     def __init__(self, filename, study=None, system=None):
         self.study = study
@@ -97,7 +100,7 @@ class CSVImport(Import):
     """
 
     def read_file(self):
-        self.content = read_csv(self.file_path())
+        self.content: Iterable = read_csv(self.file_path())
 
     def execute_import(self):
         for element in self.content:
@@ -107,7 +110,7 @@ class CSVImport(Import):
         form = self.DOR.form
         element = self.process_element(element)
         try:
-            model = self.DOR.form.Meta.model
+            model = self.DOR.form.Meta.model  # type: ignore
             fields = model.DOR.id_fields
             definition = {
                 key: value for key, value in form(element).data.items() if key in fields
@@ -117,15 +120,16 @@ class CSVImport(Import):
         # or the model might not have "model.DOR.id_fields"
         except (AttributeError, ObjectDoesNotExist):
             obj = None
-        form = self.DOR.form(element, instance=obj)
-        form.full_clean()
-        if form.is_valid():
-            new_object = form.save()
+        # mypy django-stubs seem to have a problem with forms.
+        form = self.DOR.form(element, instance=obj)  # type: ignore
+        form.full_clean()  # type: ignore
+        if form.is_valid():  # type: ignore
+            new_object = form.save()  # type: ignore
             print(".", end="")
             return new_object
         LOGGER.error("Import error in %s", str(self.__class__))
         LOGGER.error(form.data)
-        LOGGER.error(form.errors.as_data())
+        LOGGER.error(form.errors.as_data())  # type: ignore
         return None
 
     def process_element(self, element):

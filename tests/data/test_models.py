@@ -11,8 +11,8 @@ from tests.data.factories import VariableFactory
 pytestmark = [pytest.mark.data, pytest.mark.models]
 
 
-@pytest.fixture
-def related_variables_by_concept(variable, concept):
+@pytest.fixture(name="related_variables_by_concept")
+def _related_variables_by_concept(variable, concept):
     """ Two variables that are related by concept """
     variable.concept = concept
     variable.save()
@@ -73,26 +73,13 @@ class TestVariableModel:
         expected = "no-concept"
         assert expected == result
 
-    def test_get_period(self, variable):
-        result = variable.get_period()
+    def test_period_fallback(self, variable: Variable):
+        result = variable.period_fallback
+        expected = variable.period
+        assert expected == result
+        variable.period = None
+        result = variable.period_fallback
         expected = variable.dataset.period
-        assert expected == result
-
-    def test_get_period_id(self, variable):
-        result = variable.get_period(period_id=True)
-        expected = variable.dataset.period.id
-        assert expected == result
-
-    def test_get_period_name(self, variable):
-        result = variable.get_period(period_id="name")
-        expected = variable.dataset.period.name
-        assert expected == result
-
-    def test_get_period_default(self, variable):
-        variable.dataset.period = None
-        variable.dataset.save()
-        result = variable.get_period(default="no-period", period_id="name")
-        expected = "no-period"
         assert expected == result
 
     def test_get_related_variables_without_concept(self, variable):
@@ -102,20 +89,24 @@ class TestVariableModel:
 
     def test_get_related_variables_with_concept(self, related_variables_by_concept):
         variable, other_variable = related_variables_by_concept
+        variable = update_variable(variable)
+        other_variable = update_variable(other_variable)
         result = list(variable.get_related_variables())
         # a variable is related to itself?
         expected = [other_variable, variable]
-        assert expected == result
+        assert sorted(expected) == sorted(result)
 
-    def test_get_related_variables_by_period_empty(self, variable):
+    def test_get_related_variables_by_period_empty(self, variable: Variable):
         result = variable.get_related_variables_by_period()
-        expected = {"none": [], variable.dataset.period.name: []}
+        expected = {variable.dataset.period.name: []}
         assert expected == result
 
     def test_get_related_variables_by_period(self, related_variables_by_concept):
         variable, other_variable = related_variables_by_concept
         result = variable.get_related_variables_by_period()
-        assert [other_variable, variable] == result[other_variable.dataset.period.name]
+        assert sorted([other_variable, variable]) == sorted(
+            result[other_variable.dataset.period.name]
+        )
 
     def test_get_related_variables_by_period_none_period(
         self, related_variables_by_concept
@@ -123,8 +114,13 @@ class TestVariableModel:
         variable, other_variable = related_variables_by_concept
         other_variable.dataset.period = None
         other_variable.dataset.save()
+        # Refresh variable to sync dataset across both variables
+        variable = Variable.objects.get(id=variable.id)
+        # Save method should make variable.period == variable.dataset.period
+        variable.save()
+        other_variable.save()
         result = variable.get_related_variables_by_period()
-        assert [other_variable, variable] == result["none"]
+        assert sorted([other_variable, variable]) == sorted(result["none"])
 
     def test_get_categories_method_without_categories(self, variable):
         variable.categories = {}
@@ -222,3 +218,8 @@ class TestDatasetModel:
     def test_absolute_url_method(self, dataset):
         expected = f"/{dataset.study.name}/data/{dataset.name}"
         assert dataset.get_absolute_url() == expected
+
+
+def update_variable(variable: Variable) -> Variable:
+    """Sync variable with database content."""
+    return Variable.objects.get(id=variable.id)

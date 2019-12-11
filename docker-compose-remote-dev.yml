@@ -23,7 +23,7 @@ services:
       - ./:/usr/src/app/
       - media:/var/django/media
       - ~/.ssh/docker-dev/:/root/.ssh
-      - ~/.gnupg/:/root/.gnupg/
+      - ~/.gnupg/docker-dev/:/root/.gnupg/
 
   postgres:
     env_file:

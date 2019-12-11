@@ -5,7 +5,7 @@
 */
 
 @import "~jquery.fancytree/dist/skin-bootstrap/ui.fancytree.css";
-@import "~spinkit/css/spinners/7-three-bounce.css";
+@import "~spinkit/spinkit.min.css";
 
 .filter-options {
   visibility: hidden;
@@ -50,4 +50,9 @@ span.fancytree-expander:hover {
 html,
 body {
   height: 100%;
+}
+
+.sk-flow {
+  margin-left: auto;
+  margin-right: auto;
 }
