@@ -16,7 +16,7 @@ from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
 
 logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class DatasetJsonImport(imports.Import):
@@ -35,19 +35,20 @@ class DatasetJsonImport(imports.Import):
             self._import_variable(var, dataset, sort_id)
             sort_id += 1
 
-    def _import_variable(self, var, dataset, sort_id):
-        name = var["variable"]
+    @staticmethod
+    def _import_variable(var, dataset, sort_id):
+        name = var.get("name", var.get("variable"))
         variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
         if "statistics" in var:
-            statistics = {
-                key: value
-                for key, value in zip(
-                    var["statistics"]["names"], var["statistics"]["values"]
+            if "names" in var["statistics"]:
+                statistics = dict(
+                    zip(var["statistics"]["names"], var["statistics"]["values"])
                 )
-            }
+            else:
+                statistics = var["statistics"]
             variable.statistics = statistics
         if "categories" in var:
             values = var["categories"].get("values")
@@ -69,7 +70,7 @@ class DatasetImport(imports.CSVImport):
         try:
             self._import_dataset_links(element)
         except:
-            logger.error(f'Failed to import dataset "{element["dataset_name"]}"')
+            LOGGER.error(f'Failed to import dataset "{element["dataset_name"]}"')
 
     def _import_dataset_links(self, element: OrderedDict):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
@@ -104,7 +105,7 @@ class VariableImport(imports.CSVImport):
         except:
             variable = element.get("variable_name")
             dataset = element.get("dataset_name")
-            logger.error(
+            LOGGER.error(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
 
@@ -136,8 +137,19 @@ class TransformationImport(imports.CSVImport):
                 element["target_variable_name"],
             )
         except ObjectDoesNotExist:
-            origin_variable = f"{element['origin_study_name']}/{element['origin_dataset_name']}/{element['origin_variable_name']}"
-            target_variable = f"{element['target_study_name']}/{element['target_dataset_name']}/{element['target_variable_name']}"
-            logger.error(
-                f'Failed to import transformation from variable"{origin_variable}" to variable "{target_variable}"'
+            origin_variable = (
+                f"{element['origin_study_name']}/"
+                f"{element['origin_dataset_name']}/"
+                f"{element['origin_variable_name']}"
+            )
+            target_variable = (
+                f"{element['target_study_name']}/"
+                f"{element['target_dataset_name']}/"
+                f"{element['target_variable_name']}"
+            )
+            LOGGER.error(
+                (
+                    f"Failed to import transformation from variable "
+                    f'"{origin_variable}" to variable "{target_variable}"'
+                )
             )
