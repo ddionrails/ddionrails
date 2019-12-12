@@ -14,84 +14,65 @@ from ddionrails.workspace.mixins import SoepMixin
 def soepmixin():
     return SoepMixin()
 
-
 @pytest.fixture
-def soepletters():
-    return [
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
-        "ba",
-        "bb",
-        "bc",
-        "bd",
-        "be",
-        "bf",
-        "bg",
-    ]
-
-
-testdata_soep_classify_dataset_method = [("ah", "h"), ("ap", "p")]
-
+def script_dict():
+    return {
+        "bah": dict(
+            name="bah",
+            analysis_unit="h",
+            period=2010,
+            prefix="ba",
+            variables=set(),
+            matches=["p", "h"],
+        ),
+        "rp": dict(
+            name="rp",
+            analysis_unit="p",
+            period=2001,
+            prefix="r",
+            variables=set(),
+            matches=["p"]
+        )
+    }
 
 class TestSoepMixin:
-    def test_soep_year_method(self, soepmixin):
-        year = 2001
-        soepmixin._soep_year(year)  # pylint: disable=protected-access
+    def test_generate_script_dict_method(self, soepmixin):
+        """
+        TODO: create test
+        """
 
-    def test_soep_letters_method(self, soepmixin, soepletters):
-        result = soepmixin._soep_letters()  # pylint: disable=protected-access
-        assert result == soepletters
-
-    def test_soep_letters_method_page_1(self, soepmixin):
-        page = 1
-        result = soepmixin._soep_letters(page)  # pylint: disable=protected-access
-        expected = list(string.ascii_lowercase)
-        assert result == expected
-
-    def test_soep_letters_method_page_2(self, soepmixin):
-        page = 2
-        result = soepmixin._soep_letters(page)  # pylint: disable=protected-access
-        assert result == ["ba", "bb", "bc", "bd", "be", "bf", "bg"]
-
-    @pytest.mark.parametrize("argument,expected", testdata_soep_classify_dataset_method)
-    def test_soep_classify_dataset_method(
-        self, mocker, soepmixin, soepletters, argument, expected
-    ):
-        mocked_soep_letters = mocker.patch.object(SoepMixin, "_soep_letters")
-        mocked_soep_letters.return_value = soepletters
-        dataset_name = argument
-        result = soepmixin._soep_classify_dataset(  # pylint: disable=protected-access
-            dataset_name
+    def test_create_dataset_dict_method(self, soepmixin):
+        dataset_name = "bah"
+        testdict = soepmixin._create_dataset_dict(dataset_name)
+        assert testdict == dict(
+            name="bah",
+            analysis_unit="h",
+            period=2010,
+            prefix="ba",
+            variables=set(),
+            curr_hid="bahhnr",
+            is_matchable=True,
+            is_special=False,
         )
-        assert result == expected
 
-    def test_soep_letter_year_method(self, soepmixin):
-        result = soepmixin._soep_letter_year()  # pylint: disable=protected-access
-        assert result.get("") == 0
-        assert result.get("a") == 2001
-        assert result.get("z") == 2026
-        assert result.get("bg") == 2033
+    def test_enrich_dataset_dict_method(self, soepmixin):
+        dataset_dict_p = {"analysis_unit": "p", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        soepmixin._enrich_dataset_dict(dataset_dict_p)
+        assert dataset_dict_p == {"analysis_unit": "p", "variables": {"persnr", "bahhnr"}, "merge_id": "persnr", "prefix": "ba", "curr_hid": "bahhnr"}
+
+        dataset_dict_h = {"analysis_unit": "h", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        soepmixin._enrich_dataset_dict(dataset_dict_h)
+        assert dataset_dict_h == {"analysis_unit": "h", "variables": {"bahhnr"}, "merge_id": "bahhnr", "prefix": "ba", "curr_hid": "bahhnr"}
+
+        dataset_dict_other = {"analysis_unit": "", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        soepmixin._enrich_dataset_dict(dataset_dict_other)
+        assert dataset_dict_other == {"analysis_unit": "", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+
+    def test_validate_datasets_method(self, script_dict, soepmixin):
+        analysis_unit_p = "p"
+        valid_p = soepmixin._validate_datasets(script_dict, analysis_unit_p)
+        analysis_unit_h = "h"
+        valid_h = soepmixin._validate_datasets(script_dict, analysis_unit_h)
+
+        assert valid_p == ['bah', 'rp']
+        assert valid_h == ['bah']

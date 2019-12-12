@@ -1,0 +1,4808 @@
+{
+    "soep.v35::artkalen": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "artkalen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biobirth": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biobirth",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biocouplm": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biocouplm",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biocouply": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biocouply",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::bioedu": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioedu",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biojob": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biojob",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biomarsm": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biomarsm",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biomarsy": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biomarsy",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::bioparen": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioparen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biosib": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biosib",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::biotwin": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biotwin",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::design": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "design",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35::hpath": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hpath",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": false
+    },
+    "soep.v35::lifespell": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "lifespell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::migspell": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "migspell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::pbiospe": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pbiospe",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::ppath": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "ppath",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::refugspell": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "refugspell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::abroad": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "abroad",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::bioage17": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioage17",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::bioagel": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioagel",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::bioimmig": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioimmig",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::biol": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biol",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::biopupil": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biopupil",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::bioresid": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "bioresid",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::biosoc": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "biosoc",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::camces": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "camces",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::cogdj": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "cogdj",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::cognit": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "cognit",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::gripstr": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "gripstr",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::hbrutt": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hbrutt",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::hbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hbrutto",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::health": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "health",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::hgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hgen",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::hl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::hpathl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hpathl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::hwealth": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hwealth",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::interviewer": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "interviewer",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35::jugendl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "jugendl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::kidlong": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "kidlong",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::mihinc": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "mihinc",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::pbr_exit": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pbr_exit",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pbr_hhch": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pbr_hhch",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pbrutto",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pequiv",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pflege": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pflege",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pgen",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pkal",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::plueckel": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "plueckel",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35::ppathl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "ppathl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::pwealth": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "pwealth",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::trust": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "trust",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::vpl": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "vpl",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::timepref": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "timepref",
+        "syear": 2006,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35::hconsum": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "hconsum",
+        "syear": 2010,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35::cog_refu": {
+        "soep_version": "soep.v35",
+        "sub_path": "",
+        "dataset_name": "cog_refu",
+        "syear": 2017,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:eu-silc-clone:D-File": {
+        "soep_version": "soep.v35",
+        "sub_path": "eu-silc-clone",
+        "dataset_name": "D-File",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:eu-silc-clone:H-File": {
+        "soep_version": "soep.v35",
+        "sub_path": "eu-silc-clone",
+        "dataset_name": "H-File",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:eu-silc-clone:P-File": {
+        "soep_version": "soep.v35",
+        "sub_path": "eu-silc-clone",
+        "dataset_name": "P-File",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:eu-silc-clone:R-File": {
+        "soep_version": "soep.v35",
+        "sub_path": "eu-silc-clone",
+        "dataset_name": "R-File",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:raw:artkalen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "artkalen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biobirth": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biobirth",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biocouplm": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biocouplm",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biocouply": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biocouply",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bioedu": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioedu",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biojob": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biojob",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biomarsm": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biomarsm",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biomarsy": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biomarsy",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bioparen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioparen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biosib": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biosib",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:biotwin": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biotwin",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:cirdef": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cirdef",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:raw:design": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "design",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:raw:einkalen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "einkalen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:ggkbou": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ggkbou",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:hhrf": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hhrf",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:hpfad": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpfad",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:lifespell": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lifespell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:migspell": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "migspell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:pbiospe": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pbiospe",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:phrf": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "phrf",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:ppfad": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppfad",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:refugspell": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "refugspell",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:sozkalen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "sozkalen",
+        "syear": -1,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:abroad": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "abroad",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bioage17": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioage17",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bioagel": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioagel",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bioimmig": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioimmig",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:biopupil": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biopupil",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bioresid": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bioresid",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:biosoc": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "biosoc",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:camces": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "camces",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cogdj": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cogdj",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cognit": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cognit",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gripstr": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gripstr",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:health": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "health",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hwealth": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hwealth",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:interviewer": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "interviewer",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": null,
+        "_is_matchable": false
+    },
+    "soep.v35:raw:kidlong": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kidlong",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mihinc": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mihinc",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pbr_exit": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pbr_exit",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pbr_hhch": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pbr_hhch",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pflege": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pflege",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pwealth": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pwealth",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:trust": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "trust",
+        "syear": 0,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:timepref": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "timepref",
+        "syear": 2006,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:exit": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "exit",
+        "syear": 2009,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hconsum": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hconsum",
+        "syear": 2010,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cog_refu": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cog_refu",
+        "syear": 2017,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ddr18": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ddr18",
+        "syear": 2018,
+        "_prefix": null,
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ah": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ah",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bh",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ch": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ch",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dh",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:eh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "eh",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fh",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gh",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hh",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ih": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ih",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jh",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kh",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lh",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mh",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:nh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "nh",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:oh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "oh",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ph": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ph",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qh",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rh",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:sh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "sh",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:th": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "th",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:uh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "uh",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vh",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wh",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xh",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:yh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "yh",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zh",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bah": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bah",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbh",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bch": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bch",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdh",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:beh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "beh",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfh",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgh",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhh": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhh",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bih": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bih",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgh_refugees": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgh_refugees",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt84": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt84",
+        "syear": 1984,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt98": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt98",
+        "syear": 1998,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt00": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt00",
+        "syear": 2000,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt02": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt02",
+        "syear": 2002,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt06": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt06",
+        "syear": 2006,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt09": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt09",
+        "syear": 2009,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt10": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt10",
+        "syear": 2010,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt11": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt11",
+        "syear": 2011,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt12": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt12",
+        "syear": 2012,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt13": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt13",
+        "syear": 2013,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt15": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt15",
+        "syear": 2015,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt16": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt16",
+        "syear": 2016,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt17": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt17",
+        "syear": 2017,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hbrutt18": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hbrutt18",
+        "syear": 2018,
+        "_prefix": null,
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ahbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ahbrutto",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhbrutto",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:chbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "chbrutto",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dhbrutto",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ehbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ehbrutto",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fhbrutto",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ghbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ghbrutto",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hhbrutto",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ihbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ihbrutto",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jhbrutto",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:khbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "khbrutto",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lhbrutto",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mhbrutto",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:nhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "nhbrutto",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ohbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ohbrutto",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:phbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "phbrutto",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qhbrutto",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rhbrutto",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:shbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "shbrutto",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:thbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "thbrutto",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:uhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "uhbrutto",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vhbrutto",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:whbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "whbrutto",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xhbrutto",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:yhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "yhbrutto",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zhbrutto",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bahbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bahbrutto",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbhbrutto",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bchbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bchbrutto",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdhbrutto",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:behbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "behbrutto",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfhbrutto",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bghbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bghbrutto",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhhbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhhbrutto",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bihbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bihbrutto",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ahgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ahgen",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhgen",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:chgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "chgen",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dhgen",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ehgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ehgen",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fhgen",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ghgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ghgen",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hhgen",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ihgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ihgen",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jhgen",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:khgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "khgen",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lhgen",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mhgen",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:nhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "nhgen",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ohgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ohgen",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:phgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "phgen",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qhgen",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rhgen",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:shgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "shgen",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:thgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "thgen",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:uhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "uhgen",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vhgen",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:whgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "whgen",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xhgen",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:yhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "yhgen",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zhgen",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bahgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bahgen",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbhgen",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bchgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bchgen",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdhgen",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:behgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "behgen",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfhgen",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bghgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bghgen",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhhgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhhgen",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bihgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bihgen",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ghost": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ghost",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "h",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qjugend",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rjugend",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:sjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "sjugend",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tjugend",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ujugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ujugend",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vjugend",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wjugend",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xjugend",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:yjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "yjugend",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zjugend",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bajugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bajugend",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbjugend",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcjugend",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdjugend",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bejugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bejugend",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfjugend",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgjugend",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhjugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhjugend",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bijugend": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bijugend",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:akind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "akind",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bkind",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ckind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ckind",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dkind",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ekind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ekind",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fkind",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gkind",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hkind",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ikind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ikind",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jkind",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kkind",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lkind",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mkind",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:nkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "nkind",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:okind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "okind",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pkind",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qkind",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rkind",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:skind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "skind",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tkind",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ukind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ukind",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vkind",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wkind",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xkind",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ykind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ykind",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zkind",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bakind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bakind",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbkind",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bckind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bckind",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdkind",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bekind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bekind",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfkind",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgkind",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhkind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhkind",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bikind": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bikind",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ap": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ap",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bp",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cp",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dp",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ep": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ep",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fp",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gp",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hp",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ip": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ip",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jp",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kp",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lp",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mp",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:np": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "np",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:op": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "op",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:pp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "pp",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qp",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rp",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:sp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "sp",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tp",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:up": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "up",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vp",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wp",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xp",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:yp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "yp",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zp",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bap": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bap",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbp",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcp",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdp",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bep": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bep",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfp",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgp",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhp",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bip": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bip",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdp_mig": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdp_mig",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bep_mig": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bep_mig",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfp_mig": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfp_mig",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgp_mig": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgp_mig",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgp_refugees": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgp_refugees",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:apausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "apausl",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpausl",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpausl",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpausl",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:epausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epausl",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpausl",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpausl",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpausl",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ipausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipausl",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpausl",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpausl",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lpausl": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpausl",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:apbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "apbrutto",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpbrutto",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpbrutto",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpbrutto",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:epbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epbrutto",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpbrutto",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpbrutto",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpbrutto",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ipbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipbrutto",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpbrutto",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpbrutto",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpbrutto",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mpbrutto",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:npbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "npbrutto",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:opbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "opbrutto",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ppbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppbrutto",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qpbrutto",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rpbrutto",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:spbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "spbrutto",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tpbrutto",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:upbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "upbrutto",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vpbrutto",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wpbrutto",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xpbrutto",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ypbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ypbrutto",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zpbrutto",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bapbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bapbrutto",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbpbrutto",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcpbrutto",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdpbrutto",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bepbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bepbrutto",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfpbrutto",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgpbrutto",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhpbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhpbrutto",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bipbrutto": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bipbrutto",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:apequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "apequiv",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpequiv",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpequiv",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpequiv",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:epequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epequiv",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpequiv",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpequiv",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpequiv",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ipequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipequiv",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpequiv",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpequiv",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpequiv",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mpequiv",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:npequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "npequiv",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:opequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "opequiv",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ppequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppequiv",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qpequiv",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rpequiv",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:spequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "spequiv",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tpequiv",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:upequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "upequiv",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vpequiv",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wpequiv",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xpequiv",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ypequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ypequiv",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zpequiv",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bapequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bapequiv",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbpequiv",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcpequiv",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdpequiv",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bepequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bepequiv",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfpequiv",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgpequiv",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhpequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhpequiv",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bipequiv": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bipequiv",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:apgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "apgen",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpgen",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpgen",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpgen",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:epgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epgen",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpgen",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpgen",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpgen",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ipgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipgen",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpgen",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpgen",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpgen",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mpgen",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:npgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "npgen",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:opgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "opgen",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ppgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppgen",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qpgen",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rpgen",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:spgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "spgen",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tpgen",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:upgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "upgen",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vpgen",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wpgen",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xpgen",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ypgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ypgen",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zpgen",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bapgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bapgen",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbpgen",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcpgen",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdpgen",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bepgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bepgen",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfpgen",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgpgen",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhpgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhpgen",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bipgen": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bipgen",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:apkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "apkal",
+        "syear": 1984,
+        "_prefix": "a",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpkal",
+        "syear": 1985,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:cpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpkal",
+        "syear": 1986,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:dpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpkal",
+        "syear": 1987,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:epkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epkal",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:fpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpkal",
+        "syear": 1989,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpkal",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpkal",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ipkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipkal",
+        "syear": 1992,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:jpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpkal",
+        "syear": 1993,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:kpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpkal",
+        "syear": 1994,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:lpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpkal",
+        "syear": 1995,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:mpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mpkal",
+        "syear": 1996,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:npkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "npkal",
+        "syear": 1997,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:opkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "opkal",
+        "syear": 1998,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ppkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppkal",
+        "syear": 1999,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:qpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qpkal",
+        "syear": 2000,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:rpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rpkal",
+        "syear": 2001,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:spkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "spkal",
+        "syear": 2002,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:tpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tpkal",
+        "syear": 2003,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:upkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "upkal",
+        "syear": 2004,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:vpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vpkal",
+        "syear": 2005,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:wpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wpkal",
+        "syear": 2006,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:xpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xpkal",
+        "syear": 2007,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ypkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ypkal",
+        "syear": 2008,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zpkal",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bapkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bapkal",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbpkal",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcpkal",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdpkal",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bepkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bepkal",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfpkal",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgpkal",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhpkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhpkal",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bipkal": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bipkal",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:gpkalost": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpkalost",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpkalost": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpkalost",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bpluecke",
+        "syear": 1986,
+        "_prefix": "b",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:cpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "cpluecke",
+        "syear": 1987,
+        "_prefix": "c",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:dpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "dpluecke",
+        "syear": 1988,
+        "_prefix": "d",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:epluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "epluecke",
+        "syear": 1989,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:fpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "fpluecke",
+        "syear": 1990,
+        "_prefix": "f",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:gpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpluecke",
+        "syear": 1991,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:hpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpluecke",
+        "syear": 1992,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:ipluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ipluecke",
+        "syear": 1993,
+        "_prefix": "i",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:jpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "jpluecke",
+        "syear": 1994,
+        "_prefix": "j",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:kpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "kpluecke",
+        "syear": 1995,
+        "_prefix": "k",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:lpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "lpluecke",
+        "syear": 1996,
+        "_prefix": "l",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:mpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "mpluecke",
+        "syear": 1997,
+        "_prefix": "m",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:npluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "npluecke",
+        "syear": 1998,
+        "_prefix": "n",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:opluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "opluecke",
+        "syear": 1999,
+        "_prefix": "o",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:ppluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ppluecke",
+        "syear": 2000,
+        "_prefix": "p",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:qpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "qpluecke",
+        "syear": 2001,
+        "_prefix": "q",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:rpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "rpluecke",
+        "syear": 2002,
+        "_prefix": "r",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:spluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "spluecke",
+        "syear": 2003,
+        "_prefix": "s",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:tpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "tpluecke",
+        "syear": 2004,
+        "_prefix": "t",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:upluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "upluecke",
+        "syear": 2005,
+        "_prefix": "u",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:vpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "vpluecke",
+        "syear": 2006,
+        "_prefix": "v",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:wpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "wpluecke",
+        "syear": 2007,
+        "_prefix": "w",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:xpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "xpluecke",
+        "syear": 2008,
+        "_prefix": "x",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:ypluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ypluecke",
+        "syear": 2009,
+        "_prefix": "y",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:zpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zpluecke",
+        "syear": 2010,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bapluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bapluecke",
+        "syear": 2011,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bbpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbpluecke",
+        "syear": 2012,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bcpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcpluecke",
+        "syear": 2013,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bdpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdpluecke",
+        "syear": 2014,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bepluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bepluecke",
+        "syear": 2015,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bfpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfpluecke",
+        "syear": 2016,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bgpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgpluecke",
+        "syear": 2017,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:bhpluecke": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhpluecke",
+        "syear": 2018,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": false
+    },
+    "soep.v35:raw:gpost": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "gpost",
+        "syear": 1990,
+        "_prefix": "g",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:hpost": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "hpost",
+        "syear": 1991,
+        "_prefix": "h",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:beschool": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "beschool",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfschool": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfschool",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgschool": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgschool",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhschool": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhschool",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bischool": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bischool",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgschool2": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgschool2",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhschool2": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhschool2",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bischool2": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bischool2",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:ev": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "ev",
+        "syear": 1988,
+        "_prefix": "e",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:zvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "zvp",
+        "syear": 2009,
+        "_prefix": "z",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bavp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bavp",
+        "syear": 2010,
+        "_prefix": "ba",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bbvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bbvp",
+        "syear": 2011,
+        "_prefix": "bb",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bcvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bcvp",
+        "syear": 2012,
+        "_prefix": "bc",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bdvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bdvp",
+        "syear": 2013,
+        "_prefix": "bd",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bevp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bevp",
+        "syear": 2014,
+        "_prefix": "be",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bfvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bfvp",
+        "syear": 2015,
+        "_prefix": "bf",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bgvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bgvp",
+        "syear": 2016,
+        "_prefix": "bg",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bhvp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bhvp",
+        "syear": 2017,
+        "_prefix": "bh",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    },
+    "soep.v35:raw:bivp": {
+        "soep_version": "soep.v35",
+        "sub_path": "raw",
+        "dataset_name": "bivp",
+        "syear": 2018,
+        "_prefix": "bi",
+        "analyse_unit": "p",
+        "_is_matchable": true
+    }
+}

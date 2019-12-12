@@ -7,77 +7,14 @@ from typing import Dict
 
 from ..mixins import SoepMixin
 from .script_config import ScriptConfig
+from .soep_config import SoepConfig
+# from ddionrails.workspace.scripts.soep_datasets import SoepDatasets # only for debug
 
-
-class SoepStata(ScriptConfig, SoepMixin):
+class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
     """ Script Generator for Stata scripts """
 
     NAME = "soep-stata"
     COMMENT = "*"
-
-    DEFAULT_DICT = dict(
-        path_in="data/",
-        path_out="out/",
-        analysis_unit="p",
-        private="t",
-        gender="b",
-        balanced="t",
-        age_group="adult",
-    )
-    DEFAULT_CONFIG = json.dumps(DEFAULT_DICT)
-
-    def __init__(self, script, basket):
-        self.basket = basket
-        self.script = script
-        self.fields = [
-            dict(name="path_in", label="Input path", scale="text"),
-            dict(name="path_out", label="Output path", scale="text"),
-            dict(
-                name="analysis_unit",
-                label="Analysis Unit",
-                scale="select",
-                options=dict(p="Individual", h="Household"),
-            ),
-            dict(
-                name="private",
-                label="Private households",
-                scale="select",
-                options=dict(t="Private households only", f="All households"),
-            ),
-            dict(
-                name="gender",
-                label="Gender",
-                scale="select",
-                options=dict(b="Both", m="Male", f="Female"),
-            ),
-            dict(
-                name="balanced",
-                label="Sample composition",
-                scale="select",
-                options=dict(t="balanced", f="unbalanced"),
-            ),
-            dict(
-                name="age_group",
-                label="Age group",
-                scale="select",
-                options=dict(
-                    all="All sample members",
-                    adult="All adult respondents",
-                    no17="All adult repspondents without first time interviewed (age 17)",
-                ),
-            ),
-        ]
-        self.default_settings = self.DEFAULT_CONFIG
-        self.settings = script.get_settings()
-        self.template = "scripts/soep_stata.html"
-        self.script_dict_raw = self._generate_script_dict()
-        valid_datasets = self._validate_datasets(
-            self.script_dict_raw, self.settings["analysis_unit"]
-        )
-        self.script_dict = {
-            x: y for x, y in self.script_dict_raw.items() if x in valid_datasets
-        }
-        self.years = self._get_selected_years(self.script_dict)
 
     def get_script_input(self) -> Dict:
         script_input = super().get_script_input()
@@ -93,24 +30,45 @@ class SoepStata(ScriptConfig, SoepMixin):
         script_input["not_processed"] = {
             x: y for x, y in script_input["data"].items() if x in not_processed_datasets
         }
+        script_input["is_special"] = {
+            x: y for x, y in script_input["data"].items() if x in {"hhrf", "phrf", "ppfad", "hpfad"}
+        }
+
         script_input["text"] = "\n".join(
             [
+                # self._render_test(script_input["data"], script_input["valid_datasets"], script_input["not_processed"], script_input["is_special"]),
                 self._render_disclaimer(),
                 self._render_local_variables(),
                 self._render_not_processed(script_input["not_processed"]),
-                self._render_pfad(),
+                self._render_pfad(script_input["is_special"]),
                 self._render_balanced(),
                 self._render_private(),
                 self._render_gender(),
                 self._render_sort_pfad(),
-                self._render_hrf(),
+                self._render_hrf(script_input["is_special"]),
                 self._render_create_master(),
                 self._render_read_data(),
-                self._render_merge(),
+                self._render_merge(script_input["is_special"]),
                 self._render_done(),
             ]
         )
         return script_input
+
+    def _render_test(self, data, old_valid, old_notp, special):
+        """test"""
+        heading = "\n\n* * * Debug * * *\n"
+        script = "\n {}".format(data)
+        #script += "\n {}".format(old_valid)
+        #script += "\n {}".format(old_notp)
+        script += "\n {}".format(special)
+        script += "\n {}".format(self.script_dict.values())
+        #script += "\n {}".format(SoepDatasets().data.keys())
+        #script += "\n {}".format(SoepDatasets().data.items())
+        #script += "\n {}".format(self.settings["analysis_unit"])
+        #script += "\n {}".format(self.settings["private"])
+        #x = "ah" in SoepDatasets().data.keys()
+        #script += "\n {}".format(x)
+        return heading + script
 
     def _render_disclaimer(self) -> str:
         """ Render the disclaimer of the script file """
@@ -148,20 +106,31 @@ class SoepStata(ScriptConfig, SoepMixin):
             script += "%s From datasets '%s': %s.\n" % (self.COMMENT, key, value)
         return heading + script
 
-    def _render_pfad(self) -> str:
+    def _render_pfad(self, special_datasets) -> str:
         """ Render a "load pfad" section of the script file """
         heading = "\n\n* * * PFAD * * *\n"
         script = []
         if self.settings["analysis_unit"] == "p":
-            script.append("\nuse hhnr persnr sex gebjahr psample")
+            script.append("\nuse")
+            pfad_variables =["hhnr", "persnr", "sex", "gebjahr", "psample"]
             for year in self.years:
-                script.append("%shhnr %snetto %spop" % (year, year, year))
-            script.append('using "${MY_PATH_IN}ppfad.dta", clear')
+                pfad_variables.append("%shhnr" % year)
+                pfad_variables.append("%snetto" % year)
+                pfad_variables.append("%spop" % year)
+            if "ppfad" in special_datasets:
+                for variable in special_datasets["ppfad"]:
+                    pfad_variables.append(variable)
+            script.extend(list(set(pfad_variables)))
+            script.append("///")
+            script.append('\nusing "${MY_PATH_IN}ppfad.dta", clear')
         else:
-            script.append("\nuse hhnr hhnrakt hsample")
+            script.append("\nuse /// \nhhnr hhnrakt hsample ///")
             for year in self.years:
-                script.append("%shhnr %shnetto %shpop" % (year, year, year))
-            script.append('using "${MY_PATH_IN}hpfad.dta", clear')
+                script.append("\n%shhnr %shnetto %shpop ///" % (year, year, year))
+            if "hpfad" in special_datasets:
+                for variable in special_datasets["hpfad"]:
+                    script.append("\n%s ///" % variable)
+            script.append('\nusing "${MY_PATH_IN}hpfad.dta", clear')
         return heading + " ".join(script)
 
     def _render_balanced(self) -> str:
@@ -186,43 +155,63 @@ class SoepStata(ScriptConfig, SoepMixin):
 
     def _render_private(self) -> str:
         """ Render a "private households" section of the script file """
-        heading = "\n\n* * * PRIVATE VS ALL HOUSEHOLDS * * *\n"
+        heading = "\n\n* * * ONLY PRIVATE HOUSEHOLDS * * *\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
+        temp = []
         if self.settings["private"] == "t":
-            temp = []
             for year in self.years:
                 temp.append(
                     " (%s%s == 1 | %s%s == 2) " % (year, set_name, year, set_name)
                 )
             return heading + "\nkeep if (" + "|".join(temp) + ")"
         else:
-            return heading + "\n/* all households */"
+            return heading + "\n/* All households */"
 
     def _render_gender(self) -> str:
         """ Render a "gender" section of the script file """
-        options = {
-            "m": "\nkeep if (sex == 1)",
-            "f": "\nkeep if (sex == 2)",
-            "b": "\n/* all genders */",
-        }
-        gender = self.settings.get("gender", "b")
-        gender_selection = options[gender]
-        return "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
+        if self.settings["analysis_unit"] == "p":
+            options = {
+                "m": "\nkeep if (sex == 1)",
+                "f": "\nkeep if (sex == 2)",
+                "b": "\n/* all genders */",
+            }
+            gender = self.settings.get("gender", "b")
+            gender_selection = options[gender]
+            return "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
+        else:
+            return "\n\n* * * GENDER NOT FOR HOUSEHOLDS * * *\n"
 
     @staticmethod
     def _render_sort_pfad() -> str:
         """ Render a "sort pfad" section of the script file """
-        return "\n\n" "* * * SORT PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace'
+        return "\n\n" "* * * SAVE PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace \nclear'
 
-    def _render_hrf(self) -> str:
+    def _render_hrf(self, special_datasets) -> str:
         """ Render a "load hrf" section of the script file """
         heading = "\n\n* * * HRF * * *\n"
+        script = ["\nuse"]
+        hrf_dataset = ""
         if self.settings["analysis_unit"] == "p":
-            script = '\nuse "${MY_PATH_IN}phrf.dta", clear'
+            hrf_variables =["hhnr", "persnr", "prgroup"]
+            hrf_dataset = "phrf.dta"
+            for year in self.years:
+                hrf_variables.append("{}phrf".format(year))
+            if "phrf" in special_datasets:
+                for variable in special_datasets["phrf"]:
+                    hrf_variables.append("{}".format(variable))
         else:
-            script = '\nuse "${MY_PATH_IN}hhrf.dta", clear'
-        script += '\nsave "${MY_PATH_OUT}hrf.dta", replace'
-        return heading + script
+            hrf_variables =["hhnr", "hhnrakt", "hrgroup"]
+            hrf_dataset = "hhrf.dta"
+            for year in self.years:
+                hrf_variables.append("{}hhrf".format(year))
+            if "hhrf" in special_datasets:
+                for variable in special_datasets["hhrf"]:
+                    hrf_variables.append("{}".format(variable))
+        script.extend(list(set(hrf_variables)))
+        script.append("///")
+        script.append('\nusing "${MY_PATH_IN}%s"' % hrf_dataset)
+        script.append('\nsave "${MY_PATH_OUT}hrf.dta", replace \nclear')
+        return heading + " ".join(script)
 
     def _render_create_master(self) -> str:
         """ Render a "create master" section of the script file """
@@ -230,7 +219,7 @@ class SoepStata(ScriptConfig, SoepMixin):
         key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
         script = '\nuse "${MY_PATH_OUT}pfad.dta", clear'
         script += (
-            '\nmerge 1:1 %s using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen' % key
+            '\nmerge 1:1 %s hhnr using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen' % key
         )
         script += '\nsave "${MY_PATH_OUT}master.dta", replace'
         return heading + script
@@ -240,24 +229,33 @@ class SoepStata(ScriptConfig, SoepMixin):
         heading = "\n\n* * * READ DATA * * *\n"
         temp = []
         for dataset in self.script_dict.values():
-            script = "\nuse %s" % " ".join(dataset["variables"])
+            if dataset["is_special"] == True:
+                continue
+            list_variables = set.copy(dataset["variables"])
+            if dataset["analysis_unit"] == "p":
+                for var in dataset["variables"]:
+                    if var.endswith("hhnr"):
+                        list_variables.remove(var)
+            script = "\nuse %s" % " ".join(list_variables)
             script += ' using "${MY_PATH_IN}%s.dta", clear' % dataset["name"]
             script += '\nsave "${MY_PATH_OUT}%s.dta", replace' % dataset["name"]
             temp.append(script)
         return heading + "\n\n".join(temp)
 
-    def _render_merge(self) -> str:
+    def _render_merge(self, special_datasets) -> str:
         """ Render a "merge" section of the script file """
         heading = "\n\n* * * MERGE DATA * * *\n"
         script = '\nuse   "${MY_PATH_OUT}master.dta", clear'
         for dataset in self.script_dict.values():
-            if self.settings["analysis_unit"] != dataset["analysis_unit"]:
+            if dataset["is_special"] == True:
+                continue
+            elif self.settings["analysis_unit"] != dataset["analysis_unit"] or (self.settings["analysis_unit"] == "h" and self.settings["balanced"] == "f"):
                 merge_factor = "m:1"
             else:
                 merge_factor = "1:1"
             script += (
                 '\nmerge %s %s using "${MY_PATH_OUT}%s.dta", keep(master match) nogen'
-                % (merge_factor, dataset["key"], dataset["name"])
+                % (merge_factor, dataset["merge_id"], dataset["name"])
             )
         return heading + script
 

@@ -1,0 +1,4259 @@
+{
+    "artkalen": {
+        "dataset_name": "artkalen",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biobirth": {
+        "dataset_name": "biobirth",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biocouplm": {
+        "dataset_name": "biocouplm",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biocouply": {
+        "dataset_name": "biocouply",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioedu": {
+        "dataset_name": "bioedu",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biojob": {
+        "dataset_name": "biojob",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biomarsm": {
+        "dataset_name": "biomarsm",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biomarsy": {
+        "dataset_name": "biomarsy",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioparen": {
+        "dataset_name": "bioparen",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biosib": {
+        "dataset_name": "biosib",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biotwin": {
+        "dataset_name": "biotwin",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "cirdef": {
+        "dataset_name": "cirdef",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": null,
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "design": {
+        "dataset_name": "design",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": null,
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "einkalen": {
+        "dataset_name": "einkalen",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "ggkbou": {
+        "dataset_name": "ggkbou",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "hhrf": {
+        "dataset_name": "hhrf",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": true
+    },
+    "hpfad": {
+        "dataset_name": "hpfad",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": true
+    },
+    "lifespell": {
+        "dataset_name": "lifespell",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "migspell": {
+        "dataset_name": "migspell",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "pbiospe": {
+        "dataset_name": "pbiospe",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "phrf": {
+        "dataset_name": "phrf",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": true
+    },
+    "ppfad": {
+        "dataset_name": "ppfad",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": true
+    },
+    "refugspell": {
+        "dataset_name": "refugspell",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "sozkalen": {
+        "dataset_name": "sozkalen",
+        "syear": -1,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "abroad": {
+        "dataset_name": "abroad",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioage17": {
+        "dataset_name": "bioage17",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioagel": {
+        "dataset_name": "bioagel",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioimmig": {
+        "dataset_name": "bioimmig",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biopupil": {
+        "dataset_name": "biopupil",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bioresid": {
+        "dataset_name": "bioresid",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "biosoc": {
+        "dataset_name": "biosoc",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "camces": {
+        "dataset_name": "camces",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "cogdj": {
+        "dataset_name": "cogdj",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "cognit": {
+        "dataset_name": "cognit",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "gripstr": {
+        "dataset_name": "gripstr",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "health": {
+        "dataset_name": "health",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "hwealth": {
+        "dataset_name": "hwealth",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "interviewer": {
+        "dataset_name": "interviewer",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": null,
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "kidlong": {
+        "dataset_name": "kidlong",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "mihinc": {
+        "dataset_name": "mihinc",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "pbr_exit": {
+        "dataset_name": "pbr_exit",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "pbr_hhch": {
+        "dataset_name": "pbr_hhch",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "pflege": {
+        "dataset_name": "pflege",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "pwealth": {
+        "dataset_name": "pwealth",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "trust": {
+        "dataset_name": "trust",
+        "syear": 0,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "timepref": {
+        "dataset_name": "timepref",
+        "syear": 2006,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "exit": {
+        "dataset_name": "exit",
+        "syear": 2009,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "hconsum": {
+        "dataset_name": "hconsum",
+        "syear": 2010,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "cog_refu": {
+        "dataset_name": "cog_refu",
+        "syear": 2017,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "ddr18": {
+        "dataset_name": "ddr18",
+        "syear": 2018,
+        "prefix": "",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "ah": {
+        "dataset_name": "ah",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bh": {
+        "dataset_name": "bh",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "ch": {
+        "dataset_name": "ch",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dh": {
+        "dataset_name": "dh",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "eh": {
+        "dataset_name": "eh",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fh": {
+        "dataset_name": "fh",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gh": {
+        "dataset_name": "gh",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hh": {
+        "dataset_name": "hh",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ih": {
+        "dataset_name": "ih",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jh": {
+        "dataset_name": "jh",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kh": {
+        "dataset_name": "kh",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lh": {
+        "dataset_name": "lh",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mh": {
+        "dataset_name": "mh",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "nh": {
+        "dataset_name": "nh",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "oh": {
+        "dataset_name": "oh",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ph": {
+        "dataset_name": "ph",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qh": {
+        "dataset_name": "qh",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rh": {
+        "dataset_name": "rh",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "sh": {
+        "dataset_name": "sh",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "th": {
+        "dataset_name": "th",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "uh": {
+        "dataset_name": "uh",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vh": {
+        "dataset_name": "vh",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wh": {
+        "dataset_name": "wh",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xh": {
+        "dataset_name": "xh",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "yh": {
+        "dataset_name": "yh",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zh": {
+        "dataset_name": "zh",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bah": {
+        "dataset_name": "bah",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbh": {
+        "dataset_name": "bbh",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bch": {
+        "dataset_name": "bch",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdh": {
+        "dataset_name": "bdh",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "beh": {
+        "dataset_name": "beh",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfh": {
+        "dataset_name": "bfh",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgh": {
+        "dataset_name": "bgh",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhh": {
+        "dataset_name": "bhh",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bih": {
+        "dataset_name": "bih",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "bgh_refugees": {
+        "dataset_name": "bgh_refugees",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "hbrutt84": {
+        "dataset_name": "hbrutt84",
+        "syear": 1984,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "hbrutt98": {
+        "dataset_name": "hbrutt98",
+        "syear": 1998,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "hbrutt00": {
+        "dataset_name": "hbrutt00",
+        "syear": 2000,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "hbrutt02": {
+        "dataset_name": "hbrutt02",
+        "syear": 2002,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "hbrutt06": {
+        "dataset_name": "hbrutt06",
+        "syear": 2006,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "hbrutt09": {
+        "dataset_name": "hbrutt09",
+        "syear": 2009,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "hbrutt10": {
+        "dataset_name": "hbrutt10",
+        "syear": 2010,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "hbrutt11": {
+        "dataset_name": "hbrutt11",
+        "syear": 2011,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "hbrutt12": {
+        "dataset_name": "hbrutt12",
+        "syear": 2012,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "hbrutt13": {
+        "dataset_name": "hbrutt13",
+        "syear": 2013,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "hbrutt15": {
+        "dataset_name": "hbrutt15",
+        "syear": 2015,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "hbrutt16": {
+        "dataset_name": "hbrutt16",
+        "syear": 2016,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "hbrutt17": {
+        "dataset_name": "hbrutt17",
+        "syear": 2017,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "hbrutt18": {
+        "dataset_name": "hbrutt18",
+        "syear": 2018,
+        "prefix": "",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "ahbrutto": {
+        "dataset_name": "ahbrutto",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bhbrutto": {
+        "dataset_name": "bhbrutto",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "chbrutto": {
+        "dataset_name": "chbrutto",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dhbrutto": {
+        "dataset_name": "dhbrutto",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "ehbrutto": {
+        "dataset_name": "ehbrutto",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fhbrutto": {
+        "dataset_name": "fhbrutto",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "ghbrutto": {
+        "dataset_name": "ghbrutto",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hhbrutto": {
+        "dataset_name": "hhbrutto",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ihbrutto": {
+        "dataset_name": "ihbrutto",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jhbrutto": {
+        "dataset_name": "jhbrutto",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "khbrutto": {
+        "dataset_name": "khbrutto",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lhbrutto": {
+        "dataset_name": "lhbrutto",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mhbrutto": {
+        "dataset_name": "mhbrutto",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "nhbrutto": {
+        "dataset_name": "nhbrutto",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "ohbrutto": {
+        "dataset_name": "ohbrutto",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "phbrutto": {
+        "dataset_name": "phbrutto",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qhbrutto": {
+        "dataset_name": "qhbrutto",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rhbrutto": {
+        "dataset_name": "rhbrutto",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "shbrutto": {
+        "dataset_name": "shbrutto",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "thbrutto": {
+        "dataset_name": "thbrutto",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "uhbrutto": {
+        "dataset_name": "uhbrutto",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vhbrutto": {
+        "dataset_name": "vhbrutto",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "whbrutto": {
+        "dataset_name": "whbrutto",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xhbrutto": {
+        "dataset_name": "xhbrutto",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "yhbrutto": {
+        "dataset_name": "yhbrutto",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zhbrutto": {
+        "dataset_name": "zhbrutto",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bahbrutto": {
+        "dataset_name": "bahbrutto",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbhbrutto": {
+        "dataset_name": "bbhbrutto",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bchbrutto": {
+        "dataset_name": "bchbrutto",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdhbrutto": {
+        "dataset_name": "bdhbrutto",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "behbrutto": {
+        "dataset_name": "behbrutto",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfhbrutto": {
+        "dataset_name": "bfhbrutto",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bghbrutto": {
+        "dataset_name": "bghbrutto",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhhbrutto": {
+        "dataset_name": "bhhbrutto",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bihbrutto": {
+        "dataset_name": "bihbrutto",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "ahgen": {
+        "dataset_name": "ahgen",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bhgen": {
+        "dataset_name": "bhgen",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "chgen": {
+        "dataset_name": "chgen",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dhgen": {
+        "dataset_name": "dhgen",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "ehgen": {
+        "dataset_name": "ehgen",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fhgen": {
+        "dataset_name": "fhgen",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "ghgen": {
+        "dataset_name": "ghgen",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hhgen": {
+        "dataset_name": "hhgen",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ihgen": {
+        "dataset_name": "ihgen",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jhgen": {
+        "dataset_name": "jhgen",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "khgen": {
+        "dataset_name": "khgen",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lhgen": {
+        "dataset_name": "lhgen",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mhgen": {
+        "dataset_name": "mhgen",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "nhgen": {
+        "dataset_name": "nhgen",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "ohgen": {
+        "dataset_name": "ohgen",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "phgen": {
+        "dataset_name": "phgen",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qhgen": {
+        "dataset_name": "qhgen",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rhgen": {
+        "dataset_name": "rhgen",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "shgen": {
+        "dataset_name": "shgen",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "thgen": {
+        "dataset_name": "thgen",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "uhgen": {
+        "dataset_name": "uhgen",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vhgen": {
+        "dataset_name": "vhgen",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "whgen": {
+        "dataset_name": "whgen",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xhgen": {
+        "dataset_name": "xhgen",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "yhgen": {
+        "dataset_name": "yhgen",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zhgen": {
+        "dataset_name": "zhgen",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bahgen": {
+        "dataset_name": "bahgen",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbhgen": {
+        "dataset_name": "bbhgen",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bchgen": {
+        "dataset_name": "bchgen",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdhgen": {
+        "dataset_name": "bdhgen",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "behgen": {
+        "dataset_name": "behgen",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfhgen": {
+        "dataset_name": "bfhgen",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bghgen": {
+        "dataset_name": "bghgen",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhhgen": {
+        "dataset_name": "bhhgen",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bihgen": {
+        "dataset_name": "bihgen",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "ghost": {
+        "dataset_name": "ghost",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "h",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "qjugend": {
+        "dataset_name": "qjugend",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rjugend": {
+        "dataset_name": "rjugend",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "sjugend": {
+        "dataset_name": "sjugend",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tjugend": {
+        "dataset_name": "tjugend",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "ujugend": {
+        "dataset_name": "ujugend",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vjugend": {
+        "dataset_name": "vjugend",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wjugend": {
+        "dataset_name": "wjugend",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xjugend": {
+        "dataset_name": "xjugend",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "yjugend": {
+        "dataset_name": "yjugend",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zjugend": {
+        "dataset_name": "zjugend",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bajugend": {
+        "dataset_name": "bajugend",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbjugend": {
+        "dataset_name": "bbjugend",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcjugend": {
+        "dataset_name": "bcjugend",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdjugend": {
+        "dataset_name": "bdjugend",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bejugend": {
+        "dataset_name": "bejugend",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfjugend": {
+        "dataset_name": "bfjugend",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgjugend": {
+        "dataset_name": "bgjugend",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhjugend": {
+        "dataset_name": "bhjugend",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bijugend": {
+        "dataset_name": "bijugend",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "akind": {
+        "dataset_name": "akind",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bkind": {
+        "dataset_name": "bkind",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "ckind": {
+        "dataset_name": "ckind",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dkind": {
+        "dataset_name": "dkind",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "ekind": {
+        "dataset_name": "ekind",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fkind": {
+        "dataset_name": "fkind",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gkind": {
+        "dataset_name": "gkind",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hkind": {
+        "dataset_name": "hkind",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ikind": {
+        "dataset_name": "ikind",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jkind": {
+        "dataset_name": "jkind",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kkind": {
+        "dataset_name": "kkind",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lkind": {
+        "dataset_name": "lkind",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mkind": {
+        "dataset_name": "mkind",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "nkind": {
+        "dataset_name": "nkind",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "okind": {
+        "dataset_name": "okind",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "pkind": {
+        "dataset_name": "pkind",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qkind": {
+        "dataset_name": "qkind",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rkind": {
+        "dataset_name": "rkind",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "skind": {
+        "dataset_name": "skind",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tkind": {
+        "dataset_name": "tkind",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "ukind": {
+        "dataset_name": "ukind",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vkind": {
+        "dataset_name": "vkind",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wkind": {
+        "dataset_name": "wkind",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xkind": {
+        "dataset_name": "xkind",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ykind": {
+        "dataset_name": "ykind",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zkind": {
+        "dataset_name": "zkind",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bakind": {
+        "dataset_name": "bakind",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbkind": {
+        "dataset_name": "bbkind",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bckind": {
+        "dataset_name": "bckind",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdkind": {
+        "dataset_name": "bdkind",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bekind": {
+        "dataset_name": "bekind",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfkind": {
+        "dataset_name": "bfkind",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgkind": {
+        "dataset_name": "bgkind",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhkind": {
+        "dataset_name": "bhkind",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bikind": {
+        "dataset_name": "bikind",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "ap": {
+        "dataset_name": "ap",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bp": {
+        "dataset_name": "bp",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cp": {
+        "dataset_name": "cp",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dp": {
+        "dataset_name": "dp",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "ep": {
+        "dataset_name": "ep",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fp": {
+        "dataset_name": "fp",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gp": {
+        "dataset_name": "gp",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hp": {
+        "dataset_name": "hp",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ip": {
+        "dataset_name": "ip",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jp": {
+        "dataset_name": "jp",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kp": {
+        "dataset_name": "kp",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lp": {
+        "dataset_name": "lp",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mp": {
+        "dataset_name": "mp",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "np": {
+        "dataset_name": "np",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "op": {
+        "dataset_name": "op",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "pp": {
+        "dataset_name": "pp",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qp": {
+        "dataset_name": "qp",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rp": {
+        "dataset_name": "rp",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "sp": {
+        "dataset_name": "sp",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tp": {
+        "dataset_name": "tp",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "up": {
+        "dataset_name": "up",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vp": {
+        "dataset_name": "vp",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wp": {
+        "dataset_name": "wp",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xp": {
+        "dataset_name": "xp",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "yp": {
+        "dataset_name": "yp",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zp": {
+        "dataset_name": "zp",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bap": {
+        "dataset_name": "bap",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbp": {
+        "dataset_name": "bbp",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcp": {
+        "dataset_name": "bcp",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdp": {
+        "dataset_name": "bdp",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bep": {
+        "dataset_name": "bep",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfp": {
+        "dataset_name": "bfp",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgp": {
+        "dataset_name": "bgp",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhp": {
+        "dataset_name": "bhp",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bip": {
+        "dataset_name": "bip",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "bdp_mig": {
+        "dataset_name": "bdp_mig",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bep_mig": {
+        "dataset_name": "bep_mig",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfp_mig": {
+        "dataset_name": "bfp_mig",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgp_mig": {
+        "dataset_name": "bgp_mig",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bgp_refugees": {
+        "dataset_name": "bgp_refugees",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "apausl": {
+        "dataset_name": "apausl",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bpausl": {
+        "dataset_name": "bpausl",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpausl": {
+        "dataset_name": "cpausl",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpausl": {
+        "dataset_name": "dpausl",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epausl": {
+        "dataset_name": "epausl",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpausl": {
+        "dataset_name": "fpausl",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpausl": {
+        "dataset_name": "gpausl",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpausl": {
+        "dataset_name": "hpausl",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipausl": {
+        "dataset_name": "ipausl",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpausl": {
+        "dataset_name": "jpausl",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpausl": {
+        "dataset_name": "kpausl",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpausl": {
+        "dataset_name": "lpausl",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "apbrutto": {
+        "dataset_name": "apbrutto",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bpbrutto": {
+        "dataset_name": "bpbrutto",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpbrutto": {
+        "dataset_name": "cpbrutto",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpbrutto": {
+        "dataset_name": "dpbrutto",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epbrutto": {
+        "dataset_name": "epbrutto",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpbrutto": {
+        "dataset_name": "fpbrutto",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpbrutto": {
+        "dataset_name": "gpbrutto",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpbrutto": {
+        "dataset_name": "hpbrutto",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipbrutto": {
+        "dataset_name": "ipbrutto",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpbrutto": {
+        "dataset_name": "jpbrutto",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpbrutto": {
+        "dataset_name": "kpbrutto",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpbrutto": {
+        "dataset_name": "lpbrutto",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mpbrutto": {
+        "dataset_name": "mpbrutto",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "npbrutto": {
+        "dataset_name": "npbrutto",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "opbrutto": {
+        "dataset_name": "opbrutto",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ppbrutto": {
+        "dataset_name": "ppbrutto",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qpbrutto": {
+        "dataset_name": "qpbrutto",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rpbrutto": {
+        "dataset_name": "rpbrutto",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "spbrutto": {
+        "dataset_name": "spbrutto",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tpbrutto": {
+        "dataset_name": "tpbrutto",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "upbrutto": {
+        "dataset_name": "upbrutto",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vpbrutto": {
+        "dataset_name": "vpbrutto",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wpbrutto": {
+        "dataset_name": "wpbrutto",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xpbrutto": {
+        "dataset_name": "xpbrutto",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ypbrutto": {
+        "dataset_name": "ypbrutto",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zpbrutto": {
+        "dataset_name": "zpbrutto",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bapbrutto": {
+        "dataset_name": "bapbrutto",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbpbrutto": {
+        "dataset_name": "bbpbrutto",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcpbrutto": {
+        "dataset_name": "bcpbrutto",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdpbrutto": {
+        "dataset_name": "bdpbrutto",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bepbrutto": {
+        "dataset_name": "bepbrutto",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfpbrutto": {
+        "dataset_name": "bfpbrutto",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgpbrutto": {
+        "dataset_name": "bgpbrutto",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhpbrutto": {
+        "dataset_name": "bhpbrutto",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bipbrutto": {
+        "dataset_name": "bipbrutto",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "apequiv": {
+        "dataset_name": "apequiv",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bpequiv": {
+        "dataset_name": "bpequiv",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpequiv": {
+        "dataset_name": "cpequiv",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpequiv": {
+        "dataset_name": "dpequiv",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epequiv": {
+        "dataset_name": "epequiv",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpequiv": {
+        "dataset_name": "fpequiv",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpequiv": {
+        "dataset_name": "gpequiv",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpequiv": {
+        "dataset_name": "hpequiv",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipequiv": {
+        "dataset_name": "ipequiv",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpequiv": {
+        "dataset_name": "jpequiv",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpequiv": {
+        "dataset_name": "kpequiv",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpequiv": {
+        "dataset_name": "lpequiv",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mpequiv": {
+        "dataset_name": "mpequiv",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "npequiv": {
+        "dataset_name": "npequiv",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "opequiv": {
+        "dataset_name": "opequiv",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ppequiv": {
+        "dataset_name": "ppequiv",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qpequiv": {
+        "dataset_name": "qpequiv",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rpequiv": {
+        "dataset_name": "rpequiv",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "spequiv": {
+        "dataset_name": "spequiv",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tpequiv": {
+        "dataset_name": "tpequiv",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "upequiv": {
+        "dataset_name": "upequiv",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vpequiv": {
+        "dataset_name": "vpequiv",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wpequiv": {
+        "dataset_name": "wpequiv",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xpequiv": {
+        "dataset_name": "xpequiv",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ypequiv": {
+        "dataset_name": "ypequiv",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zpequiv": {
+        "dataset_name": "zpequiv",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bapequiv": {
+        "dataset_name": "bapequiv",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbpequiv": {
+        "dataset_name": "bbpequiv",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcpequiv": {
+        "dataset_name": "bcpequiv",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdpequiv": {
+        "dataset_name": "bdpequiv",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bepequiv": {
+        "dataset_name": "bepequiv",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfpequiv": {
+        "dataset_name": "bfpequiv",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgpequiv": {
+        "dataset_name": "bgpequiv",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhpequiv": {
+        "dataset_name": "bhpequiv",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bipequiv": {
+        "dataset_name": "bipequiv",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "apgen": {
+        "dataset_name": "apgen",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bpgen": {
+        "dataset_name": "bpgen",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpgen": {
+        "dataset_name": "cpgen",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpgen": {
+        "dataset_name": "dpgen",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epgen": {
+        "dataset_name": "epgen",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpgen": {
+        "dataset_name": "fpgen",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpgen": {
+        "dataset_name": "gpgen",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpgen": {
+        "dataset_name": "hpgen",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipgen": {
+        "dataset_name": "ipgen",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpgen": {
+        "dataset_name": "jpgen",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpgen": {
+        "dataset_name": "kpgen",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpgen": {
+        "dataset_name": "lpgen",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mpgen": {
+        "dataset_name": "mpgen",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "npgen": {
+        "dataset_name": "npgen",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "opgen": {
+        "dataset_name": "opgen",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ppgen": {
+        "dataset_name": "ppgen",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qpgen": {
+        "dataset_name": "qpgen",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rpgen": {
+        "dataset_name": "rpgen",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "spgen": {
+        "dataset_name": "spgen",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tpgen": {
+        "dataset_name": "tpgen",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "upgen": {
+        "dataset_name": "upgen",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vpgen": {
+        "dataset_name": "vpgen",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wpgen": {
+        "dataset_name": "wpgen",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xpgen": {
+        "dataset_name": "xpgen",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ypgen": {
+        "dataset_name": "ypgen",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zpgen": {
+        "dataset_name": "zpgen",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bapgen": {
+        "dataset_name": "bapgen",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbpgen": {
+        "dataset_name": "bbpgen",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcpgen": {
+        "dataset_name": "bcpgen",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdpgen": {
+        "dataset_name": "bdpgen",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bepgen": {
+        "dataset_name": "bepgen",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfpgen": {
+        "dataset_name": "bfpgen",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgpgen": {
+        "dataset_name": "bgpgen",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhpgen": {
+        "dataset_name": "bhpgen",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bipgen": {
+        "dataset_name": "bipgen",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "apkal": {
+        "dataset_name": "apkal",
+        "syear": 1984,
+        "prefix": "a",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ahhnr",
+        "is_special": false
+    },
+    "bpkal": {
+        "dataset_name": "bpkal",
+        "syear": 1985,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpkal": {
+        "dataset_name": "cpkal",
+        "syear": 1986,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpkal": {
+        "dataset_name": "dpkal",
+        "syear": 1987,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epkal": {
+        "dataset_name": "epkal",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpkal": {
+        "dataset_name": "fpkal",
+        "syear": 1989,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpkal": {
+        "dataset_name": "gpkal",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpkal": {
+        "dataset_name": "hpkal",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipkal": {
+        "dataset_name": "ipkal",
+        "syear": 1992,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpkal": {
+        "dataset_name": "jpkal",
+        "syear": 1993,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpkal": {
+        "dataset_name": "kpkal",
+        "syear": 1994,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpkal": {
+        "dataset_name": "lpkal",
+        "syear": 1995,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mpkal": {
+        "dataset_name": "mpkal",
+        "syear": 1996,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "npkal": {
+        "dataset_name": "npkal",
+        "syear": 1997,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "opkal": {
+        "dataset_name": "opkal",
+        "syear": 1998,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ppkal": {
+        "dataset_name": "ppkal",
+        "syear": 1999,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qpkal": {
+        "dataset_name": "qpkal",
+        "syear": 2000,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rpkal": {
+        "dataset_name": "rpkal",
+        "syear": 2001,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "spkal": {
+        "dataset_name": "spkal",
+        "syear": 2002,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tpkal": {
+        "dataset_name": "tpkal",
+        "syear": 2003,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "thhnr",
+        "is_special": false
+    },
+    "upkal": {
+        "dataset_name": "upkal",
+        "syear": 2004,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "uhhnr",
+        "is_special": false
+    },
+    "vpkal": {
+        "dataset_name": "vpkal",
+        "syear": 2005,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "vhhnr",
+        "is_special": false
+    },
+    "wpkal": {
+        "dataset_name": "wpkal",
+        "syear": 2006,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xpkal": {
+        "dataset_name": "xpkal",
+        "syear": 2007,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ypkal": {
+        "dataset_name": "ypkal",
+        "syear": 2008,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zpkal": {
+        "dataset_name": "zpkal",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bapkal": {
+        "dataset_name": "bapkal",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbpkal": {
+        "dataset_name": "bbpkal",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcpkal": {
+        "dataset_name": "bcpkal",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdpkal": {
+        "dataset_name": "bdpkal",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bepkal": {
+        "dataset_name": "bepkal",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfpkal": {
+        "dataset_name": "bfpkal",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgpkal": {
+        "dataset_name": "bgpkal",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhpkal": {
+        "dataset_name": "bhpkal",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bipkal": {
+        "dataset_name": "bipkal",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "gpkalost": {
+        "dataset_name": "gpkalost",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpkalost": {
+        "dataset_name": "hpkalost",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "bpluecke": {
+        "dataset_name": "bpluecke",
+        "syear": 1986,
+        "prefix": "b",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "bhhnr",
+        "is_special": false
+    },
+    "cpluecke": {
+        "dataset_name": "cpluecke",
+        "syear": 1987,
+        "prefix": "c",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "chhnr",
+        "is_special": false
+    },
+    "dpluecke": {
+        "dataset_name": "dpluecke",
+        "syear": 1988,
+        "prefix": "d",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "dhhnr",
+        "is_special": false
+    },
+    "epluecke": {
+        "dataset_name": "epluecke",
+        "syear": 1989,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "fpluecke": {
+        "dataset_name": "fpluecke",
+        "syear": 1990,
+        "prefix": "f",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "fhhnr",
+        "is_special": false
+    },
+    "gpluecke": {
+        "dataset_name": "gpluecke",
+        "syear": 1991,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpluecke": {
+        "dataset_name": "hpluecke",
+        "syear": 1992,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "ipluecke": {
+        "dataset_name": "ipluecke",
+        "syear": 1993,
+        "prefix": "i",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "ihhnr",
+        "is_special": false
+    },
+    "jpluecke": {
+        "dataset_name": "jpluecke",
+        "syear": 1994,
+        "prefix": "j",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "jhhnr",
+        "is_special": false
+    },
+    "kpluecke": {
+        "dataset_name": "kpluecke",
+        "syear": 1995,
+        "prefix": "k",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "khhnr",
+        "is_special": false
+    },
+    "lpluecke": {
+        "dataset_name": "lpluecke",
+        "syear": 1996,
+        "prefix": "l",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "lhhnr",
+        "is_special": false
+    },
+    "mpluecke": {
+        "dataset_name": "mpluecke",
+        "syear": 1997,
+        "prefix": "m",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "mhhnr",
+        "is_special": false
+    },
+    "npluecke": {
+        "dataset_name": "npluecke",
+        "syear": 1998,
+        "prefix": "n",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "nhhnr",
+        "is_special": false
+    },
+    "opluecke": {
+        "dataset_name": "opluecke",
+        "syear": 1999,
+        "prefix": "o",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "ohhnr",
+        "is_special": false
+    },
+    "ppluecke": {
+        "dataset_name": "ppluecke",
+        "syear": 2000,
+        "prefix": "p",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "phhnr",
+        "is_special": false
+    },
+    "qpluecke": {
+        "dataset_name": "qpluecke",
+        "syear": 2001,
+        "prefix": "q",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "qhhnr",
+        "is_special": false
+    },
+    "rpluecke": {
+        "dataset_name": "rpluecke",
+        "syear": 2002,
+        "prefix": "r",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "rhhnr",
+        "is_special": false
+    },
+    "spluecke": {
+        "dataset_name": "spluecke",
+        "syear": 2003,
+        "prefix": "s",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "shhnr",
+        "is_special": false
+    },
+    "tpluecke": {
+        "dataset_name": "tpluecke",
+        "syear": 2004,
+        "prefix": "t",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "upluecke": {
+        "dataset_name": "upluecke",
+        "syear": 2005,
+        "prefix": "u",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "vpluecke": {
+        "dataset_name": "vpluecke",
+        "syear": 2006,
+        "prefix": "v",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "wpluecke": {
+        "dataset_name": "wpluecke",
+        "syear": 2007,
+        "prefix": "w",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "whhnr",
+        "is_special": false
+    },
+    "xpluecke": {
+        "dataset_name": "xpluecke",
+        "syear": 2008,
+        "prefix": "x",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "xhhnr",
+        "is_special": false
+    },
+    "ypluecke": {
+        "dataset_name": "ypluecke",
+        "syear": 2009,
+        "prefix": "y",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "yhhnr",
+        "is_special": false
+    },
+    "zpluecke": {
+        "dataset_name": "zpluecke",
+        "syear": 2010,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bapluecke": {
+        "dataset_name": "bapluecke",
+        "syear": 2011,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbpluecke": {
+        "dataset_name": "bbpluecke",
+        "syear": 2012,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bcpluecke": {
+        "dataset_name": "bcpluecke",
+        "syear": 2013,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bdpluecke": {
+        "dataset_name": "bdpluecke",
+        "syear": 2014,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bepluecke": {
+        "dataset_name": "bepluecke",
+        "syear": 2015,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bfpluecke": {
+        "dataset_name": "bfpluecke",
+        "syear": 2016,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bgpluecke": {
+        "dataset_name": "bgpluecke",
+        "syear": 2017,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bhpluecke": {
+        "dataset_name": "bhpluecke",
+        "syear": 2018,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": false,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "gpost": {
+        "dataset_name": "gpost",
+        "syear": 1990,
+        "prefix": "g",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ghhnr",
+        "is_special": false
+    },
+    "hpost": {
+        "dataset_name": "hpost",
+        "syear": 1991,
+        "prefix": "h",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "hhhnr",
+        "is_special": false
+    },
+    "beschool": {
+        "dataset_name": "beschool",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "",
+        "is_special": false
+    },
+    "bfschool": {
+        "dataset_name": "bfschool",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgschool": {
+        "dataset_name": "bgschool",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhschool": {
+        "dataset_name": "bhschool",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bischool": {
+        "dataset_name": "bischool",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "bgschool2": {
+        "dataset_name": "bgschool2",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhschool2": {
+        "dataset_name": "bhschool2",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bischool2": {
+        "dataset_name": "bischool2",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    },
+    "ev": {
+        "dataset_name": "ev",
+        "syear": 1988,
+        "prefix": "e",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "ehhnr",
+        "is_special": false
+    },
+    "zvp": {
+        "dataset_name": "zvp",
+        "syear": 2009,
+        "prefix": "z",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "zhhnr",
+        "is_special": false
+    },
+    "bavp": {
+        "dataset_name": "bavp",
+        "syear": 2010,
+        "prefix": "ba",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bahhnr",
+        "is_special": false
+    },
+    "bbvp": {
+        "dataset_name": "bbvp",
+        "syear": 2011,
+        "prefix": "bb",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bbhhnr",
+        "is_special": false
+    },
+    "bcvp": {
+        "dataset_name": "bcvp",
+        "syear": 2012,
+        "prefix": "bc",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bchhnr",
+        "is_special": false
+    },
+    "bdvp": {
+        "dataset_name": "bdvp",
+        "syear": 2013,
+        "prefix": "bd",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bdhhnr",
+        "is_special": false
+    },
+    "bevp": {
+        "dataset_name": "bevp",
+        "syear": 2014,
+        "prefix": "be",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "behhnr",
+        "is_special": false
+    },
+    "bfvp": {
+        "dataset_name": "bfvp",
+        "syear": 2015,
+        "prefix": "bf",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bfhhnr",
+        "is_special": false
+    },
+    "bgvp": {
+        "dataset_name": "bgvp",
+        "syear": 2016,
+        "prefix": "bg",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bghhnr",
+        "is_special": false
+    },
+    "bhvp": {
+        "dataset_name": "bhvp",
+        "syear": 2017,
+        "prefix": "bh",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bhhhnr",
+        "is_special": false
+    },
+    "bivp": {
+        "dataset_name": "bivp",
+        "syear": 2018,
+        "prefix": "bi",
+        "analyse_unit": "p",
+        "is_matchable": true,
+        "curr_hid": "bihhnr",
+        "is_special": false
+    }
+}

@@ -11,26 +11,26 @@ from ddionrails.workspace.models import BasketVariable
 from ddionrails.workspace.scripts import ScriptConfig, SoepR, SoepSpss, SoepStata
 
 
-@pytest.fixture
-def soepstata(script, basket):
+@pytest.fixture(name="soepstata")
+def _soepstata(script, basket):
     """ An instantiated SoepStata object with related script and basket """
     return SoepStata(script, basket)
 
 
-@pytest.fixture
-def soepspss(script, basket):
+@pytest.fixture(name="soepspss")
+def _soepspss(script, basket):
     """ An instantiated SoepSpss object with related script and basket """
     return SoepSpss(script, basket)
 
 
-@pytest.fixture
-def soepr(script, basket):
+@pytest.fixture(name="soepr")
+def _soepr(script, basket):
     """ An instantiated SoepR object with related script and basket """
     return SoepR(script, basket)
 
 
-@pytest.fixture
-def script_config(script, basket):
+@pytest.fixture(name="script_config")
+def _script_config(script, basket):
     """ An instantiated ScriptConfig object with related script and basket """
     return ScriptConfig(script, basket)
 
@@ -69,26 +69,35 @@ class TestScriptConfig:
 
 
 class TestSoepStata:
-    def test_render_gender_method_with_male(self, soepstata):
+    def test_render_individual_gender_method_with_male(self, soepstata):
         soepstata.settings["gender"] = "m"
+        soepstata.settings["analysis_unit"] = "p"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "keep if (sex == 1)"
         assert STATA_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepstata):
+    def test_render_individual_gender_method_with_female(self, soepstata):
         soepstata.settings["gender"] = "f"
+        soepstata.settings["analysis_unit"] = "p"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "keep if (sex == 2)"
         assert STATA_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepstata):
+    def test_render_individual_gender_method_with_both(self, soepstata):
         soepstata.settings["gender"] = "b"
+        soepstata.settings["analysis_unit"] = "p"
         result = soepstata._render_gender()  # pylint: disable=protected-access
         command = "\n/* all genders */"
         assert STATA_HEADING_GENDER in result
         assert command in result
+
+    def test_render_household_gender_method_with_both(self, soepstata):
+        soepstata.settings["gender"] = "b"
+        soepstata.settings["analysis_unit"] = "h"
+        result = soepstata._render_gender()  # pylint: disable=protected-access
+        assert "\n\n* * * GENDER NOT FOR HOUSEHOLDS * * *\n" in result
 
     def test_disclaimer(self, soepstata):
         result = soepstata._render_disclaimer()  # pylint: disable=protected-access
@@ -110,7 +119,9 @@ class TestSoepStata:
     def test_render_sort_pfad(self, soepstata):
         result = soepstata._render_sort_pfad()  # pylint: disable=protected-access
         expected = (
-            "\n\n" "* * * SORT PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace'
+            "\n\n"
+            "* * * SAVE PFAD * * *\n\n"
+            'save "${MY_PATH_OUT}pfad.dta", replace \nclear'
         )
         assert expected == result
 
@@ -128,26 +139,35 @@ class TestSoepStata:
 
 
 class TestSoepSpssClass:
-    def test_render_gender_method_with_male(self, soepspss):
+    def test_render_individual_gender_method_with_male(self, soepspss):
         soepspss.settings["gender"] = "m"
+        soepspss.settings["analysis_unit"] = "p"
         result = soepspss._render_gender()  # pylint: disable=protected-access
-        command = "select if (sex == 1)"
+        command = "select if (sex = 1)"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepspss):
+    def test_render_individual_gender_method_with_female(self, soepspss):
         soepspss.settings["gender"] = "f"
+        soepspss.settings["analysis_unit"] = "p"
         result = soepspss._render_gender()  # pylint: disable=protected-access
-        command = "select if (sex == 2)"
+        command = "select if (sex = 2)"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepspss):
+    def test_render_individual_gender_method_with_both(self, soepspss):
         soepspss.settings["gender"] = "b"
+        soepspss.settings["analysis_unit"] = "p"
         result = soepspss._render_gender()  # pylint: disable=protected-access
         command = "\n* all genders *."
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
+
+    def test_render_household_gender_method_with_both(self, soepspss):
+        soepspss.settings["gender"] = "b"
+        soepspss.settings["analysis_unit"] = "h"
+        result = soepspss._render_gender()  # pylint: disable=protected-access
+        assert "\n* ### GENDER NOT FOR HOUSEHOLDS ### *.\n" in result
 
     def test_render_done(self, soepspss):
         result = soepspss._render_done()  # pylint: disable=protected-access
@@ -165,26 +185,35 @@ class TestSoepSpssClass:
 
 
 class TestSoepR:
-    def test_render_gender_method_with_male(self, soepr):
+    def test_render_individual_gender_method_with_male(self, soepr):
         soepr.settings["gender"] = "m"
+        soepr.settings["analysis_unit"] = "p"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "pfad <- pfad[pfad$sex==1,]"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_female(self, soepr):
+    def test_render_individual_gender_method_with_female(self, soepr):
         soepr.settings["gender"] = "f"
+        soepr.settings["analysis_unit"] = "p"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "pfad <- pfad[pfad$sex==2,]"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
 
-    def test_render_gender_method_with_both(self, soepr):
+    def test_render_individual_gender_method_with_both(self, soepr):
         soepr.settings["gender"] = "b"
+        soepr.settings["analysis_unit"] = "p"
         result = soepr._render_gender()  # pylint: disable=protected-access
         command = "\n# all genders"
         assert SPSS_R_HEADING_GENDER in result
         assert command in result
+
+    def test_render_household_gender_method_with_both(self, soepr):
+        soepr.settings["gender"] = "b"
+        soepr.settings["analysis_unit"] = "h"
+        result = soepr._render_gender()  # pylint: disable=protected-access
+        assert "\n### GENDER NOT FOR HOUSEHOLDS ###\n" in result
 
     def test_render_done(self, soepr):
         result = soepr._render_done()  # pylint: disable=protected-access
