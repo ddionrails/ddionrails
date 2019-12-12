@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring,no-self-use,protected-access
 
 """ Test cases for importer classes in ddionrails.data app """
 
@@ -19,23 +19,23 @@ from .factories import VariableFactory
 pytestmark = [pytest.mark.data, pytest.mark.imports]
 
 
-@pytest.fixture
-def dataset_csv_importer(study):
+@pytest.fixture(name="dataset_csv_importer")
+def _dataset_csv_importer(study):
     return DatasetImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def dataset_json_importer(study):
+@pytest.fixture(name="dataset_json_importer")
+def _dataset_json_importer(study):
     return DatasetJsonImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def variable_importer(study):
+@pytest.fixture(name="variable_importer")
+def _variable_importer(study):
     return VariableImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def transformation_importer():
+@pytest.fixture(name="transformation_importer")
+def _transformation_importer():
     return TransformationImport("DUMMY.csv")
 
 
@@ -52,7 +52,7 @@ class TestDatasetImport:
     def test__import_dataset_links_method_with_minimal_fields(
         self, dataset, mocker, dataset_csv_importer
     ):
-        """ This import method needs an already existing dataset and study in the database """
+        """This import needs already existing dataset and study in the database."""
         valid_dataset_data = dict(dataset_name="some-dataset")
         assert 1 == Dataset.objects.count()
         dataset_csv_importer._import_dataset_links(
@@ -73,7 +73,7 @@ class TestDatasetImport:
     def test__import_dataset_links_method_with_more_fields(
         self, dataset, dataset_csv_importer
     ):
-        """ This import method needs an already existing dataset and study in the database """
+        """This import needs already existing dataset and study in the database."""
 
         valid_dataset_data = dict(
             dataset_name="some-dataset",
@@ -153,7 +153,6 @@ class TestDatasetJsonImport:
                 missings=[True, False],
             ),
         )
-        dataset = dataset
         sort_id = 0
         dataset_json_importer._import_variable(var, dataset, sort_id)
         assert 1 == Variable.objects.count()
@@ -175,6 +174,12 @@ class TestDatasetJsonImport:
         )
         assert "-6" == variable.categories["values"][0]
         assert True is variable.categories["missings"][0]
+        # Test new statistics format
+        expected_min = 100
+        var["statistics"] = {"Min.": expected_min, "Median": 200}
+        dataset_json_importer._import_variable(var, dataset, sort_id)
+        variable = Variable.objects.get(id=variable.id)
+        assert expected_min == variable.statistics["Min."]
 
     def test_import_variable_method_without_statistics(
         self, dataset_json_importer, dataset
