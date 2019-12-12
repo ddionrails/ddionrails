@@ -1,0 +1,3313 @@
+{
+    "sh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "upkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "camces": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "fpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "xhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "nh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "bahgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "jpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "wpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "bfh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "hpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "ujugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "npbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "ip": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "biotwin": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bioage17": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "bip": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "cpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "c"
+    },
+    "gpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "yhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bbpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "lpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "op": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "upluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "u"
+    },
+    "gpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "nhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "behgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "ipgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "kpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "k"
+    },
+    "cpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "hwealth": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 0,
+        "_prefix": null
+    },
+    "spequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "biobirth": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "biosib": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bapgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "lh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "bgh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bcpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "bbhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "biocouply": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "thgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "bijugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "mihinc": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 0,
+        "_prefix": null
+    },
+    "cp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "bch": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "rpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "bhhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "rpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "lpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "ph": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "timepref": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": null
+    },
+    "qp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "pwealth": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "zpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "z"
+    },
+    "zvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "ghgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "hpfad": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": -1,
+        "_prefix": null
+    },
+    "zkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bdpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "ahgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "pflege": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "vpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "v"
+    },
+    "health": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "ap": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "wpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "mhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "ih": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "mh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "cpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "hh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "xp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "hhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "jpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "j"
+    },
+    "fpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "kh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bhh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "dhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "epluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "e"
+    },
+    "biopupil": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "mpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "bep": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "bkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "qkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "bioresid": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "bdp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "bchbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "bhpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bapbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "tkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "epgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "xjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "bhschool2": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bbhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "abroad": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "gpost": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "npgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "bhp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bevp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "epbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "spgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "ppfad": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "ohgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "hpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "lpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "bfschool": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "biomarsm": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "mpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "m"
+    },
+    "oh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "jpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "vjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "bcpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "npequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "nkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "wh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "bfpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "rpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "bgp_mig": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "kpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bcpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "np": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "bioedu": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bgp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "kpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "beschool": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "bhpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "ddr18": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": null
+    },
+    "bfp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "jh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "bbp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "hpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "h"
+    },
+    "rpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "r"
+    },
+    "sjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "dkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "chbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "sp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "qhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "rh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "bischool": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "phbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "vpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "zhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "opbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "dp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "qh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "bioagel": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "bdp_mig": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "bcp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "okind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "bfvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "bp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "qpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "bpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "sozkalen": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": -1,
+        "_prefix": null
+    },
+    "xpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "x"
+    },
+    "bchgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "gpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "apbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "upbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "lifespell": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "biosoc": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "ypluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "y"
+    },
+    "lkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "bbkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "dpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "opequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "bepkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "hbrutt16": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2016,
+        "_prefix": null
+    },
+    "pbr_hhch": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "pkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "rpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "cogdj": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "jkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "zpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bbpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bb"
+    },
+    "design": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": null,
+        "syear": -1,
+        "_prefix": null
+    },
+    "vh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "hbrutt15": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2015,
+        "_prefix": null
+    },
+    "hpkalost": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "ihgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "bpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "ihbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "bbpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "zpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bepbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "thbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "bdvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "epkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "tpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "apausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "qpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "hbrutt13": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2013,
+        "_prefix": null
+    },
+    "bikind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "tpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "vp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "bdkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "ppkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "mhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "gpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "vpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "fpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "ah": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "dpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "xh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "wpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "dhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "bgschool": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bioparen": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "spluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "s"
+    },
+    "khbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "hbrutt84": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1984,
+        "_prefix": null
+    },
+    "jpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "wkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "jp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "bdjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "nhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "gp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "kpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "gpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "mkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "kidlong": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "jhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "bgschool2": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "yh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bakind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "lpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "l"
+    },
+    "jpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "bpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "phgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "bgpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "apequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "ggkbou": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bhhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bgjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "lp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "bepequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "bipgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "whbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "bh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "bgpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bapluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "ba"
+    },
+    "biocouplm": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "kp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bgvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bdh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "vhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "ppluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "p"
+    },
+    "bavp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "vhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "rp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "ckind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "tjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "bhvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "ohbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "phrf": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bioimmig": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "tpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "hpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "opkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "whgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "fh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "fhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "dpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "ghost": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "pp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "hbrutt98": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1998,
+        "_prefix": null
+    },
+    "bbjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "hbrutt09": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2009,
+        "_prefix": null
+    },
+    "dpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "hkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "bipkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "bhpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bh"
+    },
+    "cpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "exit": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": null
+    },
+    "upequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "ykind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "biojob": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "cirdef": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": null,
+        "syear": -1,
+        "_prefix": null
+    },
+    "hp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "wjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "lpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "zh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bdpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "hhrf": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": -1,
+        "_prefix": null
+    },
+    "bekind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "chgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "xhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "akind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "zpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "ypbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bipequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "ypequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "gh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "ipkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "lhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "fpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "ipbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "bfkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "einkalen": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "ppbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "xpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "ahbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "bgkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bdpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "xpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "bischool2": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "pbiospe": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "uh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "migspell": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "npkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1997,
+        "_prefix": "n"
+    },
+    "gripstr": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "cognit": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "up": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "yjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "artkalen": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "ep": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "hbrutt06": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2006,
+        "_prefix": null
+    },
+    "uhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "bep_mig": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "rhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "bcvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "rhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "interviewer": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": null,
+        "syear": 0,
+        "_prefix": null
+    },
+    "uhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "cog_refu": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": null
+    },
+    "ypkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "opgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "o"
+    },
+    "hbrutt02": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2002,
+        "_prefix": null
+    },
+    "dpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "d"
+    },
+    "fpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "ukind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "upgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "u"
+    },
+    "ehgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "bap": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "qjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "bghgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "b"
+    },
+    "apkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "bivp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "mp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "bdhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "wpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "w"
+    },
+    "tpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "kpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "lpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "vpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "vpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "ppgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "gkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "yp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bbvp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "kkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bfhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "ppequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "p"
+    },
+    "bfpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "jpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "zhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bhpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "trust": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "ghbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "qpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "fkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "bepluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "be"
+    },
+    "skind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "bcpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bc"
+    },
+    "fhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "ipequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "hbrutt11": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2011,
+        "_prefix": null
+    },
+    "ev": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "bah": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "bhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "dpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "lhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1995,
+        "_prefix": "l"
+    },
+    "zpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "bdhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "zjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "rkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "bckind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "bdpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2013,
+        "_prefix": "bd"
+    },
+    "bfjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "hpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "ypgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bhjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "dh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1987,
+        "_prefix": "d"
+    },
+    "bpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "epequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "wp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "bghbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "yhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2008,
+        "_prefix": "y"
+    },
+    "bihbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "bbpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "bipbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "bih": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "pbr_exit": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 0,
+        "_prefix": null
+    },
+    "bbpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "bbh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2011,
+        "_prefix": "bb"
+    },
+    "cpausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "wpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2006,
+        "_prefix": "w"
+    },
+    "bejugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "bcpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "hhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "bgh_refugees": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "bhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "biomarsy": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "ipluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1993,
+        "_prefix": "i"
+    },
+    "bapkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "vkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2005,
+        "_prefix": "v"
+    },
+    "ehbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "xkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "npluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1998,
+        "_prefix": "n"
+    },
+    "hbrutt10": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2010,
+        "_prefix": null
+    },
+    "hconsum": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2010,
+        "_prefix": null
+    },
+    "bgpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "mpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "bpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1985,
+        "_prefix": "b"
+    },
+    "qpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "q"
+    },
+    "rjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2001,
+        "_prefix": "r"
+    },
+    "opluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1999,
+        "_prefix": "o"
+    },
+    "mpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "gpkalost": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "g"
+    },
+    "tp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "mpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1996,
+        "_prefix": "m"
+    },
+    "xpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "hbrutt12": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2012,
+        "_prefix": null
+    },
+    "hpost": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "bepgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "ekind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "refugspell": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": -1,
+        "_prefix": null
+    },
+    "khgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bhkind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bajugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "th": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2003,
+        "_prefix": "t"
+    },
+    "tpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2004,
+        "_prefix": "t"
+    },
+    "fp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1989,
+        "_prefix": "f"
+    },
+    "cpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "bgp_refugees": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "jhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1993,
+        "_prefix": "j"
+    },
+    "bahbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "shbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "bdpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2014,
+        "_prefix": "bd"
+    },
+    "hpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "h"
+    },
+    "gpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1991,
+        "_prefix": "g"
+    },
+    "hbrutt00": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2000,
+        "_prefix": null
+    },
+    "bgpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bg"
+    },
+    "bhschool": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bcjugend": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2012,
+        "_prefix": "bc"
+    },
+    "ch": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1986,
+        "_prefix": "c"
+    },
+    "qpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "bihgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2018,
+        "_prefix": "bi"
+    },
+    "kpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1994,
+        "_prefix": "k"
+    },
+    "bfpequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "eh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "epausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1988,
+        "_prefix": "e"
+    },
+    "hbrutt18": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2018,
+        "_prefix": null
+    },
+    "shgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "behbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "bfpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bf"
+    },
+    "bhpgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2017,
+        "_prefix": "bh"
+    },
+    "bfpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "beh": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2014,
+        "_prefix": "be"
+    },
+    "xpbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2007,
+        "_prefix": "x"
+    },
+    "bfp_mig": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "bgpkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2016,
+        "_prefix": "bg"
+    },
+    "zp": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2009,
+        "_prefix": "z"
+    },
+    "qhgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2000,
+        "_prefix": "q"
+    },
+    "hbrutt17": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2017,
+        "_prefix": null
+    },
+    "spkal": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    },
+    "ikind": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "ipausl": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1992,
+        "_prefix": "i"
+    },
+    "apgen": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1984,
+        "_prefix": "a"
+    },
+    "fpluecke": {
+        "_is_matchable": false,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 1990,
+        "_prefix": "f"
+    },
+    "bapequiv": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2010,
+        "_prefix": "ba"
+    },
+    "bfhbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "h",
+        "syear": 2015,
+        "_prefix": "bf"
+    },
+    "spbrutto": {
+        "_is_matchable": true,
+        "sub_path": "raw",
+        "analyse_unit": "p",
+        "syear": 2002,
+        "_prefix": "s"
+    }
+}
