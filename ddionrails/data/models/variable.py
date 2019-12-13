@@ -6,7 +6,7 @@ from __future__ import annotations
 import inspect
 import uuid
 from collections import OrderedDict
-from typing import Any, Dict, List, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
 
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
@@ -22,6 +22,11 @@ from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .dataset import Dataset
+
+# Workaround to prevent cyclic importing.
+# Refactoring of data and instrument app might be necessary to remove this.
+if TYPE_CHECKING:
+    from ddionrails.instruments.models.question import Question
 
 
 class Variable(ModelMixin, models.Model):
@@ -143,7 +148,9 @@ class Variable(ModelMixin, models.Model):
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.dataset_id, self.name, cache=False
         )
-        self.period_id = self.dataset.period_id
+        # Disable attribute-defined-outside-init warning.
+        # Django magic defines _id fields.
+        self.period_id = self.dataset.period_id  # pylint: disable=W0201
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -280,6 +287,44 @@ class Variable(ModelMixin, models.Model):
         """
         return self.origin_variables.count() > 0
 
+    @staticmethod
+    def _get_related_object_information(
+        objects: Union[List[Variable], List[Question]], object_type: str = "variable"
+    ):
+        """Get objects related through transformations
+
+        Notice: The following is my own best interpretation at the moment.
+        This code was contained both in get_target_by_study_and_period
+        and get_origin_by_study_and_period.
+        Its purpose seems to be, to get information to display it on on the
+        variable page.
+        Specifically to retrieve the periods of related variables or questions and put
+        everything together into a dict.
+        The dictionary content is probably used by a template.
+
+        Params:
+            objects: Variables or Objects related to this variable instance.
+            object_type: The type of the input. Either variable or question.
+        """
+
+        studies = {variable.dataset.study for variable in objects}
+
+        result: Dict[Any, Any] = OrderedDict()
+        for study in studies:
+            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
+            result[study.name] = OrderedDict()
+            for period in periods:
+                result[study.name][period.name] = list()
+        for _objects in objects:
+            study_name = _objects.dataset.study.name
+            period = getattr(_objects, "period_fallback", None)
+            period_name = getattr(period, "name", "no period")
+            if object_type == "variable":
+                result[study_name][period_name].append(_objects)
+            elif object_type == "question":
+                result[study_name][period_name] += _objects.questions_variables.all()
+        return result
+
     def get_targets_by_study_and_period(self, object_type="variable"):
         """
         Get objects that are based on an relationship through transformations
@@ -291,34 +336,7 @@ class Variable(ModelMixin, models.Model):
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         target_variables = [x.target for x in self.target_variables.all()]
-
-        studies = {target_variable.dataset.study for target_variable in target_variables}
-
-        result = OrderedDict()
-        for study in studies:
-            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
-            result[study.name] = OrderedDict()
-            for period in periods:
-                result[study.name][period.name] = list()
-        for target_variable in target_variables:
-            study_name = target_variable.dataset.study.name
-            period = getattr(target_variable, "period_fallback", None)
-            period_name = getattr(period, "name", "no period")
-            if object_type == "variable":
-                result[study_name][period_name].append(target_variable)
-            elif object_type == "question":
-                result[study_name][
-                    period_name
-                ] += target_variable.questions_variables.all()
-        return result
-
-    def get_target_variables(self):
-        """Return "target variables"
-
-        Target variables are those,
-        that that have this variable instance as their "origin"
-        """
-        return self.get_targets_by_study_and_period(object_type="variable")
+        return self._get_related_object_information(target_variables, object_type)
 
     def get_origins_by_study_and_period(self, object_type="variable"):
         """
@@ -331,26 +349,15 @@ class Variable(ModelMixin, models.Model):
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         origin_variables = [x.origin for x in self.origin_variables.all()]
+        return self._get_related_object_information(origin_variables, object_type)
 
-        studies = {origin_variable.dataset.study for origin_variable in origin_variables}
+    def get_target_variables(self):
+        """Return "target variables"
 
-        result = OrderedDict()
-        for study in studies:
-            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
-            result[study.name] = OrderedDict()
-            for period in periods:
-                result[study.name][period.name] = list()
-        for origin_variable in origin_variables:
-            study_name = origin_variable.dataset.study.name
-            period = getattr(origin_variable, "period_fallback", None)
-            period_name = getattr(period, "name", "no period")
-            if object_type == "variable":
-                result[study_name][period_name].append(origin_variable)
-            elif object_type == "question":
-                result[study_name][
-                    period_name
-                ] += origin_variable.questions_variables.all()
-        return result
+        Target variables are those,
+        that that have this variable instance as their "origin"
+        """
+        return self.get_targets_by_study_and_period(object_type="variable")
 
     def get_origin_variables(self):
         """ Return "origin variables"
