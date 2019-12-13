@@ -24,7 +24,7 @@ from ddionrails.studies.models import Study
 from .dataset import Dataset
 
 
-class Variable(ModelMixin, models.Model):  # type: ignore
+class Variable(ModelMixin, models.Model):
     """
     Stores a single variable,
     related to :model:`data.Dataset`,
@@ -95,15 +95,15 @@ class Variable(ModelMixin, models.Model):  # type: ignore
     #############
     # relations #
     #############
-    dataset: Dataset = models.ForeignKey(
+    dataset = models.ForeignKey(
         Dataset,
         blank=True,
-        null=True,
+        null=False,
         related_name="variables",
         on_delete=models.CASCADE,
         help_text="Foreign key to data.Dataset",
     )
-    concept: Concept = models.ForeignKey(
+    concept = models.ForeignKey(
         Concept,
         blank=True,
         null=True,
@@ -111,7 +111,7 @@ class Variable(ModelMixin, models.Model):  # type: ignore
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Concept",
     )
-    period: Period = models.ForeignKey(
+    period = models.ForeignKey(
         Period,
         blank=True,
         null=True,
@@ -119,7 +119,12 @@ class Variable(ModelMixin, models.Model):  # type: ignore
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Period",
     )
-    image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
+    image = FilerImageField(
+        null=True, related_name="variable_image", blank=True, on_delete=models.CASCADE
+    )
+    image_de = FilerImageField(
+        null=True, related_name="variable_image_de", blank=True, on_delete=models.CASCADE
+    )
 
     # Non database attributes
     class Cache(NamedTuple):
@@ -131,7 +136,7 @@ class Variable(ModelMixin, models.Model):  # type: ignore
     related_cache: Optional[Cache] = None
     languages: List[str] = list()
 
-    def save(  # type: ignore
+    def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
@@ -218,12 +223,11 @@ class Variable(ModelMixin, models.Model):  # type: ignore
 
     def get_concept(self, default=None, concept_id=False):
         """ Returns the related concept_id | Concept instance | a default """
-        try:
+        if self.concept:
             if concept_id:
                 return self.concept.id
             return self.concept
-        except AttributeError:
-            return default
+        return default
 
     @property
     def period_fallback(self):
@@ -413,9 +417,10 @@ class Variable(ModelMixin, models.Model):  # type: ignore
         self.set_language(language)
 
         # A variable might not have a related concept
-        try:
+        concept_key: Optional[str]
+        if self.concept:
             concept_key = f"concept_{self.concept.name}"
-        except AttributeError:
+        else:
             concept_key = None
 
         return dict(

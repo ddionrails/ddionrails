@@ -5,12 +5,16 @@
 import json
 import logging
 from collections import OrderedDict
-from typing import Dict, List, Union
+from csv import DictReader
+from functools import lru_cache
+from pathlib import Path
+from typing import Dict, List, Optional, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
+from ddionrails.imports.helpers import download_image, store_image
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
@@ -149,7 +153,62 @@ class TransformationImport(imports.CSVImport):
             )
             LOGGER.error(
                 (
-                    f"Failed to import transformation from variable "
+                    "Failed to import transformation from variable"
                     f'"{origin_variable}" to variable "{target_variable}"'
                 )
             )
+
+
+class VariableImageImport:
+    """Store images that can be linked to existing variables."""
+
+    variables_images: Optional[List[Dict[str, str]]]
+
+    def __init__(self, file_path: Union[str, Path]):
+        try:
+            with open(file_path, "r") as csv_images:
+                self.variables_images = list(DictReader(csv_images))
+        except FileNotFoundError:
+            self.variables_images = None
+        super().__init__()
+
+    def image_import(self):
+        """Import all images consecutively."""
+        if self.variables_images is None:
+            return None
+        for variable_data in self.variables_images:
+            dataset = self._get_dataset(variable_data["study"], variable_data["dataset"])
+            variable = Variable.objects.get(
+                name=variable_data["variable"], dataset=dataset.id
+            )
+            self._image_import(variable, variable_data)
+        return None
+
+    @staticmethod
+    @lru_cache()
+    def _get_dataset(study_name: str, dataset_name: str) -> Dataset:
+        """Cache results for Dataset lookups."""
+        return Dataset.objects.get(study__name=study_name, name=dataset_name)
+
+    @staticmethod
+    def _image_import(variable: Variable, data: Dict[str, str]):
+        """Load and store images for a single variable."""
+        # Folder structure; location to store the image.
+        path = [
+            variable.dataset.study.name,
+            "datasets",
+            variable.dataset.name,
+            variable.name,
+        ]
+        for image_key in {"url", "url_de"}.intersection(data.keys()):
+            suffix = Path(data[image_key]).suffix
+            _image_file = download_image(data[image_key])
+            if "de" in image_key:
+                variable.image_de, _ = store_image(
+                    file=_image_file, name=variable.label_de + suffix, path=path
+                )
+            else:
+                variable.image, _ = store_image(
+                    file=_image_file, name=variable.label + suffix, path=path
+                )
+        variable.save()
