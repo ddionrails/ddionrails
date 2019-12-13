@@ -5,18 +5,22 @@
 import json
 import logging
 from collections import OrderedDict
-from typing import Dict, List, Union
+from csv import DictReader
+from functools import lru_cache
+from pathlib import Path
+from typing import Dict, List, Optional, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
+from ddionrails.imports.helpers import download_image, store_image
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
 
 logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class DatasetJsonImport(imports.Import):
@@ -35,19 +39,20 @@ class DatasetJsonImport(imports.Import):
             self._import_variable(var, dataset, sort_id)
             sort_id += 1
 
-    def _import_variable(self, var, dataset, sort_id):
-        name = var["variable"]
+    @staticmethod
+    def _import_variable(var, dataset, sort_id):
+        name = var.get("name", var.get("variable"))
         variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
         if "statistics" in var:
-            statistics = {
-                key: value
-                for key, value in zip(
-                    var["statistics"]["names"], var["statistics"]["values"]
+            if "names" in var["statistics"]:
+                statistics = dict(
+                    zip(var["statistics"]["names"], var["statistics"]["values"])
                 )
-            }
+            else:
+                statistics = var["statistics"]
             variable.statistics = statistics
         if "categories" in var:
             values = var["categories"].get("values")
@@ -69,7 +74,7 @@ class DatasetImport(imports.CSVImport):
         try:
             self._import_dataset_links(element)
         except:
-            logger.error(f'Failed to import dataset "{element["dataset_name"]}"')
+            LOGGER.error(f'Failed to import dataset "{element["dataset_name"]}"')
 
     def _import_dataset_links(self, element: OrderedDict):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
@@ -104,7 +109,7 @@ class VariableImport(imports.CSVImport):
         except:
             variable = element.get("variable_name")
             dataset = element.get("dataset_name")
-            logger.error(
+            LOGGER.error(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
 
@@ -136,8 +141,74 @@ class TransformationImport(imports.CSVImport):
                 element["target_variable_name"],
             )
         except ObjectDoesNotExist:
-            origin_variable = f"{element['origin_study_name']}/{element['origin_dataset_name']}/{element['origin_variable_name']}"
-            target_variable = f"{element['target_study_name']}/{element['target_dataset_name']}/{element['target_variable_name']}"
-            logger.error(
-                f'Failed to import transformation from variable"{origin_variable}" to variable "{target_variable}"'
+            origin_variable = (
+                f"{element['origin_study_name']}/"
+                f"{element['origin_dataset_name']}/"
+                f"{element['origin_variable_name']}"
             )
+            target_variable = (
+                f"{element['target_study_name']}/"
+                f"{element['target_dataset_name']}/"
+                f"{element['target_variable_name']}"
+            )
+            LOGGER.error(
+                (
+                    "Failed to import transformation from variable"
+                    f'"{origin_variable}" to variable "{target_variable}"'
+                )
+            )
+
+
+class VariableImageImport:
+    """Store images that can be linked to existing variables."""
+
+    variables_images: Optional[List[Dict[str, str]]]
+
+    def __init__(self, file_path: Union[str, Path]):
+        try:
+            with open(file_path, "r") as csv_images:
+                self.variables_images = list(DictReader(csv_images))
+        except FileNotFoundError:
+            self.variables_images = None
+        super().__init__()
+
+    def image_import(self):
+        """Import all images consecutively."""
+        if self.variables_images is None:
+            return None
+        for variable_data in self.variables_images:
+            dataset = self._get_dataset(variable_data["study"], variable_data["dataset"])
+            variable = Variable.objects.get(
+                name=variable_data["variable"], dataset=dataset.id
+            )
+            self._image_import(variable, variable_data)
+        return None
+
+    @staticmethod
+    @lru_cache()
+    def _get_dataset(study_name: str, dataset_name: str) -> Dataset:
+        """Cache results for Dataset lookups."""
+        return Dataset.objects.get(study__name=study_name, name=dataset_name)
+
+    @staticmethod
+    def _image_import(variable: Variable, data: Dict[str, str]):
+        """Load and store images for a single variable."""
+        # Folder structure; location to store the image.
+        path = [
+            variable.dataset.study.name,
+            "datasets",
+            variable.dataset.name,
+            variable.name,
+        ]
+        for image_key in {"url", "url_de"}.intersection(data.keys()):
+            suffix = Path(data[image_key]).suffix
+            _image_file = download_image(data[image_key])
+            if "de" in image_key:
+                variable.image_de, _ = store_image(
+                    file=_image_file, name=variable.label_de + suffix, path=path
+                )
+            else:
+                variable.image, _ = store_image(
+                    file=_image_file, name=variable.label + suffix, path=path
+                )
+        variable.save()

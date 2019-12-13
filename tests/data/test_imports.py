@@ -1,41 +1,47 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
-
+# pylint: disable=missing-docstring,no-self-use,misplaced-comparison-constant,protected-access
 """ Test cases for importer classes in ddionrails.data app """
 
+import csv
+import unittest
+from io import BytesIO, StringIO
+from typing import Dict, TypedDict
+from unittest.mock import MagicMock, patch
+
 import pytest
+import requests_mock
 
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
     TransformationImport,
+    VariableImageImport,
     VariableImport,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
+from tests.conftest import MockOpener, VariableImageFile
 
 from .factories import VariableFactory
 
-pytestmark = [pytest.mark.data, pytest.mark.imports]
 
-
-@pytest.fixture
-def dataset_csv_importer(study):
+@pytest.fixture(name="dataset_csv_importer")
+def _dataset_csv_importer(study):
     return DatasetImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def dataset_json_importer(study):
+@pytest.fixture(name="dataset_json_importer")
+def _dataset_json_importer(study):
     return DatasetJsonImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def variable_importer(study):
+@pytest.fixture(name="variable_importer")
+def _variable_importer(study):
     return VariableImport("DUMMY.csv", study)
 
 
-@pytest.fixture
-def transformation_importer():
+@pytest.fixture(name="transformation_importer")
+def _transformation_importer():
     return TransformationImport("DUMMY.csv")
 
 
@@ -43,21 +49,26 @@ class TestDatasetImport:
     """ Tests for csv based dataset imports """
 
     @pytest.mark.django_db
-    def test__import_dataset_links_method_gets_called(self, mocker, dataset_csv_importer):
+    @patch(
+        "ddionrails.data.imports.DatasetImport._import_dataset_links",
+        new_callable=MagicMock,
+    )
+    def test__import_dataset_links_method_gets_called(
+        self, mocked_import_dataset_links, dataset_csv_importer
+    ):
         valid_dataset_data = dict(dataset_name="some-dataset")
-        mocker.patch("ddionrails.data.imports.DatasetImport._import_dataset_links")
         dataset_csv_importer.import_element(valid_dataset_data)
-        DatasetImport._import_dataset_links.assert_called_once()
+        mocked_import_dataset_links.assert_called_once()
 
     def test__import_dataset_links_method_with_minimal_fields(
-        self, dataset, mocker, dataset_csv_importer
+        self, dataset, dataset_csv_importer
     ):
-        """ This import method needs an already existing dataset and study in the database """
+        """This import needs already existing dataset and study in the database."""
         valid_dataset_data = dict(dataset_name="some-dataset")
         assert 1 == Dataset.objects.count()
-        dataset_csv_importer._import_dataset_links(
+        dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
             valid_dataset_data
-        )  # pylint: disable=protected-access
+        )
         assert 1 == Dataset.objects.count()
         dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
 
@@ -73,7 +84,7 @@ class TestDatasetImport:
     def test__import_dataset_links_method_with_more_fields(
         self, dataset, dataset_csv_importer
     ):
-        """ This import method needs an already existing dataset and study in the database """
+        """This import needs already existing dataset and study in the database."""
 
         valid_dataset_data = dict(
             dataset_name="some-dataset",
@@ -85,7 +96,9 @@ class TestDatasetImport:
         )
 
         assert Dataset.objects.count() == 1
-        dataset_csv_importer._import_dataset_links(valid_dataset_data)
+        dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
+            valid_dataset_data
+        )
         assert Dataset.objects.count() == 1
         dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
 
@@ -115,7 +128,9 @@ class TestDatasetJsonImport:
         )
         name = "some-dataset"
         content = [dict(study="some-study", dataset="some-dataset", name="some-variable")]
-        dataset_json_importer._import_dataset(name, content)
+        dataset_json_importer._import_dataset(  # pylint: disable=protected-access
+            name, content
+        )
         mocked_import_variable.assert_called_once()
 
     def test_import_dataset_method_with_dictionary(self, mocker, dataset_json_importer):
@@ -128,7 +143,9 @@ class TestDatasetJsonImport:
                 study="some-study", dataset="some-dataset", name="some-variable"
             )
         )
-        dataset_json_importer._import_dataset(name, content)
+        dataset_json_importer._import_dataset(  # pylint: disable=protected-access
+            name, content
+        )
         mocked_import_variable.assert_called_once()
 
     def test_import_variable_method(self, dataset_json_importer, dataset):
@@ -153,9 +170,10 @@ class TestDatasetJsonImport:
                 missings=[True, False],
             ),
         )
-        dataset = dataset
         sort_id = 0
-        dataset_json_importer._import_variable(var, dataset, sort_id)
+        dataset_json_importer._import_variable(  # pylint: disable=protected-access
+            var, dataset, sort_id
+        )
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert dataset == variable.dataset
@@ -175,6 +193,12 @@ class TestDatasetJsonImport:
         )
         assert "-6" == variable.categories["values"][0]
         assert True is variable.categories["missings"][0]
+        # Test new statistics format
+        expected_min = 100
+        var["statistics"] = {"Min.": expected_min, "Median": 200}
+        dataset_json_importer._import_variable(var, dataset, sort_id)
+        variable = Variable.objects.get(id=variable.id)
+        assert expected_min == variable.statistics["Min."]
 
     def test_import_variable_method_without_statistics(
         self, dataset_json_importer, dataset
@@ -186,9 +210,10 @@ class TestDatasetJsonImport:
             variable="some-variable",
             statistics=dict(names=[], values=[]),
         )
-        dataset = dataset
         sort_id = 0
-        dataset_json_importer._import_variable(var, dataset, sort_id)
+        dataset_json_importer._import_variable(  # pylint: disable=protected-access
+            var, dataset, sort_id
+        )
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert dict() == variable.statistics
@@ -206,9 +231,10 @@ class TestDatasetJsonImport:
                 frequencies=[], labels=[], missings=[], values=[], labels_de=[]
             ),
         )
-        dataset = dataset
         sort_id = 0
-        dataset_json_importer._import_variable(var, dataset, sort_id)
+        dataset_json_importer._import_variable(  # pylint: disable=protected-access
+            var, dataset, sort_id
+        )
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert {} == variable.categories
@@ -220,11 +246,10 @@ class TestDatasetJsonImport:
             variable="some-variable",
             uni=dict(valid=1),
         )
-        dataset = dataset
         sort_id = 0
-        dataset_json_importer._import_variable(
+        dataset_json_importer._import_variable(  # pylint: disable=protected-access
             var, dataset, sort_id
-        )  # pylint: disable=protected-access
+        )
 
 
 class TestTransformationImport:
@@ -283,9 +308,9 @@ class TestVariableImport:
 
     def test_import_variable_links_method(self, variable_importer, variable):
         element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
-        variable_importer._import_variable_links(
+        variable_importer._import_variable_links(  # pylint: disable=protected-access
             element
-        )  # pylint: disable=protected-access
+        )
 
     def test_import_variable_links_method_with_concept_name(
         self, variable_importer, variable
@@ -296,7 +321,72 @@ class TestVariableImport:
             concept_name="some-concept",
             description="some-description",
         )
-        variable_importer._import_variable_links(element)
+        variable_importer._import_variable_links(  # pylint: disable=protected-access
+            element
+        )
         variable = Variable.objects.get(id=variable.id)
         assert variable.description == element["description"]
         assert variable.concept.name == element["concept_name"]
+
+
+class TestImage(TypedDict, total=False):
+    """Typing help for TestVariableImageImport."""
+
+    image_file: BytesIO
+    url: str
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("variable", "variable_image_file")
+class TestVariableImageImport(unittest.TestCase):
+
+    variable: Variable
+    variable_image_file: VariableImageFile
+    images: Dict[str, TestImage]
+
+    def setUp(self):
+        print(self.variable.name)
+        self.images = {"image": {}, "image_de": {}}
+        self.images["image"]["image_file"] = self.variable_image_file(
+            file_type="png", size=2
+        )
+        self.images["image_de"]["image_file"] = self.variable_image_file(
+            file_type="png", size=10
+        )
+        self.images["image"]["url"] = "https://image.com/image.png"
+        self.images["image_de"]["url"] = "https://image.de/image.png"
+        csv_file_handler = StringIO()
+        csv_file_content = {
+            "study": self.variable.dataset.study.name,
+            "dataset": self.variable.dataset.name,
+            "variable": self.variable.name,
+            "url": self.images["image"]["url"],
+            "url_de": self.images["image_de"]["url"],
+        }
+        csv_writer = csv.DictWriter(csv_file_handler, csv_file_content.keys())
+        csv_writer.writeheader()
+        csv_writer.writerow(csv_file_content)
+        self.csv_file = csv_file_handler.getvalue()
+
+    def test_variable_image_import(self):
+        with requests_mock.mock() as mocked_request:
+            for _, image in self.images.items():
+                mocked_request.get(image["url"], content=image["image_file"].getvalue())
+            self._call_image_import()
+            self.variable.refresh_from_db()
+            self.assertEqual(
+                self.images["image"]["image_file"].getvalue(),
+                self.variable.image.file.read(),
+            )
+            self.assertEqual(
+                self.images["image_de"]["image_file"].getvalue(),
+                self.variable.image_de.file.read(),
+            )
+
+    @patch("builtins.open", new_callable=MockOpener)
+    def _call_image_import(self, mocked_open: MockOpener = MockOpener):
+        """Detach of open mocking from the main test."""
+        csv_path = "/test/variables_images.csv"
+        mocked_open.register_file(csv_path, self.csv_file)
+        VariableImageImport(csv_path).image_import()
+        self.assertTrue(mocked_open.called_with_path(csv_path))

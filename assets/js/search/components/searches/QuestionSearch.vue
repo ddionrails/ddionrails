@@ -37,12 +37,16 @@
           :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
           renderNoResults="No Results found. Try to change your search query or filter options."
           :sortOptions="[
-              {'label': 'Relevance', 'dataField': '_score', 'sortBy': 'desc'},
-              {'label': 'Period (descending)', 'dataField': 'period', 'sortBy': 'desc'},
-              {'label': 'Period (ascending)', 'dataField': 'period', 'sortBy': 'asc'}
+            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
+            {
+              label: 'Period (descending)',
+              dataField: 'period',
+              sortBy: 'desc'
+            },
+            { label: 'Period (ascending)', dataField: 'period', sortBy: 'asc' }
           ]"
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <question-result :item="item" />
           </div>
         </reactive-list>

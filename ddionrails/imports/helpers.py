@@ -153,13 +153,14 @@ def patch_instruments(repository_dir: Path, instruments_dir: Path):
         images = {image["question"]: image for image in csv.DictReader(csv_file)}
 
     for file in instruments:
+        with open(file, "r") as old_content:
+            file_content = json.load(old_content)
+        for question, data in file_content["questions"].items():
+            data["image"] = {
+                "url": images[question]["url"],
+                "url_de": images[question]["url_de"],
+                "label": images[question]["label"],
+                "label_de": images[question]["label_de"],
+            }
         with open(file, "w") as json_file:
-            file_content = json.load(json_file)
-            for question, data in file_content["questions"].items():
-                data["image"] = {
-                    "url": images[question]["url"],
-                    "url_de": images[question]["url_de"],
-                    "label": images[question]["label"],
-                    "label_de": images[question]["label_de"],
-                }
             json.dump(file_content, json_file)
