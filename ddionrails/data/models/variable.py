@@ -25,7 +25,8 @@ from .dataset import Dataset
 
 # Workaround to prevent cyclic importing.
 # Refactoring of data and instrument app might be necessary to remove this.
-if TYPE_CHECKING:
+# Exclude this from test coverage since its not related to functionality.
+if TYPE_CHECKING:  # pragma: no cover
     from ddionrails.instruments.models.question import Question
 
 
