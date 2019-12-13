@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,misplaced-comparison-constant
-
+# pylint: disable=missing-docstring,no-self-use,misplaced-comparison-constant,protected-access
 """ Test cases for importer classes in ddionrails.data app """
 
 import csv
@@ -64,7 +63,7 @@ class TestDatasetImport:
     def test__import_dataset_links_method_with_minimal_fields(
         self, dataset, dataset_csv_importer
     ):
-        """This import method needs an existing dataset and study in the database."""
+        """This import needs already existing dataset and study in the database."""
         valid_dataset_data = dict(dataset_name="some-dataset")
         assert 1 == Dataset.objects.count()
         dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
@@ -85,7 +84,7 @@ class TestDatasetImport:
     def test__import_dataset_links_method_with_more_fields(
         self, dataset, dataset_csv_importer
     ):
-        """This import method needs an existing dataset and study in the database."""
+        """This import needs already existing dataset and study in the database."""
 
         valid_dataset_data = dict(
             dataset_name="some-dataset",
@@ -194,6 +193,12 @@ class TestDatasetJsonImport:
         )
         assert "-6" == variable.categories["values"][0]
         assert True is variable.categories["missings"][0]
+        # Test new statistics format
+        expected_min = 100
+        var["statistics"] = {"Min.": expected_min, "Median": 200}
+        dataset_json_importer._import_variable(var, dataset, sort_id)
+        variable = Variable.objects.get(id=variable.id)
+        assert expected_min == variable.statistics["Min."]
 
     def test_import_variable_method_without_statistics(
         self, dataset_json_importer, dataset

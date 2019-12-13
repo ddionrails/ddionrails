@@ -41,15 +41,18 @@ class DatasetJsonImport(imports.Import):
 
     @staticmethod
     def _import_variable(var, dataset, sort_id):
-        name = var["variable"]
+        name = var.get("name", var.get("variable"))
         variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
         if "statistics" in var:
-            statistics = dict(
-                zip(var["statistics"]["names"], var["statistics"]["values"])
-            )
+            if "names" in var["statistics"]:
+                statistics = dict(
+                    zip(var["statistics"]["names"], var["statistics"]["values"])
+                )
+            else:
+                statistics = var["statistics"]
             variable.statistics = statistics
         if "categories" in var:
             values = var["categories"].get("values")

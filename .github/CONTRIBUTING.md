@@ -58,7 +58,10 @@ Pipfile and package.json.
 Use `pre-commit install` to setup pre-commit.
 It will check your code before every commit.
 You might have to disable the unit test hook by setting the environment variable
- `export SKIP=unittest` , depending on your setup.
+`export SKIP=unittest`, depending on your setup.
+You can also disable other commit hooks, if they only fail on parts of code 
+tou did not write.
+To do this during commit you can use for example `SKIP=unittest,pylint git commit`.
 
 #### Testing
 
@@ -69,6 +72,9 @@ Tests are run with pytest on [travis-ci](https://travis-ci.org/ddionrails/ddionr
 Please take a look inside the `tests` folder inside the root of the repository to
 get an idea how tests should look like. The folder structure mirrors that of the actual
 code in the `ddionrails` folder.
+
+Test coverage is checked for each pull request.
+Contributions, that decrease test coverage without good reason will not be merged.
 
 #### Code Style
 
