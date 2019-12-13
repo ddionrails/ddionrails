@@ -34,7 +34,7 @@
           :react="{ and: ['Search', 'Study'] }"
           renderNoResults="No Concepts found. Try to change your search query or filter options."
         >
-          <div slot="renderData" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{ item }">
             <div v-if="item.type === 'variable'">
               <variable-result :item="item" />
             </div>

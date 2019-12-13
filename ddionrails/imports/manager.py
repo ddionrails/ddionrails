@@ -27,6 +27,7 @@ from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
     TransformationImport,
+    VariableImageImport,
     VariableImport,
 )
 from ddionrails.imports.helpers import patch_instruments
@@ -271,3 +272,10 @@ class StudyImportManager:
         LOGGER.info(f'Study "{self.study.name}" starts importing of all entities')
         for entity in self.import_order.keys():
             self.import_single_entity(entity)
+
+        # VariableImageImport Patch
+        variable_image_import = VariableImageImport(
+            self.base_dir / "variables_images.csv"
+        )
+        if variable_image_import:
+            django_rq.enqueue(variable_image_import.image_import)
