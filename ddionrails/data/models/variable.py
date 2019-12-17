@@ -281,14 +281,6 @@ class Variable(ModelMixin, models.Model):
     def _period_model_to_name_dict(instances: List[Period]) -> Dict[Dict[str, Any]]:
         return {instance.id: instance.name for instance in instances}
 
-    def has_origin_variables(self) -> bool:
-        """
-        TEMPORARY / DEPRECATED
-
-        Find a better solution, when to show origin variables…
-        """
-        return self.origin_variables.count() > 0
-
     @staticmethod
     def _get_related_variable_information(objects: Union[List[Variable], List[Question]]):
         """Get objects related through transformations
