@@ -13,6 +13,7 @@ from django.db import models
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
+from django.utils.functional import cached_property
 from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
@@ -289,13 +290,11 @@ class Variable(ModelMixin, models.Model):
         return self.origin_variables.count() > 0
 
     @staticmethod
-    def _get_related_object_information(
-        objects: Union[List[Variable], List[Question]], object_type: str = "variable"
-    ):
+    def _get_related_variable_information(objects: Union[List[Variable], List[Question]]):
         """Get objects related through transformations
 
         Notice: The following is my own best interpretation at the moment.
-        This code was contained both in get_target_by_study_and_period
+        This code was contained both in get_targets_by_study_and_period
         and get_origin_by_study_and_period.
         Its purpose seems to be, to get information to display it on on the
         variable page.
@@ -320,59 +319,36 @@ class Variable(ModelMixin, models.Model):
             study_name = _objects.dataset.study.name
             period = getattr(_objects, "period_fallback", None)
             period_name = getattr(period, "name", "no period")
-            if object_type == "variable":
-                result[study_name][period_name].append(_objects)
-            elif object_type == "question":
-                result[study_name][period_name] += _objects.questions_variables.all()
+            result[study_name][period_name].append(_objects)
         return result
 
-    def get_targets_by_study_and_period(self, object_type="variable"):
+    @cached_property
+    def get_target_variables(self):
         """
         Get objects that are based on an relationship through transformations
         in the direction to target (e.g., all wide variables, which a long
         variable is based on).
 
-        :param object_type: type of return value
-        :type object_type: "variable" or "question"
+        Target variables are those,
+        that that have this variable instance as their "origin"
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         target_variables = [x.target for x in self.target_variables.all()]
-        return self._get_related_object_information(target_variables, object_type)
+        return self._get_related_variable_information(target_variables)
 
-    def get_origins_by_study_and_period(self, object_type="variable"):
+    @cached_property
+    def get_origin_variables(self):
         """
         Get objects that are based on an relationship through transformations
         in the direction to origin (e.g., all wide variables, which a long
         variable is based on).
 
-        :param object_type: type of return value
-        :type object_type: "variable" or "question"
+        Origin variables are those that have this variable instance as their "target"
+
         :return: Nested dicts, study --> period --> list of variables/questions
         """
         origin_variables = [x.origin for x in self.origin_variables.all()]
-        return self._get_related_object_information(origin_variables, object_type)
-
-    def get_target_variables(self):
-        """Return "target variables"
-
-        Target variables are those,
-        that that have this variable instance as their "origin"
-        """
-        return self.get_targets_by_study_and_period(object_type="variable")
-
-    def get_origin_variables(self):
-        """ Return "origin variables"
-
-        Origin variables are those that have this variable instance as their "target"
-        """
-        return self.get_origins_by_study_and_period(object_type="variable")
-
-    def get_origin_questions(self):
-        """ Return "origin questions"
-
-        Origin Questions are those that have this variable instance as their "target"
-        """
-        return self.get_origins_by_study_and_period(object_type="question")
+        return self._get_related_variable_information(origin_variables)
 
     def has_translations(self) -> bool:
         """ Returns True if Variable has translation_languages """
@@ -408,6 +384,7 @@ class Variable(ModelMixin, models.Model):
         """ Returns True if the variable has categories """
         return len(self.categories) > 0
 
+    # TODO: is this even in use?
     def to_dict(self) -> Dict:
         """ Returns a dictionary representation of the Variable object """
         return dict(
