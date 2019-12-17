@@ -3,6 +3,8 @@
 
 """ Test cases for models in ddionrails.data app """
 
+import unittest
+
 import pytest
 
 from ddionrails.data.models import Variable
@@ -20,6 +22,28 @@ def _related_variables_by_concept(variable, concept):
     other_variable.concept = concept
     other_variable.save()
     return variable, other_variable
+
+
+class TestVariable(unittest.TestCase):
+    def test_sorting(self):
+        """Variables should be sortable by their name."""
+        first_variable = Variable()
+        first_variable.name = "a"
+        second_variable = Variable()
+        second_variable.name = "z"
+        variables = [second_variable, first_variable]
+        variables.sort()
+        self.assertEqual(first_variable, variables[0])
+        self.assertEqual(second_variable, variables[1])
+
+    def test_sorting_error(self):
+        first_variable = Variable()
+        first_variable.name = "a"
+        second_variable = "z"
+        variables = [second_variable, first_variable]
+
+        with self.assertRaises(TypeError):
+            variables.sort()
 
 
 class TestVariableModel:
