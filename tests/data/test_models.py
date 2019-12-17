@@ -181,7 +181,7 @@ class TestVariableModel:
         assert expected == result
 
     def test_to_dict(self, variable):
-        result = variable.to_dict()
+        result = variable.as_dict
         assert result["name"] == variable.name
         assert result["scale"] == variable.scale
         assert result["uni"] == variable.categories

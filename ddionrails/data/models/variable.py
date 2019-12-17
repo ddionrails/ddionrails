@@ -376,8 +376,8 @@ class Variable(ModelMixin, models.Model):
         """ Returns True if the variable has categories """
         return len(self.categories) > 0
 
-    # TODO: is this even in use?
-    def to_dict(self) -> Dict:
+    @property
+    def as_dict(self) -> Dict:
         """ Returns a dictionary representation of the Variable object """
         return dict(
             name=self.name,

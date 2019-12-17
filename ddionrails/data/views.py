@@ -144,4 +144,4 @@ def variable_json(
         dataset__name=dataset_name,
         name=variable_name,
     )
-    return JsonResponse(variable.to_dict())
+    return JsonResponse(variable.as_dict)
