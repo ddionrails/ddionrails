@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import inspect
+import logging
 import uuid
 from collections import OrderedDict
 from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
@@ -29,6 +30,8 @@ from .dataset import Dataset
 # Exclude this from test coverage since its not related to functionality.
 if TYPE_CHECKING:  # pragma: no cover
     from ddionrails.instruments.models.question import Question
+
+LOGGER = logging.getLogger(__name__)
 
 
 class Variable(ModelMixin, models.Model):
@@ -202,7 +205,14 @@ class Variable(ModelMixin, models.Model):
         """ Return a markdown rendered version of the "description_long" field """
         try:
             html = render_markdown(self.description_long)
-        except:  # TODO: what could happen in render_markdown() ?
+        except UnicodeDecodeError:
+            LOGGER.debug("Encoding error in long description: %s", self.description_long)
+            html = ""
+        except ValueError:
+            LOGGER.debug(
+                "Cannot perform basic string operations on long description: %s",
+                self.description_long,
+            )
             html = ""
         return html
 
