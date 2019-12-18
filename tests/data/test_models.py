@@ -3,11 +3,13 @@
 
 """ Test cases for models in ddionrails.data app """
 
+import logging
 import unittest
+from io import StringIO
 
 import pytest
 
-from ddionrails.data.models import Variable
+from ddionrails.data.models import Transformation, Variable
 from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.data, pytest.mark.models]
@@ -24,7 +26,48 @@ def _related_variables_by_concept(variable, concept):
     return variable, other_variable
 
 
+@pytest.mark.django_db
+@pytest.mark.usefixtures("variable")
 class TestVariable(unittest.TestCase):
+
+    variable: Variable
+
+    def test_target_variables_dict(self):
+        """Define target_variables_dict property structure."""
+        origin_variable = self.variable
+        target_variable = self._target_variable
+        result = origin_variable.target_variables_dict
+        expected = {
+            target_variable.dataset.study.name: {
+                target_variable.period.name: [target_variable]
+            }
+        }
+        self.assertEqual(expected, result)
+
+    def test_origin_variables_dict(self):
+        """Define origin_variables_dict property structure."""
+        origin_variable = self.variable
+        target_variable = self._target_variable
+        result = target_variable.origin_variables_dict
+        expected = {
+            origin_variable.dataset.study.name: {
+                origin_variable.period.name: [origin_variable]
+            }
+        }
+        self.assertEqual(expected, result)
+
+    @property
+    def _target_variable(self) -> Variable:
+        _transformation = Transformation()
+        _target = Variable()
+        _target.name = "some-other-variable"
+        _target.dataset = self.variable.dataset
+        _target.save()
+        _transformation.target = _target
+        _transformation.origin = self.variable
+        _transformation.save()
+        return _target
+
     def test_sorting(self):
         """Variables should be sortable by their name."""
         first_variable = Variable()
@@ -204,8 +247,8 @@ class TestVariableModel:
         }
         assert expected == result
 
-    def test_to_dict(self, variable):
-        result = variable.as_dict
+    def test_content_dict(self, variable):
+        result = variable.content_dict
         assert result["name"] == variable.name
         assert result["scale"] == variable.scale
         assert result["uni"] == variable.categories

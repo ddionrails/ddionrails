@@ -292,7 +292,9 @@ class Variable(ModelMixin, models.Model):
         return {instance.id: instance.name for instance in instances}
 
     @staticmethod
-    def _get_related_variable_information(objects: Union[List[Variable], List[Question]]):
+    def _get_related_variable_information(
+        objects: Union[List[Variable], List[Question]]
+    ) -> Dict[str, Dict[str, List[Variable]]]:
         """Get objects related through transformations
 
         Notice: The following is my own best interpretation at the moment.
@@ -302,7 +304,10 @@ class Variable(ModelMixin, models.Model):
         variable page.
         Specifically to retrieve the periods of related variables or questions and put
         everything together into a dict.
-        The dictionary content is probably used by a template.
+        The dictionary content is used by a template.
+
+        The periods are kept in an OrderedDict so that they can be displayed as
+        such on the variable page.
 
         Params:
             objects: Variables or Objects related to this variable instance.
@@ -311,7 +316,8 @@ class Variable(ModelMixin, models.Model):
 
         studies = {variable.dataset.study for variable in objects}
 
-        result: Dict[Any, Any] = OrderedDict()
+        # TODO: Change when OrderedDict typing becomes available. pylint: disable=W0511
+        result: Dict[str, Dict[str, List[Variable]]] = OrderedDict()
         for study in studies:
             periods = Period.objects.filter(study_id=study.id).order_by("name").all()
             result[study.name] = OrderedDict()
@@ -325,7 +331,7 @@ class Variable(ModelMixin, models.Model):
         return result
 
     @cached_property
-    def get_target_variables(self):
+    def target_variables_dict(self):
         """
         Get objects that are based on an relationship through transformations
         in the direction to target (e.g., all wide variables, which a long
@@ -339,7 +345,7 @@ class Variable(ModelMixin, models.Model):
         return self._get_related_variable_information(target_variables)
 
     @cached_property
-    def get_origin_variables(self):
+    def origin_variables_dict(self):
         """
         Get objects that are based on an relationship through transformations
         in the direction to origin (e.g., all wide variables, which a long
@@ -384,10 +390,13 @@ class Variable(ModelMixin, models.Model):
 
     def is_categorical(self) -> bool:
         """ Returns True if the variable has categories """
+        # This is too much of a guess.
+        # Variables can have labels denoting missing values, even if they are
+        # not categorical.
         return len(self.categories) > 0
 
     @property
-    def as_dict(self) -> Dict:
+    def content_dict(self) -> Dict:
         """ Returns a dictionary representation of the Variable object """
         return dict(
             name=self.name,
@@ -419,6 +428,7 @@ class Variable(ModelMixin, models.Model):
         )
 
     def __lt__(self, variable: Variable) -> bool:
+        """Determine relation of variables according to their name."""
         if not isinstance(variable, Variable):
             raise TypeError(
                 "'<' not supported between instances of {} and {}".format(
