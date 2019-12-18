@@ -205,10 +205,13 @@ class Variable(ModelMixin, models.Model):
         """ Return a markdown rendered version of the "description_long" field """
         try:
             html = render_markdown(self.description_long)
-        except UnicodeDecodeError:
+        # The markdown.markdown function used by render markdown can potentially
+        # raise these errors. But I did not find any input, that triggered errors.
+        # They also exclude these except blocks from coverage themselves.
+        except UnicodeDecodeError:  # pragma: no cover
             LOGGER.debug("Encoding error in long description: %s", self.description_long)
             html = ""
-        except ValueError:
+        except ValueError:  # pragma: no cover
             LOGGER.debug(
                 "Cannot perform basic string operations on long description: %s",
                 self.description_long,
