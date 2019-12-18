@@ -3,9 +3,7 @@
 
 """ Test cases for models in ddionrails.data app """
 
-import logging
 import unittest
-from io import StringIO
 
 import pytest
 
