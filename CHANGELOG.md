@@ -11,6 +11,24 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.2.2] - 2020-01-16
+
+## Changed
+
+- Update "legacy" import to work with image import.
+- Major refactoring of variable model.
+
+## Fixed
+
+- Comply to new names used in ReactiveList of reactivesearch-vue.
+- pytest-mock is no longer used as a context manager.
+
+  - Newest release of pytest-mocker raises
+    an error if used as context manager.
+
+- Update workspace.management.commands.restore to work with updates in new (external)
+  tablib version.
+
 ## [4.2.1] - 2019-11-20
 
 ### Changed
@@ -33,7 +51,7 @@ Older versions are not not part of this Project.
 - BasketVariables are no longer deleted when their corresponding variables
   are deleted.
 
-  - Function was implemented to clean up stale BaketVariables if the need arises.
+  - Function was implemented to clean up stale BasketVariables if the need arises.
 
 - Copyright notice to include former contributors.
 - dev: NGINX now set up for debugging long requests.
@@ -340,7 +358,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.2.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.2.2...develop
+[4.2.2]: https://github.com/ddionrails/ddionrails/compare/v4.2.1...v4.2.2
 [4.2.1]: https://github.com/ddionrails/ddionrails/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/ddionrails/ddionrails/compare/v4.1.2...v4.2.0
 [4.1.2]: https://github.com/ddionrails/ddionrails/compare/v4.1.1...v4.1.2
