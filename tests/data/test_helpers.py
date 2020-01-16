@@ -38,6 +38,9 @@ def label_table(variables):
 class TestLabelTable:
     def test_init_method(self, variables):
         """ The init method of the label table sorts the variables by their datasets periods """
+        # Save teh variables to get their period data from the dataset.
+        for variable in variables:
+            variable.save()
         label_table = LabelTable(variables)
         variables.reverse()
         assert label_table.variables == variables

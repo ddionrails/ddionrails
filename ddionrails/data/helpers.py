@@ -4,6 +4,12 @@
 
 import re
 from collections import OrderedDict, defaultdict
+from itertools import islice
+from typing import List
+
+from django.utils.functional import cached_property
+
+from ddionrails.data.models.variable import Variable
 
 LABEL_RE_SOEP = re.compile(r"\s*\[[\w\d\-]*\]\s*")
 LABEL_RE_PAIRFAM = re.compile(r"^\s*-*\d*\s*")
@@ -19,19 +25,36 @@ class LabelTable:
         table.to_html()
     """
 
+    label_count: int
+    label_max: int = 100
+    variables: List[Variable]
+    variable_max: int = 100
+
     def __init__(self, variables):
-        """
-        Initialize a label table from a list of variables.
-        """
+        """Initialize a label table from a list of variables."""
 
         def sort_helper(variable):
             try:
-                period_name = variable.dataset.period.name
+                period_name = variable.period.name
             except AttributeError:
                 period_name = ""
             return period_name
 
-        self.variables = sorted(variables, key=sort_helper)
+        self.label_count = 0
+        self.variable_count = len(variables)
+
+        if len(variables) > self.variable_max:
+            self.variables = list()
+        else:
+            self.variables = sorted(variables, key=sort_helper)
+
+    @property
+    def render_table(self):
+        if not self.variables:
+            return False
+        if self.label_count > self.label_max:
+            return False
+        return True
 
     def to_dict(self):
         """
@@ -42,7 +65,11 @@ class LabelTable:
         self._fill_body(table)
         return table
 
+    @cached_property
     def to_html(self):
+        if not self.render_table:
+            return ""
+        label_dict = self.to_dict()
         try:
             label_dict = self.to_dict()
         except:
@@ -104,6 +131,9 @@ class LabelTable:
                 categories[self._simplify_label(category["label"])].append(
                     category["value"]
                 )
+            if _label_count := len(categories) > self.label_max:
+                self.label_count = _label_count
+                return {}
 
         def sort_helper(x):
             temp_list = []

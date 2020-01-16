@@ -267,7 +267,7 @@ class Variable(ModelMixin, models.Model):
         ):
             if self.concept:
                 variables = Variable.objects.select_related(
-                    "dataset", "dataset__study"
+                    "dataset", "dataset__study", "period"
                 ).filter(concept=self.concept, dataset__study=self.dataset.study)
                 self.related_cache = self.Cache(id=self.concept.id, content=variables)
             else:
