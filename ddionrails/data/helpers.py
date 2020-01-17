@@ -4,7 +4,7 @@
 
 import re
 from collections import OrderedDict, defaultdict
-from typing import List
+from typing import Dict, List
 
 from ddionrails.data.models.variable import Variable
 
@@ -46,7 +46,8 @@ class LabelTable:
             self.variables = sorted(variables, key=sort_helper)
 
     @property
-    def render_table(self):
+    def render_table(self) -> bool:
+        """Determine if Table should be rendered in html."""
         if not self.variables:
             return False
         if self.label_count > self.label_max:
@@ -63,6 +64,7 @@ class LabelTable:
         return table
 
     def to_html(self):
+        """Create a string representing the table as html table."""
         if not self.render_table:
             return ""
         label_dict = self.to_dict()
@@ -105,7 +107,7 @@ class LabelTable:
 
     def _fill_body(self, table):
         for category_label in self._get_all_category_labels():
-            x = []
+            row = list()
             for variable in self.variables:
                 try:
                     category = [
@@ -113,15 +115,15 @@ class LabelTable:
                         for c in variable.get_categories()
                         if self._simplify_label(c["label"]) == category_label
                     ][0]
-                    x.append(
+                    row.append(
                         dict(value=category["value"], frequency=category["frequency"])
                     )
                 except:
-                    x.append(None)
-            table["body"][category_label] = x
+                    row.append(None)
+            table["body"][category_label] = row
 
     def _get_all_category_labels(self):
-        categories = defaultdict(list)
+        categories: Dict[str, List[str]] = defaultdict(list)
         for variable in self.variables:
             for category in variable.get_categories():
                 categories[self._simplify_label(category["label"])].append(
@@ -131,13 +133,14 @@ class LabelTable:
                 self.label_count = _label_count
                 return {}
 
-        def sort_helper(x):
-            temp_list = []
-            for x in x[1]:
-                if x and x != "":
+        def sort_helper(elements):
+            temp_list = list()
+            for element in elements[1]:
+                if element and element != "":
                     try:
-                        temp_list.append(int(x))
-                    # afuetterer: the int(x) might fail, when x is not castable to an integer?
+                        temp_list.append(int(element))
+                    # afuetterer: the int(x) might fail,
+                    # when x is cannot be cast to an integer?
                     except ValueError:
                         pass
             try:
@@ -152,10 +155,8 @@ class LabelTable:
 
     @staticmethod
     def _simplify_label(label):
-        try:
-            label = label.lower().strip()
-            label = LABEL_RE_SOEP.sub("", label)
-            label = LABEL_RE_PAIRFAM.sub("", label)
-            return label
-        except:
-            return ""
+        label = str(label)
+        label = label.lower().strip()
+        label = LABEL_RE_SOEP.sub("", label)
+        label = LABEL_RE_PAIRFAM.sub("", label)
+        return label
