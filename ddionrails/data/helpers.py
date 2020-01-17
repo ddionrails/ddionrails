@@ -4,7 +4,6 @@
 
 import re
 from collections import OrderedDict, defaultdict
-from itertools import islice
 from typing import List
 
 from django.utils.functional import cached_property
