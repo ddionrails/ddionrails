@@ -6,8 +6,6 @@ import re
 from collections import OrderedDict, defaultdict
 from typing import List
 
-from django.utils.functional import cached_property
-
 from ddionrails.data.models.variable import Variable
 
 LABEL_RE_SOEP = re.compile(r"\s*\[[\w\d\-]*\]\s*")
@@ -64,7 +62,6 @@ class LabelTable:
         self._fill_body(table)
         return table
 
-    @cached_property
     def to_html(self):
         if not self.render_table:
             return ""
