@@ -142,18 +142,20 @@
         </div>
     </div>
     {% if label_table %}
-        <h2>Label table</h2>
-        <p>The label table provides you with an overview of label definitions across
-            related variables to identify changes over time in longitudinal variables.
-            The first number indicates the value code, the second number (in brackets)
-            represents the frequency in the data. Please note that labels are simplified
-            and values with frequency = 0 are hidden.</p>
-        <!-- End content -->
-        <div class="table-responsive">
-            {{ label_table.to_html | safe }}
-        </div>
-        <div class="content">
-        <!-- Restart content -->
+        {% if label_table.render_table %}
+            <h2>Label table</h2>
+            <p>The label table provides you with an overview of label definitions across
+                related variables to identify changes over time in longitudinal variables.
+                The first number indicates the value code, the second number (in brackets)
+                represents the frequency in the data. Please note that labels are simplified
+                and values with frequency = 0 are hidden.</p>
+            <!-- End content -->
+            <div class="table-responsive">
+                {{ label_table.to_html | safe }}
+            </div>
+            <div class="content">
+            <!-- Restart content -->
+        {% endif %}
     {% endif %}
 {% endblock content %}
 {% block scripts %}
