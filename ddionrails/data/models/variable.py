@@ -223,15 +223,16 @@ class Variable(ModelMixin, models.Model):
         """ Return a list of dictionaries based on the "categories" field """
         if self.categories:
             categories = []
+            if "labels_de" not in self.categories:
+                self.categories["labels_de"] = self.categories["labels"]
             for index, _ in enumerate(self.categories["values"]):
                 category = dict(
                     value=self.categories["values"][index],
                     label=self.categories["labels"][index],
                     frequency=self.categories["frequencies"][index],
                     valid=(not self.categories["missings"][index]),
+                    label_de=self.categories["labels_de"][index],
                 )
-                if "labels_de" in self.categories:
-                    category["label_de"] = self.categories["labels_de"][index]
                 categories.append(category)
             return categories
 
