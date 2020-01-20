@@ -45,6 +45,8 @@ class LabelTable:
         else:
             self.variables = sorted(variables, key=sort_helper)
 
+        self.category_labels = self._get_all_category_labels()
+
     @property
     def render_table(self) -> bool:
         """Determine if Table should be rendered in html."""
@@ -106,7 +108,7 @@ class LabelTable:
             table["header"].append(variable)
 
     def _fill_body(self, table):
-        for category_label in self._get_all_category_labels():
+        for category_label in self.category_labels:
             row = list()
             for variable in self.variables:
                 try:

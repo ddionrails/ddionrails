@@ -60,13 +60,59 @@ class TestLabelTable:
         for number in range(0, 101):
             categories.append({"label": uuid4(), "value": number})
 
+        # To use unittest assertions with this pytest setup.
+        # Class should be refactored to inherit TestCase if time can be allocated.
+        test = TestCase()
+
         with patch(
             "ddionrails.data.models.variable.Variable.get_categories",
             return_value=categories,
         ):
             label_table = LabelTable(variables)
-            label_table.to_html()
-            TestCase().assertFalse(label_table.render_table)
+            test.assertFalse(label_table.render_table)
+            test.assertEqual("", label_table.to_html())
+
+    def test_variable_render_limit(self, variables):
+        """LabelTable should not be rendered for more than 100 variables.
+
+        The creation of the HTML of the LabelTable is to time consuming for large
+        numbers of related variables.
+        """
+
+        # To use unittest assertions with this pytest setup.
+        # Class should be refactored to inherit TestCase if time can be allocated.
+        test = TestCase()
+
+        for _ in range(0, 100):
+            variables.append(variables[0])
+        label_table = LabelTable(variables)
+        # Do not render a LabelTable if variable count exceeds the limit.
+        test.assertFalse(label_table.render_table)
+        # Throw away all variables for the LabelTable if their number exceeds
+        # the limit.
+        test.assertEqual(list(), label_table.variables)
+
+    def test_to_html(self, variables):
+        """LabelTable should not be rendered for variable with more than 100 labels.
+
+        The creation of the HTML of the LabelTable is to time consuming for large
+        numbers of labels.
+        """
+
+        categories = list()
+        for number in range(0, 5):
+            categories.append({"label": uuid4(), "value": number})
+
+        test = TestCase()
+
+        with patch(
+            "ddionrails.data.models.variable.Variable.get_categories",
+            return_value=categories,
+        ):
+            label_table = LabelTable(variables)
+            html_output = label_table.to_html()
+            for variable in variables:
+                test.assertIn(variable.name, html_output)
 
     def test_init_method_without_period(self, variables):
         """ The first variable has no period in this test """
