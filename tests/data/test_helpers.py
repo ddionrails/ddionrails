@@ -3,6 +3,10 @@
 
 """ Test cases for helpers in ddionrails.data app """
 
+from unittest import TestCase
+from unittest.mock import patch
+from uuid import uuid4
+
 import pytest
 
 from ddionrails.data.helpers import LabelTable
@@ -11,8 +15,8 @@ from tests.concepts.factories import PeriodFactory
 from .factories import DatasetFactory, VariableFactory
 
 
-@pytest.fixture
-def variables(db):  # pylint: disable=unused-argument,invalid-name
+@pytest.fixture(name="variables")
+def _variables(db):  # pylint: disable=unused-argument,invalid-name
     """ This fixture contains two variables from two datasets from two periods
         they appear in an unsorted order
     """
@@ -29,21 +33,40 @@ def variables(db):  # pylint: disable=unused-argument,invalid-name
     return [variable, other_variable]
 
 
-@pytest.fixture
-def label_table(variables):
+@pytest.fixture(name="label_table")
+def _label_table(variables):
     """ A label table with the variables from the variables fixture """
     return LabelTable(variables)
 
 
 class TestLabelTable:
     def test_init_method(self, variables):
-        """ The init method of the label table sorts the variables by their datasets periods """
+        """LabelTables Init should sort passed variables by their datasets periods."""
         # Save teh variables to get their period data from the dataset.
         for variable in variables:
             variable.save()
         label_table = LabelTable(variables)
         variables.reverse()
         assert label_table.variables == variables
+
+    def test_label_render_limit(self, variables):
+        """LabelTable should not be rendered for variable with more than 100 labels.
+
+        The creation of the HTML of the LabelTable is to time consuming for large
+        numbers of labels.
+        """
+
+        categories = list()
+        for number in range(0, 101):
+            categories.append({"label": uuid4(), "value": number})
+
+        with patch(
+            "ddionrails.data.models.variable.Variable.get_categories",
+            return_value=categories,
+        ):
+            label_table = LabelTable(variables)
+            label_table.to_html()
+            TestCase().assertFalse(label_table.render_table)
 
     def test_init_method_without_period(self, variables):
         """ The first variable has no period in this test """

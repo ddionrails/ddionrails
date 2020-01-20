@@ -122,16 +122,14 @@ class LabelTable:
                     row.append(None)
             table["body"][category_label] = row
 
-    def _get_all_category_labels(self):
-        categories: Dict[str, List[str]] = defaultdict(list)
+    def _get_all_category_labels(self) -> Dict[str, List[str]]:
+        labels: Dict[str, List[str]] = defaultdict(list)
         for variable in self.variables:
             for category in variable.get_categories():
-                categories[self._simplify_label(category["label"])].append(
-                    category["value"]
-                )
-            if _label_count := len(categories) > self.label_max:
-                self.label_count = _label_count
-                return {}
+                labels[self._simplify_label(category["label"])].append(category["value"])
+            if len(labels) > self.label_max:
+                self.label_count = len(labels)
+                return dict()
 
         def sort_helper(elements):
             temp_list = list()
@@ -149,9 +147,9 @@ class LabelTable:
             except ZeroDivisionError:
                 return 100000000
 
-        categories = sorted(list(categories.items()), key=sort_helper)
-        categories = [category[0] for category in categories]
-        return categories
+        labels = sorted(list(labels.items()), key=sort_helper)
+        labels = [category[0] for category in labels]
+        return labels
 
     @staticmethod
     def _simplify_label(label):
