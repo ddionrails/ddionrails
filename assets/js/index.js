@@ -12,6 +12,7 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
+import "cookieconsent";
 
 // Credit to https://stackoverflow.com/q/44484469
 window["jQuery"] = window["$"] = require("jquery");
@@ -28,3 +29,22 @@ if (ieTen > 0 || ieEleven > 0) {
   const warning = document.getElementById("windowsWarning");
   warning.classList.remove("hidden");
 }
+
+window.cookieconsent.initialise({
+  palette: {
+    popup: {
+      background: "#edeff5",
+      text: "#838391",
+    },
+    button: {
+      background: "#4b81e8",
+    },
+  },
+  position: "bottom-left",
+  content: {
+    message: "This website uses cookies to ensure its functionality.",
+    dismiss: "Accept",
+    link: "Privacy Policy at DIW Berlin",
+    href: "https://www.diw.de/dataprotection",
+  },
+});
