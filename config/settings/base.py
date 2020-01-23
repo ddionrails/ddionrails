@@ -63,6 +63,7 @@ THIRD_PARTY_APPS = (
     "markdown",
     "mptt",
     "webpack_loader",
+    "rest_framework",
 )
 LOCAL_APPS = (
     "ddionrails.api",
@@ -168,6 +169,17 @@ WEBPACK_LOADER = {
         "TIMEOUT": None,
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
+}
+
+# Rest API config
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
+    "PAGE_SIZE": 100,
 }
 
 # DDI on Rails: imports
