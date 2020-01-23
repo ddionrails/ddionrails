@@ -92,3 +92,8 @@ if settings.DEBUG:
         settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
     )
     urlpatterns = [path(r"__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+
+urlpatterns.append(
+    path("auth/", include("rest_framework.urls", namespace="rest_framework"))
+)

@@ -2,9 +2,21 @@
 
 """ URLConf for ddionrails.api app """
 
-from django.urls import path
+from django.conf.urls import include
+from django.contrib.auth.models import User
+from django.urls import path, re_path
+from rest_framework import routers, viewsets
 
+from ddionrails.api.serializers import (
+    BasketSerializer,
+    StudySerializer,
+    UserSerializer,
+    VariableSerializer,
+)
+from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.views import question_comparison_partial
+from ddionrails.studies.models import Study
+from ddionrails.workspace.models import Basket
 
 from . import views
 
@@ -48,3 +60,53 @@ urlpatterns = [
         name="add_variable_by_id",
     ),
 ]
+
+
+# pylint: disable=too-many-ancestors
+
+
+class StudyViewSet(viewsets.ModelViewSet):
+    queryset = Study.objects.all()
+    serializer_class = StudySerializer
+
+
+class VariableViewSet(viewsets.ModelViewSet):
+    queryset = Variable.objects.all()
+    serializer_class = VariableSerializer
+
+
+class BasketViewSet(viewsets.ModelViewSet):
+    queryset = Basket.objects.all()
+    serializer_class = BasketSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Basket.objects.all()
+        return Basket.objects.filter(user=user.id)
+
+
+class BasketVariableSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Variable.objects.all()
+        return Variable.objects.filter(basket__user=user.id)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return User.objects.filter(pk=user.id)
+
+
+ROUTER = routers.SimpleRouter()
+ROUTER.register(r"users", UserViewSet)
+ROUTER.register(r"baskets", BasketViewSet)
+ROUTER.register(r"studies", StudyViewSet)
+ROUTER.register(r"variables", VariableViewSet)
+
+urlpatterns.append(re_path("^", include(ROUTER.urls)))
