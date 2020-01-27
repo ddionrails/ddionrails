@@ -4,12 +4,11 @@
 
 from django.conf.urls import include
 from django.contrib.auth.models import User
-from django.http import HttpResponse
 from django.urls import path, re_path
-from rest_framework import generics, routers, status, viewsets
+from rest_framework import routers, status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 
 from ddionrails.api.serializers import (
@@ -83,14 +82,14 @@ class VariableViewSet(viewsets.ModelViewSet):
 
 class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
     """List baskets or create one.
-    
+
     Baskets are listed according to permissions.
     Normal users can only retrieve their owned baskets.
     Superusers can list all baskets.
 
     Basket creation is the same.
     Normal users can create baskets for themselves.
-    Superusers can create baskets for arbitrary users. 
+    Superusers can create baskets for arbitrary users.
     """
 
     queryset = Basket.objects.all()

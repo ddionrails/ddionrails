@@ -32,12 +32,6 @@ class VariableRelatedField(serializers.HyperlinkedRelatedField):
     read_only = False
 
     def get_queryset(self):
-        request = self.context["request"]
-        view = self.context["view"]
-        user = request.user
-
-        # if view.basename == "basketvariable":
-        #    return list()
         return Variable.objects.all()
 
 

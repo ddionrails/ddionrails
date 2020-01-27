@@ -3,7 +3,6 @@ from rest_framework import serializers
 
 from ddionrails.api.related_fields import (
     BasketRelatedField,
-    SessionUserRelatedField,
     UserRelatedField,
     VariableRelatedField,
 )
