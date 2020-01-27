@@ -4,11 +4,17 @@
 
 from django.conf.urls import include
 from django.contrib.auth.models import User
+from django.http import HttpResponse
 from django.urls import path, re_path
-from rest_framework import routers, viewsets
+from rest_framework import generics, routers, status, viewsets
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.response import Response
 
 from ddionrails.api.serializers import (
-    BasketSerializer,
+    BasketHyperlinkedSerializer,
+    BasketVariableSerializer,
     StudySerializer,
     UserSerializer,
     VariableSerializer,
@@ -16,7 +22,7 @@ from ddionrails.api.serializers import (
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.views import question_comparison_partial
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket
+from ddionrails.workspace.models import Basket, BasketVariable
 
 from . import views
 
@@ -75,32 +81,74 @@ class VariableViewSet(viewsets.ModelViewSet):
     serializer_class = VariableSerializer
 
 
-class BasketViewSet(viewsets.ModelViewSet):
+class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
+    """List baskets or create one.
+    
+    Baskets are listed according to permissions.
+    Normal users can only retrieve their owned baskets.
+    Superusers can list all baskets.
+
+    Basket creation is the same.
+    Normal users can create baskets for themselves.
+    Superusers can create baskets for arbitrary users. 
+    """
+
     queryset = Basket.objects.all()
-    serializer_class = BasketSerializer
+    serializer_class = BasketHyperlinkedSerializer
 
     def get_queryset(self):
+        """get queryset according to permissions."""
         user = self.request.user
         if user.is_superuser:
             return Basket.objects.all()
         return Basket.objects.filter(user=user.id)
 
+    def create(self, request, *args, **kwargs):
+        """Create a single basket."""
+        data = request.data
+        basket_user = data["user_id"]
+        user = request.user
+
+        if basket_user != user.id and not user.is_superuser:
+            raise PermissionDenied(detail="Permission on users baskets denied.")
+
+        basket, created = Basket.objects.get_or_create(
+            name=data["name"], user_id=data["user_id"], study_id=data["study_id"]
+        )
+
+        if not created:
+            return Response(
+                {
+                    "detail": (
+                        "This user already owns a basket of that name for this study."
+                    )
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        basket.label = data["label"]
+        basket.description = data["description"]
+        basket.save()
+
+        serializer = BasketHyperlinkedSerializer(basket, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class BasketVariableSet(viewsets.ModelViewSet):
+    queryset = BasketVariable.objects.all()
+    serializer_class = BasketVariableSerializer
+
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
-            return Variable.objects.all()
-        return Variable.objects.filter(basket__user=user.id)
+            return BasketVariable.objects.all()
+        return BasketVariable.objects.filter(basket__user=user.id)
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return User.objects.filter(pk=user.id)
+    permission_classes = [IsAdminUser]
 
 
 ROUTER = routers.SimpleRouter()
@@ -108,5 +156,6 @@ ROUTER.register(r"users", UserViewSet)
 ROUTER.register(r"baskets", BasketViewSet)
 ROUTER.register(r"studies", StudyViewSet)
 ROUTER.register(r"variables", VariableViewSet)
+ROUTER.register(r"basket-variables", BasketVariableSet)
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))

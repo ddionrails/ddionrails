@@ -1,7 +1,12 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from ddionrails.api.related_fields import SessionUserRelatedField, VariableRelatedField
+from ddionrails.api.related_fields import (
+    BasketRelatedField,
+    SessionUserRelatedField,
+    UserRelatedField,
+    VariableRelatedField,
+)
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
@@ -11,22 +16,29 @@ from ddionrails.workspace.models import Basket, BasketVariable
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ["username", "email"]
+        fields = ["id", "username", "email"]
 
 
-class BasketSerializer(serializers.HyperlinkedModelSerializer):
-    user = SessionUserRelatedField()
+class BasketHyperlinkedSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.HyperlinkedRelatedField(
+        view_name="api:user-detail", read_only=True
+    )
+    user_id = UserRelatedField()
     study = serializers.HyperlinkedRelatedField(
-        view_name="api:study-detail", read_only=False, queryset=Study.objects.all()
+        view_name="api:study-detail", read_only=True
+    )
+    study_id = serializers.PrimaryKeyRelatedField(
+        read_only=False, queryset=Study.objects.all()
     )
 
     class Meta:
         model = Basket
-        fields = ["name", "label", "description", "user", "study"]
+        fields = ["user_id", "name", "label", "description", "user", "study", "study_id"]
 
 
 class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
-    variable = VariableRelatedField()
+    variable = VariableRelatedField(style={"base_template": "input.html"})
+    basket = BasketRelatedField()
 
     class Meta:
         model = BasketVariable

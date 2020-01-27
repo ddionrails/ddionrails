@@ -16,10 +16,29 @@ class SessionUserRelatedField(serializers.HyperlinkedRelatedField):
         return [User.objects.get(pk=user.id)]
 
 
+class UserRelatedField(serializers.PrimaryKeyRelatedField):
+    view_name = "api:user-detail"
+    read_only = False
+
+    def get_queryset(self):
+        user = self.context["request"].user
+        if user.is_superuser:
+            return User.objects.all()
+        return [User.objects.get(pk=user.id)]
+
+
 class VariableRelatedField(serializers.HyperlinkedRelatedField):
     view_name = "api:variable-detail"
     read_only = False
-    queryset = Variable.objects.all()
+
+    def get_queryset(self):
+        request = self.context["request"]
+        view = self.context["view"]
+        user = request.user
+
+        # if view.basename == "basketvariable":
+        #    return list()
+        return Variable.objects.all()
 
 
 class BasketRelatedField(serializers.HyperlinkedRelatedField):
