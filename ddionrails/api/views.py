@@ -5,13 +5,27 @@
 import uuid
 from typing import Union
 
+from django.contrib.auth.models import User
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from rest_framework import status, viewsets
+from rest_framework.exceptions import PermissionDenied
+from rest_framework.mixins import CreateModelMixin
+from rest_framework.permissions import IsAdminUser
+from rest_framework.response import Response
 
+from ddionrails.api.serializers import (
+    BasketHyperlinkedSerializer,
+    BasketVariableSerializer,
+    StudySerializer,
+    UserSerializer,
+    VariableSerializer,
+)
 from ddionrails.concepts.models import Concept, Topic
-from ddionrails.data.models import Variable
+from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models import Question
+from ddionrails.instruments.views import question_comparison_partial
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 
@@ -229,3 +243,87 @@ def add_variables_by_topic(
         except:
             pass
     return HttpResponse("DONE")
+
+
+# pylint: disable=too-many-ancestors
+# Propper REST views start here
+
+
+class StudyViewSet(viewsets.ModelViewSet):
+    queryset = Study.objects.all()
+    serializer_class = StudySerializer
+
+
+class VariableViewSet(viewsets.ModelViewSet):
+    queryset = Variable.objects.all()
+    serializer_class = VariableSerializer
+
+
+class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
+    """List baskets or create a single basket.
+
+    Baskets are returned according to permissions.
+    Normal users can only retrieve their own baskets.
+    Superusers can retrieve all baskets.
+
+    Basket creation is the similar.
+    Normal users can create baskets for themselves.
+    Superusers can create baskets for arbitrary users.
+    """
+
+    queryset = Basket.objects.all()
+    serializer_class = BasketHyperlinkedSerializer
+
+    def get_queryset(self):
+        """get queryset according to permissions."""
+        user = self.request.user
+        if user.is_superuser:
+            return Basket.objects.all()
+        return Basket.objects.filter(user=user.id)
+
+    def create(self, request, *args, **kwargs):
+        """Create a single basket."""
+        data = request.data
+        basket_user = data["user_id"]
+        user = request.user
+
+        if basket_user != user.id and not user.is_superuser:
+            raise PermissionDenied(detail="Permission on users baskets denied.")
+
+        basket, created = Basket.objects.get_or_create(
+            name=data["name"], user_id=data["user_id"], study_id=data["study_id"]
+        )
+
+        if not created:
+            return Response(
+                {
+                    "detail": (
+                        "This user already owns a basket of that name for this study."
+                    )
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        basket.label = data["label"]
+        basket.description = data["description"]
+        basket.save()
+
+        serializer = BasketHyperlinkedSerializer(basket, context={"request": request})
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class BasketVariableSet(viewsets.ModelViewSet):
+    queryset = BasketVariable.objects.all()
+    serializer_class = BasketVariableSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return BasketVariable.objects.all()
+        return BasketVariable.objects.filter(basket__user=user.id)
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAdminUser]
