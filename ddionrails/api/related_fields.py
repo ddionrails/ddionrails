@@ -27,14 +27,6 @@ class UserRelatedField(serializers.PrimaryKeyRelatedField):
         return [User.objects.get(pk=user.id)]
 
 
-class VariableRelatedField(serializers.HyperlinkedRelatedField):
-    view_name = "api:variable-detail"
-    read_only = False
-
-    def get_queryset(self):
-        return Variable.objects.all()
-
-
 class BasketRelatedField(serializers.HyperlinkedRelatedField):
     view_name = "api:basket-detail"
     read_only = False

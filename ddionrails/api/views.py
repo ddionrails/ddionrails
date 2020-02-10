@@ -25,7 +25,6 @@ from ddionrails.api.serializers import (
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models import Question
-from ddionrails.instruments.views import question_comparison_partial
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 
@@ -271,7 +270,6 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
     Superusers can create baskets for arbitrary users.
     """
 
-    queryset = Basket.objects.all()
     serializer_class = BasketHyperlinkedSerializer
 
     def get_queryset(self):
@@ -308,7 +306,7 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
         basket.description = data["description"]
         basket.save()
 
-        serializer = BasketHyperlinkedSerializer(basket, context={"request": request})
+        serializer = self.serializer_class(basket, context={"request": request})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
