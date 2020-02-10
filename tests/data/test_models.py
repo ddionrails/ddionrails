@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,no-self-use,invalid-name,too-many-public-methods
 
 """ Test cases for models in ddionrails.data app """
 
@@ -210,6 +210,7 @@ class TestVariableModel:
         expected = {
             "value": "-6",
             "label": "[-6] Version of questionnaire with modified filtering",
+            "label_de": "[-6] Version of questionnaire with modified filtering",
             "frequency": 1,
             "valid": False,
         }
