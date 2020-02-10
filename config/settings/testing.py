@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=wildcard-import,used-before-assignment
+# pylint: disable=wildcard-import,unused-wildcard-import,used-before-assignment
 
 """ Django settings for ddionrails project: Settings for testing environment """
 
 import logging
 
-import django_rq.queues
-from fakeredis import FakeRedis, FakeStrictRedis
-
-from .base import *
+from config.settings.base import *
 
 TEMPLATE_DEBUG = False
 
@@ -36,13 +33,6 @@ RQ_QUEUES = {
         "ASYNC": False,
     }
 }
-
-# https://github.com/rq/django-rq/issues/277#issuecomment-391555883
-# Credit to @zyv
-# adapted from https://github.com/rq/django-rq/issues/106#issuecomment-367674954
-django_rq.queues.get_redis_connection = (
-    lambda _, strict: FakeStrictRedis() if strict else FakeRedis()
-)
 
 # Django Elasticsearch DSL
 # ------------------------------------------------------------------------------
