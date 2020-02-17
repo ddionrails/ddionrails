@@ -43,7 +43,7 @@
     "vue-template-compiler": "^2.6.11",
     "webpack": "^4.41.5",
     "webpack-bundle-tracker": "^0.4.3",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
