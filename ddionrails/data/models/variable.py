@@ -201,10 +201,10 @@ class Variable(ModelMixin, models.Model):
         """ Return a QuerySet of Variable objects by a given concept id """
         return cls.objects.filter(concept_id=concept_id)
 
-    def html_description_long(self) -> str:
+    def html_description(self) -> str:
         """ Return a markdown rendered version of the "description_long" field """
         try:
-            html = render_markdown(self.description_long)
+            html = render_markdown(self.description)
         # The markdown.markdown function used by render markdown can potentially
         # raise these errors. But I did not find any input, that triggered errors.
         # They also exclude these except blocks from coverage themselves.
