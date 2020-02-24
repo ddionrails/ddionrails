@@ -44,7 +44,7 @@ services:
       - media:/var/django/media
 
   postgres:
-    image: postgres:11.6-alpine 
+    image: postgres:11.7-alpine 
     # Set your own variables, use of the example files at yout own risk.
     #env_file:
     #  - docker/environments/database.env
