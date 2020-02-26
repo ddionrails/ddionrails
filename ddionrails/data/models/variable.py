@@ -225,6 +225,11 @@ class Variable(ModelMixin, models.Model):
             categories = []
             if "labels_de" not in self.categories:
                 self.categories["labels_de"] = self.categories["labels"]
+            # Temporary fix till the bilingual dataset json files are fixed.
+            if len(self.categories["labels_de"]) < len(self.categories["values"]):
+                self.categories["labels_de"] += self.categories["values"][
+                    len(self.categories["labels_de"]) :
+                ]
             for index, _ in enumerate(self.categories["values"]):
                 category = dict(
                     value=self.categories["values"][index],
