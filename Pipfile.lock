@@ -789,11 +789,11 @@
         },
         "pre-commit": {
             "hashes": [
-                "sha256:5295fb6d652a6c5e0b4636cd2c73183efdf253d45b657ce7367183134e806fe1",
-                "sha256:5387b53bb84ad9abc9b0845775dddd4e3243fd64cdcddaa6db28d3da6fbf06c2"
+                "sha256:09ebe467f43ce24377f8c2f200fe3cd2570d328eb2ce0568c8e96ce19da45fa6",
+                "sha256:f8d555e31e2051892c7f7b3ad9f620bd2c09271d87e9eedb2ad831737d6211eb"
             ],
             "index": "pypi",
-            "version": "==2.1.0"
+            "version": "==2.1.1"
         },
         "py": {
             "hashes": [
@@ -1118,10 +1118,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:531b142e300d405bb9faedad4adbeb82b4098b918e35209af2adef3129274aae",
-                "sha256:5dd42a9f56307542bddc446cfd10ef6576f11910366a07609fe8d0d88fa8fb7e"
+                "sha256:36cbdd40c67351e0a7f4dfb9a9c4000bbea6f236f9bb9c601c5eae1ac183ba3d",
+                "sha256:92e23178c60679f3a2f11136e39a286c43d6ee182ffa1e0f9c7b9683d57acb7c"
             ],
-            "version": "==20.0.5"
+            "version": "==20.0.6"
         },
         "wcwidth": {
             "hashes": [
