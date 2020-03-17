@@ -3,12 +3,17 @@
 
 """ Test cases for "python manage.py backup" """
 
+import csv
 import pytest
+import shutil
 import tablib
 from click.testing import CliRunner
 from dateutil.parser import parse
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
 from django.utils import timezone
+from pathlib import Path
+from tempfile import mkdtemp
 
 from ddionrails.data.models import Variable
 from ddionrails.workspace.management.commands import restore
@@ -228,9 +233,23 @@ class TestRestoreManagementCommand:
     @pytest.mark.parametrize("argument", ("--users", "-u"))
     def test_restore_users(self, clirunner, argument, client):
         assert 0 == User.objects.count()
+        clear_password = "some-password"
+        user = {
+            "date_joined": "2019-01-01 10:00:00 UTC",
+            "username": "some-user",
+            "email": "some-user@some-mail.org",
+            "password": make_password(clear_password),
+        }
+        tmp_folder = Path(mkdtemp())
+        tmp_file = tmp_folder.joinpath('users.csv')
+        with open(tmp_file, 'w') as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=user.keys())
+            writer.writeheader()
+            writer.writerow(user)
         result = clirunner.invoke(
-            restore.command, [argument, "-p", "tests/workspace/test_data/"]
+            restore.command, [argument, "-p", tmp_folder]
         )
+        shutil.rmtree(tmp_folder)
         assert result.exit_code == 0
         assert "Succesfully" in result.output
         assert 1 == User.objects.count()
@@ -241,6 +260,7 @@ class TestRestoreManagementCommand:
         # test user can login
         username = user.username
         password = "some-password"  # nosec
+        hashed_password = make_password(password)
         logged_in = client.login(username=username, password=password)  # nosec
         assert logged_in is True
 
