@@ -38,7 +38,10 @@ class Command(BaseCommand):
             self.summary(study)
             confirmed = ""
             while confirmed not in list("yYnN"):
-                confirmed = input(f"Do you want to delete study {study_name}? [y/n]")
+                # Bandit should ignore this. We do not use python2
+                confirmed = input(  # nosec
+                    f"Do you want to delete study {study_name}? [y/n]"
+                )
             if confirmed and confirmed in "Yy":
                 self.remove_from_database(study)
                 return None

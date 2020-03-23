@@ -236,7 +236,9 @@ class TestRestoreManagementCommand:
     @pytest.mark.parametrize("argument", ("--users", "-u"))
     def test_restore_users(self, argument, client, capsys: CaptureFixture):
         TEST_CASE.assertEqual(0, User.objects.count())
-        clear_password = "some-password"
+        # Bandit should ignore this.
+        # This is obviously not a cleartext password in use.
+        clear_password = "some-password"  # nosec
         user = {
             "date_joined": "2019-01-01 10:00:00 UTC",
             "username": "some-user",
