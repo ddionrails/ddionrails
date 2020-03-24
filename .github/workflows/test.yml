@@ -6,7 +6,7 @@ on:
 
 env:
   # TODO: Change variable to your image's name.
-  COMPOSE_FILE: docker-compose-travis.yml
+  COMPOSE_FILE: docker-compose.yml:docker-compose-travis.yml
 
 jobs:
   # Run tests.
