@@ -1,13 +1,94 @@
 # -*- coding: utf-8 -*-
 
 """ "Update" management command for ddionrails project """
+import sys
+from pathlib import Path
 
 import django_rq
-import djclick as click
 from django.core.management import call_command
+from django.core.management.base import BaseCommand
 
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
+
+
+class Command(BaseCommand):
+    """Update the data of a study from its associated git repository."""
+
+    help = """Update command
+
+        This command is used to update study metadata in ddionrails.
+
+        \b
+        Arguments:
+            study_name: The name of a study (optional).
+            entity: One or more entities to be updated (optional).
+            local: Set this flag to suppress updating from GitHub (optional).
+            filename: The filename of a single file, only used in combination
+                      with a single 'entity' (optional).
+        """
+
+    def add_arguments(self, parser):
+        parser.add_argument("study_name", nargs="?", type=str, default="all")
+        parser.add_argument("entity", nargs="*", default=set())
+        parser.add_argument(
+            "-l",
+            "--local",
+            action="store_true",
+            help="Do not try to update data from remote repository.",
+            default=False,
+        )
+        parser.add_argument("-f", "--filename", nargs="?", type=Path, default=None)
+        return super().add_arguments(parser)
+
+    def handle(self, *args, **options):
+        study_name = options["study_name"]
+        entity = set(options["entity"])
+        local = options["local"]
+        filename = options["filename"]
+
+        # if no study_name is given, update all studies
+        if study_name == "all":
+            self.log_success(f"Updating all studies")
+            update_all_studies_completely(local)
+            sys.exit(0)
+
+        # if study_name is given, select study from database or exit
+        try:
+            study = Study.objects.get(name=study_name)
+        except Study.DoesNotExist:
+            self.log_error(f'Study "{study_name}" does not exist.')
+            sys.exit(1)
+
+        # if one or more entities are given, validate all are available
+        manager = StudyImportManager(study)
+        for single_entity in entity:
+            if single_entity not in manager.import_order:
+                self.log_error(f'Entity "{single_entity}" does not exist.')
+                sys.exit(1)
+
+        # if filename is given, validate that entity is "datasets.json" or "instruments"
+        if filename and not entity.intersection({"datasets.json", "instruments"}):
+            out = ", ".join(entity.intersection({"datasets.json", "instruments"}))
+            self.log_error(
+                f'Support for single file import not available for entity "{out}".'
+            )
+            sys.exit(1)
+
+        update_single_study(study, local, entity, filename)
+
+        # Populate the search index from the database (indexes everything)
+        django_rq.enqueue(call_command, "search_index", "--populate")
+        sys.exit(0)
+        return super().handle(*args, **options)
+
+    def log_success(self, message: str):
+        """Log success messages."""
+        self.stdout.write(self.style.SUCCESS(message))
+
+    def log_error(self, message: str):
+        """Log error messages."""
+        self.stderr.write(self.style.ERROR(message))
 
 
 def update_study_partial(manager: StudyImportManager, entity: tuple):
@@ -33,73 +114,5 @@ def update_single_study(
 
 def update_all_studies_completely(local: bool) -> None:
     """ Update all studies in the database """
-    click.secho(f"Updating all studies", fg="green")
     for study in Study.objects.all():
         update_single_study(study, local)
-
-
-@click.command()
-@click.argument("study_name", nargs=1, required=False)
-@click.argument("entity", nargs=-1)
-@click.option(
-    "-l",
-    "--local",
-    default=False,
-    is_flag=True,
-    help="Set this flag to suppress updating from GitHub (local import)",
-)
-@click.option(
-    "-f",
-    "--filename",
-    type=click.Path(exists=True),
-    help="Filename of a single file to be imported, only used in combination with a single 'entity'",
-)
-def command(study_name: str, entity: tuple, local: bool, filename: str) -> None:
-    """Update command
-
-    This command is used to update study metadata in ddionrails.
-
-    \b
-    Arguments:
-        study_name: The name of a study (optional).
-        entity: One or more entities to be updated (optional).
-        local: Set this flag to suppress updating from GitHub (optional).
-        filename: The filename of a single file, only used in combination with a single 'entity' (optional).
-    """
-
-    # if no study_name is given, update all studies
-    if study_name is None:
-        update_all_studies_completely(local)
-        exit(0)
-
-    # if study_name is given, select study from database or exit
-    try:
-        study = Study.objects.get(name=study_name)
-    except Study.DoesNotExist:
-        click.secho(f'Study "{study_name}" does not exist.', fg="red")
-        exit(1)
-
-    # if one or more entities are given, validate all are available
-    manager = StudyImportManager(study)
-    for single_entity in entity:
-        if single_entity not in manager.import_order:
-            click.secho(f'Entity "{single_entity}" does not exist.', fg="red")
-            exit(1)
-
-    # if filename is given, validate that entity is "datasets.json" or "instruments"
-    if filename and entity[0] not in {"datasets.json", "instruments"}:
-        click.secho(
-            f'Support for single file import not available for entity "{entity[0]}".',
-            fg="red",
-        )
-        exit(1)
-
-    update_single_study(study, local, entity, filename)
-
-    # Populate the search index from the database (indexes everything)
-    django_rq.enqueue(call_command, "search_index", "--populate")
-    exit(0)
-
-
-# remove "verbosity", "settings", "pythonpath", "traceback", "color" options from django-click
-command.params = command.params[:2] + command.params[7:]

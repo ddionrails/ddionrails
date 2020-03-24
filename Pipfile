@@ -13,7 +13,6 @@ name = "pypi"
 # Django
 # ------------------------------------------------------------------------------
 django = "*"
-django-click = "*"
 django-crispy-forms = "*"
 django-extensions = "*"
 django-filer = "*"
