@@ -6,6 +6,7 @@ on:
 
 env:
   COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   # Run tests.
@@ -46,3 +47,5 @@ jobs:
           docker exec ddionrails_web_1 python manage.py migrate
           # check if production settings file throws warnings
           docker exec ddionrails_web_1 python manage.py check --deploy --settings=config.settings.production
+      - name: Upload codecov
+        run: bash <(curl -s https://codecov.io/bash)
