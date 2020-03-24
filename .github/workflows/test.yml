@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  COMPOSE_FILE: docker-compose.yml:docker-compose-travis.yml
+  COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
 
 jobs:
   # Run tests.
