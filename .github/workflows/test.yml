@@ -5,7 +5,6 @@ on:
   pull_request:
 
 env:
-  # TODO: Change variable to your image's name.
   COMPOSE_FILE: docker-compose.yml:docker-compose-travis.yml
 
 jobs:
@@ -28,22 +27,22 @@ jobs:
           docker-compose up --build -d
           docker images
           docker ps -a
-          docker-compose exec web pip install pipfile-requirements==0.1.0.post0
-          docker-compose exec web bash -c \
+          docker exec ddionrails_web_1 bash -c "pip install pipfile-requirements==0.1.0.post0"
+          docker exec ddionrails_web_1 bash -c \
           '{ pipfile2req Pipfile.lock & pipfile2req -d Pipfile.lock; } > Requirements.txt'
-          docker-compose exec web pip install -r Requirements.txt
-          docker-compose exec web npm install
-          docker-compose exec web npm run build
+          docker exec ddionrails_web_1 pip install -r Requirements.txt
+          docker exec ddionrails_web_1 npm install
+          docker exec ddionrails_web_1 npm run build
       - name: Run tests
         run: |
-          docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch
-          docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch \
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional" tests/functional/imports/ --cov-append
-          docker-compose exec web pytest --cov-report xml --cov --cov-report html --cov-branch \
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional and not search" tests/functional/browser --cov-append
           # move coverage report to directory, that is mounted as volume
-          docker-compose exec web mv coverage.xml codecov/
+          docker exec ddionrails_web_1 mv coverage.xml codecov/
           # check if migrations can be applied without errors
-          docker-compose exec web python manage.py migrate
+          docker exec ddionrails_web_1 python manage.py migrate
           # check if production settings file throws warnings
-          docker-compose exec web python manage.py check --deploy --settings=config.settings.production
+          docker exec ddionrails_web_1 python manage.py check --deploy --settings=config.settings.production
