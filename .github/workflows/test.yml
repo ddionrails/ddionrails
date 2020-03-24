@@ -45,5 +45,5 @@ jobs:
           docker-compose exec web mv coverage.xml codecov/
           # check if migrations can be applied without errors
           docker-compose exec web python manage.py migrate
-         # check if production settings file throws warnings
-         docker-compose exec web python manage.py check --deploy --settings=config.settings.production
+          # check if production settings file throws warnings
+          docker-compose exec web python manage.py check --deploy --settings=config.settings.production
