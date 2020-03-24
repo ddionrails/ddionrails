@@ -22,7 +22,7 @@ jobs:
           docker --version
           docker-compose --version
           mkdir codecov
-      - name: Before install
+      - name: Install
         run: |
           docker-compose config
           docker-compose up --build -d
