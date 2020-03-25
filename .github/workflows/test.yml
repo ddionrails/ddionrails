@@ -1,0 +1,55 @@
+name: System-Tests
+
+on:
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Before install
+        run: |
+          docker --version
+          docker-compose --version
+          mkdir codecov
+      - name: Install
+        run: |
+          docker-compose config
+          docker-compose up --build -d
+          docker images
+          docker ps -a
+          docker exec ddionrails_web_1 bash -c "pip install pipfile-requirements==0.1.0.post0"
+          docker exec ddionrails_web_1 bash -c \
+          '{ pipfile2req Pipfile.lock & pipfile2req -d Pipfile.lock; } > Requirements.txt'
+          docker exec ddionrails_web_1 pip install -r Requirements.txt
+          docker exec ddionrails_web_1 npm install
+          docker exec ddionrails_web_1 npm run build
+      - name: Unittests
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml \
+          --cov --cov-report html --cov-branch
+      - name: Functional import tests
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+          -m "functional" tests/functional/imports/ --cov-append
+      - name: Functional browser tests
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+          -m "functional and not search" tests/functional/browser --cov-append
+      - name: Upload codecov report
+        run: |
+          # move coverage report to directory, that is mounted as volume
+          docker exec ddionrails_web_1 mv coverage.xml codecov/
+          # check if migrations can be applied without errors
+          docker exec ddionrails_web_1 python manage.py migrate
+          # check if production settings file throws warnings
+          docker exec ddionrails_web_1 python manage.py check --deploy --settings=config.settings.production
+          bash <(curl -s https://codecov.io/bash)
