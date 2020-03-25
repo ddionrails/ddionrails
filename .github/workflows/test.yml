@@ -33,18 +33,22 @@ jobs:
           docker exec ddionrails_web_1 npm install
           docker exec ddionrails_web_1 npm run build
       - name: Unittests
+        if: always()
         run: |
           docker exec ddionrails_web_1 pytest --cov-report xml \
           --cov --cov-report html --cov-branch
       - name: Functional import tests
+        if: always()
         run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional" tests/functional/imports/ --cov-append
       - name: Functional browser tests
+        if: always()
         run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional and not search" tests/functional/browser --cov-append
       - name: Upload codecov report
+        if: always()
         run: |
           # move coverage report to directory, that is mounted as volume
           docker exec ddionrails_web_1 mv coverage.xml codecov/
