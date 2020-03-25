@@ -6,7 +6,6 @@ on:
 
 env:
   COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
-  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   tests:
@@ -14,6 +13,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./codecov/coverage.xml
+          name: Upload codecov report
+          fail_ci_if_error: true 
 
       - name: Before install
         run: |
@@ -47,13 +52,13 @@ jobs:
         run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional and not search" tests/functional/browser --cov-append
-      - name: Upload codecov report
+      - name: Run migrations
+        run: docker exec ddionrails_web_1 python manage.py migrate
+      - name: Check production settings file
+        run: | 
+          docker exec ddionrails_web_1 python manage.py check \
+          --deploy --settings=config.settings.production
+      - name: Move codecov report
         if: always()
         run: |
-          # move coverage report to directory, that is mounted as volume
           docker exec ddionrails_web_1 mv coverage.xml codecov/
-          # check if migrations can be applied without errors
-          docker exec ddionrails_web_1 python manage.py migrate
-          # check if production settings file throws warnings
-          docker exec ddionrails_web_1 python manage.py check --deploy --settings=config.settings.production
-          bash <(curl -s https://codecov.io/bash)
