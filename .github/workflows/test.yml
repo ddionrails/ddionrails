@@ -1,4 +1,4 @@
-name: Docker
+name: System-Tests
 
 on:
   # Run tests for any PRs.
@@ -9,9 +9,7 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
-  test:
+  tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -34,18 +32,24 @@ jobs:
           docker exec ddionrails_web_1 pip install -r Requirements.txt
           docker exec ddionrails_web_1 npm install
           docker exec ddionrails_web_1 npm run build
-      - name: Run tests
+      - name: Unittests
         run: |
-          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch
+          docker exec ddionrails_web_1 pytest --cov-report xml \
+          --cov --cov-report html --cov-branch
+      - name: Functional import tests
+        run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional" tests/functional/imports/ --cov-append
+      - name: Functional browser tests
+        run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional and not search" tests/functional/browser --cov-append
+      - name: Upload codecov report
+        run: |
           # move coverage report to directory, that is mounted as volume
           docker exec ddionrails_web_1 mv coverage.xml codecov/
           # check if migrations can be applied without errors
           docker exec ddionrails_web_1 python manage.py migrate
           # check if production settings file throws warnings
           docker exec ddionrails_web_1 python manage.py check --deploy --settings=config.settings.production
-      - name: Upload codecov
-        run: bash <(curl -s https://codecov.io/bash)
+          bash <(curl -s https://codecov.io/bash)
