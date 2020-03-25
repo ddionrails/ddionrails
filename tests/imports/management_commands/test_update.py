@@ -3,45 +3,51 @@
 
 """ Test cases for "update" management command for ddionrails project """
 
+import unittest
+from pathlib import Path
+
 import pytest
-from click.testing import CliRunner
+from _pytest.capture import CaptureFixture
+from django.core.management import call_command
 
 from ddionrails.imports.management.commands import update
 from ddionrails.imports.manager import StudyImportManager
 
 pytestmark = [pytest.mark.django_db]
 
+TEST_CASE = unittest.TestCase()
 
-@pytest.fixture
-def mocked_update_single_study(mocker):
+
+@pytest.fixture(name="mocked_update_single_study")
+def _mocked_update_single_study(mocker):
     return mocker.patch(
         "ddionrails.imports.management.commands.update.update_single_study"
     )
 
 
-@pytest.fixture
-def mocked_update_study_partial(mocker):
+@pytest.fixture(name="mocked_update_study_partial")
+def _mocked_update_study_partial(mocker):
     return mocker.patch(
         "ddionrails.imports.management.commands.update.update_study_partial"
     )
 
 
-@pytest.fixture
-def mocked_update_all_studies_completely(mocker):
+@pytest.fixture(name="mocked_update_all_studies_completely")
+def _mocked_update_all_studies_completely(mocker):
     return mocker.patch(
         "ddionrails.imports.management.commands.update.update_all_studies_completely"
     )
 
 
-@pytest.fixture
-def mocked_import_single_entity(mocker):
+@pytest.fixture(name="mocked_import_single_entity")
+def _mocked_import_single_entity(mocker):
     return mocker.patch(
         "ddionrails.imports.manager.StudyImportManager.import_single_entity"
     )
 
 
-@pytest.fixture
-def mocked_import_all_entities(mocker):
+@pytest.fixture(name="mocked_import_all_entities")
+def _mocked_import_all_entities(mocker):
     return mocker.patch(
         "ddionrails.imports.manager.StudyImportManager.import_all_entities"
     )
@@ -88,19 +94,26 @@ def test_update_all_studies_completely(
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
-def test_update_command_shows_help(option):
+def test_update_command_shows_help(option, capsys: CaptureFixture):
     """ Test "update" shows help """
-    result = CliRunner().invoke(update.command, option)
-    assert 0 == result.exit_code
-    assert "This command is used to update study metadata in ddionrails." in result.output
-    assert "--local" in result.output
-    assert "--filename" in result.output
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", option)
+
+    TEST_CASE.assertEqual(0, error.exception.code)
+    output = capsys.readouterr().out
+    TEST_CASE.assertIn(
+        "This command is used to update study metadata in ddionrails.", output
+    )
+    TEST_CASE.assertIn("--local", output)
+    TEST_CASE.assertIn("--filename", output)
 
 
 def test_update_command_without_study_name(mocked_update_all_studies_completely):
     """ Test "update" runs "update_all_studies_completely" when given no study name """
-    result = CliRunner().invoke(update.command)
-    assert 0 == result.exit_code
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update")
+
+    TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_all_studies_completely.assert_called_once()
 
 
@@ -108,21 +121,27 @@ def test_update_command_without_study_name(mocked_update_all_studies_completely)
 def test_update_command_without_study_name_local(
     option, mocked_update_all_studies_completely
 ):
-    """ Test "update" runs "update_all_studies_completely" when given no study name and --local """
-    result = CliRunner().invoke(update.command, option)
-    assert 0 == result.exit_code
+    """Test "update" runs "update_all_studies_completely" correctly with --local """
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", option)
+
+    TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_all_studies_completely.assert_called_once_with(True)
 
 
-def test_update_command_with_invalid_study_name():
-    result = CliRunner().invoke(update.command, "study-not-in-db")
-    assert 1 == result.exit_code
-    assert "does not exist" in result.output
+def test_update_command_with_invalid_study_name(capsys: CaptureFixture):
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", "study-not-in-db")
+
+    TEST_CASE.assertEqual(1, error.exception.code)
+    TEST_CASE.assertIn("does not exist", capsys.readouterr().err)
 
 
 def test_update_command_with_valid_study_name(study, mocked_update_single_study):
-    result = CliRunner().invoke(update.command, study.name)
-    assert 0 == result.exit_code
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name)
+
+    TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_single_study.assert_called_once()
 
 
@@ -130,22 +149,28 @@ def test_update_command_with_valid_study_name(study, mocked_update_single_study)
 def test_update_command_with_valid_study_name_local(
     study, option, mocked_update_single_study
 ):
-    result = CliRunner().invoke(update.command, [study.name, option])
-    assert 0 == result.exit_code
-    mocked_update_single_study.assert_called_once_with(study, True, (), None)
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, option)
+
+    TEST_CASE.assertEqual(0, error.exception.code)
+    mocked_update_single_study.assert_called_once_with(study, True, set(), None)
 
 
 def test_update_command_with_valid_study_name_and_entity(
     study, mocked_update_single_study
 ):
-    result = CliRunner().invoke(update.command, [study.name, "periods"])
-    assert 0 == result.exit_code
-    mocked_update_single_study.assert_called_once_with(study, False, ("periods",), None)
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, "periods")
+
+    TEST_CASE.assertEqual(0, error.exception.code)
+    mocked_update_single_study.assert_called_once_with(study, False, {"periods"}, None)
 
 
 def test_update_command_with_valid_study_name_and_invalid_entity(study):
-    result = CliRunner().invoke(update.command, [study.name, "invalid-entity"])
-    assert 1 == result.exit_code
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, "invalid-entity")
+
+    TEST_CASE.assertEqual(1, error.exception.code)
 
 
 @pytest.mark.parametrize("option", ("-f", "--filename"))
@@ -153,20 +178,26 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
     study, option, mocked_update_single_study
 ):
     filename = "tests/imports/test_data/sample.csv"
-    result = CliRunner().invoke(
-        update.command, [study.name, "instruments", option, filename]
-    )
-    assert 0 == result.exit_code
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, "instruments", option, filename)
+
+    TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_single_study.assert_called_once_with(
-        study, False, ("instruments",), filename
+        study, False, {"instruments"}, Path(filename)
     )
 
 
 @pytest.mark.parametrize("option", ("-f", "--filename"))
 def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
-    study, option
+    study, option, capsys: CaptureFixture
 ):
     filename = "tests/imports/test_data/sample.csv"
-    result = CliRunner().invoke(update.command, [study.name, "periods", option, filename])
-    assert 1 == result.exit_code
-    assert "Support for single file import not available for entity" in result.output
+
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, "periods", option, filename)
+
+    TEST_CASE.assertEqual(1, error.exception.code)
+    TEST_CASE.assertRegex(
+        capsys.readouterr().err,
+        ".*Support for single file import not available for entity.*",
+    )

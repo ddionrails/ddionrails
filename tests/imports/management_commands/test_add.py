@@ -3,11 +3,15 @@
 
 """ Test cases for "add" management command for ddionrails project """
 
-import pytest
-from click.testing import CliRunner
+from unittest import TestCase
 
-from ddionrails.imports.management.commands import add
+import pytest
+from django.core.management import call_command
+from django.core.management.base import CommandError
+
 from ddionrails.studies.models import Study
+
+TEST_CASE = TestCase()
 
 
 @pytest.fixture
@@ -18,46 +22,50 @@ def mocked_delete_method(mocker):
 
 def test_add_command_without_study_name():
     """ Test add management command displays "missing argument" message """
-    result = CliRunner().invoke(add.command)
-    assert 'Missing argument "STUDY_NAME"' in result.output
-    assert 2 == result.exit_code
+    with TEST_CASE.assertRaisesRegex(
+        CommandError, ".*arguments are required: study_name.*"
+    ):
+        call_command("add")
 
 
 def test_add_command_without_repo_url():
     """ Test add management command displays "missing argument" message """
-    study_name = "some-study"
-    result = CliRunner().invoke(add.command, study_name)
-    assert 'Missing argument "REPO_URL"' in result.output
-    assert 2 == result.exit_code
+    with TEST_CASE.assertRaisesRegex(
+        CommandError, ".*arguments are required: repo_url.*"
+    ):
+        call_command("add", "some-study")
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
-def test_add_command_displays_help(option):
+def test_add_command_displays_help(option, capsys):
     """ Test add management command displays help with "-h" and "--help" """
-    result = CliRunner().invoke(add.command, option)
-    assert "STUDY_NAME REPO_URL" in result.output
-    assert 0 == result.exit_code
+    with TEST_CASE.assertRaises(SystemExit):
+        call_command("add", option)
+    TEST_CASE.assertRegex(capsys.readouterr().out, ".*usage:.*-h.*")
 
 
 @pytest.mark.django_db
 def test_add_command_creates_study_object():
     """ Test add management command creates a study """
-    assert 0 == Study.objects.count()
+    TEST_CASE.assertEqual(0, Study.objects.count())
     study_name = "some-study"
     repo_url = "some-repo-url"
-    result = CliRunner().invoke(add.command, [study_name, repo_url])
-    assert 0 == result.exit_code
-    assert 1 == Study.objects.count()
+    call_command("add", study_name, repo_url)
+    TEST_CASE.assertEqual(1, Study.objects.count())
     study = Study.objects.first()
-    assert study_name == study.name
-    assert repo_url == study.repo
+    TEST_CASE.assertEqual(study_name, study.name)
+    TEST_CASE.assertEqual(repo_url, study.repo)
 
 
-def test_add_command_with_existing_study_name(study):  # pylint: disable=unused-argument
+def test_add_command_with_existing_study_name(study):
     """ Test add management command with existing study name """
-    assert 1 == Study.objects.count()
-    study_name = "some-study"
-    repo_url = "some-repo-url"
-    result = CliRunner().invoke(add.command, [study_name, repo_url])
-    assert 1 == result.exit_code
-    assert 1 == Study.objects.count()
+    TEST_CASE.assertEqual(1, Study.objects.count())
+    study_name = study.name
+    repo_url = study.repo
+    with TEST_CASE.assertRaises(SystemExit):
+        try:
+            call_command("add", study_name, repo_url)
+        except SystemExit as exit_error:
+            TEST_CASE.assertEqual(1, exit_error.code)
+            raise SystemExit()
+    TEST_CASE.assertEqual(1, Study.objects.count())

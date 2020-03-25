@@ -3,15 +3,23 @@
 
 """ Test cases for "python manage.py backup" """
 
+import csv
+import shutil
+import unittest
+from pathlib import Path
+from tempfile import mkdtemp
+
 import pytest
 import tablib
+from _pytest.capture import CaptureFixture
 from click.testing import CliRunner
 from dateutil.parser import parse
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
+from django.core.management import call_command
 from django.utils import timezone
 
 from ddionrails.data.models import Variable
-from ddionrails.workspace.management.commands import restore
 from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.resources import (
     BasketResource,
@@ -24,16 +32,18 @@ from ddionrails.workspace.resources import (
 
 pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
+TEST_CASE = unittest.TestCase()
+
 
 class TestUserResource:
     def test_export(self, user):
         dataset = UserResource().export()
-        assert user.username == dataset["username"][0]
-        assert user.email == dataset["email"][0]
-        assert user.password == dataset["password"][0]
+        TEST_CASE.assertEqual(user.username, dataset["username"][0])
+        TEST_CASE.assertEqual(user.email, dataset["email"][0])
+        TEST_CASE.assertEqual(user.password, dataset["password"][0])
 
     def test_import(self):
-        assert 0 == User.objects.count()
+        TEST_CASE.assertEqual(0, User.objects.count())
         now = timezone.now()
         username = "some-user"
         email = "some-email@some-mail.org"
@@ -44,14 +54,14 @@ class TestUserResource:
         )
 
         result = UserResource().import_data(dataset, dry_run=False)
-        assert False is result.has_errors()
-        assert 1 == User.objects.count()
+        TEST_CASE.assertFalse(result.has_errors())
+        TEST_CASE.assertEqual(1, User.objects.count())
 
         user = User.objects.first()
-        assert username == user.username
-        assert email == user.email
-        assert password == user.password
-        assert now == user.date_joined
+        TEST_CASE.assertEqual(username, user.username)
+        TEST_CASE.assertEqual(email, user.email)
+        TEST_CASE.assertEqual(password, user.password)
+        TEST_CASE.assertEqual(now, user.date_joined)
 
 
 class TestBasketResource:
@@ -60,19 +70,19 @@ class TestBasketResource:
 
         # select first row from exported baskets
         basket_export = dataset.dict[0]
-        assert basket.name in basket_export["name"]
-        assert basket.label in basket_export["label"]
-        assert basket.description in basket_export["description"]
-        assert basket.study.name in basket_export["study"]
-        assert basket.user.username in basket_export["user"]
+        TEST_CASE.assertIn(basket.name, basket_export["name"])
+        TEST_CASE.assertIn(basket.label, basket_export["label"])
+        TEST_CASE.assertIn(basket.description, basket_export["description"])
+        TEST_CASE.assertIn(basket.study.name, basket_export["study"])
+        TEST_CASE.assertIn(basket.user.username, basket_export["user"])
 
         created_timestamp = basket.created.strftime("%Y-%m-%d %H:%M:%S %Z")
-        assert created_timestamp in basket_export["created"]
+        TEST_CASE.assertIn(created_timestamp, basket_export["created"])
         modified_timestamp = basket.modified.strftime("%Y-%m-%d %H:%M:%S %Z")
-        assert modified_timestamp in basket_export["modified"]
+        TEST_CASE.assertIn(modified_timestamp, basket_export["modified"])
 
     def test_import(self, user, study):
-        assert 0 == Basket.objects.count()
+        TEST_CASE.assertEqual(0, Basket.objects.count())
 
         study = study.name
         username = user.username
@@ -97,37 +107,37 @@ class TestBasketResource:
         )
 
         result = BasketResource().import_data(dataset, dry_run=False)
-        assert False is result.has_errors()
-        assert 1 == Basket.objects.count()
+        TEST_CASE.assertFalse(result.has_errors())
+        TEST_CASE.assertEqual(1, Basket.objects.count())
 
         basket = Basket.objects.first()
-        assert user == basket.user
-        assert name == basket.name
-        assert label == basket.label
-        assert description == basket.description
+        TEST_CASE.assertEqual(user, basket.user)
+        TEST_CASE.assertEqual(name, basket.name)
+        TEST_CASE.assertEqual(label, basket.label)
+        TEST_CASE.assertEqual(description, basket.description)
 
-        assert created_datetime == basket.created
+        TEST_CASE.assertEqual(created_datetime, basket.created)
         # Basket gets new modified timestamp after importing
 
 
 class TestBasketVariableResource:
     def test_export(self, variable, basket):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         basket_variable = BasketVariable(basket=basket, variable=variable)
         basket_variable.save()
 
         dataset = BasketVariableExportResource().export()
-        assert basket.name == dataset["basket"][0]
-        assert basket.user.username == dataset["user"][0]
-        assert basket.study.name == dataset["study"][0]
-        assert variable.dataset.name == dataset["dataset"][0]
-        assert variable.name == dataset["variable"][0]
+        TEST_CASE.assertEqual(basket.name, dataset["basket"][0])
+        TEST_CASE.assertEqual(basket.user.username, dataset["user"][0])
+        TEST_CASE.assertEqual(basket.study.name, dataset["study"][0])
+        TEST_CASE.assertEqual(variable.dataset.name, dataset["dataset"][0])
+        TEST_CASE.assertEqual(variable.name, dataset["variable"][0])
 
     def test_import(self, basket, variable):
-        assert 0 == BasketVariable.objects.count()
-        assert 1 == Variable.objects.count()
-        assert 1 == Basket.objects.count()
-        assert 1 == User.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
+        TEST_CASE.assertEqual(1, Variable.objects.count())
+        TEST_CASE.assertEqual(1, Basket.objects.count())
+        TEST_CASE.assertEqual(1, User.objects.count())
 
         username = basket.user.username
         basket_name = basket.name
@@ -140,27 +150,25 @@ class TestBasketVariableResource:
             headers=["basket", "user", "study", "dataset", "variable"],
         )
         result = BasketVariableImportResource().import_data(dataset, dry_run=False)
-        assert (
-            False is result.has_errors()
-        ), "Did not import basket variable without errors"
-        assert 1 == BasketVariable.objects.count()
+        TEST_CASE.assertFalse(result.has_errors())
+        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
         basket_variable = BasketVariable.objects.first()
-        assert basket == basket_variable.basket
-        assert variable == basket_variable.variable
+        TEST_CASE.assertEqual(basket, basket_variable.basket)
+        TEST_CASE.assertEqual(variable, basket_variable.variable)
 
 
 class TestScriptResource:
     def test_export(self, script):
         dataset = ScriptExportResource().export()
-        assert script.basket.user.username == dataset["user"][0]
-        assert script.basket.name == dataset["basket"][0]
-        assert script.name == dataset["name"][0]
-        assert script.generator_name == dataset["generator_name"][0]
-        assert script.label == dataset["label"][0]
-        assert script.settings == dataset["settings"][0]
+        TEST_CASE.assertEqual(script.basket.user.username, dataset["user"][0])
+        TEST_CASE.assertEqual(script.basket.name, dataset["basket"][0])
+        TEST_CASE.assertEqual(script.name, dataset["name"][0])
+        TEST_CASE.assertEqual(script.generator_name, dataset["generator_name"][0])
+        TEST_CASE.assertEqual(script.label, dataset["label"][0])
+        TEST_CASE.assertEqual(script.settings, dataset["settings"][0])
 
     def test_import(self, study, basket):
-        assert 0 == Script.objects.count()
+        TEST_CASE.assertEqual(0, Script.objects.count())
         username = basket.user.username
         script_name = "some-script"
         generator_name = "some-generator-name"
@@ -189,19 +197,19 @@ class TestScriptResource:
         )
         result = ScriptImportResource().import_data(dataset, dry_run=False)
 
-        assert False is result.has_errors()
-        assert 1 == Script.objects.count()
+        TEST_CASE.assertFalse(result.has_errors())
+        TEST_CASE.assertEqual(1, Script.objects.count())
         script = Script.objects.first()
-        assert script_name == script.name
-        assert basket == script.basket
-        assert study == script.basket.study
-        assert generator_name == script.generator_name
-        assert label == script.label
-        assert settings == script.settings
+        TEST_CASE.assertEqual(script_name, script.name)
+        TEST_CASE.assertEqual(basket, script.basket)
+        TEST_CASE.assertEqual(study, script.basket.study)
+        TEST_CASE.assertEqual(generator_name, script.generator_name)
+        TEST_CASE.assertEqual(label, script.label)
+        TEST_CASE.assertEqual(settings, script.settings)
 
 
-@pytest.fixture()
-def clirunner():
+@pytest.fixture(name="clirunner")
+def _clirunner():
     return CliRunner()
 
 
@@ -226,39 +234,55 @@ class TestBackupManagementCommand:
 
 class TestRestoreManagementCommand:
     @pytest.mark.parametrize("argument", ("--users", "-u"))
-    def test_restore_users(self, clirunner, argument, client):
-        assert 0 == User.objects.count()
-        result = clirunner.invoke(
-            restore.command, [argument, "-p", "tests/workspace/test_data/"]
-        )
-        assert result.exit_code == 0
-        assert "Succesfully" in result.output
-        assert 1 == User.objects.count()
+    def test_restore_users(self, argument, client, capsys: CaptureFixture):
+        TEST_CASE.assertEqual(0, User.objects.count())
+        # Bandit should ignore this.
+        # This is obviously not a cleartext password in use.
+        clear_password = "some-password"  # nosec
+        user = {
+            "date_joined": "2019-01-01 10:00:00 UTC",
+            "username": "some-user",
+            "email": "some-user@some-mail.org",
+            "password": make_password(clear_password),
+        }
+        tmp_folder = Path(mkdtemp())
+        tmp_file = tmp_folder.joinpath("users.csv")
+        with open(tmp_file, "w") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=user.keys())
+            writer.writeheader()
+            writer.writerow(user)
+
+        call_command("restore", argument, "-p", tmp_folder)
+
+        shutil.rmtree(tmp_folder)
+
+        TEST_CASE.assertIn("Successfully", capsys.readouterr().out)
+        TEST_CASE.assertEqual(1, User.objects.count())
+
         user = User.objects.first()
-        assert "some-user" == user.username
-        assert "some-user@some-mail.org" == user.email
+        TEST_CASE.assertEqual("some-user", user.username)
+        TEST_CASE.assertEqual("some-user@some-mail.org", user.email)
 
         # test user can login
         username = user.username
         password = "some-password"  # nosec
         logged_in = client.login(username=username, password=password)  # nosec
-        assert logged_in is True
+        TEST_CASE.assertTrue(logged_in)
 
     @pytest.mark.parametrize("argument", ("--baskets", "-b"))
-    def test_restore_baskets(self, clirunner, argument, user, study):
-        assert 0 == Basket.objects.count()
-        result = clirunner.invoke(
-            restore.command, [argument, "-p", "tests/workspace/test_data/"]
-        )
-        assert result.exit_code == 0
-        assert "Succesfully" in result.output
-        assert 1 == Basket.objects.count()
+    def test_restore_baskets(self, argument, user, study, capsys: CaptureFixture):
+        TEST_CASE.assertEqual(0, Basket.objects.count())
+        call_command("restore", argument, "-p", "tests/workspace/test_data/")
+        TEST_CASE.assertIn("Successfully", capsys.readouterr().out)
+
+        TEST_CASE.assertEqual(1, Basket.objects.count())
+
         basket = Basket.objects.first()
-        assert "some-basket" == basket.name
-        assert "Some Basket" == basket.label
-        assert "This is some basket" == basket.description
-        assert user == basket.user
-        assert study == basket.study
+        TEST_CASE.assertEqual("some-basket", basket.name)
+        TEST_CASE.assertEqual("Some Basket", basket.label)
+        TEST_CASE.assertEqual("This is some basket", basket.description)
+        TEST_CASE.assertEqual(user, basket.user)
+        TEST_CASE.assertEqual(study, basket.study)
 
     def test_restore_scripts(self):
         pass
