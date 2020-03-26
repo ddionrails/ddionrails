@@ -74,29 +74,30 @@ def concept_by_study(
             _variables.append(variable)
         context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
-    elif request.GET.get("question_html", None) == "true":
+
+    if request.GET.get("question_html", None) == "true":
         _questions = []
         for question in question_set.all():
             question.set_language(language)
             _questions.append(question)
         context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
-    else:
-        result = dict(
-            study_id=str(study.id),
-            study_name=study.name,
-            concept_id=str(concept.id),
-            concept_name=concept.name,
-            variable_count=variable_set.count(),
-        )
-        if request.GET.get("variable_list", True) != "false":
-            result["variable_list"] = [
-                variable.to_topic_dict(language) for variable in variable_set.all()
-            ]
-            result["question_list"] = [
-                question.to_topic_dict(language) for question in question_set.all()
-            ]
-        return JsonResponse(result)
+
+    result = dict(
+        study_id=str(study.id),
+        study_name=study.name,
+        concept_id=str(concept.id),
+        concept_name=concept.name,
+        variable_count=variable_set.count(),
+    )
+    if request.GET.get("variable_list", True) != "false":
+        result["variable_list"] = [
+            variable.to_topic_dict(language) for variable in variable_set.all()
+        ]
+        result["question_list"] = [
+            question.to_topic_dict(language) for question in question_set.all()
+        ]
+    return JsonResponse(result)
 
 
 # request is a required parameter
@@ -132,32 +133,33 @@ def topic_by_study(
             _variables.append(variable)
         context = dict(variables=_variables, language=language)
         return render(request, "studies/topic_variable_table.html", context=context)
-    elif request.GET.get("question_html", None) == "true":
+
+    if request.GET.get("question_html", None) == "true":
         _questions = []
         for question in question_set.all():
             question.set_language(language)
             _questions.append(question)
         context = dict(questions=_questions, language=language)
         return render(request, "studies/topic_question_table.html", context=context)
-    else:
-        # convert to string for json response
-        topic_id_list = [str(topic_id) for topic_id in topic_id_list]
-        result = dict(
-            study_id=str(study.id),
-            study_name=study.name,
-            topic_id=str(topic.id),
-            topic_name=topic.name,
-            topic_id_list=topic_id_list,
-            variable_count=variable_set.count(),
-        )
-        if request.GET.get("variable_list", True) != "false":
-            result["variable_list"] = [
-                variable.to_topic_dict(language) for variable in variable_set.all()
-            ]
-            result["question_list"] = [
-                question.to_topic_dict(language) for question in question_set.all()
-            ]
-        return JsonResponse(result)
+
+    # convert to string for json response
+    topic_id_list = [str(topic_id) for topic_id in topic_id_list]
+    result = dict(
+        study_id=str(study.id),
+        study_name=study.name,
+        topic_id=str(topic.id),
+        topic_name=topic.name,
+        topic_id_list=topic_id_list,
+        variable_count=variable_set.count(),
+    )
+    if request.GET.get("variable_list", True) != "false":
+        result["variable_list"] = [
+            variable.to_topic_dict(language) for variable in variable_set.all()
+        ]
+        result["question_list"] = [
+            question.to_topic_dict(language) for question in question_set.all()
+        ]
+    return JsonResponse(result)
 
 
 # request is a required parameter
@@ -249,11 +251,15 @@ def add_variables_by_topic(
 
 
 class StudyViewSet(viewsets.ModelViewSet):
+    """List metadata about all studies."""
+
     queryset = Study.objects.all()
     serializer_class = StudySerializer
 
 
 class VariableViewSet(viewsets.ModelViewSet):
+    """List metadata about all variables."""
+
     queryset = Variable.objects.all()
     serializer_class = VariableSerializer
 
@@ -311,6 +317,8 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
 
 
 class BasketVariableSet(viewsets.ModelViewSet):
+    """List metadata about Baskets depending on user permissions."""
+
     queryset = BasketVariable.objects.all()
     serializer_class = BasketVariableSerializer
 
@@ -322,6 +330,8 @@ class BasketVariableSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """List user metadata for admin users."""
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
