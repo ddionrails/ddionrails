@@ -3,17 +3,28 @@
 
 """ Test cases for views in ddionrails.api app """
 
+import json
+import unittest
+from typing import Dict, List
+from uuid import UUID
+
 import pytest
 from django.urls import reverse
+from rest_framework.test import APIRequestFactory, force_authenticate
 
-from ddionrails.workspace.models import BasketVariable
+from ddionrails.api.views import BasketViewSet
+from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
+from tests.data.factories import VariableFactory
+from tests.factories import UserFactory
 
 LANGUAGE = "en"
 
+TEST_CASE = unittest.TestCase()
 
-@pytest.fixture
-def variable_with_concept_and_topic(variable, concept, topic):
+
+@pytest.fixture(name="variable_with_concept_and_topic")
+def _variable_with_concept_and_topic(variable, concept, topic):
     """ A variable with a related concept and topic """
     concept.topics.add(topic)
     concept.save()
@@ -41,16 +52,18 @@ class TestConceptByStudy:
             },
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert response_is_json(response)
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertTrue(response_is_json(response))
 
         response_dictionary = response.json()
-        assert str(study.id) == response_dictionary["study_id"]
-        assert str(concept.id) == response_dictionary["concept_id"]
-        assert study.name == response_dictionary["study_name"]
-        assert concept.name == response_dictionary["concept_name"]
-        assert 1 == response_dictionary["variable_count"]
-        assert variable.name == response_dictionary["variable_list"][0]["name"]
+        TEST_CASE.assertEqual(str(study.id), response_dictionary["study_id"])
+        TEST_CASE.assertEqual(str(concept.id), response_dictionary["concept_id"])
+        TEST_CASE.assertEqual(study.name, response_dictionary["study_name"])
+        TEST_CASE.assertEqual(concept.name, response_dictionary["concept_name"])
+        TEST_CASE.assertEqual(1, response_dictionary["variable_count"])
+        TEST_CASE.assertEqual(
+            variable.name, response_dictionary["variable_list"][0]["name"]
+        )
 
     def test_json_response_without_variable_list(self, study, client, concept):
         url = reverse(
@@ -62,8 +75,8 @@ class TestConceptByStudy:
             },
         )
         response = client.get(url, data={"variable_list": "false"})
-        assert "variable_list" not in response.json()
-        assert "question_list" not in response.json()
+        TEST_CASE.assertNotIn("variable_list", response.json())
+        TEST_CASE.assertNotIn("question_list", response.json())
 
     def test_html_response_variable_html(self, study, client, concept, variable):
         variable.concept = concept
@@ -78,9 +91,9 @@ class TestConceptByStudy:
         )
         response = client.get(url, data={"variable_html": "true"})
         expected_content_type = "text/html; charset=utf-8"
-        assert expected_content_type == response["content-type"]
-        assert LANGUAGE == response.context["language"]
-        assert variable == response.context["variables"][0]
+        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
+        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
+        TEST_CASE.assertEqual(variable, response.context["variables"][0])
 
     def test_html_response_question_html(
         self, study, client, question_variable, concept_question
@@ -98,9 +111,9 @@ class TestConceptByStudy:
         )
         response = client.get(url, data={"question_html": "true"})
         expected_content_type = "text/html; charset=utf-8"
-        assert expected_content_type == response["content-type"]
-        assert LANGUAGE == response.context["language"]
-        assert [question_variable.question] == response.context["questions"]
+        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
+        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
+        TEST_CASE.assertEqual([question_variable.question], response.context["questions"])
 
 
 class TestTopicByStudy:
@@ -115,16 +128,16 @@ class TestTopicByStudy:
             },
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert response_is_json(response)
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertTrue(response_is_json(response))
 
         response_dictionary = response.json()
-        assert str(study.id) == response_dictionary["study_id"]
-        assert str(topic.id) == response_dictionary["topic_id"]
-        assert study.name == response_dictionary["study_name"]
-        assert topic.name == response_dictionary["topic_name"]
-        assert 1 == response_dictionary["variable_count"]
-        assert [str(topic.id)] == response_dictionary["topic_id_list"]
+        TEST_CASE.assertEqual(str(study.id), response_dictionary["study_id"])
+        TEST_CASE.assertEqual(str(topic.id), response_dictionary["topic_id"])
+        TEST_CASE.assertEqual(study.name, response_dictionary["study_name"])
+        TEST_CASE.assertEqual(topic.name, response_dictionary["topic_name"])
+        TEST_CASE.assertEqual(1, response_dictionary["variable_count"])
+        TEST_CASE.assertEqual([str(topic.id)], response_dictionary["topic_id_list"])
 
     def test_json_response_without_variable_list(
         self, study, client, variable_with_concept_and_topic
@@ -139,8 +152,8 @@ class TestTopicByStudy:
             },
         )
         response = client.get(url, data={"variable_list": "false"})
-        assert "variable_list" not in response.json()
-        assert "question_list" not in response.json()
+        TEST_CASE.assertNotIn("variable_list", response.json())
+        TEST_CASE.assertNotIn("question_list", response.json())
 
     def test_html_response_variable_html(
         self, client, study, variable_with_concept_and_topic
@@ -156,9 +169,9 @@ class TestTopicByStudy:
         )
         response = client.get(url, data={"variable_html": "true"})
         expected_content_type = "text/html; charset=utf-8"
-        assert expected_content_type == response["content-type"]
-        assert LANGUAGE == response.context["language"]
-        assert variable == response.context["variables"][0]
+        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
+        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
+        TEST_CASE.assertEqual(variable, response.context["variables"][0])
 
     def test_html_response_question_html(
         self, client, study, question_variable, variable_with_concept_and_topic
@@ -174,9 +187,9 @@ class TestTopicByStudy:
         )
         response = client.get(url, data={"question_html": "true"})
         expected_content_type = "text/html; charset=utf-8"
-        assert expected_content_type == response["content-type"]
-        assert LANGUAGE == response.context["language"]
-        assert [question_variable.question] == response.context["questions"]
+        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
+        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
+        TEST_CASE.assertEqual([question_variable.question], response.context["questions"])
 
 
 class TestBasketsByStudyAndUser:
@@ -186,13 +199,16 @@ class TestBasketsByStudyAndUser:
             kwargs={"study_name": study.name, "language": LANGUAGE},
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert response_is_json(response)
+
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertTrue(response_is_json(response))
+
         response_dictionary = response.json()
         expected = False
-        assert expected is response_dictionary["user_logged_in"]
+        TEST_CASE.assertIs(expected, response_dictionary["user_logged_in"])
+
         expected = []
-        assert expected == response_dictionary["baskets"]
+        TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
 
     def test_logged_in_user(self, client, study, basket):
         url = reverse(
@@ -201,17 +217,20 @@ class TestBasketsByStudyAndUser:
         )
         client.force_login(user=basket.user)
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
         response_dictionary = response.json()
+
         expected = True
-        assert expected is response_dictionary["user_logged_in"]
+        TEST_CASE.assertIs(expected, response_dictionary["user_logged_in"])
         expected = [basket.to_dict()]
-        assert expected == response_dictionary["baskets"]
+        TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
 
 
 class TestAddVariablesByConceptView:
-    def test_with_valid_name_and_id(self, study, client, basket, concept, variable):
-        assert 0 == BasketVariable.objects.count()
+    def test_with_valid_name_and_id(  # pylint: disable=R0913
+        self, study, client, basket, concept, variable
+    ):
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         variable.concept = concept
         variable.save()
         url = reverse(
@@ -224,14 +243,14 @@ class TestAddVariablesByConceptView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert 1 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
         basket_variable = BasketVariable.objects.first()
-        assert variable == basket_variable.variable
-        assert basket == basket_variable.basket
+        TEST_CASE.assertEqual(variable, basket_variable.variable)
+        TEST_CASE.assertEqual(basket, basket_variable.basket)
 
     def test_with_invalid_name(self, study, client, basket):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_concept",
             kwargs={
@@ -242,11 +261,11 @@ class TestAddVariablesByConceptView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
     def test_with_invalid_id(self, study, client, concept):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_concept",
             kwargs={
@@ -257,8 +276,8 @@ class TestAddVariablesByConceptView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
 
 class TestAddVariablesByTopicView:
@@ -266,7 +285,7 @@ class TestAddVariablesByTopicView:
         self, study, client, basket, variable_with_concept_and_topic
     ):
         variable, _, topic = variable_with_concept_and_topic
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_topic",
             kwargs={
@@ -277,14 +296,14 @@ class TestAddVariablesByTopicView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert 1 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
         basket_variable = BasketVariable.objects.first()
-        assert variable == basket_variable.variable
-        assert basket == basket_variable.basket
+        TEST_CASE.assertEqual(variable, basket_variable.variable)
+        TEST_CASE.assertEqual(basket, basket_variable.basket)
 
     def test_with_invalid_study_name(self, client, basket, topic):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_topic",
             kwargs={
@@ -295,11 +314,11 @@ class TestAddVariablesByTopicView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
     def test_with_invalid_topic_name(self, study, client, basket):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_topic",
             kwargs={
@@ -310,11 +329,11 @@ class TestAddVariablesByTopicView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
     def test_with_invalid_id(self, study, client, topic):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variables_by_topic",
             kwargs={
@@ -325,13 +344,13 @@ class TestAddVariablesByTopicView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
 
 class TestAddVariableByIdView:
     def test_with_valid_ids(self, study, basket, variable, client):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variable_by_id",
             kwargs={
@@ -342,14 +361,14 @@ class TestAddVariableByIdView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert 1 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
         basket_variable = BasketVariable.objects.first()
-        assert variable == basket_variable.variable
-        assert basket == basket_variable.basket
+        TEST_CASE.assertEqual(variable, basket_variable.variable)
+        TEST_CASE.assertEqual(basket, basket_variable.basket)
 
     def test_with_invalid_basket_id(self, study, variable, client):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variable_by_id",
             kwargs={
@@ -360,11 +379,11 @@ class TestAddVariableByIdView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
     def test_with_invalid_variable_id(self, study, basket, client, uuid_identifier):
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
         url = reverse(
             "api:add_variable_by_id",
             kwargs={
@@ -375,8 +394,8 @@ class TestAddVariableByIdView:
             },
         )
         response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-        assert 0 == BasketVariable.objects.count()
+        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
 
 @pytest.mark.parametrize(
@@ -389,6 +408,67 @@ def test_topic_list(client, topiclist, language, expected):
         kwargs={"study_name": topiclist.study.name, "language": language},
     )
     response = client.get(url)
-    assert status.HTTP_200_OK == response.status_code
-    assert expected == response.json()
+    TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+    TEST_CASE.assertEqual(expected, response.json())
     response_is_json(response)
+
+
+@pytest.mark.django_db
+class TestBasketViewSet(unittest.TestCase):
+
+    variables: List[VariableFactory] = list()
+    request_factory: APIRequestFactory
+
+    def setUp(self):
+        self.request_factory = APIRequestFactory()
+
+        self._init_self_variables()
+
+        self.study = self.variables[0].dataset.study
+        self.user = UserFactory(username="test-user")
+
+        self.basket = Basket()
+        self.basket.name = "test-basket"
+        self.basket.study = self.study
+        self.basket.user = self.user
+        self.basket.save()
+
+        return super().setUp()
+
+    def _init_self_variables(self):
+        if self.variables:
+            return None
+        self.variables = list()
+        for number in range(1, 100):
+            self.variables.append(VariableFactory(name=f"{number}"))
+        return None
+
+    def test_get_basket(self):
+        results = self._get_api_GET_content()
+        baskets_names = [result["name"] for result in results]
+
+        self.assertIn(self.basket.name, baskets_names)
+
+    def test_returned_fields(self):
+        results = self._get_api_GET_content()
+        baskets_names = [result["name"] for result in results]
+        test_basket = results[baskets_names.index(self.basket.name)]
+
+        direct_fields = ["id", "name", "label", "description"]
+
+        for field in direct_fields:
+            self.assertIn(field, test_basket)
+            self.assertEqual(getattr(self.basket, field), test_basket[field])
+
+        self.assertIn("user_id", test_basket)
+        self.assertEqual(self.basket.user.id, test_basket["user_id"])
+
+        self.assertIn("study_id", test_basket)
+        self.assertEqual(self.basket.study.id, UUID(test_basket["study_id"]))
+
+    def _get_api_GET_content(self) -> Dict[str, str]:
+        request = self.request_factory.get("/api/baskets/", format="json")
+        view = BasketViewSet.as_view({"get": "list"})
+        force_authenticate(request, user=self.user)
+        rendered_view = view(request).render()
+        return json.loads(rendered_view.content).get("results")
