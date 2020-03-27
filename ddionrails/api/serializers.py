@@ -38,7 +38,16 @@ class BasketHyperlinkedSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Basket
-        fields = ["user_id", "name", "label", "description", "user", "study", "study_id"]
+        fields = [
+            "id",
+            "user_id",
+            "name",
+            "label",
+            "description",
+            "user",
+            "study",
+            "study_id",
+        ]
 
 
 class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
