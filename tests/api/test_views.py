@@ -10,7 +10,7 @@ from uuid import UUID
 
 import pytest
 from django.urls import reverse
-from rest_framework.test import APIRequestFactory, force_authenticate
+from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
 from ddionrails.api.views import BasketViewSet
 from ddionrails.workspace.models import Basket, BasketVariable
@@ -416,6 +416,7 @@ def test_topic_list(client, topiclist, language, expected):
 @pytest.mark.django_db
 class TestBasketViewSet(unittest.TestCase):
 
+    API_PATH = "/api/baskets/"
     variables: List[VariableFactory] = list()
     request_factory: APIRequestFactory
 
@@ -444,12 +445,14 @@ class TestBasketViewSet(unittest.TestCase):
         return None
 
     def test_get_basket(self):
+        """Can we get the test basket from the API?"""
         results = self._get_api_GET_content()
         baskets_names = [result["name"] for result in results]
 
         self.assertIn(self.basket.name, baskets_names)
 
     def test_returned_fields(self):
+        """Define fields that need to be present in API response."""
         results = self._get_api_GET_content()
         baskets_names = [result["name"] for result in results]
         test_basket = results[baskets_names.index(self.basket.name)]
@@ -466,8 +469,42 @@ class TestBasketViewSet(unittest.TestCase):
         self.assertIn("study_id", test_basket)
         self.assertEqual(self.basket.study.id, UUID(test_basket["study_id"]))
 
+    def test_create_basket(self):
+        """Can we create a basket through the API?"""
+        basket_data = {
+            "user_id": self.user.id,
+            "study_id": str(self.study.id),
+            "name": "expected_basket",
+            "label": "expected label",
+            "description": "expected description",
+        }
+        client = APIClient()
+        request = client.post(self.API_PATH, basket_data, format="json")
+        # Only user with permisson should be able to create a basket
+        # No User logged in:
+        self.assertEqual(403, request.status_code)
+
+        # Wrong user logged in:
+        dummy_user = UserFactory(username="dummy")
+        client.force_authenticate(user=dummy_user)
+        request = client.post(self.API_PATH, basket_data, format="json")
+        self.assertEqual(403, request.status_code)
+        dummy_user.delete()
+
+        # Correct user:
+        client.force_authenticate(user=self.user)
+        request = client.post(self.API_PATH, basket_data, format="json")
+
+        baskets = self._get_api_GET_content()
+        result = [basket for basket in baskets if basket["name"] == basket_data["name"]]
+        self.assertEqual(1, len(result))
+
+        result = result[0]
+        for key, value in basket_data.items():
+            self.assertEqual(value, result.get(key))
+
     def _get_api_GET_content(self) -> Dict[str, str]:
-        request = self.request_factory.get("/api/baskets/", format="json")
+        request = self.request_factory.get(self.API_PATH, format="json")
         view = BasketViewSet.as_view({"get": "list"})
         force_authenticate(request, user=self.user)
         rendered_view = view(request).render()

@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, render
 from rest_framework import status, viewsets
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.mixins import CreateModelMixin
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from ddionrails.api.serializers import (
@@ -277,6 +277,7 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
     """
 
     serializer_class = BasketHyperlinkedSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         """get queryset according to permissions."""
