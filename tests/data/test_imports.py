@@ -329,7 +329,7 @@ class TestVariableImport:
         assert variable.concept.name == element["concept_name"]
 
 
-class TestImage(TypedDict, total=False):
+class ImageDummy(TypedDict, total=False):
     """Typing help for TestVariableImageImport."""
 
     image_file: BytesIO
@@ -342,7 +342,7 @@ class TestVariableImageImport(unittest.TestCase):
 
     variable: Variable
     variable_image_file: VariableImageFile
-    images: Dict[str, TestImage]
+    images: Dict[str, ImageDummy]
 
     def setUp(self):
         print(self.variable.name)
