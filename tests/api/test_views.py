@@ -10,9 +10,8 @@ from uuid import UUID
 
 import pytest
 from django.urls import reverse
-from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
+from rest_framework.test import APIClient, APIRequestFactory
 
-from ddionrails.api.views import BasketViewSet
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
 from tests.data.factories import VariableFactory
@@ -434,6 +433,14 @@ class TestBasketViewSet(unittest.TestCase):
         self.basket.user = self.user
         self.basket.save()
 
+        self.basket_data = {
+            "user_id": self.user.id,
+            "study_id": str(self.study.id),
+            "name": "expected_basket",
+            "label": "expected label",
+            "description": "expected description",
+        }
+
         return super().setUp()
 
     def _init_self_variables(self):
@@ -471,41 +478,41 @@ class TestBasketViewSet(unittest.TestCase):
 
     def test_create_basket(self):
         """Can we create a basket through the API?"""
-        basket_data = {
-            "user_id": self.user.id,
-            "study_id": str(self.study.id),
-            "name": "expected_basket",
-            "label": "expected label",
-            "description": "expected description",
-        }
         client = APIClient()
-        request = client.post(self.API_PATH, basket_data, format="json")
-        # Only user with permisson should be able to create a basket
-        # No User logged in:
-        self.assertEqual(403, request.status_code)
-
-        # Wrong user logged in:
-        dummy_user = UserFactory(username="dummy")
-        client.force_authenticate(user=dummy_user)
-        request = client.post(self.API_PATH, basket_data, format="json")
-        self.assertEqual(403, request.status_code)
-        dummy_user.delete()
-
-        # Correct user:
         client.force_authenticate(user=self.user)
-        request = client.post(self.API_PATH, basket_data, format="json")
+        request = client.post(self.API_PATH, self.basket_data, format="json")
 
         baskets = self._get_api_GET_content()
-        result = [basket for basket in baskets if basket["name"] == basket_data["name"]]
+        result = [
+            basket for basket in baskets if basket["name"] == self.basket_data["name"]
+        ]
         self.assertEqual(1, len(result))
 
         result = result[0]
-        for key, value in basket_data.items():
+        for key, value in self.basket_data.items():
             self.assertEqual(value, result.get(key))
 
+    def test_create_basket_no_user(self):
+        """Only a logged in user should be able to create a basket."""
+        client = APIClient()
+        request = client.post(self.API_PATH, self.basket_data, format="json")
+
+        self.assertEqual(403, request.status_code)
+
+    def test_create_basket_wrong_user(self):
+        """Only user with permissions should be able to create a basket."""
+
+        client = APIClient()
+        request = client.post(self.API_PATH, self.basket_data, format="json")
+
+        dummy_user = UserFactory(username="dummy")
+        client.force_authenticate(user=dummy_user)
+        request = client.post(self.API_PATH, self.basket_data, format="json")
+        self.assertEqual(403, request.status_code)
+        dummy_user.delete()
+
     def _get_api_GET_content(self) -> Dict[str, str]:
-        request = self.request_factory.get(self.API_PATH, format="json")
-        view = BasketViewSet.as_view({"get": "list"})
-        force_authenticate(request, user=self.user)
-        rendered_view = view(request).render()
-        return json.loads(rendered_view.content).get("results")
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        request = client.get(self.API_PATH, format="json")
+        return json.loads(request.content).get("results")
