@@ -531,6 +531,23 @@ class TestVariableViewSet(unittest.TestCase):
         self.client = APIClient()
         return super().setUp()
 
+    def test_returned_fields(self):
+        """Define fields that should be provided."""
+        expected_fields = [
+            "id",
+            "name",
+            "label",
+            "dataset_name",
+            "study_name",
+            "dataset",
+            "study",
+        ]
+        VariableFactory(name=f"test_variable")
+        response = self.client.get(self.API_PATH)
+        results = json.loads(response.content)["results"]
+        variable = results[0]
+        self.assertListEqual(expected_fields, list(variable.keys()))
+
     def test_get_variable_GET_data(self):
         """Is the get response as expected?"""
         variable_amount = 10

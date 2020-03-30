@@ -260,7 +260,7 @@ class StudyViewSet(viewsets.ModelViewSet):
 class VariableViewSet(viewsets.ModelViewSet):
     """List metadata about all variables."""
 
-    queryset = Variable.objects.all()
+    queryset = Variable.objects.all().select_related("dataset", "dataset__study")
     serializer_class = VariableSerializer
 
 
