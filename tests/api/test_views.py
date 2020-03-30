@@ -495,6 +495,14 @@ class TestBasketViewSet(unittest.TestCase):
         for key, value in self.basket_data.items():
             self.assertEqual(value, result.get(key))
 
+    def test_create_existing_basket(self):
+        """Creating an existing basket should be answered with HTTP 409."""
+        client = APIClient()
+        client.force_authenticate(user=self.user)
+        client.post(self.API_PATH, self.basket_data, format="json")
+        result = client.post(self.API_PATH, self.basket_data, format="json")
+        self.assertEqual(409, result.status_code)
+
     def test_create_basket_no_user(self):
         """Only a logged in user should be able to create a basket."""
         client = APIClient()
@@ -512,6 +520,20 @@ class TestBasketViewSet(unittest.TestCase):
         client.force_authenticate(user=dummy_user)
         request = client.post(self.API_PATH, self.basket_data, format="json")
         self.assertEqual(403, request.status_code)
+        dummy_user.delete()
+
+    def test_create_basket_superuser(self):
+        """Only user with permissions should be able to create a basket."""
+
+        client = APIClient()
+
+        dummy_user = UserFactory(username="dummy")
+        dummy_user.is_superuser = True
+        dummy_user.save()
+
+        client.force_authenticate(user=dummy_user)
+        request = client.get(self.API_PATH)
+        self.assertEqual(200, request.status_code)
         dummy_user.delete()
 
     def _get_api_GET_content(self) -> Dict[str, str]:
