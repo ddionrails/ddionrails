@@ -16,6 +16,7 @@ from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
 from tests.data.factories import VariableFactory
 from tests.factories import UserFactory
+from tests.workspace.factories import BasketVariableFactory
 
 LANGUAGE = "en"
 
@@ -597,3 +598,47 @@ class TestVariableViewSet(unittest.TestCase):
         self.assertEqual(variable_amount, content["count"])
         results = content.get("results")
         self.assertEqual(100, len(results))
+
+
+@pytest.mark.django_db
+class TestBasketVariableSet(unittest.TestCase):
+
+    API_PATH = "/api/basket-variables/"
+    client: APIClient
+
+    def setUp(self):
+        self.client = APIClient()
+        self.basket_variable = BasketVariableFactory()
+        self.basket_variable.save()
+        self.user = self.basket_variable.basket.user
+        return super().setUp()
+
+    def test_get_basket_variable_GET_data(self):
+        """Can we get basket variable data."""
+        self.client.force_authenticate(user=self.user)
+        response = self.client.get(self.API_PATH)
+        results = json.loads(response.content)["results"]
+        basket = results[0]
+        self.assertEqual(self.basket_variable.basket_id, basket["basket_id"])
+        self.assertEqual(str(self.basket_variable.variable_id), basket["variable_id"])
+
+    def test_get_basket_variable_GET_data_as_superuser(self):
+        """Can we get basket variable data."""
+        superuser = UserFactory(username="super_tester")
+        superuser.is_superuser = True
+        superuser.save()
+        self.client.force_authenticate(user=superuser)
+        response = self.client.get(self.API_PATH)
+        results = json.loads(response.content)["results"]
+        basket = results[0]
+        self.assertEqual(self.basket_variable.basket_id, basket["basket_id"])
+        self.assertEqual(str(self.basket_variable.variable_id), basket["variable_id"])
+        superuser.delete()
+
+    def test_get_basket_variable_GET_data_unauthorized(self):
+        """Can we get basket variable data."""
+        response = self.client.get(self.API_PATH)
+        self.assertEqual(200, response.status_code)
+
+        content = json.loads(response.content)
+        self.assertEqual(0, content["count"])

@@ -320,7 +320,7 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
 class BasketVariableSet(viewsets.ModelViewSet):
     """List metadata about Baskets depending on user permissions."""
 
-    queryset = BasketVariable.objects.all()
+    queryset = BasketVariable.objects.all().select_related("basket", "variable")
     serializer_class = BasketVariableSerializer
 
     def get_queryset(self):
