@@ -480,7 +480,7 @@ class TestBasketViewSet(unittest.TestCase):
         """Can we create a basket through the API?"""
         client = APIClient()
         client.force_authenticate(user=self.user)
-        request = client.post(self.API_PATH, self.basket_data, format="json")
+        client.post(self.API_PATH, self.basket_data, format="json")
 
         baskets = self._get_api_GET_content()
         result = [
