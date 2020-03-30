@@ -412,6 +412,9 @@ def test_topic_list(client, topiclist, language, expected):
     response_is_json(response)
 
 
+######## Test new API units
+
+
 @pytest.mark.django_db
 class TestBasketViewSet(unittest.TestCase):
 
@@ -516,3 +519,42 @@ class TestBasketViewSet(unittest.TestCase):
         client.force_authenticate(user=self.user)
         request = client.get(self.API_PATH, format="json")
         return json.loads(request.content).get("results")
+
+
+@pytest.mark.django_db
+class TestVariableViewSet(unittest.TestCase):
+
+    API_PATH = "/api/variables/"
+    client: APIClient
+
+    def setUp(self):
+        self.client = APIClient()
+        return super().setUp()
+
+    def test_get_variable_GET_data(self):
+        """Is the get response as expected?"""
+        variable_amount = 10
+        variables = list()
+        for number in range(1, variable_amount + 1):
+            variables.append(VariableFactory(name=f"{number}"))
+        response = self.client.get(self.API_PATH)
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertEqual(variable_amount, content["count"])
+        results = content.get("results")
+        result_ids = [result["id"] for result in results]
+        for variable in variables:
+            self.assertIn(str(variable.id), result_ids)
+
+    def test_scroll_limit(self):
+        """Is the scroll limit at 100 as expected?"""
+        variable_amount = 101
+        variables = list()
+        for number in range(1, variable_amount + 1):
+            variables.append(VariableFactory(name=f"{number}"))
+        response = self.client.get(self.API_PATH)
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertEqual(variable_amount, content["count"])
+        results = content.get("results")
+        self.assertEqual(100, len(results))
