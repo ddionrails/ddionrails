@@ -14,8 +14,10 @@ from rest_framework.test import APIClient, APIRequestFactory
 
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
-from tests.data.factories import VariableFactory
+from tests.concepts.factories import ConceptFactory, TopicFactory
+from tests.data.factories import DatasetFactory, VariableFactory
 from tests.factories import UserFactory
+from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketVariableFactory
 
 LANGUAGE = "en"
@@ -552,7 +554,78 @@ class TestVariableViewSet(unittest.TestCase):
 
     def setUp(self):
         self.client = APIClient()
+        self.concept = ConceptFactory(name="test-concept")
+        self.topic = TopicFactory(name="test-topic")
         return super().setUp()
+
+    def test_query_parameter_conflict(self):
+        concept_name = self.concept.name
+        topic_name = self.topic.name
+        response = self.client.get(
+            self.API_PATH + f"?concept={concept_name}&topic={topic_name}"
+        )
+        self.assertEqual(406, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn("mutually exclusive", content["detail"])
+
+        response = self.client.get(self.API_PATH + f"?topic={topic_name}")
+        self.assertEqual(406, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn("requires study parameter", content["detail"])
+
+    def test_404_errors(self):
+        study = "some-nonexistent-study"
+        call_string = f"{self.API_PATH}?study={study}"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+        concept = "some-nonexistent-concept"
+        call_string = f"{self.API_PATH}?concept={concept}"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+        topic = "some-nonexistent-topic"
+        call_string = f"{self.API_PATH}?topic={topic}&study=dummy"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+    def test_query_parameter_concept(self):
+        concept_name = self.concept.name
+        variable_list = list()
+
+        for number in range(1, 11):
+            _variable = VariableFactory(name=str(number))
+            _variable.concept = self.concept
+            _variable.save()
+            variable_list.append(_variable)
+
+        for number in range(11, 21):
+            _variable = VariableFactory(name=str(number))
+            variable_list.append(_variable)
+
+        response = self.client.get(self.API_PATH + f"?concept={concept_name}")
+        content = json.loads(response.content)
+        self.assertEqual(10, content["count"])
+
+    def test_query_parameter_study(self):
+        """Define study parameter behavior."""
+        dataset = DatasetFactory(name="different-dataset")
+        study = StudyFactory(name="different-study")
+        study_name = study.name
+        dataset.study = study
+        dataset.save()
+        variable_list = list()
+
+        for number in range(1, 11):
+            _variable = VariableFactory(name=str(number))
+            _variable.dataset = dataset
+            _variable.save()
+            variable_list.append(_variable)
+
+        for number in range(11, 21):
+            _variable = VariableFactory(name=str(number))
+            variable_list.append(_variable)
+
+        response = self.client.get(self.API_PATH + f"?study={study_name}")
+        content = json.loads(response.content)
+        self.assertEqual(10, content["count"])
 
     def test_returned_fields(self):
         """Define fields that should be provided."""

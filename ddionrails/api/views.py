@@ -10,7 +10,7 @@ from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework import status, viewsets
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
@@ -262,6 +262,40 @@ class VariableViewSet(viewsets.ModelViewSet):
 
     queryset = Variable.objects.all().select_related("dataset", "dataset__study")
     serializer_class = VariableSerializer
+
+    def get_queryset(self):
+        topic = self.request.query_params.get("topic", None)
+        concept = self.request.query_params.get("concept", None)
+        study = self.request.query_params.get("study", None)
+        queryset_filter = dict()
+        if topic and concept:
+            raise NotAcceptable(
+                detail="Concept and topic are mutually exclusive parameters."
+            )
+
+        if topic:
+            if study:
+                topic_object: Topic = get_object_or_404(
+                    Topic, name=topic, study__name=study
+                )
+                children = [
+                    topic.id for topic in topic_object.get_children(topic_object.id)
+                ]
+                queryset_filter["concept__topics__id__in"] = children
+            else:
+                raise NotAcceptable(
+                    detail="Topic parameter requires study parameter to be present as well."
+                )
+        if concept:
+            concept_object = get_object_or_404(Concept, name=concept)
+            queryset_filter["concept_id"] = concept_object.id
+        if study:
+            study_object = get_object_or_404(Study, name=study)
+            queryset_filter["dataset__study_id"] = study_object.id
+
+        return Variable.objects.filter(**queryset_filter).select_related(
+            "dataset", "dataset__study"
+        )
 
 
 class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
