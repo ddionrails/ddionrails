@@ -6,6 +6,7 @@
 import json
 import unittest
 from typing import Dict, List
+from unittest.mock import PropertyMock, patch
 from uuid import UUID
 
 import pytest
@@ -683,7 +684,9 @@ class TestBasketVariableSet(unittest.TestCase):
         self.client = APIClient()
         self.basket_variable = BasketVariableFactory()
         self.basket_variable.save()
-        self.user = self.basket_variable.basket.user
+        self.variable = self.basket_variable.variable
+        self.basket = self.basket_variable.basket
+        self.user = self.basket.user
         return super().setUp()
 
     def test_get_basket_variable_GET_data(self):
@@ -711,7 +714,40 @@ class TestBasketVariableSet(unittest.TestCase):
     def test_get_basket_variable_GET_data_unauthorized(self):
         """Can we get basket variable data."""
         response = self.client.get(self.API_PATH)
-        self.assertEqual(200, response.status_code)
+        self.assertEqual(403, response.status_code)
 
-        content = json.loads(response.content)
-        self.assertEqual(0, content["count"])
+    def test_POST_basket_variables(self):
+        """Can we fill a basket with variables?"""
+        new_variable = VariableFactory(name="new-test-variable")
+        new_variable.dataset = self.variable.dataset
+        new_variable.save()
+        post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
+
+        self.client.force_authenticate(user=self.user)
+        post_response = self.client.post(self.API_PATH, post_data, format="json")
+        self.assertEqual(201, post_response.status_code)
+
+        result = self.client.get(f"{self.API_PATH}")
+        results = json.loads(result.content)["results"]
+
+        self.assertIn(
+            True, [result["variable_id"] == str(self.variable.id) for result in results]
+        )
+
+    def test_basket_variable_limit(self):
+        too_many_variables = [
+            VariableFactory(name=str(number)) for number in range(1, 11)
+        ]
+        too_many_variable_ids = [str(variable.id) for variable in too_many_variables]
+        with patch(
+            "ddionrails.api.views.BasketVariableSet.basket_limit",
+            new_callable=PropertyMock,
+        ) as basket_limit:
+            basket_limit.return_value = 10
+            post_data = {
+                "basket": str(self.basket.id),
+                "variables": too_many_variable_ids,
+            }
+            self.client.force_authenticate(user=self.user)
+            post_response = self.client.post(self.API_PATH, post_data, format="json")
+            self.assertEqual(406, post_response.status_code)

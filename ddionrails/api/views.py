@@ -351,17 +351,47 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-class BasketVariableSet(viewsets.ModelViewSet):
+class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
     """List metadata about Baskets depending on user permissions."""
 
     queryset = BasketVariable.objects.all().select_related("basket", "variable")
     serializer_class = BasketVariableSerializer
+    permission_classes = (IsAuthenticated,)
+    BASKET_LIMIT = 1000
+
+    @property
+    def basket_limit(self):
+        """The global size limit for all Baskets."""
+        return self.BASKET_LIMIT
 
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
             return BasketVariable.objects.all()
         return BasketVariable.objects.filter(basket__user=user.id)
+
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        basket = Basket.objects.get(id=data.get("basket"))
+        basket_variables = list()
+        basket_size = BasketVariable.objects.filter(basket=basket.id).count()
+
+        if data.get("variables", False):
+            variables = list(Variable.objects.filter(id__in=data["variables"]))
+            if len(variables) + basket_size > self.basket_limit:
+                raise NotAcceptable()
+            for variable in variables:
+                basket_variables.append(BasketVariable(variable=variable, basket=basket))
+
+        BasketVariable.objects.bulk_create(basket_variables)
+
+        serialized = list()
+        for basket_variable in basket_variables:
+            serializer = self.serializer_class(
+                basket_variable, context={"request": request}
+            )
+            serialized.append(serializer.data)
+        return Response(serialized, status=status.HTTP_201_CREATED)
 
 
 class UserViewSet(viewsets.ModelViewSet):
