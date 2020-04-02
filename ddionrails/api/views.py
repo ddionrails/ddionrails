@@ -279,12 +279,17 @@ class VariableViewSet(viewsets.ModelViewSet):
                     Topic, name=topic, study__name=study
                 )
                 children = [
-                    topic.id for topic in topic_object.get_children(topic_object.id)
+                    topic.id
+                    for topic in topic_object.get_topic_tree_leaves(
+                        topic_object=topic_object
+                    )
                 ]
                 queryset_filter["concept__topics__id__in"] = children
             else:
                 raise NotAcceptable(
-                    detail="Topic parameter requires study parameter to be present as well."
+                    detail=(
+                        "Topic parameter requires study parameter to be present as well."
+                    )
                 )
         if concept:
             concept_object = get_object_or_404(Concept, name=concept)

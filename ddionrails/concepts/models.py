@@ -84,9 +84,9 @@ class Topic(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -101,14 +101,35 @@ class Topic(models.Model, ModelMixin):
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "parent"]
 
-    @classmethod
-    def get_children(cls, topic_id: int) -> List[Topic]:
+    @staticmethod
+    def get_children(topic_id: int) -> List[Topic]:
         """ Returns a list of all Topics, that have this Topic object as its ancestor """
-        # TODO: Refactor this. This implementation is strange.
-        children = list(cls.objects.filter(parent_id=topic_id).all())
+        children = list(Topic.objects.filter(parent_id=topic_id).all())
         for child in children:
-            children += list(cls.get_children(child.id))
+            children += list(Topic.get_children(child.id))
         return children
+
+    @staticmethod
+    def get_topic_tree_leaves(
+        topic_object: Topic = None, topic_id: uuid.UUID = ""
+    ) -> List[Topic]:
+        """Get all ancestor Topics with no further child topics.
+
+        Works recursively similar to get_children but does not return
+        intermediate Topics.
+        """
+        if topic_object:
+            children = list(Topic.objects.filter(parent_id=topic_object.id).all())
+        elif topic_id:
+            children = list(Topic.objects.filter(parent_id=topic_id).all())
+            topic_object = Topic.objects.get(id=topic_id)
+        if not children:
+            return [topic_object]
+
+        grand_children = list()
+        for child in children:
+            grand_children += list(Topic.get_topic_tree_leaves(topic_object=child))
+        return grand_children
 
 
 class Concept(ModelMixin, models.Model):
@@ -187,9 +208,9 @@ class Concept(ModelMixin, models.Model):
         happen, it is circumvented by concatenating each name with the
         literal string `concept:`.
         """
-        self.id = hash_with_base_uuid(
+        self.id = hash_with_base_uuid(  # pylint: disable=C0103
             "concept:" + self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -280,9 +301,9 @@ class Period(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -363,9 +384,9 @@ class AnalysisUnit(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save()."""
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -443,9 +464,9 @@ class ConceptualDataset(models.Model, ModelMixin):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """Set id and call parents save()."""
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
