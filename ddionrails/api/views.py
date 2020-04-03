@@ -3,7 +3,7 @@
 """ Views for ddionrails.api app """
 
 import uuid
-from typing import Union
+from typing import List, Union
 
 from django.contrib.auth.models import User
 from django.core.handlers.wsgi import WSGIRequest
@@ -364,6 +364,18 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
     permission_classes = (IsAuthenticated,)
     BASKET_LIMIT = 1000
 
+    DATA_MISSING_ERROR_MESSAGE = (
+        "No set of variables was specified. "
+        "To add variables to a basket specify either a list of variables, "
+        "a topic or a concept fr9om which to add variables."
+    )
+
+    def _basket_limit_error_message(self, basket_size: int, variables: int):
+        return (
+            f"The basket contains {basket_size} variables, adding {variables}"
+            f"exceeds the basket size limit of {self.basket_limit}."
+        )
+
     @property
     def basket_limit(self):
         """The global size limit for all Baskets."""
@@ -377,26 +389,51 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
+
+        if "basket" not in data:
+            raise NotAcceptable(detail="Target basket needs to be specified.")
+
         basket = Basket.objects.get(id=data.get("basket"))
         basket_variables = list()
         basket_size = BasketVariable.objects.filter(basket=basket.id).count()
 
-        if data.get("variables", False):
-            variables = list(Variable.objects.filter(id__in=data["variables"]))
-            if len(variables) + basket_size > self.basket_limit:
-                raise NotAcceptable()
-            for variable in variables:
-                basket_variables.append(BasketVariable(variable=variable, basket=basket))
+        self._test_exclusivity(["topic" in data, "variables" in data, "concept" in data])
+
+        variable_filter = dict()
+
+        if "variables" in data:
+            variable_filter = {"id__in": data["variables"]}
+
+        if "topic" in data:
+            variable_filter = {
+                "concept__topics__in": Topic.get_topic_tree_leaves(
+                    topic_id=uuid.UUID(data["topic"])
+                )
+            }
+
+        variables = Variable.objects.filter(**variable_filter)
+        if len(variables) + basket_size > self.basket_limit:
+            raise NotAcceptable(
+                detail=self._basket_limit_error_message(basket_size, len(variables))
+            )
+        for variable in variables:
+            basket_variables.append(BasketVariable(variable=variable, basket=basket))
 
         BasketVariable.objects.bulk_create(basket_variables)
 
-        serialized = list()
-        for basket_variable in basket_variables:
-            serializer = self.serializer_class(
-                basket_variable, context={"request": request}
+        return Response(len(variables), status=status.HTTP_201_CREATED)
+
+    def _test_exclusivity(self, values: List[bool]) -> bool:
+        """Check if only one boolean in list of booleans is True."""
+        mutually_exclusive_violation = 0
+        for value in values:
+            mutually_exclusive_violation += value
+        if mutually_exclusive_violation > 1:
+            raise NotAcceptable(
+                detail="Keys topic, concept and variables are mutually exclusive."
             )
-            serialized.append(serializer.data)
-        return Response(serialized, status=status.HTTP_201_CREATED)
+        if mutually_exclusive_violation == 0:
+            raise NotAcceptable(detail=self.DATA_MISSING_ERROR_MESSAGE)
 
 
 class UserViewSet(viewsets.ModelViewSet):

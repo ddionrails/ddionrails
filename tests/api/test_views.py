@@ -734,7 +734,29 @@ class TestBasketVariableSet(unittest.TestCase):
             True, [result["variable_id"] == str(self.variable.id) for result in results]
         )
 
+    def test_POST_basket_variables_by_topic(self):
+        """Define how basket variable creation by topic should work."""
+        topic = TopicFactory(name="parent-topic")
+        child_topic = TopicFactory(name="parent-topic", parent=topic)
+        concept = ConceptFactory(name="some-concept")
+        concept.topics.set([child_topic])
+        concept.save()
+        variables = [VariableFactory(name="1"), VariableFactory(name="2")]
+        variables[1].concept = concept
+        variables[1].save()
+
+        post_data = {"basket": str(self.basket.id), "topic": str(topic.id)}
+        self.client.force_authenticate(user=self.user)
+        post_response = self.client.post(self.API_PATH, post_data, format="json")
+        self.assertEqual(201, post_response.status_code)
+        get_response = self.client.get(self.API_PATH)
+        content = json.loads(get_response.content)
+        result_ids = [result["variable_id"] for result in content["results"]]
+        self.assertIn(str(variables[1].id), result_ids)
+        self.assertNotIn(str(variables[0].id), result_ids)
+
     def test_basket_variable_limit(self):
+        """Define how the basket limit should work."""
         too_many_variables = [
             VariableFactory(name=str(number)) for number in range(1, 11)
         ]
