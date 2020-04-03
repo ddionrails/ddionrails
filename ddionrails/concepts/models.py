@@ -123,6 +123,8 @@ class Topic(models.Model, ModelMixin):
         elif topic_id:
             children = list(Topic.objects.filter(parent_id=topic_id).all())
             topic_object = Topic.objects.get(id=topic_id)
+        else:
+            return []
         if not children:
             return [topic_object]
 
