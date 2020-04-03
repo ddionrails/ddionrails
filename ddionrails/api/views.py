@@ -397,9 +397,14 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         basket_variables = list()
         basket_size = BasketVariable.objects.filter(basket=basket.id).count()
 
-        self._test_exclusivity(["topic" in data, "variables" in data, "concept" in data])
+        self._test_exclusivity(
+            ["variables" in data, "concept" in data, "topic" in data]
+            + ["concept_name" in data, "topic_name" in data]
+        )
 
         variable_filter = dict()
+
+        data = self._get_object_id(data, basket)
 
         if "variables" in data:
             variable_filter = {"id__in": data["variables"]}
@@ -426,6 +431,18 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         BasketVariable.objects.bulk_create(basket_variables)
 
         return Response(len(variables), status=status.HTTP_201_CREATED)
+
+    @staticmethod
+    def _get_object_id(data, basket):
+
+        if "topic_name" in data:
+            data["topic"] = str(
+                Topic.objects.get(name=data["topic_name"], study=basket.study).id
+            )
+        if "concept_name" in data:
+            data["concept"] = str(Concept.objects.get(name=data["concept_name"]).id)
+
+        return data
 
     def _test_exclusivity(self, values: List[bool]) -> bool:
         """Check if only one boolean in list of booleans is True."""
