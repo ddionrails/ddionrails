@@ -373,7 +373,7 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
     def _basket_limit_error_message(self, basket_size: int, variables: int):
         return (
             f"The basket contains {basket_size} variables, adding {variables}"
-            f"exceeds the basket size limit of {self.basket_limit}."
+            f"variables would exceed the basket size limit of {self.basket_limit}."
         )
 
     @property
@@ -411,7 +411,11 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
                 )
             }
 
+        if "concept" in data:
+            variable_filter = {"concept__id": uuid.UUID(data["concept"])}
+
         variables = Variable.objects.filter(**variable_filter)
+
         if len(variables) + basket_size > self.basket_limit:
             raise NotAcceptable(
                 detail=self._basket_limit_error_message(basket_size, len(variables))
