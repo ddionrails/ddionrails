@@ -104,14 +104,20 @@
           "arrays": "always-multiline",
           "objects": "always-multiline",
           "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
+          "exports": "always-multiline"
         }
       ],
       "complexity": [
         "error",
         {
-          "max": 4
+          "max": 6
+        }
+      ],
+      "indent": [
+        "error",
+        2,
+        {
+          "MemberExpression": 1
         }
       ]
     }
