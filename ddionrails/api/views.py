@@ -2,7 +2,6 @@
 
 """ Views for ddionrails.api app """
 
-import json
 import uuid
 from typing import List, Union
 

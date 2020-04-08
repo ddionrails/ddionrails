@@ -224,7 +224,7 @@ function removeAsyncLoadedData(activeNode, type) {
   const children = activeNode.getChildren();
   const tmp = [];
   if (children) {
-    for (const i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       // eslint-disable-next-line security/detect-object-injection
       const node = $.ui.fancytree.getNode(children[i]);
       const extraClasses = node.extraClasses || "";
@@ -232,7 +232,7 @@ function removeAsyncLoadedData(activeNode, type) {
         tmp.push(node);
       }
     }
-    for (const i = 0; i < tmp.length; i++) {
+    for (let i = 0; i < tmp.length; i++) {
       // eslint-disable-next-line security/detect-object-injection
       tmp[i].remove();
     }
@@ -353,7 +353,7 @@ function addToBasketRequest(nodeKey, basketId) {
   client.setRequestHeader("Accept", "application/json");
 
   client.onreadystatechange = function() {
-    if (client.readyState == XMLHttpRequest.DONE) {
+    if (client.readyState === XMLHttpRequest.DONE) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
       if (200 <= status <= 201) {
