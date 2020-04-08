@@ -2,6 +2,7 @@
 
 """ Views for ddionrails.api app """
 
+import json
 import uuid
 from typing import List, Union
 
@@ -395,7 +396,11 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
 
         basket = Basket.objects.get(id=data.get("basket"))
         basket_variables = list()
-        basket_size = BasketVariable.objects.filter(basket=basket.id).count()
+        basket_content = [
+            variable.variable.id
+            for variable in BasketVariable.objects.filter(basket=basket.id)
+        ]
+        basket_size = len(basket_content)
 
         self._test_exclusivity(
             ["variables" in data, "concept" in data, "topic" in data]
@@ -418,8 +423,9 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
 
         if "concept" in data:
             variable_filter = {"concept__id": uuid.UUID(data["concept"])}
-
-        variables = Variable.objects.filter(**variable_filter)
+        variables = Variable.objects.filter(**variable_filter).exclude(
+            id__in=basket_content
+        )
 
         if len(variables) + basket_size > self.basket_limit:
             raise NotAcceptable(
@@ -429,8 +435,20 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
             basket_variables.append(BasketVariable(variable=variable, basket=basket))
 
         BasketVariable.objects.bulk_create(basket_variables)
+        if len(variables) == 0:
+            return Response(
+                {"detail": "No new variables to add to this Basket."},
+                status=status.HTTP_200_OK,
+            )
 
-        return Response(len(variables), status=status.HTTP_201_CREATED)
+        return Response(
+            {
+                "detail": "Successfully added "
+                + str(len(variables))
+                + " variables to this Basket."
+            },
+            status=status.HTTP_201_CREATED,
+        )
 
     @staticmethod
     def _get_object_id(data, basket):

@@ -749,6 +749,10 @@ class TestBasketVariableSet(unittest.TestCase):
         self.client.force_authenticate(user=self.user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(201, post_response.status_code)
+        content = json.loads(post_response.content)
+        self.assertEqual(
+            "Successfully added 1 variables to this Basket.", content["detail"]
+        )
         get_response = self.client.get(self.API_PATH)
         content = json.loads(get_response.content)
         result_ids = [result["variable_id"] for result in content["results"]]
