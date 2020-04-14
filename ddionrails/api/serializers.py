@@ -53,6 +53,9 @@ class BasketHyperlinkedSerializer(serializers.HyperlinkedModelSerializer):
 class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
     """Serialize a relationship between a Basket and a Variable."""
 
+    id = serializers.HyperlinkedRelatedField(
+        view_name=NAMESPACE + ":basket-variables-detail", read_only=True
+    )
     basket = BasketRelatedField()
     basket_id = serializers.SlugRelatedField(
         source="basket", read_only=True, slug_field="id"
@@ -69,7 +72,7 @@ class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = BasketVariable
-        fields = ["basket", "basket_id", "variable", "variable_id"]
+        fields = ["id", "basket", "basket_id", "variable", "variable_id"]
 
 
 class VariableSerializer(serializers.HyperlinkedModelSerializer):

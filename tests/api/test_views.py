@@ -746,6 +746,56 @@ class TestBasketVariableSet(unittest.TestCase):
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(403, post_response.status_code)
 
+    def test_DELETE_basket_variables(self):
+        """Can we delete a BasketVariable"""
+        new_variable = VariableFactory(name="new-test-variable")
+        new_variable.dataset = self.variable.dataset
+        new_variable.save()
+        post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
+
+        self.client.force_authenticate(user=self.user)
+        post_response = self.client.post(self.API_PATH, post_data, format="json")
+        self.assertEqual(201, post_response.status_code)
+
+        result = self.client.get(f"{self.API_PATH}")
+        results = json.loads(result.content)["results"]
+
+        self.assertIn(
+            True, [result["variable_id"] == str(self.variable.id) for result in results]
+        )
+
+        basket_variable_id = BasketVariable.objects.get(
+            basket_id=self.basket.id, variable_id=new_variable.id
+        ).id
+
+        self.client.delete(self.API_PATH + f"{basket_variable_id}/")
+        result = self.client.get(f"{self.API_PATH}")
+        results = json.loads(result.content)["results"]
+
+        self.assertNotIn(
+            True, [result["variable_id"] == str(new_variable) for result in results]
+        )
+
+    def test_DELETE_basket_variables_no_permission(self):
+        """Can we fill a basket with variables?"""
+        user = UserFactory(username="unauthorized")
+
+        new_variable = VariableFactory(name="new-test-variable")
+        new_variable.dataset = self.variable.dataset
+        new_variable.save()
+        post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
+
+        self.client.force_authenticate(user=user)
+        self.client.post(self.API_PATH, post_data, format="json")
+
+        basket_variable = BasketVariable.objects.get(
+            basket_id=self.basket.id, variable_id=self.variable.id
+        )
+        basket_variable_id = basket_variable.id
+
+        response = self.client.delete(self.API_PATH + f"{basket_variable_id}/")
+        self.assertEqual(403, response.status_code)
+
     def test_POST_basket_variables_by_topic(self):
         """Define how basket variable creation by topic should work."""
         topic = TopicFactory(name="parent-topic")

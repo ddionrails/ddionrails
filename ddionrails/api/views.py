@@ -11,7 +11,7 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
-from rest_framework.mixins import CreateModelMixin
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
@@ -303,7 +303,7 @@ class VariableViewSet(viewsets.ModelViewSet):
         )
 
 
-class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
+class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin):
     """List baskets or create a single basket.
 
     Baskets are returned according to permissions.
