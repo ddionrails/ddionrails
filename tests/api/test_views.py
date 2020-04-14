@@ -698,6 +698,23 @@ class TestBasketVariableSet(unittest.TestCase):
         self.assertEqual(self.basket_variable.basket_id, basket["basket_id"])
         self.assertEqual(str(self.basket_variable.variable_id), basket["variable_id"])
 
+    def test_get_basket_variable_GET_with_url_param(self):
+        """Can we get a basket variable with url params"""
+        self.client.force_authenticate(user=self.user)
+        new_basket_variable = BasketVariable()
+        new_basket_variable.basket = self.basket
+        new_basket_variable.variable = VariableFactory(name="new_variable")
+        new_basket_variable.save()
+
+        response = self.client.get(
+            self.API_PATH
+            + f"?variable={new_basket_variable.variable.id}&basket={self.basket.id}"
+        )
+        results = json.loads(response.content)["results"]
+        basket = results[0]
+        self.assertEqual(self.basket.id, basket["basket_id"])
+        self.assertEqual(str(new_basket_variable.variable.id), basket["variable_id"])
+
     def test_get_basket_variable_GET_data_as_superuser(self):
         """Can we get basket variable data."""
         superuser = UserFactory(username="super_tester")

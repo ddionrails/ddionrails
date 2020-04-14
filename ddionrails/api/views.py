@@ -407,12 +407,20 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         return self.BASKET_LIMIT
 
     def get_queryset(self):
+        _filter = dict()
+        basket = self.request.query_params.get("basket", None)
+        variable = self.request.query_params.get("variable", None)
+
+        if basket and variable:
+            _filter["basket_id"] = basket
+            _filter["variable_id"] = uuid.UUID(variable)
+
         if self.request.method == "GET":
             user = self.request.user
-            if user.is_superuser:
-                return BasketVariable.objects.all()
-            return BasketVariable.objects.filter(basket__user=user.id)
-        return self.queryset
+            if not user.is_superuser:
+                _filter["basket__user"] = user.id
+
+        return self.queryset.filter(**_filter)
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
