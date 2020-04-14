@@ -119,6 +119,10 @@
         {
           "MemberExpression": 1
         }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "never"
       ]
     }
   }
