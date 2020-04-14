@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
-from rest_framework import status, viewsets
+from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -356,12 +356,37 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
+class IsBasketOwner(permissions.BasePermission):
+    """ Limit creation and deletion premissions of BasketVariables.
+
+    Users should only be allowed to create or delete BasketVariables for Baskets that
+    they own.
+
+    Superusers are exempt and can manipulate all BasketVariables.
+    """
+
+    def has_permission(self, request, view):
+        if request.user.is_superuser:
+            return True
+        if request.method == "POST":
+            if "basket" in request.data:
+                basket = Basket.objects.get(id=request.data["basket"])
+                return basket.user == request.user
+            return False
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+        return obj.basket.user == request.user
+
+
 class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
     """List metadata about Baskets depending on user permissions."""
 
     queryset = BasketVariable.objects.all().select_related("basket", "variable")
     serializer_class = BasketVariableSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsBasketOwner)
     BASKET_LIMIT = 1000
 
     DATA_MISSING_ERROR_MESSAGE = (
@@ -382,10 +407,12 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         return self.BASKET_LIMIT
 
     def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return BasketVariable.objects.all()
-        return BasketVariable.objects.filter(basket__user=user.id)
+        if self.request.method == "GET":
+            user = self.request.user
+            if user.is_superuser:
+                return BasketVariable.objects.all()
+            return BasketVariable.objects.filter(basket__user=user.id)
+        return self.queryset
 
     def create(self, request, *args, **kwargs):
         data = self.request.data
