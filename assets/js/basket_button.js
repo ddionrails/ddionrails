@@ -118,7 +118,7 @@ function removeBasketVariable(basket, basketName, variable, basketButton) {
   url.searchParams.append("basket", basket);
 
   const getClient = new XMLHttpRequest();
-  getClient.open("GET", url, false);
+  getClient.open("GET", url, true);
   getClient.setRequestHeader("Content-type", "application/json");
 
   const csrfTokenRegExp = new RegExp("csrftoken=(\\w+)(?:; )?", "g");
@@ -127,25 +127,33 @@ function removeBasketVariable(basket, basketName, variable, basketButton) {
   const csrfToken = csrfMatch[1];
   getClient.withCredentials = true;
   getClient.setRequestHeader("X-CSRFToken", csrfToken);
+  getClient.onreadystatechange = function() {
+    if (getClient.readyState === XMLHttpRequest.DONE) {
+      try {
+        const _response = JSON.parse(getClient.responseText);
+        const basketVariableURL = _response["results"][0]["id"];
+
+        const client = new XMLHttpRequest();
+        client.open("DELETE", basketVariableURL, true);
+        client.setRequestHeader("Content-type", "application/json");
+        client.withCredentials = true;
+        client.setRequestHeader("X-CSRFToken", csrfToken);
+        client.send();
+      } catch (SyntaxError) {
+        window.alert("Variable is not part of this Basket.");
+      }
+
+
+      basketButton.toggleClass("btn-success btn-danger");
+      basketButton.text(`Add to basket`);
+      basketButton.unbind("click");
+      basketButton.click(function() {
+        addBasketVariable(basket, basketName, variable, basketButton);
+      });
+    }
+  };
+
   getClient.send();
-
-  const _response = JSON.parse(getClient.responseText);
-  const basketVariable = _response["results"][0]["id"];
-
-
-  const client = new XMLHttpRequest();
-  client.open("DELETE", basketVariable, true);
-  client.setRequestHeader("Content-type", "application/json");
-
-  client.withCredentials = true;
-  client.setRequestHeader("X-CSRFToken", csrfToken);
-  client.send();
-  basketButton.toggleClass("btn-success btn-danger");
-  basketButton.text(`Add to basket`);
-  basketButton.unbind("click");
-  basketButton.click(function() {
-    addBasketVariable(basket, basketName, variable, basketButton);
-  });
 }
 
 
