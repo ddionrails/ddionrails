@@ -10,29 +10,21 @@ const BasketVariableAPI = new URL(
 
 const basketButton = (function() {
   const addVariable = function($button, $count) {
-    $.ajax({
-      url: "/workspace/baskets/" +
-        $button.attr("basket_id") +
-        "/add/" +
-        $button.attr("variable_id"),
-      success: function() {
-        $button.removeClass("btn-default");
-        $button.addClass("btn-success");
-      },
-    });
+    addBasketVariable(
+      $button.attr("basket_id"),
+      $button.attr("variable_id"),
+      null
+    );
+    $button.toggleClass("btn-success btn-default");
   };
 
   const removeVariable = function($button, $count) {
-    $.ajax({
-      url: "/workspace/baskets/" +
-        $button.attr("basket_id") +
-        "/remove/" +
-        $button.attr("variable_id"),
-      success: function() {
-        $button.removeClass("btn-success");
-        $button.addClass("btn-default");
-      },
-    });
+    removeBasketVariable(
+      $button.attr("basket_id"),
+      $button.attr("variable_id"),
+      null
+    );
+    $button.toggleClass("btn-success btn-default");
   };
 
   const handleButton = function() {
@@ -60,11 +52,10 @@ $(function() {
  * Changes the Button onlcick event to removeBasketVariable after adding
  * the variable.
  * @param {number} basket The internal id of the basket
- * @param {string} basketName The display name of the basket
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function addBasketVariable(basket, basketName, variable, basketButton) {
+function addBasketVariable(basket, variable, basketButton) {
   const postData = {
     basket: basket,
   };
@@ -88,12 +79,14 @@ function addBasketVariable(basket, basketName, variable, basketButton) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
       if (200 <= status <= 201) {
-        basketButton.toggleClass("btn-success btn-danger");
-        basketButton.text(`Remove from basket`);
-        basketButton.unbind("click");
-        basketButton.click(function() {
-          removeBasketVariable(basket, basketName, variable, basketButton);
-        });
+        if (BasketVariableAPI) {
+          basketButton.toggleClass("btn-success btn-danger");
+          basketButton.text(`Remove from basket`);
+          basketButton.unbind("click");
+          basketButton.click(function() {
+            removeBasketVariable(basket, variable, basketButton);
+          });
+        }
       }
       if (status >= 400) {
         window.alert(_response["detail"]);
@@ -108,11 +101,10 @@ function addBasketVariable(basket, basketName, variable, basketButton) {
  * Changes the Button onlcick event to addBasketVariable after removing
  * the variable.
  * @param {number} basket The internal id of the basket
- * @param {string} basketName The display name of the basket
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function removeBasketVariable(basket, basketName, variable, basketButton) {
+function removeBasketVariable(basket, variable, basketButton) {
   const url = new URL(BasketVariableAPI);
   url.searchParams.append("variable", variable);
   url.searchParams.append("basket", basket);
@@ -143,13 +135,14 @@ function removeBasketVariable(basket, basketName, variable, basketButton) {
         window.alert("Variable is not part of this Basket.");
       }
 
-
-      basketButton.toggleClass("btn-success btn-danger");
-      basketButton.text(`Add to basket`);
-      basketButton.unbind("click");
-      basketButton.click(function() {
-        addBasketVariable(basket, basketName, variable, basketButton);
-      });
+      if (basketButton) {
+        basketButton.toggleClass("btn-success btn-danger");
+        basketButton.text(`Add to basket`);
+        basketButton.unbind("click");
+        basketButton.click(function() {
+          addBasketVariable(basket, variable, basketButton);
+        });
+      }
     }
   };
 
@@ -188,7 +181,6 @@ function createBasketList() {
       basketButton.click(function() {
         removeBasketVariable(
           data["id"],
-          name,
           context["variable"]["id"],
           basketButton
         );
@@ -199,7 +191,6 @@ function createBasketList() {
       basketButton.click(function() {
         addBasketVariable(
           data["id"],
-          name,
           context["variable"]["id"],
           basketButton
         );
