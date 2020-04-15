@@ -214,7 +214,7 @@ function filter(node, type) {
       $(".sk-flow").hide(); // hide the loading message
       $("#tree_variables").html(
         "<p><span class='fas fa-exclamation-triangle'" +
-          " aria-hidden='true'></span> Load Error!</p>"
+        " aria-hidden='true'></span> Load Error!</p>"
       );
     });
 }
@@ -274,7 +274,7 @@ function addToBasket(el) {
     });
   }
 
-  url = apiUrl + "/baskets";
+  url = new URL(`api/topics/${study}/baskets`, window.location.origin);
   jQuery.getJSON(url, function(data) {
     if (data.user_logged_in) {
       if (data.baskets.length === 0) {
@@ -285,8 +285,8 @@ function addToBasket(el) {
           "/workspace/baskets";
         $("#basket_list").append(
           "<p><a class='btn btn-primary' href='" +
-            redirectCreateBasketUrl +
-            "'>Create a basket</a></p>"
+          redirectCreateBasketUrl +
+          "'>Create a basket</a></p>"
         );
       }
       for (let i = 0; i < data.baskets.length; i++) {
@@ -295,11 +295,11 @@ function addToBasket(el) {
           "addToBasketRequest('" + node.key + "'," + data.baskets[i].id + ")";
         $("#basket_list").append(
           "<p><button class='btn btn-primary' onclick=" +
-            addToBasketFunction +
-            ">Add to basket <strong>" +
-            // eslint-disable-next-line security/detect-object-injection
-            data.baskets[i].name +
-            "</strong></button></p>"
+          addToBasketFunction +
+          ">Add to basket <strong>" +
+          // eslint-disable-next-line security/detect-object-injection
+          data.baskets[i].name +
+          "</strong></button></p>"
         );
       }
     } else {
@@ -307,8 +307,8 @@ function addToBasket(el) {
         location.protocol + "//" + window.location.host + "/workspace/login";
       $("#basket_list").append(
         "<p><a class='btn btn-primary' href='" +
-          redirectLoginUrl +
-          "'>Please log in to use this function.</a></p>"
+        redirectLoginUrl +
+        "'>Please log in to use this function.</a></p>"
       );
     }
   });

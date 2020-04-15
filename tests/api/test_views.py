@@ -197,10 +197,7 @@ class TestTopicByStudy:
 
 class TestBasketsByStudyAndUser:
     def test_anonymous_user(self, client, study):
-        url = reverse(
-            "api:baskets_by_study_and_user",
-            kwargs={"study_name": study.name, "language": LANGUAGE},
-        )
+        url = reverse("api:baskets_by_study_and_user", kwargs={"study_name": study.name})
         response = client.get(url)
 
         TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -214,10 +211,7 @@ class TestBasketsByStudyAndUser:
         TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
 
     def test_logged_in_user(self, client, study, basket):
-        url = reverse(
-            "api:baskets_by_study_and_user",
-            kwargs={"study_name": study.name, "language": LANGUAGE},
-        )
+        url = reverse("api:baskets_by_study_and_user", kwargs={"study_name": study.name})
         client.force_login(user=basket.user)
         response = client.get(url)
         TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
@@ -227,178 +221,6 @@ class TestBasketsByStudyAndUser:
         TEST_CASE.assertIs(expected, response_dictionary["user_logged_in"])
         expected = [basket.to_dict()]
         TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
-
-
-class TestAddVariablesByConceptView:
-    def test_with_valid_name_and_id(  # pylint: disable=R0913
-        self, study, client, basket, concept, variable
-    ):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        variable.concept = concept
-        variable.save()
-        url = reverse(
-            "api:add_variables_by_concept",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept.name,
-                "basket_id": basket.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
-        basket_variable = BasketVariable.objects.first()
-        TEST_CASE.assertEqual(variable, basket_variable.variable)
-        TEST_CASE.assertEqual(basket, basket_variable.basket)
-
-    def test_with_invalid_name(self, study, client, basket):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_concept",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": "concept-not-in-db",
-                "basket_id": basket.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-    def test_with_invalid_id(self, study, client, concept):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_concept",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept.name,
-                "basket_id": 1,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-
-class TestAddVariablesByTopicView:
-    def test_with_valid_name_and_id(
-        self, study, client, basket, variable_with_concept_and_topic
-    ):
-        variable, _, topic = variable_with_concept_and_topic
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_topic",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-                "basket_id": basket.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
-        basket_variable = BasketVariable.objects.first()
-        TEST_CASE.assertEqual(variable, basket_variable.variable)
-        TEST_CASE.assertEqual(basket, basket_variable.basket)
-
-    def test_with_invalid_study_name(self, client, basket, topic):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_topic",
-            kwargs={
-                "study_name": "study-not-in-db",
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-                "basket_id": basket.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-    def test_with_invalid_topic_name(self, study, client, basket):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_topic",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": "topic-not-in-db",
-                "basket_id": basket.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-    def test_with_invalid_id(self, study, client, topic):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variables_by_topic",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-                "basket_id": 1,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-
-class TestAddVariableByIdView:
-    def test_with_valid_ids(self, study, basket, variable, client):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variable_by_id",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "basket_id": basket.id,
-                "variable_id": variable.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertEqual(1, BasketVariable.objects.count())
-        basket_variable = BasketVariable.objects.first()
-        TEST_CASE.assertEqual(variable, basket_variable.variable)
-        TEST_CASE.assertEqual(basket, basket_variable.basket)
-
-    def test_with_invalid_basket_id(self, study, variable, client):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variable_by_id",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "basket_id": 1,
-                "variable_id": variable.id,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-
-    def test_with_invalid_variable_id(self, study, basket, client, uuid_identifier):
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
-        url = reverse(
-            "api:add_variable_by_id",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "basket_id": basket.id,
-                "variable_id": uuid_identifier,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
-        TEST_CASE.assertEqual(0, BasketVariable.objects.count())
 
 
 @pytest.mark.parametrize(
