@@ -59,10 +59,10 @@ $(function() {
  * Button onclick event to add a single variable to a Basket.
  * Changes the Button onlcick event to removeBasketVariable after adding
  * the variable.
- * @param {number} basket
- * @param {string} basketName
- * @param {string} variable
- * @param {string} basketButton
+ * @param {number} basket The internal id of the basket
+ * @param {string} basketName The display name of the basket
+ * @param {string} variable The internal id of the variable
+ * @param {string} basketButton The html node of the basket button
  */
 function addBasketVariable(basket, basketName, variable, basketButton) {
   const postData = {
@@ -107,10 +107,10 @@ function addBasketVariable(basket, basketName, variable, basketButton) {
  * Button onclick event to remove a single variable from a Basket.
  * Changes the Button onlcick event to addBasketVariable after removing
  * the variable.
- * @param {number} basket
- * @param {string} basketName
- * @param {string} variable
- * @param {string} basketButton
+ * @param {number} basket The internal id of the basket
+ * @param {string} basketName The display name of the basket
+ * @param {string} variable The internal id of the variable
+ * @param {string} basketButton The html node of the basket button
  */
 function removeBasketVariable(basket, basketName, variable, basketButton) {
   const url = new URL(BasketVariableAPI);
