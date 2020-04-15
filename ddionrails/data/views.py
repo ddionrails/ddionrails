@@ -9,7 +9,7 @@ from django.views.generic import DetailView, RedirectView
 
 from config.helpers import RowHelper
 from ddionrails.instruments.models import Question
-from ddionrails.workspace.models import Basket
+from ddionrails.workspace.models import Basket, BasketVariable
 
 from .helpers import LabelTable
 from .models import Dataset, Variable
@@ -125,6 +125,25 @@ class VariableDetailView(DetailView):
             "valid",
             "invalid",
         )
+        context["javascript_json"] = {
+            "variable": {
+                "id": str(context["variable"].id),
+                "name": context["variable"].name,
+            },
+            "baskets": {
+                basket.name: {
+                    "basket_variable": getattr(
+                        BasketVariable.objects.filter(
+                            variable=context["variable"], basket=basket
+                        ).first(),
+                        "id",
+                        "",
+                    ),
+                    "id": basket.id,
+                }
+                for basket in context["basket_list"]
+            },
+        }
         for measure in ORDERING:
             if measure in self.object.statistics:
                 context["statistics"][measure] = self.object.statistics[measure]
