@@ -1,53 +1,13 @@
 /* !
- * ddionrails - basket_button.js
- * Copyright 2015-2019
- * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
- */
-const BasketVariableAPI = new URL(
-  "api/basket-variables/",
-  window.location.origin
-);
-
-const basketButton = (function() {
-  const addVariable = function($button, $count) {
-    addBasketVariable(
-      $button.attr("basket_id"),
-      $button.attr("variable_id"),
-      null
-    );
-    $button.toggleClass("btn-success btn-default");
-  };
-
-  const removeVariable = function($button, $count) {
-    removeBasketVariable(
-      $button.attr("basket_id"),
-      $button.attr("variable_id"),
-      null
-    );
-    $button.toggleClass("btn-success btn-default");
-  };
-
-  const handleButton = function() {
-    // eslint-disable-next-line no-invalid-this
-    const $button = $(this);
-    const $count = $("#basket-count").first();
-    if ($button.hasClass("btn-success")) {
-      removeVariable($button, $count);
-    } else {
-      addVariable($button, $count);
-    }
-  };
-
-  return function() {
-    $("body").on("click", "button.basket-button", handleButton);
-  };
-}());
-
-/**
  * License 3-BSD
  * @author Dominique Hansen
  * @copyright 2019
  */
+
+const BasketVariableAPI = new URL(
+  "api/basket-variables/",
+  window.location.origin
+);
 
 /**
  * Button onclick event to add a single variable to a Basket.
@@ -150,7 +110,7 @@ function removeBasketVariable(basket, variable, basketButton) {
  */
 function createBasketList() {
   const basketList = $("#basket-list");
-  if ($("#context_data").length == 0) {
+  if ($("#context_data").length === 0) {
     return null;
   }
   const context = JSON.parse($("#context_data").text());
@@ -172,6 +132,10 @@ function createBasketList() {
     element.append(basketLink);
     element.append(basketButton);
 
+    // Call either addBasketVariable or removeBasketVariable
+    // Dependant on the classes rm-var add-var
+    // Text content of the button is also determined by rm-var and add-var
+    // via index.scss.
     const toggleFunction = function() {
       if (basketButton.hasClass("add-var")) {
         addBasketVariable(data["id"], context["variable"]["id"], basketButton);
@@ -197,6 +161,48 @@ function createBasketList() {
 }
 
 $(document).ready(createBasketList());
+
+/* !
+ * ddionrails - basket_button.js
+ * Copyright 2015-2019
+ * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
+ */
+
+const basketButton = (function() {
+  const addVariable = function($button, $count) {
+    addBasketVariable(
+      $button.attr("basket_id"),
+      $button.attr("variable_id"),
+      null
+    );
+    $button.toggleClass("btn-success btn-default");
+  };
+
+  const removeVariable = function($button, $count) {
+    removeBasketVariable(
+      $button.attr("basket_id"),
+      $button.attr("variable_id"),
+      null
+    );
+    $button.toggleClass("btn-success btn-default");
+  };
+
+  const handleButton = function() {
+    // eslint-disable-next-line no-invalid-this
+    const $button = $(this);
+    const $count = $("#basket-count").first();
+    if ($button.hasClass("btn-success")) {
+      removeVariable($button, $count);
+    } else {
+      addVariable($button, $count);
+    }
+  };
+
+  return function() {
+    $("body").on("click", "button.basket-button", handleButton);
+  };
+}());
+
 $(document).ready(basketButton());
 
 export {basketButton};

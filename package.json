@@ -120,6 +120,13 @@
           "MemberExpression": 1
         }
       ],
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": true,
+          "classes": true
+        }
+      ],
       "object-curly-spacing": [
         "error",
         "never"
