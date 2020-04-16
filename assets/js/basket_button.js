@@ -28,6 +28,7 @@ const basketButton = (function() {
   };
 
   const handleButton = function() {
+    // eslint-disable-next-line no-invalid-this
     const $button = $(this);
     const $count = $("#basket-count").first();
     if ($button.hasClass("btn-success")) {
@@ -40,12 +41,13 @@ const basketButton = (function() {
   return function() {
     $("body").on("click", "button.basket-button", handleButton);
   };
-})();
+}());
 
-$(function() {
-  basketButton();
-  $(".datatable").DataTable();
-});
+/**
+ * License 3-BSD
+ * @author Dominique Hansen
+ * @copyright 2019
+ */
 
 /**
  * Button onclick event to add a single variable to a Basket.
@@ -57,7 +59,7 @@ $(function() {
  */
 function addBasketVariable(basket, variable, basketButton) {
   const postData = {
-    basket: basket,
+    basket,
   };
   // eslint-disable-next-line security/detect-object-injection
   postData["variables"] = [variable];
@@ -79,13 +81,8 @@ function addBasketVariable(basket, variable, basketButton) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
       if (200 <= status <= 201) {
-        if (BasketVariableAPI) {
-          basketButton.toggleClass("btn-success btn-danger");
-          basketButton.text(`Remove from basket`);
-          basketButton.unbind("click");
-          basketButton.click(function() {
-            removeBasketVariable(basket, variable, basketButton);
-          });
+        if (basketButton) {
+          basketButton.toggleClass("btn-success btn-danger add-var rm-var");
         }
       }
       if (status >= 400) {
@@ -136,12 +133,7 @@ function removeBasketVariable(basket, variable, basketButton) {
       }
 
       if (basketButton) {
-        basketButton.toggleClass("btn-success btn-danger");
-        basketButton.text(`Add to basket`);
-        basketButton.unbind("click");
-        basketButton.click(function() {
-          addBasketVariable(basket, variable, basketButton);
-        });
+        basketButton.toggleClass("btn-success btn-danger add-var rm-var");
       }
     }
   };
@@ -154,9 +146,13 @@ function removeBasketVariable(basket, variable, basketButton) {
  * List all baskets on a VariableDetailView with buttons.
  * The Buttons are tied to onclick events to either remove or
  * add the variable from/to the basket.
+ * @return {null}
  */
 function createBasketList() {
   const basketList = $("#basket-list");
+  if ($("#context_data").length == 0) {
+    return null;
+  }
   const context = JSON.parse($("#context_data").text());
   // list-group-item
   for (const [name, data] of Object.entries(context["baskets"])) {
@@ -176,36 +172,31 @@ function createBasketList() {
     element.append(basketLink);
     element.append(basketButton);
 
-    if (data["basket_variable"]) {
-      basketButton.toggleClass("btn btn-danger");
-      basketButton.click(function() {
+    const toggleFunction = function() {
+      if (basketButton.hasClass("add-var")) {
+        addBasketVariable(data["id"], context["variable"]["id"], basketButton);
+      } else if (basketButton.hasClass("rm-var")) {
         removeBasketVariable(
           data["id"],
           context["variable"]["id"],
           basketButton
         );
-      });
-      basketButton.text(`Remove from basket`);
+      }
+    };
+
+    if (data["basket_variable"]) {
+      basketButton.toggleClass("btn btn-danger rm-var");
     } else {
-      basketButton.toggleClass("btn btn-success");
-      basketButton.click(function() {
-        addBasketVariable(
-          data["id"],
-          context["variable"]["id"],
-          basketButton
-        );
-      });
-      basketButton.text(`Add to basket`);
+      basketButton.toggleClass("btn btn-success add-var");
     }
+    basketButton.click(toggleFunction);
     element.append(basketButton);
-    basketList.append(
-      element
-    );
+    basketList.append(element);
   }
+  return null;
 }
 
 $(document).ready(createBasketList());
+$(document).ready(basketButton());
 
-export {
-  basketButton,
-};
+export {basketButton};

@@ -82,7 +82,7 @@
       "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-      "ecmaVersion": 2018,
+      "ecmaVersion": 6,
       "sourceType": "module"
     },
     "plugins": [
@@ -123,6 +123,14 @@
       "object-curly-spacing": [
         "error",
         "never"
+      ],
+      "object-shorthand": [
+        "error",
+        "always"
+      ],
+      "wrap-iife": [
+        "error",
+        "outside"
       ]
     }
   }
