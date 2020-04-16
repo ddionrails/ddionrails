@@ -295,7 +295,8 @@ class IsBasketOwner(permissions.BasePermission):
     Superusers are exempt and can manipulate all BasketVariables.
     """
 
-    def has_permission(self, request, view):
+    @staticmethod
+    def has_permission(request, view):
         if request.user.is_superuser:
             return True
         if request.method == "POST":
@@ -305,7 +306,8 @@ class IsBasketOwner(permissions.BasePermission):
             return False
         return True
 
-    def has_object_permission(self, request, view, obj):
+    @staticmethod
+    def has_object_permission(request, view, obj):
         if request.user.is_superuser:
             return True
         return obj.basket.user == request.user
