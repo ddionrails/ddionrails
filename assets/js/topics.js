@@ -23,6 +23,10 @@ import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
 
 $.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
 
+const context = JSON.parse($("#context_data").text());
+const study = context["study"];
+const language = context["language"];
+
 // Get current URL to read 'open' Parameter for opening specified node
 const urlString = window.location.href;
 let url = new URL(urlString);
@@ -100,7 +104,7 @@ $(function() {
       counter: false,
       mode: "hide",
     },
-    icon: function(event, data) {
+    icon(event, data) {
       return data.typeInfo.icon;
     },
     glyph: {
@@ -136,7 +140,7 @@ $(function() {
       url: apiUrl, // load data from api (topic and concepts only)
       cache: false,
     },
-    renderNode: function(event, data) {
+    renderNode(event, data) {
       const node = data.node;
       const $spanTitle = $(node.span).find("span.fancytree-title");
       if ($(node.span).find("span.filter-options").length === 0) {
@@ -151,7 +155,7 @@ $(function() {
     },
     // When tree fully loaded:
     // if parameter 'open' is set in URL open specified node
-    init: function(event, data) {
+    init(event, data) {
       if (open != null) {
         const node = $("#tree").fancytree("getNodeByKey", open);
         node.makeVisible();
@@ -325,6 +329,7 @@ function addToBasket(el) {
  * We can identify the type by the prefix of the nodekey.
  * It is either topic_ or concept_.
  * Following the underscore (_) is the name of the topic/concept.
+ * @author Dominique Hansen
  *
  * @param {string} nodeKey The key attribute of a FancyTreeNode. Will probably
  *                         be in the form of (topic|concept)_name

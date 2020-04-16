@@ -7,18 +7,13 @@
 {% endblock styles %}
 
 {% block scripts %}
-
-    <script>
-        var study = '{{study.name}}'
-        var language = '{{ language }}'
-    </script>
-
     {% render_bundle 'topics' 'js' %}
-
 {% endblock scripts %}
 
 {% block content %}
 
+
+{{ json_object|json_script:"context_data" }}
     <p class="text-right">
         Languages:
         {% for link_language in study.topic_languages %}
