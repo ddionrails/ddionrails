@@ -8,6 +8,7 @@
     {% render_bundle 'visualization' 'css' %}
 {% endblock styles %}
 {% block content %}
+    {{ javascript_json|json_script:"context_data" }}
     <h1>{{ variable.title }}</h1>
     <div class="row">
         <div class="col-lg-8">
@@ -100,40 +101,20 @@
             <div class="card">
                 <div class="card-header"><b>Basket</b>
                 </div>
-                <div class="list-group">
+                <div class="list-group" id="basket-list">
                     {% if user.is_authenticated %}
-                        {% for basket in basket_list %}
-                            <div class="list-group-item">
-                                {% if variable in basket.variables.all %}
-                                    <a href="{% url 'workspace:remove_variable' basket_id=basket.id variable_id=variable.id %}">
-
-                                        Remove
-
-                                    </a> from
-                                {% else %} <a href="{% url 'workspace:add_variable' basket_id=basket.id variable_id=variable.id %}">
-
-                                    Add
-
-                                </a> to
-                                {% endif %}basket <a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
-
-                                {{ basket.name }}
-
-                            </a>
-                            </div>
-                        {% endfor %}
+                        </div>
                         <div class="card-body text-right"><a href="{% url 'workspace:basket_new' %}" class="btn btn-secondary">
 
                             Create a new basket
 
                         </a>
-                        </div>
                     {% else %}
+                        </div>
                         <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>
                             or <a href="{% url 'workspace:register' %">register</a>
                             to
                             use the basket functionality.
-                        </div>
                     {% endif %}
                 </div>
             </div>

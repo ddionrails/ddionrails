@@ -2,8 +2,17 @@
 
 """ URLConf for ddionrails.api app """
 
-from django.urls import path
+from django.conf.urls import include
+from django.urls import path, re_path
+from rest_framework import routers
 
+from ddionrails.api.views import (
+    BasketVariableSet,
+    BasketViewSet,
+    StudyViewSet,
+    UserViewSet,
+    VariableViewSet,
+)
 from ddionrails.instruments.views import question_comparison_partial
 
 from . import views
@@ -11,6 +20,11 @@ from . import views
 app_name = "api"
 
 urlpatterns = [
+    path(
+        "topics/<str:study_name>/baskets",
+        views.baskets_by_study_and_user,
+        name="baskets_by_study_and_user",
+    ),
     path(
         "questions/compare/<uuid:from_id>/<uuid:to_id>",
         question_comparison_partial,
@@ -27,24 +41,13 @@ urlpatterns = [
         views.topic_by_study,
         name="topic_by_study",
     ),
-    path(
-        "topics/<str:study_name>/<str:language>/baskets",
-        views.baskets_by_study_and_user,
-        name="baskets_by_study_and_user",
-    ),
-    path(
-        "topics/<str:study_name>/<str:language>/concept_<str:concept_name>/add_to_basket/<int:basket_id>",
-        views.add_variables_by_concept,
-        name="add_variables_by_concept",
-    ),
-    path(
-        "topics/<str:study_name>/<str:language>/topic_<str:topic_name>/add_to_basket/<int:basket_id>",
-        views.add_variables_by_topic,
-        name="add_variables_by_topic",
-    ),
-    path(
-        "topics/<str:study_name>/<str:language>/variable_<uuid:variable_id>/add_to_basket/<int:basket_id>",
-        views.add_variable_by_id,
-        name="add_variable_by_id",
-    ),
 ]
+
+ROUTER = routers.SimpleRouter()
+ROUTER.register(r"users", UserViewSet, basename="user")
+ROUTER.register(r"baskets", BasketViewSet, basename="basket")
+ROUTER.register(r"studies", StudyViewSet, basename="study")
+ROUTER.register(r"variables", VariableViewSet)
+ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
+
+urlpatterns.append(re_path("^", include(ROUTER.urls)))

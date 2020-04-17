@@ -82,7 +82,7 @@
       "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-      "ecmaVersion": 2018,
+      "ecmaVersion": 6,
       "sourceType": "module"
     },
     "plugins": [
@@ -104,15 +104,40 @@
           "arrays": "always-multiline",
           "objects": "always-multiline",
           "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
+          "exports": "always-multiline"
         }
       ],
       "complexity": [
         "error",
         {
-          "max": 4
+          "max": 6
         }
+      ],
+      "indent": [
+        "error",
+        2,
+        {
+          "MemberExpression": 1
+        }
+      ],
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": true,
+          "classes": true
+        }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "never"
+      ],
+      "object-shorthand": [
+        "error",
+        "always"
+      ],
+      "wrap-iife": [
+        "error",
+        "outside"
       ]
     }
   }

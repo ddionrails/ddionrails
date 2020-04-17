@@ -21,6 +21,7 @@ django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
+djangorestframework = "*"
 
 # PostgreSQL
 # ------------------------------------------------------------------------------
