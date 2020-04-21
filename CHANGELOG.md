@@ -11,6 +11,21 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.3.0] - 2020-04-21
+
+## Added
+
+- Several API endpoints using Django REST Framework.
+
+## Changed
+
+- Refactored javascript libraries.
+- Replaced basket handling via old API endpoints with django REST framework
+  calls.
+
+- Replaced django-click dependency with django native command handling.
+- Set limit (1000) for variables associated to a basket to improve server performance.
+
 ## [4.2.4] - 2020-02-27
 
 ## Changed
@@ -382,7 +397,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...develop
+[4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
 [4.2.3]: https://github.com/ddionrails/ddionrails/compare/v4.2.2...v4.2.3
 [4.2.2]: https://github.com/ddionrails/ddionrails/compare/v4.2.1...v4.2.2
