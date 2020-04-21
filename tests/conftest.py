@@ -4,10 +4,11 @@
 """ Pytest fixtures """
 
 import time
+import unittest
 import uuid
 from io import BytesIO
 from pathlib import Path
-from typing import Any, Callable, Dict, Generator, List, Protocol, Set, Union
+from typing import Any, Callable, Dict, Generator, List, Protocol, Set, TypedDict, Union
 from unittest.mock import mock_open
 
 import PIL.Image
@@ -17,6 +18,7 @@ from django.conf import settings
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
+from config.views import News
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.data.documents import VariableDocument
 from ddionrails.instruments.documents import QuestionDocument
@@ -40,6 +42,8 @@ from tests.instruments.factories import (
 from tests.publications.factories import PublicationFactory
 from tests.studies.factories import StudyFactory, TopicListFactory
 from tests.workspace.factories import BasketFactory
+
+TEST_CASE = unittest.TestCase()
 
 
 @pytest.fixture
@@ -93,12 +97,15 @@ def conceptual_dataset(study):
     )
 
 
-@pytest.fixture
-def dataset(db):
+@pytest.fixture(name="dataset")
+def _dataset(request, db):
     """ A dataset in the database """
-    return DatasetFactory(
+    _factory = DatasetFactory(
         name="some-dataset", label="Some Dataset", description="This is some dataset"
     )
+    if request.instance:
+        request.instance.dataset = _factory
+    return _factory
 
 
 @pytest.fixture(scope="session")
@@ -306,14 +313,14 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     # saving the concept, will index the concept as well
     concept.save()
     expected = 1
-    assert expected == ConceptDocument.search().count()
+    TEST_CASE.assertEqual(expected, ConceptDocument.search().count())
 
     # Run tests
     yield
 
     # Delete documents in index after testing
     response = ConceptDocument.search().query("match_all").delete()
-    assert response["deleted"] > 0
+    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 @pytest.fixture
@@ -325,14 +332,14 @@ def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argume
     # saving the topic, will index the topic as well
     topic.save()
     expected = 1
-    assert expected == TopicDocument.search().count()
+    TEST_CASE.assertEqual(expected, TopicDocument.search().count())
 
     # Run tests
     yield
 
     # Delete documents in index after testing
     response = TopicDocument.search().query("match_all").delete()
-    assert response["deleted"] > 0
+    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 @pytest.fixture
@@ -344,14 +351,14 @@ def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-
     # saving the question, will index the question as well
     question.save()
     expected = 1
-    assert expected == QuestionDocument.search().count()
+    TEST_CASE.assertEqual(expected, QuestionDocument.search().count())
 
     # Run tests
     yield
 
     # Delete documents in index after testing
     response = QuestionDocument.search().query("match_all").delete()
-    assert response["deleted"] > 0
+    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 @pytest.fixture
@@ -365,14 +372,14 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
     variable.save()
     expected = 1
 
-    assert expected == VariableDocument.search().count()
+    TEST_CASE.assertEqual(expected, VariableDocument.search().count())
 
     # Run tests
     yield
 
     # Delete documents in index after testing
     response = VariableDocument.search().query("match_all").delete()
-    assert response["deleted"] > 0
+    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 @pytest.fixture
@@ -402,14 +409,36 @@ def publications_index(
     publication_with_umlauts.save()
     expected = 1
 
-    assert expected == PublicationDocument.search().count()
+    TEST_CASE.assertEqual(expected, PublicationDocument.search().count())
 
     # Run tests
     yield
 
     # Delete documents in index after testing
     response = PublicationDocument.search().query("match_all").delete()
-    assert response["deleted"] > 0
+    TEST_CASE.assertGreater(response["deleted"], 0)
+
+
+class NewsFixture(TypedDict):
+    """Describe news fixture output."""
+
+    news: News
+    bullet_points: List[str]
+
+
+@pytest.mark.django_db
+@pytest.fixture(name="news")
+def _news(request) -> NewsFixture:
+    """Provide a News object with its content in a separate list for easier testing."""
+    the_news = News()
+    bullet_points = ["test content", "more test content", "even more test content"]
+    content_string = "\r\n".join(["* " + point for point in bullet_points])
+    the_news.content = content_string
+    the_news.save()
+    if request.instance:
+        request.instance.news = the_news
+        request.instance.news_bullets = bullet_points
+    return {"news": the_news, "bullet_points": bullet_points}
 
 
 class MockOpener:

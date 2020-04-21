@@ -10,40 +10,40 @@
     "name": "Marcel Hebing"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch-vue": "^1.0.0-vue",
-    "@fortawesome/fontawesome-free": "^5.11.2",
+    "@appbaseio/reactivesearch-vue": "^1.2.0",
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "bootstrap": "^4.4.1",
     "d3": "^3.5.17",
     "datatables.net-bs4": "1.10.20",
     "datatables.net-buttons-bs4": "^1.6.1",
     "datatables.net-responsive-bs4": "2.2.3",
     "har-validator": "^5.1.3",
-    "jquery": "^3.4.1",
-    "jquery.fancytree": "^2.33.0",
-    "popper.js": "^1.16.0",
+    "jquery": "^3.5.0",
+    "jquery.fancytree": "^2.35.0",
+    "popper.js": "^1.16.1",
     "spinkit": "^2.0.1",
-    "vue": "^2.6.10",
-    "vue-router": "^3.1.3"
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.6"
   },
   "devDependencies": {
-    "cspell": "^4.0.35",
-    "css-loader": "^3.2.0",
-    "eslint": "^6.7.2",
+    "cspell": "^4.0.57",
+    "css-loader": "^3.5.2",
+    "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-security": "^1.4.0",
-    "eslint-plugin-vue": "^6.0.1",
-    "file-loader": "^4.3.0",
-    "mini-css-extract-plugin": "^0.8.0",
-    "node-sass": "^4.13.0",
-    "prettier": "^1.19.1",
-    "sass-loader": "^8.0.0",
-    "style-loader": "^1.0.1",
-    "vue-loader": "^15.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "file-loader": "^6.0.0",
+    "mini-css-extract-plugin": "^0.9.0",
+    "node-sass": "^4.13.1",
+    "prettier": "^2.0.4",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.1.4",
+    "vue-loader": "^15.9.1",
     "vue-style-loader": "^4.1.2",
-    "vue-template-compiler": "^2.6.10",
-    "webpack": "^4.41.2",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.42.1",
     "webpack-bundle-tracker": "^0.4.3",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
@@ -82,7 +82,7 @@
       "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-      "ecmaVersion": 2018,
+      "ecmaVersion": 6,
       "sourceType": "module"
     },
     "plugins": [
@@ -104,15 +104,40 @@
           "arrays": "always-multiline",
           "objects": "always-multiline",
           "imports": "always-multiline",
-          "exports": "always-multiline",
-          "functions": "always-multiline"
+          "exports": "always-multiline"
         }
       ],
       "complexity": [
         "error",
         {
-          "max": 4
+          "max": 6
         }
+      ],
+      "indent": [
+        "error",
+        2,
+        {
+          "MemberExpression": 1
+        }
+      ],
+      "no-use-before-define": [
+        "error",
+        {
+          "functions": true,
+          "classes": true
+        }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "never"
+      ],
+      "object-shorthand": [
+        "error",
+        "always"
+      ],
+      "wrap-iife": [
+        "error",
+        "outside"
       ]
     }
   }

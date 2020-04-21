@@ -8,6 +8,7 @@
     {% render_bundle 'visualization' 'css' %}
 {% endblock styles %}
 {% block content %}
+    {{ javascript_json|json_script:"context_data" }}
     <h1>{{ variable.title }}</h1>
     <div class="row">
         <div class="col-lg-8">
@@ -73,8 +74,8 @@
                         {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="origin_variables">
-                        {% if variable.get_origin_variables %}
-                            {% for study, variable_list in variable.get_origin_variables.items %}
+                        {% if variable.origin_variables_dict %}
+                            {% for study, variable_list in variable.origin_variables_dict.items %}
                                 {% include "data/related_variables.html" with table_name=study.title %}
                             {% endfor %}
                         {% else %}
@@ -82,8 +83,8 @@
                         {% endif %}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="target_variables">
-                        {% if variable.get_target_variables %}
-                            {% for study, variable_list in variable.get_target_variables.items %}
+                        {% if variable.target_variables_dict %}
+                            {% for study, variable_list in variable.target_variables_dict.items %}
                                 {% include "data/related_variables.html" with table_name=study.title %}
                             {% endfor %}
                         {% else %}
@@ -100,40 +101,20 @@
             <div class="card">
                 <div class="card-header"><b>Basket</b>
                 </div>
-                <div class="list-group">
+                <div class="list-group" id="basket-list">
                     {% if user.is_authenticated %}
-                        {% for basket in basket_list %}
-                            <div class="list-group-item">
-                                {% if variable in basket.variables.all %}
-                                    <a href="{% url 'workspace:remove_variable' basket_id=basket.id variable_id=variable.id %}">
-
-                                        Remove
-
-                                    </a> from
-                                {% else %} <a href="{% url 'workspace:add_variable' basket_id=basket.id variable_id=variable.id %}">
-
-                                    Add
-
-                                </a> to
-                                {% endif %}basket <a href="{% url 'workspace:basket_detail' basket_id=basket.id %}">
-
-                                {{ basket.name }}
-
-                            </a>
-                            </div>
-                        {% endfor %}
+                        </div>
                         <div class="card-body text-right"><a href="{% url 'workspace:basket_new' %}" class="btn btn-secondary">
 
                             Create a new basket
 
                         </a>
-                        </div>
                     {% else %}
+                        </div>
                         <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>
                             or <a href="{% url 'workspace:register' %">register</a>
                             to
                             use the basket functionality.
-                        </div>
                     {% endif %}
                 </div>
             </div>
@@ -142,18 +123,20 @@
         </div>
     </div>
     {% if label_table %}
-        <h2>Label table</h2>
-        <p>The label table provides you with an overview of label definitions across
-            related variables to identify changes over time in longitudinal variables.
-            The first number indicates the value code, the second number (in brackets)
-            represents the frequency in the data. Please note that labels are simplified
-            and values with frequency = 0 are hidden.</p>
-        <!-- End content -->
-        <div class="table-responsive">
-            {{ label_table.to_html | safe }}
-        </div>
-        <div class="content">
-        <!-- Restart content -->
+        {% if label_table.render_table %}
+            <h2>Label table</h2>
+            <p>The label table provides you with an overview of label definitions across
+                related variables to identify changes over time in longitudinal variables.
+                The first number indicates the value code, the second number (in brackets)
+                represents the frequency in the data. Please note that labels are simplified
+                and values with frequency = 0 are hidden.</p>
+            <!-- End content -->
+            <div class="table-responsive">
+                {{ label_table.to_html | safe }}
+            </div>
+            <div class="content">
+            <!-- Restart content -->
+        {% endif %}
     {% endif %}
 {% endblock content %}
 {% block scripts %}

@@ -1,0 +1,68 @@
+name: System-Tests
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  # Run tests for any PRs.
+  pull_request:
+
+env:
+  COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Before install
+        run: |
+          docker --version
+          docker-compose --version
+          mkdir codecov
+      - name: Install
+        run: |
+          docker-compose config
+          docker-compose up --build -d
+          docker images
+          docker ps -a
+          docker exec ddionrails_web_1 bash -c "pip install pipfile-requirements==0.1.0.post0"
+          docker exec ddionrails_web_1 bash -c \
+          '{ pipfile2req Pipfile.lock & pipfile2req -d Pipfile.lock; } > Requirements.txt'
+          docker exec ddionrails_web_1 pip install -r Requirements.txt
+          docker exec ddionrails_web_1 npm install
+          docker exec ddionrails_web_1 npm run build
+      - name: Unittests
+        if: always()
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml \
+          --cov --cov-report html --cov-branch
+      - name: Functional import tests
+        if: always()
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+          -m "functional" tests/functional/imports/ --cov-append
+      - name: Functional browser tests
+        if: always()
+        run: |
+          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+          -m "functional and not search" tests/functional/browser --cov-append
+      - name: Run migrations
+        run: docker exec ddionrails_web_1 python manage.py migrate
+      - name: Check production settings file
+        run: |
+          docker exec ddionrails_web_1 python manage.py check \
+          --deploy --settings=config.settings.production
+      - name: Move codecov report
+        if: always()
+        run: |
+          docker exec ddionrails_web_1 mv coverage.xml codecov/
+      - name: Upload codecov report
+        if: always()
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./codecov/coverage.xml
+          fail_ci_if_error: true

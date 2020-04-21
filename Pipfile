@@ -13,7 +13,6 @@ name = "pypi"
 # Django
 # ------------------------------------------------------------------------------
 django = "*"
-django-click = "*"
 django-crispy-forms = "*"
 django-extensions = "*"
 django-filer = "*"
@@ -22,6 +21,7 @@ django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
+djangorestframework = "*"
 
 # PostgreSQL
 # ------------------------------------------------------------------------------
@@ -68,7 +68,6 @@ pytest-splinter = "*"
 splinter = "==0.11.0" # pin until pytest-splinter works with newer versions
 factory-boy = "*"
 django-coverage-plugin = "*"
-fakeredis = "*"
 requests-mock = "*"
 
 # Documentation

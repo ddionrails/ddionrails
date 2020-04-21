@@ -14,9 +14,8 @@ def own_basket_only(view):
 
     def wrapper(request: WSGIRequest, basket_id: int, *args, **kwargs):
         basket = get_object_or_404(Basket, pk=basket_id)
-        if basket.user == request.user:
-            return view(request, basket_id, *args, **kwargs)
-        else:
+        if not basket.user == request.user:
             raise PermissionDenied
+        return view(request, basket_id, *args, **kwargs)
 
     return wrapper
