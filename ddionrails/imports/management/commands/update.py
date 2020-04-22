@@ -10,6 +10,7 @@ from django.core.management.base import BaseCommand
 
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
+from ddionrails.workspace.models import BasketVariable
 
 
 class Command(BaseCommand):
@@ -39,6 +40,13 @@ class Command(BaseCommand):
             default=False,
         )
         parser.add_argument("-f", "--filename", nargs="?", type=Path, default=None)
+        parser.add_argument(
+            "-c",
+            "--clean-import",
+            action="store_true",
+            help="Remove study content before import.",
+            default=False,
+        )
         return super().add_arguments(parser)
 
     def handle(self, *args, **options):
@@ -46,11 +54,12 @@ class Command(BaseCommand):
         entity = set(options["entity"])
         local = options["local"]
         filename = options["filename"]
+        clean_import = options["clean_import"]
 
         # if no study_name is given, update all studies
         if study_name == "all":
             self.log_success(f"Updating all studies")
-            update_all_studies_completely(local)
+            update_all_studies_completely(local, clean_import)
             sys.exit(0)
 
         # if study_name is given, select study from database or exit
@@ -75,7 +84,7 @@ class Command(BaseCommand):
             )
             sys.exit(1)
 
-        update_single_study(study, local, entity, filename)
+        update_single_study(study, local, entity, filename, clean_import)
 
         # Populate the search index from the database (indexes everything)
         django_rq.enqueue(call_command, "search_index", "--populate")
@@ -98,9 +107,16 @@ def update_study_partial(manager: StudyImportManager, entity: tuple):
 
 
 def update_single_study(
-    study: Study, local: bool, entity: tuple = None, filename: str = None
+    study: Study,
+    local: bool,
+    entity: tuple = None,
+    filename: str = None,
+    clean_import=False,
 ) -> None:
     """ Update a single study """
+    if clean_import:
+        study.delete()
+        study.save()
     manager = StudyImportManager(study)
     if not local:
         manager.update_repo()
@@ -110,9 +126,10 @@ def update_single_study(
         manager.import_single_entity(entity[0], filename)
     else:
         update_study_partial(manager, entity)
+    BasketVariable.remove_dangling_basket_variables()
 
 
-def update_all_studies_completely(local: bool) -> None:
+def update_all_studies_completely(local: bool, clean_import=False) -> None:
     """ Update all studies in the database """
     for study in Study.objects.all():
-        update_single_study(study, local)
+        update_single_study(study, local, clean_import=clean_import)
