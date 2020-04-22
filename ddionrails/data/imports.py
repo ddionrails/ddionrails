@@ -100,7 +100,7 @@ class VariableImport(imports.CSVImport):
         form = VariableForm
 
     def import_element(self, element):
-        # TODO: Workaround
+        # TODO: Workaround for outdated input field name.
         if "variable_name" not in element.keys():
             element["variable_name"] = element.get("name")
 
