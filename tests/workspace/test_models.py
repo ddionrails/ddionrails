@@ -107,7 +107,7 @@ class TestBasketVariableModel(unittest.TestCase):
         basket_variable.save()
         self.assertEqual(1, BasketVariable.objects.count())
 
-    def test_variable_deletion_behaviour(self):
+    def test_variable_deletion_behavior(self):
         """Does the BasketVariable keep existing and can we clean it up?
 
         Is a BasketVariable kept if we delete its variable?
