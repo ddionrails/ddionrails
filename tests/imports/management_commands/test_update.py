@@ -10,8 +10,10 @@ import pytest
 from _pytest.capture import CaptureFixture
 from django.core.management import call_command
 
+from ddionrails.data.models import Dataset
 from ddionrails.imports.management.commands import update
 from ddionrails.imports.manager import StudyImportManager
+from tests.data.factories import DatasetFactory
 
 pytestmark = [pytest.mark.django_db]
 
@@ -126,7 +128,7 @@ def test_update_command_without_study_name_local(
         call_command("update", option)
 
     TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_all_studies_completely.assert_called_once_with(True)
+    mocked_update_all_studies_completely.assert_called_once_with(True, False)
 
 
 def test_update_command_with_invalid_study_name(capsys: CaptureFixture):
@@ -153,7 +155,7 @@ def test_update_command_with_valid_study_name_local(
         call_command("update", study.name, option)
 
     TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_single_study.assert_called_once_with(study, True, set(), None)
+    mocked_update_single_study.assert_called_once_with(study, True, set(), None, False)
 
 
 def test_update_command_with_valid_study_name_and_entity(
@@ -163,7 +165,9 @@ def test_update_command_with_valid_study_name_and_entity(
         call_command("update", study.name, "periods")
 
     TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_single_study.assert_called_once_with(study, False, {"periods"}, None)
+    mocked_update_single_study.assert_called_once_with(
+        study, False, {"periods"}, None, False
+    )
 
 
 def test_update_command_with_valid_study_name_and_invalid_entity(study):
@@ -183,7 +187,7 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
 
     TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_single_study.assert_called_once_with(
-        study, False, {"instruments"}, Path(filename)
+        study, False, {"instruments"}, Path(filename), False
     )
 
 
@@ -201,3 +205,26 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
         capsys.readouterr().err,
         ".*Support for single file import not available for entity.*",
     )
+
+
+class TestUpdate(unittest.TestCase):
+    def setUp(self):
+        self.dataset = DatasetFactory(name="test-dataset")
+        self.study = self.dataset.study
+        return super().setUp()
+
+    def test_clean_update(self):
+        """Does a clean update reove study data before the update?
+
+        The clean import should remove all entities related to a study before
+        the import of the study.
+        There is no data provided to import for this test.
+        After the clean import without data only the study object itself should
+        remain in the database.
+        The test dataset should be gone.
+        """
+        clean_import = True
+        self.assertTrue(list(Dataset.objects.filter(id=self.dataset.id)))
+        update.update_single_study(self.study, True, clean_import=clean_import)
+        datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
+        self.assertNotIn(self.dataset.id, datasets_ids)

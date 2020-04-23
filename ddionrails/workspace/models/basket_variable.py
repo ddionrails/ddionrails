@@ -41,6 +41,7 @@ class BasketVariable(models.Model):
         related_name="baskets_variables",
         on_delete=models.DO_NOTHING,
         help_text="Foreign key to data.Variable",
+        db_constraint=False,
     )
 
     class Meta:

@@ -164,7 +164,6 @@ class StudyImportManager:
 
         self.import_order = OrderedDict(
             {
-                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
                 "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
                 "concepts": (ConceptImport, self.base_dir / "concepts.csv"),
@@ -201,6 +200,7 @@ class StudyImportManager:
                 ),
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
+                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
             }
         )
 
