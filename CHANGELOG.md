@@ -11,6 +11,17 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.4.0] - 2020-04-23
+
+### Added
+
+- `update` command flag -c --clean-import
+
+  - Clean import deletes a study and all its associated data,
+    except BasketVariables.
+    The import then restores the study itself and continues
+    importing from the studies metadata repository.
+
 ## [4.3.0] - 2020-04-21
 
 ### Added
@@ -397,7 +408,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...develop
+[4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
 [4.2.3]: https://github.com/ddionrails/ddionrails/compare/v4.2.2...v4.2.3
