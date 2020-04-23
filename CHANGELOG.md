@@ -13,11 +13,11 @@ Older versions are not not part of this Project.
 
 ## [4.3.0] - 2020-04-21
 
-## Added
+### Added
 
 - Several API endpoints using Django REST Framework.
 
-## Changed
+### Changed
 
 - Refactored javascript libraries.
 - Replaced basket handling via old API endpoints with django REST framework
@@ -28,36 +28,36 @@ Older versions are not not part of this Project.
 
 ## [4.2.4] - 2020-02-27
 
-## Changed
+### Changed
 
 - Updated django from 2.2.10 to 3.0.3
 
-## Fixed
+### Fixed
 
 - Added missing migration.
 - crash occurring while trying to display faulty dataset data.
 
 ## [4.2.3] - 2020-02-24
 
-## Changed
+### Changed
 
 - Badge with news on Homepage is now dynamically filled from the database.
 - Limit LabelTable size to fix system overloading.
 - Variable detail `description` is now filled from the database field
   `description`. Was formerly filled from `description_long`.
 
-## Removed
+### Removed
 
 - fakeredis from dependencies.
 
 ## [4.2.2] - 2020-01-16
 
-## Changed
+### Changed
 
 - Update "legacy" import to work with image import.
 - Major refactoring of variable model.
 
-## Fixed
+### Fixed
 
 - Comply to new names used in ReactiveList of reactivesearch-vue.
 - pytest-mock is no longer used as a context manager.
