@@ -11,6 +11,7 @@
 {% endblock scripts %}
 
 {% block content %}
+{% csrf_token %}
 
 
 {{ json_object|json_script:"context_data" }}
