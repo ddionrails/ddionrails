@@ -77,10 +77,10 @@
         },
         "django-filer": {
             "hashes": [
-                "sha256:3da256ab69edc0daed0ccc9a7de37d0548b16037d57684b5524ec34cf3e203fe"
+                "sha256:7bf8cda6cbdd02c30198c59dfe2027624ee70a204f2d4f6cc2a0a8563df9b286"
             ],
             "index": "pypi",
-            "version": "==1.7.0"
+            "version": "==1.7.1"
         },
         "django-import-export": {
             "hashes": [
@@ -1122,10 +1122,10 @@
         },
         "virtualenv": {
             "hashes": [
-                "sha256:8bb59b586fea2eb3bb5600f7ef53d11fd4a64806cdf1a7217b29e7d943dbd8dc",
-                "sha256:b86480fc1fe3908a85d7377eee8dc9644a58090b9d3a3701b347c69c308f3e72"
+                "sha256:b4c14d4d73a0c23db267095383c4276ef60e161f94fde0427f2f21a0132dde74",
+                "sha256:fd0e54dec8ac96c1c7c87daba85f0a59a7c37fe38748e154306ca21c73244637"
             ],
-            "version": "==20.0.19"
+            "version": "==20.0.20"
         },
         "wcwidth": {
             "hashes": [
