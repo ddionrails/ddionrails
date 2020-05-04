@@ -11,6 +11,12 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.4.1] - 2020-05-04
+
+### Fixed
+
+- Clean import no longer deletes baskets
+
 ## [4.4.0] - 2020-04-23
 
 ### Added
@@ -369,7 +375,7 @@ Older versions are not not part of this Project.
 ### Removed
 
 - Fabric from dependencies
-
+>
 ## [3.0.0] - 2019-05-17
 
 ### Added
@@ -408,7 +414,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...develop
+[4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
