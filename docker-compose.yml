@@ -107,7 +107,7 @@ services:
       - no-new-privileges
 
   nginx:
-    image: nginx:1.17-alpine
+    image: nginx:1.18-alpine
     ports:
       - 80:80
     depends_on: 
