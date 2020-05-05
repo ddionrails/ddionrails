@@ -46,8 +46,9 @@ class Basket(TimeStampedModel):
     study = models.ForeignKey(
         Study,
         related_name="baskets",
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         help_text="Foreign key to studies.Study",
+        db_constraint=False,
     )
     user = models.ForeignKey(
         User,
@@ -65,7 +66,7 @@ class Basket(TimeStampedModel):
         unique_together = ("user", "name")
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "user.username" and "name" fields """
+        """ Create a pathlike string to reach this basket from the frontend."""
         return "%s/%s" % (self.user.username, self.name)
 
     def get_absolute_url(self) -> str:
@@ -77,7 +78,10 @@ class Basket(TimeStampedModel):
         return render_markdown(self.description)
 
     def title(self) -> str:
-        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        """ Returns a title representation.
+
+        Uses the "label" field, with "name" field as fallback
+        """
         return str(self.label) if self.label != "" else str(self.name)
 
     @classmethod
