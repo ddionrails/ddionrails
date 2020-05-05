@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+{% csrf_token %}
 
     <h1>Basket: {{ basket.name }}</h1>
 

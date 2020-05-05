@@ -8,6 +8,7 @@
     {% render_bundle 'visualization' 'css' %}
 {% endblock styles %}
 {% block content %}
+    {% csrf_token %}
     {{ javascript_json|json_script:"context_data" }}
     <h1>{{ variable.title }}</h1>
     <div class="row">
