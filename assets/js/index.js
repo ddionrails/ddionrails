@@ -28,3 +28,11 @@ if (ieTen > 0 || ieEleven > 0) {
   const warning = document.getElementById("windowsWarning");
   warning.classList.remove("hidden");
 }
+
+$("document").ready(
+  function() {
+    for (const table of $(".datatable")) {
+      table.dataTable();
+    }
+  }
+);
