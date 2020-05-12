@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 from ddionrails.imports.helpers import download_image, store_image
+from ddionrails.workspace.models import BasketVariable
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
@@ -118,6 +119,12 @@ class VariableImport(imports.CSVImport):
             raise type(error)(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
+
+    def execute_import(self):
+        for row in self.content:
+            self.import_element(row)
+        # Only clean up basket variables, if all variables have been reimported properly.
+        BasketVariable.remove_dangling_basket_variables()
 
     def _import_variable(self, element):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
