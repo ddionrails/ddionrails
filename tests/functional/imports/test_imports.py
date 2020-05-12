@@ -182,10 +182,12 @@ class TestStudyImportManager:
     def test_import_variables(self, study_import_manager, variable, concept):
         assert 1 == Variable.objects.count()
         study_import_manager.import_single_entity("variables")
-        assert 1 == Variable.objects.count()
-        variable = Variable.objects.first()
-        assert "https://variable-image.de" == variable.image_url
-        assert concept == variable.concept
+        assert 2 == Variable.objects.count()
+        imported_variable = Variable.objects.get(
+            name=variable.name, dataset=variable.dataset
+        )
+        assert "https://variable-image.de" == imported_variable.image_url
+        assert concept == imported_variable.concept
 
     def test_import_questions_variables(self, study_import_manager, variable, question):
         assert 0 == QuestionVariable.objects.count()
