@@ -128,7 +128,9 @@ class VariableImport(imports.CSVImport):
 
     def _import_variable(self, element):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
-        variable = Variable.objects.get(dataset=dataset, name=element["variable_name"])
+        variable, _ = Variable.objects.get_or_create(
+            dataset=dataset, dataset__study=self.study, name=element["variable_name"]
+        )
         concept_name = element.get("concept_name", "")
         if concept_name != "":
             concept = Concept.objects.get(name=concept_name)
