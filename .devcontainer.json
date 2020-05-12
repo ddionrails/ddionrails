@@ -35,6 +35,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "github.vscode-pull-request-github",
-    "gruntfuggly.todo-tree"
+    "gruntfuggly.todo-tree",
+    "alefragnani.bookmarks"
   ]
 }
