@@ -11,6 +11,27 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.4.2] - 2020-05-04
+
+### Changed
+
+- Dangling BasketVariables are now removed after a full import of all variables
+  instead of after all import jobs.
+
+  - To guarantee that no basket variables are removed because of failed variable imports.
+  - To no longer block the study update command since it is now part of a redis job.
+  
+- Removal of Dangling BasketVariables is now only performed for the study, that is 
+  currently imported to prevent accidental removal of variables when trying to update
+  several studies.
+
+### Fixed
+
+- Authentication for the button to add variables to baskets now works in production.
+- Added function to instantiate all dataTables on a page.
+
+  - Display of dataTables had stopped working, probably through some dependency update.
+
 ## [4.4.1] - 2020-05-04
 
 ### Fixed
@@ -414,8 +435,9 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...develop
-[4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...develop
+[4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
+[4.4.1]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
