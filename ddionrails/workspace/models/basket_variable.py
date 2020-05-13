@@ -78,7 +78,7 @@ class BasketVariable(models.Model):
         return True
 
     @staticmethod
-    def remove_dangling_basket_variables():
+    def remove_dangling_basket_variables(study_name: str = None):
         """Remove all BasketVariables that are not linked with an existing Variable.
 
         The variable ForeignKey is set to not Cascade on delete of the linked variable.
@@ -88,7 +88,14 @@ class BasketVariable(models.Model):
         This means it is also possible that ForeignKeys no longer point to an existing
         variable after an update.
         These BasketVariables should be removed after an update.
+
+        Args:
+            study_name: Limits clean up to variables linked to the study with the
+                        specified name.
         """
-        for basket_variable in BasketVariable.objects.all():
+        _filter = dict()
+        if study_name:
+            _filter["basket__study__name"] = study_name
+        for basket_variable in BasketVariable.objects.filter(**_filter):
             if not basket_variable.variable_key_exists():
                 basket_variable.delete()

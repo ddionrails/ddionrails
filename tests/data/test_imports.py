@@ -20,9 +20,12 @@ from ddionrails.data.imports import (
     VariableImport,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
+from tests.concepts.factories import ConceptFactory
 from tests.conftest import MockOpener, VariableImageFile
 
 from .factories import VariableFactory
+
+TEST_CASE = unittest.TestCase()
 
 
 @pytest.fixture(name="dataset_csv_importer")
@@ -288,42 +291,35 @@ class TestTransformationImport:
 
 class TestVariableImport:
     def test_import_element_method(self, mocker, variable_importer, dataset):
-        mocked_import_variable_links = mocker.patch.object(
-            VariableImport, "_import_variable_links"
-        )
+        mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
         element = dict(dataset_name=dataset.name, variable_name="some-variable")
         variable_importer.import_element(element)
-        mocked_import_variable_links.assert_called_once()
+        mocked_import_variable.assert_called_once()
 
     def test_import_element_method_fails(
         self, mocker, capsys, variable_importer, dataset
     ):  # pylint: disable=unused-argument
-        mocked_import_variable_links = mocker.patch.object(
-            VariableImport, "_import_variable_links"
-        )
-        mocked_import_variable_links.side_effect = KeyError
+        mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
+        mocked_import_variable.side_effect = KeyError
         element = dict(dataset_name="asdas", variable_name="")
-        variable_importer.import_element(element)
-        mocked_import_variable_links.assert_called_once()
+        with TEST_CASE.assertRaises(KeyError):
+            variable_importer.import_element(element)
+        mocked_import_variable.assert_called_once()
 
-    def test_import_variable_links_method(self, variable_importer, variable):
+    def test_import_variable_method(self, variable_importer, variable):
         element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
-        variable_importer._import_variable_links(  # pylint: disable=protected-access
-            element
-        )
+        variable_importer._import_variable(element)  # pylint: disable=protected-access
 
-    def test_import_variable_links_method_with_concept_name(
-        self, variable_importer, variable
-    ):
+    def test_import_variable_method_with_concept_name(self, variable_importer, variable):
+        concept = ConceptFactory(name="some-concept")
+        concept.save()
         element = dict(
             dataset_name=variable.dataset.name,
             variable_name=variable.name,
-            concept_name="some-concept",
+            concept_name=concept.name,
             description="some-description",
         )
-        variable_importer._import_variable_links(  # pylint: disable=protected-access
-            element
-        )
+        variable_importer._import_variable(element)  # pylint: disable=protected-access
         variable = Variable.objects.get(id=variable.id)
         assert variable.description == element["description"]
         assert variable.concept.name == element["concept_name"]

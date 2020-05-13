@@ -10,7 +10,6 @@ from django.core.management.base import BaseCommand
 
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import BasketVariable
 
 
 class Command(BaseCommand):
@@ -126,7 +125,6 @@ def update_single_study(
         manager.import_single_entity(entity[0], filename)
     else:
         update_study_partial(manager, entity)
-    BasketVariable.remove_dangling_basket_variables()
 
 
 def update_all_studies_completely(local: bool, clean_import=False) -> None:
