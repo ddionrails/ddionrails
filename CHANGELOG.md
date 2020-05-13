@@ -415,7 +415,7 @@ Older versions are not not part of this Project.
 - Codestyle to work with flake8
 
 [unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...develop
-[4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
+[4.4.1]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
