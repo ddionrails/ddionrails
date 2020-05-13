@@ -108,20 +108,31 @@ class TestBasketVariableModel(unittest.TestCase):
         self.assertEqual(1, BasketVariable.objects.count())
 
     def test_variable_deletion_behavior(self):
-        """Does the BasketVariable keep existing and can we clean it up?
+        """Do BasketVariable persist through study deletion?
 
         Is a BasketVariable kept if we delete its variable?
-        Can we clean up BasketVariables, that link to non existing variables?
         """
         basket_variable = BasketVariable(
             basket_id=self.basket.id, variable_id=self.variable.id
         )
-        basket_variable.clean()
         basket_variable.save()
+        variable_id = basket_variable.variable.id
         basket_variable.variable.delete()
-        self.assertEqual(1, BasketVariable.objects.count())
+        BasketVariable.objects.get(variable__id=variable_id)
+        with self.assertRaises(Variable.DoesNotExist):
+            Variable.objects.get(id=variable_id)
+
+    def test_remove_dangling_basket_variables(self):
+        """Can we clean up BasketVariables, that link to non existing variables?"""
+        basket_variable = BasketVariable(
+            basket_id=self.basket.id, variable_id=self.variable.id
+        )
+        basket_variable.save()
+        variable_id = basket_variable.variable.id
+        basket_variable.variable.delete()
         basket_variable.remove_dangling_basket_variables()
-        self.assertEqual(0, BasketVariable.objects.count())
+        with self.assertRaises(BasketVariable.DoesNotExist):
+            BasketVariable.objects.get(variable__id=variable_id)
 
     def test_clean_method_fails(self):
         """Ensure the correct error raising of the BasketVariable clean method.
