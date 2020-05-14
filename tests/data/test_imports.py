@@ -5,6 +5,7 @@
 import csv
 import unittest
 from io import BytesIO, StringIO
+from pathlib import Path
 from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
@@ -22,6 +23,7 @@ from ddionrails.data.imports import (
 from ddionrails.data.models import Dataset, Transformation, Variable
 from tests.concepts.factories import ConceptFactory
 from tests.conftest import MockOpener, VariableImageFile
+from tests.data.factories import DatasetFactory
 
 from .factories import VariableFactory
 
@@ -289,7 +291,24 @@ class TestTransformationImport:
         assert Transformation.objects.count() == 0
 
 
+@pytest.mark.django_db
 class TestVariableImport:
+    def test_variable_import(self):
+        some_dataset = DatasetFactory(name="some-dataset")
+        some_dataset.save()
+        ConceptFactory(name="some-concept").save()
+        ConceptFactory(name="orphaned-concept").save()
+        variable_path = Path(
+            "tests/functional/test_data/some-study/ddionrails/variables.csv"
+        )
+        variable_path = variable_path.absolute()
+        VariableImport.run_import(variable_path, study=some_dataset.study)
+        with open(variable_path, "r") as csv_file:
+            variable_names = {row["name"] for row in csv.DictReader(csv_file)}
+        result = Variable.objects.filter(name__in=list(variable_names))
+        TEST_CASE.assertNotEqual(0, len(result))
+        TEST_CASE.assertEqual(len(variable_names), len(result))
+
     def test_import_element_method(self, mocker, variable_importer, dataset):
         mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
         element = dict(dataset_name=dataset.name, variable_name="some-variable")
