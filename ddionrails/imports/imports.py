@@ -4,12 +4,15 @@
 
 import logging
 import os
+from pathlib import Path
 from typing import Iterable, Union
 
 import frontmatter
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from django.forms import Form
+
+from ddionrails.studies.models import Study
 
 from .helpers import read_csv
 
@@ -26,7 +29,7 @@ class Import:
 
     content: Union[None, str, Iterable]
 
-    def __init__(self, filename, study=None, system=None):
+    def __init__(self, filename: Union[Path, str], study: Study = None, system=None):
         self.study = study
         self.system = system
         self.filename = filename
