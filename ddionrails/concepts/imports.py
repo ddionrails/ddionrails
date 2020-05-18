@@ -5,6 +5,8 @@
 import json
 import logging
 
+from django.db.transaction import atomic
+
 from ddionrails.imports import imports
 
 from .forms import (
@@ -54,6 +56,10 @@ class ConceptImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = ConceptForm
 
+    @atomic
+    def execute_import(self):
+        super().execute_import()
+
     def import_element(self, element):
         new_concept = super().import_element(element)
         topic_name = element.get("topic_name", None)
@@ -63,7 +69,10 @@ class ConceptImport(imports.CSVImport):
                 topic.concepts.add(new_concept)
             except:
                 logger.error(
-                    f'Could not link concept "{new_concept.name}"" to topic "{topic_name}"'
+                    (
+                        "Could not link concept "
+                        f'"{new_concept.name}"" to topic "{topic_name}"'
+                    )
                 )
         return new_concept
 

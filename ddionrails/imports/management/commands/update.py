@@ -57,7 +57,7 @@ class Command(BaseCommand):
 
         # if no study_name is given, update all studies
         if study_name == "all":
-            self.log_success(f"Updating all studies")
+            self.log_success("Updating all studies")
             update_all_studies_completely(local, clean_import)
             sys.exit(0)
 

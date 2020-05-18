@@ -8,8 +8,10 @@ import unittest
 import uuid
 from io import BytesIO
 from pathlib import Path
+from shutil import copytree, rmtree
+from tempfile import mkdtemp
 from typing import Any, Callable, Dict, Generator, List, Protocol, Set, TypedDict, Union
-from unittest.mock import mock_open
+from unittest.mock import MagicMock, mock_open, patch
 
 import PIL.Image
 import pytest
@@ -439,6 +441,26 @@ def _news(request) -> NewsFixture:
         request.instance.news = the_news
         request.instance.news_bullets = bullet_points
     return {"news": the_news, "bullet_points": bullet_points}
+
+
+@pytest.fixture(name="mock_import_path")
+def _mock_import_path(request) -> MagicMock:
+    tmp_path = Path(mkdtemp())
+    csv_path = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
+    import_path = copytree(csv_path, tmp_path.joinpath("ddionrails"))
+
+    patch_dict = {
+        "target": "ddionrails.studies.models.Study.import_path",
+        "return_value": import_path,
+    }
+
+    if request.instance:
+        request.instance.import_path_patch_dict = patch_dict
+
+    with patch(**patch_dict):
+        yield
+
+    rmtree(tmp_path)
 
 
 class MockOpener:

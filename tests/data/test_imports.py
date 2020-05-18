@@ -12,6 +12,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests_mock
 
+from ddionrails.concepts.imports import ConceptImport
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.imports import (
     DatasetImport,
@@ -21,6 +22,8 @@ from ddionrails.data.imports import (
     VariableImport,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
+from ddionrails.imports.manager import StudyImportManager
+from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory
 from tests.conftest import MockOpener, VariableImageFile
 from tests.data.factories import DatasetFactory
@@ -292,6 +295,7 @@ class TestTransformationImport:
 
 
 @pytest.mark.django_db
+@pytest.mark.usefixtures(("mock_import_path"))
 class TestVariableImport:
     def test_variable_import(self):
         some_dataset = DatasetFactory(name="some-dataset")
@@ -303,6 +307,26 @@ class TestVariableImport:
         )
         variable_path = variable_path.absolute()
         VariableImport.run_import(variable_path, study=some_dataset.study)
+        with open(variable_path, "r") as csv_file:
+            variable_names = {row["name"] for row in csv.DictReader(csv_file)}
+        result = Variable.objects.filter(name__in=list(variable_names))
+        TEST_CASE.assertNotEqual(0, len(result))
+        TEST_CASE.assertEqual(len(variable_names), len(result))
+
+    def test_variable_import_with_orphaned_concept(self):
+
+        csv_path = Study().import_path()
+        concept_path = csv_path.joinpath("concepts.csv")
+
+        some_dataset = DatasetFactory(name="some-dataset")
+        some_dataset.save()
+        StudyImportManager(study=some_dataset.study).fix_concepts_csv()
+        ConceptFactory(name="some-concept").save()
+        variable_path = csv_path.joinpath("variables.csv")
+        variable_path = variable_path.absolute()
+        ConceptImport(concept_path).run_import(filename=concept_path)
+        VariableImport.run_import(variable_path, study=some_dataset.study)
+
         with open(variable_path, "r") as csv_file:
             variable_names = {row["name"] for row in csv.DictReader(csv_file)}
         result = Variable.objects.filter(name__in=list(variable_names))
