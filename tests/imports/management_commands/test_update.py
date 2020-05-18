@@ -3,6 +3,7 @@
 
 """ Test cases for "update" management command for ddionrails project """
 
+import csv
 import unittest
 from pathlib import Path
 
@@ -10,7 +11,8 @@ import pytest
 from _pytest.capture import CaptureFixture
 from django.core.management import call_command
 
-from ddionrails.data.models import Dataset
+from ddionrails.concepts.models import Period
+from ddionrails.data.models import Dataset, Variable
 from ddionrails.imports.management.commands import update
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.workspace.models import Basket
@@ -18,6 +20,9 @@ from tests.data.factories import DatasetFactory
 from tests.workspace.factories import BasketFactory
 
 pytestmark = [pytest.mark.django_db]
+
+
+IMPORT_PATH = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
 
 TEST_CASE = unittest.TestCase()
 
@@ -64,24 +69,44 @@ def test_update_study_partial(study, mocked_import_single_entity):
     mocked_import_single_entity.assert_called_once_with(entity[0])
 
 
-def test_update_single_study(study, mocker, mocked_import_all_entities):
+@pytest.mark.django_db
+@pytest.mark.usefixtures(("mock_import_path"))
+def test_update_single_study(study, mocker):
+    with open(IMPORT_PATH.joinpath("variables.csv")) as variables_file:
+        expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
     mocked_update_repo = mocker.patch(
         "ddionrails.imports.manager.StudyImportManager.update_repo"
     )
-
     update.update_single_study(study, False, (), None)
     mocked_update_repo.assert_called_once()
-    mocked_import_all_entities.assert_called_once()
+    result = {variable.name for variable in Variable.objects.all()}
+    TEST_CASE.assertNotEqual(0, len(result))
+    TEST_CASE.assertEqual(expected_variables, result)
 
 
-def test_update_single_study_local(study, mocked_import_all_entities):
-    update.update_single_study(study, True, (), None)
-    mocked_import_all_entities.assert_called_once()
+@pytest.mark.usefixtures(("mock_import_path"))
+def test_update_single_study_local(study):
+    local = True
+    with open(IMPORT_PATH.joinpath("variables.csv")) as variables_file:
+        expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
+    update.update_single_study(study, local, (), None)
+    result = {variable.name for variable in Variable.objects.all()}
+    TEST_CASE.assertNotEqual(0, len(result))
+    TEST_CASE.assertEqual(expected_variables, result)
 
 
-def test_update_single_study_entity(study, mocked_update_study_partial):
-    update.update_single_study(study, True, ("periods",), None)
-    mocked_update_study_partial.assert_called_once()
+@pytest.mark.usefixtures(("mock_import_path"))
+def test_update_single_study_entity(study):
+
+    entities = ("periods",)
+
+    local = True
+    with open(IMPORT_PATH.joinpath("periods.csv")) as periods_file:
+        expected_periods = {row["name"] for row in csv.DictReader(periods_file)}
+    update.update_single_study(study, local, entities, None)
+    result = {period.name for period in Period.objects.all()}
+    TEST_CASE.assertNotEqual(0, len(result))
+    TEST_CASE.assertEqual(expected_periods, result)
 
 
 def test_update_single_study_entity_filename(study, mocked_import_single_entity):
@@ -209,6 +234,7 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
     )
 
 
+@pytest.mark.usefixtures(("mock_import_path"))
 class TestUpdate(unittest.TestCase):
     def setUp(self):
         self.dataset = DatasetFactory(name="test-dataset")
@@ -220,7 +246,7 @@ class TestUpdate(unittest.TestCase):
         return super().setUp()
 
     def test_clean_update(self):
-        """Does a clean update reove study data before the update?
+        """Does a clean update remove study data before the update?
 
         The clean import should remove all entities related to a study before
         the import of the study.

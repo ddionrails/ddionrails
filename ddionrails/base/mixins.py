@@ -111,10 +111,9 @@ class ModelMixin:
         label = getattr(self, "label", "")
         if self.language == "de":
             label = getattr(self, "label_de", "")
-        if label is not None and label != "":
+        if label:
             return str(label)
-        else:
-            return str(name)
+        return str(name)
 
     def html_description(self):
         """
@@ -139,7 +138,7 @@ class ModelMixin:
         return "/".join(result)
 
 
-class ImportPathMixin:
+class ImportPathMixin:  # pylint: disable=R0903
     """ A mixin for models to return an import_path based on their name attribute """
 
     def import_path(self) -> pathlib.Path:

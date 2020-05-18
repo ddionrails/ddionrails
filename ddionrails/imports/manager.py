@@ -2,6 +2,7 @@
 
 """ Manager classes for imports in ddionrails project """
 
+import csv
 import logging
 import re
 import shutil
@@ -156,6 +157,7 @@ class StudyImportManager:
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
+        self._concepts_fixed = False
 
         repositories_base_dir: Path = settings.IMPORT_REPO_PATH
         repository_dir = repositories_base_dir.joinpath(self.study.name)
@@ -204,6 +206,33 @@ class StudyImportManager:
             }
         )
 
+    def fix_concepts_csv(self):
+        """Add missing concepts, only present in the variable.csv, to the concepts.csv"""
+        if self._concepts_fixed:
+            return None
+        concept_path = self.import_order["concepts"][1]
+        variable_path = self.import_order["variables"][1]
+        with open(variable_path, "r") as variable_csv:
+            variable_concepts = {
+                row["concept_name"] for row in csv.DictReader(variable_csv)
+            }
+        with open(concept_path, "r") as concepts_csv:
+            _reader = csv.DictReader(concepts_csv)
+            concept_csv_content = list(_reader)
+            concept_fields = {field: "" for field in _reader.fieldnames}
+            concepts = {row["name"] for row in concept_csv_content}
+        orphaned_concepts = variable_concepts.difference(concepts)
+        with open(concept_path, "w") as concepts_csv:
+            writer = csv.DictWriter(concepts_csv, concept_fields.keys())
+            writer.writeheader()
+            for row in concept_csv_content:
+                writer.writerow(row)
+            for concept in orphaned_concepts:
+                concept_fields["name"] = concept
+                writer.writerow(concept_fields)
+        self._concepts_fixed = True
+        return None
+
     def update_repo(self):
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
@@ -220,6 +249,8 @@ class StudyImportManager:
         manager.import_single_entity("instruments", "instruments/some-instrument.json")
 
         """
+        if "concepts" in entity or "variables" in entity:
+            self.fix_concepts_csv()
         LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
         importer_class, default_file_path = self.import_order.get(entity)
 
