@@ -27,7 +27,7 @@
     "minimist": "^1.2.2"
   },
   "devDependencies": {
-    "cspell": "^4.0.61",
+    "cspell": "^4.0.63",
     "css-loader": "^3.5.3",
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
