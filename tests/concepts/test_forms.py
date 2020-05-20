@@ -28,7 +28,7 @@ class TestConceptForm:
         form = ConceptForm(data=valid_concept_data)
         assert form.is_valid() is True
         concept = form.save()
-        assert concept.name == valid_concept_data["concept_name"]
+        assert concept.name == valid_concept_data["name"]
 
     @pytest.mark.django_db
     def test_form_with_minimal_valid_data(self, minimal_valid_concept_data):

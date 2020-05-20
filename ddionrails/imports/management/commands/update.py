@@ -83,7 +83,7 @@ class Command(BaseCommand):
             )
             sys.exit(1)
 
-        update_single_study(study, local, entity, filename, clean_import)
+        update_single_study(study, local, tuple(entity), filename, clean_import)
 
         # Populate the search index from the database (indexes everything)
         django_rq.enqueue(call_command, "search_index", "--populate")

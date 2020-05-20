@@ -222,6 +222,8 @@ class StudyImportManager:
             concept_fields = {field: "" for field in _reader.fieldnames}
             concepts = {row["name"] for row in concept_csv_content}
         orphaned_concepts = variable_concepts.difference(concepts)
+        if "" in orphaned_concepts:
+            orphaned_concepts.remove("")
         with open(concept_path, "w") as concepts_csv:
             writer = csv.DictWriter(concepts_csv, concept_fields.keys())
             writer.writeheader()
