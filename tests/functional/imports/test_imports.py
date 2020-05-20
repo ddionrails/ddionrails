@@ -33,8 +33,7 @@ from tests.data.factories import VariableFactory
 TEST_CASE = unittest.TestCase()
 
 pytestmark = [  # pylint: disable=invalid-name
-    pytest.mark.functional,
-    pytest.mark.filterwarnings("ignore::DeprecationWarning"),
+    pytest.mark.filterwarnings("ignore::DeprecationWarning")
 ]
 
 
