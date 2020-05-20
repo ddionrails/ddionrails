@@ -111,8 +111,11 @@ def test_update_single_study_entity(study):
 
 def test_update_single_study_entity_filename(study, mocked_import_single_entity):
     filename = "tests/imports/test_data/sample.csv"
-    update.update_single_study(study, True, ("instruments",), filename)
-    mocked_import_single_entity.assert_called_once_with("instruments", filename)
+    with TEST_CASE.assertRaises(SystemExit) as error:
+        call_command("update", study.name, "instruments", "-f", filename, "-l")
+        TEST_CASE.assertEqual(0, error.exception.code)
+    TEST_CASE.assertEqual("instruments", mocked_import_single_entity.call_args.args[0])
+    TEST_CASE.assertEqual(Path(filename), mocked_import_single_entity.call_args.args[1])
 
 
 def test_update_all_studies_completely(
@@ -182,7 +185,7 @@ def test_update_command_with_valid_study_name_local(
         call_command("update", study.name, option)
 
     TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_single_study.assert_called_once_with(study, True, set(), None, False)
+    mocked_update_single_study.assert_called_once_with(study, True, tuple(), None, False)
 
 
 def test_update_command_with_valid_study_name_and_entity(
@@ -193,7 +196,7 @@ def test_update_command_with_valid_study_name_and_entity(
 
     TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_single_study.assert_called_once_with(
-        study, False, {"periods"}, None, False
+        study, False, tuple(("periods",)), None, False
     )
 
 
@@ -214,7 +217,7 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
 
     TEST_CASE.assertEqual(0, error.exception.code)
     mocked_update_single_study.assert_called_once_with(
-        study, False, {"instruments"}, Path(filename), False
+        study, False, tuple(("instruments",)), Path(filename), False
     )
 
 

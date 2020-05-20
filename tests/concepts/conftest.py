@@ -48,9 +48,7 @@ def period_with_range_definition(db):  # pylint: disable=invalid-name,unused-arg
 def valid_concept_data():
     """ A valid input for concept forms and imports """
     return dict(
-        concept_name="some-concept",
-        label="Some Concept",
-        description="This is some concept",
+        name="some-concept", label="Some Concept", description="This is some concept"
     )
 
 
