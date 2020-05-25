@@ -4,8 +4,8 @@
 
 import csv
 import logging
-import re
 import shutil
+import sys
 from collections import OrderedDict
 from pathlib import Path
 from typing import List
@@ -110,29 +110,6 @@ class Repository:
         return self.list_changed_files()
 
 
-class ImportLink:
-    def __init__(self, expression, importer, activate_import=True):
-        self.expression = re.compile(expression)
-        self.importer = importer
-        self.activate_import = activate_import
-
-    def run_import(self, import_files, study=None):
-        if self.activate_import:
-            for import_file in import_files:
-                self._process_import_file(import_file, study=study)
-
-    def _import(self, study, import_file):
-        self.importer.run_import(import_file, study=study)
-
-    def _process_import_file(self, import_file, study=None):
-        # import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
-        if self._match(import_file):
-            django_rq.enqueue(self._import, study, import_file)
-
-    def _match(self, import_file):
-        return bool(self.expression.match(import_file))
-
-
 class SystemImportManager:
     """Import the files from the system repository."""
 
@@ -153,11 +130,12 @@ class SystemImportManager:
 
 
 class StudyImportManager:
-    def __init__(self, study: Study):
+    def __init__(self, study: Study, redis: bool = True):
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
         self._concepts_fixed = False
+        self.redis = redis
 
         repositories_base_dir: Path = settings.IMPORT_REPO_PATH
         repository_dir = repositories_base_dir.joinpath(self.study.name)
@@ -239,6 +217,12 @@ class StudyImportManager:
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
+    def _execute(self, import_function, *args):
+        if self.redis:
+            django_rq.enqueue(import_function, *args)
+        else:
+            import_function(*args)
+
     def import_single_entity(self, entity: str, filename: str = None):
         """
         Example usage:
@@ -264,16 +248,17 @@ class StudyImportManager:
                     f'Study "{self.study.name}" starts import of file: "{file.name}"'
                 )
                 importer = importer_class(file, self.study)
-                django_rq.enqueue(importer.run_import, file, self.study)
+                self._execute(importer.run_import, file, self.study)
             else:
                 LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
+                sys.exit(1)
         else:
 
             # single file import
             if isinstance(default_file_path, Path):
                 if default_file_path.is_file():
                     importer = importer_class(default_file_path, self.study)
-                    django_rq.enqueue(importer.run_import, default_file_path, self.study)
+                    self._execute(importer.run_import, default_file_path, self.study)
                 else:
                     LOGGER.warning(
                         (
@@ -290,7 +275,7 @@ class StudyImportManager:
                         f'Study "{self.study.name}" starts import of file: "{file.name}"'
                     )
                     importer = importer_class(file, self.study)
-                    django_rq.enqueue(importer.run_import, file, self.study)
+                    self._execute(importer.run_import, file, self.study)
 
     def import_all_entities(self):
         """
@@ -311,4 +296,4 @@ class StudyImportManager:
             self.base_dir / "variables_images.csv"
         )
         if variable_image_import:
-            django_rq.enqueue(variable_image_import.image_import)
+            self._execute(variable_image_import.image_import)
