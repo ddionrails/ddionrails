@@ -44,8 +44,14 @@ def _study_import_manager(study, settings):
     return manager
 
 
+@pytest.fixture(name="clean_search_index")
+def _clean_search_index():
+    yield
+    call_command("search_index", "--delete", force=True)
+
+
 @pytest.mark.django_db
-@pytest.mark.usefixtures("mock_import_path")
+@pytest.mark.usefixtures("mock_import_path", "clean_search_index")
 class TestStudyImportManager:
     def test_import_study(self, study_import_manager):  # pylint: disable=unused-argument
         study_import_manager.import_single_entity("study")
@@ -144,6 +150,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(analysis_unit, instrument.analysis_unit)
         TEST_CASE.assertEqual(period, instrument.period)
 
+        call_command("search_index", "--populate")
         search = QuestionDocument.search().query("match_all")
         TEST_CASE.assertEqual(1, search.count())
         response = search.execute()
@@ -155,7 +162,6 @@ class TestStudyImportManager:
 
     @pytest.mark.usefixtures(("elasticsearch_indices"))
     def test_import_json_datasets(self, study):
-        VariableDocument.search().query("match_all").delete()
         TEST_CASE.assertEqual(0, Dataset.objects.count())
         TEST_CASE.assertEqual(0, Variable.objects.count())
         with TEST_CASE.assertRaises(SystemExit) as _error:
@@ -205,6 +211,23 @@ class TestStudyImportManager:
         )
         TEST_CASE.assertEqual("https://variable-image.de", imported_variable.image_url)
         TEST_CASE.assertEqual(concept, imported_variable.concept)
+
+    @pytest.mark.usefixtures("variable", "concept")
+    def test_import_variables_empty_concept(self, study):
+        """Do not create concept with empty, "", name."""
+
+        variables_csv = Study().import_path().joinpath("variables.csv")
+        with open(variables_csv, "a") as file:
+            file.write("some-study,some-dataset,a-variable,,")
+
+        TEST_CASE.assertEqual(1, Variable.objects.count())
+        with TEST_CASE.assertRaises(SystemExit) as _exit:
+            call_command("update", study.name, "concepts", "-l")
+            TEST_CASE.assertEqual(0, _exit.exception.code)
+        with TEST_CASE.assertRaises(SystemExit) as _exit:
+            call_command("update", study.name, "variables", "-l")
+            TEST_CASE.assertEqual(0, _exit.exception.code)
+        TEST_CASE.assertEqual(2, Concept.objects.count())
 
     def test_import_questions_variables(self, study_import_manager, variable, question):
         TEST_CASE.assertEqual(0, QuestionVariable.objects.count())
@@ -261,6 +284,8 @@ class TestStudyImportManager:
 
     @pytest.mark.usefixtures(("elasticsearch_indices"))
     def test_import_all(self, study):
+
+        call_command("search_index", "--delete", force=True)
         TEST_CASE.assertEqual(1, Study.objects.count())
 
         TEST_CASE.assertEqual(0, Concept.objects.count())
