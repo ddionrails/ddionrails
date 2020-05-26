@@ -11,6 +11,18 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.4.3] - 2020-05-26
+
+### Added
+
+- Flag to import without redis
+
+### Fixed
+
+- Abandoned Concepts (only found in variables.csv) are now handled explicitly.
+- Concepts are now imported directly in the ConceptInput class not through an
+  inherited function. The inherited function did no longer seem to work.
+
 ## [4.4.2] - 2020-05-04
 
 ### Changed
@@ -435,7 +447,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...develop
+[4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
 [4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
 [4.4.1]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
 [4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
