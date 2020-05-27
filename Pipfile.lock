@@ -157,10 +157,10 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:35de81968b78a1c708178773ccca56422661fc6e00905b81f48af8e8a9a2a6ba",
-                "sha256:eae591811e9bd82845ea22db3e891c30cad3d0f3e5dfd79cee80708872e5f626"
+                "sha256:9bfcb2bd137d6d7ca123e252b9d7261cfe4f7723f7b749a99c52b47766cf387c",
+                "sha256:e9138aa9de7624a6c6fbf5d0300bb11617cfe0a056fc6731665748731961d693"
             ],
-            "version": "==7.7.0"
+            "version": "==7.7.1"
         },
         "elasticsearch-dsl": {
             "hashes": [
@@ -350,10 +350,10 @@
         },
         "rq": {
             "hashes": [
-                "sha256:318017229145a40d34c20bc21ecdcd8c217a326eb08c9bee249e8c9e09846e36",
-                "sha256:e6d82156eb43a8fffe451099a716114f5f163ec7603b6e8c8dab16a1b31f4547"
+                "sha256:ef61f4517a1dc499b57bc0fa9e8a8f1c561e1f72abab936dbe9081a4508f8874",
+                "sha256:f680c52c7079266465d5e5c49679fab0d14db11d70fec6f1470423408b6bbcf6"
             ],
-            "version": "==1.4.1"
+            "version": "==1.4.2"
         },
         "six": {
             "hashes": [
@@ -632,10 +632,10 @@
         },
         "identify": {
             "hashes": [
-                "sha256:0f3c3aac62b51b86fea6ff52fe8ff9e06f57f10411502443809064d23e16f1c2",
-                "sha256:f9ad3d41f01e98eb066b6e05c5b184fd1e925fadec48eb165b4e01c72a1ef3a7"
+                "sha256:be66b9673d59336acd18a3a0e0c10d35b8a780309561edf16c46b6b74b83f6af",
+                "sha256:ef6fa3d125c27516f8d1aaa2038c3263d741e8723825eb38350cdc0288ab35eb"
             ],
-            "version": "==1.4.16"
+            "version": "==1.4.17"
         },
         "idna": {
             "hashes": [
@@ -992,11 +992,11 @@
         },
         "sphinx": {
             "hashes": [
-                "sha256:62edfd92d955b868d6c124c0942eba966d54b5f3dcb4ded39e65f74abac3f572",
-                "sha256:f5505d74cf9592f3b997380f9bdb2d2d0320ed74dd69691e3ee0644b956b8d83"
+                "sha256:779a519adbd3a70fc7c468af08c5e74829868b0a5b34587b33340e010291856c",
+                "sha256:ea64df287958ee5aac46be7ac2b7277305b0381d213728c3a49d8bb9b8415807"
             ],
             "index": "pypi",
-            "version": "==3.0.3"
+            "version": "==3.0.4"
         },
         "sphinx-rtd-theme": {
             "hashes": [
