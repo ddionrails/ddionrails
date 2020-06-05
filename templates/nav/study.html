@@ -13,5 +13,7 @@
         {% endif %}
         <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
         </li>
+        <li class="nav-item"><a href='search/all?Study="{{ study.label }}"' class="nav-link">Search in Study</a>
+        </li>
     </ul>
 </div>
