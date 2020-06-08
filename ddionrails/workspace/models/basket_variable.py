@@ -14,17 +14,6 @@ class BasketVariable(models.Model):
     """Links a Basket to its variables.
 
     related to :model:`workspace.Basket` and :model:`data.Variable`
-
-    on_delete, of the variable ForeignKey is set to DO_NOTHING.
-    This is done to keep this data, if the variable data is removed.
-    The use case for this is when all data from a study is to be removed to get
-    a clean import.
-    BasketVariables are user generated and cannot be imported like study data.
-    This means we do not want to delete them during the clean import process.
-
-    It is possible, that the name of a variable changes, which will lead to a
-    different id. This will leave BasketVariables, that do not point to an existing
-    variable. remove_dangling_basket_variables can be used to clean them up.
     """
 
     #############
@@ -39,7 +28,7 @@ class BasketVariable(models.Model):
     variable: models.ForeignKey = models.ForeignKey(
         Variable,
         related_name="baskets_variables",
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         help_text="Foreign key to data.Variable",
         db_constraint=False,
     )
@@ -76,26 +65,3 @@ class BasketVariable(models.Model):
         except ObjectDoesNotExist:
             return False
         return True
-
-    @staticmethod
-    def remove_dangling_basket_variables(study_name: str = None):
-        """Remove all BasketVariables that are not linked with an existing Variable.
-
-        The variable ForeignKey is set to not Cascade on delete of the linked variable.
-        This makes it possible to freshly ingest study data without removing user data
-        in the form of variables in baskets.
-        It is possible that variables may change names.
-        This means it is also possible that ForeignKeys no longer point to an existing
-        variable after an update.
-        These BasketVariables should be removed after an update.
-
-        Args:
-            study_name: Limits clean up to variables linked to the study with the
-                        specified name.
-        """
-        _filter = dict()
-        if study_name:
-            _filter["basket__study__name"] = study_name
-        for basket_variable in BasketVariable.objects.filter(**_filter):
-            if not basket_variable.variable_key_exists():
-                basket_variable.delete()

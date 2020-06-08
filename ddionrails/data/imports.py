@@ -123,8 +123,6 @@ class VariableImport(imports.CSVImport):
     def execute_import(self):
         for row in self.content:
             self.import_element(row)
-        # Only clean up basket variables, if all variables have been reimported properly.
-        BasketVariable.remove_dangling_basket_variables(study_name=self.study.name)
 
     def _import_variable(self, element):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])

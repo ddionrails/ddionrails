@@ -46,7 +46,7 @@ class Basket(TimeStampedModel):
     study = models.ForeignKey(
         Study,
         related_name="baskets",
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         help_text="Foreign key to studies.Study",
         db_constraint=False,
     )

@@ -107,66 +107,6 @@ class TestBasketVariableModel(unittest.TestCase):
         basket_variable.save()
         self.assertEqual(1, BasketVariable.objects.count())
 
-    def test_variable_deletion_behavior(self):
-        """Do BasketVariable persist through study deletion?
-
-        Is a BasketVariable kept if we delete its variable?
-        """
-        basket_variable = BasketVariable(
-            basket_id=self.basket.id, variable_id=self.variable.id
-        )
-        basket_variable.save()
-        variable_id = basket_variable.variable.id
-        basket_variable.variable.delete()
-        BasketVariable.objects.get(variable__id=variable_id)
-        with self.assertRaises(Variable.DoesNotExist):
-            Variable.objects.get(id=variable_id)
-
-    def test_remove_dangling_basket_variables(self):
-        """Can we clean up BasketVariables, that link to non existing variables?"""
-        basket_variable = BasketVariable(
-            basket_id=self.basket.id, variable_id=self.variable.id
-        )
-        basket_variable.save()
-        variable_id = basket_variable.variable.id
-        basket_variable.variable.delete()
-        basket_variable.remove_dangling_basket_variables()
-        with self.assertRaises(BasketVariable.DoesNotExist):
-            BasketVariable.objects.get(variable__id=variable_id)
-
-    def test_remove_dangling_basket_variables_study_specific(self):
-        """Can we clean up BasketVariables belonging to a specific study?"""
-        other_study = StudyFactory(name="a_different_study")
-        dataset = DatasetFactory(name="a_different_study")
-        dataset.study = other_study
-        dataset.save()
-        new_variable = Variable()
-        new_variable.name = "a_different_variable"
-        new_variable.dataset = dataset
-        basket_variable = BasketVariable(
-            basket_id=self.basket.id, variable_id=self.variable.id
-        )
-        new_basket = Basket()
-        new_basket.study = other_study
-        new_basket.user = self.basket.user
-        new_basket.save()
-        new_basket_variable = BasketVariable()
-        new_basket_variable.variable = new_variable
-        new_basket_variable.basket = new_basket
-        new_basket_variable.save()
-
-        basket_variable.save()
-        variable_id = basket_variable.variable.id
-        new_variable_id = new_variable.id
-        basket_variable.variable.delete()
-        new_variable.delete()
-        basket_variable.remove_dangling_basket_variables(
-            study_name=self.basket.study.name
-        )
-        with self.assertRaises(BasketVariable.DoesNotExist):
-            BasketVariable.objects.get(variable__id=variable_id)
-        BasketVariable.objects.get(variable__id=new_variable_id)
-
     def test_clean_method_fails(self):
         """Ensure the correct error raising of the BasketVariable clean method.
 
