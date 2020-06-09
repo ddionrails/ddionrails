@@ -11,6 +11,19 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.0] - 2020-06-09
+
+### Added
+
+- "Search in Study" navigation link from a Study view.
+  
+  - User is directed to the search interface with the filter for the
+    study already enabled.
+
+### Changed
+
+- Update ScriptGenerator in workspace
+
 ## [4.4.3] - 2020-05-26
 
 ### Added
@@ -447,7 +460,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...develop
+[4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
 [4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
 [4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
 [4.4.1]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
