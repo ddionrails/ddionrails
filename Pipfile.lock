@@ -91,10 +91,10 @@
         },
         "django-import-export": {
             "hashes": [
-                "sha256:28784ba1754850059f3612c1b233c87f4c8658e01870c22e9d9d66ae7af1f41e"
+                "sha256:83be410caca8c1b78585677c0fd7ae0e4de5dd5507ad3cea815fbcd29323f448"
             ],
             "index": "pypi",
-            "version": "==2.1.0"
+            "version": "==2.2.0"
         },
         "django-js-asset": {
             "hashes": [
