@@ -31,8 +31,6 @@ if (ieTen > 0 || ieEleven > 0) {
 
 $("document").ready(
   function() {
-    for (const table of $(".datatable")) {
-      table.dataTable();
-    }
+    $(".datatable").dataTable();
   }
 );
