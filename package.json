@@ -54,20 +54,6 @@
     "format": "eslint --fix",
     "cspell": "cspell"
   },
-  "renovate": {
-    "baseBranches": [
-      "develop"
-    ],
-    "extends": [
-      "config:base"
-    ],
-    "lockFileMaintenance": {
-      "enabled": true
-    },
-    "rangeStrategy": "bump",
-    "schedule": "before 3am on Monday",
-    "statusCheckVerify": true
-  },
   "eslintConfig": {
     "env": {
       "browser": true,
