@@ -1,10 +1,57 @@
 version: 2
 updates:
-- package-ecosystem: pip
-  directory: "/"
-  schedule:
-    interval: daily
-    time: '04:00'
-    timezone: Europe/Berlin
-  open-pull-requests-limit: 10
-  target-branch: develop
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - "Python"
+      - "dependencies"
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - "JavaScript"
+      - "dependencies"
+  - package-ecosystem: "docker"
+    directory: "/docker/ddionrails"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - "ProductionDockerImage"
+      - "dependencies"
+  - package-ecosystem: "docker"
+    directory: "/docker/ddionrails/dev"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - "DevDockerImage"
+      - "dependencies"
+  - package-ecosystem: "docker"
+    directory: "/docker/postfix"
+    schedule:
+      interval: daily
+      time: "04:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 10
+    target-branch: develop
+    labels:
+      - "PostfixDockerImage"
+      - "dependencies"
