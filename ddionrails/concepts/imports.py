@@ -5,6 +5,9 @@
 import json
 import logging
 
+from django.db.transaction import atomic
+
+from ddionrails.concepts.models import Concept
 from ddionrails.imports import imports
 
 from .forms import (
@@ -54,18 +57,32 @@ class ConceptImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = ConceptForm
 
+    @atomic
+    def execute_import(self):
+        super().execute_import()
+
     def import_element(self, element):
-        new_concept = super().import_element(element)
+        concept_name = element.get("name", "")
+        if not concept_name:
+            return None
+        concept, _ = Concept.objects.get_or_create(name=concept_name)
+        concept.label = element.get("label", "")
+        concept.label_de = element.get("label_de", "")
+        concept.save()
         topic_name = element.get("topic_name", None)
-        if topic_name and new_concept:
+        if topic_name:
             try:
                 topic = Topic.objects.get(name=topic_name, study=self.study)
-                topic.concepts.add(new_concept)
-            except:
+                topic.concepts.add(concept)
+            except Topic.DoesNotExist:
                 logger.error(
-                    f'Could not link concept "{new_concept.name}"" to topic "{topic_name}"'
+                    (
+                        'Could not link concept "%s" to topic "%s"',
+                        concept.name,
+                        topic_name,
+                    )
                 )
-        return new_concept
+        return concept
 
 
 class AnalysisUnitImport(imports.CSVImport):

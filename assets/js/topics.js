@@ -349,10 +349,7 @@ function addToBasketRequest(nodeKey, basketId) {
   client.open("POST", newApiUrl, true);
   client.setRequestHeader("Content-type", "application/json");
 
-  const csrfTokenRegExp = new RegExp("csrftoken=(\\w+)(?:; )?", "g");
-  const csrfMatch = csrfTokenRegExp.exec(document.cookie);
-
-  const csrfToken = csrfMatch[1];
+  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
   client.withCredentials = true;
   client.setRequestHeader("X-CSRFToken", csrfToken);
   client.setRequestHeader("Accept", "application/json");

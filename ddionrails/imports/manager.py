@@ -2,9 +2,10 @@
 
 """ Manager classes for imports in ddionrails project """
 
+import csv
 import logging
-import re
 import shutil
+import sys
 from collections import OrderedDict
 from pathlib import Path
 from typing import List
@@ -109,29 +110,6 @@ class Repository:
         return self.list_changed_files()
 
 
-class ImportLink:
-    def __init__(self, expression, importer, activate_import=True):
-        self.expression = re.compile(expression)
-        self.importer = importer
-        self.activate_import = activate_import
-
-    def run_import(self, import_files, study=None):
-        if self.activate_import:
-            for import_file in import_files:
-                self._process_import_file(import_file, study=study)
-
-    def _import(self, study, import_file):
-        self.importer.run_import(import_file, study=study)
-
-    def _process_import_file(self, import_file, study=None):
-        # import_file = import_file.replace(settings.IMPORT_SUB_DIRECTORY, "")
-        if self._match(import_file):
-            django_rq.enqueue(self._import, study, import_file)
-
-    def _match(self, import_file):
-        return bool(self.expression.match(import_file))
-
-
 class SystemImportManager:
     """Import the files from the system repository."""
 
@@ -152,10 +130,12 @@ class SystemImportManager:
 
 
 class StudyImportManager:
-    def __init__(self, study: Study):
+    def __init__(self, study: Study, redis: bool = True):
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
+        self._concepts_fixed = False
+        self.redis = redis
 
         repositories_base_dir: Path = settings.IMPORT_REPO_PATH
         repository_dir = repositories_base_dir.joinpath(self.study.name)
@@ -164,7 +144,6 @@ class StudyImportManager:
 
         self.import_order = OrderedDict(
             {
-                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
                 "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
                 "concepts": (ConceptImport, self.base_dir / "concepts.csv"),
@@ -201,12 +180,48 @@ class StudyImportManager:
                 ),
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
+                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
             }
         )
+
+    def fix_concepts_csv(self):
+        """Add missing concepts, only present in the variable.csv, to the concepts.csv"""
+        if self._concepts_fixed:
+            return None
+        concept_path = self.import_order["concepts"][1]
+        variable_path = self.import_order["variables"][1]
+        with open(variable_path, "r") as variable_csv:
+            variable_concepts = {
+                row["concept_name"] for row in csv.DictReader(variable_csv)
+            }
+        with open(concept_path, "r") as concepts_csv:
+            _reader = csv.DictReader(concepts_csv)
+            concept_csv_content = list(_reader)
+            concept_fields = {field: "" for field in _reader.fieldnames}
+            concepts = {row["name"] for row in concept_csv_content}
+        orphaned_concepts = variable_concepts.difference(concepts)
+        if "" in orphaned_concepts:
+            orphaned_concepts.remove("")
+        with open(concept_path, "w") as concepts_csv:
+            writer = csv.DictWriter(concepts_csv, concept_fields.keys())
+            writer.writeheader()
+            for row in concept_csv_content:
+                writer.writerow(row)
+            for concept in orphaned_concepts:
+                concept_fields["name"] = concept
+                writer.writerow(concept_fields)
+        self._concepts_fixed = True
+        return None
 
     def update_repo(self):
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
+
+    def _execute(self, import_function, *args):
+        if self.redis:
+            django_rq.enqueue(import_function, *args)
+        else:
+            import_function(*args)
 
     def import_single_entity(self, entity: str, filename: str = None):
         """
@@ -220,6 +235,8 @@ class StudyImportManager:
         manager.import_single_entity("instruments", "instruments/some-instrument.json")
 
         """
+        if "concepts" in entity or "variables" in entity:
+            self.fix_concepts_csv()
         LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
         importer_class, default_file_path = self.import_order.get(entity)
 
@@ -231,16 +248,17 @@ class StudyImportManager:
                     f'Study "{self.study.name}" starts import of file: "{file.name}"'
                 )
                 importer = importer_class(file, self.study)
-                django_rq.enqueue(importer.run_import, file, self.study)
+                self._execute(importer.run_import, file, self.study)
             else:
                 LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
+                sys.exit(1)
         else:
 
             # single file import
             if isinstance(default_file_path, Path):
                 if default_file_path.is_file():
                     importer = importer_class(default_file_path, self.study)
-                    django_rq.enqueue(importer.run_import, default_file_path, self.study)
+                    self._execute(importer.run_import, default_file_path, self.study)
                 else:
                     LOGGER.warning(
                         (
@@ -257,7 +275,7 @@ class StudyImportManager:
                         f'Study "{self.study.name}" starts import of file: "{file.name}"'
                     )
                     importer = importer_class(file, self.study)
-                    django_rq.enqueue(importer.run_import, file, self.study)
+                    self._execute(importer.run_import, file, self.study)
 
     def import_all_entities(self):
         """
@@ -278,4 +296,4 @@ class StudyImportManager:
             self.base_dir / "variables_images.csv"
         )
         if variable_image_import:
-            django_rq.enqueue(variable_image_import.image_import)
+            self._execute(variable_image_import.image_import)

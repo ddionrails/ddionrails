@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 from ddionrails.imports.helpers import download_image, store_image
+from ddionrails.workspace.models import BasketVariable
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
@@ -100,25 +101,39 @@ class VariableImport(imports.CSVImport):
         form = VariableForm
 
     def import_element(self, element):
-        # TODO: Workaround
-        if "variable_name" not in element.keys():
-            element["variable_name"] = element.get("name")
+        variable_metadata = element
+        # TODO: Workaround for outdated input field name.
+        if "variable_name" not in variable_metadata.keys():
+            variable_metadata["variable_name"] = variable_metadata.get("name")
 
+        # This basically dropped variables in "silence" when there was a problem.
+        # Incomplete imports are highly undesirable.
+        # The exceptions handling should remain here for a while till it is clear
+        # what exceptions were actually meant to be handled here.
         try:
-            self._import_variable_links(element)
-        except:
-            variable = element.get("variable_name")
-            dataset = element.get("dataset_name")
-            LOGGER.error(
+            self._import_variable(variable_metadata)
+        except BaseException as error:
+            variable = variable_metadata.get("variable_name")
+            dataset = variable_metadata.get("dataset_name")
+
+            raise type(error)(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
 
-    def _import_variable_links(self, element):
+    def execute_import(self):
+        for row in self.content:
+            self.import_element(row)
+        # Only clean up basket variables, if all variables have been reimported properly.
+        BasketVariable.remove_dangling_basket_variables(study_name=self.study.name)
+
+    def _import_variable(self, element):
         dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
-        variable = Variable.objects.get(dataset=dataset, name=element["variable_name"])
-        concept_name = element.get("concept_name", "").lower()
+        variable, _ = Variable.objects.get_or_create(
+            dataset=dataset, dataset__study=self.study, name=element["variable_name"]
+        )
+        concept_name = element.get("concept_name", "")
         if concept_name != "":
-            concept = Concept.objects.get_or_create(name=concept_name)[0]
+            concept = Concept.objects.get(name=concept_name)
             variable.concept = concept
         variable.description = element.get("description", "")
         variable.description_long = element.get("description_long", "")

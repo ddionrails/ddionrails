@@ -10,7 +10,7 @@ from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 
 from ddionrails.workspace.models import Basket, Script
-from ddionrails.workspace.scripts import SoepStata
+from ddionrails.workspace.scripts.soep_config import SoepConfig
 
 from .decorator import own_basket_only
 
@@ -95,7 +95,7 @@ def script_new_lang(
     script = Script.objects.create(
         name=script_name,
         basket_id=basket_id,
-        settings=SoepStata.DEFAULT_CONFIG,
+        settings=SoepConfig.DEFAULT_CONFIG,
         generator_name=generator_name,
     )
     return redirect(script.get_absolute_url())

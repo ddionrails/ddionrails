@@ -57,7 +57,7 @@ class TestConceptImport:
     def test_import_with_valid_data(self, concept_importer, valid_concept_data):
         response = concept_importer.import_element(valid_concept_data)
         assert isinstance(response, Concept)
-        assert response.name == valid_concept_data["concept_name"]
+        assert response.name == valid_concept_data["name"]
 
     def test_import_with_invalid_data(self, concept_importer, empty_data):
         response = concept_importer.import_element(empty_data)

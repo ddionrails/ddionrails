@@ -11,13 +11,76 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.0] - 2020-06-09
+
+### Added
+
+- "Search in Study" navigation link from a Study view.
+  
+  - User is directed to the search interface with the filter for the
+    study already enabled.
+
+### Changed
+
+- Update ScriptGenerator in workspace
+
+## [4.4.3] - 2020-05-26
+
+### Added
+
+- Flag to import without redis
+
+### Fixed
+
+- Abandoned Concepts (only found in variables.csv) are now handled explicitly.
+- Concepts are now imported directly in the ConceptInput class not through an
+  inherited function. The inherited function did no longer seem to work.
+
+## [4.4.2] - 2020-05-04
+
+### Changed
+
+- Dangling BasketVariables are now removed after a full import of all variables
+  instead of after all import jobs.
+
+  - To guarantee that no basket variables are removed because of failed variable imports.
+  - To no longer block the study update command since it is now part of a redis job.
+  
+- Removal of Dangling BasketVariables is now only performed for the study, that is 
+  currently imported to prevent accidental removal of variables when trying to update
+  several studies.
+
+### Fixed
+
+- Authentication for the button to add variables to baskets now works in production.
+- Added function to instantiate all dataTables on a page.
+
+  - Display of dataTables had stopped working, probably through some dependency update.
+
+## [4.4.1] - 2020-05-04
+
+### Fixed
+
+- Clean import no longer deletes baskets
+
+## [4.4.0] - 2020-04-23
+
+### Added
+
+- `update` command flag -c --clean-import
+
+  - Clean import deletes a study and all its associated data,
+    except BasketVariables.
+    The import then restores the study itself and continues
+    importing from the studies metadata repository.
+
 ## [4.3.0] - 2020-04-21
 
-## Added
+### Added
 
 - Several API endpoints using Django REST Framework.
 
-## Changed
+### Changed
 
 - Refactored javascript libraries.
 - Replaced basket handling via old API endpoints with django REST framework
@@ -28,36 +91,36 @@ Older versions are not not part of this Project.
 
 ## [4.2.4] - 2020-02-27
 
-## Changed
+### Changed
 
 - Updated django from 2.2.10 to 3.0.3
 
-## Fixed
+### Fixed
 
 - Added missing migration.
 - crash occurring while trying to display faulty dataset data.
 
 ## [4.2.3] - 2020-02-24
 
-## Changed
+### Changed
 
 - Badge with news on Homepage is now dynamically filled from the database.
 - Limit LabelTable size to fix system overloading.
 - Variable detail `description` is now filled from the database field
   `description`. Was formerly filled from `description_long`.
 
-## Removed
+### Removed
 
 - fakeredis from dependencies.
 
 ## [4.2.2] - 2020-01-16
 
-## Changed
+### Changed
 
 - Update "legacy" import to work with image import.
 - Major refactoring of variable model.
 
-## Fixed
+### Fixed
 
 - Comply to new names used in ReactiveList of reactivesearch-vue.
 - pytest-mock is no longer used as a context manager.
@@ -358,7 +421,7 @@ Older versions are not not part of this Project.
 ### Removed
 
 - Fabric from dependencies
-
+>
 ## [3.0.0] - 2019-05-17
 
 ### Added
@@ -397,7 +460,12 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...develop
+[4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
+[4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
+[4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
+[4.4.1]: https://github.com/ddionrails/ddionrails/compare/v4.4.0...v4.4.1
+[4.4.0]: https://github.com/ddionrails/ddionrails/compare/v4.3.0...v4.4.0
 [4.3.0]: https://github.com/ddionrails/ddionrails/compare/v4.2.4...v4.3.0
 [4.2.4]: https://github.com/ddionrails/ddionrails/compare/v4.2.3...v4.2.4
 [4.2.3]: https://github.com/ddionrails/ddionrails/compare/v4.2.2...v4.2.3

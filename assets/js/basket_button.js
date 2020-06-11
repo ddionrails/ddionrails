@@ -28,10 +28,7 @@ function addBasketVariable(basket, variable, basketButton) {
   client.open("POST", BasketVariableAPI, true);
   client.setRequestHeader("Content-type", "application/json");
 
-  const csrfTokenRegExp = new RegExp("csrftoken=(\\w+)(?:; )?", "g");
-  const csrfMatch = csrfTokenRegExp.exec(document.cookie);
-
-  const csrfToken = csrfMatch[1];
+  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
   client.withCredentials = true;
   client.setRequestHeader("X-CSRFToken", csrfToken);
   client.setRequestHeader("Accept", "application/json");
@@ -70,10 +67,7 @@ function removeBasketVariable(basket, variable, basketButton) {
   getClient.open("GET", url, true);
   getClient.setRequestHeader("Content-type", "application/json");
 
-  const csrfTokenRegExp = new RegExp("csrftoken=(\\w+)(?:; )?", "g");
-  const csrfMatch = csrfTokenRegExp.exec(document.cookie);
-
-  const csrfToken = csrfMatch[1];
+  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
   getClient.withCredentials = true;
   getClient.setRequestHeader("X-CSRFToken", csrfToken);
   getClient.onreadystatechange = function() {
