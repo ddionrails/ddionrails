@@ -143,13 +143,5 @@
 {% block scripts %}
     <!-- Webpack bundle: "visualization" JS -->
     {% render_bundle 'visualization' 'js' %}
-    <script>
-        var path = "{{ variable }}.json"
-        var rawData;
-        d3.json(path, function (json) {
-            rawData = json;
-            render(rawData);
-        });
-    </script>
 {% endblock scripts %}
 </div>
