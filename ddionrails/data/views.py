@@ -111,11 +111,11 @@ class VariableDetailView(DetailView):
             Basket.objects.filter(study_id=study.id)
             .filter(user_id=self.request.user.id)
             .all()
-        )  # TODO user!
+        )
 
         # Ordering of keys in statistics dictionary
         context["statistics"] = dict()
-        ORDERING = (
+        ordering = (
             "Min.",
             "1st Qu.",
             "Median",
@@ -129,6 +129,7 @@ class VariableDetailView(DetailView):
             "variable": {
                 "id": str(context["variable"].id),
                 "name": context["variable"].name,
+                "data": self.object.content_dict,
             },
             "baskets": {
                 basket.name: {
@@ -144,7 +145,7 @@ class VariableDetailView(DetailView):
                 for basket in context["basket_list"]
             },
         }
-        for measure in ORDERING:
+        for measure in ordering:
             if measure in self.object.statistics:
                 context["statistics"][measure] = self.object.statistics[measure]
         return context
@@ -157,6 +158,7 @@ def variable_json(
     dataset_name: str,
     variable_name: str,
 ):
+    """Get variable metadata to be visualized in JavaScript plot."""
     variable = get_object_or_404(
         Variable,
         dataset__study__name=study_name,
