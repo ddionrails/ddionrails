@@ -13,6 +13,12 @@ python manage.py rqworker &
 echo "Creating search indices"
 python manage.py search_index --create || echo "Creating search indices failed." &
 
+apk add --no-cache npm & \
+npm install & \
+npm run build & \
+rm -r node_modules & \
+apk del npm &&
+
 echo "Starting server"
 exec "$@"
 
