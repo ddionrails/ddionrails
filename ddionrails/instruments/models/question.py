@@ -17,7 +17,7 @@ from django.db.models import QuerySet
 from django.urls import reverse
 
 from ddionrails.base.mixins import ModelMixin
-from ddionrails.concepts.models import Concept
+from ddionrails.concepts.models import Concept, Period
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
@@ -83,10 +83,16 @@ class Question(ModelMixin, models.Model):
         on_delete=models.CASCADE,
     )
 
+    period = models.ForeignKey(
+        Period, blank=True, null=True, related_name="period", on_delete=models.SET_NULL
+    )
+
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
+        if not self.period:
+            self.period = self.instrument.period
 
         self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
             self.instrument_id, self.name, cache=False
@@ -151,6 +157,8 @@ class Question(ModelMixin, models.Model):
         """Retrieve period from instrument if dataset period is not set yet."""
         if self.period:
             return self.period
+        # Save sets self.period = self.instrument.period
+        self.save()
         return self.instrument.period
 
     def get_related_question_set(self, all_studies=False, by_study_and_period=False):
