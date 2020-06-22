@@ -32,7 +32,7 @@
           :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study'] }"
-          renderNoResults="No Concepts found. Try to change your search query or filter options."
+          renderNoResults="Nothing found. Try to change your search query or filter options."
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <div v-if="item.type === 'variable'">
@@ -68,7 +68,7 @@ const helpers = require("./helpers.js");
 
 export default {
   name: "BaseSearch",
-  data: function() {
+  data() {
     return {
       index:
         helpers.indexNameSwitch("concepts,") +
@@ -96,8 +96,8 @@ export default {
         "description_long",
         "categories.labels",
         "categories.labels_de",
-        "dataset"
-      ]
+        "dataset",
+      ],
     };
   },
   components: {
@@ -106,12 +106,12 @@ export default {
     QuestionResult,
     PublicationResult,
     TopicResult,
-    VariableResult
+    VariableResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+  },
 };
 </script>
