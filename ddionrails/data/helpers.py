@@ -77,12 +77,14 @@ class LabelTable:
         result = [
             '<table class="table" id="label_table">',
             "<thead><tr>",
-            "<th>Variable:</th>",
+            '<th><i class="fa fa-chart-bar" title="Variable"></i> Variable</th>',
         ]
         try:
             for var in label_dict["header"]:
                 result.append('<th><a href="%s">%s</a></th>' % (str(var), var.name))
-            result.append("</tr><tr><th>Dataset:</th>")
+            result.append(
+                '</tr><tr><th><i class="fa fa-table" title="Dataset"></i> Dataset</th>'
+            )
             for var in label_dict["header"]:
                 dat = var.dataset
                 result.append('<th><a href="%s">%s</a></th>' % (str(dat), dat.name))
