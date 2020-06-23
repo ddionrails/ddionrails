@@ -10,7 +10,9 @@
 {% block content %}
     {% csrf_token %}
     {{ variable_baskets_context|json_script:"context_data" }}
-    <h1><i class="fa fa-chart-bar"></i> {{ variable.name }}: {{ variable.label }} ({{ variable.dataset.name}})</h1>
+    <h1><i class="fa fa-chart-bar" title="Variable"></i>
+        {{ variable.name }}: {{ variable.label }} ({{ variable.dataset.name}})
+    </h1>
     <div class="row">
         <div class="col-lg-8">
             <div class="btn-toolbar" role="toolbar" aria-label="...">
