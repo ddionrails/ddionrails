@@ -2,10 +2,23 @@
     <div class="card-header"><b>Info</b>
     </div>
     <div class="card-body">
-        <p><b>Variable name:</b>
+        <p><i class="fa fa-chart-bar" title="Variable"></i>
             <a href="{{ variable.get_absolute_url }}">{{ variable.name }}</a>
         </p>
-        <p><b>Dataset:</b>
+        <p><i class="fa fa-cog" title="Concept"></i>
+            {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
+            {% else %}
+                No concept available.
+            {% endif %}
+        </p>
+        <p><b>Description:</b>
+            {{ variable.html_description | safe }}
+        </p>
+        {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
+
+        <hr>
+
+        <p><b><i class="fa fa-table" title="Dataset"></i></b>
             <a href="{{ variable.dataset.get_absolute_url }}">
 
                 {{ variable.dataset.name }}
@@ -14,33 +27,29 @@
 
             </a>
         </p>
+        <p><b>Analysis Unit:</b>
+            {{ variable.dataset.analysis_unit.title }}
+        </p>
+        <p><b>Dataset Type:</b>
+            {{ variable.dataset.conceptual_dataset.title }}
+        </p>
+        <p><b>Period:</b>
+            {{ variable.period.title }}
+        </p>
+
+        <hr>
+
         <p><b>Study:</b>
             <a href="{{ study.get_absolute_url }}">{{ study.title }}</a>
         </p>
-        {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
         <hr>
-        <p><b>Description:</b>
-            {{ variable.html_description | safe }}
-        </p>
-        <hr>
-        <p><b>Analysis unit:</b>
-            {{ variable.dataset.analysis_unit.title }}
-        </p>
-        <p><b>Period:</b>
-            {{ variable.dataset.period.title }}
-        </p>
-        <p><b>Conceptual Dataset:</b>
-            {{ variable.dataset.conceptual_dataset.title }}
-        </p>
-        <hr>
-        <p><b>Concept:</b>
-            {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
-            {% else %}
-                No concept available.
-            {% endif %}
-        </p>
-        <p><b>Question:</b>
-        </p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><b>Questions</b>
+    </div>
+    <div class="card-body">
         <ul>
             {% for question in questions %}
                 <li><a href="{{ question.get_absolute_url }}">{{ question.title }}</a>
