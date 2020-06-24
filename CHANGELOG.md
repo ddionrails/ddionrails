@@ -24,7 +24,7 @@ Older versions are not not part of this Project.
 
 - Migrate visualization.js from d3 <= v3 to >= v5.
 
-  - d3 brought some breaking changes that had to be addressed.
+  - d3 v4 brought in some breaking changes that had to be addressed.
 
 ### Fixed
 
