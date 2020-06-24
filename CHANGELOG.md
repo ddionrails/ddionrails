@@ -11,12 +11,39 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.1] - 2020-06-24
+
+### Changed
+
+- During production docker image build JavaScript and CSS libraries are now moved after
+  building them with webpack.
+
+  - They are moved back through the entrypoint script.
+  - The shared static files volume for web and nginx container otherwise masks files
+    in production setup.
+
+- Migrate visualization.js from d3 <= v3 to >= v5.
+
+  - d3 v4 brought in some breaking changes that had to be addressed.
+
+- Recoupled Baskets with BasketVariables and BasketVariables with Variables due to
+  data integrity problems.
+
+### Fixed
+
+- Corrected message displayed in base search UI, when no results are found.
+- Instantiation of dataTable elements in UI.
+- Question model called a non existent period attribute.
+
+  - Period is now set for Questions during save.
+  - Question Period == Instrument Period
+
 ## [4.5.0] - 2020-06-09
 
 ### Added
 
 - "Search in Study" navigation link from a Study view.
-  
+
   - User is directed to the search interface with the filter for the
     study already enabled.
 
@@ -45,8 +72,8 @@ Older versions are not not part of this Project.
 
   - To guarantee that no basket variables are removed because of failed variable imports.
   - To no longer block the study update command since it is now part of a redis job.
-  
-- Removal of Dangling BasketVariables is now only performed for the study, that is 
+
+- Removal of Dangling BasketVariables is now only performed for the study, that is
   currently imported to prevent accidental removal of variables when trying to update
   several studies.
 
@@ -421,7 +448,8 @@ Older versions are not not part of this Project.
 ### Removed
 
 - Fabric from dependencies
->
+  >
+
 ## [3.0.0] - 2019-05-17
 
 ### Added
@@ -460,7 +488,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...develop
+[4.5.1]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
 [4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
 [4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
