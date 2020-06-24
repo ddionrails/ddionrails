@@ -18,9 +18,9 @@ Older versions are not not part of this Project.
 - During production docker image build JavaScript and CSS libraries are now moved after
   building them with webpack.
 
-  - They are moved back by the entrypoint script.
-  - Shared static files volume for web and nginx container otherwise masks files
-    created during build.
+  - They are moved back through the entrypoint script.
+  - The shared static files volume for web and nginx container otherwise masks files
+    in production setup.
 
 - Migrate visualization.js from d3 <= v3 to >= v5.
 
@@ -28,7 +28,7 @@ Older versions are not not part of this Project.
 
 ### Fixed
 
-- Corrected Message displayed in base search UI, when no results are found.
+- Corrected message displayed in base search UI, when no results are found.
 - Instantiation of dataTable elements in UI.
 - Question model called a non existent period attribute.
 
