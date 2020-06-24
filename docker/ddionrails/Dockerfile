@@ -5,6 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 # Hard coded again in entrypoint
 ENV DOCKER_APP_DIRECTORY /usr/src/app
+ENV WEB_LIBRARY /usr/src/app/distribution
+ENV WEB_LIBRARY_SERV_DIR /usr/src/app/static/dist
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
@@ -29,7 +31,8 @@ RUN apk add --no-cache \
     && npm run build \
     && apk del nodejs nodejs-npm \
     && rm -rf /var/cache/apk/* \
-    && rm -rf node_modules 
+    && rm -rf node_modules \
+    && mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
 
 # Set up entrypoint
 COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
