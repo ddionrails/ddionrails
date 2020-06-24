@@ -11,6 +11,30 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.1] - 2020-06-24
+
+### Changed
+
+- During production docker image build JavaScript and CSS libraries are now moved after
+  building them with webpack.
+
+  - They are moved back by the entrypoint script.
+  - Shared static files volume for web and nginx container otherwise masks files
+    created during build.
+
+- Migrate visualization.js from d3 <= v3 to >= v5.
+
+  - d3 brought some breaking changes that had to be addressed.
+
+### Fixed
+
+- Corrected Message displayed in base search UI, when no results are found.
+- Instantiation of dataTable elements in UI.
+- Question model called a non existent period attribute.
+
+  - Period is now set for Questions during save.
+  - Question Period == Instrument Period
+
 ## [4.5.0] - 2020-06-09
 
 ### Added
@@ -460,7 +484,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...develop
+[4.5.1]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
 [4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
 [4.4.2]: https://github.com/ddionrails/ddionrails/compare/v4.4.1...v4.4.2
