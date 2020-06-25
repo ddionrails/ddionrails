@@ -18,9 +18,7 @@ from ddionrails.imports.management.commands import update
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket
 from tests.data.factories import DatasetFactory
-from tests.workspace.factories import BasketFactory
 
 pytestmark = [pytest.mark.django_db]
 
@@ -291,10 +289,6 @@ class TestUpdate(unittest.TestCase):
     def setUp(self):
         self.dataset = DatasetFactory(name="test-dataset")
         self.study = self.dataset.study
-        basket = BasketFactory(name="test-basket")
-        basket.study = self.study
-        basket.save()
-        self.basket_id = basket.id
         return super().setUp()
 
     def test_clean_update(self):
@@ -315,4 +309,3 @@ class TestUpdate(unittest.TestCase):
         )
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
-        self.assertTrue(bool(list(Basket.objects.filter(id=self.basket_id))))
