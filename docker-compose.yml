@@ -46,6 +46,8 @@ services:
         volume:
           nocopy: false
       - media:/var/django/media
+      # Hardcoded again in ./config/settings/base.py
+      - backup:/var/lib/ddionrails/backup
 
   postgres:
     image: postgres:11.7-alpine
@@ -148,12 +150,13 @@ services:
       - no-new-privileges
 
 volumes:
-  elastic_data:
-  static:
-  media:
+  backup:
   ddi-psql-config:
   ddi-psql-data:
   ddi-psql-logs:
+  elastic_data:
+  media:
+  static:
 
 networks:
   ddi_net:
