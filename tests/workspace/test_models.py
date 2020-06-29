@@ -4,9 +4,11 @@
 """ Test cases for models in ddionrails.workspace app """
 
 import unittest
+from os import remove
 
 import pytest
 from django.core.exceptions import ValidationError
+from django.core.management import call_command
 
 from ddionrails.data.models import Variable
 from ddionrails.studies.models import Study
@@ -16,6 +18,8 @@ from tests.data.factories import DatasetFactory, VariableFactory
 from tests.studies.factories import StudyFactory
 
 pytestmark = [pytest.mark.workspace]
+
+TEST_CASE = unittest.TestCase()
 
 
 @pytest.fixture(name="csv_heading")
@@ -90,6 +94,31 @@ class TestBasketModel:
         assert variable.dataset.name in result
         assert variable.dataset.study.name in result
         assert variable.concept.name in result
+
+    def test_backup(self, basket, variable):
+        basket.save()
+        basket_id = basket.id
+        basket_variable = BasketVariable(basket=basket, variable=variable)
+        other_variable = VariableFactory(name="test-variable")
+        other_basket_variable = BasketVariable(basket=basket, variable=other_variable)
+        other_basket_variable.basket = basket
+        other_basket_variable.variable = other_variable
+        basket_variable.save()
+        other_basket_variable.save()
+
+        backup_file = Basket.backup()
+
+        variable.delete()
+        basket.delete()
+
+        call_command("loaddata", backup_file)
+
+        basket = Basket.objects.get(id=basket_id)
+        basket_variables = list(basket.variables.all())
+
+        TEST_CASE.assertIn(other_basket_variable.variable, basket_variables)
+        TEST_CASE.assertNotIn(basket_variable.variable, basket_variables)
+        remove(backup_file)
 
 
 @pytest.mark.usefixtures("study", "basket", "variable")
