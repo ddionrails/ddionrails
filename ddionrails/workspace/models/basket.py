@@ -4,9 +4,12 @@
 
 import csv
 import io
+from pathlib import Path
 from typing import Dict, Union
 
+from django.apps import apps
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.db import models
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
@@ -141,3 +144,16 @@ class Basket(TimeStampedModel):
     def to_dict(self) -> Dict[str, Union[int, str]]:
         """ Returns a dictionary containing the fields: name, label and id """
         return dict(name=self.name, label=self.label, id=self.id)
+
+    @staticmethod
+    def backup():
+        """Create a backup file for baskets and their content."""
+        basket_variables = apps.get_model("workspace", "BasketVariable")
+        objects = list(Basket.objects.all()) + list(basket_variables.objects.all())
+        json_serializer = serializers.get_serializer("json")
+        serializer = json_serializer()
+        filename = Path("file.json").absolute()
+
+        with open(filename, "w") as out:
+            serializer.serialize(objects, stream=out)
+        return filename
