@@ -4,10 +4,12 @@
 import sys
 from pathlib import Path
 
+from django.core.management import call_command
 from django.core.management.base import BaseCommand
 
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
+from ddionrails.workspace.models import Basket, BasketVariable
 
 
 class Command(BaseCommand):
@@ -121,7 +123,9 @@ def update_single_study(  # pylint: disable=R0913
     manager: StudyImportManager = None,
 ) -> None:
     """ Update a single study """
+    backup_file = Path()
     if clean_import:
+        backup_file = Basket.backup()
         study.delete()
         study.save()
     if not manager:
@@ -134,6 +138,10 @@ def update_single_study(  # pylint: disable=R0913
         manager.import_single_entity(entity[0], filename)
     else:
         update_study_partial(manager, entity)
+
+    if backup_file.is_file():
+        call_command("loaddata", backup_file)
+        BasketVariable.clean_basket_variables(study.name)
 
 
 def update_all_studies_completely(local: bool, clean_import=False, redis=True) -> None:

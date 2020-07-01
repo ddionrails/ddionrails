@@ -14,6 +14,9 @@ BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=str(uuid.NAMESPACE_DNS)))
 
 APPS_DIR = BASE_DIR.joinpath("ddionrails")
 
+BACKUP_DIR = Path("/var/lib/ddionrails/backup/")
+os.makedirs(BACKUP_DIR, exist_ok=True)
+
 if os.getenv("DJANGO_DEBUG") == "True":
     DEBUG = True
     STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
