@@ -65,3 +65,20 @@ class BasketVariable(models.Model):
         except ObjectDoesNotExist:
             return False
         return True
+
+    @staticmethod
+    def clean_basket_variables(study_name: str = None):
+        """Remove all BasketVariables that are not linked with an existing Variable.
+
+        Basket restoration during a clean update might ingest outdated relations.
+
+        Args:
+            study_name: Limits clean up to variables linked to the study with the
+                        specified name.
+        """
+        _filter = dict()
+        if study_name:
+            _filter["basket__study__name"] = study_name
+        for basket_variable in BasketVariable.objects.filter(**_filter):
+            if not basket_variable.variable_key_exists():
+                basket_variable.delete()
