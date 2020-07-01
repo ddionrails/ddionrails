@@ -455,7 +455,7 @@ def _mock_import_path(request) -> MagicMock:
     }
 
     if request.instance:
-        request.instance.import_path_patch_dict = patch_dict
+        request.instance.patch_argument_dict = patch_dict
 
     with patch(**patch_dict):
         yield
@@ -551,3 +551,15 @@ class VariableImageFile(Protocol):  # pylint: disable=too-few-public-methods
 
     def __call__(self, file_type: str, size: int = 1) -> BytesIO:
         ...  # pylint: disable=pointless-statement
+
+
+class PatchImportPathArguments(TypedDict):
+    """Typing for the arguments used to mock the import path.
+
+    Attributes:
+        target: The function, that would normally return the import path.
+        return_value: The location of the testing import path.
+    """
+
+    target: str
+    return_value: str

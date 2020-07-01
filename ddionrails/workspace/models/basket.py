@@ -3,11 +3,12 @@
 """ Model definitions for ddionrails.workspace app: Basket """
 
 import csv
+import datetime
 import io
-from pathlib import Path
 from typing import Dict, Union
 
 from django.apps import apps
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.db import models
@@ -146,14 +147,19 @@ class Basket(TimeStampedModel):
         return dict(name=self.name, label=self.label, id=self.id)
 
     @staticmethod
-    def backup():
+    def backup(study: Study = None):
         """Create a backup file for baskets and their content."""
         basket_variables = apps.get_model("workspace", "BasketVariable")
-        objects = list(Basket.objects.all()) + list(basket_variables.objects.all())
+        if study:
+            objects = list(Basket.objects.filter(study=study))
+            objects += list(basket_variables.objects.filter(basket__in=objects))
+        else:
+            objects = list(Basket.objects.all()) + list(basket_variables.objects.all())
         json_serializer = serializers.get_serializer("json")
         serializer = json_serializer()
-        filename = Path("file.json").absolute()
+        filename = datetime.datetime.now().strftime("baskets_%Y%m%d_%H%M.json")
+        file_path = settings.BACKUP_DIR.joinpath(filename).absolute()
 
-        with open(filename, "w") as out:
+        with open(file_path, "w") as out:
             serializer.serialize(objects, stream=out)
-        return filename
+        return file_path

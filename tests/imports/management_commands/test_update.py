@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 from _pytest.capture import CaptureFixture
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 
 from ddionrails.concepts.models import Period
@@ -18,7 +19,10 @@ from ddionrails.imports.management.commands import update
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
+from ddionrails.workspace.models import Basket, BasketVariable
+from tests.conftest import PatchImportPathArguments
 from tests.data.factories import DatasetFactory
+from tests.workspace.factories import BasketFactory
 
 pytestmark = [pytest.mark.django_db]
 
@@ -286,6 +290,9 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
 
 @pytest.mark.usefixtures(("mock_import_path"))
 class TestUpdate(unittest.TestCase):
+
+    patch_argument_dict: PatchImportPathArguments
+
     def setUp(self):
         self.dataset = DatasetFactory(name="test-dataset")
         self.study = self.dataset.study
@@ -309,3 +316,54 @@ class TestUpdate(unittest.TestCase):
         )
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
+
+    def test_basket_protection(self):
+        """A clean update should leave baskets intact."""
+        clean_import = False
+
+        basket = BasketFactory(name="study_basket")
+
+        manager = StudyImportManager(self.study, redis=False)
+        update.update_single_study(
+            self.study, True, clean_import=clean_import, manager=manager
+        )
+        variable = Variable.objects.get(name="some-variable")
+        outdated_variable = Variable.objects.get(name="some-third-variable")
+
+        basket_variable = BasketVariable(basket=basket, variable=variable)
+        outdated_basket_variable = BasketVariable(
+            basket=basket, variable=outdated_variable
+        )
+        outdated_basket_variable.save()
+        basket.save()
+        basket_variable.save()
+        outdated_id = outdated_variable.id
+        variable_id = variable.id
+        basket_id = basket.id
+
+        import_files = Path(self.patch_argument_dict["return_value"])
+        new_variables = """study_name,dataset_name,name,concept_name,image_url
+some-study,some-dataset,some-variable,some-concept,https://variable-image.de
+some-study,some-dataset,some-other-variable,some-concept,https://variable-other-image.de
+"""
+        with open(import_files.joinpath("variables.csv"), "w") as file:
+            file.write(new_variables)
+
+        clean_import = True
+        manager = StudyImportManager(self.study, redis=False)
+        update.update_single_study(
+            self.study, True, clean_import=clean_import, manager=manager
+        )
+
+        with self.assertRaises(ObjectDoesNotExist):
+            Variable.objects.get(name="some-third-variable")
+
+        variable = Variable.objects.get(name="some-variable")
+        self.assertEqual(1, BasketVariable.objects.all().count())
+        self.assertEqual(
+            1, BasketVariable.objects.filter(variable_id=variable_id).count()
+        )
+        self.assertEqual(
+            0, BasketVariable.objects.filter(variable_id=outdated_id).count()
+        )
+        self.assertEqual(1, Basket.objects.filter(id=basket_id).count())

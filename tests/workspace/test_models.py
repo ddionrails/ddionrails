@@ -10,7 +10,7 @@ import pytest
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
 
-from ddionrails.data.models import Variable
+from ddionrails.data.models import Dataset, Variable
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.scripts import SoepStata
@@ -96,6 +96,7 @@ class TestBasketModel:
         assert variable.concept.name in result
 
     def test_backup(self, basket, variable):
+        """Can we do a backup of existing Baskets."""
         basket.save()
         basket_id = basket.id
         basket_variable = BasketVariable(basket=basket, variable=variable)
@@ -119,6 +120,43 @@ class TestBasketModel:
         TEST_CASE.assertIn(other_basket_variable.variable, basket_variables)
         TEST_CASE.assertNotIn(basket_variable.variable, basket_variables)
         remove(backup_file)
+
+    def test_study_specific_backup(self, basket, variable):
+        """Can we limit the backup to a specific study?"""
+        # A whole lot of boilerplate to set up another study basket.
+        basket.save()
+        basket.variables.add(variable)
+        basket.save()
+
+        other_study = Study(name="other-sturdy")
+        other_study.save()
+
+        other_dataset = Dataset(name="other-dataset")
+        other_dataset.study = other_study
+        other_dataset.save()
+
+        other_variable = Variable(name="other-variable")
+        other_variable.dataset = other_dataset
+        other_variable.save()
+
+        other_basket = Basket(name="other-basket", study=other_study, user=basket.user)
+        other_basket.save()
+        other_basket.variables.add(other_variable)
+        other_basket.save()
+
+        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=other_variable))
+        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=variable))
+
+        # Actual testing
+        backup_file = Basket.backup(study=basket.study)
+        BasketVariable.objects.all().delete()
+
+        call_command("loaddata", backup_file)
+
+        with TEST_CASE.assertRaises(BasketVariable.DoesNotExist):
+            BasketVariable.objects.get(variable=other_variable)
+
+        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=variable))
 
 
 @pytest.mark.usefixtures("study", "basket", "variable")
