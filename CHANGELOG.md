@@ -11,6 +11,23 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.2] - 2020-07-03
+
+### Changed
+
+- Downgrade reactivesearch-vue dependency to 1.2.0 since everything from 1.3.0
+  breaks UI components.
+
+- Reimplement clean-update to address data integrity issues.
+
+  - A clean update now creates a backup of user basket data. Then the study data
+    is deleted, reimported and the backup restored. The restored backup
+    can introduce "dead" BasketVariables which are cleaned up at the end.
+
+### Fixed
+
+- Unittests that were not up to date.
+
 ## [4.5.1] - 2020-06-24
 
 ### Changed
@@ -488,7 +505,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.2...develop
+[4.5.2]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...v4.5.2
 [4.5.1]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
 [4.4.3]: https://github.com/ddionrails/ddionrails/compare/v4.4.2...v4.4.3
