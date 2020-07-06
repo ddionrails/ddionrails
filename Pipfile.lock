@@ -68,11 +68,11 @@
         },
         "django-elasticsearch-dsl": {
             "hashes": [
-                "sha256:33dafbfe014829605176bdf79c7d08fd0be7a27232cbf3b0f0921d6026c57f63",
-                "sha256:ca0ff7489e18d680674a97cd8f3fb11ea239fb5dc1713abda48f799b8cf7c022"
+                "sha256:5bbd49a9acb51c08fbbb7fba9beee7c9ce73b481af718cc57e4c8ac3d561888f",
+                "sha256:e733ccfd0e8b83ad6896d812a2c15ccbd563caf4ebf30fd31640538ad2de8e26"
             ],
             "index": "pypi",
-            "version": "==7.1.1"
+            "version": "==7.1.4"
         },
         "django-extensions": {
             "hashes": [
