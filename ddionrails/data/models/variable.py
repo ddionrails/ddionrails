@@ -384,9 +384,9 @@ class Variable(ModelMixin, models.Model):
 
     def translation_table(self) -> Dict:
         """Get labels and categories in their available languages."""
-        translation_table = dict(label=dict(en=self.label))
-        for language in self.translation_languages():
-            translation_table["label"][language] = getattr(self, f"label_{language}")
+        translation_table = dict()
+        # for language in self.translation_languages():
+        #    translation_table["label"][language] = getattr(self, f"label_{language}")
 
         for category in self.get_categories():
             translation_table[category["value"]] = dict(en=category["label"])

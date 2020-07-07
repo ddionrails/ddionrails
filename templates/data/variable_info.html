@@ -11,6 +11,16 @@
                 No concept available.
             {% endif %}
         </p>
+        {% if variable.label %}
+        <p>
+            <b>English label</b>: {{ variable.label }}
+        </p>
+        {% endif %}
+        {% if variable.label_de %}
+        <p>
+            <b>German label</b>: {{ variable.label_de }} 
+        </p>
+        {% endif %}
         <p><b>Description:</b>
             {{ variable.html_description | safe }}
         </p>

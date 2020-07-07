@@ -237,7 +237,6 @@ class TestVariableModel:
     def test_translation_table(self, variable):
         result = variable.translation_table()
         expected = {
-            "label": {"en": variable.label, "de": variable.label_de},
             "-6": {
                 "en": "[-6] Version of questionnaire with modified filtering",
                 "de": "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
