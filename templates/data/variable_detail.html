@@ -11,7 +11,7 @@
     {% csrf_token %}
     {{ variable_baskets_context|json_script:"context_data" }}
     <h1><i class="fa fa-chart-bar" title="Variable"></i>
-        {{ variable.name }}: {{ variable.label }} ({{ variable.dataset.name}})
+        {{ variable.dataset.name}}/{{ variable.name }}: {{ variable.label }}
     </h1>
     <div class="row">
         <div class="col-lg-8">
