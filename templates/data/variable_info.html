@@ -2,10 +2,10 @@
     <div class="card-header"><b>Info</b>
     </div>
     <div class="card-body">
-        <p><i class="fa fa-chart-bar" title="Variable"></i>
+        <p title="Variable"><i class="fa fa-chart-bar"></i>
             <a href="{{ variable.get_absolute_url }}">{{ variable.name }}</a>
         </p>
-        <p><i class="fa fa-cog" title="Concept"></i>
+        <p title="Concept"><i class="fa fa-cog"></i>
             {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
             {% else %}
                 No concept available.
@@ -18,7 +18,7 @@
 
         <hr>
 
-        <p><b><i class="fa fa-table" title="Dataset"></i></b>
+        <p title="Dataset"><b><i class="fa fa-table"></i></b>
             <a href="{{ variable.dataset.get_absolute_url }}">
 
                 {{ variable.dataset.name }}
