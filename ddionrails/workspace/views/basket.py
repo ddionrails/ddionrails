@@ -25,10 +25,10 @@ from .decorator import own_basket_only
 def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
     """ ListView for workspace.Basket model """
     if request.user.is_authenticated:
-        basket_list = request.user.baskets.all()
+        _basket_list = request.user.baskets.all()
     else:
-        basket_list = []
-    context = dict(basket_list=basket_list)
+        _basket_list = []
+    context = dict(basket_list=_basket_list)
     return render(request, "workspace/basket_list.html", context=context)
 
 
@@ -59,14 +59,12 @@ def basket_detail(
             vars_without_concept.append(variable)
     concept_list = sorted(
         Concept.objects.filter(
-            id__in=set([variable.concept.id for variable in vars_with_concept])
+            id__in={variable.concept.id for variable in vars_with_concept}
         ).all(),
         key=lambda x: x.name,
     )
     related_variable_list = (
-        Variable.objects.filter(
-            concept_id__in=set([concept.id for concept in concept_list])
-        )
+        Variable.objects.filter(concept_id__in={concept.id for concept in concept_list})
         .filter(dataset__study_id=basket.study.id)
         .prefetch_related("dataset", "dataset__period", "period", "concept")
         .all()
@@ -243,21 +241,9 @@ def remove_concept(
     """ Remove variables from a basket by a given concept id """
 
     _ = get_object_or_404(Concept, id=concept_id)
-    basket = get_object_or_404(Basket, id=basket_id)
-    study_id = basket.study_id
-    variable_list = (
-        Variable.objects.filter(dataset__study_id=study_id)
-        .filter(concept_id=concept_id)
-        .all()
-    )
-    for variable in variable_list:
-        try:
-            relation = get_object_or_404(
-                BasketVariable, basket_id=basket_id, variable_id=variable.id
-            )
-            relation.delete()
-        except BasketVariable.DoesNotExist:
-            pass
+    BasketVariable.objects.filter(
+        variable__concept_id=concept_id, basket_id=basket_id
+    ).delete()
     return redirect(request.META.get("HTTP_REFERER"))
 
 
