@@ -239,9 +239,24 @@ class Variable(ModelMixin, models.Model):
                     label_de=self.categories["labels_de"][index],
                 )
                 categories.append(category)
-            return categories
+            return self._sort_categories(categories)
 
         return []
+
+    @staticmethod
+    def _sort_categories(categories: List[Dict[str, str]]) -> List[Dict[str, str]]:
+        positive = list()
+        negative = list()
+        for category in categories:
+            if int(category["value"]) > 0:
+                positive.append(category)
+            else:
+                negative.append(category)
+        sorted_categories = sorted(
+            positive, key=lambda category: category["value"], reverse=True
+        )
+        sorted_categories += sorted(negative, key=lambda category: category["value"])
+        return sorted_categories
 
     def get_study(self, study_id: bool = False) -> Union[Study, uuid.UUID]:
         """ Returns the related study_id | Study instance """

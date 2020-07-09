@@ -201,7 +201,7 @@ class TestVariableModel:
             "frequency": 1,
             "valid": False,
         }
-        assert expected == result[0]
+        assert expected in result
 
     def test_get_categories_method_without_labels_de(self, variable):
         variable.categories.pop("labels_de")
@@ -214,7 +214,7 @@ class TestVariableModel:
             "frequency": 1,
             "valid": False,
         }
-        assert expected == result[0]
+        assert expected in result
 
     def test_is_categorical_method(self, variable):
         variable.categories = dict(labels="some-category")
