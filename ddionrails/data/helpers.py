@@ -151,7 +151,16 @@ class LabelTable:
             except ZeroDivisionError:
                 return 100000000
 
-        labels = sorted(list(labels.items()), key=sort_helper)
+        positive = list()
+        negative = list()
+        for label in labels.items():
+            if sum([int(_label) for _label in label[1]]) > 0:
+                positive.append(label)
+            else:
+                negative.append(label)
+        labels = sorted(positive, key=sort_helper, reverse=True)
+        labels += sorted(negative, key=sort_helper)
+        # labels = sorted(list(labels.items()), key=sort_helper)
         labels = [category[0] for category in labels]
         return labels
 
