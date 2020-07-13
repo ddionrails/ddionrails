@@ -248,7 +248,7 @@ class Variable(ModelMixin, models.Model):
         positive = list()
         negative = list()
         for category in categories:
-            if int(category["value"]) > 0:
+            if int(category["value"]) >= 0:
                 positive.append(category)
             else:
                 negative.append(category)
