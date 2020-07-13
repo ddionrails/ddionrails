@@ -28,6 +28,18 @@ class SoepMixin:
         """
         Returns dict with dataset information
         """
+        if dataset_name not in SoepDatasets().data.keys():
+            return dict(
+                name = dataset_name,
+                analysis_unit = "",
+                period = "",
+                prefix = "",
+                is_matchable = "",
+                is_special = "",
+                curr_hid = "",
+                variables = set(),
+            )
+
         dataset = SoepDatasets().get_dict(dataset_name)
         return dict(
             name = dataset_name,
