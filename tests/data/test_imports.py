@@ -3,6 +3,7 @@
 """ Test cases for importer classes in ddionrails.data app """
 
 import csv
+import os
 import unittest
 from io import BytesIO, StringIO
 from pathlib import Path
@@ -332,6 +333,20 @@ class TestVariableImport:
         result = Variable.objects.filter(name__in=list(variable_names))
         TEST_CASE.assertNotEqual(0, len(result))
         TEST_CASE.assertEqual(len(variable_names), len(result))
+
+    def test_variable_import_without_concept_csv(self):
+
+        csv_path = Study().import_path()
+        concept_path = csv_path.joinpath("concepts.csv")
+
+        os.remove(concept_path)
+
+        some_dataset = DatasetFactory(name="some-dataset")
+        some_dataset.save()
+        TEST_CASE.assertIsNone(
+            StudyImportManager(study=some_dataset.study).fix_concepts_csv()
+        )
+        TEST_CASE.assertFalse(concept_path.exists())
 
     def test_import_element_method(self, mocker, variable_importer, dataset):
         mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
