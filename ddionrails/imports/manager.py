@@ -188,7 +188,9 @@ class StudyImportManager:
         """Add missing concepts, only present in the variable.csv, to the concepts.csv"""
         if self._concepts_fixed:
             return None
-        concept_path = self.import_order["concepts"][1]
+        concept_path = Path(self.import_order["concepts"][1])
+        if not concept_path.exists():
+            return None
         variable_path = self.import_order["variables"][1]
         with open(variable_path, "r") as variable_csv:
             variable_concepts = {
