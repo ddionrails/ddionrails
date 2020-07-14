@@ -46,9 +46,10 @@
         },
         "diff-match-patch": {
             "hashes": [
-                "sha256:a809a996d0f09b9bbd59e9bbd0b71eed8c807922512910e05cbd3f9480712ddb"
+                "sha256:8bf9d9c4e059d917b5c6312bac0c137971a32815ddbda9c682b949f2986b4d34",
+                "sha256:da6f5a01aa586df23dfc89f3827e1cafbb5420be9d87769eeb079ddfd9477a18"
             ],
-            "version": "==20181111"
+            "version": "==20200713"
         },
         "django": {
             "hashes": [
@@ -186,11 +187,11 @@
         },
         "gitpython": {
             "hashes": [
-                "sha256:39ae158ee8c360ee5a872fc411705430d4875cbe894654edbe39e246e38e4d64",
-                "sha256:90400ecfa87bac36ac75dfa7b62e83a02017b51759f6eef4494e4de775b2b4be"
+                "sha256:2db287d71a284e22e5c2846042d0602465c7434d910406990d5b74df4afb0858",
+                "sha256:fa3b92da728a457dd75d62bb5f3eb2816d99a7fe6c67398e260637a40e3fafb5"
             ],
             "index": "pypi",
-            "version": "==3.1.5"
+            "version": "==3.1.7"
         },
         "gunicorn": {
             "hashes": [
@@ -634,11 +635,11 @@
         },
         "gitpython": {
             "hashes": [
-                "sha256:39ae158ee8c360ee5a872fc411705430d4875cbe894654edbe39e246e38e4d64",
-                "sha256:90400ecfa87bac36ac75dfa7b62e83a02017b51759f6eef4494e4de775b2b4be"
+                "sha256:2db287d71a284e22e5c2846042d0602465c7434d910406990d5b74df4afb0858",
+                "sha256:fa3b92da728a457dd75d62bb5f3eb2816d99a7fe6c67398e260637a40e3fafb5"
             ],
             "index": "pypi",
-            "version": "==3.1.5"
+            "version": "==3.1.7"
         },
         "identify": {
             "hashes": [
@@ -1075,10 +1076,10 @@
         },
         "stevedore": {
             "hashes": [
-                "sha256:182d557078b4f840f412f148e6f3c2ace83a3e206a020f35f6c97d3b8d91f180",
-                "sha256:4ccc328424eb8b6b3d9def62976b686348b7064b2b470daf81ffd6251abd6d02"
+                "sha256:79270bd5fb4a052e76932e9fef6e19afa77090c4000f2680eb8c2e887d2e6e36",
+                "sha256:9fb12884b510fdc25f8a883bb390b8ff82f67863fb360891a33135bcb2ce8c54"
             ],
-            "version": "==3.0.0"
+            "version": "==3.1.0"
         },
         "text-unidecode": {
             "hashes": [
