@@ -11,6 +11,14 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.3] - 2020-07-14
+
+### Fixed
+
+- Import no longer fails, whe no concepts.csv is present.
+- `Remove all` link in Basket view now works again.
+- `Search in Study` navigational link now works on all pages it occurs.
+
 ## [4.5.2] - 2020-07-03
 
 ### Changed
@@ -505,7 +513,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.3...develop
+[4.5.3]: https://github.com/ddionrails/ddionrails/compare/v4.5.2...v4.5.3
 [4.5.2]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...v4.5.2
 [4.5.1]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...v4.5.1
 [4.5.0]: https://github.com/ddionrails/ddionrails/compare/v4.4.3...v4.5.0
