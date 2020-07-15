@@ -125,11 +125,12 @@ class VariableDetailView(DetailView):
             "valid",
             "invalid",
         )
+        variable_data = self._sort_variable_data(self.object.content_dict)
         context["variable_baskets_context"] = {
             "variable": {
                 "id": str(context["variable"].id),
                 "name": context["variable"].name,
-                "data": self.object.content_dict,
+                "data": variable_data,
             },
             "baskets": {
                 basket.name: {
@@ -149,6 +150,39 @@ class VariableDetailView(DetailView):
             if measure in self.object.statistics:
                 context["statistics"][measure] = self.object.statistics[measure]
         return context
+
+    @staticmethod
+    def _sort_variable_data(data):
+        try:
+            statistics = data["uni"]
+            sorting_list = zip(
+                statistics["values"],
+                statistics["labels"],
+                statistics["missings"],
+                statistics["frequencies"],
+            )
+        except KeyError:
+            return data
+        positive = list()
+        negative = list()
+        for package in sorting_list:
+            if int(package[0]) >= 0:
+                positive.append(package)
+            else:
+                negative.append(package)
+
+        sorted_list = sorted(negative, key=lambda item: item[0], reverse=True)
+        sorted_list += sorted(positive, key=lambda item: item[0])
+        del sorting_list, positive, negative
+        for index, package in enumerate(sorted_list):
+            statistics["values"][index] = package[0]
+            statistics["labels"][index] = package[1]
+            statistics["missings"][index] = package[2]
+            statistics["frequencies"][index] = package[3]
+
+        data["uni"] = statistics
+
+        return data
 
 
 # request is a required parameter
