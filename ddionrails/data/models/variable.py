@@ -252,10 +252,10 @@ class Variable(ModelMixin, models.Model):
                 positive.append(category)
             else:
                 negative.append(category)
-        sorted_categories = sorted(
-            positive, key=lambda category: category["value"], reverse=True
+        sorted_categories = sorted(positive, key=lambda category: category["value"])
+        sorted_categories += sorted(
+            negative, key=lambda category: category["value"], reverse=True
         )
-        sorted_categories += sorted(negative, key=lambda category: category["value"])
         return sorted_categories
 
     def get_study(self, study_id: bool = False) -> Union[Study, uuid.UUID]:

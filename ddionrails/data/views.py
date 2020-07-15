@@ -171,8 +171,8 @@ class VariableDetailView(DetailView):
             else:
                 negative.append(package)
 
-        sorted_list = sorted(negative, key=lambda item: item[0], reverse=True)
-        sorted_list += sorted(positive, key=lambda item: item[0])
+        sorted_list = sorted(negative, key=lambda item: item[0])
+        sorted_list += sorted(positive, key=lambda item: item[0], reverse=True)
         del sorting_list, positive, negative
         for index, package in enumerate(sorted_list):
             statistics["values"][index] = package[0]

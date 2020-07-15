@@ -158,8 +158,8 @@ class LabelTable:
                 positive.append(label)
             else:
                 negative.append(label)
-        labels = sorted(positive, key=sort_helper, reverse=True)
-        labels += sorted(negative, key=sort_helper)
+        labels = sorted(positive, key=sort_helper)
+        labels += sorted(negative, key=sort_helper, reverse=True)
         # labels = sorted(list(labels.items()), key=sort_helper)
         labels = [category[0] for category in labels]
         return labels
