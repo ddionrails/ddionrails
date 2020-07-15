@@ -37,7 +37,7 @@ repos:
         name: lint python code (pylint)
         entry: >-
           pylint
-          --load-plugins=pylint_django,pylint_django.checkers.db_performance
+          --load-plugins=pylint_django,pylint_django.checkers.migrations
           --rcfile=setup.cfg
         language: system
         files: '.*\.py'
