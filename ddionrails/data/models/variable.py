@@ -219,10 +219,11 @@ class Variable(ModelMixin, models.Model):
             html = ""
         return html
 
-    def get_categories(self) -> List[Dict[str, str]]:
+    @cached_property
+    def category_list(self) -> List[Dict[str, str]]:
         """ Return a list of dictionaries based on the "categories" field """
         if self.categories:
-            categories = []
+            categories = list()
             if "labels_de" not in self.categories:
                 self.categories["labels_de"] = self.categories["labels"]
             # Temporary fix till the bilingual dataset json files are fixed.
@@ -403,10 +404,11 @@ class Variable(ModelMixin, models.Model):
         # for language in self.translation_languages():
         #    translation_table["label"][language] = getattr(self, f"label_{language}")
 
-        for category in self.get_categories():
+        categories = self.category_list
+        for category in categories:
             translation_table[category["value"]] = dict(en=category["label"])
         for language in self.translation_languages():
-            for category in self.get_categories():
+            for category in categories:
                 translation_table[category["value"]][language] = category.get(
                     f"label_{language}"
                 )

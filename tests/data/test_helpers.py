@@ -10,6 +10,7 @@ from uuid import uuid4
 import pytest
 
 from ddionrails.data.helpers import LabelTable
+from ddionrails.data.models import Variable
 from tests.concepts.factories import PeriodFactory
 
 from .factories import DatasetFactory, VariableFactory
@@ -64,10 +65,7 @@ class TestLabelTable:
         # Class should be refactored to inherit TestCase if time can be allocated.
         test = TestCase()
 
-        with patch(
-            "ddionrails.data.models.variable.Variable.get_categories",
-            return_value=categories,
-        ):
+        with patch.object(Variable, "category_list", categories):
             label_table = LabelTable(variables)
             test.assertFalse(label_table.render_table)
             test.assertEqual("", label_table.to_html())
@@ -106,7 +104,7 @@ class TestLabelTable:
         test = TestCase()
 
         with patch(
-            "ddionrails.data.models.variable.Variable.get_categories",
+            "ddionrails.data.models.variable.Variable.category_list",
             return_value=categories,
         ):
             label_table = LabelTable(variables)

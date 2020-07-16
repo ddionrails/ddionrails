@@ -116,7 +116,7 @@ class LabelTable:
                 try:
                     category = [
                         c
-                        for c in variable.get_categories()
+                        for c in variable.category_list
                         if self._simplify_label(c["label"]) == category_label
                     ][0]
                     row.append(
@@ -129,7 +129,7 @@ class LabelTable:
     def _get_all_category_labels(self) -> Dict[str, List[str]]:
         labels: Dict[str, List[str]] = defaultdict(list)
         for variable in self.variables:
-            for category in variable.get_categories():
+            for category in variable.category_list:
                 labels[self._simplify_label(category["label"])].append(category["value"])
             if len(labels) > self.label_max:
                 self.label_count = len(labels)

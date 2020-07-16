@@ -187,13 +187,13 @@ class TestVariableModel:
         result = variable.get_related_variables_by_period()
         assert sorted([other_variable, variable]) == sorted(result["none"])
 
-    def test_get_categories_method_without_categories(self, variable):
+    def test_category_list_method_without_categories(self, variable):
         variable.categories = {}
         variable.save()
-        assert [] == variable.get_categories()
+        assert [] == variable.category_list
 
-    def test_get_categories_method(self, variable):
-        result = variable.get_categories()
+    def test_category_list_method(self, variable):
+        result = variable.category_list
         expected = {
             "value": "-6",
             "label": "[-6] Version of questionnaire with modified filtering",
@@ -203,10 +203,10 @@ class TestVariableModel:
         }
         assert expected in result
 
-    def test_get_categories_method_without_labels_de(self, variable):
+    def test_category_list_method_without_labels_de(self, variable):
         variable.categories.pop("labels_de")
         variable.save()
-        result = variable.get_categories()
+        result = variable.category_list
         expected = {
             "value": "-6",
             "label": "[-6] Version of questionnaire with modified filtering",
