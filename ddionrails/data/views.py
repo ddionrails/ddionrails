@@ -2,6 +2,8 @@
 
 """ Views for ddionrails.data app """
 
+from copy import deepcopy
+
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -153,8 +155,9 @@ class VariableDetailView(DetailView):
 
     @staticmethod
     def _sort_variable_data(data):
+        _data = deepcopy(data)
         try:
-            statistics = data["uni"]
+            statistics = _data["uni"]
             sorting_list = zip(
                 statistics["values"],
                 statistics["labels"],
@@ -162,7 +165,7 @@ class VariableDetailView(DetailView):
                 statistics["frequencies"],
             )
         except KeyError:
-            return data
+            return _data
         positive = list()
         negative = list()
         for package in sorting_list:
@@ -180,9 +183,9 @@ class VariableDetailView(DetailView):
             statistics["missings"][index] = package[2]
             statistics["frequencies"][index] = package[3]
 
-        data["uni"] = statistics
+        _data["uni"] = statistics
 
-        return data
+        return _data
 
 
 # request is a required parameter

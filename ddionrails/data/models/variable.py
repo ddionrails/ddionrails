@@ -7,6 +7,7 @@ import inspect
 import logging
 import uuid
 from collections import OrderedDict
+from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
 
 from django.db import models
@@ -430,7 +431,7 @@ class Variable(ModelMixin, models.Model):
             label_de=self.label_de,
             concept_id=self.concept_id,
             scale=self.scale,
-            uni=self.categories,
+            uni=deepcopy(self.categories),
         )
 
     def to_topic_dict(self, language="en") -> Dict:
