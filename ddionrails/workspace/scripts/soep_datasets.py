@@ -1,10 +1,4 @@
 #!/usr/bin/python3
-
-############################################################
-# File   : soep_datasets.py
-# Date   : 2020-02-04 / ISO 8601: YYYY-MM-DD
-# Author : mpahl
-############################################################
 """
 Example:
 # from soep_datasets import SoepDatasets
@@ -23,13 +17,21 @@ TODO: Add checks and exceptions ..
 
 """
 
-############################################################
-# imports
-
 import json
 from os import path
 
 ############################################################
+# File   : soep_datasets.py
+# Date   : 2020-02-04 / ISO 8601: YYYY-MM-DD
+# Author : mpahl
+############################################################
+
+############################################################
+# imports
+
+
+############################################################
+
 
 class SoepDatasetsJsonLoader:
     """class SoepDatasetsJsonLoader -
@@ -44,21 +46,24 @@ class SoepDatasetsJsonLoader:
         _json_data = {}
 
         if path.exists(json_file):
-            with open(json_file) as f:
-                _json_data = json.load(f)
+            with open(json_file) as file:
+                _json_data = json.load(file)
 
         return _json_data
+
 
 class SoepDataset:
     """
     TODO: Describe this module and methodes ..
     """
+
     def __init__(self):
         self.sub_path = ""
         self.syear = ""
         self.prefix = ""
         self.analyse_unit = ""
         self.is_matchable = ""
+
 
 class SoepDatasets:
     """
@@ -67,7 +72,7 @@ class SoepDatasets:
 
     # Default path to json file
     # _default_json_datasets_file = "../datafiles.json" # bash tests
-    _default_json_datasets_file = "ddionrails/workspace/datafiles.json" # local tests
+    _default_json_datasets_file = "ddionrails/workspace/datafiles.json"  # local tests
     # _default_json_datasets_file = "ddionrails/workspace/datafiles_with_long.json"
 
     ########################################################
@@ -89,6 +94,7 @@ class SoepDatasets:
         _dataset.is_matchable = dataset_property["_is_matchable"]
 
         return _dataset
+
 
 if __name__ == "__main__":
 
