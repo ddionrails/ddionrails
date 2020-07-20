@@ -11,6 +11,16 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.5.4] - 2020-07-20
+
+### Changed
+
+- Bumped lodash dependency to 4.17.19 for important security update.
+
+### Fixed
+
+- 500 HTTP error that occurred with newer soep-core long datasets.
+
 ## [4.5.3] - 2020-07-14
 
 ### Fixed
@@ -513,7 +523,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.5.4...develop
+[4.5.4]: https://github.com/ddionrails/ddionrails/compare/v4.5.3...v4.5.4
 [4.5.3]: https://github.com/ddionrails/ddionrails/compare/v4.5.2...v4.5.3
 [4.5.2]: https://github.com/ddionrails/ddionrails/compare/v4.5.1...v4.5.2
 [4.5.1]: https://github.com/ddionrails/ddionrails/compare/v4.5.0...v4.5.1
