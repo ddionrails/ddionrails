@@ -24,18 +24,22 @@ class SoepMixin:
 
     @staticmethod
     def _create_dataset_dict(dataset_name: str) -> Dict:
-        """
-        Returns dict with dataset information
+        """ Returns dict with dataset information
+
+        A possible empty dict from SoepDatasets().get_dict()
+        Is handled with "" as default values.
+        Variables from such a dataset will be included in the
+        `NOT PROCESSED` section of the created script.
         """
         dataset = SoepDatasets().get_dict(dataset_name)
         return dict(
             name=dataset_name,
-            analysis_unit=dataset["analyse_unit"],
-            period=dataset["syear"],
-            prefix=dataset["prefix"],
-            is_matchable=dataset["is_matchable"],
-            is_special=dataset["is_special"],
-            curr_hid=dataset["curr_hid"],
+            analysis_unit=dataset.get("analyse_unit", ""),
+            period=dataset.get("syear", ""),
+            prefix=dataset.get("prefix", ""),
+            is_matchable=dataset.get("is_matchable", ""),
+            is_special=dataset.get("is_special", ""),
+            curr_hid=dataset.get("curr_hid", ""),
             variables=set(),
         )
 

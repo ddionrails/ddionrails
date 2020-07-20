@@ -19,6 +19,7 @@ TODO: Add checks and exceptions ..
 
 import json
 from os import path
+from typing import Dict, Union
 
 ############################################################
 # File   : soep_datasets.py
@@ -79,8 +80,14 @@ class SoepDatasets:
     def __init__(self, json_file=_default_json_datasets_file):
         self.data = SoepDatasetsJsonLoader().load_json_data(json_file)
 
-    def get_dict(self, dataset_name):
-        return self.data[dataset_name]
+    def get_dict(self, dataset_name) -> Union[Dict[str, str], Dict]:
+        """ Return dataset information
+
+        Returns:
+            The dataset information from the datafiles.json file
+            or an empty dictionairy if dataset_name is not present in JSON file.
+        """
+        return self.data.get(dataset_name, dict())
 
     def get_dataset(self, dataset_name):
         dataset_property = self.get_dict(dataset_name)
