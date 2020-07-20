@@ -11,9 +11,7 @@ class SoepMixin:
     """SoepMixin - utilities/helpers to get SOEP years and year prefixes"""
 
     def _generate_script_dict(self):
-        """
-        Creates a dictionary with dataset names as keys and variables from basket as values
-        """
+        """ Map variables from basket to their dataset names """
         script_dict = dict()
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
@@ -24,20 +22,21 @@ class SoepMixin:
                 self._enrich_dataset_dict(dataset_dict)
         return script_dict
 
-    def _create_dataset_dict(self, dataset_name: str) -> Dict:
+    @staticmethod
+    def _create_dataset_dict(dataset_name: str) -> Dict:
         """
         Returns dict with dataset information
         """
         dataset = SoepDatasets().get_dict(dataset_name)
         return dict(
-            name = dataset_name,
-            analysis_unit = dataset["analyse_unit"],
-            period = dataset["syear"],
-            prefix = dataset["prefix"],
-            is_matchable = dataset["is_matchable"],
-            is_special = dataset["is_special"],
-            curr_hid = dataset["curr_hid"],
-            variables = set(),
+            name=dataset_name,
+            analysis_unit=dataset["analyse_unit"],
+            period=dataset["syear"],
+            prefix=dataset["prefix"],
+            is_matchable=dataset["is_matchable"],
+            is_special=dataset["is_special"],
+            curr_hid=dataset["curr_hid"],
+            variables=set(),
         )
 
     @staticmethod
@@ -46,18 +45,17 @@ class SoepMixin:
         Set merge_id variables and add variables to dataset
         """
 
-        d = dataset_dict
-        analysis_unit = d["analysis_unit"]
+        analysis_unit = dataset_dict["analysis_unit"]
         if analysis_unit == "h":
-            d["merge_id"] = d["curr_hid"]
-            d["variables"].add(d["curr_hid"])
+            dataset_dict["merge_id"] = dataset_dict["curr_hid"]
+            dataset_dict["variables"].add(dataset_dict["curr_hid"])
         elif analysis_unit == "p":
-            d["merge_id"] = "persnr"
-            d["variables"].add("persnr")
-            if d["curr_hid"] != "":
-                d["variables"].add(d["curr_hid"])
+            dataset_dict["merge_id"] = "persnr"
+            dataset_dict["variables"].add("persnr")
+            if dataset_dict["curr_hid"] != "":
+                dataset_dict["variables"].add(dataset_dict["curr_hid"])
         else:
-            d["merge_id"] = ""
+            dataset_dict["merge_id"] = ""
 
     @staticmethod
     def _validate_datasets(script_dict, analysis_unit, valid=True):
@@ -84,7 +82,10 @@ class SoepMixin:
         for dataset_name in script_dict.keys():
             if dataset_name in all_datasets:
                 if script_dict[dataset_name]["prefix"] != "":
-                    if analysis_unit == "h" and script_dict[dataset_name]["analysis_unit"] == "p":
+                    if (
+                        analysis_unit == "h"
+                        and script_dict[dataset_name]["analysis_unit"] == "p"
+                    ):
                         invalid_list.append(dataset_name)
                     else:
                         valid_list.append(dataset_name)
@@ -99,6 +100,4 @@ class SoepMixin:
 
         if valid:
             return valid_list
-        else:
-            return invalid_list
-
+        return invalid_list
