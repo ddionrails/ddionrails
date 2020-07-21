@@ -153,10 +153,11 @@ class QuestionVariableImport(imports.CSVImport):
             self._import_link(link)
 
     def _import_link(self, link):
+        question = self._get_question(link)
+        variable = self._get_variable(link)
+        QuestionVariable.objects.get_or_create(question=question, variable=variable)
         try:
-            question = self._get_question(link)
-            variable = self._get_variable(link)
-            QuestionVariable.objects.get_or_create(question=question, variable=variable)
+            pass
         except:
             variable = (
                 f"{link['study_name']}/{link['dataset_name']}/{link['variable_name']}"
@@ -166,19 +167,25 @@ class QuestionVariableImport(imports.CSVImport):
             )
             logger.error(f'Could not link variable "{variable}" to question "{question}"')
 
-    def _get_question(self, link):
+    @staticmethod
+    def _get_question(link):
         question = (
-            Question.objects.filter(instrument__study__name=link["study_name"])
-            .filter(instrument__name=link["instrument_name"])
-            .get(name=link["question_name"])
+            Question.objects.filter(
+                instrument__study__name=link.get("study", link.get("study_name"))
+            )
+            .filter(instrument__name=link.get("instrument", link.get("instrument_name")))
+            .get(name=link.get("question", link.get("question_name")))
         )
         return question
 
-    def _get_variable(self, link):
+    @staticmethod
+    def _get_variable(link):
         variable = (
-            Variable.objects.filter(dataset__study__name=link["study_name"])
-            .filter(dataset__name=link["dataset_name"])
-            .filter(name=link["variable_name"])
+            Variable.objects.filter(
+                dataset__study__name=link.get("study", link.get("study_name"))
+            )
+            .filter(dataset__name=link.get("dataset", link.get("dataset_name")))
+            .filter(name=link.get("variable", link.get("variable_name")))
             .first()
         )
         return variable
