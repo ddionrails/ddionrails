@@ -1,2 +1,2 @@
-study_name,dataset_name,variable_name,question_name,instrument_name
+study,dataset,variable,question,instrument
 some-study,some-dataset,some-variable,some-question,some-instrument
