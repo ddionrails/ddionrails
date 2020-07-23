@@ -15,7 +15,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 from ddionrails.imports.helpers import download_image, store_image
-from ddionrails.workspace.models import BasketVariable
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
@@ -68,28 +67,31 @@ class DatasetImport(imports.CSVImport):
         form = DatasetForm
 
     def import_element(self, element: OrderedDict):
-        # TODO: Workaround
-        if "dataset_name" not in element.keys():
-            element["dataset_name"] = element.get("name")
+        if "name" not in element.keys():
+            element["name"] = element.get("dataset_name")
 
         try:
             self._import_dataset_links(element)
-        except:
-            LOGGER.error(f'Failed to import dataset "{element["dataset_name"]}"')
+        except BaseException as error:
+            raise type(error)(f'Failed to import dataset "{element.get("name")}"')
 
     def _import_dataset_links(self, element: OrderedDict):
-        dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
-        period_name = element.get("period_name", "none")
+        dataset = Dataset.objects.get(study=self.study, name=element.get("name"))
+        period_name = element.get("period", element.get("period_name", "none"))
         dataset.period = Period.objects.get_or_create(study=self.study, name=period_name)[
             0
         ]
-        analysis_unit_name = element.get("analysis_unit_name", "none")
+        analysis_unit_name = element.get(
+            "analysis_unit", element.get("analysis_unit_name", "none")
+        )
         dataset.analysis_unit = AnalysisUnit.objects.get_or_create(
             study=self.study, name=analysis_unit_name
         )[0]
-        conceptual_dataset_name = element.get("conceptual_dataset_name", "none")
+        conceptual_dataset = element.get(
+            "conceptual_dataset", element.get("conceptual_dataset_name", "none")
+        )
         dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(
-            study=self.study, name=conceptual_dataset_name
+            study=self.study, name=conceptual_dataset
         )[0]
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")
@@ -102,9 +104,8 @@ class VariableImport(imports.CSVImport):
 
     def import_element(self, element):
         variable_metadata = element
-        # TODO: Workaround for outdated input field name.
-        if "variable_name" not in variable_metadata.keys():
-            variable_metadata["variable_name"] = variable_metadata.get("name")
+        if "name" not in variable_metadata.keys():
+            variable_metadata["name"] = variable_metadata.get("variable_name")
 
         # This basically dropped variables in "silence" when there was a problem.
         # Incomplete imports are highly undesirable.
@@ -113,9 +114,8 @@ class VariableImport(imports.CSVImport):
         try:
             self._import_variable(variable_metadata)
         except BaseException as error:
-            variable = variable_metadata.get("variable_name")
-            dataset = variable_metadata.get("dataset_name")
-
+            variable = variable_metadata.get("name")
+            dataset = variable_metadata.get("dataset", element.get("dataset_name"))
             raise type(error)(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
             )
@@ -125,11 +125,13 @@ class VariableImport(imports.CSVImport):
             self.import_element(row)
 
     def _import_variable(self, element):
-        dataset = Dataset.objects.get(study=self.study, name=element["dataset_name"])
-        variable, _ = Variable.objects.get_or_create(
-            dataset=dataset, dataset__study=self.study, name=element["variable_name"]
+        dataset = Dataset.objects.get(
+            study=self.study, name=element.get("dataset", element.get("dataset_name"))
         )
-        concept_name = element.get("concept_name", "")
+        variable, _ = Variable.objects.get_or_create(
+            dataset=dataset, dataset__study=self.study, name=element["name"]
+        )
+        concept_name = element.get("concept", element.get("concept_name", ""))
         if concept_name != "":
             concept = Concept.objects.get(name=concept_name)
             variable.concept = concept

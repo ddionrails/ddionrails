@@ -73,13 +73,13 @@ class TestDatasetImport:
         self, dataset, dataset_csv_importer
     ):
         """This import needs already existing dataset and study in the database."""
-        valid_dataset_data = dict(dataset_name="some-dataset")
+        valid_dataset_data = dict(name="some-dataset")
         assert 1 == Dataset.objects.count()
         dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
             valid_dataset_data
         )
         assert 1 == Dataset.objects.count()
-        dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
+        dataset = Dataset.objects.get(name=valid_dataset_data["name"])
 
         analysis_unit = AnalysisUnit.objects.get(name="none")
         conceptual_dataset = ConceptualDataset.objects.get(name="none")
@@ -96,11 +96,11 @@ class TestDatasetImport:
         """This import needs already existing dataset and study in the database."""
 
         valid_dataset_data = dict(
-            dataset_name="some-dataset",
+            name="some-dataset",
             label="Some dataset",
             description="This is some dataset",
-            analysis_unit_name="some-analysis-unit",
-            conceptual_dataset_name="some-conceptual-dataset-name",
+            analysis_unit="some-analysis-unit",
+            conceptual_dataset="some-conceptual-dataset-name",
             period_name="some-period-name",
         )
 
@@ -109,7 +109,7 @@ class TestDatasetImport:
             valid_dataset_data
         )
         assert Dataset.objects.count() == 1
-        dataset = Dataset.objects.get(name=valid_dataset_data["dataset_name"])
+        dataset = Dataset.objects.get(name=valid_dataset_data["name"])
 
         assert dataset.analysis_unit.name == "some-analysis-unit"
         assert dataset.conceptual_dataset.name == "some-conceptual-dataset-name"
@@ -365,7 +365,7 @@ class TestVariableImport:
         mocked_import_variable.assert_called_once()
 
     def test_import_variable_method(self, variable_importer, variable):
-        element = dict(dataset_name=variable.dataset.name, variable_name=variable.name)
+        element = dict(dataset_name=variable.dataset.name, name=variable.name)
         variable_importer._import_variable(element)  # pylint: disable=protected-access
 
     def test_import_variable_method_with_concept_name(self, variable_importer, variable):
@@ -373,7 +373,7 @@ class TestVariableImport:
         concept.save()
         element = dict(
             dataset_name=variable.dataset.name,
-            variable_name=variable.name,
+            name=variable.name,
             concept_name=concept.name,
             description="some-description",
         )

@@ -1,2 +1,2 @@
-study_name,name,period_name,analysis_unit_name,conceptual_dataset_name,label,description
+study_name,name,period,analysis_unit,conceptual_dataset,label,description
 some-study,some-dataset,some-period,some-analysis-unit,some-conceptual-dataset,some-dataset,some-dataset

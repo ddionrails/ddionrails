@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use
 
+import csv
 import unittest
 from pathlib import Path
 
@@ -190,12 +191,28 @@ class TestStudyImportManager:
             call_command("update", dataset.study.name, "datasets.csv", "-l")
             TEST_CASE.assertEqual(0, _error.exception.code)
         TEST_CASE.assertEqual(1, Dataset.objects.count())
-        dataset = Dataset.objects.first()
+        dataset = Dataset.objects.get(name="some-dataset")
         TEST_CASE.assertEqual("some-dataset", dataset.label)
         TEST_CASE.assertEqual("some-dataset", dataset.description)
         TEST_CASE.assertEqual(analysis_unit, dataset.analysis_unit)
         TEST_CASE.assertEqual(period, dataset.period)
         TEST_CASE.assertEqual(conceptual_dataset, dataset.conceptual_dataset)
+
+    def test_import_csv_datasets_error(
+        self, dataset, period, analysis_unit, conceptual_dataset
+    ):
+        study = dataset.study
+        path = str(study.import_path().joinpath("datasets.csv"))
+        with open(path, "r") as datasets:
+            rows = list(csv.DictReader(datasets))
+        rows[0]["name"] = "non-existent"
+        with open(path, "w") as datasets:
+            writer = csv.DictWriter(datasets, fieldnames=rows[0].keys())
+            writer.writeheader()
+            writer.writerow(rows[0])
+
+        with TEST_CASE.assertRaises(dataset.DoesNotExist) as _error:
+            call_command("update", dataset.study.name, "datasets.csv", "-l")
 
     def test_import_variables(self, study, variable, concept):
         TEST_CASE.assertEqual(1, Variable.objects.count())
