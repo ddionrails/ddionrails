@@ -33,30 +33,3 @@ class Transformation(models.Model):
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods
         unique_together = ("origin", "target")
-
-    @classmethod
-    def goc_by_name(
-        cls,
-        origin_study: str,
-        origin_dataset: str,
-        origin_variable: str,
-        target_study: str,
-        target_dataset: str,
-        target_variable: str,
-    ) -> Transformation:
-        """ Create a tranformation by:
-                origin: study_name, dataset_name, variable_name
-                and
-                target: study_name, dataset_name, variable_name
-        """
-        origin = (
-            Variable.objects.filter(dataset__study__name=origin_study)
-            .filter(dataset__name=origin_dataset)
-            .get(name=origin_variable)
-        )
-        target = (
-            Variable.objects.filter(dataset__study__name=target_study)
-            .filter(dataset__name=target_dataset)
-            .get(name=target_variable)
-        )
-        return cls.objects.get_or_create(origin=origin, target=target)
