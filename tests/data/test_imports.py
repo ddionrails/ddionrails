@@ -282,17 +282,29 @@ class TestTransformationImport:
         assert transformation.target == target_variable
 
     @pytest.mark.django_db
-    def test_import_element_method_fails(self, transformation_importer):
+    def test_import_element_method_fails(self, transformation_importer, study, dataset):
+        origin_variable = VariableFactory(name="origin")
+        target_variable = VariableFactory(name="target")
         element = dict(
             origin_study_name="",
             origin_dataset_name="",
             origin_variable_name="",
+            target_study_name=study.name,
+            target_dataset_name=dataset.name,
+            target_variable_name=target_variable.name,
+        )
+        with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Origin.*"):
+            transformation_importer.import_element(element)
+        element = dict(
+            origin_study_name=study.name,
+            origin_dataset_name=dataset.name,
+            origin_variable_name=origin_variable.name,
             target_study_name="",
             target_dataset_name="",
             target_variable_name="",
         )
-        transformation_importer.import_element(element)
-        assert Transformation.objects.count() == 0
+        with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Target.*"):
+            transformation_importer.import_element(element)
 
 
 @pytest.mark.django_db

@@ -8,9 +8,7 @@ from collections import OrderedDict
 from csv import DictReader
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, List, Optional, Union
-
-from django.core.exceptions import ObjectDoesNotExist
+from typing import Dict, List, Optional, Tuple, Union
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
@@ -146,32 +144,53 @@ class TransformationImport(imports.CSVImport):
         form = VariableForm
 
     def import_element(self, element):
+
+        origin, target = self._get_origin_and_target(element)
+        Transformation.objects.get_or_create(origin=origin, target=target)
+
+    @classmethod
+    def _get_origin_and_target(
+        cls, metadata: Dict[str, str]
+    ) -> Tuple[Variable, Variable]:
+        origin, target = (dict(), dict())
+        origin["study"] = metadata.get("origin_study", metadata.get("origin_study_name"))
+
+        origin["dataset"] = metadata.get(
+            "origin_dataset", metadata.get("origin_dataset_name")
+        )
+        origin["variable"] = metadata.get(
+            "origin_variable", metadata.get("origin_variable_name")
+        )
+
+        target["study"] = metadata.get("target_study", metadata.get("target_study_name"))
+        target["dataset"] = metadata.get(
+            "target_dataset", metadata.get("target_dataset_name")
+        )
+        target["variable"] = metadata.get(
+            "target_variable", metadata.get("target_variable_name")
+        )
+
+        origin_variable = cls._get_variable(
+            origin["study"], origin["dataset"], origin["variable"], "Origin"
+        )
+        target_variable = cls._get_variable(
+            target["study"], target["dataset"], target["variable"], "Target"
+        )
+        return (origin_variable, target_variable)
+
+    @staticmethod
+    def _get_variable(study, dataset, name, _type):
         try:
-            Transformation.goc_by_name(
-                element["origin_study_name"],
-                element["origin_dataset_name"],
-                element["origin_variable_name"],
-                element["target_study_name"],
-                element["target_dataset_name"],
-                element["target_variable_name"],
+            _variable = (
+                Variable.objects.filter(dataset__study__name=study)
+                .filter(dataset__name=dataset)
+                .get(name=name)
             )
-        except ObjectDoesNotExist:
-            origin_variable = (
-                f"{element['origin_study_name']}/"
-                f"{element['origin_dataset_name']}/"
-                f"{element['origin_variable_name']}"
+        except BaseException as error:
+            raise type(error)(
+                (f"{_type} variable " f"{study}/{dataset}/{name} does not exist.")
             )
-            target_variable = (
-                f"{element['target_study_name']}/"
-                f"{element['target_dataset_name']}/"
-                f"{element['target_variable_name']}"
-            )
-            LOGGER.error(
-                (
-                    "Failed to import transformation from variable"
-                    f'"{origin_variable}" to variable "{target_variable}"'
-                )
-            )
+        return _variable
 
 
 class VariableImageImport:
