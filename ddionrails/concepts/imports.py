@@ -69,7 +69,7 @@ class ConceptImport(imports.CSVImport):
         concept.label = element.get("label", "")
         concept.label_de = element.get("label_de", "")
         concept.save()
-        topic_name = element.get("topic_name", None)
+        topic_name = element.get("topic", element.get("topic_name"))
         if topic_name:
             try:
                 topic = Topic.objects.get(name=topic_name, study=self.study)
