@@ -10,6 +10,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Union
 
+from django.db.transaction import atomic
+
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
 from ddionrails.imports.helpers import download_image, store_image
@@ -142,6 +144,10 @@ class VariableImport(imports.CSVImport):
 class TransformationImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
+
+    @atomic
+    def execute_import(self):
+        return super().execute_import()
 
     def import_element(self, element):
 
