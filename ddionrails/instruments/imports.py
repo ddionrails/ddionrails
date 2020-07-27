@@ -8,6 +8,8 @@ from collections import OrderedDict
 from pathlib import Path
 from typing import Dict, Optional
 
+from django.db.transaction import atomic
+
 from ddionrails.concepts.models import AnalysisUnit, Concept, Period
 from ddionrails.data.models import Variable
 from ddionrails.imports import imports
@@ -56,18 +58,18 @@ class InstrumentImport(imports.Import):
         )[0]
         instrument.analysis_unit = analysis_unit
 
-        for _name, q in content["questions"].items():
+        for _name, _question in content["questions"].items():
             question, _ = Question.objects.get_or_create(
-                name=q["question"], instrument=instrument
+                name=_question["question"], instrument=instrument
             )
-            question.sort_id = int(q.get("sn", 0))
-            question.label = q.get("label", q.get("text", _name))
-            question.label_de = q.get("label_de", q.get("text_de", ""))
-            question.description = q.get("description", "")
-            question.description_de = q.get("description_de", "")
-            question.items = q.get("items", list)
+            question.sort_id = int(_question.get("sn", 0))
+            question.label = _question.get("label", _question.get("text", _name))
+            question.label_de = _question.get("label_de", _question.get("text_de", ""))
+            question.description = _question.get("description", "")
+            question.description_de = _question.get("description_de", "")
+            question.items = _question.get("items", list)
             question.save()
-            image_data = q.get("image", None)
+            image_data = _question.get("image", None)
             if image_data:
                 self.question_image_import(question, image_data)
 
@@ -192,6 +194,7 @@ class QuestionVariableImport(imports.CSVImport):
 
 
 class ConceptQuestionImport(imports.CSVImport):
+    @atomic
     def execute_import(self):
         for link in self.content:
             self._import_link(link)
@@ -200,23 +203,30 @@ class ConceptQuestionImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             concept = self._get_concept(link)
-            ConceptQuestion.objects.get_or_create(question=question, concept=concept)
         except:
             question = (
                 f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"
             )
             concept = link["concept_name"]
             logger.error(f'Could not link concept "{concept}" to question "{question}"')
+        ConceptQuestion.objects.get_or_create(question=question, concept=concept)
 
     @staticmethod
-    def _get_question(link):
-        question = (
-            Question.objects.filter(instrument__study__name=link["study_name"])
-            .filter(instrument__name=link["instrument_name"])
-            .get(name=link["question_name"])
+    def _get_question(element):
+        study = element.get("study", element.get("study_name"))
+        instrument = element.get("instrument", element.get("instrument_name"))
+        question = element.get("question", element.get("question_name"))
+
+        question = Question.objects.get(
+            instrument__study__name=study, instrument__name=instrument, name=question
         )
         return question
 
     @staticmethod
-    def _get_concept(link):
-        return Concept.objects.get_or_create(name=link["concept_name"])[0]
+    def _get_concept(element):
+        # TODO: Concepts should not be imported implicitly.
+        concept = Concept.objects.get_or_create(
+            name=element.get("concept", element.get("concept_name"))
+        )[0]
+
+        return concept
