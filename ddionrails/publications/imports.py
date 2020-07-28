@@ -15,7 +15,6 @@ from ddionrails.instruments.models import Instrument, Question
 from ddionrails.publications.models import Attachment
 
 from .forms import AttachmentForm, PublicationForm
-from .models import Publication
 
 logging.config.fileConfig("logging.conf")
 logger = logging.getLogger(__name__)
