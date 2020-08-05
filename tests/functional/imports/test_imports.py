@@ -68,9 +68,28 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(2, Topic.objects.count())
         topic = Topic.objects.get(name="some-topic")
         parent_topic = Topic.objects.get(name="some-other-topic")
-        TEST_CASE.assertEqual("some-topic", topic.label)
+        TEST_CASE.assertEqual("some-label", topic.label)
         TEST_CASE.assertEqual(parent_topic, topic.parent)
-        TEST_CASE.assertEqual("some-other-topic", parent_topic.label)
+        TEST_CASE.assertEqual("some-other-label", parent_topic.label)
+
+    def test_import_csv_topics_exception(self, study_import_manager):
+        import_path: Path = study_import_manager.study.import_path()
+
+        faulty_row = {
+            "study": "some-nonexistent-study",
+            "name": "some-topic",
+            "label": "some-label",
+            "label_de": "some-german-label",
+            "description": "Some description",
+            "description_de": "Eine Beschreibung",
+            "parent": "some-other-topic",
+        }
+        with open(import_path.joinpath("topics.csv"), "a") as topic_file:
+            writer = csv.DictWriter(topic_file, fieldnames=list(faulty_row.keys()))
+            writer.writerow(faulty_row)
+
+        with TEST_CASE.assertRaises(Study.DoesNotExist):
+            study_import_manager.import_single_entity("topics.csv")
 
     def test_import_json_topics(
         self, study_import_manager
@@ -198,9 +217,8 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(period, dataset.period)
         TEST_CASE.assertEqual(conceptual_dataset, dataset.conceptual_dataset)
 
-    def test_import_csv_datasets_error(
-        self, dataset, period, analysis_unit, conceptual_dataset
-    ):
+    @pytest.mark.usefixtures("period", "analysis_unit", "conceptual_dataset")
+    def test_import_csv_datasets_error(self, dataset):
         study = dataset.study
         path = str(study.import_path().joinpath("datasets.csv"))
         with open(path, "r") as datasets:
