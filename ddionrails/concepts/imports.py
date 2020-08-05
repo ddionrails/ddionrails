@@ -9,6 +9,7 @@ from django.db.transaction import atomic
 
 from ddionrails.concepts.models import Concept
 from ddionrails.imports import imports
+from ddionrails.studies.models import Study
 
 from .forms import (
     AnalysisUnitForm,
@@ -27,17 +28,24 @@ class TopicImport(imports.CSVImport):
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = TopicForm
 
-    def process_element(self, element):
-        parent_name = element.get("parent_name", None)
-        if parent_name:
-            try:
-                element["parent"] = Topic.objects.get_or_create(
-                    study=self.study, name=parent_name
-                )[0].id
-            except:
-                logger.error(f'Could not import parent for: "{element}"')
-        element["study"] = self.study.id
-        return element
+    def import_element(self, element):
+        study = element.get("study", element.get("study_name"))
+        study_object = Study.objects.get(name=study)
+        name = element.get("name", element.get("topic_name"))
+        parent = element.get("parent", element.get("parent_name"))
+        if parent:
+            parent_object, _ = Topic.objects.get_or_create(
+                name=parent, study=study_object
+            )
+        else:
+            parent_object = None
+        topic, _ = Topic.objects.get_or_create(name=name, study=study_object)
+        topic.parent = parent_object
+        topic.label = element.get("label")
+        topic.label_de = element.get("label_de")
+        topic.description = element.get("description")
+        topic.description_de = element.get("description_de")
+        topic.save()
 
 
 class TopicJsonImport(imports.Import):
