@@ -194,7 +194,8 @@ class StudyImportManager:
         variable_path = self.import_order["variables"][1]
         with open(variable_path, "r") as variable_csv:
             variable_concepts = {
-                row["concept_name"] for row in csv.DictReader(variable_csv)
+                row.get("concept", row.get("concept_name"))
+                for row in csv.DictReader(variable_csv)
             }
         with open(concept_path, "r") as concepts_csv:
             _reader = csv.DictReader(concepts_csv)
