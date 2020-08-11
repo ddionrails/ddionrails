@@ -11,6 +11,12 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.6.1] - 2020-08-11
+
+### Fixed
+
+- A part of the concepts import still used only old field names.
+
 ## [4.6.0] - 2020-08-07
 
 ### Changed
@@ -18,9 +24,8 @@ Older versions are not not part of this Project.
 - Import now works with data, as it was
   [specified](https://github.com/paneldata/data-specification).
 - Made several imports able to fail by replacing catch all try, except blocks that
-  let errors drop basically unhandled. 
+  let errors drop basically unhandled.
 - Made several imports atomic.
-
 
 ## [4.5.4] - 2020-07-20
 
@@ -534,7 +539,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...develop
+[4.6.1]: https://github.com/ddionrails/ddionrails/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/ddionrails/ddionrails/compare/v4.5.4...v4.6.0
 [4.5.4]: https://github.com/ddionrails/ddionrails/compare/v4.5.3...v4.5.4
 [4.5.3]: https://github.com/ddionrails/ddionrails/compare/v4.5.2...v4.5.3
