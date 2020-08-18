@@ -195,7 +195,9 @@ class ConceptQuestionImport(imports.CSVImport):
     def _import_link(self, link):
         try:
             question = self._get_question(link)
-            concept = self._get_concept(link)
+            concept = Concept.objects.get(
+                name=link.get("concept", link.get("concept_name"))
+            )
         except BaseException as error:
             raise type(error)(f"Could not import ConceptQuestion: {link}")
         ConceptQuestion.objects.get_or_create(question=question, concept=concept)
@@ -210,12 +212,3 @@ class ConceptQuestionImport(imports.CSVImport):
             instrument__study__name=study, instrument__name=instrument, name=question
         )
         return question
-
-    @staticmethod
-    def _get_concept(element):
-        # TODO: Concepts should not be imported implicitly.
-        concept = Concept.objects.get_or_create(
-            name=element.get("concept", element.get("concept_name"))
-        )[0]
-
-        return concept
