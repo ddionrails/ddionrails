@@ -155,19 +155,12 @@ class QuestionVariableImport(imports.CSVImport):
             self._import_link(link)
 
     def _import_link(self, link):
-        question = self._get_question(link)
-        variable = self._get_variable(link)
-        QuestionVariable.objects.get_or_create(question=question, variable=variable)
         try:
-            pass
-        except:
-            variable = (
-                f"{link['study_name']}/{link['dataset_name']}/{link['variable_name']}"
-            )
-            question = (
-                f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"
-            )
-            logger.error(f'Could not link variable "{variable}" to question "{question}"')
+            question = self._get_question(link)
+            variable = self._get_variable(link)
+            QuestionVariable.objects.get_or_create(question=question, variable=variable)
+        except BaseException as error:
+            raise type(error)(f"Could not import QuestionVariable: {link}")
 
     @staticmethod
     def _get_question(link):
@@ -203,12 +196,8 @@ class ConceptQuestionImport(imports.CSVImport):
         try:
             question = self._get_question(link)
             concept = self._get_concept(link)
-        except:
-            question = (
-                f"{link['study_name']}/{link['instrument_name']}/{link['question_name']}"
-            )
-            concept = link["concept_name"]
-            logger.error(f'Could not link concept "{concept}" to question "{question}"')
+        except BaseException as error:
+            raise type(error)(f"Could not import ConceptQuestion: {link}")
         ConceptQuestion.objects.get_or_create(question=question, concept=concept)
 
     @staticmethod
