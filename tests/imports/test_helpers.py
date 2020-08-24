@@ -16,7 +16,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import requests_mock
 from filer.models import Folder, Image
-from pytest_mock import MockFixture
+from pytest_mock import MockerFixture
 
 from ddionrails.imports.helpers import (
     download_image,
@@ -31,7 +31,7 @@ from tests.conftest import MockOpener, VariableImageFile
 @pytest.mark.django_db
 @pytest.mark.usefixtures("unittest_mock", "variable_image_file")
 class TestHelpers(unittest.TestCase):
-    mocker: MockFixture
+    mocker: MockerFixture
     # This is overwritten by a fixture function
     variable_image_file: VariableImageFile
 
