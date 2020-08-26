@@ -67,7 +67,7 @@ def test_variable_search_document_fields_missing_related_objects(
     response = search.execute()
     document = response.hits[0]
 
-    expected = None
-    assert expected is document.analysis_unit
-    assert expected is document.conceptual_dataset
-    assert expected is document.period
+    expected = "Not Categorized"
+    assert expected == document.analysis_unit
+    assert expected == document.conceptual_dataset
+    assert expected == document.period
