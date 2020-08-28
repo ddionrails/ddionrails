@@ -3,12 +3,16 @@
 
 """ Test cases for documents in ddionrails.data app """
 
+from unittest import TestCase
+
 import pytest
 from django.forms.models import model_to_dict
 
 from ddionrails.data.documents import VariableDocument
 
 pytestmark = [pytest.mark.search]
+
+TEST_CASE = TestCase()
 
 
 def test_variable_search_document_fields(
@@ -17,13 +21,13 @@ def test_variable_search_document_fields(
     search = VariableDocument.search().query("match_all")
 
     expected = 1
-    assert expected == search.count()
+    TEST_CASE.assertEqual(expected, search.count())
     response = search.execute()
     document = response.hits[0]
 
     # test meta
-    assert str(variable.id) == document.meta.id
-    assert "testing_variables" == document.meta.index
+    TEST_CASE.assertEqual(str(variable.id), document.meta.id)
+    TEST_CASE.assertEqual("testing_variables", document.meta.index)
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
@@ -51,12 +55,11 @@ def test_variable_search_document_fields(
     expected["type"] = "variable"
     # generate result dictionary from search document
     result = document.to_dict()
-    assert expected == result
+    TEST_CASE.assertEqual(expected, result)
 
 
-def test_variable_search_document_fields_missing_related_objects(
-    variables_index, variable  # pylint: disable=unused-argument
-):
+@pytest.mark.usefixture("variable_index")
+def test_variable_search_document_fields_missing_related_objects(variable):
     variable.dataset.analysis_unit = None
     variable.dataset.conceptual_dataset = None
     variable.dataset.period = None
@@ -68,6 +71,33 @@ def test_variable_search_document_fields_missing_related_objects(
     document = response.hits[0]
 
     expected = "Not Categorized"
-    assert expected == document.analysis_unit
-    assert expected == document.conceptual_dataset
-    assert expected == document.period
+    TEST_CASE.assertEqual(expected, document.analysis_unit)
+    TEST_CASE.assertEqual(expected, document.conceptual_dataset)
+    TEST_CASE.assertEqual(expected, document.period)
+
+
+@pytest.mark.usefixture("variable_index")
+def test_variable_search_document_fields_string_representing_missing(
+    variable, conceptual_dataset, analysis_unit, period
+):
+    analysis_unit.label = "Unspecified"
+    analysis_unit.save()
+    conceptual_dataset.label = "none"
+    conceptual_dataset.save()
+    period.label = "unspecified"
+    period.save()
+
+    variable.dataset.analysis_unit = analysis_unit
+    variable.dataset.conceptual_dataset = conceptual_dataset
+    variable.dataset.period = period
+    variable.dataset.save()
+    variable.save()
+
+    search = VariableDocument.search().query("match_all")
+    response = search.execute()
+    document = response.hits[0]
+
+    expected = "Not Categorized"
+    TEST_CASE.assertEqual(expected, document.analysis_unit)
+    TEST_CASE.assertEqual(expected, document.conceptual_dataset)
+    TEST_CASE.assertEqual(expected, document.period)
