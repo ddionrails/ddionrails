@@ -195,9 +195,6 @@ function catUni(options) {
           return "<strong>" + d[1] + ": </strong>" + format(d[2]);
         }
       });
-      tip
-        .style("left", d3.event.pageX + "px")
-        .style("top", d3.event.pageY + "px");
     })
     .on("mouseout", function(d) {
       tip.transition().style("opacity", 0);
