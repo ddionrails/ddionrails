@@ -75,29 +75,28 @@ class VariableDocument(Document):
         """ Return the related study's title """
         return variable.dataset.study.title()
 
-    @staticmethod
-    def prepare_analysis_unit(variable: Variable) -> Optional[str]:
+    @classmethod
+    def prepare_analysis_unit(cls, variable: Variable) -> Optional[str]:
         """ Return the related analysis_unit's or None """
-        try:
-            return variable.dataset.analysis_unit.title()
-        except AttributeError:
-            return None
+        return cls._handle_missing_content(variable.dataset.analysis_unit)
 
-    @staticmethod
-    def prepare_conceptual_dataset(variable: Variable) -> Optional[str]:
+    @classmethod
+    def prepare_conceptual_dataset(cls, variable: Variable) -> Optional[str]:
         """ Return the related conceptual_dataset' title or None """
-        try:
-            return variable.dataset.conceptual_dataset.title()
-        except AttributeError:
-            return None
+        return cls._handle_missing_content(variable.dataset.conceptual_dataset)
+
+    @classmethod
+    def prepare_period(cls, variable: Variable) -> Optional[str]:
+        """ Return the related period's title or None """
+        return cls._handle_missing_content(variable.dataset.period)
 
     @staticmethod
-    def prepare_period(variable: Variable) -> Optional[str]:
-        """ Return the related period's title or None """
-        try:
-            return variable.dataset.period.title()
-        except AttributeError:
-            return None
+    def _handle_missing_content(content: str) -> str:
+        if content is None:
+            return "Not Categorized"
+        if str(content.title()).lower() in ["none", "unspecified"]:
+            return "Not Categorized"
+        return content.title()
 
     @staticmethod
     def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
