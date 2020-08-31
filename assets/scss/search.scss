@@ -1,0 +1,12 @@
+/**
+Facet box related
+*/
+
+ul.css-bbs1vb {
+    padding-left: .5em;
+}
+
+/* Stops facet checkbox from shrinking when facet text is long.*/
+.css-1x5fnvc+label::before {
+    min-width: 15px;
+}
