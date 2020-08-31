@@ -1,12 +1,17 @@
+/** Search box size */
+.css-m1gst5 {
+  width: 100% !important;
+}
+
 /**
 Facet box related
 */
 
 ul.css-bbs1vb {
-    padding-left: .5em;
+  padding-left: 0.5em;
 }
 
-/* Stops facet checkbox from shrinking when facet text is long.*/
-.css-1x5fnvc+label::before {
-    min-width: 15px;
+/* Stops facet checkbox from shrinking when facet text is long. */
+.css-1x5fnvc + label::before {
+  min-width: 15px;
 }
