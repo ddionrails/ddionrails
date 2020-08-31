@@ -17,7 +17,10 @@ module.exports = {
   entry: {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
-    search: "./assets/js/search/main.js",
+    search: [
+      "./assets/js/search/main.js",
+      "./assets/scss/search.scss",
+    ],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     visualization: [
       "./assets/js/visualization.js",
@@ -43,7 +46,7 @@ module.exports = {
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
-          process.env.ELASTICSEARCH_DSL_INDEX_PREFIX,
+        process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
       ),
     }),
   ],
