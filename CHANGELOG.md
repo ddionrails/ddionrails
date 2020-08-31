@@ -11,6 +11,21 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.6.2] - 2020-08-31
+
+### Changed
+
+- Migrate data visualization to d3 v6.
+
+### Fixed
+
+- Concepts are no longer implicitly imported from question data.
+- Errors during instrument import are no longer silently dropped.
+- Handle missing data during variable indexation.
+ 
+  - Values "none", "unspecified" and None (Python None) for conceptual dataset
+    period and analysis unit are now unified to "Not Categorized".
+
 ## [4.6.1] - 2020-08-11
 
 ### Fixed
@@ -539,7 +554,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...develop
+[4.6.2]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...v4.6.2
 [4.6.1]: https://github.com/ddionrails/ddionrails/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/ddionrails/ddionrails/compare/v4.5.4...v4.6.0
 [4.5.4]: https://github.com/ddionrails/ddionrails/compare/v4.5.3...v4.5.4
