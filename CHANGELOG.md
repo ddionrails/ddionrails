@@ -11,6 +11,22 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.6.3] - 2020-09-03
+
+## Changed
+
+- Display of sub menu link `Topics` for studies now depends on the existence of
+  topics linked to that study.
+
+  - Was dependent on the attribute topic_languages being set before this change.
+
+- Error reporting for attachment import is now more detailed.
+
+## Fixed
+
+- Removed unused function call in topics.js that caused errors.
+- Users without baskets no longer cause errors during createBasketList calls.
+
 ## [4.6.2] - 2020-08-31
 
 ### Changed
@@ -554,7 +570,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.3...develop
+[4.6.3]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...v4.6.3
 [4.6.2]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...v4.6.2
 [4.6.1]: https://github.com/ddionrails/ddionrails/compare/v4.6.0...v4.6.1
 [4.6.0]: https://github.com/ddionrails/ddionrails/compare/v4.5.4...v4.6.0
