@@ -108,6 +108,9 @@ function createBasketList() {
     return null;
   }
   const context = JSON.parse($("#context_data").text());
+  if (! context.hasOwnProperty("baskets")) {
+    return null;
+  }
   // list-group-item
   for (const [name, data] of Object.entries(context["baskets"])) {
     const element = $("<div />", {
