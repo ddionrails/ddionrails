@@ -2,6 +2,7 @@
 # pylint: disable=missing-docstring,no-self-use
 
 import csv
+import json
 import unittest
 from pathlib import Path
 
@@ -297,6 +298,32 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(study, attachment.context_study)
         TEST_CASE.assertEqual("https://some-study.de", attachment.url)
         TEST_CASE.assertEqual("some-study", attachment.url_text)
+
+    @pytest.mark.usefixture("study")
+    def test_import_attachments_exception(self, study_import_manager):
+        TEST_CASE.assertEqual(0, Attachment.objects.count())
+        attachements_path = study_import_manager.study.import_path().joinpath(
+            "attachments.csv"
+        )
+        header = (
+            "type",
+            "study",
+            "dataset",
+            "variable",
+            "instrument",
+            "question",
+            "url",
+            "url_text",
+        )
+        row = dict(type="dataset", dataset="Nonexistent-dataset")
+        with open(attachements_path, "w") as attacheements_file:
+            writer = csv.DictWriter(attacheements_file, fieldnames=header)
+            writer.writeheader()
+            writer.writerow(row)
+        with TEST_CASE.assertRaises(Dataset.DoesNotExist) as error:
+            study_import_manager.import_single_entity("attachments")
+        error_dict = json.loads(error.exception.args[0])
+        TEST_CASE.assertDictContainsSubset(row, error_dict)
 
     @pytest.mark.usefixtures(("elasticsearch_indices"))
     def test_import_publications(self, study_import_manager, study):

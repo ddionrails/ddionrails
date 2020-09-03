@@ -2,6 +2,7 @@
 
 """ Importer classes for ddionrails.publications app """
 
+import json
 import logging
 from collections import OrderedDict
 from typing import Dict
@@ -40,12 +41,25 @@ class AttachmentImport(imports.CSVImport):
     @atomic
     def execute_import(self):
         for attachment in self.content:
-            attachment = self._process_field_names(attachment)
-            related = self._get_related_object(attachment)
-            attachment = dict(
-                **related, url=attachment["url"], url_text=attachment["url_text"]
-            )
-            self.import_element(attachment)
+            try:
+                attachment = self._process_field_names(attachment)
+                related = self._get_related_object(attachment)
+                attachment = dict(
+                    **related, url=attachment["url"], url_text=attachment["url_text"]
+                )
+                self.import_element(attachment)
+            except BaseException as error:
+                raise type(error)(
+                    "\n"
+                    + json.dumps(
+                        attachment,
+                        default=str,
+                        ensure_ascii=False,
+                        sort_keys=True,
+                        indent=4,
+                        separators=(",", ": "),
+                    )
+                )
 
     def import_element(self, element):
         attachment, _ = Attachment.objects.get_or_create(
