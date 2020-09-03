@@ -180,13 +180,6 @@ $(function() {
       $("#btn-search").click();
     }
   });
-
-  // Activate tooltip for more information about filter buttons,
-  //  e.g. 'Show all related variables'
-  $("body").tooltip({
-    selector: "[data-tooltip=tooltip]",
-    trigger: "hover",
-  });
 });
 
 // On click on a topic or concept show all variables oder questions
