@@ -4,6 +4,7 @@
 import uuid
 from typing import List, Optional
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
@@ -169,7 +170,8 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
 
     def has_topics(self) -> bool:
         """ Returns True if the study has topics. """
-        return bool(len(self.topic_languages) > 0)
+        topic_model = apps.get_model("concepts", "Topic")
+        return bool(topic_model.objects.filter(study=self)[:1])
 
     def get_topiclist(self, language: str = "en") -> Optional[List]:
         """ Returns the list of topics for a given language or None """
