@@ -85,10 +85,11 @@
         },
         "django-filer": {
             "hashes": [
-                "sha256:7bf8cda6cbdd02c30198c59dfe2027624ee70a204f2d4f6cc2a0a8563df9b286"
+                "sha256:33d0a8bbe2bda56655bd53f7fe0ef53f46d31bd25d499003b99ca0993e3a4fd3",
+                "sha256:6a955bb0f8cfb61911bc4299533d20ff62a92f5e0e9a688bca231249abac7fe2"
             ],
             "index": "pypi",
-            "version": "==1.7.1"
+            "version": "==2.0.0"
         },
         "django-import-export": {
             "hashes": [
@@ -122,10 +123,10 @@
         },
         "django-polymorphic": {
             "hashes": [
-                "sha256:0a25058e95e5e99fe0beeabb8f4734effe242d7b5b77dca416fba9fd3062da6a",
-                "sha256:6e08a76c91066635ccb7ef3ebbe9a0ad149febae6b30be2579716ec16d3c6461"
+                "sha256:73b75eb44ea302bd32820f8661e469509d245ce7f7ff09cd2ad149e5c42034ff",
+                "sha256:9d886f19f031d26bb1391c055ed9be06fb226a04a4cec1842b372c58873b3caa"
             ],
-            "version": "==2.1.2"
+            "version": "==3.0.0"
         },
         "django-rq": {
             "hashes": [
