@@ -254,6 +254,7 @@ function removeAllChildren(activeNode, type) {
 // Show more information for adding an elment to
 // the basket (how many variables will be added to the basket) and render
 // a list of the user's baskets
+/** */
 function addToBasket(el) {
   const node = $.ui.fancytree.getNode(el);
   let url = apiUrl + "/" + node.key + "?variable_list=false";
@@ -329,9 +330,10 @@ function addToBasket(el) {
  * @param {number} basketId The id of the basket, to which to add the variables.
  */
 function addToBasketRequest(nodeKey, basketId) {
-  const typeNameArray = nodeKey.split("_");
-  const type = typeNameArray[0];
-  const name = typeNameArray[1];
+  const regexp = /^(\w*?)_(_?\w*)$/;
+  const typeNameArray = nodeKey.match(regexp);
+  const type = typeNameArray[1];
+  const name = typeNameArray[2];
   const postData = {
     basket: basketId,
   };
