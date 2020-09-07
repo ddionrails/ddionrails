@@ -85,11 +85,10 @@
         },
         "django-filer": {
             "hashes": [
-                "sha256:33d0a8bbe2bda56655bd53f7fe0ef53f46d31bd25d499003b99ca0993e3a4fd3",
-                "sha256:6a955bb0f8cfb61911bc4299533d20ff62a92f5e0e9a688bca231249abac7fe2"
+                "sha256:efd6fecd4da320ee4b2333d52d260ad3f2a01b0de7196db089abd3352833d775"
             ],
             "index": "pypi",
-            "version": "==2.0.0"
+            "version": "==2.0.1"
         },
         "django-import-export": {
             "hashes": [
