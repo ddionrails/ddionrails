@@ -5,7 +5,7 @@
 import uuid
 from typing import List, Union
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -250,10 +250,15 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin):
 
     def get_queryset(self):
         """get queryset according to permissions."""
+        study = self.request.query_params.get("study", None)
+        ui_call = self.request.query_params.get("ui-call", False)
         user = self.request.user
-        if user.is_superuser:
+        if user.is_superuser and not ui_call:
             return Basket.objects.all()
-        return Basket.objects.filter(user=user.id)
+        filter_dict = dict(user=user.id)
+        if study:
+            filter_dict["study__name"] = study
+        return Basket.objects.filter(**filter_dict)
 
     def create(self, request, *args, **kwargs):
         """Create a single basket."""
