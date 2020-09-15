@@ -125,7 +125,7 @@ class VariableDetailView(DetailView):
             "valid",
             "invalid",
         )
-        context["javascript_json"] = {
+        context["variable_baskets_context"] = {
             "variable": {
                 "id": str(context["variable"].id),
                 "name": context["variable"].name,

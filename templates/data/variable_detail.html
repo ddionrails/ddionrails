@@ -9,7 +9,7 @@
 {% endblock styles %}
 {% block content %}
     {% csrf_token %}
-    {{ javascript_json|json_script:"context_data" }}
+    {{ variable_baskets_context|json_script:"context_data" }}
     <h1>{{ variable.title }}</h1>
     <div class="row">
         <div class="col-lg-8">
