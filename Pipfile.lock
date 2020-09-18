@@ -166,11 +166,11 @@
         },
         "elasticsearch-dsl": {
             "hashes": [
-                "sha256:1e345535164cb684de4b825e1d0daf81b75554b30d3905446584a9e4af0cc3e7",
-                "sha256:593c01822a03e3e84b87753c78edb833f4b2bfafcd52089841bd8f99b7e74ccd"
+                "sha256:0ed75f6ff037e36b2397a8e92cae0ddde79b83adc70a154b8946064cb62f7301",
+                "sha256:9390d8e5cf82ebad3505e7f656e407259cf703f5a4035f211cef454127672572"
             ],
             "index": "pypi",
-            "version": "==7.2.1"
+            "version": "==7.3.0"
         },
         "et-xmlfile": {
             "hashes": [
@@ -646,10 +646,10 @@
         },
         "identify": {
             "hashes": [
-                "sha256:56e70094705056ac75e66eb9f068beb323f4a31b24eb649cb1cf3126d138e35c",
-                "sha256:e5cc8ba10ca658c278f841813c5f1556804141c93f82a7e620a938528a0c3f32"
+                "sha256:c770074ae1f19e08aadbda1c886bc6d0cb55ffdc503a8c0fe8699af2fc9664ae",
+                "sha256:d02d004568c5a01261839a05e91705e3e9f5c57a3551648f9b3fb2b9c62c0f62"
             ],
-            "version": "==1.5.2"
+            "version": "==1.5.3"
         },
         "idna": {
             "hashes": [
@@ -844,10 +844,10 @@
         },
         "pygments": {
             "hashes": [
-                "sha256:2594e8fdb06fef91552f86f4fd3a244d148ab24b66042036e64f29a291515048",
-                "sha256:2df50d16b45b977217e02cba6c8422aaddb859f3d0570a88e09b00eafae89c6e"
+                "sha256:307543fe65c0947b126e83dd5a61bd8acbd84abec11f43caebaf5534cbc17998",
+                "sha256:926c3f319eda178d1bd90851e4317e6d8cdb5e292a3386aac9bd75eca29cf9c7"
             ],
-            "version": "==2.7.0"
+            "version": "==2.7.1"
         },
         "pygraphviz": {
             "hashes": [
