@@ -16,7 +16,7 @@
     "d3": "^6.1.1",
     "datatables.net-bs4": "1.10.22",
     "datatables.net-buttons-bs4": "^1.6.4",
-    "datatables.net-responsive-bs4": "2.2.5",
+    "datatables.net-responsive-bs4": "2.2.6",
     "har-validator": "^5.1.5",
     "jquery": "^3.5.1",
     "jquery.fancytree": "^2.36.1",
