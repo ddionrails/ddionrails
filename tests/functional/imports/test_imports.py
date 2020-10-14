@@ -209,7 +209,7 @@ class TestStudyImportManager:
     ):
         with TEST_CASE.assertRaises(SystemExit) as _error:
             call_command("update", dataset.study.name, "datasets.csv", "-l")
-            TEST_CASE.assertEqual(0, _error.exception.code)
+        TEST_CASE.assertEqual(0, _error.exception.code)
         TEST_CASE.assertEqual(1, Dataset.objects.count())
         dataset = Dataset.objects.get(name="some-dataset")
         TEST_CASE.assertEqual("some-dataset", dataset.label)
@@ -217,21 +217,6 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(analysis_unit, dataset.analysis_unit)
         TEST_CASE.assertEqual(period, dataset.period)
         TEST_CASE.assertEqual(conceptual_dataset, dataset.conceptual_dataset)
-
-    @pytest.mark.usefixtures("period", "analysis_unit", "conceptual_dataset")
-    def test_import_csv_datasets_error(self, dataset):
-        study = dataset.study
-        path = str(study.import_path().joinpath("datasets.csv"))
-        with open(path, "r") as datasets:
-            rows = list(csv.DictReader(datasets))
-        rows[0]["name"] = "non-existent"
-        with open(path, "w") as datasets:
-            writer = csv.DictWriter(datasets, fieldnames=rows[0].keys())
-            writer.writeheader()
-            writer.writerow(rows[0])
-
-        with TEST_CASE.assertRaises(dataset.DoesNotExist) as _error:
-            call_command("update", dataset.study.name, "datasets.csv", "-l")
 
     def test_import_variables(self, study, variable, concept):
         TEST_CASE.assertEqual(1, Variable.objects.count())
