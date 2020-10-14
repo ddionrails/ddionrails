@@ -5,6 +5,7 @@
 import json
 import logging
 from collections import OrderedDict
+from csv import DictReader
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -187,28 +188,45 @@ class QuestionVariableImport(imports.CSVImport):
 
 
 class ConceptQuestionImport(imports.CSVImport):
+    def read_file(self):
+        self.content: Dict[str, str] = dict()
+        with open(self.file_path(), "r") as questions_csv:
+            reader = DictReader(questions_csv)
+            for row in reader:
+                _question = (
+                    row.get("study", row.get("study_name")),
+                    row.get("instrument", row.get("instrument_name")),
+                    row.get("name", row.get("question_name")),
+                )
+                self.content[_question] = row.get("concept", row.get("concept_name"))
+
     @atomic
     def execute_import(self):
-        for link in self.content:
-            self._import_link(link)
+        for question, concept in self.content.items():
+            self._import_link(
+                {
+                    "study": question[0],
+                    "instrument": question[1],
+                    "question": question[2],
+                    "concept": concept,
+                }
+            )
 
     def _import_link(self, link):
         try:
             question = self._get_question(link)
-            concept = Concept.objects.get(
-                name=link.get("concept", link.get("concept_name"))
-            )
+            concept = Concept.objects.get(name=link.get("concept"))
         except BaseException as error:
             raise type(error)(f"Could not import ConceptQuestion: {link}")
         ConceptQuestion.objects.get_or_create(question=question, concept=concept)
 
     @staticmethod
     def _get_question(element):
-        study = element.get("study", element.get("study_name"))
-        instrument = element.get("instrument", element.get("instrument_name"))
-        question = element.get("question", element.get("question_name"))
+        study = element.get("study")
+        instrument = element.get("instrument")
+        question = element.get("question")
 
-        question = Question.objects.get(
+        question_object = Question.objects.get(
             instrument__study__name=study, instrument__name=instrument, name=question
         )
-        return question
+        return question_object

@@ -70,13 +70,12 @@ class DatasetImport(imports.CSVImport):
         if "name" not in element.keys():
             element["name"] = element.get("dataset_name")
 
-        try:
-            self._import_dataset_links(element)
-        except BaseException as error:
-            raise type(error)(f'Failed to import dataset "{element.get("name")}"')
+        self._import_dataset_links(element)
 
     def _import_dataset_links(self, element: OrderedDict):
-        dataset = Dataset.objects.get(study=self.study, name=element.get("name"))
+        dataset, _ = Dataset.objects.get_or_create(
+            study=self.study, name=element.get("name")
+        )
         period_name = element.get("period", element.get("period_name", "none"))
         dataset.period = Period.objects.get_or_create(study=self.study, name=period_name)[
             0
