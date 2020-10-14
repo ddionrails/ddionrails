@@ -160,11 +160,11 @@ class StudyImportManager:
                     InstrumentImport,
                     Path(self.base_dir / "instruments/").glob("*.json"),
                 ),
+                "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
                 "datasets.json": (
                     DatasetJsonImport,
                     Path(self.base_dir / "datasets/").glob("*.json"),
                 ),
-                "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
                 "variables": (VariableImport, self.base_dir / "variables.csv"),
                 "questions_variables": (
                     QuestionVariableImport,
@@ -172,7 +172,7 @@ class StudyImportManager:
                 ),
                 "concepts_questions": (
                     ConceptQuestionImport,
-                    self.base_dir / "concepts_questions.csv",
+                    self.base_dir / "questions.csv",
                 ),
                 "transformations": (
                     TransformationImport,
