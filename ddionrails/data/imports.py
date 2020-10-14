@@ -76,7 +76,9 @@ class DatasetImport(imports.CSVImport):
             raise type(error)(f'Failed to import dataset "{element.get("name")}"')
 
     def _import_dataset_links(self, element: OrderedDict):
-        dataset = Dataset.objects.get(study=self.study, name=element.get("name"))
+        dataset, _ = Dataset.objects.get_or_create(
+            study=self.study, name=element.get("name")
+        )
         period_name = element.get("period", element.get("period_name", "none"))
         dataset.period = Period.objects.get_or_create(study=self.study, name=period_name)[
             0
