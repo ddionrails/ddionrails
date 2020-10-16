@@ -29,7 +29,8 @@ module.exports = {
   },
   output: {
     path: path.resolve("./static/dist/"),
-    filename: "[name]-[hash].js",
+    publicPath: path.resolve("./static/dist/"),
+    filename: "[name]-[contenthash].js",
   },
 
   plugins: [
@@ -99,7 +100,10 @@ module.exports = {
       },
       {
         test: /\.ico$/,
-        loader: "file-loader?name=[name].[ext]",
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+        },
       },
     ],
   },
