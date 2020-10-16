@@ -35,7 +35,7 @@ class Topic(models.Model, ModelMixin):
     name = models.CharField(
         max_length=255,
         validators=[validate_lowercase],
-        unique=True,
+        unique=False,
         help_text="Name of the topic (Lowercase)",
     )
     label = models.CharField(
