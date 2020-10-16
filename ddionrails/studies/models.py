@@ -6,9 +6,9 @@ from typing import List, Optional
 
 from django.apps import apps
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField, JSONField
-from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.db.models import JSONField
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
@@ -24,7 +24,7 @@ class TopicList(models.Model):
     ##############
     # attributes #
     ##############
-    topiclist = JSONBField(
+    topiclist = JSONField(
         default=list,
         null=True,
         blank=True,

@@ -9,8 +9,8 @@ import uuid
 from collections import OrderedDict
 from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
 
-from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.db import models
+from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse

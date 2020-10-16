@@ -10,9 +10,9 @@ import uuid
 from collections import OrderedDict
 from typing import Dict, List, Optional, Union
 
-from django.contrib.postgres.fields.jsonb import JSONField as JSONBField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
 from django.urls import reverse
 
@@ -260,8 +260,8 @@ class Question(ModelMixin, models.Model):
 
             current = item.get("answer_list", None)
             try:
-                after = items[index + 1]["answer_list"]
-            except:
+                after = items[index + 1].get("answer_list")
+            except IndexError:
                 after = None
             if current and current == before:
                 if current == after:
