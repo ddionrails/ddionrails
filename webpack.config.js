@@ -29,7 +29,7 @@ module.exports = {
   },
   output: {
     path: path.resolve("./static/dist/"),
-    publicPath: path.resolve("./static/dist/"),
+    publicPath: "",
     filename: "[name]-[contenthash].js",
   },
 
@@ -49,6 +49,10 @@ module.exports = {
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
       ),
+    }),
+    // reactivesearch-vue breaks without this
+    new webpack.DefinePlugin({
+      "process.browser": JSON.stringify("production"),
     }),
   ],
 

@@ -48,8 +48,8 @@
   },
   "scripts": {
     "build": "find ./static/dist/ \\( -name \"*.js\" -o -name \"*.js.map\" -o -name \"*.css\" \\) -exec rm {} + & webpack --config webpack.config.js",
-    "build_dev": "webpack --mode=development --config webpack.config.js --debug --devtool source-map",
-    "webpack_watch": "webpack --mode=development --config webpack.config.js --watch --debug --devtool source-map",
+    "build_dev": "webpack --mode=development --config webpack.config.js --devtool source-map",
+    "webpack_watch": "webpack --mode=development --config webpack.config.js --watch --devtool source-map",
     "lint": "eslint",
     "format": "eslint --fix",
     "cspell": "cspell"
