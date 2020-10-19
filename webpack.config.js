@@ -29,7 +29,8 @@ module.exports = {
   },
   output: {
     path: path.resolve("./static/dist/"),
-    filename: "[name]-[hash].js",
+    publicPath: "",
+    filename: "[name]-[contenthash].js",
   },
 
   plugins: [
@@ -48,6 +49,11 @@ module.exports = {
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
       ),
+    }),
+    // reactivesearch-vue breaks without this.
+    // A false value breaks slider ui elements
+    new webpack.DefinePlugin({
+      "process.browser": true,
     }),
   ],
 
@@ -99,7 +105,10 @@ module.exports = {
       },
       {
         test: /\.ico$/,
-        loader: "file-loader?name=[name].[ext]",
+        loader: "file-loader",
+        options: {
+          name: "[name].[ext]",
+        },
       },
     ],
   },
