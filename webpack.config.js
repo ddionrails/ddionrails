@@ -50,9 +50,10 @@ module.exports = {
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
       ),
     }),
-    // reactivesearch-vue breaks without this
+    // reactivesearch-vue breaks without this.
+    // A false value breaks slider ui elements
     new webpack.DefinePlugin({
-      "process.browser": JSON.stringify("production"),
+      "process.browser": true,
     }),
   ],
 
