@@ -1,6 +1,6 @@
 #!/bin/bash
 # Collect Admin stiling etc.
-cp -r ${WEB_LIBRARY}/* ${WEB_LIBRARY_SERV_DIR}/
+mv ${WEB_LIBRARY}/* ${WEB_LIBRARY_SERV_DIR}/
 python manage.py collectstatic --noinput
 
 echo "Initialising System"
