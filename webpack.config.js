@@ -30,7 +30,7 @@ module.exports = {
   output: {
     path: path.resolve("./static/dist/"),
     publicPath: "",
-    filename: "[name]-[contenthash].js",
+    filename: "[name].js",
   },
 
   plugins: [
