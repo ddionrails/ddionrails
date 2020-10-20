@@ -23,6 +23,12 @@ logger = logging.getLogger(__name__)
 
 
 class InstrumentImport(imports.Import):
+    """Import a single Instrument and its containing questions.
+
+    Is called with a single instrument JSON file.
+    Also imports associated Periods and analysis_units, if they are not
+    already present.
+    """
 
     content: str
 
@@ -188,11 +194,20 @@ class QuestionVariableImport(imports.CSVImport):
 
 
 class ConceptQuestionImport(imports.CSVImport):
+    """Imports links between Concepts and Questions
+
+    Reuses the content of questions.csv.
+    Both Question and Concept have to already exist.
+    """
+
     def read_file(self):
         self.content: Dict[str, str] = dict()
         with open(self.file_path(), "r") as questions_csv:
             reader = DictReader(questions_csv)
             for row in reader:
+                # No concept; nothing to import for this question
+                if not row.get("concept", row.get("concept_name")):
+                    continue
                 _question = (
                     row.get("study", row.get("study_name")),
                     row.get("instrument", row.get("instrument_name")),
