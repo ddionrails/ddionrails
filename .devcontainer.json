@@ -36,6 +36,8 @@
     "dbaeumer.vscode-eslint",
     "github.vscode-pull-request-github",
     "gruntfuggly.todo-tree",
-    "alefragnani.bookmarks"
+    "alefragnani.bookmarks",
+    "ms-python.vscode-pylance"
+
   ]
 }

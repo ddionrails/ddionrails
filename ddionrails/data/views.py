@@ -104,9 +104,17 @@ class VariableDetailView(DetailView):
         context["label_table"] = LabelTable(context["related_variables"])
         context["questions"] = Question.objects.filter(
             questions_variables__variable=self.object.id
-        ) | Question.objects.filter(
+        ).select_related("period", "instrument") | Question.objects.filter(
             questions_variables__variable__target_variables__target_id=self.object.id
+        ).select_related(
+            "period", "instrument"
         )
+        context["questions"] = sorted(
+            context["questions"], key=lambda question: question.period.label, reverse=True
+        )
+        # All questions are intended to be displayed separately in a bootstrap modal.
+        # The subset here is to be displayed directly on the page.
+        context["questions_subset"] = context["questions"][:5]
         context["concept"] = self.object.get_concept()
         context["row_helper"] = RowHelper()
         context["basket_list"] = (

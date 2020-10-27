@@ -1,4 +1,17 @@
 <div class="card">
+    <div class="card-header"><b>Description</b>
+    </div>
+    <div class="card-body" id="description-card-content">
+        {{ variable.html_description | safe }}
+    </div>
+    <div class="card-footer text-center">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#descriptionModal">
+        Show full description
+        </button>
+    </div>
+</div>
+
+<div class="card">
     <div class="card-header"><b>Info</b>
     </div>
     <div class="card-body">
@@ -21,9 +34,6 @@
             <b>German label</b>: {{ variable.label_de }} 
         </p>
         {% endif %}
-        <p><b>Description:</b>
-            {{ variable.html_description | safe }}
-        </p>
         {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
 
         <hr>
@@ -55,15 +65,89 @@
     </div>
 </div>
 
+<!-- Questions Modal  -->
+<div class="modal" tabindex="-1" role="dialog" id="relatedQuestionsModal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Questions</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <table class="table">
+            <tr>
+                <th scope="col">
+                Period
+                </th>
+                <th scope="col">
+                Instrument
+                </th>
+                <th scope="col">
+                Question Text
+                </th>
+            </tr>
+            {% for question in questions %}
+            <tr>
+                <td scope="row">
+                {{ question.period.label }}
+                </td>
+                <td scope="row">
+                {{ question.instrument.label }}
+                </td>
+                <td scope="row">
+                <a href="{{ question.get_absolute_url }}">{{ question.label }}</a>
+                </td>
+            </tr>
+            {% endfor %}
+
+        </table>
+    </div>
+
+    </div>
+  </div>
+</div>
+<!-- Questions Modal End -->
+
+<!-- Description Modal -->
+<div class="modal" tabindex="-1" role="dialog" id="descriptionModal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Description</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="description-modal-content">
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Description Modal End -->
+
+
+
+
+{% if questions_subset %}
+
 <div class="card">
     <div class="card-header"><b>Questions</b>
     </div>
     <div class="card-body">
         <ul>
-            {% for question in questions %}
-                <li><a href="{{ question.get_absolute_url }}">{{ question.title }}</a>
+            {% for question in questions_subset %}
+                <li><a href="{{ question.get_absolute_url }}">{{ question.label }}</a>
                 </li>
             {% endfor %}
         </ul>
     </div>
+    <div class="card-footer text-center">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relatedQuestionsModal">
+        Show all questions
+        </button>
+    </div>
 </div>
+{% endif %}
