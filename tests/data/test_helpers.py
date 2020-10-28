@@ -4,7 +4,7 @@
 """ Test cases for helpers in ddionrails.data app """
 
 from unittest import TestCase
-from unittest.mock import patch
+from unittest.mock import PropertyMock, patch
 from uuid import uuid4
 
 import pytest
@@ -103,9 +103,10 @@ class TestLabelTable:
 
         test = TestCase()
 
+        mocked_categories = PropertyMock(return_value=categories)
         with patch(
             "ddionrails.data.models.variable.Variable.category_list",
-            return_value=categories,
+            new_callable=mocked_categories,
         ):
             label_table = LabelTable(variables)
             html_output = label_table.to_html()
