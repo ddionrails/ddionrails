@@ -144,10 +144,12 @@
             {% endfor %}
         </ul>
     </div>
-    <div class="card-footer text-center">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relatedQuestionsModal">
-        Show all questions
-        </button>
-    </div>
+    {% if questions_subset != questions %}
+        <div class="card-footer text-center">
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relatedQuestionsModal">
+            Show all questions
+            </button>
+        </div>
+    {% endif %}
 </div>
 {% endif %}

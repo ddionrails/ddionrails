@@ -4,7 +4,7 @@
  */
 $(function() {
   const description=$("#description-card-content").clone();
-  if (description.text().trim()=="") {
+  if (description.text().trim()==="") {
     $("#description-card-content").parent().hide();
     return;
   }
