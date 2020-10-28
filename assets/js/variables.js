@@ -2,14 +2,19 @@
  * Hide description info card if no description text is present.
  * Copy full description content into a modal otherwise.
  */
-$(function() {
-  const description=$("#description-card-content").clone();
+$(window).on("load", function() {
+  const description=$("#description-card-content");
   if (description.text().trim()==="") {
-    $("#description-card-content").parent().hide();
+    description.parent().hide();
     return;
   }
-  const descriptionModal=$("#description-modal-content");
-  description.clone().appendTo(descriptionModal);
+  if (
+    description.prop("scrollHeight") - description.prop("clientHeight") <= 1
+  ) {
+    $("#description-footer").hide();
+    return;
+  }
+  description.clone().appendTo("#description-modal-content");
 }
 
 );
