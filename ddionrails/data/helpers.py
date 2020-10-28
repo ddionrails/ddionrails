@@ -70,10 +70,6 @@ class LabelTable:
         if not self.render_table:
             return ""
         label_dict = self.to_dict()
-        try:
-            label_dict = self.to_dict()
-        except:
-            pass
         result = [
             '<table class="table" id="label_table">',
             "<thead><tr>",
@@ -113,16 +109,19 @@ class LabelTable:
         for category_label in self.category_labels:
             row = list()
             for variable in self.variables:
-                try:
-                    category = [
-                        c
-                        for c in variable.category_list
-                        if self._simplify_label(c["label"]) == category_label
-                    ][0]
+                category = None
+                for _category in variable.category_list:
+                    if self._simplify_label(_category["label"]) == category_label:
+                        category = _category
+                        break
+                if category:
                     row.append(
-                        dict(value=category["value"], frequency=category["frequency"])
+                        dict(
+                            value=category.get("value", "Unknown"),
+                            frequency=category.get("frequency", "Unknown"),
+                        )
                     )
-                except:
+                else:
                     row.append(None)
             table["body"][category_label] = row
 
