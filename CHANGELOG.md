@@ -11,6 +11,26 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [4.7.0] - 2020-10-29
+
+## Added
+
+- modal elements to the variable view to display larger metadata content in a better way.
+
+## Changed
+
+- formatting for gunicorn logs changed for parsability.
+- import of django JSONField to address deprecation issues.
+- Migrate webpack setup to v5 and optimize building process.
+- Refactor import to better work with data specifications.
+- Refactor variable view to make content more understandable.
+- Removed unique constraint on Topic name field.
+  Unique identifier is now dependant on study name + topic name.
+
+## Fixed
+
+- Handle questions without concepts in import.
+
 ## [4.6.3] - 2020-09-03
 
 ## Changed
@@ -570,7 +590,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.6.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.7.0...develop
+[4.7.0]: https://github.com/ddionrails/ddionrails/compare/v4.6.3...v4.7.0
 [4.6.3]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...v4.6.3
 [4.6.2]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...v4.6.2
 [4.6.1]: https://github.com/ddionrails/ddionrails/compare/v4.6.0...v4.6.1
