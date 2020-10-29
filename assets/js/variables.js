@@ -33,5 +33,5 @@ $(window).on("load", function() {
   anchorLink[0].click();
   $([document.documentElement, document.body]).animate({
     scrollTop: anchorLink.offset().top - $("#paneldata-navbar").outerHeight(),
-  }, 2000);
+  }, 800);
 });
