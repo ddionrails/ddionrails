@@ -23,7 +23,7 @@
     "popper.js": "^1.16.1",
     "spinkit": "^2.0.1",
     "vue": "^2.6.12",
-    "vue-router": "^3.4.8",
+    "vue-router": "^3.4.9",
     "minimist": "^1.2.5"
   },
   "devDependencies": {
