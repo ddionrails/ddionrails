@@ -34,9 +34,14 @@ const open = url.searchParams.get("open");
 
 // Define buttons, which are shown when you hover over a topic or concept
 // This buttons will be append to the nodes defined by fancytree
-let filterOptionsString = `
-<span class='btn-group btn-group-sm filter-options' data-container='body'
-  role='group'>
+const filterOptionsString = $("<span />",
+  {
+    "class": "btn-group btn-group-sm filter-options",
+    "data-container": "body",
+    "role": "group",
+  }
+);
+filterOptionsString.html(`
     <button type='button' data-tooltip='tooltip' data-container='body'
       title='Show all related variables' onclick='filter(this, \"variable\")'
       class='btn btn-link filter-option-variable' >
@@ -53,15 +58,18 @@ let filterOptionsString = `
       data-target='#topic-list-add-to-basket'>
         <span class='fas fa-shopping-cart' aria-hidden='true'></span>
     </button>
-`;
-const clipboard = `
-<button type='button' data-tooltip='tooltip' data-container='body'
-  title='Copy URL' onclick='copyUrlToClipboard(this)' class='btn btn-link'>
-    <span class='fas fa-copy' aria-hidden='true'></span>
-</button>
-`;
-const filterAndClipboard = filterOptionsString + clipboard + "</span>";
-filterOptionsString = filterOptionsString + "</span>";
+`);
+const clipboard = $("<button />", {
+  "type": "button",
+  "data-tooltip": "tooltip",
+  "data-container": "body",
+  "title": "Copy URL",
+  "onclick": "copyUrlToClipboard(this)",
+  "class": "btn btn-link",
+});
+clipboard.html("<span class='fas fa-copy' aria-hidden='true'></span>");
+const filterAndClipboard = filterOptionsString.clone().append(clipboard);
+
 const newApiUrl = new URL("api/basket-variables/", window.location.origin);
 const apiUrl =
   location.protocol +
@@ -140,18 +148,17 @@ $(function() {
       url: apiUrl, // load data from api (topic and concepts only)
       cache: false,
     },
-    renderNode(event, data) {
-      const node = data.node;
-      const $spanTitle = $(node.span).find("span.fancytree-title");
-      if ($(node.span).find("span.filter-options").length === 0) {
-        if (node.type === "topic") {
-          // insert additional copy_to_clipboard button to button group
-          $spanTitle.after(filterAndClipboard);
-        }
-        if (node.type === "concept") {
-          $spanTitle.after(filterOptionsString);
-        }
-      }
+    createNode(event, data) {
+      // Topic Nodes have fancytree children.
+      $(node.span).filter(
+        ".fancytree-has-children"
+      ).find(
+        "span.fancytree-title").after(filterAndClipboard.prop("outerHTML"));
+      // Concept nodes have no fancytree children.
+      $(data.node.span).not(
+        ".fancytree-has-children"
+      ).find(
+        "span.fancytree-title").after(filterOptionsString.prop("outerHTML"));
     },
     // When tree fully loaded:
     // if parameter 'open' is set in URL open specified node
