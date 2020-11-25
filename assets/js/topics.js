@@ -150,7 +150,7 @@ $(function() {
     },
     createNode(event, data) {
       // Topic Nodes have fancytree children.
-      $(node.span).filter(
+      $(data.node.span).filter(
         ".fancytree-has-children"
       ).find(
         "span.fancytree-title").after(filterAndClipboard.prop("outerHTML"));
@@ -189,7 +189,9 @@ $(function() {
   });
 });
 
-// On click on a topic or concept show all variables oder questions
+/**
+ * On click on a topic or concept show all variables or questions
+ * */
 function filter(node, type) {
   // show spinner while loading
   $("#tree_variables").empty();
