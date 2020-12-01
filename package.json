@@ -31,6 +31,7 @@
     "css-loader": "^5.0.1",
     "eslint": "^7.17.0",
     "eslint-config-google": "^0.14.0",
+    "eslint-plugin-jquery": "^1.5.1",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-vue": "^7.4.1",
     "file-loader": "^6.2.0",
@@ -62,7 +63,8 @@
     "extends": [
       "plugin:vue/essential",
       "google",
-      "plugin:security/recommended"
+      "plugin:security/recommended",
+      "plugin:jquery/deprecated"
     ],
     "globals": {
       "Atomics": "readonly",
@@ -74,7 +76,8 @@
     },
     "plugins": [
       "vue",
-      "security"
+      "security",
+      "jquery"
     ],
     "rules": {
       "quotes": [
@@ -105,6 +108,13 @@
         2,
         {
           "MemberExpression": 1
+        }
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 90,
+          "tabWidth": 4
         }
       ],
       "no-use-before-define": [

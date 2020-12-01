@@ -21,54 +21,9 @@ import "jquery.fancytree";
 import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
 import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
 
-$.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
 
-const context = JSON.parse($("#context_data").text());
+const context = JSON.parse($("#context_data")[0].textContent);
 const study = context["study"];
-const language = context["language"];
-
-// Get current URL to read 'open' Parameter for opening specified node
-const urlString = window.location.href;
-let url = new URL(urlString);
-const open = url.searchParams.get("open");
-
-// Define buttons, which are shown when you hover over a topic or concept
-// This buttons will be append to the nodes defined by fancytree
-const filterOptionsString = $("<span />",
-  {
-    "class": "btn-group btn-group-sm filter-options",
-    "data-container": "body",
-    "role": "group",
-  }
-);
-filterOptionsString.html(`
-    <button type='button' data-tooltip='tooltip' data-container='body'
-      title='Show all related variables' onclick='filter(this, \"variable\")'
-      class='btn btn-link filter-option-variable' >
-        <span class='fas fa-chart-bar' aria-hidden='true'></span>
-    </button>
-    <button type='button' class='btn btn-link filter-option-question'
-      data-tooltip='tooltip' data-container='body'
-      title='Show all related questions' onclick='filter(this, \"question\")'>
-        <span class='fas fa-tasks' aria-hidden='true'></span>
-    </button>
-    <button type='button' data-tooltip='tooltip' data-container='body'
-      title='Add all related variables to one of your baskets'
-      onclick='addToBasket(this)' class='btn btn-link' data-toggle='modal'
-      data-target='#topic-list-add-to-basket'>
-        <span class='fas fa-shopping-cart' aria-hidden='true'></span>
-    </button>
-`);
-const clipboard = $("<button />", {
-  "type": "button",
-  "data-tooltip": "tooltip",
-  "data-container": "body",
-  "title": "Copy URL",
-  "onclick": "copyUrlToClipboard(this)",
-  "class": "btn btn-link",
-});
-clipboard.html("<span class='fas fa-copy' aria-hidden='true'></span>");
-const filterAndClipboard = filterOptionsString.clone().append(clipboard);
 
 const newApiUrl = new URL("api/basket-variables/", window.location.origin);
 const apiUrl =
@@ -76,22 +31,170 @@ const apiUrl =
   "//" +
   window.location.host +
   "/api/topics/" +
-  study +
+  context["study"] +
   "/" +
-  language;
+  context["language"];
 const baseUrl =
   location.protocol +
   "//" +
   window.location.host +
   "/" +
-  study +
+  context["study"] +
   "/topics/" +
-  language;
+  context["language"];
+
+
+/**
+ * Retrieve and display related questions or variables for a topic or concept.
+ *
+ * @param {HTMLButtonElement} node A button Element associated with a topic or concept
+ */
+function filter(node) {
+  // show spinner while loading
+  const relatedVariableSection = document.querySelector("#tree_variables > div");
+  relatedVariableSection.innerHTML = "";
+
+  const loadingErrorIcon = document.getElementById("loading-error");
+  loadingErrorIcon.classList.add("hidden");
+
+  const loadingIcon = document.getElementById("loading-icon");
+  loadingIcon.classList.remove("hidden");
+
+  node = $(node);
+  node.removeClass("variables-btn-active questions-btn-active");
+
+
+  const activeNode = $.ui.fancytree.getNode(node);
+
+  let url = apiUrl + "/" + activeNode.key;
+  if (node.hasClass("variables")) {
+    url += "?variable_html=true";
+    node.toggleClass("variables-btn-active");
+  }
+  if (node.hasClass("questions")) {
+    url += "?question_html=true";
+    node.toggleClass("questions-btn-active");
+  }
+  // This should be switched to the new API so we can retrieve JSON
+  // and build the Table ourselves.
+  fetch(url).then(
+    function(response) {
+      loadingIcon.classList.add("hidden");
+      response.text().then(
+        function(data) {
+          const parser = new DOMParser();
+          const parsed = parser.parseFromString(data, "text/html");
+          const nodes = parsed.querySelectorAll("body > *");
+          nodes.forEach(function(node) {
+            relatedVariableSection.appendChild(node);
+          });
+        }
+      );
+    }
+  ).catch( function(_error) {
+    loadingIcon.classList.add("hidden");
+    loadingErrorIcon.classList.remove("hidden");
+  }
+  );
+}
+
+/**
+ * Prompt to add all variables of a topic or concept to a basket.
+ * TODO: Needs refactoring
+ * @param {HTMLButtonElement} node A button Element associated with a topic or concept
+ */
+function addToBasket(node) {
+  const treeNode = $.ui.fancytree.getNode(node);
+  let url = apiUrl + "/" + treeNode.key + "?variable_list=false";
+  $("#basket_list").empty();
+  let numVariables = "?";
+  const numberNode = document.getElementById("number_of_variables");
+  if (treeNode.type === "variable") {
+    numVariables = 1;
+    // Set number of variables in add to basket modal
+    numberNode.textContent = numVariables;
+  } else {
+    jQuery.getJSON(url, function(data) {
+      numVariables = data.variable_count || "?";
+      // Set number of variables in add to basket modal
+      numberNode.textContent = numVariables;
+    });
+  }
+
+  url = new URL(`api/topics/${study}/baskets`, window.location.origin);
+  jQuery.getJSON(url, function(data) {
+    if (data.user_logged_in) {
+      if (data.baskets.length === 0) {
+        const redirectCreateBasketUrl =
+          location.protocol +
+          "//" +
+          window.location.host +
+          "/workspace/baskets";
+        $("#basket_list").append(
+          "<p><a class='btn btn-primary' href='" +
+          redirectCreateBasketUrl +
+          "'>Create a basket</a></p>"
+        );
+      }
+      for (let i = 0; i < data.baskets.length; i++) {
+        const addToBasketFunction =
+          // eslint-disable-next-line security/detect-object-injection
+          "addToBasketRequest('" + treeNode.key + "'," + data.baskets[i].id + ")";
+        $("#basket_list").append(
+          "<p><button class='btn btn-primary' onclick=" +
+          addToBasketFunction +
+          ">Add to basket <strong>" +
+          // eslint-disable-next-line security/detect-object-injection
+          data.baskets[i].name +
+          "</strong></button></p>"
+        );
+      }
+    } else {
+      const redirectLoginUrl =
+        location.protocol + "//" + window.location.host + "/workspace/login";
+      $("#basket_list").append(
+        "<p><a class='btn btn-primary' href='" +
+        redirectLoginUrl +
+        "'>Please log in to use this function.</a></p>"
+      );
+    }
+  });
+}
+
+/**
+ * Copy the URL of selected topic to clipboard
+ *
+* @param {HTMLButtonElement} node - The button node inside the fancytree node
+ */
+function copyUrlToClipboard(node) {
+  const activeNode = $.ui.fancytree.getNode(node);
+
+  // URL need to be selectable to be copied to clipboard,
+  // append temporary element
+  const text = $("<textarea />", {
+    "text": baseUrl + "?open=" + activeNode.key,
+  });
+
+  text.appendTo(document.body);
+  text[0].select();
+  document.execCommand("copy");
+  text.remove();
+}
+
+
+$.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
+
+
+// Get current URL to read 'open' Parameter for opening specified node
+const urlString = window.location.href;
+const url = new URL(urlString);
+const open = url.searchParams.get("open");
+
 
 // Define what the tree structure will look like, for more information and
 // options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
-$(function() {
+$(window).on("load", function() {
   $("#tree").fancytree({
     extensions: ["filter", "glyph"],
     types: {
@@ -112,7 +215,7 @@ $(function() {
       counter: false,
       mode: "hide",
     },
-    icon(event, data) {
+    icon(_event, data) {
       return data.typeInfo.icon;
     },
     glyph: {
@@ -148,21 +251,70 @@ $(function() {
       url: apiUrl, // load data from api (topic and concepts only)
       cache: false,
     },
-    createNode(event, data) {
-      // Topic Nodes have fancytree children.
-      $(data.node.span).filter(
-        ".fancytree-has-children"
-      ).find(
-        "span.fancytree-title").after(filterAndClipboard.prop("outerHTML"));
-      // Concept nodes have no fancytree children.
-      $(data.node.span).not(
-        ".fancytree-has-children"
-      ).find(
-        "span.fancytree-title").after(filterOptionsString.prop("outerHTML"));
+    createNode(_event, data) {
+      const filterOptionsString = $("<span />",
+        {
+          "class": "btn-group btn-group-sm filter-options",
+          "data-container": "body",
+          "role": "group",
+        }
+      );
+
+      let displayButtons = [$("<button />",
+        {
+          "class": "btn btn-link filter-option-variable",
+          "type": "button",
+          "data-tooltip": "tooltip",
+          "data-container": "body",
+          "title": "Show all related variables",
+        }
+      )];
+
+      displayButtons[1] = displayButtons[0].clone();
+      const basketButton = displayButtons[0].clone();
+
+      displayButtons[1].attr("title", "Show all related questions");
+      displayButtons[0].html("<span class='fas fa-chart-bar' aria-hidden='true'></span>");
+      displayButtons[0].addClass("variables");
+      displayButtons[1].addClass("questions");
+      displayButtons[1].html("<span class='fas fa-tasks' aria-hidden='true'></span>");
+
+      basketButton.attr("title", "Add all related variables to one of your baskets");
+      basketButton.attr("data-toggle", "modal");
+      basketButton.attr("data-target", "#topic-list-add-to-basket");
+      basketButton.html("<span class='fas fa-shopping-cart' aria-hidden='true'></span>");
+
+      displayButtons = displayButtons.map(function(target) {
+        return target.on("click", function(event) {
+          filter(event.target);
+        });
+      });
+      basketButton.on("click", function(event) {
+        addToBasket(event.target);
+      });
+      filterOptionsString.append(displayButtons, basketButton);
+
+      if ($(data.node)[0]["type"] === "topic") {
+        const clipboard = $("<button />", {
+          "type": "button",
+          "data-tooltip": "tooltip",
+          "data-container": "body",
+          "title": "Copy URL",
+          "class": "btn btn-link",
+        });
+        clipboard.html("<span class='fas fa-copy' aria-hidden='true'></span>");
+        clipboard.on("click", function(event) {
+          copyUrlToClipboard(event.target);
+        });
+        filterOptionsString.append(clipboard);
+      }
+
+      data.node.span.querySelector(".fancytree-title").insertAdjacentElement(
+        "afterend", filterOptionsString[0]);
     },
     // When tree fully loaded:
     // if parameter 'open' is set in URL open specified node
-    init(event, data) {
+    init(_event, _data) {
       if (open != null) {
         const node = $("#tree").fancytree("getNodeByKey", open);
         node.makeVisible();
@@ -175,7 +327,7 @@ $(function() {
   $("#btn-search").on("click", function() {
     $("#tree")
       .fancytree("getTree")
-      .filterBranches($("#search").val(), {
+      .filterBranches(document.getElementById("search").value, {
         autoExpand: true,
       });
   });
@@ -189,136 +341,6 @@ $(function() {
   });
 });
 
-/**
- * On click on a topic or concept show all variables or questions
- * */
-function filter(node, type) {
-  // show spinner while loading
-  $("#tree_variables").empty();
-  $(".sk-flow").show();
-  $("#tree")
-    .find("button[class*='-btn-active']")
-    .removeClass("variable-btn-active question-btn-active");
-  $(node).toggleClass(type + "-btn-active");
-
-  const activeNode = $.ui.fancytree.getNode(node);
-
-  let url = apiUrl + "/" + activeNode.key;
-  if (type === "variable") {
-    url += "?variable_html=true";
-  }
-  if (type === "question") {
-    url += "?question_html=true";
-  }
-  jQuery
-    .get(url, function(data) {
-      $(".sk-flow").hide(); // hide the loading message
-      $("#tree_variables").html(data);
-      $("#variable_table").DataTable();
-    })
-    .fail(function() {
-      $(".sk-flow").hide(); // hide the loading message
-      $("#tree_variables").html(
-        "<p><span class='fas fa-exclamation-triangle'" +
-        " aria-hidden='true'></span> Load Error!</p>"
-      );
-    });
-}
-
-// Remove all variables and questions from active node
-function removeAsyncLoadedData(activeNode, type) {
-  const children = activeNode.getChildren();
-  const tmp = [];
-  if (children) {
-    for (let i = 0; i < children.length; i++) {
-      // eslint-disable-next-line security/detect-object-injection
-      const node = $.ui.fancytree.getNode(children[i]);
-      const extraClasses = node.extraClasses || "";
-      if (extraClasses.includes("async-data-" + type)) {
-        tmp.push(node);
-      }
-    }
-    for (let i = 0; i < tmp.length; i++) {
-      // eslint-disable-next-line security/detect-object-injection
-      tmp[i].remove();
-    }
-  }
-}
-
-// Remove all child nodes from active node
-function removeAllChildren(activeNode, type) {
-  const tmp = [];
-  activeNode.visit(function(node) {
-    if (node.type === type) {
-      tmp.push(node);
-    }
-  }, true);
-
-  for (let i = 0; i < tmp.length; i++) {
-    // eslint-disable-next-line security/detect-object-injection
-    tmp[i].remove();
-  }
-}
-
-// Show more information for adding an elment to
-// the basket (how many variables will be added to the basket) and render
-// a list of the user's baskets
-function addToBasket(el) {
-  const node = $.ui.fancytree.getNode(el);
-  let url = apiUrl + "/" + node.key + "?variable_list=false";
-  $("#basket_list").empty();
-  let numVariables = "?";
-  if (node.type === "variable") {
-    numVariables = 1;
-    // Set number of variables in add to basket modal
-    $("#number_of_variables").text(numVariables);
-  } else {
-    jQuery.getJSON(url, function(data) {
-      numVariables = data.variable_count || "?";
-      // Set number of variables in add to basket modal
-      $("#number_of_variables").text(numVariables);
-    });
-  }
-
-  url = new URL(`api/topics/${study}/baskets`, window.location.origin);
-  jQuery.getJSON(url, function(data) {
-    if (data.user_logged_in) {
-      if (data.baskets.length === 0) {
-        const redirectCreateBasketUrl =
-          location.protocol +
-          "//" +
-          window.location.host +
-          "/workspace/baskets";
-        $("#basket_list").append(
-          "<p><a class='btn btn-primary' href='" +
-          redirectCreateBasketUrl +
-          "'>Create a basket</a></p>"
-        );
-      }
-      for (let i = 0; i < data.baskets.length; i++) {
-        const addToBasketFunction =
-          // eslint-disable-next-line security/detect-object-injection
-          "addToBasketRequest('" + node.key + "'," + data.baskets[i].id + ")";
-        $("#basket_list").append(
-          "<p><button class='btn btn-primary' onclick=" +
-          addToBasketFunction +
-          ">Add to basket <strong>" +
-          // eslint-disable-next-line security/detect-object-injection
-          data.baskets[i].name +
-          "</strong></button></p>"
-        );
-      }
-    } else {
-      const redirectLoginUrl =
-        location.protocol + "//" + window.location.host + "/workspace/login";
-      $("#basket_list").append(
-        "<p><a class='btn btn-primary' href='" +
-        redirectLoginUrl +
-        "'>Please log in to use this function.</a></p>"
-      );
-    }
-  });
-}
 
 /**
  * Call basket variable API to add variables via their topic or concept.
@@ -338,6 +360,11 @@ function addToBasket(el) {
  * @param {number} basketId The id of the basket, to which to add the variables.
  */
 function addToBasketRequest(nodeKey, basketId) {
+  const successMessage = document.getElementById("basket_success");
+  const errorMessage = document.getElementById("basket_error");
+  successMessage.classList.add("hidden");
+  errorMessage.classList.add("hidden");
+
   const typeNameArray = nodeKey.split("_");
   const type = typeNameArray[0];
   const name = typeNameArray[1];
@@ -351,7 +378,7 @@ function addToBasketRequest(nodeKey, basketId) {
   client.open("POST", newApiUrl, true);
   client.setRequestHeader("Content-type", "application/json");
 
-  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+  const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
   client.withCredentials = true;
   client.setRequestHeader("X-CSRFToken", csrfToken);
   client.setRequestHeader("Accept", "application/json");
@@ -361,54 +388,43 @@ function addToBasketRequest(nodeKey, basketId) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
       if (200 <= status <= 201) {
-        $("#basket_success").text(_response["detail"]);
+        successMessage.textContent = _response["detail"];
 
-        $("#basket_success").removeClass("hidden");
+        successMessage.classList.remove("hidden");
       }
       if (status >= 400) {
-        $("#basket_error").text(_response["detail"]);
-        $("#basket_error").removeClass("hidden");
+        errorMessage.textContent = _response["detail"];
+        errorMessage.removeClass("hidden");
       }
     }
   };
   client.send(JSON.stringify(postData));
 }
 
-// Remove status alerts from modal after modal was closed
-$("#topic-list-add-to-basket").on("hidden.bs.modal", function() {
-  $("#basket_success").addClass("hidden");
-  $("#basket_error").addClass("hidden");
+/**
+ * When basket modal is closed, hide old alert messages.
+ * A closed modal can be identified by the lack of a `show`.
+ * This is why we check for changes in the class list.
+ */
+const modalObserver = new MutationObserver(function(mutations) {
+  mutations.forEach(function(mutation) {
+    if (mutation.attributeName === "class") {
+      if (!mutation.target.classList.contains("show")) {
+        mutation.target.querySelectorAll(".modal-body > .alert").forEach(
+          function(node) {
+            node.classList.add("hidden");
+          }
+        );
+      }
+    }
+  });
+});
+modalObserver.observe(document.getElementById("topic-list-add-to-basket"), {
+  attributes: true,
 });
 
-// Copy the URL of selected topic to clipboard
-function copyUrlToClipboard(el) {
-  const activeNode = $.ui.fancytree.getNode(el);
-
-  // URL need to be selectable to be copied to clipboard,
-  // append temporary element
-  url = baseUrl + "?open=" + activeNode.key;
-  const tmp = document.createElement("textarea");
-  tmp.value = url;
-  document.body.appendChild(tmp);
-  tmp.select();
-  document.execCommand("copy");
-  document.body.removeChild(tmp);
-
-  // Show feedback message (url copied)
-  $(el)
-    .attr("title", "Copied URL")
-    .tooltip("fixTitle")
-    .tooltip("show");
-  setTimeout(function() {
-    $(el)
-      .attr("title", "Copy URL")
-      .tooltip("fixTitle");
-  }, 1000);
-}
 
 window.filter = filter;
-window.removeAsyncLoadedData = removeAsyncLoadedData;
-window.removeAllChildren = removeAllChildren;
 window.addToBasket = addToBasket;
 window.addToBasketRequest = addToBasketRequest;
 window.copyUrlToClipboard = copyUrlToClipboard;

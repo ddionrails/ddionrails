@@ -46,12 +46,20 @@
         </div>
         <div class="col-lg-6 col-6">
             <div class="topic-list-content">
-                <div class="sk-flow" style="display: none">
-                    <div class="sk-flow-dot"></div>
-                    <div class="sk-flow-dot"></div>
-                    <div class="sk-flow-dot"></div>
+                <div class="hidden" id="loading-icon">
+                    <div class="sk-flow">
+                        <div class="sk-flow-dot"></div>
+                        <div class="sk-flow-dot"></div>
+                        <div class="sk-flow-dot"></div>
+                    </div>
                 </div>
                 <div id="tree_variables">
+                    <div></div>
+                    <p class="hidden" id="loading-error">
+                        <span class='fas fa-exclamation-triangle' aria-hidden='true'>
+                        </span>
+                        Load Error!
+                    </p>
                 </div>
             </div>
         </div>
