@@ -17,29 +17,11 @@ from tests.instruments.factories import QuestionFactory
 pytestmark = [pytest.mark.instruments, pytest.mark.models]
 
 
-class TestInstrumentModel:
-    def test_string_method(self, instrument, study):
-        assert str(instrument) == "/" + study.name + "/inst/" + instrument.name
-
-    def test_get_absolute_url_method(self, instrument, study):
-        assert (
-            instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
-        )
-
-    def test_layout_class_method(self, instrument):
-        expected = "instrument"
-        assert expected == instrument.layout_class()
+def test_get_absolute_url_method(instrument, study):
+    assert instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
 
 
 class TestQuestionModel:
-    def test_string_method(self, question):
-        expected = (
-            f"/{question.instrument.study.name}"
-            f"/inst/{question.instrument.name}"
-            f"/{question.name}"
-        )
-        assert expected == str(question)
-
     def test_get_absolute_url_method(self, question):
         expected = (
             f"/{question.instrument.study.name}"

@@ -121,10 +121,6 @@ class Question(ModelMixin, models.Model):
         id_fields = ["instrument", "name"]
         io_fields = ["name", "label", "description", "instrument"]
 
-    def __str__(self) -> str:
-        """ Returns a string representation using the "instrument" and "name" fields """
-        return f"{self.instrument}/{self.name}"
-
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model
 
@@ -247,9 +243,9 @@ class Question(ModelMixin, models.Model):
 
     # pylint: disable=fixme
     # TODO Refactor instruments.models.question.item array and associated
-    # BODY item_array method is used to create a data structure intended
-    # BODY for display purposes. This function is overly comlex and its the return
-    # BODY value still needs to be processed in the template.
+    # item_array method is used to create a data structure intended
+    # for display purposes. This function is overly complex and its the return
+    # value still needs to be processed in the template.
     def item_array(self, language=None) -> List:
         """ Returns a list containing the items of this Question object """
         items_file = Union[List[QuestionItem], Dict[str, QuestionItem]]

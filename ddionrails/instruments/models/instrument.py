@@ -91,9 +91,9 @@ class Instrument(ModelMixin, models.Model):
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+        self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -109,19 +109,9 @@ class Instrument(ModelMixin, models.Model):
         id_fields = ["study", "name"]
         io_fields = ["study", "name", "label", "description", "period", "analysis_unit"]
 
-    def __str__(self) -> str:
-        """ Returns a string representation using the "study" and "name" fields """
-        return f"{self.study}/inst/{self.name}"
-
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "study" and "name" fields """
         return reverse(
             "inst:instrument_detail",
             kwargs={"study_name": self.study.name, "instrument_name": self.name},
         )
-
-    @staticmethod
-    def layout_class() -> str:
-        """ Returns the layout class (used in templates) """
-        # TODO: What does this do?
-        return "instrument"

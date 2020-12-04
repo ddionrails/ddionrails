@@ -113,10 +113,6 @@ class Dataset(ModelMixin, models.Model):
     class DOR(ModelMixin.DOR):  # pylint: disable=missing-docstring,too-few-public-methods
         id_fields = ["study", "name"]
 
-    def __str__(self) -> str:
-        """ Returns a string representation using the "study" and "name" fields """
-        return f"{self.study}/data/{self.name}"
-
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "study" and "name" fields """
         return reverse(

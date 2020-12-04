@@ -126,17 +126,6 @@ class ModelMixin:
             html = ""
         return html
 
-    def __str__(self):
-        """ Returns a string reprensentation of the instance, using DOR.id_fields """
-        result = []
-        for field in self.DOR.id_fields:
-            value = getattr(self, field)
-            try:
-                result.append(value.string_id())
-            except AttributeError:
-                result.append(str(value))
-        return "/".join(result)
-
 
 class ImportPathMixin:  # pylint: disable=R0903
     """ A mixin for models to return an import_path based on their name attribute """

@@ -139,20 +139,6 @@ class TestModelMixin:
         expected = ""
         assert expected == result
 
-    def test_string_method_single_id_field(self, model_mixin):
-        model_mixin.name = "some-name"
-        expected = model_mixin.name
-        result = str(model_mixin)
-        assert expected == result
-
-    def test_string_method_multiple_id_field(self, model_mixin):
-        model_mixin.DOR.id_fields = ["id1", "id2"]
-        model_mixin.id1 = "name-1"
-        model_mixin.id2 = "name-2"
-        expected = f"{model_mixin.id1}/{model_mixin.id2}"
-        result = str(model_mixin)
-        assert expected == result
-
 
 class TestImportPathMixin:
     def test_import_path_method(self, importpath_mixin, settings):
