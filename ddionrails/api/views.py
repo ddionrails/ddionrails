@@ -5,7 +5,7 @@
 import uuid
 from typing import List, Union
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
@@ -190,8 +190,8 @@ class StudyViewSet(viewsets.ModelViewSet):
 class VariableViewSet(viewsets.ModelViewSet):
     """List metadata about all variables."""
 
-    queryset = Variable.objects.all().select_related("dataset", "dataset__study")
     serializer_class = VariableSerializer
+    pagination_class = None
 
     def get_queryset(self):
         topic = self.request.query_params.get("topic", None)

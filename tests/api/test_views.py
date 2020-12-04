@@ -425,7 +425,7 @@ class TestVariableViewSet(unittest.TestCase):
 
         response = self.client.get(self.API_PATH + f"?concept={concept_name}")
         content = json.loads(response.content)
-        self.assertEqual(10, content["count"])
+        self.assertEqual(10, len(content))
 
     def test_query_parameter_study(self):
         """Define study parameter behavior."""
@@ -448,7 +448,7 @@ class TestVariableViewSet(unittest.TestCase):
 
         response = self.client.get(self.API_PATH + f"?study={study_name}")
         content = json.loads(response.content)
-        self.assertEqual(10, content["count"])
+        self.assertEqual(10, len(content))
 
     def test_returned_fields(self):
         """Define fields that should be provided."""
@@ -461,9 +461,9 @@ class TestVariableViewSet(unittest.TestCase):
             "dataset",
             "study",
         ]
-        VariableFactory(name=f"test_variable")
+        VariableFactory(name="test_variable")
         response = self.client.get(self.API_PATH)
-        results = json.loads(response.content)["results"]
+        results = json.loads(response.content)
         variable = results[0]
         self.assertListEqual(expected_fields, list(variable.keys()))
 
@@ -476,14 +476,13 @@ class TestVariableViewSet(unittest.TestCase):
         response = self.client.get(self.API_PATH)
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
-        self.assertEqual(variable_amount, content["count"])
-        results = content.get("results")
-        result_ids = [result["id"] for result in results]
+        self.assertEqual(variable_amount, len(content))
+        result_ids = [result["id"] for result in content]
         for variable in variables:
             self.assertIn(str(variable.id), result_ids)
 
     def test_scroll_limit(self):
-        """Is the scroll limit at 100 as expected?"""
+        """There should be no scroll limit"""
         variable_amount = 101
         variables = list()
         for number in range(1, variable_amount + 1):
@@ -491,9 +490,7 @@ class TestVariableViewSet(unittest.TestCase):
         response = self.client.get(self.API_PATH)
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
-        self.assertEqual(variable_amount, content["count"])
-        results = content.get("results")
-        self.assertEqual(100, len(results))
+        self.assertEqual(variable_amount, len(content))
 
 
 @pytest.mark.django_db

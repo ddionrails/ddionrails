@@ -20,12 +20,17 @@
 import "jquery.fancytree";
 import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
 import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
+import "datatables.net-bs4";
+import "datatables.net-buttons-bs4";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import "datatables.net-responsive-bs4";
 
 
 const context = JSON.parse($("#context_data")[0].textContent);
 const study = context["study"];
 
-const newApiUrl = new URL("api/basket-variables/", window.location.origin);
+const basketApiUrl = new URL("api/basket-variables/", window.location.origin);
+const variablesApiUrl = new URL("api/variables/", window.location.origin);
 const apiUrl =
   location.protocol +
   "//" +
@@ -43,6 +48,53 @@ const baseUrl =
   "/topics/" +
   context["language"];
 
+/**
+ * Load and display variable data through a dataTable
+ *
+ * @param {HTMLTableElement} table Target to fill with the data
+ * @param {URL} url API call with params to retrieve the data
+ */
+const renderVariableTable = function(table, url) {
+  $(table).dataTable(
+    {
+      "ajax":
+      {
+        url,
+        "dataSrc":
+         "",
+      },
+      "columns": [
+        {
+          data: "label",
+          render(data, type, row) {
+            return (row["label"] ? row["label"] : row["name"] );
+          },
+        },
+        {
+          data: "variable",
+          render(data, type, row) {
+            const link = document.createElement("a");
+            link.href = window.location.protocol + "//" + window.location.hostname +
+              `/${study}/data/` + data + "/" + row["name"];
+            link.textContent = row["name"];
+
+            return link.outerHTML;
+          },
+        },
+        {data: "dataset_name",
+          render(data, type, row) {
+            const link = document.createElement("a");
+            link.href = window.location.protocol + "//" + window.location.hostname +
+              `/${study}/data/` + data;
+            link.textContent = data;
+
+            return link.outerHTML;
+          },
+        },
+      ],
+    }
+  );
+};
 
 /**
  * Retrieve and display related questions or variables for a topic or concept.
@@ -68,6 +120,16 @@ function filter(node) {
 
   let url = apiUrl + "/" + activeNode.key;
   if (node.hasClass("variables")) {
+    const filterName = activeNode.key.substring(activeNode.type.length+1);
+    const api = new URL(variablesApiUrl.toString());
+    api.searchParams.append("study", study);
+    api.searchParams.append(activeNode.type, filterName);
+
+    const variableTable = document.getElementById("variable-table").cloneNode(true);
+    variableTable.classList.remove("hidden");
+    relatedVariableSection.appendChild(variableTable);
+
+    renderVariableTable(variableTable, api.toString());
     url += "?variable_html=true";
     node.toggleClass("variables-btn-active");
   }
@@ -375,7 +437,7 @@ function addToBasketRequest(nodeKey, basketId) {
   postData[type + "_name"] = name;
 
   const client = new XMLHttpRequest();
-  client.open("POST", newApiUrl, true);
+  client.open("POST", basketApiUrl, true);
   client.setRequestHeader("Content-type", "application/json");
 
   const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
