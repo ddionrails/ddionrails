@@ -7,7 +7,7 @@ import logging
 from collections import OrderedDict
 from csv import DictReader
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Set, Tuple
 
 from django.db.transaction import atomic
 
@@ -15,8 +15,14 @@ from ddionrails.concepts.models import AnalysisUnit, Concept, Period
 from ddionrails.data.models import Variable
 from ddionrails.imports import imports
 from ddionrails.imports.helpers import download_image, store_image
-
-from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
+from ddionrails.instruments.models import (
+    ConceptQuestion,
+    Instrument,
+    Question,
+    QuestionImage,
+    QuestionVariable,
+)
+from ddionrails.studies.models import Study
 
 logging.config.fileConfig("logging.conf")  # type: ignore
 logger = logging.getLogger(__name__)
@@ -157,6 +163,8 @@ class InstrumentImport(imports.Import):
 
 
 class QuestionVariableImport(imports.CSVImport):
+    """Import relations between Variable and Question model objects."""
+
     def execute_import(self):
         for link in self.content:
             self._import_link(link)
@@ -200,48 +208,52 @@ class ConceptQuestionImport(imports.CSVImport):
     Both Question and Concept have to already exist.
     """
 
+    content: Set[Tuple[str, str, str, Optional[str]]]
+
     def read_file(self):
-        self.content: Dict[str, str] = dict()
+        self.content = set()
         with open(self.file_path(), "r") as questions_csv:
             reader = DictReader(questions_csv)
             for row in reader:
-                # No concept; nothing to import for this question
-                if not row.get("concept", row.get("concept_name")):
-                    continue
                 _question = (
-                    row.get("study", row.get("study_name")),
-                    row.get("instrument", row.get("instrument_name")),
-                    row.get("name", row.get("question_name")),
+                    row.get("study", row.get("study_name", "")),
+                    row.get("instrument", row.get("instrument_name", "")),
+                    row.get("name", row.get("question_name", "")),
+                    row.get("concept", row.get("concept_name", None)),
                 )
-                self.content[_question] = row.get("concept", row.get("concept_name"))
+                if _question[3] == "":
+                    continue
+                if "" in _question:
+                    raise ValueError(
+                        (
+                            "Expected values in columns: "
+                            "study, instrument, name and concept. "
+                            f"Got {_question}"
+                        )
+                    )
+                self.content.add(_question)
 
     @atomic
     def execute_import(self):
-        for question, concept in self.content.items():
-            self._import_link(
-                {
-                    "study": question[0],
-                    "instrument": question[1],
-                    "question": question[2],
-                    "concept": concept,
-                }
+        studies = dict()
+        for concept_question_data in self.content:
+            if concept_question_data[0] not in studies.keys():
+                try:
+                    study = Study.objects.get(name=concept_question_data[0])
+                    studies[study.name] = study
+                except Study.DoesNotExist:
+                    continue
+            try:
+                concept_question = Question.objects.get(
+                    instrument__study=studies[concept_question_data[0]],
+                    instrument__name=concept_question_data[1],
+                    name=concept_question_data[2],
+                )
+                concept = Concept.objects.get(name=concept_question_data[3])
+            except BaseException as error:
+                raise type(error)(
+                    f"Could not import ConceptQuestion: {concept_question_data}"
+                )
+            ConceptQuestion.objects.get_or_create(
+                question=concept_question, concept=concept
             )
-
-    def _import_link(self, link):
-        try:
-            question = self._get_question(link)
-            concept = Concept.objects.get(name=link.get("concept"))
-        except BaseException as error:
-            raise type(error)(f"Could not import ConceptQuestion: {link}")
-        ConceptQuestion.objects.get_or_create(question=question, concept=concept)
-
-    @staticmethod
-    def _get_question(element):
-        study = element.get("study")
-        instrument = element.get("instrument")
-        question = element.get("question")
-
-        question_object = Question.objects.get(
-            instrument__study__name=study, instrument__name=instrument, name=question
-        )
-        return question_object
