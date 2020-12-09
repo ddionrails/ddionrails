@@ -31,6 +31,7 @@ const study = context["study"];
 
 const basketApiUrl = new URL("api/basket-variables/", window.location.origin);
 const variablesApiUrl = new URL("api/variables/", window.location.origin);
+const questionsApiUrl = new URL("api/questions/", window.location.origin);
 const apiUrl =
   location.protocol +
   "//" +
@@ -48,13 +49,7 @@ const baseUrl =
   "/topics/" +
   context["language"];
 
-/**
- * Load and display variable data through a dataTable
- *
- * @param {HTMLTableElement} table Target to fill with the data
- * @param {URL} url API call with params to retrieve the data
- */
-const renderVariableTable = function(table, url) {
+const renderEntityTable = function(entity, table, url) {
   $(table).dataTable(
     {
       "ajax":
@@ -71,22 +66,23 @@ const renderVariableTable = function(table, url) {
           },
         },
         {
-          data: "variable",
-          render(data, type, row) {
+          data: "entity",
+          render(_data, _type, row) {
             const link = document.createElement("a");
             link.href = window.location.protocol + "//" + window.location.hostname +
-              `/${study}/data/` + data + "/" + row["name"];
+              `/${study}/${entity.parentURL}/` +
+              row[entity.parentType] + "/" + row["name"];
             link.textContent = row["name"];
 
             return link.outerHTML;
           },
         },
-        {data: "dataset_name",
-          render(data, type, row) {
+        {data: "parent",
+          render(_data, _type, row) {
             const link = document.createElement("a");
             link.href = window.location.protocol + "//" + window.location.hostname +
-              `/${study}/data/` + data;
-            link.textContent = data;
+              `/${study}/${entity.parentURL}/` + row[entity.parentType];
+            link.textContent = row[entity.parentType];
 
             return link.outerHTML;
           },
@@ -97,14 +93,55 @@ const renderVariableTable = function(table, url) {
 };
 
 /**
+ * Load and display variable data through a dataTable
+ *
+ * @param {fancytreeNode} fancytreeNode Node in topic tree
+ * @param {HTMLTableElement} relatedVariableSection Target table to fill with the data
+ */
+const renderVariableTable = function(fancytreeNode, relatedVariableSection) {
+  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
+  const api = new URL(variablesApiUrl.toString());
+  api.searchParams.append("study", study);
+  api.searchParams.append(fancytreeNode.type, categoryName);
+
+  const variableTable = document.getElementById("variable-table").cloneNode(true);
+  variableTable.classList.remove("hidden");
+  relatedVariableSection.appendChild(variableTable);
+
+  const variable = {
+    type: "variable",
+    parentURL: "data",
+    parentType: "dataset_name",
+  };
+  renderEntityTable(variable, variableTable, api);
+};
+
+const renderQuestionTable = function(fancytreeNode, relatedQuestionSection) {
+  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
+  const api = new URL(questionsApiUrl.toString());
+  api.searchParams.append("study", study);
+  api.searchParams.append(fancytreeNode.type, categoryName);
+
+  const questionTable = document.getElementById("question-table").cloneNode(true);
+  questionTable.classList.remove("hidden");
+  relatedQuestionSection.appendChild(questionTable);
+  const question = {
+    type: "question",
+    parentURL: "inst",
+    parentType: "instrument_name",
+  };
+  renderEntityTable(question, questionTable, api);
+};
+
+/**
  * Retrieve and display related questions or variables for a topic or concept.
  *
  * @param {HTMLButtonElement} node A button Element associated with a topic or concept
  */
 function filter(node) {
   // show spinner while loading
-  const relatedVariableSection = document.querySelector("#tree_variables > div");
-  relatedVariableSection.innerHTML = "";
+  const relatedEntitiesTableSection = document.querySelector("#tree_variables > div");
+  relatedEntitiesTableSection.innerHTML = "";
 
   const loadingErrorIcon = document.getElementById("loading-error");
   loadingErrorIcon.classList.add("hidden");
@@ -120,20 +157,12 @@ function filter(node) {
 
   let url = apiUrl + "/" + activeNode.key;
   if (node.hasClass("variables")) {
-    const filterName = activeNode.key.substring(activeNode.type.length+1);
-    const api = new URL(variablesApiUrl.toString());
-    api.searchParams.append("study", study);
-    api.searchParams.append(activeNode.type, filterName);
-
-    const variableTable = document.getElementById("variable-table").cloneNode(true);
-    variableTable.classList.remove("hidden");
-    relatedVariableSection.appendChild(variableTable);
-
-    renderVariableTable(variableTable, api.toString());
+    renderVariableTable(activeNode, relatedEntitiesTableSection);
     url += "?variable_html=true";
     node.toggleClass("variables-btn-active");
   }
   if (node.hasClass("questions")) {
+    renderQuestionTable(activeNode, relatedEntitiesTableSection);
     url += "?question_html=true";
     node.toggleClass("questions-btn-active");
   }
@@ -148,7 +177,7 @@ function filter(node) {
           const parsed = parser.parseFromString(data, "text/html");
           const nodes = parsed.querySelectorAll("body > *");
           nodes.forEach(function(node) {
-            relatedVariableSection.appendChild(node);
+            relatedEntitiesTableSection.appendChild(node);
           });
         }
       );
