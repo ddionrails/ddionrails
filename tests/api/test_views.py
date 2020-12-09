@@ -13,11 +13,13 @@ import pytest
 from django.urls import reverse
 from rest_framework.test import APIClient, APIRequestFactory
 
+from ddionrails.instruments.models.concept_question import ConceptQuestion
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
 from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.factories import UserFactory
+from tests.instruments.factories import InstrumentFactory, QuestionFactory
 from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketVariableFactory
 
@@ -367,6 +369,130 @@ class TestBasketViewSet(unittest.TestCase):
         client.force_authenticate(user=self.user)
         request = client.get(self.API_PATH, format="json")
         return json.loads(request.content).get("results")
+
+
+@pytest.mark.django_db
+class TestQuestionViewSet(unittest.TestCase):
+
+    API_PATH = "/api/questions/"
+    client: APIClient
+
+    def setUp(self):
+        self.client = APIClient()
+        self.concept = ConceptFactory(name="test-concept")
+        self.topic = TopicFactory(name="test-topic")
+        return super().setUp()
+
+    def test_query_parameter_conflict(self):
+        concept_name = self.concept.name
+        topic_name = self.topic.name
+        response = self.client.get(
+            self.API_PATH + f"?concept={concept_name}&topic={topic_name}"
+        )
+        self.assertEqual(406, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn("mutually exclusive", content["detail"])
+
+        response = self.client.get(self.API_PATH + f"?topic={topic_name}")
+        self.assertEqual(406, response.status_code)
+        content = json.loads(response.content)
+        self.assertIn("requires study parameter", content["detail"])
+
+    def test_404_errors(self):
+        study = "some-nonexistent-study"
+        call_string = f"{self.API_PATH}?study={study}"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+        concept = "some-nonexistent-concept"
+        call_string = f"{self.API_PATH}?concept={concept}"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+        topic = "some-nonexistent-topic"
+        call_string = f"{self.API_PATH}?topic={topic}&study=dummy"
+        self.assertEqual(404, self.client.get(call_string).status_code)
+
+    def test_query_parameter_concept(self):
+        concept_name = self.concept.name
+        question_list = list()
+
+        for number in range(1, 11):
+            _question = QuestionFactory(name=str(number))
+            _question.save()
+            ConceptQuestion(concept=self.concept, question=_question).save()
+            question_list.append(_question)
+
+        for number in range(11, 21):
+            _question = QuestionFactory(name=str(number))
+            question_list.append(_question)
+
+        response = self.client.get(self.API_PATH + f"?concept={concept_name}")
+        content = json.loads(response.content)
+        self.assertEqual(10, len(content))
+
+    def test_query_parameter_study(self):
+        """Define study parameter behavior."""
+        instrument = InstrumentFactory(name="different-instrument")
+        study = StudyFactory(name="different-study")
+        study_name = study.name
+        instrument.study = study
+        instrument.save()
+        question_list = list()
+
+        for number in range(1, 11):
+            _question = QuestionFactory(name=str(number))
+            _question.instrument = instrument
+            _question.save()
+            question_list.append(_question)
+
+        for number in range(11, 21):
+            _question = QuestionFactory(name=str(number))
+            question_list.append(_question)
+
+        response = self.client.get(self.API_PATH + f"?study={study_name}")
+        content = json.loads(response.content)
+        self.assertEqual(10, len(content))
+
+    def test_returned_fields(self):
+        """Define fields that should be provided."""
+        expected_fields = [
+            "id",
+            "name",
+            "label",
+            "instrument_name",
+            "study_name",
+            "instrument",
+            "study",
+        ]
+        QuestionFactory(name="test_question")
+        response = self.client.get(self.API_PATH)
+        results = json.loads(response.content)
+        question = results[0]
+        self.assertListEqual(expected_fields, list(question.keys()))
+
+    def test_get_variable_GET_data(self):
+        """Is the get response as expected?"""
+        question_amount = 10
+        questions = list()
+        for number in range(1, question_amount + 1):
+            questions.append(QuestionFactory(name=f"{number}"))
+        response = self.client.get(self.API_PATH)
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertEqual(question_amount, len(content))
+        result_ids = [result["id"] for result in content]
+        for question in questions:
+            self.assertIn(str(question.id), result_ids)
+
+    def test_scroll_limit(self):
+        """There should be no scroll limit"""
+        question_amount = 101
+        questions = list()
+        for number in range(1, question_amount + 1):
+            questions.append(QuestionFactory(name=f"{number}"))
+        response = self.client.get(self.API_PATH)
+        self.assertEqual(200, response.status_code)
+        content = json.loads(response.content)
+        self.assertEqual(question_amount, len(content))
 
 
 @pytest.mark.django_db

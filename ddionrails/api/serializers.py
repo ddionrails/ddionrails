@@ -2,11 +2,13 @@
 
 Serializers are used to serialize django ORM objects to standard data formats.
 """
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from rest_framework import serializers
 
 from ddionrails.api.related_fields import BasketRelatedField, UserRelatedField
 from ddionrails.data.models.variable import Dataset, Variable
+from ddionrails.instruments.models.instrument import Instrument
+from ddionrails.instruments.models.question import Question
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 
@@ -94,6 +96,35 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Variable
         fields = ["id", "name", "label", "dataset_name", "study_name", "dataset", "study"]
+
+
+class QuestionSerializer(serializers.ModelSerializer):
+    """Serialize systems Variables."""
+
+    instrument = serializers.PrimaryKeyRelatedField(
+        read_only=False, queryset=Instrument.objects.all()
+    )
+    instrument_name = serializers.SlugRelatedField(
+        source="instrument", read_only=True, slug_field="name"
+    )
+    study = serializers.SlugRelatedField(
+        source="instrument.study", read_only=True, slug_field="id"
+    )
+    study_name = serializers.SlugRelatedField(
+        source="instrument.study", read_only=True, slug_field="name"
+    )
+
+    class Meta:
+        model = Question
+        fields = [
+            "id",
+            "name",
+            "label",
+            "instrument_name",
+            "study_name",
+            "instrument",
+            "study",
+        ]
 
 
 class StudySerializer(serializers.HyperlinkedModelSerializer):

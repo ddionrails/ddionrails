@@ -9,6 +9,7 @@ from rest_framework import routers
 from ddionrails.api.views import (
     BasketVariableSet,
     BasketViewSet,
+    QuestionViewSet,
     StudyViewSet,
     UserViewSet,
     VariableViewSet,
@@ -48,6 +49,7 @@ ROUTER.register(r"users", UserViewSet, basename="user")
 ROUTER.register(r"baskets", BasketViewSet, basename="basket")
 ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
+ROUTER.register(r"questions", QuestionViewSet, basename="question")
 ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))
