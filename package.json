@@ -39,7 +39,7 @@
     "prettier": "^2.2.0",
     "sass-loader": "^10.1.0",
     "style-loader": "^2.0.0",
-    "vue-loader": "^15.9.5",
+    "vue-loader": "^15.9.6",
     "vue-style-loader": "^4.1.2",
     "vue-template-compiler": "^2.6.12",
     "webpack": "^5.6.0",
