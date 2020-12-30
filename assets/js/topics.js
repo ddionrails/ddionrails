@@ -138,55 +138,22 @@ const renderQuestionTable = function(fancytreeNode, relatedQuestionSection) {
  *
  * @param {HTMLButtonElement} node A button Element associated with a topic or concept
  */
-function filter(node) {
-  // show spinner while loading
+function renderRelatedEntities(node) {
+  // Remove previous table
   const relatedEntitiesTableSection = document.querySelector("#tree_variables > div");
   relatedEntitiesTableSection.innerHTML = "";
 
-  const loadingErrorIcon = document.getElementById("loading-error");
-  loadingErrorIcon.classList.add("hidden");
-
-  const loadingIcon = document.getElementById("loading-icon");
-  loadingIcon.classList.remove("hidden");
-
   node = $(node);
   node.removeClass("variables-btn-active questions-btn-active");
-
-
   const activeNode = $.ui.fancytree.getNode(node);
 
-  let url = apiUrl + "/" + activeNode.key;
   if (node.hasClass("variables")) {
     renderVariableTable(activeNode, relatedEntitiesTableSection);
-    url += "?variable_html=true";
     node.toggleClass("variables-btn-active");
-  }
-  if (node.hasClass("questions")) {
+  } else if (node.hasClass("questions")) {
     renderQuestionTable(activeNode, relatedEntitiesTableSection);
-    url += "?question_html=true";
     node.toggleClass("questions-btn-active");
   }
-  // This should be switched to the new API so we can retrieve JSON
-  // and build the Table ourselves.
-  fetch(url).then(
-    function(response) {
-      loadingIcon.classList.add("hidden");
-      response.text().then(
-        function(data) {
-          const parser = new DOMParser();
-          const parsed = parser.parseFromString(data, "text/html");
-          const nodes = parsed.querySelectorAll("body > *");
-          nodes.forEach(function(node) {
-            relatedEntitiesTableSection.appendChild(node);
-          });
-        }
-      );
-    }
-  ).catch( function(_error) {
-    loadingIcon.classList.add("hidden");
-    loadingErrorIcon.classList.remove("hidden");
-  }
-  );
 }
 
 /**
@@ -377,7 +344,7 @@ $(window).on("load", function() {
 
       displayButtons = displayButtons.map(function(target) {
         return target.on("click", function(event) {
-          filter(event.target);
+          renderRelatedEntities(event.target);
         });
       });
       basketButton.on("click", function(event) {
@@ -515,7 +482,7 @@ modalObserver.observe(document.getElementById("topic-list-add-to-basket"), {
 });
 
 
-window.filter = filter;
+window.filter = renderRelatedEntities;
 window.addToBasket = addToBasket;
 window.addToBasketRequest = addToBasketRequest;
 window.copyUrlToClipboard = copyUrlToClipboard;
