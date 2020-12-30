@@ -62,7 +62,11 @@ const renderEntityTable = function(entity, table, url) {
         {
           data: "label",
           render(data, type, row) {
-            return (row["label"] ? row["label"] : row["name"] );
+            if (window.location.pathname.endsWith("de")) {
+              return (row["label_de"] ? row["label_de"] : row["name"] );
+            } else {
+              return (row["label"] ? row["label"] : row["name"] );
+            }
           },
         },
         {

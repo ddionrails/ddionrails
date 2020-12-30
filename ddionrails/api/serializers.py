@@ -95,7 +95,16 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Variable
-        fields = ["id", "name", "label", "dataset_name", "study_name", "dataset", "study"]
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset_name",
+            "study_name",
+            "dataset",
+            "study",
+        ]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -120,6 +129,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "id",
             "name",
             "label",
+            "label_de",
             "instrument_name",
             "study_name",
             "instrument",
