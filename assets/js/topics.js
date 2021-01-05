@@ -144,7 +144,7 @@ const renderQuestionTable = function(fancytreeNode, relatedQuestionSection) {
  */
 function renderRelatedEntities(node) {
   // Remove previous table
-  const relatedEntitiesTableSection = document.querySelector("#tree_variables > div");
+  const relatedEntitiesTableSection = document.querySelector("#related-elements > div");
   relatedEntitiesTableSection.innerHTML = "";
 
   node = $(node);

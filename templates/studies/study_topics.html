@@ -25,9 +25,9 @@
     </p>
 
     <h2><i class="small fas fa-cogs"></i> Topics</h2>
-    <a class="anchor" id="topics"></a>
-    <div class="row">
-        <div class="offset-md-8 col-lg-4 col-8 offset-4 search-bar">
+
+    <div class="row" id="topic-search-bar-container">
+        <div class="search-bar">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Search node .." id="search">
                 <span class="input-group-btn">    
@@ -38,49 +38,32 @@
             </div>
         </div>
     </div>
-    <div class="row topic-list-wrapper">
-        <div class="col-lg-6 col-6">
-            <div class="topic-list-content">
-                <div id="tree"></div>
-            </div>
+
+    <div id="topic-display">
+        <div id="topic-tree-content">
+            <div id="tree"></div>
         </div>
-        <div class="col-lg-6 col-6">
-            <div class="topic-list-content">
-                <div class="hidden" id="loading-icon">
-                    <div class="sk-flow">
-                        <div class="sk-flow-dot"></div>
-                        <div class="sk-flow-dot"></div>
-                        <div class="sk-flow-dot"></div>
-                    </div>
-                </div>
-                <div id="tree_variables">
-                    <div>
-                    </div>
-                    <table id="variable-table" class="table table-striped table-bordered hidden">
-                    <thead>
-                    <tr>
-                    <th>Label</th>
-                    <th>Variable</th>
-                    <th>Dataset</th>
-                    </tr>
-                    </thead>
-                    </table>
-                    <table id="question-table" class="table table-striped table-bordered hidden">
-                    <thead>
-                    <tr>
-                    <th>Label</th>
-                    <th>Question</th>
-                    <th>Instrument</th>
-                    </tr>
-                    </thead>
-                    </table>
-                    <p class="hidden" id="loading-error">
-                        <span class='fas fa-exclamation-triangle' aria-hidden='true'>
-                        </span>
-                        Load Error!
-                    </p>
-                </div>
+        <div id="related-elements">
+            <div id="related-table">
             </div>
+            <table id="variable-table" class="table table-striped table-bordered hidden">
+            <thead>
+            <tr>
+            <th>Label</th>
+            <th>Variable</th>
+            <th>Dataset</th>
+            </tr>
+            </thead>
+            </table>
+            <table id="question-table" class="table table-striped table-bordered hidden">
+            <thead>
+            <tr>
+            <th>Label</th>
+            <th>Question</th>
+            <th>Instrument</th>
+            </tr>
+            </thead>
+            </table>
         </div>
     </div>
 
