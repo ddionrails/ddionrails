@@ -771,7 +771,11 @@ class TestBasketVariableSet(unittest.TestCase):
         variables[1].concept = concept
         variables[1].save()
 
-        post_data = {"basket": str(self.basket.id), "topic": str(topic.id)}
+        post_data = {
+            "basket": str(self.basket.id),
+            "topic": str(topic.id),
+            "study": self.variable.dataset.study.name,
+        }
         self.client.force_authenticate(user=self.user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(201, post_response.status_code)

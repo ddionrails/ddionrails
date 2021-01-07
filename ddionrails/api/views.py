@@ -7,6 +7,7 @@ from typing import List, Union
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from rest_framework import permissions, status, viewsets
@@ -192,12 +193,14 @@ class VariableViewSet(viewsets.ModelViewSet):
     """List metadata about all variables."""
 
     serializer_class = VariableSerializer
-    pagination_class = None
 
     def get_queryset(self):
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
+        if not self.request.query_params.get("paginate", False):
+            self.pagination_class = None
+
         queryset_filter = dict()
         if topic and concept:
             raise NotAcceptable(
@@ -298,9 +301,11 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin):
     def get_queryset(self):
         """get queryset according to permissions."""
         user = self.request.user
-        if user.is_superuser:
-            return Basket.objects.all()
-        return Basket.objects.filter(user=user.id)
+        study = self.request.query_params.get("study", None)
+        query_filter = dict()
+        if study:
+            query_filter["study__name"] = study
+        return Basket.objects.filter(user=user.id, **query_filter)
 
     def create(self, request, *args, **kwargs):
         """Create a single basket."""
@@ -409,11 +414,7 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
 
         basket = Basket.objects.get(id=data.get("basket"))
         basket_variables = list()
-        basket_content = [
-            variable.variable.id
-            for variable in BasketVariable.objects.filter(basket=basket.id)
-        ]
-        basket_size = len(basket_content)
+        basket_size = BasketVariable.objects.filter(basket=basket.id).count()
 
         self._test_exclusivity(
             ["variables" in data, "concept" in data, "topic" in data]
@@ -436,8 +437,12 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
 
         if "concept" in data:
             variable_filter = {"concept__id": uuid.UUID(data["concept"])}
-        variables = Variable.objects.filter(**variable_filter).exclude(
-            id__in=basket_content
+
+        if "study" in data:
+            variable_filter["dataset__study__name"] = data["study"]
+
+        variables = Variable.objects.filter(
+            ~Q(baskets_variables__basket=basket), **variable_filter
         )
 
         if len(variables) + basket_size > self.basket_limit:
