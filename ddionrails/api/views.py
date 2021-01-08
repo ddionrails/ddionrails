@@ -416,27 +416,22 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         basket_variables = list()
         basket_size = BasketVariable.objects.filter(basket=basket.id).count()
 
-        self._test_exclusivity(
-            ["variables" in data, "concept" in data, "topic" in data]
-            + ["concept_name" in data, "topic_name" in data]
-        )
+        self._test_exclusivity(["variables" in data, "concept" in data, "topic" in data])
 
         variable_filter = dict()
-
-        data = self._get_object_id(data, basket)
 
         if "variables" in data:
             variable_filter = {"id__in": data["variables"]}
 
         if "topic" in data:
+            topic = Topic.objects.get(name=data["topic"], study=basket.study).id
             variable_filter = {
-                "concept__topics__in": Topic.get_topic_tree_leaves(
-                    topic_id=uuid.UUID(data["topic"])
-                )
+                "concept__topics__in": Topic.get_topic_tree_leaves(topic_object=topic)
             }
 
         if "concept" in data:
-            variable_filter = {"concept__id": uuid.UUID(data["concept"])}
+            concept = Concept.objects.get(name=data["concept"])
+            variable_filter = {"concept": concept}
 
         if "study" in data:
             variable_filter["dataset__study__name"] = data["study"]
@@ -467,18 +462,6 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
             },
             status=status.HTTP_201_CREATED,
         )
-
-    @staticmethod
-    def _get_object_id(data, basket):
-
-        if "topic_name" in data:
-            data["topic"] = str(
-                Topic.objects.get(name=data["topic_name"], study=basket.study).id
-            )
-        if "concept_name" in data:
-            data["concept"] = str(Concept.objects.get(name=data["concept_name"]).id)
-
-        return data
 
     def _test_exclusivity(self, values: List[bool]) -> bool:
         """Check if only one boolean in list of booleans is True."""

@@ -760,35 +760,6 @@ class TestBasketVariableSet(unittest.TestCase):
         response = self.client.delete(self.API_PATH + f"{basket_variable_id}/")
         self.assertEqual(403, response.status_code)
 
-    def test_POST_basket_variables_by_topic(self):
-        """Define how basket variable creation by topic should work."""
-        topic = TopicFactory(name="parent-topic")
-        child_topic = TopicFactory(name="parent-topic", parent=topic)
-        concept = ConceptFactory(name="some-concept")
-        concept.topics.set([child_topic])
-        concept.save()
-        variables = [VariableFactory(name="1"), VariableFactory(name="2")]
-        variables[1].concept = concept
-        variables[1].save()
-
-        post_data = {
-            "basket": str(self.basket.id),
-            "topic": str(topic.id),
-            "study": self.variable.dataset.study.name,
-        }
-        self.client.force_authenticate(user=self.user)
-        post_response = self.client.post(self.API_PATH, post_data, format="json")
-        self.assertEqual(201, post_response.status_code)
-        content = json.loads(post_response.content)
-        self.assertEqual(
-            "Successfully added 1 variables to this Basket.", content["detail"]
-        )
-        get_response = self.client.get(self.API_PATH)
-        content = json.loads(get_response.content)
-        result_ids = [result["variable_id"] for result in content["results"]]
-        self.assertIn(str(variables[1].id), result_ids)
-        self.assertNotIn(str(variables[0].id), result_ids)
-
     def test_POST_basket_variables_by_topic_by_name(self):
         """Define how basket variable creation by topic should work."""
         topic = TopicFactory(name="parent-topic")
@@ -800,28 +771,7 @@ class TestBasketVariableSet(unittest.TestCase):
         variables[1].concept = concept
         variables[1].save()
 
-        post_data = {"basket": str(self.basket.id), "topic_name": topic.name}
-        self.client.force_authenticate(user=self.user)
-        post_response = self.client.post(self.API_PATH, post_data, format="json")
-        self.assertEqual(201, post_response.status_code)
-        get_response = self.client.get(self.API_PATH)
-        content = json.loads(get_response.content)
-        result_ids = [result["variable_id"] for result in content["results"]]
-        self.assertIn(str(variables[1].id), result_ids)
-        self.assertNotIn(str(variables[0].id), result_ids)
-
-    def test_POST_basket_variables_by_concept(self):
-        """Define how basket variable creation by concept should work."""
-        topic = TopicFactory(name="parent-topic")
-        child_topic = TopicFactory(name="parent-topic", parent=topic)
-        concept = ConceptFactory(name="some-concept")
-        concept.topics.set([child_topic])
-        concept.save()
-        variables = [VariableFactory(name="1"), VariableFactory(name="2")]
-        variables[1].concept = concept
-        variables[1].save()
-
-        post_data = {"basket": str(self.basket.id), "concept": str(concept.id)}
+        post_data = {"basket": str(self.basket.id), "topic": topic.name}
         self.client.force_authenticate(user=self.user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(201, post_response.status_code)
@@ -842,7 +792,7 @@ class TestBasketVariableSet(unittest.TestCase):
         variables[1].concept = concept
         variables[1].save()
 
-        post_data = {"basket": str(self.basket.id), "concept_name": concept.name}
+        post_data = {"basket": str(self.basket.id), "concept": concept.name}
         self.client.force_authenticate(user=self.user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(201, post_response.status_code)
@@ -889,7 +839,7 @@ class TestBasketVariableSet(unittest.TestCase):
             new_callable=PropertyMock,
         ) as basket_limit:
             basket_limit.return_value = 10
-            post_data = {"basket": str(self.basket.id), "topic": str(topic.id)}
+            post_data = {"basket": str(self.basket.id), "topic": topic.name}
             self.client.force_authenticate(user=self.user)
             post_response = self.client.post(self.API_PATH, post_data, format="json")
             self.assertEqual(406, post_response.status_code)
@@ -897,7 +847,7 @@ class TestBasketVariableSet(unittest.TestCase):
 
             BasketVariable.objects.all().delete()
 
-            post_data = {"basket": str(self.basket.id), "concept": str(concept.id)}
+            post_data = {"basket": str(self.basket.id), "concept": concept.name}
             self.client.force_authenticate(user=self.user)
             post_response = self.client.post(self.API_PATH, post_data, format="json")
             self.assertEqual(406, post_response.status_code)

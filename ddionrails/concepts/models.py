@@ -119,7 +119,7 @@ class Topic(models.Model, ModelMixin):
         intermediate Topics.
         """
         if topic_object:
-            children = list(Topic.objects.filter(parent_id=topic_object.id).all())
+            children = list(Topic.objects.filter(parent=topic_object).all())
         elif topic_id:
             children = list(Topic.objects.filter(parent_id=topic_id).all())
             topic_object = Topic.objects.get(id=topic_id)
