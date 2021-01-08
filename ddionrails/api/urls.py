@@ -11,43 +11,27 @@ from ddionrails.api.views import (
     BasketViewSet,
     QuestionViewSet,
     StudyViewSet,
+    TopicTreeViewSet,
     UserViewSet,
     VariableViewSet,
 )
 from ddionrails.instruments.views import question_comparison_partial
 
-from . import views
-
 app_name = "api"
 
 urlpatterns = [
     path(
-        "topics/<str:study_name>/baskets",
-        views.baskets_by_study_and_user,
-        name="baskets_by_study_and_user",
-    ),
-    path(
         "questions/compare/<uuid:from_id>/<uuid:to_id>",
         question_comparison_partial,
         name="question_comparison_partial",
-    ),
-    path("topics/<str:study_name>/<str:language>", views.topic_list, name="topic_list"),
-    path(
-        "topics/<str:study_name>/<str:language>/concept_<str:concept_name>",
-        views.concept_by_study,
-        name="concept_by_study",
-    ),
-    path(
-        "topics/<str:study_name>/<str:language>/topic_<str:topic_name>",
-        views.topic_by_study,
-        name="topic_by_study",
-    ),
+    )
 ]
 
 ROUTER = routers.SimpleRouter()
 ROUTER.register(r"users", UserViewSet, basename="user")
 ROUTER.register(r"baskets", BasketViewSet, basename="basket")
 ROUTER.register(r"studies", StudyViewSet, basename="study")
+ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
 ROUTER.register(r"questions", QuestionViewSet, basename="question")
 ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")

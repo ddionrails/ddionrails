@@ -10,7 +10,6 @@ from unittest.mock import PropertyMock, patch
 from uuid import UUID
 
 import pytest
-from django.urls import reverse
 from rest_framework.test import APIClient, APIRequestFactory
 
 from ddionrails.instruments.models.concept_question import ConceptQuestion
@@ -44,197 +43,15 @@ def response_is_json(response) -> bool:
     return expected_content_type == response["content-type"]
 
 
-class TestConceptByStudy:
-    def test_json_response(self, study, client, concept, variable):
-        variable.concept = concept
-        variable.save()
-        url = reverse(
-            "api:concept_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept.name,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertTrue(response_is_json(response))
-
-        response_dictionary = response.json()
-        TEST_CASE.assertEqual(str(study.id), response_dictionary["study_id"])
-        TEST_CASE.assertEqual(str(concept.id), response_dictionary["concept_id"])
-        TEST_CASE.assertEqual(study.name, response_dictionary["study_name"])
-        TEST_CASE.assertEqual(concept.name, response_dictionary["concept_name"])
-        TEST_CASE.assertEqual(1, response_dictionary["variable_count"])
-        TEST_CASE.assertEqual(
-            variable.name, response_dictionary["variable_list"][0]["name"]
-        )
-
-    def test_json_response_without_variable_list(self, study, client, concept):
-        url = reverse(
-            "api:concept_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept.name,
-            },
-        )
-        response = client.get(url, data={"variable_list": "false"})
-        TEST_CASE.assertNotIn("variable_list", response.json())
-        TEST_CASE.assertNotIn("question_list", response.json())
-
-    def test_html_response_variable_html(self, study, client, concept, variable):
-        variable.concept = concept
-        variable.save()
-        url = reverse(
-            "api:concept_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept.name,
-            },
-        )
-        response = client.get(url, data={"variable_html": "true"})
-        expected_content_type = "text/html; charset=utf-8"
-        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
-        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
-        TEST_CASE.assertEqual(variable, response.context["variables"][0])
-
-    def test_html_response_question_html(
-        self, study, client, question_variable, concept_question
-    ):
-        # create a relation between variable - concept - question
-        question_variable.variable.concept = concept_question.concept
-        question_variable.variable.save()
-        url = reverse(
-            "api:concept_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "concept_name": concept_question.concept.name,
-            },
-        )
-        response = client.get(url, data={"question_html": "true"})
-        expected_content_type = "text/html; charset=utf-8"
-        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
-        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
-        TEST_CASE.assertEqual([question_variable.question], response.context["questions"])
-
-
-class TestTopicByStudy:
-    def test_json_response(self, study, client, variable_with_concept_and_topic):
-        _, _, topic = variable_with_concept_and_topic
-        url = reverse(
-            "api:topic_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-            },
-        )
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertTrue(response_is_json(response))
-
-        response_dictionary = response.json()
-        TEST_CASE.assertEqual(str(study.id), response_dictionary["study_id"])
-        TEST_CASE.assertEqual(str(topic.id), response_dictionary["topic_id"])
-        TEST_CASE.assertEqual(study.name, response_dictionary["study_name"])
-        TEST_CASE.assertEqual(topic.name, response_dictionary["topic_name"])
-        TEST_CASE.assertEqual(1, response_dictionary["variable_count"])
-        TEST_CASE.assertEqual([str(topic.id)], response_dictionary["topic_id_list"])
-
-    def test_json_response_without_variable_list(
-        self, study, client, variable_with_concept_and_topic
-    ):
-        _, _, topic = variable_with_concept_and_topic
-        url = reverse(
-            "api:topic_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-            },
-        )
-        response = client.get(url, data={"variable_list": "false"})
-        TEST_CASE.assertNotIn("variable_list", response.json())
-        TEST_CASE.assertNotIn("question_list", response.json())
-
-    def test_html_response_variable_html(
-        self, client, study, variable_with_concept_and_topic
-    ):
-        variable, _, topic = variable_with_concept_and_topic
-        url = reverse(
-            "api:topic_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-            },
-        )
-        response = client.get(url, data={"variable_html": "true"})
-        expected_content_type = "text/html; charset=utf-8"
-        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
-        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
-        TEST_CASE.assertEqual(variable, response.context["variables"][0])
-
-    def test_html_response_question_html(
-        self, client, study, question_variable, variable_with_concept_and_topic
-    ):
-        _, _, topic = variable_with_concept_and_topic
-        url = reverse(
-            "api:topic_by_study",
-            kwargs={
-                "study_name": study.name,
-                "language": LANGUAGE,
-                "topic_name": topic.name,
-            },
-        )
-        response = client.get(url, data={"question_html": "true"})
-        expected_content_type = "text/html; charset=utf-8"
-        TEST_CASE.assertEqual(expected_content_type, response["content-type"])
-        TEST_CASE.assertEqual(LANGUAGE, response.context["language"])
-        TEST_CASE.assertEqual([question_variable.question], response.context["questions"])
-
-
-class TestBasketsByStudyAndUser:
-    def test_anonymous_user(self, client, study):
-        url = reverse("api:baskets_by_study_and_user", kwargs={"study_name": study.name})
-        response = client.get(url)
-
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        TEST_CASE.assertTrue(response_is_json(response))
-
-        response_dictionary = response.json()
-        expected = False
-        TEST_CASE.assertIs(expected, response_dictionary["user_logged_in"])
-
-        expected = []
-        TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
-
-    def test_logged_in_user(self, client, study, basket):
-        url = reverse("api:baskets_by_study_and_user", kwargs={"study_name": study.name})
-        client.force_login(user=basket.user)
-        response = client.get(url)
-        TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-        response_dictionary = response.json()
-
-        expected = True
-        TEST_CASE.assertIs(expected, response_dictionary["user_logged_in"])
-        expected = [basket.to_dict()]
-        TEST_CASE.assertEqual(expected, response_dictionary["baskets"])
-
-
+@pytest.mark.django_db
 @pytest.mark.parametrize(
     "language,expected",
     [("en", [{"title": "some-topic"}]), ("de", [{"title": "some-german-topic"}])],
 )
-def test_topic_list(client, topiclist, language, expected):
-    url = reverse(
-        "api:topic_list",
-        kwargs={"study_name": topiclist.study.name, "language": language},
+def test_topic_tree(client, topiclist, language, expected):
+    response = client.get(
+        f"/api/topic-tree/?study={topiclist.study.name}&language={language}"
     )
-    response = client.get(url)
     TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
     TEST_CASE.assertEqual(expected, response.json())
     response_is_json(response)

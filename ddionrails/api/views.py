@@ -3,13 +3,11 @@
 """ Views for ddionrails.api app """
 
 import uuid
-from typing import List, Union
+from typing import List
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
-from django.core.handlers.wsgi import WSGIRequest
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
@@ -33,149 +31,19 @@ from ddionrails.workspace.models import Basket, BasketVariable
 # VIEWS
 
 
-# request is a required parameter
-def topic_list(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
-    language: str,
-) -> JsonResponse:
-    """ Returns a topiclist as JSON by a given study_name and language """
-    study = get_object_or_404(Study, name=study_name)
-    topics = study.get_topiclist(language)
-    return JsonResponse(topics, safe=False)
+class TopicTreeViewSet(viewsets.GenericViewSet):
+    """Retrieve the topic tree of a study from a JSON field."""
 
+    queryset = Study.objects.all()
 
-# request is a required parameter
-def concept_by_study(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
-    language: str,
-    concept_name: str,
-) -> Union[HttpResponse, JsonResponse]:
-    """ Returns information about a concept and study,
-        including related variables and questions
+    @staticmethod
+    def list(request):
+        """Read query parameters and return response or 404 if study does not exist."""
+        study = request.query_params.get("study", None)
+        language = request.query_params.get("language", "en")
+        study_object = get_object_or_404(Study, name=study)
 
-        The response can be either HTML or JSON
-    """
-    study = get_object_or_404(Study, name=study_name)
-    concept = get_object_or_404(Concept, name=concept_name)
-    variable_set = Variable.objects.filter(
-        concept_id=concept.id, dataset__study_id=study.id
-    ).distinct()
-    question_set = Question.objects.filter(
-        questions_variables__variable__concept_id=concept.id,
-        instrument__study_id=study.id,
-    ).distinct()
-    if (
-        request.GET.get("html", None) == "true"
-        or request.GET.get("variable_html", None) == "true"
-    ):
-        _variables = []
-        for variable in variable_set.all():
-            variable.set_language(language)
-            _variables.append(variable)
-        context = dict(variables=_variables, language=language)
-        return render(request, "studies/topic_variable_table.html", context=context)
-
-    if request.GET.get("question_html", None) == "true":
-        _questions = []
-        for question in question_set.all():
-            question.set_language(language)
-            _questions.append(question)
-        context = dict(questions=_questions, language=language)
-        return render(request, "studies/topic_question_table.html", context=context)
-
-    result = dict(
-        study_id=str(study.id),
-        study_name=study.name,
-        concept_id=str(concept.id),
-        concept_name=concept.name,
-        variable_count=variable_set.count(),
-    )
-    if request.GET.get("variable_list", True) != "false":
-        result["variable_list"] = [
-            variable.to_topic_dict(language) for variable in variable_set.all()
-        ]
-        result["question_list"] = [
-            question.to_topic_dict(language) for question in question_set.all()
-        ]
-    return JsonResponse(result)
-
-
-# request is a required parameter
-def topic_by_study(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
-    language: str,
-    topic_name: str,
-) -> Union[HttpResponse, JsonResponse]:
-    """ Returns information about a topic and study,
-        including related variables and questions
-
-        The response can be either HTML or JSON
-    """
-    study = get_object_or_404(Study, name=study_name)
-    topic = get_object_or_404(Topic, name=topic_name, study=study)
-    topic_id_list = [topic.id for topic in Topic.get_children(topic.id)]
-    topic_id_list.append(topic.id)
-    variable_set = Variable.objects.filter(
-        concept__topics__id__in=topic_id_list, dataset__study_id=study.id
-    ).distinct()
-    question_set = Question.objects.filter(
-        questions_variables__variable__concept__topics__id__in=topic_id_list,
-        instrument__study_id=study.id,
-    ).distinct()
-    if (
-        request.GET.get("html", None) == "true"
-        or request.GET.get("variable_html", None) == "true"
-    ):
-        _variables = []
-        for variable in variable_set.all():
-            variable.set_language(language)
-            _variables.append(variable)
-        context = dict(variables=_variables, language=language)
-        return render(request, "studies/topic_variable_table.html", context=context)
-
-    if request.GET.get("question_html", None) == "true":
-        _questions = []
-        for question in question_set.all():
-            question.set_language(language)
-            _questions.append(question)
-        context = dict(questions=_questions, language=language)
-        return render(request, "studies/topic_question_table.html", context=context)
-
-    # convert to string for json response
-    topic_id_list = [str(topic_id) for topic_id in topic_id_list]
-    result = dict(
-        study_id=str(study.id),
-        study_name=study.name,
-        topic_id=str(topic.id),
-        topic_name=topic.name,
-        topic_id_list=topic_id_list,
-        variable_count=variable_set.count(),
-    )
-    if request.GET.get("variable_list", True) != "false":
-        result["variable_list"] = [
-            variable.to_topic_dict(language) for variable in variable_set.all()
-        ]
-        result["question_list"] = [
-            question.to_topic_dict(language) for question in question_set.all()
-        ]
-    return JsonResponse(result)
-
-
-# request is a required parameter
-def baskets_by_study_and_user(
-    request: WSGIRequest, study_name: str  # pylint: disable=unused-argument
-) -> JsonResponse:
-    """ Returns a list of the baskets for the currently logged in user """
-    study = get_object_or_404(Study, name=study_name)
-    baskets = Basket.objects.filter(user_id=request.user.id, study_id=study.id).all()
-    result = dict(
-        user_logged_in=bool(request.user.id),
-        baskets=[basket.to_dict() for basket in baskets],
-    )
-    return JsonResponse(result)
+        return Response(study_object.get_topiclist(language))
 
 
 # pylint: disable=too-many-ancestors
