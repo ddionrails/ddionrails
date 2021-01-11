@@ -115,12 +115,28 @@ function renderEntityTable(entity, table, url) {
 };
 
 /**
+ * Update language switching links to maintain displayed related elements.
+ * @param {Object} params key-value pairs to identify currently opened related elements.
+ */
+function updateLanguageSwitch(params) {
+  for (const id of ["language-switch-de", "language-switch-en"]) {
+    const switchLink = document.getElementById(id);
+    const url = new URL(switchLink.href);
+    for (const [key, value] of Object.entries(params)) {
+      url.searchParams.set(key, value);
+    }
+    switchLink.setAttribute("href", url);
+  }
+}
+
+/**
  * Load and display variable data through a dataTable
  *
  * @param {fancytreeNode} fancytreeNode Topic or concept Node in topic tree
  * @param {HTMLTableElement} relatedVariableSection Target table to fill with the data
  */
 function renderVariableTable(fancytreeNode, relatedVariableSection) {
+  updateLanguageSwitch({"related-id": fancytreeNode.key, "related-type": "variables"});
   const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
   const api = new URL(variablesApiUrl.toString());
   api.searchParams.append("study", study);
@@ -145,6 +161,7 @@ function renderVariableTable(fancytreeNode, relatedVariableSection) {
  * @param {HTMLTableElement} relatedQuestionSection Target table to fill with the data
  */
 function renderQuestionTable(fancytreeNode, relatedQuestionSection) {
+  updateLanguageSwitch({"related-id": fancytreeNode.key, "related-type": "questions"});
   const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
   const api = new URL(questionsApiUrl.toString());
   api.searchParams.append("study", study);
@@ -192,7 +209,8 @@ function copyUrlToClipboard(node) {
   // URL need to be selectable to be copied to clipboard,
   // append temporary element
   const text = document.createElement("textarea");
-  const url = new URL(window.location.href);
+  // Do not carry over old search params
+  const url = new URL(window.location.href.split("?")[0]);
   url.searchParams.append("open", activeNode.key);
 
   text.innerHTML = url;
@@ -493,6 +511,18 @@ window.addEventListener("load", function() {
         const node = $.ui.fancytree.getTree("#tree").getNodeByKey(toOpen);
         node.makeVisible();
         node.setActive(true);
+      }
+      const categoryID = new URL(window.location.href).searchParams.get("related-id");
+      const relatedType = new URL(window.location.href).searchParams.get("related-type");
+      if (categoryID != null) {
+        const relatedEntitiesTableSection =
+          document.querySelector("#related-elements > div");
+        const categoryNode = $.ui.fancytree.getTree("#tree").getNodeByKey(categoryID);
+        if (relatedType === "variables") {
+          renderVariableTable(categoryNode, relatedEntitiesTableSection);
+        } else if (relatedType === "questions" ) {
+          renderQuestionTable(categoryNode, relatedEntitiesTableSection);
+        }
       }
     },
   });

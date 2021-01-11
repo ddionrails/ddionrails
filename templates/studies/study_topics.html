@@ -19,7 +19,7 @@
         Languages:
         {% for link_language in study.topic_languages %}
             {% if link_language == language %} <b>{% endif %}
-        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}">{{ link_language }}</a>
+        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}" id="language-switch-{{link_language}}">{{ link_language }}</a>
         {% if link_language == language %} </b>{% endif %}
         {% endfor %}
     </p>
