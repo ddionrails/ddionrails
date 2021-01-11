@@ -95,3 +95,13 @@ th {
 button > * {
   pointer-events: none;
 }
+
+#topic-list-add-to-basket >* .modal-body {
+  display: flex;
+  flex-direction: column;
+}
+
+#topic-list-add-to-basket >* .modal-body > .btn{
+  margin-right: auto;
+  margin-bottom: .5rem;
+}
