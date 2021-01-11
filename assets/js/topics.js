@@ -1,19 +1,15 @@
 /* !
- * ddionrails - topics.js
- * Copyright 2018-2019
- * Licensed under AGPL
- * (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
- *
- * Topic List
- *
- * This script visualizes a tree structure of topics and their concepts,
- * questions and variables using the fancytree library.
- * Make sure you set study and language variable in template,
- * else api calls will not work.
- *
- * @author cstolpe
+ * Initialize a fancytree to display topics, concepts and their relation.
+ * Also provides frontend functionality to:
+ * - Display variables or questions related to a topic/concept.
+ * - Add variables related to a topic/concept to a basket.
+ * - Switch display language.
+ * - Copy a link to share a currently opened topic/concept in the tree.
  *
  *
+ * fancytree configuration partly retained from an older script by cstolpe
+ *
+ * @author hansendx
  */
 
 // Credit to https://github.com/mar10/fancytree/issues/793
