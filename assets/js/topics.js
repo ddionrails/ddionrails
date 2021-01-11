@@ -272,7 +272,6 @@ function addToBasket(buttonNode) {
 
 /**
  * Prompt to add all variables of a topic or concept to a basket.
- * TODO: Needs cleaning up
  * @param {HTMLButtonElement} node A button Element associated with a topic or concept
  */
 function renderBasketButtons(node) {
