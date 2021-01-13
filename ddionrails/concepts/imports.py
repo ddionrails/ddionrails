@@ -30,7 +30,10 @@ class TopicImport(imports.CSVImport):
 
     def import_element(self, element):
         study = element.get("study", element.get("study_name"))
-        study_object = Study.objects.get(name=study)
+        try:
+            study_object = Study.objects.get(name=study)
+        except Study.DoesNotExist as error:
+            raise type(error)(f"Study {study} does not exist: {str(error)}")
         name = element.get("name", element.get("topic_name"))
         parent = element.get("parent", element.get("parent_name"))
         if parent:
