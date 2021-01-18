@@ -56,7 +56,8 @@
               'Study'
             ]
           }"
-          renderNoResults="No Variables found. Try to change your search query or filter options."
+          renderNoResults=
+            "No Variables found. Try to change your search query or filter options."
           :sortOptions="[
             { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
             {
@@ -86,20 +87,15 @@ const helpers = require("./helpers.js");
 
 export default {
   name: "VariableSearch",
-  data: function() {
+  data() {
     return {
       index: helpers.indexNameSwitch("variables"),
       dataField: [
         "name",
         "label",
         "label_de",
-        "description",
-        "description_de",
-        "description_long",
-        "categories.labels",
-        "categories.labels_de",
-        "dataset"
-      ]
+        "dataset",
+      ],
     };
   },
   components: {
@@ -107,12 +103,12 @@ export default {
     ConceptualDatasetFacet,
     PeriodFacet,
     StudyFacet,
-    VariableResult
+    VariableResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+  },
 };
 </script>
