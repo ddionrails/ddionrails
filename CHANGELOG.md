@@ -11,13 +11,35 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
-## [4.7.0] - 2020-10-29
+## [5.0.0] - 2021-01-18
 
 ## Added
 
+- new topic related API endpoints. 
+
+### Changed
+
+- Search UI now runs on latest reactivesearch-vue version.
+- :rocket: Topics view frontend JavaScript was completely rewritten.
+
+  -  Loading time for related elements was improved drastically.
+  -  Rendering of related elements was migrated to the front end.
+
+- Variable labels are now imported from variables.csv files, if no data
+  from datasets JSON files was imported.
+
+### Removed
+
+- :rocket: old API endpoints that were not implemented with django rest-framework.
+
+
+## [4.7.0] - 2020-10-29
+
+### Added
+
 - modal elements to the variable view to display larger metadata content in a better way.
 
-## Changed
+### Changed
 
 - formatting for gunicorn logs changed for parsability.
 - import of django JSONField to address deprecation issues.
@@ -27,13 +49,13 @@ Older versions are not not part of this Project.
 - Removed unique constraint on Topic name field.
   Unique identifier is now dependant on study name + topic name.
 
-## Fixed
+### Fixed
 
 - Handle questions without concepts in import.
 
 ## [4.6.3] - 2020-09-03
 
-## Changed
+### Changed
 
 - Display of sub menu link `Topics` for studies now depends on the existence of
   topics linked to that study.
@@ -42,7 +64,7 @@ Older versions are not not part of this Project.
 
 - Error reporting for attachment import is now more detailed.
 
-## Fixed
+### Fixed
 
 - Removed unused function call in topics.js that caused errors.
 - Users without baskets no longer cause errors during createBasketList calls.
@@ -590,7 +612,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v4.7.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.0...develop
+[5.0.0]: https://github.com/ddionrails/ddionrails/compare/v4.7.0...v5.0.0
 [4.7.0]: https://github.com/ddionrails/ddionrails/compare/v4.6.3...v4.7.0
 [4.6.3]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...v4.6.3
 [4.6.2]: https://github.com/ddionrails/ddionrails/compare/v4.6.1...v4.6.2
