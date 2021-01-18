@@ -11,6 +11,7 @@ from django.views.generic.base import TemplateView
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
 from config.views import HomePageView
+from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import VariableRedirectView
 from ddionrails.studies.views import StudyDetailView, study_topics
@@ -27,11 +28,7 @@ admin.site.index_title = "Welcome to DDI on Rails Admin"
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
-    path(
-        "imprint/",
-        TemplateView.as_view(template_name="pages/imprint.html"),
-        name="imprint",
-    ),
+    path("imprint/", imprint, name="imprint"),
     path(
         "contact/",
         TemplateView.as_view(template_name="pages/contact.html"),
