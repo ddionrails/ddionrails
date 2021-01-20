@@ -11,9 +11,19 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.0.1] - 2021-01-20
+
+### Changed 
+
+- Load outgoing mail address from environment variable.
+
+### Fixed
+
+- Limited search fields for variable search to mitigate slow response times.
+
 ## [5.0.0] - 2021-01-18
 
-## Added
+### Added
 
 - new topic related API endpoints. 
 
@@ -612,7 +622,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.1...develop
+[5.0.1]: https://github.com/ddionrails/ddionrails/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/ddionrails/ddionrails/compare/v4.7.0...v5.0.0
 [4.7.0]: https://github.com/ddionrails/ddionrails/compare/v4.6.3...v4.7.0
 [4.6.3]: https://github.com/ddionrails/ddionrails/compare/v4.6.2...v4.6.3
