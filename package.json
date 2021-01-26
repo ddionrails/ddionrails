@@ -24,7 +24,7 @@
     "popper.js": "^1.16.1",
     "spinkit": "^2.0.1",
     "vue": "^2.6.12",
-    "vue-router": "^3.4.9"
+    "vue-router": "^3.5.0"
   },
   "devDependencies": {
     "cspell": "^5.1.3",
