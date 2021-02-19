@@ -1,6 +1,10 @@
 <div class="list-group-item">
-    <b><a href="{{ variable }}">{{ variable.title }}</a></b>
-    [variable: {{ variable.name }}]
-    <br/>
-    {{ variable }}
+    <p>
+    <a
+        href="{{ base_url }}/{{ variable.dataset.study.name }}/data/{{ variable.dataset.name }}"
+        >{{ variable.dataset.name }}</a>/<a
+        href="{{ base_url }}/{{ variable.dataset.study.name }}/data/{{ variable.dataset.name }}/{{ variable.name }}"
+        >{{ variable.name }}</a>:
+    {{ variable.title }}
+    </p>
 </div>

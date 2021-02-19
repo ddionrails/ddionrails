@@ -145,7 +145,7 @@ class Question(ModelMixin, models.Model):
             i.e. the question object with the preceding sort_id
         """
         try:
-            return self.instrument.questions.get(sort_id=self.sort_id - 1)
+            return self.instrument.questions.get(sort_id=self.sort_id - 1).name
         except ObjectDoesNotExist:
             return None
 
@@ -154,7 +154,7 @@ class Question(ModelMixin, models.Model):
             i.e. the question object with the following sort_id
         """
         try:
-            return self.instrument.questions.get(sort_id=self.sort_id + 1)
+            return self.instrument.questions.get(sort_id=self.sort_id + 1).name
         except ObjectDoesNotExist:
             return None
 

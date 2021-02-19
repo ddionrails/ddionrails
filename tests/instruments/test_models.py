@@ -38,7 +38,7 @@ class TestQuestionModel:
         previous_question = QuestionFactory(name="other-question", sort_id=1)
         question.sort_id = 2
         question.save()
-        assert previous_question == question.previous_question()
+        assert previous_question.name == question.previous_question()
 
     def test_previous_question_method_without_previous_question(self, question):
         expected = None
@@ -46,7 +46,7 @@ class TestQuestionModel:
 
     def test_next_question_method(self, question):
         next_question = QuestionFactory(name="other-question", sort_id=2)
-        assert next_question == question.next_question()
+        assert next_question.name == question.next_question()
 
     def test_next_question_method_without_next_question(self, question):
         expected = None
