@@ -19,7 +19,7 @@
     "datatables.net-responsive-bs4": "2.2.7",
     "har-validator": "^5.1.5",
     "jquery": "^3.5.1",
-    "jquery.fancytree": "^2.37.0",
+    "jquery.fancytree": "^2.38.0",
     "minimist": "^1.2.5",
     "popper.js": "^1.16.1",
     "spinkit": "^2.0.1",
