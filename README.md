@@ -4,8 +4,8 @@
 [![Django version][django-badge]](https://docs.djangoproject.com/en/2.2/releases/2.2.6/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
+![System-Tests](https://github.com/ddionrails/ddionrails/actions/workflows/system-tests.yml/badge.svg)
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
-[![Travis][travis-badge]](https://travis-ci.org/ddionrails/ddionrails/)
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
 
