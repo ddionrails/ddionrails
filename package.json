@@ -27,7 +27,7 @@
     "vue-router": "^3.5.1"
   },
   "devDependencies": {
-    "cspell": "^5.3.12",
+    "cspell": "^5.4.0",
     "css-loader": "^5.2.4",
     "eslint": "^7.25.0",
     "eslint-config-google": "^0.14.0",
