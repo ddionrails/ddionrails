@@ -38,7 +38,7 @@
     "mini-css-extract-plugin": "^1.6.0",
     "node-sass": "^6.0.0",
     "prettier": "^2.2.1",
-    "sass-loader": "^11.0.1",
+    "sass-loader": "^11.1.1",
     "style-loader": "^2.0.0",
     "vue-loader": "^15.9.7",
     "vue-style-loader": "^4.1.3",
