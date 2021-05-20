@@ -44,7 +44,6 @@ repos:
         pass_filenames: true
       - id: bandit
         name: check python security (bandit)
-        args: ["--skip", "B322"]
         entry: bandit
         language: system
         files: '.*\.py'
