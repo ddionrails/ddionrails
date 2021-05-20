@@ -34,7 +34,8 @@ class ConceptDocument(Document):
     type = fields.KeywordField()
 
     @staticmethod
-    def prepare_type(concept: Concept) -> str:
+    def prepare_type(_: Concept) -> str:
+        """Function seems to be necessary for elasticsearch to work."""
         return "concept"
 
     # attributes
@@ -59,11 +60,7 @@ class ConceptDocument(Document):
         studies_by_question = Study.objects.filter(
             instruments__questions__concepts_questions__concept_id=concept.id
         ).distinct()
-        studies = (
-            studies_by_topic.union(studies_by_variable)
-            .union(studies_by_question)
-            .distinct()
-        )
+        studies = studies_by_topic.union(studies_by_variable).union(studies_by_question)
         return [study.title() for study in studies]
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
@@ -88,7 +85,8 @@ class TopicDocument(Document):
     type = fields.KeywordField()
 
     @staticmethod
-    def prepare_type(topic: Topic) -> str:
+    def prepare_type(_: Topic) -> str:
+        """Function seems to be necessary for elasticsearch to work."""
         return "topic"
 
     # attributes
