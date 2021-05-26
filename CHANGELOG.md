@@ -11,6 +11,12 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.0.3] - 2021-05-26
+
+### Changed
+
+- Upgrade several dependencies. 
+
 ## [5.0.2] - 2021-02-03
 
 ### Fixed
@@ -628,7 +634,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.3...develop
+[5.0.3]: https://github.com/ddionrails/ddionrails/compare/v5.0.2...v5.0.3
 [5.0.2]: https://github.com/ddionrails/ddionrails/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/ddionrails/ddionrails/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/ddionrails/ddionrails/compare/v4.7.0...v5.0.0
