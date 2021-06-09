@@ -77,13 +77,17 @@ class LabelTable:
         ]
         try:
             for var in label_dict["header"]:
-                result.append('<th><a href="%s">%s</a></th>' % (str(var), var.name))
+                result.append(
+                    '<th><a href="%s">%s</a></th>' % (var.get_absolute_url(), var.name)
+                )
             result.append(
                 '</tr><tr><th><i class="fa fa-table" title="Dataset"></i> Dataset</th>'
             )
             for var in label_dict["header"]:
                 dat = var.dataset
-                result.append('<th><a href="%s">%s</a></th>' % (str(dat), dat.name))
+                result.append(
+                    '<th><a href="%s">%s</a></th>' % (dat.get_absolute_url(), dat.name)
+                )
             result.append("</tr></thead><tbody>")
             for val, variables in label_dict["body"].items():
                 result.append("<tr>")
