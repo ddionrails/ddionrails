@@ -156,11 +156,12 @@ def patch_instruments(repository_dir: Path, instruments_dir: Path):
         with open(file, "r") as old_content:
             file_content = json.load(old_content)
         for question, data in file_content["questions"].items():
-            data["image"] = {
-                "url": images[question]["url"],
-                "url_de": images[question]["url_de"],
-                "label": images[question]["label"],
-                "label_de": images[question]["label_de"],
-            }
+            if question in images:
+                data["image"] = {
+                    "url": images[question]["url"],
+                    "url_de": images[question]["url_de"],
+                    "label": images[question]["label"],
+                    "label_de": images[question]["label_de"],
+                }
         with open(file, "w") as json_file:
             json.dump(file_content, json_file)
