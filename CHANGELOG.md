@@ -11,6 +11,15 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.0.4] - 2021-06-09
+
+### Fixed
+
+- Image import no longer fails if not all questions have images.
+- Links to variables and datasets in the
+  "Codes of related variables with the same concept" table are now generated
+  correctly.
+
 ## [5.0.3] - 2021-05-26
 
 ### Changed
@@ -634,7 +643,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.4...develop
+[5.0.4]: https://github.com/ddionrails/ddionrails/compare/v5.0.3...v5.0.4
 [5.0.3]: https://github.com/ddionrails/ddionrails/compare/v5.0.2...v5.0.3
 [5.0.2]: https://github.com/ddionrails/ddionrails/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/ddionrails/ddionrails/compare/v5.0.0...v5.0.1
