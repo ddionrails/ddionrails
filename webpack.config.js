@@ -22,6 +22,7 @@ module.exports = {
       "./assets/scss/search.scss",
     ],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
+    concept_table: ["./assets/js/concept_table.js", "./assets/scss/topics.scss"],
     variables: ["./assets/js/variables.js", "./assets/scss/variables.scss"],
     visualization: [
       "./assets/js/visualization.js",

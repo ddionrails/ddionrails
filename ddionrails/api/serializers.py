@@ -92,6 +92,9 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
     study_name = serializers.SlugRelatedField(
         source="dataset.study", read_only=True, slug_field="name"
     )
+    study_label = serializers.SlugRelatedField(
+        source="dataset.study", read_only=True, slug_field="label"
+    )
 
     class Meta:
         model = Variable
@@ -102,6 +105,7 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
             "label_de",
             "dataset_name",
             "study_name",
+            "study_label",
             "dataset",
             "study",
         ]
@@ -122,6 +126,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     study_name = serializers.SlugRelatedField(
         source="instrument.study", read_only=True, slug_field="name"
     )
+    study_label = serializers.SlugRelatedField(
+        source="instrument.study", read_only=True, slug_field="label"
+    )
 
     class Meta:
         model = Question
@@ -132,6 +139,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "label_de",
             "instrument_name",
             "study_name",
+            "study_label",
             "instrument",
             "study",
         ]

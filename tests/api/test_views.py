@@ -278,6 +278,7 @@ class TestQuestionViewSet(unittest.TestCase):
             "label_de",
             "instrument_name",
             "study_name",
+            "study_label",
             "instrument",
             "study",
         ]
@@ -403,6 +404,7 @@ class TestVariableViewSet(unittest.TestCase):
             "label_de",
             "dataset_name",
             "study_name",
+            "study_label",
             "dataset",
             "study",
         ]

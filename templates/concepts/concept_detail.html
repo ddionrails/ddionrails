@@ -1,9 +1,41 @@
 {% extends "base.html" %}
+{% load render_bundle from webpack_loader %}
+
+{% block styles %}
+    <!-- Webpack bundle: "topics" CSS -->
+    {% render_bundle 'topics' 'css' %}
+{% endblock styles %}
+
+{% block scripts %}
+    {% render_bundle 'concept_table' 'js' %}
+{% endblock scripts %}
 
 {% block content %}
     <h1>{{ concept.title }}</h1>
-    <p>[{{ concept.name }}]</p>
+    <p id="concept-name" value="{{ concept.name }}">[{{ concept.name }}]</p>
     <p>{{ concept.html_description }}</p>
-    <h2>Variables and questions</h2>
-    {% include "concepts/variable_table.html" with variables=variables.all %}
+    <div id="concept-tables">
+        <h2>Variables</h2>
+        <table id="variable-table" class="table table-striped table-bordered">
+        <thead>
+        <tr>
+        <th>Study</th>
+        <th>Label</th>
+        <th>Variable</th>
+        <th>Dataset</th>
+        </tr>
+        </thead>
+        </table>
+        <h2>Questions</h2>
+        <table id="question-table" class="table table-striped table-bordered">
+        <thead>
+        <tr>
+        <th>Study</th>
+        <th>Label</th>
+        <th>Question</th>
+        <th>Instrument</th>
+        </tr>
+        </thead>
+        </table>
+    </div>
 {% endblock content %} 
