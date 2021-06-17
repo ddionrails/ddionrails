@@ -11,6 +11,14 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.1.0] - 2021-06-09
+
+### Changed
+
+- Updated concept view to use new API.
+ 
+  - Split formerly merged table into variables and questions table
+
 ## [5.0.4] - 2021-06-09
 
 ### Fixed
@@ -643,7 +651,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.0.4...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.0...develop
+[5.0.4]: https://github.com/ddionrails/ddionrails/compare/v5.0.4...v5.1.0
 [5.0.4]: https://github.com/ddionrails/ddionrails/compare/v5.0.3...v5.0.4
 [5.0.3]: https://github.com/ddionrails/ddionrails/compare/v5.0.2...v5.0.3
 [5.0.2]: https://github.com/ddionrails/ddionrails/compare/v5.0.1...v5.0.2
