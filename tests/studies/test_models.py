@@ -20,7 +20,7 @@ class TestStudyModel:
         TEST_CASE.assertEqual(expected, str(study))
 
     def test_get_absolute_url_method(self, study):
-        expected = "/" + study.name
+        expected = f"/{study.name}/"
         TEST_CASE.assertEqual(expected, study.get_absolute_url())
 
     def test_repo_url_method_https(self, study, settings):

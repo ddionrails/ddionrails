@@ -50,7 +50,7 @@ urlpatterns = [
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
     # Study by name
-    path("<slug:study_name>", StudyDetailView.as_view(), name="study_detail"),
+    path("<slug:study_name>/", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links
     path("<slug:study_name>/data/", include("ddionrails.data.urls", namespace="data")),
     path(
