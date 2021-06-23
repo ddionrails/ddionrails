@@ -6,6 +6,9 @@ BODY Their structure is convoluted and confusing.
 {% extends "base_study.html" %}
 {% block scripts %}
 {% endblock %}
+{% block title %}
+    {{ question.instrument.title }}/{{ question.name }}
+{% endblock %}
 {% block content %}
     <div class="row">
         <div class="col-xl-9">
