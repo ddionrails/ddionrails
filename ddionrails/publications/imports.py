@@ -62,10 +62,8 @@ class AttachmentImport(imports.CSVImport):
                 )
 
     def import_element(self, element):
-        attachment, _ = Attachment.objects.get_or_create(
-            url=element["url"], context_study=self.study
-        )
-        del element["url"]
+        attachment = Attachment()
+        attachment.context_study = self.study
         for key, value in element.items():
             setattr(attachment, key, value)
         attachment.save()
