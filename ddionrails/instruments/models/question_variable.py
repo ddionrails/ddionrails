@@ -16,6 +16,8 @@ class QuestionVariable(models.Model):
     Linking items in an instrument with related variables.
     """
 
+    id = models.AutoField(primary_key=True)
+
     #############
     # relations #
     #############

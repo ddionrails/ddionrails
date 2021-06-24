@@ -27,6 +27,8 @@ class Basket(TimeStampedModel):
     related to :model:`studies.Study`, :model:`auth.User` and :model:`data.Variable`.
     """
 
+    id = models.AutoField(primary_key=True)
+
     ##############
     # attributes #
     ##############

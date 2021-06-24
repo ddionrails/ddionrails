@@ -21,6 +21,8 @@ class TopicList(models.Model):
     Stores a single topiclist, related to :model:`studies.Study`.
     """
 
+    id = models.AutoField(primary_key=True)
+
     ##############
     # attributes #
     ##############

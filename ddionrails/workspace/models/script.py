@@ -18,6 +18,8 @@ class Script(TimeStampedModel):
     Stores a single script, related to :model:`workspace.Basket`.
     """
 
+    id = models.AutoField(primary_key=True)
+
     ##############
     # attributes #
     ##############

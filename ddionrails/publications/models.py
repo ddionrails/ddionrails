@@ -115,6 +115,8 @@ class Attachment(models.Model):
 
     """
 
+    id = models.AutoField(primary_key=True)
+
     ##############
     # attributes #
     ##############

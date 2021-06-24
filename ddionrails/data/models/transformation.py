@@ -16,6 +16,9 @@ class Transformation(models.Model):
     #############
     # relations #
     #############
+
+    id = models.AutoField(primary_key=True)
+
     origin = models.ForeignKey(
         Variable,
         related_name="target_variables",

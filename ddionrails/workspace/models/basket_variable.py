@@ -16,6 +16,8 @@ class BasketVariable(models.Model):
     related to :model:`workspace.Basket` and :model:`data.Variable`
     """
 
+    id = models.AutoField(primary_key=True)
+
     #############
     # relations #
     #############

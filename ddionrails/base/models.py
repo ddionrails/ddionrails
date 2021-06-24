@@ -13,6 +13,8 @@ from .mixins import ImportPathMixin
 class Singleton(models.Model):
     """Base Class for models with just one entry."""
 
+    id = models.AutoField(primary_key=True)
+
     class Meta:
         abstract = True
 
@@ -47,8 +49,9 @@ class System(ImportPathMixin, Singleton):
     def get(cls) -> System:
         """ Returns a single system instance """
         fallback_system: System
-        if (system := System.objects.first()) is None:
-            fallback_system = System()
+        system = System.objects.first()
+        fallback_system = System()
+        if system is None:
             fallback_system.save()
         return system or fallback_system
 
