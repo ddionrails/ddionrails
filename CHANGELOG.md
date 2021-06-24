@@ -11,6 +11,19 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.1.2] - 2021-06-24
+
+
+### Changed
+
+- Make use of models.AutoField explicit for id fields.
+### Fixed
+
+- issue where attachements with the same target url overwrite each other.
+- Removed use of string representation of database objects in templates.
+- routing for study view; to fix relative links.
+
+
 ## [5.1.1] - 2021-06-18
 
 ### Fixed
@@ -656,7 +669,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...develop
+[5.1.2]: https://github.com/ddionrails/ddionrails/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/ddionrails/ddionrails/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/ddionrails/ddionrails/compare/v5.0.4...v5.1.0
 [5.0.4]: https://github.com/ddionrails/ddionrails/compare/v5.0.3...v5.0.4
