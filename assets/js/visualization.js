@@ -36,6 +36,16 @@ function shortenLabels(axisLabels) {
 }
 
 /**
+ * Determine if a value metadata marks a missing datapoint.
+ * @param {boolean} isMissing Associated missing truth value
+ * @param {number} answerCode Numerical code of the Answer
+ * @return {boolean}
+ */
+function isMissingValue(isMissing, answerCode) {
+  return isMissing || answerCode < 0;
+}
+
+/**
  * Render Univariate category chart
  * @param {*} options Display options
  */
@@ -57,7 +67,9 @@ function catUni(options) {
   const data = [];
 
   for (let i = 0; i < rData.uni[dataType].length; i++) {
-    if (hideMissings === true && rData.uni.missings[i]) {
+    if (
+      hideMissings === true && isMissingValue(rData.uni.missings[i], rData.uni.values[i])
+    ) {
       continue;
     }
 
@@ -272,8 +284,5 @@ function render() {
   });
 }
 
-$("document").ready(
-  function() {
-    render();
-  }
-);
+window.addEventListener("load", render());
+
