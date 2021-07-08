@@ -20,7 +20,7 @@
         </div>
     {% endfor %}
     <p></p>
-    {% if item.scale != "cat" and item.scale != "txt" %}
+    {% if item.scale and item.scale != "cat" and item.scale != "txt" %}
         <input type="text" class="form-control" disabled="disabled" placeholder="Response scale: {{ item.scale }}">
     {% endif %}
     <hr>
