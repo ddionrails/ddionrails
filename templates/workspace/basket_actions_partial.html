@@ -8,6 +8,13 @@
                 Export to CSV
             </a>
         </div>
+        {% if study.name == "soep-core" %}
+        <div class="alert alert-danger" role="alert">
+            Warning:
+            The generator is currently not working for v36 data.
+            We are working on an update and are hoping to release it soon.
+        </div>
+        {% endif %}
         {% for generator_name in basket.get_script_generators %}
             <div class="list-group-item">
                 <a href="{% url 'workspace:script_new_lang' basket_id=basket.id generator_name=generator_name%}">
