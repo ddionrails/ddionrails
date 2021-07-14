@@ -7,8 +7,10 @@ import logging
 import shutil
 import sys
 from collections import OrderedDict
+from inspect import isfunction, isgenerator
 from pathlib import Path
-from typing import List
+from types import FunctionType
+from typing import Any, Generator, List, Tuple, Union
 
 import django_rq
 import git
@@ -31,11 +33,11 @@ from ddionrails.data.imports import (
     VariableImageImport,
     VariableImport,
 )
-from ddionrails.imports.helpers import patch_instruments
 from ddionrails.instruments.imports import (
     ConceptQuestionImport,
     InstrumentImport,
     QuestionVariableImport,
+    questions_images_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
@@ -130,17 +132,15 @@ class SystemImportManager:
 
 
 class StudyImportManager:
+
+    import_order: OrderedDict[str, Tuple[Any, Union[Path, Generator]]]
+
     def __init__(self, study: Study, redis: bool = True):
         self.study = study
         self.repo = Repository(study)
         self.base_dir = study.import_path()
         self._concepts_fixed = False
         self.redis = redis
-
-        repositories_base_dir: Path = settings.IMPORT_REPO_PATH
-        repository_dir = repositories_base_dir.joinpath(self.study.name)
-        instruments_dir = repository_dir.joinpath("ddionrails/instruments")
-        patch_instruments(repository_dir, instruments_dir)
 
         self.import_order = OrderedDict(
             {
@@ -181,6 +181,10 @@ class StudyImportManager:
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
+                "questions_images": (
+                    questions_images_import,
+                    self.base_dir.joinpath("questions_images.csv"),
+                ),
             }
         )
 
@@ -220,7 +224,7 @@ class StudyImportManager:
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
-    def _execute(self, import_function, *args):
+    def _execute(self, import_function: FunctionType, *args):
         if self.redis:
             django_rq.enqueue(import_function, *args)
         else:
@@ -240,45 +244,40 @@ class StudyImportManager:
         """
         if "concepts" in entity or "variables" in entity:
             self.fix_concepts_csv()
-        LOGGER.info(f'Study "{self.study.name}" starts import of entity: "{entity}"')
-        importer_class, default_file_path = self.import_order.get(entity)
+        self.__log_import_start(entity)
+        importer_class, _default_files_path = self.import_order.get(entity)
+        default_importer_files: Any
+        if isgenerator(_default_files_path):
+            default_importer_files = _default_files_path
+        else:
+            default_importer_files = [_default_files_path]
 
         # import specific file
         if filename:
-            file = self.base_dir / filename
+            file = self.base_dir.joinpath(filename)
             if file.is_file():
-                LOGGER.info(
-                    f'Study "{self.study.name}" starts import of file: "{file.name}"'
-                )
-                importer = importer_class(file, self.study)
-                self._execute(importer.run_import, file, self.study)
+                self.__log_import_start(file.name)
+                default_importer_files = [file]
             else:
-                LOGGER.error(f'Study "{self.study.name}" has no file: "{file.name}"')
+                self.__log_import_fail(file)
                 sys.exit(1)
-        else:
 
-            # single file import
-            if isinstance(default_file_path, Path):
-                if default_file_path.is_file():
-                    importer = importer_class(default_file_path, self.study)
-                    self._execute(importer.run_import, default_file_path, self.study)
-                else:
-                    LOGGER.warning(
-                        (
-                            f'Study "{self.study.name}" '
-                            f'has no file: "{default_file_path.name}"'
-                        )
-                    )
-
-            # multiple files import, e.g. instruments, datasets
+        for file in default_importer_files:
+            self.__log_import_start(file.name)
+            if not file.is_file():  # type: ignore
+                self.__log_import_fail(file)
+            if isfunction(importer_class):
+                importer = importer_class
             else:
+                _importer = importer_class(file, self.study)
+                importer = _importer.run_import
+            self._execute(importer, file, self.study)
 
-                for file in sorted(default_file_path):
-                    LOGGER.info(
-                        f'Study "{self.study.name}" starts import of file: "{file.name}"'
-                    )
-                    importer = importer_class(file, self.study)
-                    self._execute(importer.run_import, file, self.study)
+    def __log_import_start(self, file: str) -> None:
+        LOGGER.info('Study "%s" starts import of: "%s"', self.study.name, file)
+
+    def __log_import_fail(self, file: Path) -> None:
+        LOGGER.error('Study "%s" has no file: "%s"', self.study.name, file.name)
 
     def import_all_entities(self):
         """
@@ -290,7 +289,7 @@ class StudyImportManager:
         manager.import_all_entities()
 
         """
-        LOGGER.info(f'Study "{self.study.name}" starts importing of all entities')
+        self.__log_import_start("all entities")
         for entity in self.import_order.keys():
             self.import_single_entity(entity)
 

@@ -147,7 +147,7 @@ def test_update_single_study_entity_nonexistent_filename(study):
         logging.getLogger("ddionrails.imports.manager")
         TEST_CASE.assertEqual(1, error.exception.code)
         log.assert_called_once_with(
-            'Study "some-study" has no file: "nonexistent-file.json"'
+            'Study "%s" has no file: "%s"', "some-study", "nonexistent-file.json"
         )
 
 

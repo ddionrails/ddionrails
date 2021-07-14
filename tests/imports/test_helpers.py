@@ -4,28 +4,19 @@
 """ Test cases for helpers in ddionrails.imports app """
 
 import csv
-import glob
-import json
 import unittest
 from io import StringIO
-from pathlib import Path
 from random import choices
-from typing import Any, Callable, Dict, List, Optional, Tuple, TypedDict
-from unittest.mock import MagicMock, patch
+from typing import Callable, Dict, List, Optional, Tuple, TypedDict
 
 import pytest
 import requests_mock
 from filer.models import Folder, Image
 from pytest_mock import MockerFixture
 
-from ddionrails.imports.helpers import (
-    download_image,
-    patch_instruments,
-    read_csv,
-    store_image,
-)
+from ddionrails.imports.helpers import download_image, read_csv, store_image
 from ddionrails.imports.types import QuestionsImages
-from tests.conftest import MockOpener, VariableImageFile
+from tests.conftest import VariableImageFile
 
 
 @pytest.mark.django_db
@@ -106,68 +97,6 @@ class TestHelpers(unittest.TestCase):
         result_image_bytes = result_image.file.open().read()
         self.assertEqual(image_file.getvalue(), result_image_bytes)
         self.assertEqual(image_info["name"], result_image.name)
-
-
-@pytest.mark.usefixtures("questions_images_csv")
-class TestTemporaryHelper(unittest.TestCase):  # pylint: disable=R0902
-
-    json_file: Path
-    json_folder: Path
-    questions_images_csv: str
-    questions_images: List[QuestionsImages]
-
-    def setUp(self):
-        self.test_study = self.questions_images[0]["study"]
-        self.test_instrument = self.questions_images[0]["instrument"]
-
-        self.repo: Path = Path("/test-repository")
-        self.csv_path = self.repo.joinpath("metadata")
-        self.json_folder: Path = self.repo.joinpath("ddionrails/instruments")
-        self.csv_file = self.csv_path.joinpath("questions_images.csv")
-
-        self.json_file = self.json_folder.joinpath(self.test_instrument)
-        self.json_file = self.json_file.with_suffix(".json")
-        original_content = self._build_test_json()
-        self.json_content = json.dumps(original_content)
-        self.expected = self._build_expected(original_content)
-
-        return super().setUp()
-
-    def _build_test_json(self) -> Dict[str, Any]:
-        file_base = {"study": self.test_study, "questions": {}}
-        for question in self.questions_images:
-            question_json = {"question": question["question"]}
-            file_base["questions"][question["question"]] = question_json
-        return file_base
-
-    def _build_expected(self, instrument: Dict[str, Any]):
-        _questions_images: Dict[str, QuestionsImages] = {
-            question["question"]: question for question in self.questions_images
-        }
-        for question, data in instrument["questions"].items():
-            data["image"] = {
-                "url": _questions_images[question]["url"],
-                "url_de": _questions_images[question]["url_de"],
-                "label": _questions_images[question]["label"],
-                "label_de": _questions_images[question]["label_de"],
-            }
-        return instrument
-
-    @patch("pathlib.Path.is_file", new_callable=MagicMock, return_value=True)
-    @patch("glob.glob", new_callable=MagicMock, spec=glob)
-    @patch("builtins.open", new_callable=MockOpener)
-    def test_patch_instruments(self, mocked_open: MockOpener, mocked_glob, *_):
-
-        mocked_glob.return_value = [self.json_file]
-        mocked_open.register_file(self.csv_file, self.questions_images_csv)
-        mocked_open.register_file(self.json_file, self.json_content)
-
-        patch_instruments(repository_dir=self.repo, instruments_dir=self.json_folder)
-
-        self.assertIn(self.csv_file, mocked_open.call_history)
-        mocked_glob.assert_called_with(f"{self.json_folder}/*")
-        result = mocked_open.get_content_written_in_path(self.json_file)
-        self.assertEqual(json.dumps(self.expected), result)
 
 
 @pytest.fixture(name="unittest_mock")

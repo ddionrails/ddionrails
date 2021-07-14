@@ -3,13 +3,10 @@
 """ Helper functions for ddionrails.imports app """
 
 import csv
-import glob
-import json
 import os
 import uuid
 from functools import lru_cache
 from io import BytesIO
-from pathlib import Path
 from typing import BinaryIO, List, Optional, Tuple, Union
 
 import requests
@@ -139,29 +136,3 @@ def _create_folder_structure(path: Union[List, str]) -> Folder:
     for folder in _path[1:]:
         _parent, _ = Folder.objects.get_or_create(name=folder, parent=_parent)
     return _parent
-
-
-def patch_instruments(repository_dir: Path, instruments_dir: Path):
-    """Temporary patch of instrument json files for the import of question images."""
-    instruments = glob.glob(f"{instruments_dir}/*")
-
-    image_data_file = Path(f"{repository_dir}/metadata/questions_images.csv")
-    if not image_data_file.is_file():
-        return
-
-    with open(image_data_file, "r") as csv_file:
-        images = {image["question"]: image for image in csv.DictReader(csv_file)}
-
-    for file in instruments:
-        with open(file, "r") as old_content:
-            file_content = json.load(old_content)
-        for question, data in file_content["questions"].items():
-            if question in images:
-                data["image"] = {
-                    "url": images[question]["url"],
-                    "url_de": images[question]["url_de"],
-                    "label": images[question]["label"],
-                    "label_de": images[question]["label_de"],
-                }
-        with open(file, "w") as json_file:
-            json.dump(file_content, json_file)

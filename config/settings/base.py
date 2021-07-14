@@ -129,7 +129,7 @@ DATABASES = {
 
 # DJANGO RQ
 # ------------------------------------------------------------------------------
-RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 1000}}
+RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 2000}}
 
 THUMBNAIL_PROCESSORS = (
     "easy_thumbnails.processors.colorspace",
