@@ -81,7 +81,3 @@ django-debug-toolbar = "*"
 rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "*"
-
-
-[requires]
-python_version = "3.8"
