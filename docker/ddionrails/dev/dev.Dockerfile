@@ -28,7 +28,7 @@ RUN apt-get update \
     libjpeg-dev>=1:1.5 \
     zlib1g-dev>=1:1.2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade pipfile-requirements==0.1.0.post0 \
+    && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
     && pipfile2req Pipfile.lock > Requirements.txt \
     && pipfile2req --dev Pipfile.lock >> Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
