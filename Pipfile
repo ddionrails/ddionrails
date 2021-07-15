@@ -41,6 +41,7 @@ python-frontmatter = "*"
 # ------------------------------------------------------------------------------
 gitpython = "*"
 paver = "*"
+requests = "*"
 
 
 [dev-packages]
