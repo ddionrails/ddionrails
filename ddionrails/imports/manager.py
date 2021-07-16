@@ -17,7 +17,6 @@ import git
 from django.conf import settings
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
-from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
@@ -112,26 +111,22 @@ class Repository:
         return self.list_changed_files()
 
 
-class SystemImportManager:
+def system_import_manager(system):
     """Import the files from the system repository."""
 
-    def __init__(self, system: System):
-        self.system = system
-        self.repo = Repository(system)
+    repo = Repository(system)
+    base_directory = system.import_path()
+    studies_file = base_directory.joinpath("studies.csv")
+    StudyImport.run_import(studies_file, system)
 
-    def run_import(self):
-        """Run the system import."""
-        base_directory = self.system.import_path()
-        studies_file = base_directory.joinpath("studies.csv")
-        StudyImport.run_import(studies_file, self.system)
-
-        # Copy background image to static/
-        image_file = base_directory.joinpath("background.png")
-        shutil.copy(image_file, "static/")
-        self.repo.set_commit_id()
+    # Copy background image to static/
+    image_file = base_directory.joinpath("background.png")
+    shutil.copy(image_file, "static/")
+    repo.set_commit_id()
 
 
 class StudyImportManager:
+    """Manage the import of all study ressources."""
 
     import_order: OrderedDict[str, Tuple[Any, Union[Path, Generator]]]
 
@@ -221,10 +216,12 @@ class StudyImportManager:
         return None
 
     def update_repo(self):
+        "Update metadata git repository."
         self.repo.pull_or_clone()
         self.repo.set_commit_id()
 
     def _execute(self, import_function: FunctionType, *args):
+        """Queue or call an import function."""
         if self.redis:
             django_rq.enqueue(import_function, *args)
         else:
