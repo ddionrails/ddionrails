@@ -5,3 +5,8 @@ Full content is intended to be displayed separately in a bootstrap modal.
   max-height: 20em;
   overflow: hidden;
 }
+
+#description-modal-content {
+  max-height: 70vh;
+  overflow: auto;
+}

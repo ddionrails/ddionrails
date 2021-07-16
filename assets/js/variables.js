@@ -11,10 +11,12 @@ $(window).on("load", function() {
   if (
     description.prop("scrollHeight") - description.prop("clientHeight") <= 1
   ) {
-    $("#description-footer").hide();
+    document.getElementById("description-footer").style.display = "none";
     return;
   }
-  description.clone().appendTo("#description-modal-content");
+  const modalDescription = description.clone();
+  modalDescription.removeAttr("id");
+  modalDescription.appendTo("#description-modal-content");
 }
 
 );
@@ -31,7 +33,6 @@ $(window).on("load", function() {
   }
   const anchorLink = $(`a[href$="${anchor}"]`);
   anchorLink[0].click();
-  $([document.documentElement, document.body]).animate({
-    scrollTop: anchorLink.offset().top - $("#paneldata-navbar").outerHeight(),
-  }, 800);
+  document.querySelector("#relation-tables").scrollIntoView(true);
+  window.scrollBy(0, -document.documentElement.clientHeight/4);
 });
