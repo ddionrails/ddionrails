@@ -263,6 +263,7 @@ class StudyImportManager:
             self.__log_import_start(file.name)
             if not file.is_file():  # type: ignore
                 self.__log_import_fail(file)
+                continue
             if isfunction(importer_class):
                 importer = importer_class
             else:
