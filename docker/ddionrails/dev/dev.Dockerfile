@@ -14,9 +14,9 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-    bash-completion>=1:2 \
-    build-essential>=12.3 \
-    curl>=7 \
+    bash-completion>=1:2.8-6 \
+    build-essential>=12.6 \
+    curl>=7.64.0-4+deb10u2 \
     git>=1:2 \
     graphviz>=2.38 \
     graphviz-dev>=2.38 \
@@ -29,6 +29,7 @@ RUN apt-get update \
     zlib1g-dev>=1:1.2 \
     vim-tiny>=2:8 \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
+    && pip install --no-cache-dir --upgrade chardet==4.0.0 \
     && pipfile2req Pipfile.lock > Requirements.txt \
     && pipfile2req --dev Pipfile.lock >> Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \

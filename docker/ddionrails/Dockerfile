@@ -23,6 +23,7 @@ RUN apk add --no-cache \
     postgresql-dev \
     zlib-dev \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
+    && pip install --no-cache-dir --upgrade chardet==4.0.0 \
     && pipfile2req Pipfile.lock > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && pip uninstall -y pipfile-requirements \
