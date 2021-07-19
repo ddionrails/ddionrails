@@ -11,6 +11,18 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.1.3] - 2021-07-19
+
+### Changed
+
+- Refactor import modules.
+
+### Fixed
+
+- dependencies to work with Python 3.9 containers.
+- Don't show question scale field when no scale is present.
+- scrolling in variable view description modal.
+
 ## [5.1.2] - 2021-06-24
 
 
@@ -669,7 +681,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.3...develop
+[5.1.3]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...v5.1.3
 [5.1.2]: https://github.com/ddionrails/ddionrails/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/ddionrails/ddionrails/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/ddionrails/ddionrails/compare/v5.0.4...v5.1.0
