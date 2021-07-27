@@ -10,7 +10,7 @@ const path = require("path");
 const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const VueLoaderPlugin = require("vue-loader/dist/plugin").default;
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
   context: __dirname,
