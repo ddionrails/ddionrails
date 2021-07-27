@@ -12,6 +12,7 @@
   "dependencies": {
     "@appbaseio/reactivesearch-vue": "1.16.0",
     "@fortawesome/fontawesome-free": "^5.15.3",
+    "@vue/compiler-sfc": "^3.1.5",
     "bootstrap": "^4.6.0",
     "d3": "^7.0.0",
     "datatables.net-bs4": "1.10.25",
