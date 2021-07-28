@@ -75,25 +75,18 @@ module.exports = {
       /* Loads fonts, used for Bootstrap */
       {
         test: /\.(woff(2)?|ttf|eot|svg)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              outputPath: "fonts/",
-            },
-          },
-        ],
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[name][ext]",
+        },
       },
       /* Loads static files, e.g. images */
       {
-        test: /\.(png|jpg|gif)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {},
-          },
-        ],
+        test: /\.(png|jpg|gif|ico)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "[name][ext]",
+        },
       },
       /* Loads vue single file components */
       {
@@ -104,13 +97,6 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["vue-style-loader", "css-loader", "sass-loader"],
-      },
-      {
-        test: /\.ico$/,
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]",
-        },
       },
     ],
   },
