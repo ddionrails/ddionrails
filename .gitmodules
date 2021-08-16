@@ -1,0 +1,3 @@
+[submodule "docker/transfer.server"]
+	path = docker/transfer.server
+	url = git@github.com:ddionrails/transfer.server.git

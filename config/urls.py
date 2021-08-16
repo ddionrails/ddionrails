@@ -55,6 +55,7 @@ urlpatterns = [
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
+    path("transfer/", include("ddionrails.transfer.urls")),
     # Study by name
     path("<slug:study_name>/", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links

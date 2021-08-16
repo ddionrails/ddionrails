@@ -150,6 +150,34 @@ services:
     security_opt:
       - no-new-privileges
 
+  transfer-server:
+    image: transfer-server
+    command: >
+      bash -c "
+        xtail /var/log/shiny-server/ & shiny-server 2>&1"
+    build:
+      context: ./docker/transfer.server
+    depends_on:
+      - data-api
+    expose:
+      - 3838
+    networks:
+      - ddi_net
+    volumes:
+      - ./docker/transfer.server/R:/srv/transfer.server/R
+
+  #TODO: Replace before bringing to production
+  data-api:
+    image: transfer-api
+    build:
+      context: ./docker/data_api
+    ports:
+      - 5000:5000
+    networks:
+      - ddi_net
+    volumes:
+      - ./docker/data_api/platform-datasets /opt/platform-datasets
+
 volumes:
   backup:
   ddi-psql-config:

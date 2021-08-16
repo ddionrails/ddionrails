@@ -40,6 +40,7 @@ MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media")
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 MEDIA_URL = "/media/"
 
+TRANSFER_SERVER_URL = os.getenv("TRANSFER_SERVER_URL", "/transfer-server/")
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 

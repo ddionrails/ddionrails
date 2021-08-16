@@ -19,12 +19,15 @@ module.exports = {
     index: "./assets/js/index.js",
     search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
-    concept_table: ["./assets/js/concept_table.js", "./assets/scss/topics.scss"],
+    concept_table: [
+      "./assets/js/concept_table.js",
+      "./assets/scss/topics.scss",
+    ],
     variables: ["./assets/js/variables.js"],
     search_feedback: [
       "./assets/js/search_feedback.ts",
     ],
-    variables: ["./assets/js/variables.js"],
+    transfer_categorical: "./assets/js/transfer_categorical.js",
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
     question_comparison: [
       "./assets/js/question_comparison.js",

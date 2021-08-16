@@ -1,0 +1,78 @@
+{% extends "base_study.html" %}
+{% load render_bundle from webpack_loader %}
+
+
+{% block styles%}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+				#-second-frame {
+					display: none;
+				}
+			#container {
+				display: flex;
+				flex-direction: column;
+			}
+			iframe {
+				width: 99%
+			}
+			#main-container {
+				margin-top: 1em !important;
+			}
+			@media screen and (min-width:769px) {
+				#main-frame {
+					height: 50vh;
+				}
+				#second-frame {
+					height: 45vh;
+				}
+				
+			}
+			@media screen and (max-width:768px) {
+				#main-frame {
+					height: 100%;
+				}
+				#second-frame {
+					height: 100%;
+				}
+			}
+			#close-icon {
+				cursor: pointer;
+				text-align: right;
+			}
+			#secondary-plot{
+				width: 3em;
+				margin: 0 auto 0 auto
+			}
+		</style>
+{% endblock styles %}
+
+{% block content %}
+
+{{ server_metadata|json_script:"transfer-server-metadata" }}
+<div id="container">
+	<div>
+			</div>
+			<iframe id="main-frame"
+				src="http://localhost/transfer-server/categorical/?variable={{request.GET.variable}}"
+				width="500" height="50%"
+				frameborder="0"></iframe>
+
+			<span class="pull-right clickable hidden" id="close-icon">
+			<i class="fa fa-times"></i></span>
+			<iframe class="hidden"
+				id="second-frame"
+				src=""
+				frameborder="0"></iframe>
+		<button
+			type="button"
+			class="btn btn-secondary"
+			id="secondary-plot"
+			title="Vergleichsplot anzeigen">+</button>
+
+	</div>
+</div>
+
+
+		{% render_bundle "transfer_categorical" "js" %}
+		{% endblock content %}
