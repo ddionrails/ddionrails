@@ -55,6 +55,40 @@ a {
   color: #337ab7;
 }
 
+a:visited {
+  color: #154d7e;
+}
+
+.nav-item > a {
+  color: black;
+}
+
+
+@media screen and (max-width:1200px) {
+  .nav-item > a.btn {
+    font-size: 1em;
+  }
+}
+
+@media screen and (min-width:12001) and (max-width:1400px) {
+  .nav-item > a.btn {
+    font-size: 1.3vw;
+  }
+}
+@media screen and (min-width:1401px) {
+  .nav-item > a.btn {
+    font-size: 1em;
+  }
+}
+
+a.dropdown-item {
+  color: rgba(0,0,0,0.7) !important;
+}
+
+.nav-link {
+  color: rgba(0,0,0,0.7) !important;
+}
+
 h1 {
   @extend .mb-5;
 }
@@ -197,4 +231,16 @@ div.dataTables_paginate li.last a:after {
 .page-item.active .page-link {
   background-color: rgb(151, 150, 150);
   border-color: rgb(184, 181, 181);
+}
+
+.header-vline{
+  border-left: 2px solid #afafaf;
+  border-right: 2px solid #afafaf;
+  border-radius: 25px;
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+.nav-link{
+  white-space: nowrap;
 }

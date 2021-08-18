@@ -16,9 +16,6 @@
 			#main-container {
 				margin-top: 0em !important;
 			}
-			#second-frame {
-				margin-top: .5em;
-			}
 			#close-icon {
 				cursor: pointer;
 				text-align: right;
@@ -31,7 +28,7 @@
 			}
 			#second-plot-button{
 				width: 3em;
-				margin: 2em auto 0 auto
+				margin: 2em auto 1em auto
 			}
 		</style>
 {% endblock styles %}
@@ -43,15 +40,13 @@
 	<div>
 			</div>
 			<iframe id="main-frame"
-				src="http://localhost/transfer-server/categorical/?variable={{request.GET.variable}}"
+				src="http://localhost/transfer-server/numerical/?variable={{request.GET.variable}}"
 				width="500" height="50%"
 				frameborder="0"></iframe>
 
-			<div id="second-frame-container">
-			<div id="close-icon-container">
+			<div>
 			<span class="pull-right clickable hidden" id="close-icon">
 			<i class="fa fa-times"></i></span>
-			</div>
 			<iframe class="hidden"
 				id="second-frame"
 				src=""

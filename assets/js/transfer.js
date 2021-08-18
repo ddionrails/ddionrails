@@ -1,12 +1,40 @@
+/**
+ *  Resize given iframe so it does not display a scrollbar.
+ *
+ * @param {*} iFrame An iframe DOM Element Object
+ */
+function resizeIFrameToFitContent( iFrame ) {
+  iFrame.width = iFrame.contentWindow.document.body.scrollWidth;
+  iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
+}
+
+/**
+ * Wait for a shiny app iframe to fully load its plot.
+ *
+ * Is used to resize iframe according to plot size.
+ *
+ * @param {*} iFrame An iframe DOM Element Object
+ */
+async function waitForIFrameContent(iFrame) {
+  console.log("calling");
+  while ( iFrame.contentDocument.getElementsByClassName("plot-container").length === 0) {
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  resizeIFrameToFitContent( iFrame );
+}
+
+
 const documentURL = new URL(document.URL);
 const documentVariable = documentURL.searchParams.get("variable");
 const serverMetadata = JSON.parse(
   document.getElementById("transfer-server-metadata").textContent
 );
 
-
+/**
+ * Add handlers to manage UI elements to display/hide secondary plot.
+ */
 window.addEventListener("load", function() {
-  const addButton = document.getElementById("secondary-plot");
+  const addButton = document.getElementById("second-plot-button");
   const closeIcon = document.getElementById("close-icon");
   const firstFrame = document.getElementById("main-frame");
 
@@ -27,6 +55,7 @@ window.addEventListener("load", function() {
     secondIframe.classList.remove("hidden");
     closeIcon.classList.remove("hidden");
     addButton.classList.add("hidden");
+    waitForIFrameContent(secondIframe);
   });
 
   closeIcon.addEventListener("click", function() {
@@ -37,3 +66,7 @@ window.addEventListener("load", function() {
     addButton.classList.remove("hidden");
   } );
 });
+
+const mainFrame = document.getElementById("main-frame");
+
+document.addEventListener("load", waitForIFrameContent(mainFrame));

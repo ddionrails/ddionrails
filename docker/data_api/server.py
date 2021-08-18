@@ -1,4 +1,4 @@
-# pylint: ignore
+# pylint: skip-file
 # nosec
 from pathlib import Path
 

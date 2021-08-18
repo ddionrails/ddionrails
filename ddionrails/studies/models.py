@@ -149,7 +149,7 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
 
     def __str__(self) -> str:
         """ Returns a string representation using the "name" field """
-        return f"/{self.name}"
+        return str(self.name)
 
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "name" field """

@@ -1,8 +1,9 @@
-<div class="container-fluid d-flex justify-content-start mt-2">
-    <a class="navbar-brand" href="{{ study.get_absolute_url }}">
+    <li class="header-vline"></li>
+    <li class="navbar-brand nav-item">
+    <a  href="{{ study.get_absolute_url }}">
         {{ study.title }}
     </a>
-    <ul class="navbar-nav">
+    </li>
         <li class="nav-item"><a href="{{ study.get_absolute_url }}#datasets" class="nav-link">Data</a>
         </li>
         <li class="nav-item"><a href="{{ study.get_absolute_url }}#instruments" class="nav-link">Instruments</a>
@@ -13,6 +14,8 @@
         {% endif %}
         <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
         </li>
+        <li class="nav-item"><a href="{% url 'transfer:transfer' study=study %}" class="nav-link">Transfer</a>
+        </li>
         <li class="nav-item">
         <a
             href='{{ request.scheme }}://{{ request.get_host }}/search/all?Study="{{ study.label }}"'
@@ -20,5 +23,3 @@
             Search in Study
         </a>
         </li>
-    </ul>
-</div>

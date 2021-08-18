@@ -86,7 +86,7 @@ class Publication(ModelMixin, models.Model):
 
     def __str__(self) -> str:
         """ Returns a string representation using the "study" and "name" fields """
-        return f"{self.study}/publ/{self.name}"
+        return self.name
 
     def get_absolute_url(self) -> str:
         """ Returns a canonical URL for the model using the "study" and "name" fields """

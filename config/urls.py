@@ -5,7 +5,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path, re_path
+from django.shortcuts import get_object_or_404
+from django.urls import include, path, re_path, register_converter
 from django.views.generic.base import TemplateView
 
 import ddionrails.instruments.views as instruments_views
@@ -15,6 +16,7 @@ from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
 from ddionrails.instruments.views import QuestionRedirectView
+from ddionrails.studies.models import Study
 from ddionrails.studies.views import StudyDetailView, study_topics
 
 # These variable names are desired by Django
@@ -26,6 +28,19 @@ handler500 = "config.views.server_error"  # pylint: disable=invalid-name
 admin.site.site_header = "DDI on Rails Admin"
 admin.site.site_title = "DDI on Rails Admin"
 admin.site.index_title = "Welcome to DDI on Rails Admin"
+
+
+class StudyConverter:
+    regex = ".*"
+
+    def to_python(self, value):
+        return get_object_or_404(Study, name=value)
+
+    def to_url(self, value):
+        return value
+
+
+register_converter(StudyConverter, "study")
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
@@ -55,7 +70,11 @@ urlpatterns = [
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
-    path("transfer/", include("ddionrails.transfer.urls")),
+    path(
+        "<study:study>/transfer/",
+        include("ddionrails.transfer.urls", namespace="transfer"),
+        name="transfer",
+    ),
     # Study by name
     path("<slug:study_name>/", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links

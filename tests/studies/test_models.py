@@ -16,7 +16,7 @@ TEST_CASE = unittest.TestCase()
 
 class TestStudyModel:
     def test_string_method(self, study):
-        expected = "/" + study.name
+        expected = study.name
         TEST_CASE.assertEqual(expected, str(study))
 
     def test_get_absolute_url_method(self, study):

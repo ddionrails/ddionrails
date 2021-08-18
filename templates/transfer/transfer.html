@@ -1,0 +1,76 @@
+{% extends "base_study.html" %}
+{% load render_bundle from webpack_loader %}
+
+
+{% block styles%}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<style>
+				#-second-frame {
+					display: none;
+				}
+			#container {
+				display: flex;
+				flex-direction: column;
+			}
+			iframe {
+				width: 99%
+			}
+			#main-container {
+				margin-top: 1em !important;
+			}
+			@media screen and (min-width:769px) {
+				#main-frame {
+					height: 50vh;
+				}
+				#second-frame {
+					height: 45vh;
+				}
+				
+			}
+			@media screen and (max-width:768px) {
+				#main-frame {
+					height: 100%;
+				}
+				#second-frame {
+					height: 100%;
+				}
+			}
+		</style>
+{% endblock styles %}
+
+{% block content %}
+
+{{ server_metadata|json_script:"transfer-server-metadata" }}
+<div id="container" class="flex-row justify-content-between">
+	<div>
+	<h2>Categorical</h2>
+	<ul>
+	{% for variable, label in categorical_variables.items %}
+	<li>
+		<a
+		href="{% url 'transfer:categorical' study.name%}?variable={{variable}}">
+		{{label}}: {{variable}}
+		</a>
+	
+	</li>
+
+	{% endfor %}
+	</ul>
+	</div>
+	<div>
+	<h2>Numerical</h2>
+	<ul>
+	{% for variable, label in numerical_variables.items %}
+	<li>
+		<a
+		href="{% url 'transfer:numerical' study.name%}?variable={{variable}}">
+		{{label}}: {{variable}}
+		</a>
+	
+	</li>
+	{% endfor %}
+	</ul>
+	</div>
+
+		{% endblock content %}

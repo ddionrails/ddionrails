@@ -20,7 +20,7 @@
     <body>
     {% block header %}
     {% endblock header %}
-    <nav id="paneldata-navbar" id="nav-container" class="navbar-expand-md">
+    <nav id="paneldata-navbar" id="nav-container" class="navbar-expand-xl">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
                 data-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,8 @@
                     <a type="button" class="btn" href="{% url 'search' %}">Search</a>
                 </li>
 
+            {% block study_header %}
+            {% endblock study_header %}
             </ul>
             <ul class="navbar-nav container-fluid justify-content-end">
                 {% if user.is_authenticated %}
