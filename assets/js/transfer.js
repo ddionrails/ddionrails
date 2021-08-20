@@ -1,3 +1,8 @@
+
+const FIRST_FRAME = document.getElementById("main-frame");
+const SECOND_FRAME = document.getElementById("second-frame");
+
+
 /**
  *  Resize given iframe so it does not display a scrollbar.
  *
@@ -9,16 +14,47 @@ function resizeIFrameToFitContent( iFrame ) {
 }
 
 /**
+ *
+ * @param {*} observedElement shiny range slider DOM element to observe
+ * @param {*} inputToUpdate shiny text input to update with slider element value
+ */
+function setYearRangeObserver(observedElement, inputToUpdate) {
+  const rangeEndPointObserver = new WebKitMutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
+      inputToUpdate.value = mutation.target.textContent;
+      inputToUpdate.dispatchEvent(new KeyboardEvent("keyup", {"key": 13}));
+    });
+  });
+  rangeEndPointObserver.observe(observedElement, {childList: true});
+}
+
+
+/**
  * Wait for a shiny app iframe to fully load its plot.
  *
  * Is used to resize iframe according to plot size.
  *
  * @param {*} iFrame An iframe DOM Element Object
+ * @param {*} init Flag to denote second frames initialization
  */
-async function waitForIFrameContent(iFrame) {
-  console.log("calling");
+async function waitForIFrameContent(iFrame, init=false) {
   while ( iFrame.contentDocument.getElementsByClassName("plot-container").length === 0) {
     await new Promise((r) => setTimeout(r, 100));
+  }
+  if (init) {
+    startYear = iFrame.contentDocument.getElementById("start_year");
+    endYear = iFrame.contentDocument.getElementById("end_year");
+
+    startYear.classList.add("hidden");
+    endYear.classList.add("hidden");
+
+    const firstFrameContent = FIRST_FRAME.contentDocument;
+
+    sliderStartYear = firstFrameContent.getElementsByClassName("irs-from")[0];
+    sliderEndYear = firstFrameContent.getElementsByClassName("irs-to")[0];
+
+    setYearRangeObserver(sliderStartYear, startYear.querySelector("input"));
+    setYearRangeObserver(sliderEndYear, endYear.querySelector("input"));
   }
   resizeIFrameToFitContent( iFrame );
 }
@@ -36,37 +72,36 @@ const serverMetadata = JSON.parse(
 window.addEventListener("load", function() {
   const addButton = document.getElementById("second-plot-button");
   const closeIcon = document.getElementById("close-icon");
-  const firstFrame = document.getElementById("main-frame");
 
   addButton.addEventListener("click", function() {
-    secondIframe = document.getElementById("second-frame");
-    if ( secondIframe.getAttribute("src") === "") {
-      fromYear = firstFrame.contentDocument.getElementsByClassName(
+    if ( SECOND_FRAME.getAttribute("src") === "") {
+      const firstFrameContent = FIRST_FRAME.contentDocument;
+      sliderStartYearText = firstFrameContent.getElementsByClassName(
         "irs-from")[0].textContent;
-      toYear = firstFrame.contentDocument.getElementsByClassName(
+      sliderEndYearText = firstFrameContent.getElementsByClassName(
         "irs-to")[0].textContent;
       frameURL = new URL(serverMetadata["url"]);
       frameURL.searchParams.append("variable", documentVariable);
       frameURL.searchParams.append("no-title", "TRUE");
-      frameURL.searchParams.append("from", fromYear);
-      frameURL.searchParams.append("to", toYear);
-      secondIframe.src = frameURL;
+      frameURL.searchParams.append("start-year", sliderStartYearText);
+      frameURL.searchParams.append("end-year", sliderEndYearText);
+      SECOND_FRAME.src = frameURL;
+
+      waitForIFrameContent(SECOND_FRAME, init=true);
     }
-    secondIframe.classList.remove("hidden");
+    SECOND_FRAME.classList.remove("hidden");
     closeIcon.classList.remove("hidden");
     addButton.classList.add("hidden");
-    waitForIFrameContent(secondIframe);
+    waitForIFrameContent(SECOND_FRAME);
   });
 
   closeIcon.addEventListener("click", function() {
     console.log("test");
-    secondIframe = document.getElementById("second-frame");
-    secondIframe.classList.add("hidden");
+    SECOND_FRAME.classList.add("hidden");
     closeIcon.classList.add("hidden");
     addButton.classList.remove("hidden");
   } );
 });
 
-const mainFrame = document.getElementById("main-frame");
 
-document.addEventListener("load", waitForIFrameContent(mainFrame));
+document.addEventListener("load", waitForIFrameContent(FIRST_FRAME));
