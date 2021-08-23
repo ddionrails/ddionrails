@@ -49,7 +49,7 @@
 	{% for variable, label in categorical_variables.items %}
 	<li>
 		<a
-		href="{% url 'transfer:categorical' study.name%}?variable={{variable}}">
+		href="{% url 'transfer:transfer_detail' study=study.name plot_type='categorical' %}?variable={{variable}}">
 		{{label}}: {{variable}}
 		</a>
 	
@@ -64,7 +64,7 @@
 	{% for variable, label in numerical_variables.items %}
 	<li>
 		<a
-		href="{% url 'transfer:numerical' study.name%}?variable={{variable}}">
+		href="{% url 'transfer:transfer_detail' study=study.name plot_type='numerical' %}?variable={{variable}}">
 		{{label}}: {{variable}}
 		</a>
 	

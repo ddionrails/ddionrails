@@ -1,49 +1,32 @@
 """Views for the transfer data visualization app."""
 from typing import Any, Dict
 
-import urllib3
 from django.conf import settings
-from django.db import models
+from django.http import HttpRequest
+from django.http.response import HttpResponse
+from django.shortcuts import render
 from django.views.generic import TemplateView
-from urllib3 import response
 
-# Create your views here.
-# -*- coding: utf-8 -*-
+from ddionrails.studies.models import Study
 
 
-class CategoricalView(TemplateView):
-    """Render categorical transfer server plots."""
-
-    template_name = "transfer/categorical.html"
-    study = models.SlugField()
-
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        transfer_server_url = f"{self.request.get_host()}{settings.TRANSFER_SERVER_URL}"
-        context = super().get_context_data(**kwargs)
-        context["server_metadata"] = {
-            "url": f"http://{transfer_server_url}categorical/",
-            "study": self.study.name,
-        }
-        return context
-
-
-class NumericalView(TemplateView):
-    """Render categorical transfer server plots."""
-
-    template_name = "transfer/numerical.html"
-    study = models.SlugField()
-
-    def get_context_data(self, **kwargs: Dict[str, Any]) -> Dict[str, Any]:
-        transfer_server_url = f"{self.request.get_host()}{settings.TRANSFER_SERVER_URL}"
-        context = super().get_context_data(**kwargs)
-        context["server_metadata"] = {
-            "url": f"http://{transfer_server_url}numerical/",
-            "study": self.study.name,
-        }
-        return context
+def transfer_detail_view(
+    request: HttpRequest, study: Study, plot_type: str
+) -> HttpResponse:
+    """Render numerical and categorical transfer views."""
+    transfer_server_url = f"{request.get_host()}{settings.TRANSFER_SERVER_URL}"
+    context: Dict[str, Any] = {}
+    context["transfer_server_url"] = f"http://{transfer_server_url}{plot_type}/"
+    context["study"] = study
+    context["server_metadata"] = {
+        "url": context["transfer_server_url"],
+        "study": study.name,
+    }
+    return render(request, "transfer/transfer_detail.html", context=context)
 
 
 class TransferView(TemplateView):
+    """Render overview for all numerical and categorical transfer views."""
 
     template_name = "transfer/transfer.html"
 
@@ -70,8 +53,12 @@ VARIABLES = {
         "plh0042": "Sorgen Arbeitsplatzsicherheit",
         "pli0092_h": "Aktiver Sport [harmonisiert]",
         "pli0095_h": "Mithelfen bei Freund., Verwandt. [harmonisiert]",
-        "pli0096_h": "Ehrenamtliche Taetigkeit in Vereinen, Verbaenden, ... [harmonisiert]",
-        "pli0097_h": "Beteilig. Parteien, Kommunalpolitik, Buergerinitiativen [harmonisiert]",
+        "pli0096_h": (
+            "Ehrenamtliche Taetigkeit in Vereinen, Verbaenden, ... [harmonisiert]"
+        ),
+        "pli0097_h": (
+            "Beteilig. Parteien, Kommunalpolitik, Buergerinitiativen [harmonisiert]"
+        ),
         "pli0098_h": "Kirchgang, Besuch religioeser Veranstaltungen [harmonisiert]",
         "plj0046": "Sorgen Zuwanderung",
         "plj0047": "Sorgen Auslaenderfeindlichkeit",

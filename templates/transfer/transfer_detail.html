@@ -1,0 +1,42 @@
+{% extends "base_study.html" %}
+{% load render_bundle from webpack_loader %}
+
+
+{% block styles%}
+{% render_bundle "transfer" "css" %}
+{% endblock styles %}
+
+{% block content %}
+
+{{ server_metadata|json_script:"transfer-server-metadata" }}
+<div id="container">
+		<iframe id="main-frame"
+			src="{{ transfer_server_url }}?variable={{request.GET.variable}}"
+			width="500" height="50%"
+			frameborder="0"></iframe>
+
+		<div id="second-frame-container">
+			<div id="close-icon-container">
+				<span class="clickable hidden" id="close-icon">
+					<i class="fa fa-times"></i>
+				</span>
+			</div>
+			<iframe class="hidden"
+				id="second-frame"
+				src=""
+				frameborder="0"></iframe>
+		</div>
+		<button
+			type="button"
+			class="btn btn-secondary"
+			id="second-plot-button"
+			title="Vergleichsplot anzeigen">
+			<i class="fas fa-plus"></i>
+			<i class="fas fa-chart-line"></i>
+		</button>
+
+</div>
+
+
+		{% render_bundle "transfer" "js" %}
+		{% endblock content %}
