@@ -10,7 +10,7 @@
     "name": "Marcel Hebing"
   },
   "dependencies": {
-    "@appbaseio/reactivesearch-vue": "1.21.0",
+    "@appbaseio/reactivesearch-vue": "1.21.1",
     "@fortawesome/fontawesome-free": "^5.15.3",
     "@vue/compiler-sfc": "^3.2.6",
     "bootstrap": "^4.6.0",
