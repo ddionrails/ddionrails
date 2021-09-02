@@ -10,38 +10,92 @@
 
 {{ server_metadata|json_script:"transfer-server-metadata" }}
 <div id="container">
+	<div class="d-flex flex-row">
+		<h2 id="plot-header">{{variable.label_de}}</h2>
+		<button
+			type="button"
+			class="btn btn-link"
+			data-toggle="modal"
+			data-target="#description-modal"
+			id="description-button"
+			title="Variablenbeschreibung Anzeigen">
+			<i class="fas fa-info-circle"></i>
+		</button>
+	</div>
 	<div class="d-flex justify-content-center" id="loading-spinner">
 		<div class="spinner-border" role="status">
 			<span class="sr-only">Loading...</span>
 		</div>
 	</div>
-		<iframe id="main-frame"
-			src="{{ transfer_server_url }}?variable={{request.GET.variable}}"
-			width="500" height="50%"
-			frameborder="0"></iframe>
+	<iframe id="main-frame"
+		src="{{ transfer_server_url }}?variable={{request.GET.variable}}&no-title=TRUE"
+		width="500" height="50%"
+		frameborder="0"></iframe>
 
-		<div id="second-frame-container">
-			<div id="close-icon-container">
-				<span class="clickable hidden" id="close-icon">
-					<i class="fa fa-times"></i>
-				</span>
-			</div>
-			<iframe class="hidden"
-				id="second-frame"
-				src=""
-				frameborder="0"></iframe>
+	<div id="second-frame-container">
+		<div id="close-icon-container">
+			<span class="clickable hidden" id="close-icon">
+				<i class="fa fa-times"></i>
+			</span>
 		</div>
-		<button
-			type="button"
-			class="btn btn-secondary"
-			id="second-plot-button"
-			title="Vergleichsplot anzeigen">
-			<i class="fas fa-plus"></i>
-			<i class="fas fa-chart-line"></i>
-		</button>
+		<iframe class="hidden"
+			id="second-frame"
+			src=""
+			frameborder="0"></iframe>
+	</div>
+	<button
+		type="button"
+		class="btn btn-secondary"
+		id="second-plot-button"
+		title="Vergleichsplot anzeigen">
+		<i class="fas fa-plus"></i>
+		<i class="fas fa-chart-line"></i>
+	</button>
 
 </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="description-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Beschreibung der Variable</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+					eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+					voluptua.
+					At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+					gubergren,
+					no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor
+					sit amet,
+					consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+					labore et
+					dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
+					justo duo
+					dolores et ea rebum. Stet clita kasd gubergren,
+					no sea takimata sanctus est Lorem ipsum dolor sit amet.
+				</p>
+				<p>
+					<a
+						href="https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Verbraucherpreisindex/Methoden/Erlaeuterungen/verbraucherpreisindex.html">More
+						Information</a>
+				</p>
+				<p>
+					<a href="{% url 'data:variable_detail'
+						study_name=variable.dataset.study.name dataset_name=variable.dataset.name
+						variable_name=variable.name %}">
+						Wissenschaftliche Dokumentation
+					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
 
-		{% render_bundle "transfer" "js" %}
-		{% endblock content %}
+
+{% render_bundle "transfer" "js" %}
+{% endblock content %}

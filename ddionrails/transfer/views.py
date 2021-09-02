@@ -7,6 +7,7 @@ from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
 
@@ -22,6 +23,11 @@ def transfer_detail_view(
         "url": context["transfer_server_url"],
         "study": study.name,
     }
+    context["variable"] = (
+        Variable.objects.filter(name=request.GET["variable"])
+        .prefetch_related("dataset")
+        .first()
+    )
     return render(request, "transfer/transfer_detail.html", context=context)
 
 

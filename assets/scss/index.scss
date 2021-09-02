@@ -81,6 +81,10 @@ a:visited {
   }
 }
 
+.nav-item-active {
+  font-weight: bold;
+}
+
 a.dropdown-item {
   color: rgba(0,0,0,0.7) !important;
 }
