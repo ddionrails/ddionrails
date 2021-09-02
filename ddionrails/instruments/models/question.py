@@ -244,7 +244,7 @@ class Question(ModelMixin, models.Model):
     # pylint: disable=fixme
     # TODO Refactor instruments.models.question.item array and associated
     # item_array method is used to create a data structure intended
-    # for display purposes. This function is overly complex and its the return
+    # for display purposes. This function is overly complex and its return
     # value still needs to be processed in the template.
     def item_array(self, language=None) -> List:
         """ Returns a list containing the items of this Question object """
