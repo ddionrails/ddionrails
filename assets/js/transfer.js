@@ -1,6 +1,7 @@
 
 const FIRST_FRAME = document.getElementById("main-frame");
 const SECOND_FRAME = document.getElementById("second-frame");
+let loadingSpinner = document.getElementById("loading-spinner");
 
 
 /**
@@ -57,6 +58,10 @@ async function waitForIFrameContent(iFrame, init=false) {
     setYearRangeObserver(sliderEndYear, endYear.querySelector("input"));
   }
   resizeIFrameToFitContent( iFrame );
+  if (loadingSpinner != null) {
+    loadingSpinner.remove();
+    loadingSpinner = null;
+  }
 }
 
 
@@ -103,5 +108,6 @@ window.addEventListener("load", function() {
   } );
 });
 
+document.getElementById("statistics-nav-item").classList.add("nav-item-active");
 
 document.addEventListener("load", waitForIFrameContent(FIRST_FRAME));
