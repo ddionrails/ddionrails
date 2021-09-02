@@ -135,6 +135,7 @@ class VariableImport(imports.CSVImport):
             concept = Concept.objects.get(name=concept_name)
             variable.concept = concept
         variable.description = element.get("description", "")
+        variable.description_de = element.get("description_de", "")
         variable.description_long = element.get("description_long", "")
         variable.image_url = element.get("image_url", "")
         if not variable.label:
