@@ -85,9 +85,7 @@
 						Information</a>
 				</p>
 				<p>
-					<a href="{% url 'data:variable_detail'
-						study_name=variable.dataset.study.name dataset_name=variable.dataset.name
-						variable_name=variable.name %}">
+					<a href="{% url 'data:variable_detail' study_name=variable.dataset.study.name dataset_name=variable.dataset.name variable_name=variable.name %}">
 						Wissenschaftliche Dokumentation
 					</a>
 				</p>
