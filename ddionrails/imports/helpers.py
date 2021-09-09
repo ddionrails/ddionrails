@@ -27,10 +27,8 @@ def read_csv(filename, path=None):
     return content
 
 
-def hash_with_base_uuid(name: str, cache: bool = True) -> Optional[uuid.UUID]:
+def hash_with_base_uuid(name: str, cache: bool = True) -> uuid.UUID:
     """ Compute the model instance's UUID from its name and the base UUID """
-    if not name:
-        return None
     if cache:
         return _hash_with_base_uuid(name)
     return uuid.uuid5(settings.BASE_UUID, name)
