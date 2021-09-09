@@ -1,0 +1,4 @@
+input_study,input_dataset,input_version,input_variable,output_study,output_dataset,output_version,output_variable
+some-study,some-dataset,v1,some-irrelevant-variable,some-study,some-dataset,v2,some-other-variable
+some-study,some-dataset,v2,some-other-variable,some-study,some-dataset,v2,some-variable
+some-study,some-dataset,v1,some-irrelevant-variable,some-study,some-dataset,v2,some-outdated-variable

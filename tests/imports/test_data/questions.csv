@@ -1,0 +1,3 @@
+study,instrument,item,name,template.id,text_de,instruction_de,text,instruction,scale,answer_list,range,concept,filter,goto,description
+test-study,some-questionnaire,14,vtest,4861,Testen Sie?,Denken Sie darüber nach,Do You test?,Think about this,cat,1+,,vtest,8:1=2,1@16,Some Description
+test-study,some-questionnaire,1,vsex,13786,(Geschlecht),,(Sex),,cat,869+,,vsex,,
