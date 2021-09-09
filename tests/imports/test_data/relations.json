@@ -1,0 +1,162 @@
+[
+    {
+        "file": "analysis_units.csv",
+        "fields": [
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "datasets.csv",
+                "fields": [
+                    "analysis_unit"
+                ]
+            },
+            {
+                "file": "instruments.csv",
+                "fields": [
+                    "analysis_unit"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "answers.csv",
+        "fields": [
+            "study",
+            "instrument",
+            "answer_list"
+        ],
+        "relations_from": [
+            {
+                "file": "questions.csv",
+                "fields": [
+                    "study",
+                    "instrument",
+                    "answer_list"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "concepts.csv",
+        "fields": [
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "questions.csv",
+                "fields": [
+                    "concept"
+                ]
+            },
+            {
+                "file": "variables.csv",
+                "fields": [
+                    "concept"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "conceptual_datasets.csv",
+        "fields": [
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "datasets.csv",
+                "fields": [
+                    "conceptual_dataset"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "datasets.csv",
+        "fields": [
+            "study",
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "variables.csv",
+                "fields": [
+                    "study",
+                    "dataset"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "periods.csv",
+        "fields": [
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "datasets.csv",
+                "fields": [
+                    "period"
+                ]
+            },
+            {
+                "file": "instruments.csv",
+                "fields": [
+                    "period"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "questions_images.csv",
+        "fields": [
+            "study",
+            "instrument",
+            "question"
+        ],
+        "relations_from": [
+            {
+                "file": "questions.csv",
+                "fields": [
+                    "study",
+                    "instrument",
+                    "name"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "topics.csv",
+        "fields": [
+            "study",
+            "name"
+        ],
+        "relations_from": [
+            {
+                "file": "concepts.csv",
+                "fields": [
+                    "study",
+                    "topic"
+                ]
+            }
+        ]
+    },
+    {
+        "file": "variables_images.csv",
+        "fields": [
+            "study",
+            "dataset",
+            "variable"
+        ],
+        "relations_from": [
+            {
+                "file": "variables.csv",
+                "fields": [
+                    "study",
+                    "dataset",
+                    "name"
+                ]
+            }
+        ]
+    }
+]

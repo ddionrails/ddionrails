@@ -58,7 +58,7 @@ def test_variable_search_document_fields(
     TEST_CASE.assertEqual(expected, result)
 
 
-@pytest.mark.usefixture("variable_index")
+@pytest.mark.usefixtures("variable_index")
 def test_variable_search_document_fields_missing_related_objects(variable):
     variable.dataset.analysis_unit = None
     variable.dataset.conceptual_dataset = None
@@ -76,7 +76,7 @@ def test_variable_search_document_fields_missing_related_objects(variable):
     TEST_CASE.assertEqual(expected, document.period)
 
 
-@pytest.mark.usefixture("variable_index")
+@pytest.mark.usefixtures("variable_index")
 def test_variable_search_document_fields_string_representing_missing(
     variable, conceptual_dataset, analysis_unit, period
 ):

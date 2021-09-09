@@ -1,0 +1,5 @@
+study,name,label,label_de,description,description_de,topic
+some-study,some-concept,some-label,some-german-label,some-description,some-german-description,some-child-topic
+some-study,orphaned-concept,,,,,
+test-study,vtest,,,,,
+test-study,vsex,,,,,

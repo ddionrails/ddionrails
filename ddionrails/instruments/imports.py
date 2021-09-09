@@ -270,3 +270,8 @@ def questions_images_import(file: Path, study: Study) -> None:
                 name=row["question"],
             )
             question_image_import(question=question, image_data=row)
+
+
+def question_import_direct(file: Path, study: Study) -> None:
+    """New question import."""
+    return None

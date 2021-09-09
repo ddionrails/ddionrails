@@ -1,0 +1,50 @@
+[
+    {
+        "language": "en",
+        "topics": [
+            {
+                "title": "some-label",
+                "key": "topic_some-topic",
+                "type": "topic",
+                "children": [
+                    {
+                        "title": "some-label",
+                        "key": "topic_some-child-topic",
+                        "type": "topic",
+                        "children": [
+                            {
+                                "title": "some-label",
+                                "key": "concept_some-concept",
+                                "type": "concept"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "language": "de",
+        "topics": [
+            {
+                "title": "some-german-label",
+                "key": "topic_some-topic",
+                "type": "topic",
+                "children": [
+                    {
+                        "title": "some-german-label",
+                        "key": "topic_some-child-topic",
+                        "type": "topic",
+                        "children": [
+                            {
+                                "title": "some-german-label",
+                                "key": "concept_some-concept",
+                                "type": "concept"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

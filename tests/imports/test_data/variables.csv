@@ -1,0 +1,4 @@
+study,dataset,name,concept,image_url
+some-study,some-dataset,some-variable,some-concept,https://variable-image.de
+some-study,some-dataset,some-other-variable,some-concept,https://variable-other-image.de
+some-study,some-dataset,some-third-variable,orphaned-concept,https://variable-other-image.de
