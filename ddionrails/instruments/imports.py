@@ -6,8 +6,9 @@ import json
 import logging
 from collections import OrderedDict
 from csv import DictReader
+from functools import lru_cache
 from pathlib import Path
-from typing import Dict, Optional, Set, Tuple
+from typing import Any, Dict, Generator, List, Optional, Set, Tuple
 
 from django.db.transaction import atomic
 
@@ -272,6 +273,49 @@ def questions_images_import(file: Path, study: Study) -> None:
             question_image_import(question=question, image_data=row)
 
 
+@atomic
 def question_import_direct(file: Path, study: Study) -> None:
     """New question import."""
-    return None
+    question_grouper = _group_question_items(study=study)
+    next(question_grouper)
+    with open(file) as csv_file:
+        csv_reader = DictReader(csv_file)
+        for line in csv_reader:
+            question_grouper.send(line)
+        question_grouper.send({})
+
+
+def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]:
+    question_block = list()
+    question = yield
+    question["study"] = study
+    question_block.append(question)
+
+    while question:
+        question["study"] = study
+        question = yield
+        if not question:
+            break
+        if (question["instrument"], question["name"]) != (
+            question_block[-1]["instrument"],
+            question_block[-1]["name"],
+        ):
+            _import_question_block(question_block)
+            question_block = list()
+        question_block.append(question)
+    _import_question_block(question_block)
+    yield
+
+
+def _import_question_block(block: List[Dict[str, str]]):
+    instrument = _get_instrument(name=block[0]["instrument"], study=block[0]["study"])
+
+    main_question, _ = Question.objects.get_or_create(
+        name=block[0]["name"], instrument=instrument
+    )
+    main_question.save()
+
+
+@lru_cache(maxsize=2)
+def _get_instrument(study: Study, name: str):
+    return Instrument.objects.get(name=name, study=study)

@@ -1,11 +1,11 @@
 {
   "study": "test-study",
-  "name": "some-questionnaire",
+  "name": "some-instrument",
   "label": "The english label",
   "period": 2018,
   "author": "SOEP Group",
   "label_de": "Das deutsche Label ÖÄÜß",
-  "instrument": "some-questionnaire",
+  "instrument": "some-instrument",
   "questions": {
     "vtest": {
       "question": "vtest",
@@ -41,7 +41,7 @@
         }
       ],
       "sn": 0,
-      "instrument": "some-questionnaire",
+      "instrument": "some-instrument",
       "study": "test-study"
     },
     "vsex": {
@@ -73,7 +73,7 @@
         }
       ],
       "sn": 1,
-      "instrument": "some-questionnaire",
+      "instrument": "some-instrument",
       "study": "test-study"
     }
   }
