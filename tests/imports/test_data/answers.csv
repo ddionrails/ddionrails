@@ -1,5 +1,5 @@
 study,instrument,answer_list,value,label_de,label
-test-study,some-questionnaire,1+,1,Ja,Yes
-test-study,some-questionnaire,1+,2,Nein,No
-test-study,some-questionnaire,869+,1,Männlich,Male
-test-study,some-questionnaire,869+,2,Weiblich,Female
+test-study,some-instrument,1+,1,Ja,Yes
+test-study,some-instrument,1+,2,Nein,No
+test-study,some-instrument,869+,1,Männlich,Male
+test-study,some-instrument,869+,2,Weiblich,Female

@@ -20,7 +20,7 @@ from django.conf import settings
 from django.core.management import call_command
 from elasticsearch.exceptions import RequestError
 
-from config.views import News
+from ddionrails.base.models import News
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.data.documents import VariableDocument
 from ddionrails.instruments.documents import QuestionDocument
@@ -170,8 +170,24 @@ def _variable_image_file(request) -> Generator[Callable, None, None]:
 
 
 @pytest.fixture
-def instrument(db):
+@pytest.mark.usefixtures("db")
+def instrument(
+    request: pytest.FixtureRequest
+) -> Generator[None, InstrumentFactory, InstrumentFactory]:
     """ An instrument in the database """
+
+    if hasattr(request, "instance"):
+        setattr(
+            request.instance,
+            "instrument",
+            InstrumentFactory(
+                name="some-instrument",
+                label="Some Instrument",
+                description="This is some instrument",
+            ),
+        )
+        yield
+
     return InstrumentFactory(
         name="some-instrument",
         label="Some Instrument",
@@ -502,8 +518,8 @@ class MockOpener:
         """Check if given path was opened at least once."""
         try:
             _file = self.files[Path(path)]
-        except KeyError:
-            raise ValueError("Path is not registered.")
+        except KeyError as error:
+            raise ValueError("Path is not registered.") from error
         else:
             return bool(_file["mocker"])
 

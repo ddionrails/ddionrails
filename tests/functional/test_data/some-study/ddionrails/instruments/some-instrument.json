@@ -1,6 +1,6 @@
 {
   "study_name": "some-study",
-  "questionnaire": "some-instrument",
+  "instrument": "some-instrument",
   "label": "Some Instrument",
   "period_name": "some-period",
   "analysis_unit_name": "some-analysis-unit",
