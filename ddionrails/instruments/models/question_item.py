@@ -1,10 +1,11 @@
 """Define distinct question sections in the form of question items."""
 import uuid
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Iterable, Optional, Tuple
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models.question import Question
 
 
@@ -25,7 +26,7 @@ class QuestionItem(models.Model):
         default=uuid.uuid4,
         editable=True,
         db_index=True,
-        help_text="UUID of the question. Dependent on the associated instrument.",
+        help_text="UUID of the QuestionItem. dependent on the associated Question.",
     )
     type = models.CharField(max_length=3, choices=ItemScale.choices)
     label = models.TextField(
@@ -55,8 +56,27 @@ class QuestionItem(models.Model):
         help_text="Position of the question item within one question.",
     )
 
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="question_items"
+    )
     answers: models.manager.Manager[Any]
+
+    def save(
+        self,
+        force_insert: bool = False,
+        force_update: bool = False,
+        using: Optional[str] = None,
+        update_fields: Optional[Iterable[str]] = None,
+    ) -> None:
+        self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
+            self.question.id, str(self.position)
+        )
+        return super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )
 
     def delete(
         self, using: Any = None, keep_parents: bool = False

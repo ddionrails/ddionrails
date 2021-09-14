@@ -23,6 +23,7 @@ from ddionrails.instruments.models import (
     QuestionImage,
     QuestionVariable,
 )
+from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.studies.models import Study
 
 logging.config.fileConfig("logging.conf")  # type: ignore
@@ -313,6 +314,12 @@ def _import_question_block(block: List[Dict[str, str]]):
     main_question, _ = Question.objects.get_or_create(
         name=block[0]["name"], instrument=instrument
     )
+    for position, question in enumerate(block):
+        question_item = QuestionItem.objects.create(
+            question=main_question, position=position
+        )
+        question_item.save()
+
     main_question.save()
 
 

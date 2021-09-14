@@ -4,10 +4,10 @@ test-study,some-instrument,0,1,Please enter according to address protocol.,Bitte
 test-study,some-instrument,0,hnr,Household number,Nr. des Haushalts:,,,,,hnr,int
 test-study,some-instrument,0,name,First name,Vorname der Auskunftsperson:,,Please print,Bitte in Druckbuchstaben,,name,chr
 test-study,some-instrument,0,pnr,Person number,Personen Nr.,,,,,pnr,int
-test-study,some-instrument,1,1,"Please state the first name, sex, and date of birth of the deceased person:","Bitte geben Sie den Vornamen, Geburtsdatum und Geschlecht der verstorbenen Person an:",,,,,,txt
-test-study,some-instrument,1,vname,First name of the deceased person,Vorname der verstorbenen Person:,,Please print,Bitte in Druckbuchstaben,,vname,chr
+test-study,some-instrument,1,1,"Please state the first name, sex, and date of birth:","Bitte geben Sie den Vornamen, Geburtsdatum und Geschlecht an:",,,,,,txt
+test-study,some-instrument,1,vname,First name:,Vorname:,,Please print,Bitte in Druckbuchstaben,,vname,chr
 test-study,some-instrument,1,vpnr,[de] Personen Nr.,Personen Nr.,,,,,vpnr,int
-test-study,some-instrument,1,2,[de] Geburtsdatum und Geschlecht der verstorbenen Person:,Geburtsdatum und Geschlecht der verstorbenen Person:,,,,,,txt
+test-study,some-instrument,1,2,[de] Geburtsdatum und Geschlecht:,Geburtsdatum und Geschlecht:,,,,,,txt
 test-study,some-instrument,1,vgebta,[de] Tag,Tag,,,,,vgebta,int
 test-study,some-instrument,1,vgebmo,[de] Monat,Monat,,,,,vgebmo,int
 test-study,some-instrument,1,vgebj,[de] Jahr,Jahr,,,,,vgebj,int
