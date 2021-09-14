@@ -17,6 +17,7 @@ from tests.instruments.factories import QuestionFactory
 pytestmark = [pytest.mark.instruments, pytest.mark.models]
 
 
+@pytest.mark.django_db
 def test_get_absolute_url_method(instrument, study):
     assert instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
 

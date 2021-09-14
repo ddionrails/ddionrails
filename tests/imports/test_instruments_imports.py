@@ -46,10 +46,23 @@ class QuestionImport(unittest.TestCase):
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
         )
         question_name = "1"
-        _, created = Question.objects.get_or_create(
+        question, created = Question.objects.get_or_create(
             name=question_name, instrument=self.instrument
         )
         self.assertFalse(created, msg=f"Question {question_name} was not created.")
+
+        expected_fields = {
+            "name": "1",
+            "label": "Please state the first name, sex, and date of birth:",
+            "label_de": "Bitte geben Sie den Vornamen, Geburtsdatum und Geschlecht an:",
+            "description": "",
+            "description_de": "",
+            "instruction": "",
+            "instruction_de": "",
+        }
+
+        for field, value in expected_fields.items():
+            self.assertEqual(value, getattr(question, field))
 
     def test_question_item_import(self) -> None:
         """Test import of first question, that holds the items together."""

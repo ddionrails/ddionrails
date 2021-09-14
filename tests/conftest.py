@@ -173,22 +173,16 @@ def _variable_image_file(request) -> Generator[Callable, None, None]:
 @pytest.mark.usefixtures("db")
 def instrument(
     request: pytest.FixtureRequest
-) -> Generator[None, InstrumentFactory, InstrumentFactory]:
+) -> Generator[InstrumentFactory, InstrumentFactory, None]:
     """ An instrument in the database """
 
-    if hasattr(request, "instance"):
-        setattr(
-            request.instance,
-            "instrument",
-            InstrumentFactory(
-                name="some-instrument",
-                label="Some Instrument",
-                description="This is some instrument",
-            ),
+    if request.instance:
+        request.instance.instrument = InstrumentFactory(
+            name="some-instrument",
+            label="Some Instrument",
+            description="This is some instrument",
         )
-        yield
-
-    return InstrumentFactory(
+    yield InstrumentFactory(
         name="some-instrument",
         label="Some Instrument",
         description="This is some instrument",
