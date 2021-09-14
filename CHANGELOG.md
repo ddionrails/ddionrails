@@ -11,6 +11,17 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.1.4] - 2021-09-14
+
+### Changed
+
+- Update dependencies
+- Refactor to comply with breaking changes of dependencies
+
+### Fixed
+
+- Handle description_de field in variable import
+
 ## [5.1.3] - 2021-07-19
 
 ### Changed
@@ -681,7 +692,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.4...develop
+[5.1.4]: https://github.com/ddionrails/ddionrails/compare/v5.1.3...v5.1.4
 [5.1.3]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...v5.1.3
 [5.1.2]: https://github.com/ddionrails/ddionrails/compare/v5.1.1...v5.1.2
 [5.1.1]: https://github.com/ddionrails/ddionrails/compare/v5.1.0...v5.1.1
