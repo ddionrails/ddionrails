@@ -63,6 +63,14 @@ class Question(ModelMixin, models.Model):
         verbose_name="Description (Markdown, German)",
         help_text="Description of the question (Markdown, German)",
     )
+    instruction = models.TextField(
+        blank=True, verbose_name="Instruction", help_text="Optional question instruction."
+    )
+    instruction_de = models.TextField(
+        blank=True,
+        verbose_name="Instruction German",
+        help_text="Optional german question instruction.",
+    )
     sort_id = models.IntegerField(
         blank=True,
         null=True,

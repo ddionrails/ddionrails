@@ -50,3 +50,16 @@ class QuestionImport(unittest.TestCase):
             name=question_name, instrument=self.instrument
         )
         self.assertFalse(created, msg=f"Question {question_name} was not created.")
+
+    def test_question_item_import(self) -> None:
+        """Test import of first question, that holds the items together."""
+
+        question_import_direct(
+            file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
+        )
+        question_name = "1"
+        question, _ = Question.objects.get_or_create(
+            name=question_name, instrument=self.instrument
+        )
+        number_of_question_items = len(list(question.question_items.all()))
+        self.assertEqual(8, number_of_question_items)
