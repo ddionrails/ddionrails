@@ -287,7 +287,7 @@ def question_import_direct(file: Path, study: Study) -> None:
 
 
 def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]:
-    question_block = list()
+    question_block = []
     question = yield
     question["study"] = study
     question_block.append(question)
@@ -310,14 +310,24 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
 
 def _import_question_block(block: List[Dict[str, str]]):
     instrument = _get_instrument(name=block[0]["instrument"], study=block[0]["study"])
+    fields = ["name", "description", "description_de", "instruction", "instruction_de"]
 
     main_question, _ = Question.objects.get_or_create(
         name=block[0]["name"], instrument=instrument
     )
+    for field in fields:
+        setattr(main_question, field, block[0][field])
+    main_question.label = block[0]["text"]
+    main_question.label_de = block[0]["text_de"]
     for position, question in enumerate(block):
         question_item = QuestionItem.objects.create(
             question=main_question, position=position
         )
+        for field in fields:
+            setattr(question_item, field, question[field])
+        question_item.label = question["text"]
+        question_item.label_de = question["text_de"]
+
         question_item.save()
 
     main_question.save()
