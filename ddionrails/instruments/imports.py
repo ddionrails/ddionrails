@@ -142,7 +142,7 @@ class ConceptQuestionImport(imports.CSVImport):
 
     def read_file(self):
         self.content = set()
-        with open(self.file_path(), "r") as questions_csv:
+        with open(self.file_path(), "r", encoding="utf8") as questions_csv:
             reader = DictReader(questions_csv)
             for row in reader:
                 _question = (
@@ -165,7 +165,7 @@ class ConceptQuestionImport(imports.CSVImport):
 
     @atomic
     def execute_import(self):
-        studies = dict()
+        studies = {}
         for concept_question_data in self.content:
             if concept_question_data[0] not in studies.keys():
                 try:
@@ -201,7 +201,7 @@ def question_image_import(question: Question, image_data: Dict[str, str]) -> Non
                     to the corresponding images.
     """
 
-    images = list()
+    images = []
 
     if "url" in image_data:
         images.append(
@@ -263,7 +263,7 @@ def questions_images_import(file: Path, study: Study) -> None:
     "Initiate imports of all question images"
     if not file.exists():
         return
-    with open(file, "r") as csv:
+    with open(file, "r", encoding="utf8") as csv:
         reader = DictReader(csv)
         for row in reader:
             question = Question.objects.get(
@@ -274,12 +274,11 @@ def questions_images_import(file: Path, study: Study) -> None:
             question_image_import(question=question, image_data=row)
 
 
-@atomic
 def question_import_direct(file: Path, study: Study) -> None:
     """New question import."""
     question_grouper = _group_question_items(study=study)
     next(question_grouper)
-    with open(file) as csv_file:
+    with open(file, encoding="utf8") as csv_file:
         csv_reader = DictReader(csv_file)
         for line in csv_reader:
             question_grouper.send(line)
@@ -302,7 +301,7 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
             question_block[-1]["name"],
         ):
             _import_question_block(question_block)
-            question_block = list()
+            question_block = []
         question_block.append(question)
     _import_question_block(question_block)
     yield
@@ -310,27 +309,52 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
 
 def _import_question_block(block: List[Dict[str, str]]):
     instrument = _get_instrument(name=block[0]["instrument"], study=block[0]["study"])
-    fields = ["name", "description", "description_de", "instruction", "instruction_de"]
+    fields = [
+        "label",
+        "label_de",
+        "description",
+        "description_de",
+        "instruction",
+        "instruction_de",
+    ]
+    item_specific_fields = ["input_filter", "goto", "scale", "name"]
 
     main_question, _ = Question.objects.get_or_create(
         name=block[0]["name"], instrument=instrument
     )
-    for field in fields:
-        setattr(main_question, field, block[0][field])
-    main_question.label = block[0]["text"]
-    main_question.label_de = block[0]["text_de"]
+    _import_main_question(main_question, fields, block[0])
+
+    fields.extend(item_specific_fields)
     for position, question in enumerate(block):
-        question_item = QuestionItem.objects.create(
-            question=main_question, position=position
-        )
+        question_item = QuestionItem()
+        question_item.question = main_question
+        question_item.position = position
         for field in fields:
-            setattr(question_item, field, question[field])
+            setattr(question_item, field, question[_field_mapper(field)])
         question_item.label = question["text"]
         question_item.label_de = question["text_de"]
 
         question_item.save()
 
     main_question.save()
+
+
+def _import_main_question(
+    question: Question, fields: List[str], metadata: Dict[str, str]
+) -> None:
+    for field in fields:
+        setattr(question, field, metadata[_field_mapper(field)])
+
+
+def _field_mapper(field: str) -> str:
+    """Maps differing field names from csv fields to model fields."""
+    fields = {
+        "label": "text",
+        "label_de": "text_de",
+        "input_filter": "filter",
+        "name": "item",
+    }
+    return fields.get(field, field)
 
 
 @lru_cache(maxsize=2)

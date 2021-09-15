@@ -74,5 +74,39 @@ class QuestionImport(unittest.TestCase):
         question, _ = Question.objects.get_or_create(
             name=question_name, instrument=self.instrument
         )
-        number_of_question_items = len(list(question.question_items.all()))
+        question_items = list(question.question_items.all().order_by("position"))
+        number_of_question_items = len(question_items)
         self.assertEqual(8, number_of_question_items)
+
+        expected_fields_first_item = {
+            "name": "1",
+            "label": "Please state the first name, sex, and date of birth:",
+            "label_de": "Bitte geben Sie den Vornamen, Geburtsdatum und Geschlecht an:",
+            "description": "",
+            "description_de": "",
+            "instruction": "",
+            "instruction_de": "",
+            "scale": "txt",
+            "input_filter": "test_filter",
+            "goto": "",
+            "position": 0,
+        }
+        expected_fields_last_item = {
+            "name": "vsex",
+            "label": "[de] (Geschlecht)",
+            "label_de": "(Geschlecht)",
+            "description": "",
+            "description_de": "",
+            "instruction": "",
+            "instruction_de": "",
+            "scale": "cat",
+            "input_filter": "",
+            "goto": "test_goto",
+            "position": 7,
+        }
+
+        for field, value in expected_fields_first_item.items():
+            self.assertEqual(value, getattr(question_items[0], field))
+
+        for field, value in expected_fields_last_item.items():
+            self.assertEqual(value, getattr(question_items[7], field))
