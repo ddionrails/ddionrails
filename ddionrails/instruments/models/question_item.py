@@ -28,7 +28,13 @@ class QuestionItem(models.Model):
         db_index=True,
         help_text="UUID of the QuestionItem. dependent on the associated Question.",
     )
-    type = models.CharField(max_length=3, choices=ItemScale.choices)
+    name = models.TextField(
+        null=False,
+        blank=False,
+        verbose_name="Item name",
+        help_text="Identifying name of the item.",
+    )
+    scale = models.CharField(max_length=3, choices=ItemScale.choices)
     label = models.TextField(
         blank=True,
         verbose_name="Label (English)",
@@ -49,13 +55,37 @@ class QuestionItem(models.Model):
         verbose_name="Description (Markdown, German)",
         help_text="Description of the question (Markdown, German)",
     )
-    position = models.IntegerField(
+    instruction = models.TextField(
         blank=True,
-        null=True,
+        verbose_name="Instruction",
+        help_text="Instruction given for this item.",
+    )
+    instruction_de = models.TextField(
+        blank=True,
+        verbose_name="Instruction",
+        help_text="Instruction given for this item. (German)",
+    )
+
+    position = models.IntegerField(
+        blank=False,
+        null=False,
         verbose_name="Item position",
         help_text="Position of the question item within one question.",
     )
-
+    input_filter = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Input Filter",
+        help_text=(
+            "Describes which question items lead to the inclusion of this question item."
+        ),
+    )
+    goto = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Goto (Output Filter)",
+        help_text="Describes which question item should follow this question item.",
+    )
     question = models.ForeignKey(
         Question, on_delete=models.CASCADE, related_name="question_items"
     )
