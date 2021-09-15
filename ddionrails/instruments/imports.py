@@ -288,27 +288,24 @@ def question_import_direct(file: Path, study: Study) -> None:
 def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]:
     question_block = []
     question = yield
-    question["study"] = study
     question_block.append(question)
 
     while question:
-        question["study"] = study
-        question = yield
-        if not question:
-            break
+        # Questions of a Block have the same name and the same instrument
         if (question["instrument"], question["name"]) != (
             question_block[-1]["instrument"],
             question_block[-1]["name"],
         ):
-            _import_question_block(question_block)
+            _import_question_block(question_block, study)
             question_block = []
         question_block.append(question)
-    _import_question_block(question_block)
+        question = yield
+    _import_question_block(question_block, study)
     yield
 
 
-def _import_question_block(block: List[Dict[str, str]]):
-    instrument = _get_instrument(name=block[0]["instrument"], study=block[0]["study"])
+def _import_question_block(block: List[Dict[str, str]], study: Study):
+    instrument = _get_instrument(name=block[0]["instrument"], study=study)
     fields = [
         "label",
         "label_de",
@@ -359,4 +356,9 @@ def _field_mapper(field: str) -> str:
 
 @lru_cache(maxsize=2)
 def _get_instrument(study: Study, name: str):
+    """Cache instrument retrieval.
+
+    The cache does not need to be large since questions with the same instrument
+    are grouped together in the source file.
+    """
     return Instrument.objects.get(name=name, study=study)
