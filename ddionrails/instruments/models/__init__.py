@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """ Model definitions for ddionrails.instruments app """
 
+from .answer import Answer
 from .concept_question import ConceptQuestion
 from .images import QuestionImage
 from .instrument import Instrument

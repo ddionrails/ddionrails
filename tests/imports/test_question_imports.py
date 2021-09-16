@@ -8,7 +8,7 @@ from typing import Generator
 import pytest
 
 from ddionrails.instruments.imports.question_import import question_import
-from ddionrails.instruments.models import Instrument, Question
+from ddionrails.instruments.models import Answer, Instrument, Question
 
 TEST_FILES = Path("./tests/imports/test_data/").absolute()
 
@@ -71,9 +71,7 @@ class QuestionImport(unittest.TestCase):
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
         )
         question_name = "1"
-        question, _ = Question.objects.get_or_create(
-            name=question_name, instrument=self.instrument
-        )
+        question = Question.objects.get(name=question_name, instrument=self.instrument)
         question_items = list(question.question_items.all().order_by("position"))
         number_of_question_items = len(question_items)
         self.assertEqual(8, number_of_question_items)
@@ -110,3 +108,19 @@ class QuestionImport(unittest.TestCase):
 
         for field, value in expected_fields_last_item.items():
             self.assertEqual(value, getattr(question_items[7], field))
+
+    def test_answer_import(self) -> None:
+        """ Test the import and linking of answers to question items. """
+        question_import(
+            file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
+        )
+        question_name = "1"
+        question = Question.objects.get(name=question_name, instrument=self.instrument)
+        question_items = list(question.question_items.all().order_by("position"))
+        first_cat_item = question_items[7]
+
+        self.assertEqual("cat", first_cat_item.scale)
+
+        first_answers: Answer = first_cat_item.answers.all().order_by("value")
+        self.assertEqual(1, first_answers[0].value)
+        self.assertEqual(2, first_answers[1].value)

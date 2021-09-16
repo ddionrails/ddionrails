@@ -6,25 +6,45 @@ import logging
 from csv import DictReader
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, Generator, List
+from typing import Any, Dict, Generator, List, Union
 
 from ddionrails.instruments.models import Instrument, Question
+from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.studies.models import Study
 
 logging.config.fileConfig("logging.conf")  # type: ignore
 logger = logging.getLogger(__name__)
 
+answers: Dict[str, List[Dict[str, Union[int, str]]]] = {}
+
 
 def question_import(file: Path, study: Study) -> None:
     """New question import."""
+    answers_path = file.parent.joinpath("answers.csv")
+    _read_answers(answers_path)
     question_grouper = _group_question_items(study=study)
     next(question_grouper)
-    with open(file, encoding="utf8") as csv_file:
+    with open(file, "r", encoding="utf8") as csv_file:
         csv_reader = DictReader(csv_file)
         for line in csv_reader:
             question_grouper.send(line)
         question_grouper.send({})
+
+
+def _read_answers(file: Path) -> None:
+    with open(file, "r", encoding="utf8") as csv_file:
+        csv_reader = DictReader(csv_file)
+        for line in csv_reader:
+            line["value"] = int(line["value"])
+            if line["answer_list"] in answers:
+                answers[line["answer_list"]].append(
+                    {key: line[key] for key in ["value", "label", "label_de"]}
+                )
+            else:
+                answers[line["answer_list"]] = [
+                    {key: line[key] for key in ["value", "label", "label_de"]}
+                ]
 
 
 def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]:
@@ -74,8 +94,18 @@ def _import_question_block(block: List[Dict[str, str]], study: Study):
         question_item.label_de = question["text_de"]
 
         question_item.save()
+        if question_item.scale == "cat":
+            _import_question_item_answers(question_item, question["answer_list"])
 
     main_question.save()
+
+
+def _import_question_item_answers(question_item, answer_list):
+    question_item_answers = answers[answer_list]
+    for answer in question_item_answers:
+        answer_object = _get_answer(answer["value"], answer["label"], answer["label_de"])
+        answer_object.question_items.add(question_item)
+        answer_object.save()
 
 
 def _import_main_question(
@@ -96,8 +126,14 @@ def _field_mapper(field: str) -> str:
     return fields.get(field, field)
 
 
+@lru_cache(maxsize=100)
+def _get_answer(value: int, label: str, label_de: str) -> Answer:
+    answer, _ = Answer.objects.get_or_create(value=value, label=label, label_de=label_de)
+    return answer
+
+
 @lru_cache(maxsize=2)
-def _get_instrument(study: Study, name: str):
+def _get_instrument(study: Study, name: str) -> Instrument:
     """Cache instrument retrieval.
 
     The cache does not need to be large since questions with the same instrument

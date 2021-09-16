@@ -1,5 +1,5 @@
 study,instrument,name,item,text,text_de,description,description_de,answer_list,instruction,instruction_de,filter,goto,concept,scale
-test-study,some-instrument,Intro,1,13786,Intro,,,Intro DE,(Sex),,,,,
+test-study,some-instrument,Intro,1,13786,Intro,,,Intro DE,(Sex),,,,,txt
 test-study,some-instrument,0,1,Please enter according to address protocol.,Bitte vor Übergabe unbedingt eintragen lt. Adressenprotokoll:,,,,,,,,,txt
 test-study,some-instrument,0,hnr,Household number,Nr. des Haushalts:,,,,,,,,hnr,int
 test-study,some-instrument,0,name,First name,Vorname der Auskunftsperson:,,,,Please print,Bitte in Druckbuchstaben,,,name,chr
@@ -12,3 +12,4 @@ test-study,some-instrument,1,vgebta,[de] Tag,Tag,,,,,,,,vgebta,int
 test-study,some-instrument,1,vgebmo,[de] Monat,Monat,,,,,,,,vgebmo,int
 test-study,some-instrument,1,vgebj,[de] Jahr,Jahr,,,,,,,,vgebj,int
 test-study,some-instrument,1,vsex,[de] (Geschlecht),(Geschlecht),,,869+,,,,test_goto,vsex,cat
+test-study,some-instrument,2,vtest,"Are you present?","Sind Sie andwesend?",,,1+,,,,test_goto,vtest,cat
