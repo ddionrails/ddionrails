@@ -97,15 +97,6 @@ class Question(ModelMixin, models.Model):
     )
 
     period = models.ForeignKey(
-        Period,
-        blank=True,
-        null=True,
-        related_name="questions",
-        on_delete=models.CASCADE,
-        help_text="Foreign key to concepts.Period",
-    )
-
-    period = models.ForeignKey(
         Period, blank=True, null=True, related_name="period", on_delete=models.SET_NULL
     )
 
@@ -203,9 +194,9 @@ class Question(ModelMixin, models.Model):
             result: OrderedDict = OrderedDict()
             for study in study_list:
                 result[study.name] = OrderedDict()
-                result[study.name]["no period"] = list()
+                result[study.name]["no period"] = []
                 for period in study.periods.order_by("name"):
-                    result[study.name][period.name] = list()
+                    result[study.name][period.name] = []
             for question in combined_set:
                 result[question.instrument.study.name][
                     getattr(
