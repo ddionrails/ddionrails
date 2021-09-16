@@ -85,7 +85,7 @@ class TestStudyImportManager:
             "description_de": "Eine Beschreibung",
             "parent": "some-other-topic",
         }
-        with open(import_path.joinpath("topics.csv"), "a") as topic_file:
+        with open(import_path.joinpath("topics.csv"), "a", encoding="utf8") as topic_file:
             writer = csv.DictWriter(topic_file, fieldnames=list(faulty_row.keys()))
             writer.writerow(faulty_row)
 
@@ -238,7 +238,7 @@ class TestStudyImportManager:
         """Do not create concept with empty, "", name."""
 
         variables_csv = Study().import_path().joinpath("variables.csv")
-        with open(variables_csv, "a") as file:
+        with open(variables_csv, "a", encoding="utf8") as file:
             file.write("some-study,some-dataset,a-variable,,")
 
         TEST_CASE.assertEqual(1, Variable.objects.count())
@@ -284,7 +284,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual("https://some-study.de", attachment.url)
         TEST_CASE.assertEqual("some-study", attachment.url_text)
 
-    @pytest.mark.usefixture("study")
+    @pytest.mark.usefixtures("study")
     def test_import_attachments_exception(self, study_import_manager):
         TEST_CASE.assertEqual(0, Attachment.objects.count())
         attachements_path = study_import_manager.study.import_path().joinpath(
@@ -301,7 +301,7 @@ class TestStudyImportManager:
             "url_text",
         )
         row = dict(type="dataset", dataset="Nonexistent-dataset")
-        with open(attachements_path, "w") as attacheements_file:
+        with open(attachements_path, "w", encoding="utf8") as attacheements_file:
             writer = csv.DictWriter(attacheements_file, fieldnames=header)
             writer.writeheader()
             writer.writerow(row)
@@ -329,7 +329,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(2018, hit.year)
         PublicationDocument.search().query("match_all").delete()
 
-    @pytest.mark.usefixtures(("elasticsearch_indices"))
+    @pytest.mark.usefixtures("elasticsearch_indices")
     def test_import_all(self, study):
 
         call_command("search_index", "--delete", force=True)
