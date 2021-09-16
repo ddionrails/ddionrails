@@ -7,7 +7,7 @@ from typing import Generator
 
 import pytest
 
-from ddionrails.instruments.imports import question_import_direct
+from ddionrails.instruments.imports.question_import import question_import
 from ddionrails.instruments.models import Instrument, Question
 
 TEST_FILES = Path("./tests/imports/test_data/").absolute()
@@ -42,7 +42,7 @@ class QuestionImport(unittest.TestCase):
     def test_main_question_import(self) -> None:
         """Test import of first question, that holds the items together."""
 
-        question_import_direct(
+        question_import(
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
         )
         question_name = "1"
@@ -67,7 +67,7 @@ class QuestionImport(unittest.TestCase):
     def test_question_item_import(self) -> None:
         """Test import of first question, that holds the items together."""
 
-        question_import_direct(
+        question_import(
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
         )
         question_name = "1"

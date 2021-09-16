@@ -33,10 +33,10 @@ from ddionrails.data.imports import (
     VariableImport,
 )
 from ddionrails.instruments.imports import (
-    ConceptQuestionImport,
-    InstrumentImport,
-    QuestionVariableImport,
-    questions_images_import,
+    concept_question_import,
+    instrument_import,
+    question_image_import,
+    question_variable_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
@@ -152,7 +152,7 @@ class StudyImportManager:
                     self.base_dir / "conceptual_datasets.csv",
                 ),
                 "instruments": (
-                    InstrumentImport,
+                    instrument_import.InstrumentImport,
                     Path(self.base_dir / "instruments/").glob("*.json"),
                 ),
                 "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
@@ -162,11 +162,11 @@ class StudyImportManager:
                 ),
                 "variables": (VariableImport, self.base_dir / "variables.csv"),
                 "questions_variables": (
-                    QuestionVariableImport,
+                    question_variable_import.QuestionVariableImport,
                     self.base_dir / "questions_variables.csv",
                 ),
                 "concepts_questions": (
-                    ConceptQuestionImport,
+                    concept_question_import.ConceptQuestionImport,
                     self.base_dir / "questions.csv",
                 ),
                 "transformations": (
@@ -177,7 +177,7 @@ class StudyImportManager:
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "questions_images": (
-                    questions_images_import,
+                    question_image_import.questions_images_import,
                     self.base_dir.joinpath("questions_images.csv"),
                 ),
             }
@@ -191,12 +191,12 @@ class StudyImportManager:
         if not concept_path.exists():
             return None
         variable_path = self.import_order["variables"][1]
-        with open(variable_path, "r") as variable_csv:
+        with open(variable_path, "r", encoding="utf8") as variable_csv:
             variable_concepts = {
                 row.get("concept", row.get("concept_name"))
                 for row in csv.DictReader(variable_csv)
             }
-        with open(concept_path, "r") as concepts_csv:
+        with open(concept_path, "r", encoding="utf8") as concepts_csv:
             _reader = csv.DictReader(concepts_csv)
             concept_csv_content = list(_reader)
             concept_fields = {field: "" for field in _reader.fieldnames}
@@ -204,7 +204,7 @@ class StudyImportManager:
         orphaned_concepts = variable_concepts.difference(concepts)
         if "" in orphaned_concepts:
             orphaned_concepts.remove("")
-        with open(concept_path, "w") as concepts_csv:
+        with open(concept_path, "w", encoding="utf8") as concepts_csv:
             writer = csv.DictWriter(concepts_csv, concept_fields.keys())
             writer.writeheader()
             for row in concept_csv_content:
