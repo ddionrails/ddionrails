@@ -1,3 +1,4 @@
-study,instrument,name,concept
-some-study,some-instrument,some-question,some-concept
-some-study,some-instrument,some-other-question,
+study,instrument,name,concept,item,text,text_de,description,description_de,answer_list,instruction,instruction_de,filter,goto,scale
+some-study,some-instrument,some-question,some-concept,,,,,,,,,,,,
+some-study,some-instrument,some-other-question,,,,,,,,,,,,,
+

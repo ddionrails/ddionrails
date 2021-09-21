@@ -16,7 +16,7 @@ from ddionrails.studies.models import Study
 logging.config.fileConfig("logging.conf")  # type: ignore
 logger = logging.getLogger(__name__)
 
-answers: Dict[str, List[Dict[str, Union[int, str]]]] = {}
+answers: Dict[str, List[Dict[str, Union[int, Union[str, int]]]]] = {}
 
 
 def question_import(file: Path, study: Study) -> None:
@@ -33,6 +33,8 @@ def question_import(file: Path, study: Study) -> None:
 
 
 def _read_answers(file: Path) -> None:
+    if not file.exists():
+        return
     with open(file, "r", encoding="utf8") as csv_file:
         csv_reader = DictReader(csv_file)
         for line in csv_reader:

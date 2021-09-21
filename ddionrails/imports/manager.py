@@ -36,6 +36,7 @@ from ddionrails.instruments.imports import (
     concept_question_import,
     instrument_import,
     question_image_import,
+    question_import,
     question_variable_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
@@ -154,6 +155,10 @@ class StudyImportManager:
                 "instruments": (
                     instrument_import.InstrumentImport,
                     Path(self.base_dir / "instruments/").glob("*.json"),
+                ),
+                "questions": (
+                    question_import.question_import,
+                    self.base_dir / "questions.csv",
                 ),
                 "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
                 "datasets.json": (
