@@ -356,7 +356,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(3, Variable.objects.count())
         TEST_CASE.assertEqual(1, Period.objects.count())
         TEST_CASE.assertEqual(1, Publication.objects.count())
-        TEST_CASE.assertEqual(1, Question.objects.count())
+        TEST_CASE.assertEqual(2, Question.objects.count())
         TEST_CASE.assertEqual(1, Transformation.objects.count())
         TEST_CASE.assertEqual(1, Instrument.objects.count())
         TEST_CASE.assertEqual(1, QuestionVariable.objects.count())
@@ -370,7 +370,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(2, len(concept_search))
         TEST_CASE.assertEqual(3, len(variable_search))
         TEST_CASE.assertEqual(1, len(publication_search))
-        TEST_CASE.assertEqual(1, len(question_search))
+        TEST_CASE.assertEqual(2, len(question_search))
 
         ConceptDocument.search().query("match_all").delete()
         VariableDocument.search().query("match_all").delete()
