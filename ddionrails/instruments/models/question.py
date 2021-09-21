@@ -8,7 +8,7 @@ import copy
 import textwrap
 import uuid
 from collections import OrderedDict
-from typing import Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -16,7 +16,7 @@ from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
 from django.urls import reverse
 
-from ddionrails.base.helpers.ddionrails_typing import QuestionItem
+from ddionrails.base.helpers.ddionrails_typing import QuestionItemType
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.imports.helpers import hash_with_namespace_uuid
@@ -84,6 +84,7 @@ class Question(ModelMixin, models.Model):
     items = JSONBField(
         default=list, null=True, blank=True, help_text="Items are elements in a question"
     )
+    question_items: models.manager.Manager[Any]
 
     #############
     # relations #
@@ -221,7 +222,7 @@ class Question(ModelMixin, models.Model):
         return [key.replace("text_", "") for key in keys_first_item if "text_" in key]
 
     @staticmethod
-    def overwrite_item_values_by_language(item: QuestionItem, language: str) -> None:
+    def overwrite_item_values_by_language(item: QuestionItemType, language: str) -> None:
         """Switch values with their counterparts in the specified language."""
         item["text"] = item.get(f"text_{language}", item.get("text", ""))
         item["instruction"] = item.get(
@@ -229,63 +230,6 @@ class Question(ModelMixin, models.Model):
         )
         for answer in item.get("answers", []):
             answer["label"] = answer.get(f"label_{language}", answer.get("label", ""))
-
-    def translations(self) -> Dict[str, List]:
-        """ Returns a dictionary containing translations
-            of the Question's items for each translation language
-        """
-        results = {}
-        # pylint: disable=fixme
-        # TODO: instruments.models.question.translations add missing exception Type
-        try:
-            for language in self.translation_languages():
-                results[language] = self.item_array(language=language)
-        except:
-            return {}
-        return results
-
-    # pylint: disable=fixme
-    # TODO Refactor instruments.models.question.item array and associated
-    # item_array method is used to create a data structure intended
-    # for display purposes. This function is overly complex and its return
-    # value still needs to be processed in the template.
-    def item_array(self, language=None) -> List:
-        """ Returns a list containing the items of this Question object """
-        items_file = Union[List[QuestionItem], Dict[str, QuestionItem]]
-        items_file_content: items_file = copy.deepcopy(self.items)
-        items: List[QuestionItem]
-
-        if isinstance(items_file_content, dict):
-            items = list(items_file_content.values())
-        else:
-            items = items_file_content
-        for item in items:
-            if language:
-                self.overwrite_item_values_by_language(item, language)
-            if "item" not in item:
-                item["item"] = "root"
-            if "sn" not in item:
-                item["sn"] = 0
-        items = sorted(items, key=lambda x: int(x["sn"]))
-        before = None
-        for index, item in enumerate(items):
-
-            current = item.get("answer_list", None)
-            try:
-                after = items[index + 1].get("answer_list")
-            except IndexError:
-                after = None
-            if current and current == before:
-                if current == after:
-                    item["layout"] = "matrix_element"
-                else:
-                    item["layout"] = "matrix_footer"
-            elif current and current == after:
-                item["layout"] = "matrix_header"
-            else:
-                item["layout"] = "individual"
-            before = current
-        return items
 
     def to_topic_dict(self, language: str = "en") -> Dict:
         """ Returns a topic dictionary representation of the Question object """

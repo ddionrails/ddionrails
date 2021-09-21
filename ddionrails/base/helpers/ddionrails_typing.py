@@ -10,7 +10,7 @@ class QuestionAnswer(TypedDict):
     value: int
 
 
-class QuestionItem(TypedDict):
+class QuestionItemType(TypedDict, total=False):
     """Define structure of a question item Dict.
 
     Inside the database, a question has a field with question items.
