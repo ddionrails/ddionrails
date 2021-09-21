@@ -1,12 +1,37 @@
 """Define distinct question sections in the form of question items."""
 import uuid
-from typing import Any, Dict, Iterable, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple, TypedDict
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models.question import Question
+
+
+class AnswerDict(TypedDict):
+    """Typing for Answer dict representation"""
+
+    value: int
+    label: str
+    label_de: str
+
+
+class QuestionItemDict(TypedDict, total=False):
+    """Typing for QuestionItem dict representation"""
+
+    name: str
+    scale: str
+    label: str
+    label_de: str
+    description: str
+    description_de: str
+    insruction: str
+    instruction_de: str
+    position: int
+    input_filter: str
+    goto: str
+    answers: List[AnswerDict]
 
 
 class QuestionItem(models.Model):
@@ -107,6 +132,30 @@ class QuestionItem(models.Model):
             using=using,
             update_fields=update_fields,
         )
+
+    def to_dict(self) -> QuestionItemDict:
+        """Map fields and values to dictionary key value pairs."""
+        self_dict = QuestionItemDict(
+            name=self.name,
+            scale=self.scale,
+            label=self.label,
+            label_de=self.label_de,
+            description=self.description,
+            description_de=self.description_de,
+            insruction=self.instruction,
+            instruction_de=self.instruction_de,
+            position=self.position,
+            input_filter=self.input_filter,
+            goto=self.goto,
+        )
+        if self.scale == "cat":
+            self_dict["answers"] = [
+                AnswerDict(
+                    value=answer.value, label=answer.label, label_de=answer.label_de
+                )
+                for answer in self.answers.all().order_by("value")
+            ]
+        return self_dict
 
     def delete(
         self, using: Any = None, keep_parents: bool = False

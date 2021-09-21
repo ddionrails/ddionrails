@@ -4,7 +4,7 @@
 
 import difflib
 import uuid
-from typing import TypedDict
+from typing import Dict, List, TypedDict
 
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
@@ -15,15 +15,21 @@ from django.views.generic.base import RedirectView
 
 from config.helpers import RowHelper
 from ddionrails.data.models import Variable
+from ddionrails.instruments.models import (
+    Instrument,
+    Question,
+    QuestionImage,
+    QuestionItem,
+)
+from ddionrails.instruments.models.question_item import QuestionItemDict
 from ddionrails.studies.models import Study
-
-from .models import Instrument, Question, QuestionImage
 
 
 # request is a required parameter
 def study_instrument_list(
     request: WSGIRequest, study_name: str  # pylint: disable=unused-argument
-):
+) -> HttpResponse:
+    """Render instruments of a study from template. """
     study = get_object_or_404(Study, name=study_name)
     context = dict(
         study=study, instrument_list=Instrument.objects.filter(study__name=study_name)
@@ -85,16 +91,14 @@ def question_detail(
         .filter(instrument__name=instrument_name)
         .get(name=question_name)
     )
+    question_items = _question_item_metadata(question)
 
     concept_list = question.get_concepts()
-    try:
-        related_questions = Question.objects.filter(
-            items__items_variables__variable__concept_id__in=[
-                concept.id for concept in concept_list
-            ]
-        ).distinct()
-    except:
-        related_questions = []
+    related_questions = Question.objects.filter(
+        items__items_variables__variable__concept_id__in=[
+            concept.id for concept in concept_list
+        ]
+    ).distinct()
     context = dict(
         question=question,
         study=question.instrument.study,
@@ -108,17 +112,20 @@ def question_detail(
             question.instrument.study.name
         ],
         row_helper=RowHelper(),
+        question_items=question_items,
     )
     # TODO: Language setup is not centralized. There is no global switch.
     # This would have to be overhauled if the a global switch is implemented.
     images = QuestionImage.objects.filter(question_id=question.id).all()
 
-    class ImageContextMapping(TypedDict):
+    class ImageContextMapping(TypedDict, total=False):
+        """Typing for image metadata"""
+
         image_label: str  # One label for both languages
         en: str  # URL of english image
         de: str  # URL of german image
 
-    image_context: ImageContextMapping = dict()
+    image_context: ImageContextMapping = ImageContextMapping()
     for _image in images:
         image_context[_image.language] = settings.MEDIA_URL + str(_image.image.file)
         # English label will be default label without global switch.
@@ -133,6 +140,8 @@ def question_detail(
 
 
 # request is a required parameter
+# TODO: This is not integrated into rest of the system in a way that is usabel.
+# TODO: Throw it away?
 def question_comparison_partial(
     request: WSGIRequest,  # pylint: disable=unused-argument
     from_id: uuid.UUID,
@@ -147,3 +156,48 @@ def question_comparison_partial(
         todesc=to_question.name,
     )
     return HttpResponse(diff_text)
+
+
+def _question_item_metadata(question: Question):
+    question_items = list(
+        question.question_items.all().order_by("position").prefetch_related("answers")
+    )
+    block_counter = 0
+    blocks = {block_counter: [question_items.pop(0)]}
+    for item in question_items:
+        if _blocks_equal(item, blocks[block_counter][-1]):
+            blocks[block_counter].append(item)
+            continue
+        block_counter += 1
+        blocks[block_counter] = [item]
+
+    return _serialize_blocks(blocks)
+
+
+def _serialize_blocks(
+    blocks: Dict[int, List[QuestionItem]]
+) -> List[List[QuestionItemDict]]:
+
+    serialized: List[List[QuestionItemDict]]
+    serialized = [[] for position in range(0, len(blocks))]
+    for position, block in blocks.items():
+        for item in block:
+            serialized[position].append(item.to_dict())
+
+    return serialized
+
+
+def _blocks_equal(item: QuestionItem, block_item: QuestionItem) -> bool:
+    if item.scale == block_item.scale == "cat":
+        if _answers_equal(item, block_item):
+            return True
+        return False
+    if item.scale in ["chr", "int", "bin"] and item.scale == block_item.scale:
+        return True
+    return False
+
+
+def _answers_equal(item: QuestionItem, other_item: QuestionItem) -> bool:
+    return list(item.answers.all().order_by("value")) == list(
+        other_item.answers.all().order_by("value")
+    )
