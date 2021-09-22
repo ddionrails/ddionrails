@@ -33,7 +33,7 @@ iframe {
   height: 13vw;
   background-color: #9e1310;
   line-height: 50%;
-  font-size: 10vw;
+  font-size: 1em;
 }
 
 .btn-info:hover {
@@ -47,4 +47,13 @@ iframe {
 div#transfer-button-container {
   flex-wrap: wrap;
   width: 80vw;
+}
+
+i {
+  font-size: 9vw;
+  margin-bottom: 0.7vw;
+  margin-top: 0.3vw;
+}
+button > p {
+  line-height: 100%;
 }

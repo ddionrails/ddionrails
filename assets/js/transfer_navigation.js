@@ -24,7 +24,7 @@ function toggleNavigationButtons(event) {
 
 window.addEventListener("load", function() {
   const buttonContainer = document.getElementById("transfer-button-container");
-  const buttons = Array.from(buttonContainer.children);
+  const buttons = buttonContainer.querySelectorAll("button");
   buttons.forEach((button) => {
     button.addEventListener("click", toggleNavigationButtons);
   });
