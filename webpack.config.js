@@ -25,6 +25,11 @@ module.exports = {
       "./assets/js/search_feedback.ts",
     ],
     transfer: ["./assets/js/transfer.js", "./assets/scss/transfer.scss"],
+    transfer_navigation: [
+      "./assets/js/transfer_navigation.js",
+      "./assets/scss/transfer_navigation.scss",
+    ],
+    variables: ["./assets/js/variables.js"],
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
     question_comparison: [
       "./assets/js/question_comparison.js",

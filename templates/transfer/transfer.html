@@ -5,58 +5,7 @@
 {% block styles%}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<style>
-	#-second-frame {
-		display: none;
-	}
-	#container {
-		display: flex;
-		flex-direction: column;
-	}
-	iframe {
-		width: 99%
-	}
-	#main-container {
-		margin-top: 1em !important;
-	}
-	@media screen and (min-width:769px) {
-		#main-frame {
-			height: 50vh;
-		}
-		#second-frame {
-			height: 45vh;
-		}
-		
-	}
-	@media screen and (max-width:768px) {
-		#main-frame {
-			height: 100%;
-		}
-		#second-frame {
-			height: 100%;
-		}
-	}
-	.transfer-button{
-		margin: 0 1vw 1vw 0;
-		width: 13vw;
-		height: 13vw;
-		background-color: #9e1310;
-		line-height: 50%;
-		font-size: 10vw;
-	}
-
-
-	.btn-info:hover {
-		background-color: #adb5bd; //#9e1310
-	}
-
-	div#main-container {
-		flex-wrap: wrap;
-		width: 80vw
-	}
-
-
-</style>
+{% render_bundle "transfer_navigation" "css" %}
 {% endblock styles %}
 
 {% block content %}
@@ -95,52 +44,55 @@
 </div>
 
         <div class="flex-row d-flex px-5 justify-content-center"
-            id="main-container">
-
-            <!-- Nobody should use IE anymore -->
+            id="transfer-button-container">
 
 
-            <button class="btn btn-info transfer-button" title="Attitudes, Values, and
-                Personality">
-		<i class="far fa-compass"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Demography and
-                Population">
-		<i class="fas fa-chart-area"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Education and
-                Qualification">
-		<i class="fas fa-user-graduate"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Family and Social
-                Networks">
-		<i class="fas fa-baby-carriage"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Health and Care">
-	    	<i class="far fa-hand-holding-medical"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Home, Amenities, and
-                Contributions of Private Households">
-		<i class="fas fa-home"></i>
-            </button>
-            <a href="http://localhost:3838/numerical/?variable=pglabgro">
-                <button class="btn btn-info transfer-button" title="Income, Taxes, and
-                    Social Security">
-		    <i class="fas fa-coins"></i>
-                </button>
-            </a>
-            <button class="btn btn-info transfer-button" title="Integration, Migration,
-                Transnationalization">
-		<i class="fas fa-globe"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Time Use and
-                Environmental Behavior">
-		<i class="far fa-clock"></i>
-            </button>
-            <button class="btn btn-info transfer-button" title="Work and Employment">
-	    	<i class="fas fa-tools"></i>
-            </button>
+		<button class="btn btn-info transfer-button" title="Attitudes, Values, and
+			Personality">
+			<i class="far fa-compass"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Demography and
+			Population">
+			<i class="fas fa-chart-area"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Education and
+			Qualification">
+			<i class="fas fa-user-graduate"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Family and Social
+			Networks">
+			<i class="fas fa-baby-carriage"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Health and Care">
+			<i class="far fa-hand-holding-medical"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Home, Amenities, and
+			Contributions of Private Households">
+			<i class="fas fa-home"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Income, Taxes, and
+			Social Security">
+			<i class="fas fa-coins"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Integration, Migration,
+			Transnationalization">
+			<i class="fas fa-globe"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Time Use and
+			Environmental Behavior">
+			<i class="far fa-clock"></i>
+		</button>
+		<button class="btn btn-info transfer-button" title="Work and Employment">
+			<i class="fas fa-tools"></i>
+		</button>
+		<div id="sub-topics">
+			<h3></h3>
+			<ul>
+			<li>Lorem</li>
+			<li>Ipsum</li>
+			</ul>
+		</div>
         </div>
 
-		{% render_bundle "transfer" "js" %}
+		{% render_bundle "transfer_navigation" "js" %}
 		{% endblock content %}

@@ -1,0 +1,50 @@
+#-second-frame {
+  display: none;
+}
+#container {
+  display: flex;
+  flex-direction: column;
+}
+iframe {
+  width: 99%;
+}
+#transfer-button-container {
+  margin-top: 1em !important;
+}
+@media screen and (min-width: 769px) {
+  #main-frame {
+    height: 50vh;
+  }
+  #second-frame {
+    height: 45vh;
+  }
+}
+@media screen and (max-width: 768px) {
+  #main-frame {
+    height: 100%;
+  }
+  #second-frame {
+    height: 100%;
+  }
+}
+.transfer-button {
+  margin: 0 1vw 1vw 0;
+  width: 13vw;
+  height: 13vw;
+  background-color: #9e1310;
+  line-height: 50%;
+  font-size: 10vw;
+}
+
+.btn-info:hover {
+  background-color: #adb5bd; //#9e1310
+}
+
+#sub-topics {
+  width: auto;
+}
+
+div#transfer-button-container {
+  flex-wrap: wrap;
+  width: 80vw;
+}
