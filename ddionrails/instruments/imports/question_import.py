@@ -96,14 +96,21 @@ def _read_answers(file: Path) -> Dict[str, List[QuestionAnswer]]:
     with open(file, "r", encoding="utf8") as csv_file:
         csv_reader = DictReader(csv_file)
         for line in csv_reader:
-            line["value"] = int(line["value"])
             if line["answer_list"] in answers:
                 answers[line["answer_list"]].append(
-                    {key: line[key] for key in ["value", "label", "label_de"]}
+                    {
+                        "value": int(line["value"]),
+                        "label": line["label"],
+                        "label_de": line["label_de"],
+                    }
                 )
             else:
                 answers[line["answer_list"]] = [
-                    {key: line[key] for key in ["value", "label", "label_de"]}
+                    {
+                        "value": int(line["value"]),
+                        "label": line["label"],
+                        "label_de": line["label_de"],
+                    }
                 ]
     return answers
 
