@@ -116,6 +116,10 @@ class QuestionItem(models.Model):
     )
     answers: models.manager.Manager[Any]
 
+    def generate_id(self, cache=False):
+        """Generate UUID used in the objects save method."""
+        return hash_with_namespace_uuid(self.question_id, str(self.position), cache=cache)
+
     def save(
         self,
         force_insert: bool = False,
@@ -123,9 +127,7 @@ class QuestionItem(models.Model):
         using: Optional[str] = None,
         update_fields: Optional[Iterable[str]] = None,
     ) -> None:
-        self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
-            self.question.id, str(self.position)
-        )
+        self.id = self.generate_id()  # pylint: disable=invalid-name
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
