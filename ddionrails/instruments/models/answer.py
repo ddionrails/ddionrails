@@ -16,6 +16,10 @@ class Answer(models.Model):
     label_de = models.TextField()
     question_items = models.ManyToManyField(QuestionItem, related_name="answers")
 
+    def generate_id(self):
+        """Generate UUID used in the objects save method."""
+        return hash_with_base_uuid(f"{self.value}{self.label}{self.label_de}", cache=True)
+
     def save(
         self,
         force_insert: bool = False,
@@ -23,9 +27,7 @@ class Answer(models.Model):
         using: Optional[str] = None,
         update_fields: Optional[Iterable[str]] = None,
     ) -> None:
-        self.id = hash_with_base_uuid(  # pylint: disable=invalid-name
-            f"{self.value}{self.label}{self.label_de}", cache=True
-        )
+        self.id = self.generate_id()  # pylint: disable=invalid-name
         return super().save(
             force_insert=force_insert,
             force_update=force_update,

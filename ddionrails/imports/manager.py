@@ -160,6 +160,7 @@ class StudyImportManager:
                     question_import.question_import,
                     self.base_dir / "questions.csv",
                 ),
+                "answers": (question_import.answer_import, self.base_dir / "answers.csv"),
                 "datasets.csv": (DatasetImport, self.base_dir / "datasets.csv"),
                 "datasets.json": (
                     DatasetJsonImport,

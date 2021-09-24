@@ -7,7 +7,7 @@ from typing import Generator
 
 import pytest
 
-from ddionrails.instruments.imports.question_import import question_import
+from ddionrails.instruments.imports.question_import import answer_import, question_import
 from ddionrails.instruments.models import Answer, Instrument, Question
 
 TEST_FILES = Path("./tests/imports/test_data/").absolute()
@@ -113,6 +113,9 @@ class QuestionImport(unittest.TestCase):
         """ Test the import and linking of answers to question items. """
         question_import(
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
+        )
+        answer_import(
+            file=self.data_dir.joinpath("answers.csv"), study=self.instrument.study
         )
         question_name = "1"
         question = Question.objects.get(name=question_name, instrument=self.instrument)

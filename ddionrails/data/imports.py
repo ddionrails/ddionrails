@@ -146,6 +146,8 @@ class VariableImport(imports.CSVImport):
 
 
 class TransformationImport(imports.CSVImport):
+    """Import Object relations from the transformations.csv file. """
+
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
 
@@ -162,7 +164,7 @@ class TransformationImport(imports.CSVImport):
     def _get_origin_and_target(
         cls, metadata: Dict[str, str]
     ) -> Tuple[Variable, Variable]:
-        origin, target = (dict(), dict())
+        origin, target = ({}, {})
         origin["study"] = metadata.get("origin_study", metadata.get("origin_study_name"))
 
         origin["dataset"] = metadata.get(
@@ -189,6 +191,7 @@ class TransformationImport(imports.CSVImport):
         return (origin_variable, target_variable)
 
     @staticmethod
+    @lru_cache(maxsize=100)
     def _get_variable(study, dataset, name, _type):
         try:
             _variable = (
@@ -203,6 +206,7 @@ class TransformationImport(imports.CSVImport):
         return _variable
 
 
+# TODO: Implementation of the import could be function based.
 class VariableImageImport:
     """Store images that can be linked to existing variables."""
 
@@ -210,7 +214,7 @@ class VariableImageImport:
 
     def __init__(self, file_path: Union[str, Path]):
         try:
-            with open(file_path, "r") as csv_images:
+            with open(file_path, "r", encoding="utf8") as csv_images:
                 self.variables_images = list(DictReader(csv_images))
         except FileNotFoundError:
             self.variables_images = None

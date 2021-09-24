@@ -101,6 +101,10 @@ class Question(ModelMixin, models.Model):
         Period, blank=True, null=True, related_name="period", on_delete=models.SET_NULL
     )
 
+    def generate_id(self, cache=False):
+        """Generate UUID used in the objects save method."""
+        return hash_with_namespace_uuid(self.instrument_id, self.name, cache=cache)
+
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
@@ -108,9 +112,7 @@ class Question(ModelMixin, models.Model):
         if not self.period:
             self.period = self.instrument.period
 
-        self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
-            self.instrument_id, self.name, cache=False
-        )
+        self.id = self.generate_id()  # pylint: disable=invalid-name
         super().save(
             force_insert=force_insert,
             force_update=force_update,
