@@ -94,21 +94,15 @@ def question_detail(
     question_items = _question_item_metadata(question)
 
     concept_list = question.get_concepts()
-    related_questions = Question.objects.filter(
-        items__items_variables__variable__concept_id__in=[
-            concept.id for concept in concept_list
-        ]
-    ).distinct()
     context = dict(
         question=question,
         study=question.instrument.study,
         concept_list=concept_list,
-        related_questions=related_questions,
         variables=Variable.objects.filter(
             questions_variables__question=question.id
         ).select_related("dataset", "dataset__study"),
         base_url=f"{request.scheme}://{request.get_host()}",
-        related_questions2=question.get_related_question_set(by_study_and_period=True)[
+        related_questions=question.get_related_question_set(by_study_and_period=True)[
             question.instrument.study.name
         ],
         row_helper=RowHelper(),
@@ -141,7 +135,6 @@ def question_detail(
 
 # request is a required parameter
 # TODO: This is not integrated into rest of the system in a way that is usabel.
-# TODO: Throw it away?
 def question_comparison_partial(
     request: WSGIRequest,  # pylint: disable=unused-argument
     from_id: uuid.UUID,
