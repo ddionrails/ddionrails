@@ -209,7 +209,7 @@ GIT_PROTOCOL = "https"
 SHELL_PLUS_PRE_IMPORTS = (("ddionrails.imports.manager", "*"),)
 
 SERVER_EMAIL = "admin@paneldata.org"
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", default="webmaster@paneldata.org")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", default="paneldata.org@diw.de")
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
