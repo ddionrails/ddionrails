@@ -21,6 +21,13 @@
 			title="Variablenbeschreibung Anzeigen">
 			<i class="fas fa-info-circle"></i>
 		</button>
+		<button
+			type="button"
+			class="btn btn-link hidden"
+			data-toggle="modal"
+			data-target="#ci-modal"
+			id="ci-button">
+		</button>
 	</div>
 	<div class="d-flex justify-content-center" id="loading-spinner">
 		<div class="spinner-border" role="status">
@@ -88,6 +95,37 @@
 					<a href="{% url 'data:variable_detail' study_name=variable.dataset.study.name dataset_name=variable.dataset.name variable_name=variable.name %}">
 						Wissenschaftliche Dokumentation
 					</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="ci-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Was bedeutet das Konfidenzintervall?</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>
+					Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+					eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+					voluptua.
+					At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
+					gubergren,
+					no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor
+					sit amet,
+					consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
+					labore et
+					dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et
+					justo duo
+					dolores et ea rebum. Stet clita kasd gubergren,
+					no sea takimata sanctus est Lorem ipsum dolor sit amet.
 				</p>
 			</div>
 		</div>

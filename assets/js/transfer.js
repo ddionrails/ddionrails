@@ -2,6 +2,16 @@
 const FIRST_FRAME = document.getElementById("main-frame");
 const SECOND_FRAME = document.getElementById("second-frame");
 let loadingSpinner = document.getElementById("loading-spinner");
+const infoIcon = document.createElement("i");
+infoIcon.classList.add("fas");
+infoIcon.classList.add("fa-info-circle");
+// This could be done through ingesting a style link into the iframe.
+// But this solution seems more clear since it is more centralized.
+infoIcon.style.cssText = `
+  cursor: pointer;
+  color: #007bff;
+  font-size: 0.85em
+`;
 
 
 /**
@@ -19,7 +29,7 @@ function resizeIFrameToFitContent( iFrame ) {
  * @param {*} observedElement shiny range slider DOM element to observe
  * @param {*} inputToUpdate shiny text input to update with slider element value
  */
-function setYearRangeObserver(observedElement, inputToUpdate) {
+function initYearRangeObserver(observedElement, inputToUpdate) {
   const rangeEndPointObserver = new WebKitMutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       inputToUpdate.value = mutation.target.textContent;
@@ -29,6 +39,44 @@ function setYearRangeObserver(observedElement, inputToUpdate) {
   rangeEndPointObserver.observe(observedElement, {childList: true});
 }
 
+/**
+ * Get year range slider of main plot and set up the second plots value fields.
+ *
+ * The year range slider of the main plot iframe is observe to
+ * set the range of a second plot iframe according to the first.
+ *
+ * @param {*} iFrame The frame with the year fields to be
+ *                   linked to the year range slider of the main iFrame.
+ */
+function setupYearRangeObserver(iFrame) {
+  startYear = iFrame.contentDocument.getElementById("start_year");
+  endYear = iFrame.contentDocument.getElementById("end_year");
+
+  startYear.classList.add("hidden");
+  endYear.classList.add("hidden");
+
+  const firstFrameContent = FIRST_FRAME.contentDocument;
+
+  sliderStartYear = firstFrameContent.getElementsByClassName("irs-from")[0];
+  sliderEndYear = firstFrameContent.getElementsByClassName("irs-to")[0];
+
+  initYearRangeObserver(sliderStartYear, startYear.querySelector("input"));
+  initYearRangeObserver(sliderEndYear, endYear.querySelector("input"));
+}
+
+/**
+ * Add icon to an iFrame that acts as stand in for a modal button in the main window.
+ * @param {*} iFrame
+ */
+function setupConfidenceIntervalModal(iFrame) {
+  const container = iFrame.contentDocument.getElementById( "confidence_interval")
+    .parentNode.parentNode;
+  button = infoIcon.cloneNode();
+  button.addEventListener("click", function() {
+    document.getElementById("ci-button").click();
+  });
+  container.appendChild(button); // infoButton.cloneNode(deep=true));
+}
 
 /**
  * Wait for a shiny app iframe to fully load its plot.
@@ -43,22 +91,12 @@ async function waitForIFrameContent(iFrame, init=false) {
     await new Promise((r) => setTimeout(r, 100));
   }
   if (init) {
-    startYear = iFrame.contentDocument.getElementById("start_year");
-    endYear = iFrame.contentDocument.getElementById("end_year");
-
-    startYear.classList.add("hidden");
-    endYear.classList.add("hidden");
-
-    const firstFrameContent = FIRST_FRAME.contentDocument;
-
-    sliderStartYear = firstFrameContent.getElementsByClassName("irs-from")[0];
-    sliderEndYear = firstFrameContent.getElementsByClassName("irs-to")[0];
-
-    setYearRangeObserver(sliderStartYear, startYear.querySelector("input"));
-    setYearRangeObserver(sliderEndYear, endYear.querySelector("input"));
+    setupYearRangeObserver(iFrame);
+    setupConfidenceIntervalModal(SECOND_FRAME);
   }
   resizeIFrameToFitContent( iFrame );
   if (loadingSpinner != null) {
+    setupConfidenceIntervalModal(FIRST_FRAME);
     loadingSpinner.remove();
     loadingSpinner = null;
   }
