@@ -1,10 +1,17 @@
-version: '2.4'
+version: "2.4"
 
 services:
   web:
     image: paneldata/ddionrails:latest-dev
     command: tail -f /dev/null
-    env_file: 
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      selenium-firefox:
+        condition: service_started
+    env_file:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
@@ -42,12 +49,13 @@ services:
       - docker/environments/database.env.example
 
   nginx:
-    volumes: 
+    volumes:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
 
-  selenium:
-    image: selenium/standalone-firefox:3.141.59
-    networks:
-      - ddi_net
+  selenium-firefox:
+    image: selenium/standalone-firefox:4.0.0-rc-2-prerelease-20210923
+    shm_size: "2gb"
     ports:
       - 4444
+    networks:
+      - ddi_net

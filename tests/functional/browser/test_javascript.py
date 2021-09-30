@@ -1,26 +1,40 @@
-# -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+""" Functional test cases for JavaScript frontend."""
 
-""" Functional test cases for Javascript interaction with the ddionrails project """
+import unittest
 
 import pytest
+from selenium import webdriver
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-pytestmark = [
-    pytest.mark.functional,
-    pytest.mark.django_db,
-]  # pylint: disable=invalid-name
+pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 
-def test_studies_dropdown_menu(
-    browser, live_server, study
-):  # pylint: disable=unused-argument
-    browser.visit(live_server.url)
-    studies_dropdown_menu = browser.find_by_xpath('//*[@id="navbarbarDropdown"]').first
-    aria_expanded = studies_dropdown_menu["aria-expanded"]
-    assert aria_expanded == "false"
-    studies_dropdown_menu.click()
-    aria_expanded = studies_dropdown_menu["aria-expanded"]
-    assert aria_expanded == "true"
-    browser.find_by_xpath(
-        '//*[@id="navbarSupportedContent"]/ul[1]/li[2]/div/a[1]'
-    ).first.click()
+class TestMenu(unittest.TestCase):
+    """ Test functionality of the menu bar.  """
+
+    def setUp(self) -> None:
+
+        self.browser = webdriver.Remote(
+            command_executor="http://selenium-firefox:4444",
+            desired_capabilities=DesiredCapabilities.FIREFOX,
+        )
+        self.browser.get("http://web:8000")
+
+    def test_study_dropdown(self) -> None:
+        """ Does the study dropdown work?  """
+        studies_dropdown_menu = self.browser.find_element_by_id("navbarbarDropdown")
+        aria_expanded = studies_dropdown_menu.get_attribute("aria-expanded")
+
+        self.assertEqual("false", aria_expanded)
+        studies_dropdown_menu.click()
+
+        aria_expanded = studies_dropdown_menu.get_attribute("aria-expanded")
+        self.assertEqual("true", aria_expanded)
+
+        # self.browser.find_by_xpath(
+        #    '//*[@id="navbarSupportedContent"]/ul[1]/li[2]/div/a[1]'
+        # ).first.click()
+
+    def tearDown(self) -> None:
+        self.browser.quit()
+        return super().tearDown()

@@ -13,6 +13,13 @@ services:
             --print-sql 0.0.0.0:8000;
           test $$? -gt 128 && break;
         done"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      selenium-firefox:
+        condition: service_started
     entrypoint: ./docker/ddionrails/entrypoint.sh
     env_file:
       - docker/environments/django.env.example
@@ -27,15 +34,15 @@ services:
   postgres:
     env_file:
       - docker/environments/database.env.example
-
-  # Uncomment these lines, if you want to use Kibana
-  #  kibana:
-  #    image: kibana:4.6.0
-  #    ports:
-  #      - 5601:5601
-  #    networks:
-  #      - ddi_net
-
   nginx:
     volumes:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
+  selenium-firefox:
+    image: selenium/standalone-firefox:4.0.0-rc-2-prerelease-20210923
+    shm_size: '2gb'
+    ports: 
+      - 4444
+    networks:
+      - ddi_net
+
+
