@@ -7,7 +7,7 @@ from urllib.parse import urljoin
 
 import pytest
 
-SELENIUM_URL = "http://selenium:4444/wd/hub"
+SELENIUM_URL = "http://selenium-firefox:4444"
 
 
 @pytest.fixture(scope="session")
@@ -26,7 +26,8 @@ def splinter_remote_url():
 def authenticated_browser(browser, client, live_server, user):
     """Return a browser instance with logged-in user session."""
 
-    # credit to https://flowfx.de/blog/test-django-with-selenium-pytest-and-user-authentication/
+    # credit to
+    # https://flowfx.de/blog/test-django-with-selenium-pytest-and-user-authentication/
     # ignore B106: hardcoded_password_funcar
     client.login(username=user.username, password="some-password")  # nosec
     cookie = client.cookies["sessionid"]
