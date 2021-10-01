@@ -4,7 +4,10 @@ import unittest
 
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from urllib3 import PoolManager
+from urllib3.util.retry import Retry
 
 pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
@@ -23,11 +26,18 @@ class TestMenu(unittest.TestCase):
             desired_capabilities=DesiredCapabilities.FIREFOX,
             options=options,
         )
+        retry_policy = Retry(total=1, backoff_factor=1, status_forcelist=[502, 503, 504])
+        pool_manager = PoolManager(retries=retry_policy)
+        pool_manager.request("GET", "http://nginx")
         self.browser.get("http://nginx")
 
     def test_study_dropdown(self) -> None:
         """ Does the study dropdown work?  """
-        studies_dropdown_menu = self.browser.find_element_by_id("navbarbarDropdown")
+        try:
+            studies_dropdown_menu = self.browser.find_element_by_id("navbarbarDropdown")
+        except NoSuchElementException as error:
+            raise NoSuchElementException(msg=self.browser.page_source) from error
+
         aria_expanded = studies_dropdown_menu.get_attribute("aria-expanded")
 
         self.assertEqual("false", aria_expanded)
