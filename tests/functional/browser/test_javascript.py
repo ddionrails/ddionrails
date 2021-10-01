@@ -18,7 +18,7 @@ class TestMenu(unittest.TestCase):
             command_executor="http://selenium-firefox:4444",
             desired_capabilities=DesiredCapabilities.FIREFOX,
         )
-        self.browser.get("http://web:8000")
+        self.browser.get("http://nginx")
 
     def test_study_dropdown(self) -> None:
         """ Does the study dropdown work?  """
