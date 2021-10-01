@@ -4,6 +4,7 @@ import unittest
 
 import pytest
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
@@ -27,7 +28,11 @@ class TestMenu(unittest.TestCase):
 
     def test_study_dropdown(self) -> None:
         """ Does the study dropdown work?  """
-        studies_dropdown_menu = self.browser.find_element_by_id("navbarbarDropdown")
+        try:
+            studies_dropdown_menu = self.browser.find_element_by_id("navbarbarDropdown")
+        except NoSuchElementException as error:
+            raise NoSuchElementException(msg=self.browser.page_source) from error
+
         aria_expanded = studies_dropdown_menu.get_attribute("aria-expanded")
 
         self.assertEqual("false", aria_expanded)
