@@ -12,7 +12,7 @@
   "dependencies": {
     "@appbaseio/reactivesearch-vue": "1.21.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
-    "@vue/compiler-sfc": "^3.2.6",
+    "@vue/compiler-sfc": "^3.2.19",
     "acorn": ">=8.5.0",
     "acorn-import-assertions": ">=1.7.6",
     "ansi-regex": ">=5.0.1",
