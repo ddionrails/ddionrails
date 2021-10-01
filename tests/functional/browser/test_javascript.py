@@ -14,9 +14,14 @@ class TestMenu(unittest.TestCase):
 
     def setUp(self) -> None:
 
+        options = webdriver.FirefoxOptions()
+        options.add_argument("--width=1920")
+        options.add_argument("--height=1080")
+
         self.browser = webdriver.Remote(
             command_executor="http://selenium-firefox:4444",
             desired_capabilities=DesiredCapabilities.FIREFOX,
+            options=options,
         )
         self.browser.get("http://nginx")
 
