@@ -98,6 +98,29 @@ function renderCATSingle(itemBlock) {
 }
 
 /**
+ * Render a numerical block with only a single item
+ * @param {*} itemBlock
+ * @return {document.blockNode}
+ */
+function renderINTSingle(itemBlock) {
+  const element = document.createElement("div");
+  element.classList.add("item-block");
+  questionText = document.createElement("p");
+  questionText.classList.add("question-item-text");
+  questionText.appendChild(getLabel(itemBlock[0]));
+  const numberField = document.createElement("input");
+  numberField.type = "number";
+  numberField.placeholder = "#";
+  numberField.disabled = true;
+  numberField.min = 1;
+  numberField.max = 1;
+  element.appendChild(questionText);
+  element.appendChild(numberField);
+
+  return element;
+}
+
+/**
  * Create a table row from an array
  * @param {*} content Cell content.
  * @param {*} header If row should be a header row
@@ -159,6 +182,34 @@ function renderCATMultiple(itemBlock) {
   return element;
 }
 
+/**
+ * Render a numerical block with multiple items
+ * @param {*} itemBlock
+ * @return {document.blockNode}
+ */
+function renderINTMultiple(itemBlock) {
+  const element = document.createElement("div");
+  element.classList.add("item-block");
+  const table = document.createElement("table");
+  table.classList.add("answers-table");
+  element.appendChild(table);
+
+  let row = ["", ""];
+  table.appendChild(renderTableRow(row, (header = true)));
+
+  const numberField = document.createElement("input");
+  numberField.type = "number";
+  numberField.placeholder = "#";
+  numberField.disabled = true;
+
+  for (const item of itemBlock) {
+    row = [getLabel(item), numberField.cloneNode()];
+    table.appendChild(renderTableRow(row));
+  }
+
+  return element;
+}
+
 for (const itemBlock of itemBlocks) {
   let blockNode;
   if (itemBlock[0]["scale"] === "txt") {
@@ -169,6 +220,13 @@ for (const itemBlock of itemBlocks) {
       blockNode = renderCATSingle(itemBlock);
     } else {
       blockNode = renderCATMultiple(itemBlock);
+    }
+  }
+  if (itemBlock[0]["scale"] === "int") {
+    if (itemBlock.length === 1) {
+      blockNode = renderINTSingle(itemBlock);
+    } else {
+      blockNode = renderINTMultiple(itemBlock);
     }
   }
   itemHTMLContainer.appendChild(blockNode);
