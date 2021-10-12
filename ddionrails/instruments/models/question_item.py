@@ -155,7 +155,7 @@ class QuestionItem(models.Model):
                 AnswerDict(
                     value=answer.value, label=answer.label, label_de=answer.label_de
                 )
-                for answer in self.answers.all().order_by("value")
+                for answer in self.answers.all().order_by("value").distinct()
             ]
         return self_dict
 

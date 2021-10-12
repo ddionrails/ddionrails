@@ -1,13 +1,43 @@
+@import "~bootstrap/scss/bootstrap";
+
 .question-item-text {
-	font-weight: bold;
+  font-weight: bold;
 }
 
 .form-check {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .item-answer-text {
-	padding-left: .4em;
+  padding-left: 0.4em;
 }
 
+.fa-sign-out-alt {
+  color: $link-color;
+  padding-left: 0.5em;
+}
+
+.fa-sign-in-alt {
+  color: $link-color;
+  padding-right: 0.5em;
+}
+
+.answers-table {
+  width: 100%;
+}
+.answers-table > tr > th {
+  min-width: 5em;
+  text-align: center;
+}
+.answers-table > tr > td {
+  min-width: 5em;
+  text-align: left;
+}
+.answers-table > tr > td > input {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
