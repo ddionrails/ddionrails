@@ -134,7 +134,7 @@ def question_detail(
 
 
 # request is a required parameter
-# TODO: This is not integrated into rest of the system in a way that is usabel.
+# TODO: This is not integrated into rest of the system in a way that is usable.
 def question_comparison_partial(
     request: WSGIRequest,  # pylint: disable=unused-argument
     from_id: uuid.UUID,
@@ -153,7 +153,10 @@ def question_comparison_partial(
 
 def _question_item_metadata(question: Question):
     question_items = list(
-        question.question_items.all().order_by("position").prefetch_related("answers")
+        question.question_items.all()
+        .order_by("position")
+        .prefetch_related("answers")
+        .distinct()
     )
     block_counter = 0
     blocks = {block_counter: [question_items.pop(0)]}
