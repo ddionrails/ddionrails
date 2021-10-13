@@ -98,29 +98,6 @@ function renderCATSingle(itemBlock) {
 }
 
 /**
- * Render a numerical block with only a single item
- * @param {*} itemBlock
- * @return {document.blockNode}
- */
-function renderINTSingle(itemBlock) {
-  const element = document.createElement("div");
-  element.classList.add("item-block");
-  questionText = document.createElement("p");
-  questionText.classList.add("question-item-text");
-  questionText.appendChild(getLabel(itemBlock[0]));
-  const numberField = document.createElement("input");
-  numberField.type = "number";
-  numberField.placeholder = "#";
-  numberField.disabled = true;
-  numberField.min = 1;
-  numberField.max = 1;
-  element.appendChild(questionText);
-  element.appendChild(numberField);
-
-  return element;
-}
-
-/**
  * Create a table row from an array
  * @param {*} content Cell content.
  * @param {*} header If row should be a header row
@@ -187,15 +164,12 @@ function renderCATMultiple(itemBlock) {
  * @param {*} itemBlock
  * @return {document.blockNode}
  */
-function renderINTMultiple(itemBlock) {
+function renderINT(itemBlock) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
   table.classList.add("answers-table");
   element.appendChild(table);
-
-  let row = ["", ""];
-  table.appendChild(renderTableRow(row, (header = true)));
 
   const numberField = document.createElement("input");
   numberField.type = "number";
@@ -204,6 +178,38 @@ function renderINTMultiple(itemBlock) {
 
   for (const item of itemBlock) {
     row = [getLabel(item), numberField.cloneNode()];
+    table.appendChild(renderTableRow(row));
+  }
+
+  return element;
+}
+
+/**
+ * Render a numerical block with multiple items
+ * @param {*} itemBlock
+ * @return {document.blockNode}
+ */
+function renderCHR(itemBlock) {
+  const element = document.createElement("div");
+  element.classList.add("item-block");
+  const table = document.createElement("table");
+  table.classList.add("answers-table");
+  element.appendChild(table);
+
+  const chrContainer = document.createElement("div");
+  chrContainer.classList.add("item-input-container");
+  const chrField = document.createElement("input");
+  chrField.type = "text";
+  chrField.placeholder = "abc";
+  chrField.disabled = true;
+  const icon = document.createElement("i");
+  icon.classList.add("fas");
+  icon.classList.add("fa-pen-alt");
+  chrContainer.appendChild(chrField);
+  chrContainer.appendChild(icon);
+
+  for (const item of itemBlock) {
+    row = [getLabel(item), chrContainer.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
@@ -223,11 +229,10 @@ for (const itemBlock of itemBlocks) {
     }
   }
   if (itemBlock[0]["scale"] === "int") {
-    if (itemBlock.length === 1) {
-      blockNode = renderINTSingle(itemBlock);
-    } else {
-      blockNode = renderINTMultiple(itemBlock);
-    }
+    blockNode = renderINT(itemBlock);
+  }
+  if (itemBlock[0]["scale"] === "chr") {
+    blockNode = renderCHR(itemBlock);
   }
   itemHTMLContainer.appendChild(blockNode);
   itemHTMLContainer.appendChild(document.createElement("hr"));
