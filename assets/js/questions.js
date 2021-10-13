@@ -223,6 +223,33 @@ function renderCHR(itemBlock) {
   return element;
 }
 
+/**
+ * Render a numerical block with multiple items
+ * @param {*} itemBlock
+ * @return {document.blockNode}
+ */
+function renderBIN(itemBlock) {
+  const element = document.createElement("div");
+  element.classList.add("item-block");
+  const table = document.createElement("table");
+  table.classList.add("answers-table");
+  element.appendChild(table);
+
+  const container = document.createElement("div");
+  container.classList.add("item-checkbox-container");
+  const field = document.createElement("input");
+  field.type = "checkbox";
+  field.disabled = true;
+  container.appendChild(field);
+
+  for (const item of itemBlock) {
+    row = [getLabel(item), container.cloneNode(true)];
+    table.appendChild(renderTableRow(row));
+  }
+
+  return element;
+}
+
 for (const itemBlock of itemBlocks) {
   let blockNode;
   if (itemBlock[0]["scale"] === "txt") {
@@ -240,6 +267,9 @@ for (const itemBlock of itemBlocks) {
   }
   if (itemBlock[0]["scale"] === "chr") {
     blockNode = renderCHR(itemBlock);
+  }
+  if (itemBlock[0]["scale"] === "bin") {
+    blockNode = renderBIN(itemBlock);
   }
   itemHTMLContainer.appendChild(blockNode);
   itemHTMLContainer.appendChild(document.createElement("hr"));
