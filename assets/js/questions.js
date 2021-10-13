@@ -171,13 +171,20 @@ function renderINT(itemBlock) {
   table.classList.add("answers-table");
   element.appendChild(table);
 
+  const intContainer = document.createElement("div");
+  intContainer.classList.add("item-input-container");
   const numberField = document.createElement("input");
   numberField.type = "number";
-  numberField.placeholder = "#";
+  numberField.placeholder = "123";
   numberField.disabled = true;
+  const icon = document.createElement("i");
+  icon.classList.add("fas");
+  icon.classList.add("fa-hashtag");
+  intContainer.appendChild(numberField);
+  intContainer.appendChild(icon);
 
   for (const item of itemBlock) {
-    row = [getLabel(item), numberField.cloneNode()];
+    row = [getLabel(item), intContainer.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
