@@ -211,7 +211,7 @@ function renderCHR(itemBlock) {
   chrField.disabled = true;
   const icon = document.createElement("i");
   icon.classList.add("fas");
-  icon.classList.add("fa-pen-alt");
+  icon.classList.add("fa-pencil-alt");
   chrContainer.appendChild(chrField);
   chrContainer.appendChild(icon);
 
