@@ -45,3 +45,20 @@
 input[type="number"] {
   text-align: right;
 }
+
+input[type="text"] {
+  text-align: right;
+  display: inline-block;
+}
+
+.item-input-container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+}
+
+.item-input-container i {
+  position: absolute;
+  right: 190px;
+  top: 7px;
+}
