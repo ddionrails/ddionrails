@@ -57,6 +57,12 @@ input[type="text"] {
   position: relative;
 }
 
+.item-checkbox-container {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+
 .item-input-container i {
   position: absolute;
   right: 190px;
