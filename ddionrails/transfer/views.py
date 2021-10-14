@@ -17,7 +17,9 @@ def transfer_detail_view(
     """Render numerical and categorical transfer views."""
     transfer_server_url = f"{request.get_host()}{settings.TRANSFER_SERVER_URL}"
     context: Dict[str, Any] = {}
-    context["transfer_server_url"] = f"http://{transfer_server_url}{plot_type}/"
+    context[
+        "transfer_server_url"
+    ] = f"{request.scheme}://{transfer_server_url}{plot_type}/"
     context["study"] = study
     context["server_metadata"] = {
         "url": context["transfer_server_url"],
