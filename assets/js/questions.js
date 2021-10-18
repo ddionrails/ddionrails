@@ -6,7 +6,25 @@ const itemHTMLContainers = {
   de: document.getElementById("question-items-de"),
 };
 
-console.log(itemBlocks);
+const hashIcon = document.createElement("i");
+hashIcon.classList.add("fas");
+hashIcon.classList.add("fa-hashtag");
+
+const pencilIcon = document.createElement("i");
+pencilIcon.classList.add("fas");
+pencilIcon.classList.add("fa-pencil-alt");
+
+const scaleMetadata = {
+  int: {
+    inputAttributes: {type: "number", placeholder: "123"},
+    icon: hashIcon,
+  },
+  chr: {
+    inputAttributes: {type: "text", placeholder: "abc"},
+    icon: pencilIcon,
+  },
+  bin: {inputAttributes: {type: "checkbox"}},
+};
 
 /**
  *
@@ -172,92 +190,35 @@ function renderCATMultiple(itemBlock, language = "en") {
 
 /**
  * Render a numerical block with multiple items
- * @param {*} itemBlock
+ * @param {*} itemBlock Array of question items
  * @param {*} language language of the item to create
+ * @param {*} inputAttributes object with subset of input element attributes
+ * @param {*} inputIcon icon to put into the input field
  * @return {document.blockNode}
  */
-function renderINT(itemBlock, language = "en") {
+function renderLines(itemBlock, language = "en", inputAttributes, inputIcon) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
   table.classList.add("answers-table");
   element.appendChild(table);
 
-  const intContainer = document.createElement("div");
-  intContainer.classList.add("item-input-container");
-  const itemInput = document.createElement("input");
-  itemInput.type = "number";
-  itemInput.placeholder = "123";
-  itemInput.disabled = true;
-  const icon = document.createElement("i");
-  icon.classList.add("fas");
-  icon.classList.add("fa-hashtag");
-  intContainer.appendChild(itemInput);
-  intContainer.appendChild(icon);
-
-  for (const item of itemBlock) {
-    row = [getLabel(item, language), intContainer.cloneNode(true)];
-    table.appendChild(renderTableRow(row));
+  const itemContainer = document.createElement("div");
+  itemContainer.classList.add("item-input-container");
+  const itemInput = Object.assign(
+    document.createElement("input"),
+    inputAttributes,
+    {
+      disabled: true,
+    }
+  );
+  itemContainer.appendChild(itemInput);
+  if (typeof inputIcon !== "undefined") {
+    itemContainer.appendChild(inputIcon);
   }
 
-  return element;
-}
-
-/**
- * Render a numerical block with multiple items
- * @param {*} itemBlock
- * @param {*} language language of the item to create
- * @return {document.blockNode}
- */
-function renderCHR(itemBlock, language = "en") {
-  const element = document.createElement("div");
-  element.classList.add("item-block");
-  const table = document.createElement("table");
-  table.classList.add("answers-table");
-  element.appendChild(table);
-
-  const chrContainer = document.createElement("div");
-  chrContainer.classList.add("item-input-container");
-  const itemInput = document.createElement("input");
-  itemInput.type = "text";
-  itemInput.placeholder = "abc";
-  itemInput.disabled = true;
-  const icon = document.createElement("i");
-  icon.classList.add("fas");
-  icon.classList.add("fa-pencil-alt");
-  chrContainer.appendChild(itemInput);
-  chrContainer.appendChild(icon);
-
   for (const item of itemBlock) {
-    row = [getLabel(item, language), chrContainer.cloneNode(true)];
-    table.appendChild(renderTableRow(row));
-  }
-
-  return element;
-}
-
-/**
- * Render a numerical block with multiple items
- * @param {*} itemBlock
- * @param {*} language language of the item to create
- * @return {document.blockNode}
- */
-function renderBIN(itemBlock, language = "en") {
-  const element = document.createElement("div");
-  element.classList.add("item-block");
-  const table = document.createElement("table");
-  table.classList.add("answers-table");
-  element.appendChild(table);
-
-  const container = document.createElement("div");
-  container.classList.add("item-checkbox-container");
-  const itemInput = document.createElement("input");
-  itemInput.type = "checkbox";
-  itemInput.disabled = true;
-  container.appendChild(itemInput);
-
-  for (const item of itemBlock) {
-    row = [getLabel(item, language), container.cloneNode(true)];
+    row = [getLabel(item, language), itemContainer.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
@@ -266,25 +227,23 @@ function renderBIN(itemBlock, language = "en") {
 
 for (const itemBlock of itemBlocks) {
   let blockNode;
+  const blockScale = itemBlock[0]["scale"];
   for (const language of ["en", "de"]) {
-    if (itemBlock[0]["scale"] === "txt") {
+    if (blockScale === "txt") {
       blockNode = renderTXT(itemBlock, language);
-    }
-    if (itemBlock[0]["scale"] === "cat") {
+    } else if (blockScale === "cat") {
       if (itemBlock.length === 1) {
         blockNode = renderCATSingle(itemBlock, language);
       } else {
         blockNode = renderCATMultiple(itemBlock, language);
       }
-    }
-    if (itemBlock[0]["scale"] === "int") {
-      blockNode = renderINT(itemBlock, language);
-    }
-    if (itemBlock[0]["scale"] === "chr") {
-      blockNode = renderCHR(itemBlock, language);
-    }
-    if (itemBlock[0]["scale"] === "bin") {
-      blockNode = renderBIN(itemBlock, language);
+    } else {
+      blockNode = renderLines(
+        itemBlock,
+        language,
+        scaleMetadata[`${blockScale}`]["inputAttributes"],
+        scaleMetadata[`${blockScale}`]["icon"]
+      );
     }
     if (["en", "de"].includes(language)) {
       itemHTMLContainers[`${language}`].appendChild(blockNode);
