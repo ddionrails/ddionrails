@@ -1,7 +1,10 @@
 const itemBlocks = JSON.parse(
   document.getElementById("question-meta").textContent
 );
-const itemHTMLContainer = document.getElementById("question-items");
+const itemHTMLContainers = {
+  en: document.getElementById("question-items"),
+  de: document.getElementById("question-items-de"),
+};
 
 console.log(itemBlocks);
 
@@ -30,20 +33,25 @@ function gotoIcon() {
 /**
  *
  * @param {*} item One element of an itemBlock
+ * @param {*} language Language of the label to retrieve
  * @return {document.Node}
  */
-function getLabel(item) {
+function getLabel(item, language = "en") {
+  let labelKey = "label";
+  if (language === "de") {
+    labelKey = "label_de";
+  }
   const labelContainer = document.createElement("text");
   const labelContent = document.createElement("text");
-  labelContent.innerHTML = item["label"].replace(/\n/g, "<br />");
+  labelContent.innerHTML = item[`${labelKey}`].replace(/\n/g, "<br />");
 
-  if (item["input_filter"] != "") {
+  if ("input_filter" in item && item["input_filter"] != "") {
     const inputFilter = inputFilterIcon();
     inputFilter.setAttribute("title", item["input_filter"]);
     labelContainer.appendChild(inputFilterIcon());
   }
   labelContainer.appendChild(labelContent);
-  if (item["goto"] != "") {
+  if ("goto" in item && item["goto"] != "") {
     const goto = gotoIcon();
     goto.setAttribute("title", item["goto"]);
     labelContainer.appendChild(goto);
@@ -54,29 +62,31 @@ function getLabel(item) {
 /**
  * Render an item block containing simple text.
  * @param {*} itemBlock item block object
+ * @param {*} language language of the item to create
  * @return {document.Node} A p node with the item text
  */
-function renderTXT(itemBlock) {
+function renderTXT(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const text = document.createElement("p");
   element.appendChild(text);
   element.classList.add("question-item-text");
-  text.appendChild(getLabel(itemBlock[0]));
+  text.appendChild(getLabel(itemBlock[0], language));
   return element;
 }
 
 /**
  * Render a categorical block with only a single item
  * @param {*} itemBlock
+ * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderCATSingle(itemBlock) {
+function renderCATSingle(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   questionText = document.createElement("p");
   questionText.classList.add("question-item-text");
-  questionText.appendChild(getLabel(itemBlock[0]));
+  questionText.appendChild(getLabel(itemBlock[0], language));
   element.appendChild(questionText);
   const answers = document.createElement("div");
   answers.classList.add("form-check");
@@ -90,7 +100,7 @@ function renderCATSingle(itemBlock) {
     radioButton.disabled = true;
     const answerText = document.createElement("text");
     answerElement.appendChild(answerText);
-    answerText.textContent = answer["label"];
+    answerText.textContent = getLabel(answer, language);
     answerText.classList.add("item-answer-text");
   }
 
@@ -127,9 +137,10 @@ function renderTableRow(content, header = false) {
 /**
  * Render a categorical block with only a multiple items
  * @param {*} itemBlock
+ * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderCATMultiple(itemBlock) {
+function renderCATMultiple(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const answers = itemBlock[0].answers;
@@ -137,7 +148,7 @@ function renderCATMultiple(itemBlock) {
   table.classList.add("answers-table");
   element.appendChild(table);
 
-  let row = [""].concat(answers.map((answer) => answer["label"]));
+  let row = [""].concat(answers.map((answer) => getLabel(answer, language)));
   table.appendChild(renderTableRow(row, (header = true)));
 
   const radioButton = document.createElement("input");
@@ -145,7 +156,7 @@ function renderCATMultiple(itemBlock) {
   radioButton.disabled = true;
 
   for (const item of itemBlock) {
-    row = [getLabel(item)];
+    row = [getLabel(item, language)];
     for (
       let answerPosition = 0;
       answerPosition < answers.length;
@@ -162,9 +173,10 @@ function renderCATMultiple(itemBlock) {
 /**
  * Render a numerical block with multiple items
  * @param {*} itemBlock
+ * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderINT(itemBlock) {
+function renderINT(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
@@ -173,18 +185,18 @@ function renderINT(itemBlock) {
 
   const intContainer = document.createElement("div");
   intContainer.classList.add("item-input-container");
-  const numberField = document.createElement("input");
-  numberField.type = "number";
-  numberField.placeholder = "123";
-  numberField.disabled = true;
+  const itemInput = document.createElement("input");
+  itemInput.type = "number";
+  itemInput.placeholder = "123";
+  itemInput.disabled = true;
   const icon = document.createElement("i");
   icon.classList.add("fas");
   icon.classList.add("fa-hashtag");
-  intContainer.appendChild(numberField);
+  intContainer.appendChild(itemInput);
   intContainer.appendChild(icon);
 
   for (const item of itemBlock) {
-    row = [getLabel(item), intContainer.cloneNode(true)];
+    row = [getLabel(item, language), intContainer.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
@@ -194,9 +206,10 @@ function renderINT(itemBlock) {
 /**
  * Render a numerical block with multiple items
  * @param {*} itemBlock
+ * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderCHR(itemBlock) {
+function renderCHR(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
@@ -205,18 +218,18 @@ function renderCHR(itemBlock) {
 
   const chrContainer = document.createElement("div");
   chrContainer.classList.add("item-input-container");
-  const chrField = document.createElement("input");
-  chrField.type = "text";
-  chrField.placeholder = "abc";
-  chrField.disabled = true;
+  const itemInput = document.createElement("input");
+  itemInput.type = "text";
+  itemInput.placeholder = "abc";
+  itemInput.disabled = true;
   const icon = document.createElement("i");
   icon.classList.add("fas");
   icon.classList.add("fa-pencil-alt");
-  chrContainer.appendChild(chrField);
+  chrContainer.appendChild(itemInput);
   chrContainer.appendChild(icon);
 
   for (const item of itemBlock) {
-    row = [getLabel(item), chrContainer.cloneNode(true)];
+    row = [getLabel(item, language), chrContainer.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
@@ -226,9 +239,10 @@ function renderCHR(itemBlock) {
 /**
  * Render a numerical block with multiple items
  * @param {*} itemBlock
+ * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderBIN(itemBlock) {
+function renderBIN(itemBlock, language = "en") {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
@@ -237,13 +251,13 @@ function renderBIN(itemBlock) {
 
   const container = document.createElement("div");
   container.classList.add("item-checkbox-container");
-  const field = document.createElement("input");
-  field.type = "checkbox";
-  field.disabled = true;
-  container.appendChild(field);
+  const itemInput = document.createElement("input");
+  itemInput.type = "checkbox";
+  itemInput.disabled = true;
+  container.appendChild(itemInput);
 
   for (const item of itemBlock) {
-    row = [getLabel(item), container.cloneNode(true)];
+    row = [getLabel(item, language), container.cloneNode(true)];
     table.appendChild(renderTableRow(row));
   }
 
@@ -252,25 +266,31 @@ function renderBIN(itemBlock) {
 
 for (const itemBlock of itemBlocks) {
   let blockNode;
-  if (itemBlock[0]["scale"] === "txt") {
-    blockNode = renderTXT(itemBlock);
-  }
-  if (itemBlock[0]["scale"] === "cat") {
-    if (itemBlock.length === 1) {
-      blockNode = renderCATSingle(itemBlock);
-    } else {
-      blockNode = renderCATMultiple(itemBlock);
+  for (const language of ["en", "de"]) {
+    if (itemBlock[0]["scale"] === "txt") {
+      blockNode = renderTXT(itemBlock, language);
+    }
+    if (itemBlock[0]["scale"] === "cat") {
+      if (itemBlock.length === 1) {
+        blockNode = renderCATSingle(itemBlock, language);
+      } else {
+        blockNode = renderCATMultiple(itemBlock, language);
+      }
+    }
+    if (itemBlock[0]["scale"] === "int") {
+      blockNode = renderINT(itemBlock, language);
+    }
+    if (itemBlock[0]["scale"] === "chr") {
+      blockNode = renderCHR(itemBlock, language);
+    }
+    if (itemBlock[0]["scale"] === "bin") {
+      blockNode = renderBIN(itemBlock, language);
+    }
+    if (["en", "de"].includes(language)) {
+      itemHTMLContainers[`${language}`].appendChild(blockNode);
+      itemHTMLContainers[`${language}`].appendChild(
+        document.createElement("hr")
+      );
     }
   }
-  if (itemBlock[0]["scale"] === "int") {
-    blockNode = renderINT(itemBlock);
-  }
-  if (itemBlock[0]["scale"] === "chr") {
-    blockNode = renderCHR(itemBlock);
-  }
-  if (itemBlock[0]["scale"] === "bin") {
-    blockNode = renderBIN(itemBlock);
-  }
-  itemHTMLContainer.appendChild(blockNode);
-  itemHTMLContainer.appendChild(document.createElement("hr"));
 }
