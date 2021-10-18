@@ -51,15 +51,13 @@ input[type="text"] {
   display: inline-block;
 }
 
+input[type="checkbox"] {
+  margin-right: 10vw;
+}
+
 .item-input-container {
   display: flex;
   justify-content: flex-end;
-  position: relative;
-}
-
-.item-checkbox-container {
-  display: flex;
-  justify-content: flex-start;
   position: relative;
 }
 
