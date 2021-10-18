@@ -100,7 +100,7 @@ function renderCATSingle(itemBlock, language = "en") {
     radioButton.disabled = true;
     const answerText = document.createElement("text");
     answerElement.appendChild(answerText);
-    answerText.textContent = getLabel(answer, language);
+    answerText.appendChild(getLabel(answer, language));
     answerText.classList.add("item-answer-text");
   }
 
