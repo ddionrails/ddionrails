@@ -1,3 +1,4 @@
+let language = "en";
 const itemBlocks = JSON.parse(
   document.getElementById("question-meta").textContent
 );
@@ -108,10 +109,9 @@ const addLabelIcons = (item, labelContainer, languageKey) => {
 /**
  *
  * @param {*} item One element of an itemBlock
- * @param {*} language Language of the label to retrieve
  * @return {document.Node}
  */
-function getLabel(item, language = "en") {
+function getLabel(item) {
   let languageKey = "";
   if (language === "de") {
     languageKey = "_de";
@@ -130,10 +130,9 @@ function getLabel(item, language = "en") {
 /**
  * Render an item block containing simple text.
  * @param {*} itemBlock item block object
- * @param {*} language language of the item to create
  * @return {document.Node} A p node with the item text
  */
-function renderTXT(itemBlock, language = "en") {
+function renderTXT(itemBlock) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const text = document.createElement("p");
@@ -146,10 +145,9 @@ function renderTXT(itemBlock, language = "en") {
 /**
  * Render a categorical block with only a single item
  * @param {*} itemBlock
- * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderCATSingle(itemBlock, language = "en") {
+function renderCATSingle(itemBlock) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   questionText = document.createElement("p");
@@ -182,10 +180,9 @@ function renderCATSingle(itemBlock, language = "en") {
 /**
  * Render a categorical block with only a multiple items
  * @param {*} itemBlock
- * @param {*} language language of the item to create
  * @return {document.blockNode}
  */
-function renderCATMultiple(itemBlock, language = "en") {
+function renderCATMultiple(itemBlock) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const answers = itemBlock[0].answers;
@@ -218,12 +215,11 @@ function renderCATMultiple(itemBlock, language = "en") {
 /**
  * Render a numerical block with multiple items
  * @param {*} itemBlock Array of question items
- * @param {*} language language of the item to create
  * @param {*} inputAttributes object with subset of input element attributes
  * @param {*} inputIcon icon to put into the input field
  * @return {document.blockNode}
  */
-function renderLines(itemBlock, language = "en", inputAttributes, inputIcon) {
+function renderLines(itemBlock, inputAttributes, inputIcon) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const table = document.createElement("table");
@@ -255,19 +251,19 @@ function renderLines(itemBlock, language = "en", inputAttributes, inputIcon) {
 for (const itemBlock of itemBlocks) {
   let blockNode;
   const blockScale = itemBlock[0]["scale"];
-  for (const language of ["en", "de"]) {
+  for (const code of ["en", "de"]) {
+    language = code;
     if (blockScale === "txt") {
-      blockNode = renderTXT(itemBlock, language);
+      blockNode = renderTXT(itemBlock);
     } else if (blockScale === "cat") {
       if (itemBlock.length === 1) {
-        blockNode = renderCATSingle(itemBlock, language);
+        blockNode = renderCATSingle(itemBlock);
       } else {
-        blockNode = renderCATMultiple(itemBlock, language);
+        blockNode = renderCATMultiple(itemBlock);
       }
     } else {
       blockNode = renderLines(
         itemBlock,
-        language,
         scaleMetadata[`${blockScale}`]["inputAttributes"],
         scaleMetadata[`${blockScale}`]["icon"]
       );
