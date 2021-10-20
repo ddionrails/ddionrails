@@ -51,7 +51,8 @@ input[type="text"] {
   display: inline-block;
 }
 
-input[type="checkbox"] {
+input[type="checkbox"],
+input[type="radio"] {
   margin-right: 10vw;
 }
 
