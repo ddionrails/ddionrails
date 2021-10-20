@@ -13,13 +13,18 @@
   padding-left: 0.4em;
 }
 
-.fa-sign-out-alt {
+.fa-sign-out-alt,
+.fa-sign-in-alt,
+.fa-info-circle {
   color: $link-color;
+}
+
+.fa-sign-out-alt,
+.fa-info-circle {
   padding-left: 0.5em;
 }
 
 .fa-sign-in-alt {
-  color: $link-color;
   padding-right: 0.5em;
 }
 
