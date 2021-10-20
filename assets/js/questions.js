@@ -27,6 +27,33 @@ const scaleMetadata = {
 };
 
 /**
+ * Create a table row from an array
+ * @param {*} content Cell content.
+ * @param {*} header If row should be a header row
+ * @return {document.Node} A table row.
+ */
+function renderTableRow(content, header = false) {
+  const row = document.createElement("tr");
+  let baseCell = undefined;
+  if (header) {
+    baseCell = document.createElement("th");
+  } else {
+    baseCell = document.createElement("td");
+  }
+
+  for (const data of content) {
+    const cell = baseCell.cloneNode();
+    if (typeof data == "string") {
+      cell.innerHTML = data;
+    } else {
+      cell.appendChild(data);
+    }
+    row.appendChild(cell);
+  }
+  return row;
+}
+
+/**
  *
  * @return {document.Node} Font awesome icon for input information.
  */
@@ -110,47 +137,24 @@ function renderCATSingle(itemBlock, language = "en") {
   answers.classList.add("form-check");
   element.appendChild(answers);
   for (const answer of itemBlock[0]["answers"]) {
-    const answerElement = document.createElement("label");
-    answers.appendChild(answerElement);
+    const table = document.createElement("table");
+    table.classList.add("answers-table");
     const radioButton = document.createElement("input");
-    answerElement.appendChild(radioButton);
+    const inputContainer = document.createElement("div");
+    inputContainer.classList.add("item-input-container");
     radioButton.type = "radio";
     radioButton.disabled = true;
+    inputContainer.appendChild(radioButton);
     const answerText = document.createElement("text");
-    answerElement.appendChild(answerText);
     answerText.appendChild(getLabel(answer, language));
     answerText.classList.add("item-answer-text");
+    table.appendChild(renderTableRow([answerText, inputContainer]));
+    answers.appendChild(table);
   }
 
   return element;
 }
 
-/**
- * Create a table row from an array
- * @param {*} content Cell content.
- * @param {*} header If row should be a header row
- * @return {document.Node} A table row.
- */
-function renderTableRow(content, header = false) {
-  const row = document.createElement("tr");
-  let baseCell = undefined;
-  if (header) {
-    baseCell = document.createElement("th");
-  } else {
-    baseCell = document.createElement("td");
-  }
-
-  for (const data of content) {
-    const cell = baseCell.cloneNode();
-    if (typeof data == "string") {
-      cell.innerHTML = data;
-    } else {
-      cell.appendChild(data);
-    }
-    row.appendChild(cell);
-  }
-  return row;
-}
 
 /**
  * Render a categorical block with only a multiple items
