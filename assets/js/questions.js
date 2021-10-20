@@ -75,6 +75,36 @@ function gotoIcon() {
   return icon;
 }
 
+const getLabelString = (item, labelKey) => {
+  let prefix = item["value"] || "";
+  if (prefix !== "") {
+    prefix = `[${prefix}] `;
+  }
+  const label =item[`${labelKey}`].replace(/\n/g, "<br />");
+  return `${prefix}${label}`;
+};
+
+const addLabelIcons = (item, labelContainer, languageKey) => {
+  const instructionKey = `instruction${languageKey}`;
+  if (Boolean(item["input_filter"])) {
+    const inputFilter = inputFilterIcon();
+    inputFilter.setAttribute("title", item["input_filter"]);
+    labelContainer.prepend(inputFilter);
+  }
+  if (Boolean(item[`${instructionKey}`])) {
+    const infoIcon = document.createElement("i");
+    infoIcon.classList.add("fas");
+    infoIcon.classList.add("fa-info-circle");
+    infoIcon.setAttribute("title", item[`${instructionKey}`]);
+    labelContainer.appendChild(infoIcon);
+  }
+  if (Boolean(item["goto"])) {
+    const goto = gotoIcon();
+    goto.setAttribute("title", item["goto"]);
+    labelContainer.appendChild(goto);
+  }
+};
+
 /**
  *
  * @param {*} item One element of an itemBlock
@@ -82,27 +112,20 @@ function gotoIcon() {
  * @return {document.Node}
  */
 function getLabel(item, language = "en") {
-  let labelKey = "label";
+  let languageKey = "";
   if (language === "de") {
-    labelKey = "label_de";
+    languageKey = "_de";
   }
   const labelContainer = document.createElement("text");
   const labelContent = document.createElement("text");
-  labelContent.innerHTML = item[`${labelKey}`].replace(/\n/g, "<br />");
+  labelText = item["value"] || "";
+  labelContent.innerHTML = getLabelString(item, `label${languageKey}`);
 
-  if ("input_filter" in item && item["input_filter"] != "") {
-    const inputFilter = inputFilterIcon();
-    inputFilter.setAttribute("title", item["input_filter"]);
-    labelContainer.appendChild(inputFilterIcon());
-  }
   labelContainer.appendChild(labelContent);
-  if ("goto" in item && item["goto"] != "") {
-    const goto = gotoIcon();
-    goto.setAttribute("title", item["goto"]);
-    labelContainer.appendChild(goto);
-  }
+  addLabelIcons(item, labelContainer, languageKey);
   return labelContainer;
 }
+
 
 /**
  * Render an item block containing simple text.
