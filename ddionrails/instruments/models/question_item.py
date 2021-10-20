@@ -26,7 +26,7 @@ class QuestionItemDict(TypedDict, total=False):
     label_de: str
     description: str
     description_de: str
-    insruction: str
+    instruction: str
     instruction_de: str
     position: int
     input_filter: str
@@ -144,7 +144,7 @@ class QuestionItem(models.Model):
             label_de=self.label_de,
             description=self.description,
             description_de=self.description_de,
-            insruction=self.instruction,
+            instruction=self.instruction,
             instruction_de=self.instruction_de,
             position=self.position,
             input_filter=self.input_filter,
