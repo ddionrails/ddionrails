@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple
 
 from ddionrails.base.helpers.ddionrails_typing import QuestionAnswer
+from ddionrails.imports.helpers import hash_with_base_uuid
 from ddionrails.instruments.models import Instrument, Question
 from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.question_item import QuestionItem
@@ -30,20 +31,34 @@ def question_import(file: Path, study: Study) -> None:
         question_grouper.send({})
 
 
-def answer_import(file: Path, study: Study):
+# TODO: Remove study argument, when possible on the manager side
+def answer_import(file: Path, study: Study) -> None:  # pylint: disable=unused-argument
     """Import answers and link them to their QuestionItems."""
     answers_file = file
-    questions_file = file.parent.joinpath("questions.csv")
+    answer_list_answers = _read_answers(answers_file)
+    _bulk_import_answers(answer_list_answers)
+    del answer_list_answers
+
+
+def answer_relation_import(file: Path, study: Study) -> None:
+    """Link answers and QuestionItems"""
+    answers: Dict[Tuple[str, str], List[uuid.UUID]] = {}
+    questions = file.parent.joinpath("questions.csv")
+    with open(file, "r", encoding="utf-8") as answers_file:
+        for answer in DictReader(answers_file):
+            answerlist_key = (answer["instrument"], answer["answer_list"])
+            if answerlist_key not in answers:
+                answers[answerlist_key] = []
+            answer_id = hash_with_base_uuid(
+                f"{answer['value']}{answer['label']}{answer['label_de']}"
+            )
+            answers[answerlist_key].append(answer_id)
+    relations = []
     categorical_question_items = QuestionItem.objects.filter(
         scale="cat", question__instrument__study=study
     ).prefetch_related("question", "question__instrument")
-    answer_list_answers = _read_answers(answers_file)
-    answer_list_answer_ids = _bulk_import_answers(answer_list_answers)
-    relations = []
-    del answer_list_answers
-    with open(questions_file, "r", encoding="utf8") as questions_csv:
-        questions_reader = DictReader(questions_csv)
-        for question_item in questions_reader:
+    with open(questions, "r", encoding="utf8") as questions_file:
+        for question_item in DictReader(questions_file):
             if question_item["scale"] != "cat":
                 continue
             question_item_object = categorical_question_items.get(
@@ -51,11 +66,11 @@ def answer_import(file: Path, study: Study):
                 question__name=question_item["name"],
                 name=question_item["item"],
             )
-            question_item_id = question_item_object.generate_id(cache=True)
-            for answer_id in answer_list_answer_ids[question_item["answer_list"]]:
+            answerlist_key = (question_item["instrument"], question_item["answer_list"])
+            for answer_id in answers[answerlist_key]:
                 relation = Answer.question_items.through()
-                relation.questionitem_id = question_item_id
-                relation.answer_id = answer_id
+                relation.questionitem_id = question_item_object.id  # type: ignore
+                relation.answer_id = answer_id  # type: ignore
                 relations.append(relation)
     Answer.question_items.through.objects.bulk_create(relations, ignore_conflicts=True)
 
@@ -65,11 +80,11 @@ def _bulk_import_answers(
 ) -> Dict[str, List[uuid.UUID]]:
     answer_list_answer_ids: Dict[str, List[uuid.UUID]] = {}
     unique_answer_tuples = set()
-    unique_answers: Dict[Tuple[str, str, str], Answer] = {}
+    unique_answers: Dict[Tuple[int, str, str], Answer] = {}
     for answer_list, _answers in answers.items():
         answer_list_answer_ids[answer_list] = []
         for answer in _answers:
-            answer_tuple: Tuple[str, str, str] = (
+            answer_tuple: Tuple[int, str, str] = (
                 answer["value"],
                 answer["label"],
                 answer["label_de"],
