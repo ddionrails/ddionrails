@@ -77,9 +77,11 @@ function gotoIcon() {
 }
 
 const getLabelString = (item, labelKey) => {
-  let prefix = item["value"] || "";
-  if (prefix !== "") {
+  let prefix = item["value"];
+  if (!isNaN(parseInt(prefix))) {
     prefix = `[${prefix}] `;
+  } else {
+    prefix = "";
   }
   const label =item[`${labelKey}`].replace(/\n/g, "<br />");
   return `${prefix}${label}`;
