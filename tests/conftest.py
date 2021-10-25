@@ -11,7 +11,7 @@ from pathlib import Path
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
 from typing import Any, Callable, Dict, Generator, List, Protocol, Set, TypedDict, Union
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import mock_open, patch
 
 import PIL.Image
 import pytest
@@ -39,6 +39,7 @@ from tests.instruments.factories import (
     ConceptQuestionFactory,
     InstrumentFactory,
     QuestionFactory,
+    QuestionItemFactory,
     QuestionVariableFactory,
 )
 from tests.publications.factories import PublicationFactory
@@ -212,6 +213,7 @@ def question(db, request):
         description="This is some question",
         sort_id=1,
     )
+    _ = QuestionItemFactory(name="1", position=0, question=question)
     # To work with unittest
     if request.instance:
         request.instance.question = question
@@ -454,7 +456,7 @@ def _news(request) -> NewsFixture:
 
 
 @pytest.fixture(name="mock_import_path")
-def _mock_import_path(request) -> MagicMock:
+def _mock_import_path(request) -> Generator[None, None, None]:
     tmp_path = Path(mkdtemp())
     csv_path = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
     import_path = copytree(csv_path, tmp_path.joinpath("ddionrails"))
@@ -492,7 +494,7 @@ class MockOpener:
 
     def __init__(self):
         self.call_history = set()
-        self.files = dict()
+        self.files = {}
         super().__init__()
 
     def content_written_in_path(self, path: Union[Path, str], content: str):

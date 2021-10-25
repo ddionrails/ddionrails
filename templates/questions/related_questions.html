@@ -8,7 +8,7 @@
                 <div class="col-xl-3">
                     {{ period_name }}:
                     <br>
-                    {% for q in questions %}<a href="{{ q.get_absolute_url }}">{{ q.instrument.name }}/{{ q.name }}</a>
+                    {% for q in questions %}<a href="{{ q.get_direct_url }}">{{ q.instrument.name }}/{{ q.name }}</a>
                         <br> <a href="#question_comparison" from_id="{{ question.id }}"
                                 to_id="{{ q.id }}" class="compare-btn">&#x2014;compare&#x2014;</a>
                         <br>
