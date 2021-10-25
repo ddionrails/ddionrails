@@ -14,6 +14,7 @@ from config.views import HomePageView
 from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import VariableRedirectView
+from ddionrails.instruments.views import question_detail
 from ddionrails.studies.views import StudyDetailView, study_topics
 
 # These variable names are desired by Django
@@ -75,11 +76,7 @@ urlpatterns = [
         instruments_views.InstrumentRedirectView.as_view(),
         name="instrument_redirect",
     ),
-    path(
-        "question/<uuid:id>",
-        instruments_views.QuestionRedirectView.as_view(),
-        name="question_redirect",
-    ),
+    path("question/<uuid:_id>", question_detail, name="question_direct"),
 ]
 
 if settings.DEBUG:

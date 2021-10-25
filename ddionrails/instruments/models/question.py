@@ -20,7 +20,6 @@ from ddionrails.base.helpers.ddionrails_typing import QuestionItemType
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept, Period
 from ddionrails.imports.helpers import hash_with_namespace_uuid
-from ddionrails.studies.models import Study
 
 from .instrument import Instrument
 
@@ -141,6 +140,13 @@ class Question(ModelMixin, models.Model):
             },
         )
 
+    def get_direct_url(self) -> str:
+        """ Returns a canonical URL for the model
+
+        Uses the "study", "instrument" and "name" fields
+        """
+        return reverse("question_direct", kwargs={"_id": self.id})
+
     @staticmethod
     def layout_class() -> str:
         """ Returns the layout class (used in templates) """
@@ -173,41 +179,26 @@ class Question(ModelMixin, models.Model):
         self.save()
         return self.instrument.period
 
-    def get_related_question_set(self, all_studies=False, by_study_and_period=False):
-        """
-        pylint: disable=fixme
-        TODO: instruments.models.question.get_related_question_set needs docstring
-        """
+    def get_related_questions(self) -> OrderedDict[str, Question]:
+        """ Get all related questions categorized by their period """
+        study = self.instrument.study
         concept_list = self.get_concepts()
-        if all_studies:
-            study_list = Study.objects.all()
-        else:
-            study_list = [self.instrument.study]
-        direct_questions = Question.objects.filter(
-            concepts_questions__concept_id__in=concept_list,
-            instrument__study_id__in=study_list,
+        questions = (
+            Question.objects.filter(
+                concepts_questions__concept_id__in=concept_list,
+                instrument__study_id=study,
+            )
+            .distinct()
+            .prefetch_related("instrument", "instrument__period")
         )
-        indirect_questions = Question.objects.filter(
-            questions_variables__variable__concept__in=concept_list,
-            instrument__study_id__in=study_list,
-        )
-        combined_set = direct_questions | indirect_questions
-        combined_set = combined_set.distinct()
-        if by_study_and_period:
-            result: OrderedDict = OrderedDict()
-            for study in study_list:
-                result[study.name] = OrderedDict()
-                result[study.name]["no period"] = []
-                for period in study.periods.order_by("name"):
-                    result[study.name][period.name] = []
-            for question in combined_set:
-                result[question.instrument.study.name][
-                    getattr(
-                        getattr(question, "period_fallback", None), "name", "no period"
-                    )
-                ].append(question)
-            return result
-        return combined_set
+        result: OrderedDict = OrderedDict()
+        result = OrderedDict()
+        result["no period"] = []
+        for period in study.periods.order_by("name"):
+            result[period.name] = []
+        for question in questions:
+            result[question.instrument.period.name].append(question)
+        return result
 
     def get_concepts(self) -> QuerySet:
         """ Retrieve the related Concepts of this Question

@@ -31,6 +31,10 @@ class TestQuestionModel:
         )
         assert expected == question.get_absolute_url()
 
+    def test_get_direct_url_method(self, question):
+        expected = f"/question/{question.id}"
+        assert expected == question.get_direct_url()
+
     def test_layout_class_method(self, question):
         expected = "question"
         assert expected == question.layout_class()

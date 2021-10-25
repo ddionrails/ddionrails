@@ -9,7 +9,7 @@ from typing import Dict, List, TypedDict
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
@@ -81,11 +81,17 @@ class QuestionRedirectView(RedirectView):
 # request is a required parameter
 def question_detail(
     request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
-    instrument_name: str,
-    question_name: str,
+    study_name: str = None,
+    instrument_name: str = None,
+    question_name: str = None,
+    _id: uuid.UUID = None,
 ):
     """ DetailView for instruments.question model """
+    if _id:
+        question = get_object_or_404(
+            Question.objects.prefetch_related("instrument", "instrument__study"), id=_id
+        )
+        return redirect(question.get_absolute_url())
     question = (
         Question.objects.filter(instrument__study__name=study_name)
         .filter(instrument__name=instrument_name)
@@ -102,9 +108,7 @@ def question_detail(
             questions_variables__question=question.id
         ).select_related("dataset", "dataset__study"),
         base_url=f"{request.scheme}://{request.get_host()}",
-        related_questions=question.get_related_question_set(by_study_and_period=True)[
-            question.instrument.study.name
-        ],
+        related_questions=question.get_related_questions(),
         row_helper=RowHelper(),
         question_items=question_items,
     )

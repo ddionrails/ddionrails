@@ -9,6 +9,7 @@ from ddionrails.instruments.models import (
     ConceptQuestion,
     Instrument,
     Question,
+    QuestionItem,
     QuestionVariable,
 )
 from tests.concepts.factories import AnalysisUnitFactory, ConceptFactory, PeriodFactory
@@ -36,6 +37,15 @@ class QuestionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Question
         django_get_or_create = ("instrument", "name")
+
+
+class QuestionItemFactory(factory.django.DjangoModelFactory):
+
+    question = factory.SubFactory(QuestionFactory, name="some-question")
+
+    class Meta:
+        model = QuestionItem
+        django_get_or_create = ("question", "name")
 
 
 class ConceptQuestionFactory(factory.django.DjangoModelFactory):
