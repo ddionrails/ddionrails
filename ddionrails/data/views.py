@@ -62,6 +62,14 @@ class VariableRedirectView(RedirectView):
         return variable.get_absolute_url()
 
 
+class DatasetRedirectView(RedirectView):
+    """ Redirect from uuid to full path url of a dataset. """
+
+    def get_redirect_url(self, *args, **kwargs):
+        dataset = get_object_or_404(Dataset, id=kwargs["id"])
+        return dataset.get_absolute_url()
+
+
 class VariableDetailView(DetailView):
     """ Variable detail view
         ---
@@ -124,7 +132,7 @@ class VariableDetailView(DetailView):
         )
 
         # Ordering of keys in statistics dictionary
-        context["statistics"] = dict()
+        context["statistics"] = {}
         ordering = (
             "Min.",
             "1st Qu.",
@@ -174,8 +182,8 @@ class VariableDetailView(DetailView):
             )
         except KeyError:
             return _data
-        positive = list()
-        negative = list()
+        positive = []
+        negative = []
         for package in sorting_list:
             if int(package[0]) >= 0:
                 positive.append(package)

@@ -9,16 +9,47 @@
 <div class="card">
     <div class="card-header">Info</div>
     <div class="card-body">
-        <p><b>Name:</b>
-            {{ question.name }}
+        <p><i class="fa fa-tasks"></i>
+            <a href="{{ question.get_direct_url }}"> {{ question.name }} </a>
         </p>
-        <p><b>Instrument:</b> This question is at position <b>{{ question.sort_id }}</b> in
-            instrument <a href="{{ question.instrument.get_direct_url }}">
+        <p>
+            
+            {% if concept_list %}
+                <div class="list-group">
+                    {% for concept in concept_list %}
+                        <div>
+                            <i class="fa fa-cog"></i>
+                            <a href="{{ concept }}">{{ concept.title }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {{ question.concept.name }}
+        </p>
+        <hr>
+        <p title="Instrument">
+            <i class="fas fa-clipboard-list"></i>
+            <a href="{{ question.instrument.get_direct_url }}">
 
-                {{ question.instrument.title }}
+                {{ question.instrument.name }}
+                
+                <small>&#x2013; {{ question.instrument.label }}</small>
+                
+                </a>
+
 
             </a>
         </p>
+        {% if question.instrument.analysis_unit.name != 'none' %}
+            <p>
+                    <b>Analysis Unit:</b> {{ question.instrument.analysis_unit.name }}
+            </p>
+        {% endif %}
+        {% if question.instrument.period.name != 'none' %}
+            <p>
+                    <b>Period:</b> {{ question.instrument.period.name }}
+            </p>
+        {% endif %}
         <p>
             {% if image_urls.items %}
                 {{ image_urls.image_label }}:

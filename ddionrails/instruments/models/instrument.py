@@ -115,3 +115,7 @@ class Instrument(ModelMixin, models.Model):
             "inst:instrument_detail",
             kwargs={"study_name": self.study.name, "instrument_name": self.name},
         )
+
+    def get_direct_url(self) -> str:
+        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        return reverse("instrument_redirect", kwargs={"id": self.id})

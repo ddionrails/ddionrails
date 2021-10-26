@@ -145,7 +145,7 @@ class Variable(ModelMixin, models.Model):
         content: List[Variable]
 
     related_cache: Optional[Cache] = None
-    languages: List[str] = list()
+    languages: List[str] = []
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -190,6 +190,10 @@ class Variable(ModelMixin, models.Model):
             )
         )
 
+    def get_direct_url(self) -> str:
+        """ Returns a short self contained URL for the object.  """
+        return reverse("variable_redirect", kwargs={"id": self.id})
+
     @classmethod
     def get(cls, parameters: Dict[str, str]) -> Variable:
         study = get_object_or_404(Study, name=parameters["study_name"])
@@ -224,7 +228,7 @@ class Variable(ModelMixin, models.Model):
     def category_list(self) -> List[Dict[str, str]]:
         """ Return a list of dictionaries based on the "categories" field """
         if self.categories:
-            categories = list()
+            categories = []
             if "labels_de" not in self.categories:
                 self.categories["labels_de"] = self.categories["labels"]
             # Temporary fix till the bilingual dataset json files are fixed.
@@ -247,8 +251,8 @@ class Variable(ModelMixin, models.Model):
 
     @staticmethod
     def _sort_categories(categories: List[Dict[str, str]]) -> List[Dict[str, str]]:
-        positive = list()
-        negative = list()
+        positive = []
+        negative = []
         for category in categories:
             if int(category["value"]) >= 0:
                 positive.append(category)
@@ -295,15 +299,15 @@ class Variable(ModelMixin, models.Model):
                 self.related_cache = self.Cache(id=self.concept.id, content=variables)
             else:
                 self.related_cache = None
-        return getattr(self.related_cache, "content", list())
+        return getattr(self.related_cache, "content", [])
 
     def get_related_variables_by_period(self) -> OrderedDict:
         """ Returns the related variables by concept, ordered by period """
-        results = dict()
+        results = {}
         periods = Period.objects.filter(study_id=self.dataset.study.id).all()
         period_names = self._period_model_to_name_dict(periods)
-        results = {period_name: list() for period_name in period_names.values()}
-        results["none"] = list()
+        results = {period_name: [] for period_name in period_names.values()}
+        results["none"] = []
         for variable in self.get_related_variables():
             try:
                 results[period_names[variable.period_id]].append(variable)
@@ -348,7 +352,7 @@ class Variable(ModelMixin, models.Model):
             periods = Period.objects.filter(study_id=study.id).order_by("name").all()
             result[study.name] = OrderedDict()
             for period in periods:
-                result[study.name][period.name] = list()
+                result[study.name][period.name] = []
         for _objects in objects:
             study_name = _objects.dataset.study.name
             period = getattr(_objects, "period_fallback", None)
@@ -401,7 +405,7 @@ class Variable(ModelMixin, models.Model):
 
     def translation_table(self) -> Dict:
         """Get labels and categories in their available languages."""
-        translation_table = dict()
+        translation_table = {}
         # for language in self.translation_languages():
         #    translation_table["label"][language] = getattr(self, f"label_{language}")
 
