@@ -76,12 +76,12 @@ class TestInstrumentRedirectView:
 class TestQuestionRedirectView:
     def test_redirect_view_with_valid_id(self, client, question):
         valid_id = question.id
-        url = reverse("question_direct", kwargs={"_id": valid_id})
+        url = reverse("question_redirect", kwargs={"_id": valid_id})
         response = client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
 
     def test_redirect_view_with_invalid_id(self, client, uuid_identifier):
-        url = reverse("question_direct", kwargs={"_id": uuid_identifier})
+        url = reverse("question_redirect", kwargs={"_id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 

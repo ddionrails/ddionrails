@@ -9,7 +9,7 @@ from typing import Dict, List, TypedDict
 from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView
 from django.views.generic.base import RedirectView
 
@@ -84,18 +84,17 @@ def question_detail(
     study_name: str = None,
     instrument_name: str = None,
     question_name: str = None,
-    _id: uuid.UUID = None,
 ):
     """ DetailView for instruments.question model """
-    if _id:
-        question = get_object_or_404(
-            Question.objects.prefetch_related("instrument", "instrument__study"), id=_id
-        )
-        return redirect(question.get_absolute_url())
-    question = (
-        Question.objects.filter(instrument__study__name=study_name)
-        .filter(instrument__name=instrument_name)
-        .get(name=question_name)
+    question = Question.objects.select_related(
+        "instrument",
+        "instrument__study",
+        "instrument__period",
+        "instrument__analysis_unit",
+    ).get(
+        instrument__study__name=study_name,
+        instrument__name=instrument_name,
+        name=question_name,
     )
     question_items = _question_item_metadata(question)
 

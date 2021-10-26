@@ -1,6 +1,5 @@
 <!-- TODO Refactor question_detail.html and children templates.
 BODY templates/questions/question_detail.html
-BODY and templates/questions/item_partial.html need refactoring.
 BODY Their structure is convoluted and confusing.
  -->
 {% extends "base_study.html" %}
@@ -22,14 +21,14 @@ BODY Their structure is convoluted and confusing.
         <div class="col-xl-9">
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">{{ question.name }}</h2>
+                    <h2 class="text-center"><i class="fa fa-tasks"></i> EN</h2>
                 </div>
                 <div class="card-body" id="question-items">
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">
-                    <h2 class="text-center">DE</h2>
+                    <h2 class="text-center"><i class="fa fa-tasks"></i> DE</h2>
                 </div>
                 <div class="card-body" id="question-items-de">
                 </div>
@@ -44,28 +43,25 @@ BODY Their structure is convoluted and confusing.
                 {% if variables %}
                     <div class="list-group">
                         {% for variable in variables %}
-                            {% include "data/variable_result.html" %}
+                        <div class="list-group-item">
+                            <div>
+                                <i class="fa fa-table"></i>
+                                <a href="{{ variable.dataset.get_direct_url }}">
+                                    {{ variable.dataset.name }}
+                                </a>
+                            </div>
+                            <div>
+                                <i class="fa fa-chart-bar"></i> 
+                                <a href="{{ variable.get_direct_url }}">
+                                    {{ variable.name }}
+                                </a>
+                            </div>
+                        </div>
                         {% endfor %}
                     </div>
                 {% else %}
                     <div class="card-body">
                         <p>no related variables found</p>
-                    </div>
-                {% endif %}
-            </div>
-            <div class="card">
-                <div class="card-header"><b>Concepts</b>
-                </div>
-                <div class="list-group"></div>
-                {% if concept_list %}
-                    <div class="list-group">
-                        {% for concept in concept_list %}
-                            {% include "concepts/concept_result.html" %}
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="card-body">
-                        <p>no related concepts found</p>
                     </div>
                 {% endif %}
             </div>

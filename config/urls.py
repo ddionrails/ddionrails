@@ -13,8 +13,8 @@ import ddionrails.publications.views as publications_views
 from config.views import HomePageView
 from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
-from ddionrails.data.views import VariableRedirectView
-from ddionrails.instruments.views import question_detail
+from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
+from ddionrails.instruments.views import QuestionRedirectView
 from ddionrails.studies.views import StudyDetailView, study_topics
 
 # These variable names are desired by Django
@@ -70,13 +70,14 @@ urlpatterns = [
         name="publication_redirect",
     ),
     path("variable/<uuid:id>", VariableRedirectView.as_view(), name="variable_redirect"),
+    path("dataset/<uuid:id>", DatasetRedirectView.as_view(), name="dataset_redirect"),
     path("topic/<uuid:id>", TopicRedirectView.as_view(), name="topic_redirect"),
     path(
         "instrument/<uuid:id>",
         instruments_views.InstrumentRedirectView.as_view(),
         name="instrument_redirect",
     ),
-    path("question/<uuid:_id>", question_detail, name="question_direct"),
+    path("question/<uuid:id>", QuestionRedirectView.as_view(), name="question_redirect"),
 ]
 
 if settings.DEBUG:

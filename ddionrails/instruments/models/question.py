@@ -145,7 +145,7 @@ class Question(ModelMixin, models.Model):
 
         Uses the "study", "instrument" and "name" fields
         """
-        return reverse("question_direct", kwargs={"_id": self.id})
+        return reverse("question_redirect", kwargs={"id": self.id})
 
     @staticmethod
     def layout_class() -> str:
