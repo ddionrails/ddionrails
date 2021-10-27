@@ -26,7 +26,7 @@ from .instrument import Instrument
 
 class Question(ModelMixin, models.Model):
     """
-    Stores a single question, related to :model:`instruments.Tnstrument`.
+    Stores a single question, related to :model:`instruments.Instrument`.
     """
 
     ##############
