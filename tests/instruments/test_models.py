@@ -57,12 +57,6 @@ class TestQuestionModel:
         expected = None
         assert expected == question.next_question()
 
-    def test_period_fallback(self, question: Question):
-        question.period = None
-        result = question.period_fallback
-        expected = question.instrument.period
-        assert expected == result
-
     def test_get_concepts_method_no_concept(self, question):
         """ Test Question.get_concepts() without concept-question-relation """
         result = question.get_concepts()

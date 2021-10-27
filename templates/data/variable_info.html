@@ -16,7 +16,7 @@
     </div>
     <div class="card-body">
         <p title="Variable"><i class="fa fa-chart-bar"></i>
-            <a href="{{ variable.get_absolute_url }}">{{ variable.name }}</a>
+            <a href="{{ variable.get_direct_url }}">{{ variable.name }}</a>
         </p>
         <p title="Concept"><i class="fa fa-cog"></i>
             {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
@@ -98,7 +98,7 @@
                 {{ question.instrument.label }}
                 </td>
                 <td scope="row">
-                <a href="{{ question.get_absolute_url }}">{{ question.label }}</a>
+                <a href="{{ question.get_direct_url }}">{{ question.label }}</a>
                 </td>
             </tr>
             {% endfor %}
@@ -139,7 +139,7 @@
     <div class="card-body">
         <ul>
             {% for question in questions_subset %}
-                <li><a href="{{ question.get_absolute_url }}">{{ question.label }}</a>
+                <li><a href="{{ question.get_direct_url }}">{{ question.label }}</a>
                 </li>
             {% endfor %}
         </ul>

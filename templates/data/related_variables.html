@@ -11,7 +11,7 @@
                     {{ period_name }}:
                     <br>
                     {% for variable in variables %}
-                        <a href="{{ variable.get_absolute_url }}">
+                        <a href="{{ variable.get_direct_url }}">
                             {{ variable.dataset.name }}/{{ variable.name }}
                         </a>
                         <br>

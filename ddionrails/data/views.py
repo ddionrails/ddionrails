@@ -90,19 +90,19 @@ class VariableDetailView(DetailView):
     template_name = "data/variable_detail.html"
 
     def get_object(self, queryset=None):
-        queryset = Variable.objects.select_related(
+        variable = Variable.objects.select_related(
             "dataset",
             "dataset__study",
             "dataset__conceptual_dataset",
             "dataset__analysis_unit",
             "concept",
             "period",
-        ).filter(
+        ).get(
             dataset__study__name=self.kwargs["study_name"],
             dataset__name=self.kwargs["dataset_name"],
             name=self.kwargs["variable_name"],
         )
-        return queryset.first()
+        return variable
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -167,6 +167,8 @@ class VariableDetailView(DetailView):
         for measure in ordering:
             if measure in self.object.statistics:
                 context["statistics"][measure] = self.object.statistics[measure]
+        context["origin_variables"] = self.object.origin_variables_dict
+        context["target_variables"] = self.object.target_variables_dict
         return context
 
     @staticmethod

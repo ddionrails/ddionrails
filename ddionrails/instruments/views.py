@@ -81,10 +81,10 @@ class QuestionRedirectView(RedirectView):
 # request is a required parameter
 def question_detail(
     request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str = None,
-    instrument_name: str = None,
-    question_name: str = None,
-):
+    study_name: str,
+    instrument_name: str,
+    question_name: str,
+) -> HttpResponse:
     """ DetailView for instruments.question model """
     question = Question.objects.select_related(
         "instrument",

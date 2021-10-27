@@ -278,13 +278,6 @@ class Variable(ModelMixin, models.Model):
             return self.concept
         return default
 
-    @property
-    def period_fallback(self):
-        """Retrieve period from dataset if variable period is not set yet."""
-        if self.period:
-            return self.period
-        return self.dataset.period
-
     def get_related_variables(self) -> Union[List, QuerySet]:
         """ Returns the related variables by concept """
         # Only update if cache is empty or
@@ -321,46 +314,22 @@ class Variable(ModelMixin, models.Model):
     def _period_model_to_name_dict(instances: List[Period]) -> Dict[Dict[str, Any]]:
         return {instance.id: instance.name for instance in instances}
 
-    @staticmethod
-    def _get_related_variable_information(
-        objects: Union[List[Variable], List[Question]]
-    ) -> Dict[str, Dict[str, List[Variable]]]:
-        """Get objects related through transformations
-
-        Notice: The following is my own best interpretation at the moment.
-        This code was contained both in get_targets_by_study_and_period
-        and get_origin_by_study_and_period.
-        Its purpose seems to be, to get information to display it on on the
-        variable page.
-        Specifically to retrieve the periods of related variables or questions and put
-        everything together into a dict.
-        The dictionary content is used by a template.
-
-        The periods are kept in an OrderedDict so that they can be displayed as
-        such on the variable page.
-
-        Params:
-            objects: Variables or Objects related to this variable instance.
-            object_type: The type of the input. Either variable or question.
-        """
-
-        studies = {variable.dataset.study for variable in objects}
+    def _sort_related_variable_by_period(
+        self, variables: QuerySet[Variable]
+    ) -> Dict[str, List[Variable]]:
+        """Get variables related through transformations."""
 
         # TODO: Change when OrderedDict typing becomes available. pylint: disable=W0511
-        result: Dict[str, Dict[str, List[Variable]]] = OrderedDict()
-        for study in studies:
-            periods = Period.objects.filter(study_id=study.id).order_by("name").all()
-            result[study.name] = OrderedDict()
-            for period in periods:
-                result[study.name][period.name] = []
-        for _objects in objects:
-            study_name = _objects.dataset.study.name
-            period = getattr(_objects, "period_fallback", None)
-            period_name = getattr(period, "name", "no period")
-            result[study_name][period_name].append(_objects)
+        result: Dict[str, List[Variable]] = OrderedDict()
+        study = self.dataset.study
+        periods = Period.objects.filter(study=study).order_by("name").all()
+        result = OrderedDict((str(period.name), []) for period in periods)
+        for variable in variables:
+            period_name = getattr(variable.dataset.period, "name")
+            result[str(period_name)].append(variable)
         return result
 
-    @cached_property
+    @property
     def target_variables_dict(self):
         """
         Get objects that are based on an relationship through transformations
@@ -371,10 +340,13 @@ class Variable(ModelMixin, models.Model):
         that that have this variable instance as their "origin"
         :return: Nested dicts, study --> period --> list of variables/questions
         """
-        target_variables = [x.target for x in self.target_variables.all()]
-        return self._get_related_variable_information(target_variables)
+        # target_variables = Variable.objects.filter(origin_variables=self.id)
+        target_variables = Variable.objects.filter(
+            origin_variables__in=self.target_variables.all()
+        ).prefetch_related("dataset", "dataset__period")
+        return self._sort_related_variable_by_period(target_variables)
 
-    @cached_property
+    @property
     def origin_variables_dict(self):
         """
         Get objects that are based on an relationship through transformations
@@ -385,8 +357,12 @@ class Variable(ModelMixin, models.Model):
 
         :return: Nested dicts, study --> period --> list of variables/questions
         """
-        origin_variables = [x.origin for x in self.origin_variables.all()]
-        return self._get_related_variable_information(origin_variables)
+        origin_variables = Variable.objects.filter(
+            target_variables__in=self.origin_variables.all()
+        ).prefetch_related("dataset", "dataset__period")
+
+        # origin_variables = [x.origin for x in self.origin_variables.all()]
+        return self._sort_related_variable_by_period(origin_variables)
 
     def has_translations(self) -> bool:
         """ Returns True if Variable has translation_languages """
