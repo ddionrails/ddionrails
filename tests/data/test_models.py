@@ -4,6 +4,7 @@
 """ Test cases for models in ddionrails.data app """
 
 import unittest
+from typing import OrderedDict
 
 import pytest
 
@@ -35,23 +36,15 @@ class TestVariable(unittest.TestCase):
         origin_variable = self.variable
         target_variable = self._target_variable
         result = origin_variable.target_variables_dict
-        expected = {
-            target_variable.dataset.study.name: {
-                target_variable.period.name: [target_variable]
-            }
-        }
-        self.assertEqual(expected, result)
+        expected = OrderedDict([(target_variable.period.name, [target_variable])])
+        self.assertDictEqual(expected, result)
 
     def test_origin_variables_dict(self):
         """Define origin_variables_dict property structure."""
         origin_variable = self.variable
         target_variable = self._target_variable
         result = target_variable.origin_variables_dict
-        expected = {
-            origin_variable.dataset.study.name: {
-                origin_variable.period.name: [origin_variable]
-            }
-        }
+        expected = {origin_variable.period.name: [origin_variable]}
         self.assertEqual(expected, result)
 
     @property
@@ -132,15 +125,6 @@ class TestVariableModel:
         expected = "no-concept"
         assert expected == result
 
-    def test_period_fallback(self, variable: Variable):
-        result = variable.period_fallback
-        expected = variable.period
-        assert expected == result
-        variable.period = None
-        result = variable.period_fallback
-        expected = variable.dataset.period
-        assert expected == result
-
     def test_get_related_variables_without_concept(self, variable):
         result = variable.get_related_variables()
         expected = []
@@ -216,7 +200,7 @@ class TestVariableModel:
         assert variable.is_categorical()
 
     def test_is_categorical_method_fails(self, variable):
-        variable.categories = dict()
+        variable.categories = {}
         variable.save()
         assert not variable.is_categorical()
 
@@ -273,6 +257,10 @@ class TestDatasetModel:
     def test_absolute_url_method(self, dataset):
         expected = f"/{dataset.study.name}/data/{dataset.name}"
         assert dataset.get_absolute_url() == expected
+
+    def test_direct_url_method(self, dataset):
+        expected = f"/dataset/{dataset.id}"
+        assert dataset.get_direct_url() == expected
 
 
 def update_variable(variable: Variable) -> Variable:

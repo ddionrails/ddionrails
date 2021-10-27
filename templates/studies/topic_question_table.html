@@ -11,7 +11,7 @@
     {% for question in questions %}
         <tr>
             <td>{{ question.title }}</td>
-            <td><a href="{{ question.get_absolute_url }}">{{ question.name }}</a></td>
+            <td><a href="{{ question.get_direct_url }}">{{ question.name }}</a></td>
             <td><a href="{{ question.instrument.get_absolute_url }}">{{ question.instrument.name }}</a></td>
         </tr>
     {% endfor %}

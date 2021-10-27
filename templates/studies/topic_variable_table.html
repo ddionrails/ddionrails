@@ -15,7 +15,7 @@
             {% else %}
                 <td>{{ variable.title }}</td>
             {% endif %}
-            <td><a href="{{ variable.get_absolute_url }}">{{ variable.name }}</a></td>
+            <td><a href="{{ variable.get_direct_url }}">{{ variable.name }}</a></td>
             <td><a href="{{ variable.dataset.get_absolute_url }}">{{ variable.dataset.name }}</a></td>
         </tr>
     {% endfor %}

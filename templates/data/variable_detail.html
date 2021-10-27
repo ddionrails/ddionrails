@@ -77,19 +77,15 @@
                         {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="origin_variables">
-                        {% if variable.origin_variables_dict %}
-                            {% for study, variable_list in variable.origin_variables_dict.items %}
-                                {% include "data/related_variables.html" with table_name=study.title %}
-                            {% endfor %}
+                        {% if origin_variables %}
+                            {% include "data/related_variables.html" with variable_list=origin_variables%}
                         {% else %}
                             <div class="card bg-light card-body mb-3">No input variables</div>
                         {% endif %}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="target_variables">
-                        {% if variable.target_variables_dict %}
-                            {% for study, variable_list in variable.target_variables_dict.items %}
-                                {% include "data/related_variables.html" with table_name=study.title %}
-                            {% endfor %}
+                        {% if target_variables %}
+                            {% include "data/related_variables.html" with variable_list=target_variables%}
                         {% else %}
                             <div class="card bg-light card-body mb-3">No output variables</div>
                         {% endif %}

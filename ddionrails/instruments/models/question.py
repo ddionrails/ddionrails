@@ -170,15 +170,6 @@ class Question(ModelMixin, models.Model):
         except ObjectDoesNotExist:
             return None
 
-    @property
-    def period_fallback(self):
-        """Retrieve period from instrument if dataset period is not set yet."""
-        if self.period:
-            return self.period
-        # Save sets self.period = self.instrument.period
-        self.save()
-        return self.instrument.period
-
     def get_related_questions(self) -> OrderedDict[str, Question]:
         """ Get all related questions categorized by their period """
         study = self.instrument.study
