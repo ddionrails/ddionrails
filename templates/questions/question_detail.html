@@ -67,13 +67,15 @@ BODY Their structure is convoluted and confusing.
                             <div>
                                 <i class="fa fa-table"></i>
                                 <a href="{{ variable.dataset.get_direct_url }}">
-                                    {{ variable.dataset.name }}
+                                    {{ variable.dataset.name }} &#x2013;
+                                    <small>{{ variable.dataset.label }}</small>
                                 </a>
                             </div>
                             <div>
                                 <i class="fa fa-chart-bar"></i> 
                                 <a href="{{ variable.get_direct_url }}">
-                                    {{ variable.name }}
+                                    {{ variable.name }} &#x2013;
+                                    <small>{{ variable.label }}</small>
                                 </a>
                             </div>
                         </div>
