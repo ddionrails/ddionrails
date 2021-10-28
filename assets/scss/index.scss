@@ -4,7 +4,6 @@
  * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
 */
 
-
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap/scss/utilities/_spacing.scss";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
@@ -14,7 +13,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 // General styling
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .rm-var:after {
@@ -24,8 +23,6 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 .add-var:after {
   content: "Add variable";
 }
-
-
 
 // This padding seems to be big enough
 // so that the navbar does not overlap with the content
@@ -62,10 +59,9 @@ h1 {
   @extend .mb-5;
 }
 
-body>div:first-of-type {
+body > div:first-of-type {
   @extend .my-5;
 }
-
 
 .card {
   margin-top: 1em;
@@ -136,14 +132,14 @@ table.table thead th.sorting_desc:after {
  Datatables Pagination
 *********************/
 
-div.dataTables_paginate li.first>a,
-div.dataTables_paginate li.previous>a {
+div.dataTables_paginate li.first > a,
+div.dataTables_paginate li.previous > a {
   position: relative;
   padding-left: 24px;
 }
 
-div.dataTables_paginate li.next>a,
-div.dataTables_paginate li.last>a {
+div.dataTables_paginate li.next > a,
+div.dataTables_paginate li.last > a {
   position: relative;
   padding-right: 24px;
 }
