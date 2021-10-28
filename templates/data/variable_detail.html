@@ -6,7 +6,7 @@
 {% block styles %}
     <!-- Webpack bundle: "visualization" CSS -->
     {% render_bundle 'visualization' 'css' %}
-    {% render_bundle 'variables' 'css' %}
+    {% render_bundle 'description_modal' 'css' %}
 {% endblock styles %}
 {% block content %}
     {% csrf_token %}
@@ -142,5 +142,6 @@
     <!-- Webpack bundle: "visualization" JS -->
     {% render_bundle 'variables' 'js' %}
     {% render_bundle 'visualization' 'js' %}
+    {% render_bundle 'description_modal' 'js' %}
 {% endblock scripts %}
 </div>
