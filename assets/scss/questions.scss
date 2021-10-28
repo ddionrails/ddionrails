@@ -72,3 +72,17 @@ input[type="radio"] {
   right: 190px;
   top: 7px;
 }
+
+.question-navigation-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.question-navigation {
+  font-size: 1.5rem;
+  margin-left: 0.3em;
+  margin-right: 0.3em;
+  margin-top: 0.1em;
+  color: #6c757d !important;
+}

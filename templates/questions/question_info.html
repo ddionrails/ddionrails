@@ -1,21 +1,13 @@
-{% if question.previous_question %}
-    <a href="{{ question.previous_question }}" class="btn btn-secondary">Previous question</a>
-{% endif %}
-{% if question.next_question %}
-    <a href="{{ question.next_question }}" class="btn btn-secondary float-right">Next question</a>
-{% endif %}
-<div class="clearfix"></div>
-<hr>
 <div class="card">
     <div class="card-header">Info</div>
     <div class="card-body">
-        <p><i class="fa fa-tasks"></i>
+        <p title="Direct URL to question"><i class="fa fa-tasks"></i>
             <a href="{{ question.get_direct_url }}"> {{ question.name }} </a>
         </p>
         <p>
             
             {% if concept_list %}
-                <div class="list-group">
+                <div class="list-group" title="Concept of question item">
                     {% for concept in concept_list %}
                         <div>
                             <i class="fa fa-cog"></i>
