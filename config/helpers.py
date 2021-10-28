@@ -7,18 +7,20 @@ from django.utils.html import escape
 from markdown import markdown
 
 
-def render_markdown(text):
-    """
-    Render string to markdown. In the template, it is still necessary
-    to indicate that this string is "safe".
-
-    This is a wrapper for whatever markdown package is used in DDI on Rails,
-    which might change over time. Currently, we use markdown.py.
-    """
-    text = escape(text)
-    text = markdown(text, extensions=["markdown.extensions.tables"])
-    text = text.replace("<table>", '<table class="table">')
-    return text
+def render_markdown(markdown_text: str) -> str:
+    """ Render string to markdown.  """
+    try:
+        markdown_text = escape(markdown_text)
+        html = markdown(markdown_text, extensions=["markdown.extensions.tables"])
+        html = html.replace("<table>", '<table class="table">')
+    # The markdown.markdown function used by render markdown can potentially
+    # raise these errors. But I did not find any input, that triggered errors.
+    # They also exclude these except blocks from coverage themselves.
+    except UnicodeDecodeError:  # pragma: no cover
+        html = ""
+    except ValueError:  # pragma: no cover
+        html = ""
+    return str(html)
 
 
 def lower_dict_names(dictionary):

@@ -22,7 +22,7 @@ def read_csv(filename, path=None):
     """
     if path:
         filename = os.path.join(path, filename)
-    with open(filename, "r") as file:
+    with open(filename, "r", encoding="utf8") as file:
         content = list(csv.DictReader(file))
     return content
 

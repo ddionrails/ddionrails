@@ -41,7 +41,7 @@ class TestHelpers(unittest.TestCase):
         mocked_csv_dict_reader.return_value = return_value
         filename = "sample.csv"
         content = read_csv(filename)
-        mocked_open.assert_called_once_with(filename, "r")
+        mocked_open.assert_called_once_with(filename, "r", encoding="utf8")
         mocked_csv_dict_reader.assert_called_once()
         self.assertIn("study_name", content[0].keys())
 
@@ -146,7 +146,7 @@ def _questions_images_data_factory() -> Callable[[], QuestionsImages]:
             self._content = QuestionsImages
 
         def __call__(self):
-            content: Dict[str, str] = dict()
+            content: Dict[str, str] = {}
             content.update(dict(self._constant_pairs))
             for field in self._variable_headers:
                 content[field] = "".join(choices(self._characters, k=10))

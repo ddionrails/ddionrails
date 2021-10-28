@@ -16,6 +16,7 @@ from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
 from django.urls import reverse
 
+from config.helpers import render_markdown
 from ddionrails.base.helpers.ddionrails_typing import QuestionItemType
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.concepts.models import Concept, Period
@@ -233,6 +234,10 @@ class Question(ModelMixin, models.Model):
             type="question",
             concept_key="concept_%s" % concept_name,
         )
+
+    def html_description(self) -> str:
+        """ Return question description as HTML. """
+        return render_markdown(self.description)
 
     def comparison_string(
         self, to_string: bool = False, wrap: int = 50

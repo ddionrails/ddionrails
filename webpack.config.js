@@ -23,8 +23,12 @@ module.exports = {
     ],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: ["./assets/js/concept_table.js", "./assets/scss/topics.scss"],
-    variables: ["./assets/js/variables.js", "./assets/scss/variables.scss"],
+    variables: ["./assets/js/variables.js"],
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
+    description_modal: [
+      "./assets/js/description_modal.js",
+      "./assets/scss/description_modal.scss",
+    ],
     visualization: [
       "./assets/js/visualization.js",
       "./assets/scss/visualization.scss",
