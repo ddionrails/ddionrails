@@ -148,11 +148,11 @@
         },
         "django-webpack-loader": {
             "hashes": [
-                "sha256:21f43c7076d83cbfcf03cc2284f94ff2f2ec49d35bf0b9e9f5c1cdea9a16bcab",
-                "sha256:ee64cc3158490ca538ee177fa78e7d0c4cbad4ca1bc7ea85f3446e856339a24e"
+                "sha256:290ce20a1347e14ba1cadfb5df90f2d1218eb81a1ecdcfb7ccc8ef9adab4b7d3",
+                "sha256:7e34085b7fc4d352e482ff9cf7d09ae4524e730675e25432ab1d25a2dd94e583"
             ],
             "index": "pypi",
-            "version": "==1.4.0"
+            "version": "==1.4.1"
         },
         "djangorestframework": {
             "hashes": [
