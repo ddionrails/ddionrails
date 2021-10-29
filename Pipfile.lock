@@ -803,11 +803,11 @@
         },
         "faker": {
             "hashes": [
-                "sha256:072b61422be9da464b0bb40cdb44267dd584582056b77a2982d7c66c767f044c",
-                "sha256:8ffd1ca479364a2ea78fe23a5710d5f940c50576f45c3f62edf9f7f9242cec0b"
+                "sha256:aad59a0cb82ac072f3109667fb2ba35ac45981ec22436c649d8fcdbf1c9e6927",
+                "sha256:d23cd665886d2e9680d90f3ce2af7a439f44de3c7becc78353ca2f49b0015352"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==9.6.0"
+            "version": "==9.7.1"
         },
         "filelock": {
             "hashes": [
@@ -1167,11 +1167,11 @@
         },
         "pyparsing": {
             "hashes": [
-                "sha256:84196357aa3566d64ad123d7a3c67b0e597a115c4934b097580e5ce220b91531",
-                "sha256:fd93fc45c47893c300bd98f5dd1b41c0e783eaeb727e7cea210dcc09d64ce7c3"
+                "sha256:9e3511118010f112a4b4b435ae50e1eaa610cda191acb9e421d60cf5fde83455",
+                "sha256:f8d3fe9fc404576c5164f0f0c4e382c96b85265e023c409c43d48f65da9d60d0"
             ],
             "markers": "python_version >= '3.6'",
-            "version": "==3.0.1"
+            "version": "==3.0.3"
         },
         "pytest": {
             "hashes": [
@@ -1283,10 +1283,10 @@
         },
         "rope": {
             "hashes": [
-                "sha256:505a2f6b4ac7b18e0429be179f4d8712243a194da5c866b0731f9d91ce7590bb"
+                "sha256:366789e069a267296889b2ee7631f9278173b5e7d468f2ea08abe26069a52aef"
             ],
             "index": "pypi",
-            "version": "==0.20.1"
+            "version": "==0.21.0"
         },
         "selenium": {
             "hashes": [
