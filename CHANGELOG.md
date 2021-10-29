@@ -11,6 +11,14 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.2.0] - 2021-10-29
+
+### Changed
+
+- database storage and import of question related metadata.
+- design of the question view.
+- Updated several dependencies.
+
 ## [5.1.4] - 2021-09-14
 
 ### Changed
@@ -692,7 +700,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.1.4...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.2.0...develop
+[5.2.0]: https://github.com/ddionrails/ddionrails/compare/v5.1.4...v5.2.0
 [5.1.4]: https://github.com/ddionrails/ddionrails/compare/v5.1.3...v5.1.4
 [5.1.3]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...v5.1.3
 [5.1.2]: https://github.com/ddionrails/ddionrails/compare/v5.1.1...v5.1.2
