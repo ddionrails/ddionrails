@@ -67,11 +67,14 @@ def answer_relation_import(file: Path, study: Study) -> None:
                 name=question_item["item"],
             )
             answerlist_key = (question_item["instrument"], question_item["answer_list"])
-            for answer_id in answers[answerlist_key]:
-                relation = Answer.question_items.through()
-                relation.questionitem_id = question_item_object.id  # type: ignore
-                relation.answer_id = answer_id  # type: ignore
-                relations.append(relation)
+            try:
+                for answer_id in answers[answerlist_key]:
+                    relation = Answer.question_items.through()
+                    relation.questionitem_id = question_item_object.id  # type: ignore
+                    relation.answer_id = answer_id  # type: ignore
+                    relations.append(relation)
+            except KeyError as error:
+                raise KeyError(f"{question_item}") from error
     Answer.question_items.through.objects.bulk_create(relations, ignore_conflicts=True)
 
 
