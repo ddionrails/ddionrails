@@ -48,6 +48,9 @@ class TransferView(TemplateView):
 
 VARIABLES = {
     "categorical": {
+        "beruf": "Berufsgruppen",
+        "party": "Parteineigung",
+        "religion": "Konfession",
         "plh0012_h": "Parteineigung [harmonisiert]",
         "plh0032": "Sorgen allgemeine wirtschaftliche Entwicklung",
         "plh0033": "Sorgen eigene wirtschaftliche Situation",
