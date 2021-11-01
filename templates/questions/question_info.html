@@ -41,9 +41,23 @@
         <p>
             {% if image_urls.items %}
                 {{ image_urls.image_label }}:
-                {% if "en" in image_urls %} <a href="{{ image_urls.en }}" target="_blank">en</a>
+                {% if "en" in image_urls %}
+                    <button
+                    type="button"
+                    class="btn btn-link"
+                    data-toggle="modal"
+                    data-target="#image-en-modal">
+                        en
+                    </button>
                 {% endif %}
-                {% if "de" in image_urls %} <a href="{{ image_urls.de }}" target="_blank">de</a>
+                {% if "de" in image_urls %}
+                    <button
+                    type="button"
+                    class="btn btn-link"
+                    data-toggle="modal"
+                    data-target="#image-de-modal">
+                        de
+                    </button>
                 {% endif %}
             {% endif %}
         </p>
@@ -58,14 +72,14 @@
         {{ question.html_description | safe }}
     </div>
     <div class="card-footer text-center" id="description-footer">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#descriptionModal">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
         Show full description
         </button>
     </div>
 </div>
 
 
-<div class="modal" tabindex="-1" role="dialog" id="descriptionModal">
+<div class="modal" tabindex="-1" role="dialog" id="description-modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -75,6 +89,44 @@
         </button>
       </div>
         <div class="modal-body" id="description-modal-content">
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="image-de-modal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="image-de-modal">
+            {% if image_urls.items %}
+                {% if "de" in image_urls %}
+                    <image src="{{ image_urls.de }}">
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="image-en-modal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="image-de-modal">
+            {% if image_urls.items %}
+                {% if "en" in image_urls %}
+                    <image src="{{ image_urls.en }}">
+                {% endif %}
+            {% endif %}
         </div>
     </div>
   </div>
