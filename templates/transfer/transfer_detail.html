@@ -11,7 +11,9 @@
 {{ server_metadata|json_script:"transfer-server-metadata" }}
 <div id="container">
 	<div class="d-flex flex-row">
+		{% if variable %}
 		<h2 id="plot-header">{{variable.label_de}}</h2>
+		{% endif %}
 		<button
 			type="button"
 			class="btn btn-link"
@@ -92,9 +94,11 @@
 						Information</a>
 				</p>
 				<p>
+					{% if variable %}
 					<a href="{% url 'data:variable_detail' study_name=variable.dataset.study.name dataset_name=variable.dataset.name variable_name=variable.name %}">
 						Wissenschaftliche Dokumentation
 					</a>
+					{% endif %}
 				</p>
 			</div>
 		</div>
