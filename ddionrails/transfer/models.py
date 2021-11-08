@@ -14,6 +14,7 @@ class VariableStatistic(models.Model):
 
         CATEGORICAL = "categorical", "Categorical"
         NUMERICAL = "numerical", "Numerical"
+        ORDINAL = "ordinal", "Ordinal"
 
     # Keys
     id = models.AutoField(primary_key=True)
@@ -22,3 +23,15 @@ class VariableStatistic(models.Model):
     # Attributes
     plot_type = models.TextField(null=False, choices=PlotType.choices)
     statistics = models.TextField(null=False, blank=False)
+    start_year = models.IntegerField(null=False, blank=False)
+    end_year = models.IntegerField(null=False, blank=False)
+
+
+class IndependentVariables(models.Model):
+    """ Information about valuelabels for independent variables (dimensions)."""
+
+    # Keys
+    id = models.AutoField(primary_key=True)
+    variable = models.ForeignKey(to=Variable, null=False, on_delete=models.CASCADE)
+
+    labels = models.JSONField()
