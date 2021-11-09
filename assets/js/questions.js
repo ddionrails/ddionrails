@@ -1,3 +1,4 @@
+
 let language = "en";
 const itemBlocks = JSON.parse(
   document.getElementById("question-meta").textContent
@@ -77,6 +78,9 @@ function gotoIcon() {
 }
 
 const getLabelString = (item, labelKey) => {
+  if (item[`${labelKey}`] === "") {
+    return "";
+  }
   let prefix = item["value"];
   if (!isNaN(parseInt(prefix))) {
     prefix = `[${prefix}] `;
@@ -278,4 +282,10 @@ for (const itemBlock of itemBlocks) {
     }
   }
 }
+
+Object.values(itemHTMLContainers).map((container) => {
+  if (container.textContent.trim() === "") {
+    container.parentElement.classList.add("hidden");
+  }
+});
 
