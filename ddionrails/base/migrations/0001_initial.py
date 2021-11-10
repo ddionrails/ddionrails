@@ -10,8 +10,6 @@
 
 from django.db import migrations, models
 
-import ddionrails.base.mixins
-
 
 class Migration(migrations.Migration):
 
@@ -34,6 +32,6 @@ class Migration(migrations.Migration):
                 ),
                 ("current_commit", models.CharField(blank=True, max_length=255)),
             ],
-            bases=(ddionrails.base.mixins.ImportPathMixin, models.Model),
+            bases=[models.Model],
         )
     ]

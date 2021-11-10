@@ -53,22 +53,6 @@ class TestImport:
         mocked_file_path.assert_called_once()
         mocked_open.assert_called_once_with(filename, "r")
 
-    def test_import_path_method_with_study(self, study, settings):
-        importer = Import(filename="DUMMY.csv", study=study)
-        result = importer.import_path()
-        expected = settings.IMPORT_REPO_PATH.joinpath(
-            study.name, settings.IMPORT_SUB_DIRECTORY
-        )
-        assert expected == result
-
-    def test_import_path_method_without_study(self, system, settings):
-        importer = Import(filename="DUMMY.csv", system=system)
-        result = importer.import_path()
-        expected = settings.IMPORT_REPO_PATH.joinpath(
-            system.name, settings.IMPORT_SUB_DIRECTORY
-        )
-        assert expected == result
-
 
 class TestCSVImport:
     def test_read_file_method(self, mocker, csv_importer):

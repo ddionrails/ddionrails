@@ -5,7 +5,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Iterable, Union
+from typing import Iterable, Optional, Union
 
 import frontmatter
 from django.core.exceptions import ObjectDoesNotExist
@@ -45,7 +45,7 @@ class Import:
 
     @classmethod
     @transaction.atomic
-    def run_import(cls, filename, study=None):
+    def run_import(cls, filename: Union[Path, str], study: Optional[Study] = None):
         importer = cls(filename, study)
         importer.read_file()
         importer.execute_import()
@@ -53,11 +53,6 @@ class Import:
     def read_file(self):
         with open(self.file_path(), "r") as infile:
             self.content = infile.read()
-
-    def import_path(self):
-        if self.study:
-            return self.study.import_path()
-        return self.system.import_path()
 
     def file_path(self):
         return self.filename

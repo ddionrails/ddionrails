@@ -146,11 +146,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={"verbose_name_plural": "Studies"},
-            bases=(
-                ddionrails.base.mixins.ImportPathMixin,
-                ddionrails.base.mixins.ModelMixin,
-                models.Model,
-            ),
+            bases=(ddionrails.base.mixins.ModelMixin, models.Model),
         ),
         migrations.CreateModel(
             name="TopicList",

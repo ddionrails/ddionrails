@@ -17,6 +17,7 @@ import git
 from django.conf import settings
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
+from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
@@ -42,6 +43,7 @@ from ddionrails.instruments.imports import (
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
+from ddionrails.transfer.imports import statistics_import
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
@@ -98,6 +100,12 @@ class Repository:
 
     def list_all_files(self) -> List:
         """Returns a list of all files in the `import_path`."""
+        if isinstance(self.study_or_system, System):
+            return [
+                settings.IMPORT_REPO_PATH.joinpath(
+                    "system", settings.IMPORT_SUB_DIRECTORY
+                )
+            ]
         return [
             file
             for file in sorted(self.study_or_system.import_path().glob("**/*"))
@@ -116,7 +124,9 @@ def system_import_manager(system):
     """Import the files from the system repository."""
 
     repo = Repository(system)
-    base_directory = system.import_path()
+    base_directory = settings.IMPORT_REPO_PATH.joinpath("system").joinpath(
+        settings.IMPORT_SUB_DIRECTORY
+    )
     studies_file = base_directory.joinpath("studies.csv")
     StudyImport.run_import(studies_file, system)
 
@@ -186,6 +196,10 @@ class StudyImportManager:
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
+                "statistics": (
+                    statistics_import,
+                    self.base_dir / "transfer/metadata/variables.csv",
+                ),
                 "questions_images": (
                     question_image_import.questions_images_import,
                     self.base_dir.joinpath("questions_images.csv"),

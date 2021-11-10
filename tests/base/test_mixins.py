@@ -9,7 +9,7 @@ from django.db import models
 from django.forms import ModelForm
 
 import ddionrails.base
-from ddionrails.base.mixins import AdminMixin, ImportPathMixin, ModelMixin
+from ddionrails.base.mixins import AdminMixin, ModelMixin
 from ddionrails.concepts.models import Concept
 
 pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
@@ -19,12 +19,6 @@ pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
 def _admin_mixin():
     """ An instantiated AdminMixin """
     return AdminMixin()
-
-
-@pytest.fixture(name="importpath_mixin")
-def _importpath_mixin():
-    """ An instantiated ImportPathMixin """
-    return ImportPathMixin()
 
 
 @pytest.fixture(name="model_mixin")
@@ -137,16 +131,6 @@ class TestModelMixin:
     def test_html_description_method_without_description(self, model_mixin):
         result = model_mixin.html_description()
         expected = ""
-        assert expected == result
-
-
-class TestImportPathMixin:
-    def test_import_path_method(self, importpath_mixin, settings):
-        importpath_mixin.name = "name"
-        result = importpath_mixin.import_path()
-        expected = settings.IMPORT_REPO_PATH.joinpath(
-            importpath_mixin.name, settings.IMPORT_SUB_DIRECTORY
-        )
         assert expected == result
 
 

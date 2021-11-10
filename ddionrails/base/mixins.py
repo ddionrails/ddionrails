@@ -127,16 +127,6 @@ class ModelMixin:
         return html
 
 
-class ImportPathMixin:  # pylint: disable=R0903
-    """ A mixin for models to return an import_path based on their name attribute """
-
-    def import_path(self) -> pathlib.Path:
-        """ Returns the instance's import path """
-        return settings.IMPORT_REPO_PATH.joinpath(
-            self.name, settings.IMPORT_SUB_DIRECTORY
-        )
-
-
 class AdminMixin:
     """ A mixin for ModelAdmins to query related models via methods """
 

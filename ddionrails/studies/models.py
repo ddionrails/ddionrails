@@ -2,6 +2,7 @@
 """ Model definitions for ddionrails.studies app """
 
 import uuid
+from pathlib import Path
 from typing import List, Optional
 
 from django.apps import apps
@@ -12,7 +13,7 @@ from django.db.models import JSONField
 from django.urls import reverse
 from model_utils.models import TimeStampedModel
 
-from ddionrails.base.mixins import ImportPathMixin, ModelMixin
+from ddionrails.base.mixins import ModelMixin
 from ddionrails.imports.helpers import hash_with_base_uuid
 
 
@@ -46,7 +47,7 @@ class TopicList(models.Model):
     )
 
 
-class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
+class Study(ModelMixin, TimeStampedModel):
     """
     Stores a single study,
     related to :model:`data.Dataset`, :model:`instruments.Instrument`,
@@ -185,3 +186,9 @@ class Study(ImportPathMixin, ModelMixin, TimeStampedModel):
             return None
         else:
             return None
+
+    def import_path(self) -> Path:
+        """ Returns the studies import path """
+        return settings.IMPORT_REPO_PATH.joinpath(
+            self.name, settings.IMPORT_SUB_DIRECTORY
+        )

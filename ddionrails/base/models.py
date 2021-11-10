@@ -7,8 +7,6 @@ from __future__ import annotations
 from django.conf import settings
 from django.db import models
 
-from .mixins import ImportPathMixin
-
 
 class Singleton(models.Model):
     """Base Class for models with just one entry."""
@@ -31,7 +29,7 @@ class Singleton(models.Model):
         self.__class__.objects.exclude(id=self.id).delete()  # type:ignore
 
 
-class System(ImportPathMixin, Singleton):
+class System(Singleton):
     """Information about the git repository containing initialization information."""
 
     class Meta:
