@@ -3,12 +3,12 @@
 
 
 {% block styles%}
-{% render_bundle "transfer" "css" %}
+{% render_bundle "statistics" "css" %}
 {% endblock styles %}
 
 {% block content %}
 
-{{ server_metadata|json_script:"transfer-server-metadata" }}
+{{ server_metadata|json_script:"statistics-server-metadata" }}
 <div id="container">
 	<div class="d-flex flex-row">
 		{% if variable %}
@@ -37,7 +37,7 @@
 		</div>
 	</div>
 	<iframe id="main-frame"
-		src="{{ transfer_server_url }}?variable={{request.GET.variable}}&no-title=TRUE"
+		src="{{ statistics_server_url }}?variable={{request.GET.variable}}&no-title=TRUE"
 		width="500" height="50%"
 		frameborder="0"></iframe>
 
@@ -137,5 +137,5 @@
 </div>
 
 
-{% render_bundle "transfer" "js" %}
+{% render_bundle "statistics" "js" %}
 {% endblock content %}

@@ -31,12 +31,18 @@ admin.site.index_title = "Welcome to DDI on Rails Admin"
 
 
 class StudyConverter:
+    """ Get study object from url component. """
+
     regex = ".*"
 
-    def to_python(self, value):
+    @staticmethod
+    def to_python(value):
+        """ Get object """
         return get_object_or_404(Study, name=value)
 
-    def to_url(self, value):
+    @staticmethod
+    def to_url(value):
+        """ Return string unchanged """
         return value
 
 
@@ -71,9 +77,9 @@ urlpatterns = [
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),
     path(
-        "<study:study>/transfer/",
-        include("ddionrails.transfer.urls", namespace="transfer"),
-        name="transfer",
+        "<study:study>/statistics/",
+        include("ddionrails.statistics.urls", namespace="statistics"),
+        name="statistics",
     ),
     # Study by name
     path("<slug:study_name>/", StudyDetailView.as_view(), name="study_detail"),

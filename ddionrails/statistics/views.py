@@ -1,4 +1,4 @@
-"""Views for the transfer data visualization app."""
+"""Views for the statistics data visualization app."""
 from typing import Any, Dict
 
 from django.conf import settings
@@ -11,18 +11,18 @@ from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
 
-def transfer_detail_view(
+def statistics_detail_view(
     request: HttpRequest, study: Study, plot_type: str
 ) -> HttpResponse:
-    """Render numerical and categorical transfer views."""
-    transfer_server_url = f"{request.get_host()}{settings.TRANSFER_SERVER_URL}"
+    """Render numerical and categorical statistics views."""
+    statistics_server_url = f"{request.get_host()}{settings.STATISTICS_SERVER_URL}"
     context: Dict[str, Any] = {}
     context[
-        "transfer_server_url"
-    ] = f"{request.scheme}://{transfer_server_url}{plot_type}/"
+        "statistics_server_url"
+    ] = f"{request.scheme}://{statistics_server_url}{plot_type}/"
     context["study"] = study
     context["server_metadata"] = {
-        "url": context["transfer_server_url"],
+        "url": context["statistics_server_url"],
         "study": study.name,
     }
     context["variable"] = (
@@ -30,13 +30,13 @@ def transfer_detail_view(
         .prefetch_related("dataset")
         .first()
     )
-    return render(request, "transfer/transfer_detail.html", context=context)
+    return render(request, "statistics/statistics_detail.html", context=context)
 
 
-class TransferView(TemplateView):
-    """Render overview for all numerical and categorical transfer views."""
+class StatisticsView(TemplateView):
+    """Render overview for all numerical and categorical statistics views."""
 
-    template_name = "transfer/transfer.html"
+    template_name = "statistics/statistics.html"
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)

@@ -14,7 +14,7 @@
         {% endif %}
         <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
         </li>
-        <li class="nav-item" id="statistics-nav-item"><a href="{% url 'transfer:transfer' study=study %}" class="nav-link">Statistics</a>
+        <li class="nav-item" id="statistics-nav-item"><a href="{% url 'statistics:statistics' study=study %}" class="nav-link">Statistics</a>
         </li>
         <li class="nav-item">
         <a

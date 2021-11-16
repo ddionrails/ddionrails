@@ -40,7 +40,7 @@ MEDIA_ROOT = os.getenv("DJANGO_MEDIA_ROOT", default="/var/django/media")
 os.makedirs(MEDIA_ROOT, exist_ok=True)
 MEDIA_URL = "/media/"
 
-TRANSFER_SERVER_URL = os.getenv("TRANSFER_SERVER_URL", "/transfer-server/")
+STATISTICS_SERVER_URL = os.getenv("STATISTICS_SERVER_URL", "/statistics-server/")
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
@@ -79,6 +79,7 @@ LOCAL_APPS = (
     "ddionrails.instruments",
     "ddionrails.publications",
     "ddionrails.studies",
+    "ddionrails.statistics",
     "ddionrails.workspace",
 )
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

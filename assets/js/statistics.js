@@ -106,7 +106,7 @@ async function waitForIFrameContent(iFrame, init=false) {
 const documentURL = new URL(document.URL);
 const documentVariable = documentURL.searchParams.get("variable");
 const serverMetadata = JSON.parse(
-  document.getElementById("transfer-server-metadata").textContent
+  document.getElementById("statistics-server-metadata").textContent
 );
 
 /**

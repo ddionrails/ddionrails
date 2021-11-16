@@ -4,7 +4,7 @@
  * @param {*} event
  */
 function toggleNavigationButtons(event) {
-  const buttonContainer = document.getElementById("transfer-button-container");
+  const buttonContainer = document.getElementById("statistics-button-container");
   buttonContainer.classList.toggle("justify-content-left");
   buttonContainer.classList.toggle("justify-content-center");
   const buttons = buttonContainer.querySelectorAll("button");
@@ -23,7 +23,7 @@ function toggleNavigationButtons(event) {
 }
 
 window.addEventListener("load", function() {
-  const buttonContainer = document.getElementById("transfer-button-container");
+  const buttonContainer = document.getElementById("statistics-button-container");
   const buttons = buttonContainer.querySelectorAll("button");
   buttons.forEach((button) => {
     button.addEventListener("click", toggleNavigationButtons);

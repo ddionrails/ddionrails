@@ -1,4 +1,4 @@
-"""Models for the transfer-server App."""
+"""Models for the statistics-server App."""
 from django.db import models
 
 from ddionrails.data.models.variable import Variable

@@ -41,9 +41,9 @@ from ddionrails.instruments.imports import (
     question_variable_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
+from ddionrails.statistics.imports import statistics_import
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
-from ddionrails.transfer.imports import statistics_import
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
@@ -198,7 +198,7 @@ class StudyImportManager:
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "statistics": (
                     statistics_import,
-                    self.base_dir / "transfer/metadata/variables.csv",
+                    self.base_dir / "statistics/metadata/variables.csv",
                 ),
                 "questions_images": (
                     question_image_import.questions_images_import,

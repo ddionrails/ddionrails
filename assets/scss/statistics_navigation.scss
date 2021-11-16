@@ -8,7 +8,7 @@
 iframe {
   width: 99%;
 }
-#transfer-button-container {
+#statistics-button-container {
   margin-top: 1em !important;
 }
 @media screen and (min-width: 769px) {
@@ -27,7 +27,7 @@ iframe {
     height: 100%;
   }
 }
-.transfer-button {
+.statistics-button {
   margin: 0 1vw 1vw 0;
   width: 13vw;
   height: 13vw;
@@ -44,7 +44,7 @@ iframe {
   width: auto;
 }
 
-div#transfer-button-container {
+div#statistics-button-container {
   flex-wrap: wrap;
   width: 80vw;
 }

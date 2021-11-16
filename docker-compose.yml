@@ -150,8 +150,8 @@ services:
     security_opt:
       - no-new-privileges
 
-  transfer-server:
-    image: transfer-server
+  statistics-server:
+    image: statistics-server
     command: >
       bash -c "
         xtail /var/log/shiny-server/ & shiny-server 2>&1"

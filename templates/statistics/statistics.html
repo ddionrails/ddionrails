@@ -5,12 +5,12 @@
 {% block styles%}
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-{% render_bundle "transfer_navigation" "css" %}
+{% render_bundle "statistics_navigation" "css" %}
 {% endblock styles %}
 
 {% block content %}
 
-{{ server_metadata|json_script:"transfer-server-metadata" }}
+{{ server_metadata|json_script:"statistics-server-metadata" }}
 <div id="container" class="flex-row justify-content-between">
 	<div>
 	<h2>Categorical</h2>
@@ -18,7 +18,7 @@
 	{% for variable, label in categorical_variables.items %}
 	<li>
 		<a
-		href="{% url 'transfer:transfer_detail' study=study.name plot_type='categorical' %}?variable={{variable}}">
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='categorical' %}?variable={{variable}}">
 		{{label}}: {{variable}}
 		</a>
 	
@@ -33,7 +33,7 @@
 	{% for variable, label in numerical_variables.items %}
 	<li>
 		<a
-		href="{% url 'transfer:transfer_detail' study=study.name plot_type='numerical' %}?variable={{variable}}">
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='numerical' %}?variable={{variable}}">
 		{{label}}: {{variable}}
 		</a>
 	
@@ -44,54 +44,54 @@
 </div>
 
         <div class="flex-row d-flex px-5 justify-content-center"
-            id="transfer-button-container">
+            id="statistics-button-container">
 
 
-		<button class="btn btn-info transfer-button" title="Attitudes, Values, and
+		<button class="btn btn-info statistics-button" title="Attitudes, Values, and
 			Personality">
 			<i class="far fa-compass"></i>
 			<p>Attitudes, Values, and Personality</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Demography and
+		<button class="btn btn-info statistics-button" title="Demography and
 			Population">
 			<i class="fas fa-chart-area"></i>
 			<p>Demography and Population</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Education and
+		<button class="btn btn-info statistics-button" title="Education and
 			Qualification">
 			<i class="fas fa-user-graduate"></i>
 			<p>Education and Qualification</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Family and Social
+		<button class="btn btn-info statistics-button" title="Family and Social
 			Networks">
 			<i class="fas fa-baby-carriage"></i>
 			<p>Family and Social Networks</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Health and Care">
+		<button class="btn btn-info statistics-button" title="Health and Care">
 			<i class="far fa-hand-holding-medical"></i>
 			<p>Health and Care</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Home, Amenities, and
+		<button class="btn btn-info statistics-button" title="Home, Amenities, and
 			Contributions of Private Households">
 			<i class="fas fa-home"></i>
 			<p>Home, Amenities, and Contributions of Private Households</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Income, Taxes, and
+		<button class="btn btn-info statistics-button" title="Income, Taxes, and
 			Social Security">
 			<i class="fas fa-coins"></i>
 			<p>Income, Taxes, and Social Security</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Integration, Migration,
+		<button class="btn btn-info statistics-button" title="Integration, Migration,
 			Transnationalization">
 			<i class="fas fa-globe"></i>
 			<p>Integration, Migration, Transnationalization</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Time Use and
+		<button class="btn btn-info statistics-button" title="Time Use and
 			Environmental Behavior">
 			<i class="far fa-clock"></i>
 			<p>Time Use and Environmental Behavior</p>
 		</button>
-		<button class="btn btn-info transfer-button" title="Work and Employment">
+		<button class="btn btn-info statistics-button" title="Work and Employment">
 			<i class="fas fa-tools"></i>
 			<p>Work and Employment</p>
 		</button>
@@ -104,5 +104,5 @@
 		</div>
         </div>
 
-		{% render_bundle "transfer_navigation" "js" %}
+		{% render_bundle "statistics_navigation" "js" %}
 		{% endblock content %}

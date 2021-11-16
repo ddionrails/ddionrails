@@ -4,8 +4,9 @@ from pathlib import Path
 
 import pytest
 
+from ddionrails.statistics.imports import statistics_import
+from ddionrails.statistics.models import VariableStatistic
 from ddionrails.studies.models import Study
-from ddionrails.transfer.imports import statistics_import
 
 
 @pytest.mark.usefixtures("tmp_import_path")

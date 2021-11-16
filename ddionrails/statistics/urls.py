@@ -7,7 +7,7 @@ from django.urls import path, register_converter
 
 from . import views
 
-app_name = "transfer"
+app_name = "statistics"
 
 
 class TypeConverter:
@@ -25,6 +25,6 @@ class TypeConverter:
 register_converter(TypeConverter, "type")
 
 urlpatterns = [
-    path("", views.TransferView.as_view(), name="transfer"),
-    path("<type:plot_type>/", views.transfer_detail_view, name="transfer_detail"),
+    path("", views.StatisticsView.as_view(), name="statistics"),
+    path("<type:plot_type>/", views.statistics_detail_view, name="statistics_detail"),
 ]
