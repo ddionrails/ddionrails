@@ -23,6 +23,7 @@ class VariableStatistic(models.Model):
     # Attributes
     plot_type = models.TextField(null=False, choices=PlotType.choices)
     statistics = models.TextField(null=False, blank=False)
+    # independent_variables = models.ManyToManyField(null=True, blank=True)
     start_year = models.IntegerField(null=False, blank=False)
     end_year = models.IntegerField(null=False, blank=False)
 

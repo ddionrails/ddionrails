@@ -1,0 +1,69 @@
+[
+  {
+    "variable": "alter_gr",
+    "label": "Altersgruppen",
+    "values": [
+      "16-34 Jahre alt",
+      "35-65 Jahre alt",
+      "66 und älter"
+    ]
+  },
+  {
+    "variable": "sex",
+    "label": "Geschlecht",
+    "values": [
+      "maennlich",
+      "weiblich"
+    ]
+  },
+  {
+    "variable": "bula_h",
+    "label": "Bundesland lt. Statistik [harmonisiert]",
+    "values": [
+      "Schleswig-Holstein",
+      "Hamburg",
+      "Niedersachsen",
+      "Bremen",
+      "Nordrhein-Westfalen",
+      "Hessen",
+      "Rheinland-Pfalz,Saarland",
+      "Baden-Wuerttemberg",
+      "Bayern",
+      "Saarland",
+      "Berlin",
+      "Brandenburg",
+      "Mecklenburg-Vorpommern",
+      "Sachsen",
+      "Sachsen-Anhalt",
+      "Thueringen"
+    ]
+  },
+  {
+    "variable": "bildungsniveau",
+    "label": "Bildungsniveau",
+    "values": [
+      "(noch) kein Abschluss",
+      "Hauptschulabschluss",
+      "Realschulabschluss",
+      "(Fach-)Abitur",
+      "AkademikerInnen"
+    ]
+  },
+  {
+    "variable": "sampreg",
+    "label": "Aktuelle Stichprobenregion (Berlin West-Ost)",
+    "values": [
+      "Westdeutschland, alte Bundeslaender",
+      "Ostdeutschland, neue Bundeslaender"
+    ]
+  },
+  {
+    "variable": "migback",
+    "label": "Migrationshintergrund",
+    "values": [
+      "kein Migrationshintergrund",
+      "direkter Migrationshintergrund",
+      "indirekter Migrationshintergrund"
+    ]
+  }
+]

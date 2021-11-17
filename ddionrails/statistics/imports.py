@@ -1,12 +1,15 @@
 """ Import functions for statistical data used in data visualization."""
+import json
 from csv import DictReader
 from glob import glob
 from pathlib import Path
 from typing import Dict, Tuple
 
-from ddionrails.data.models import Variable
-from ddionrails.statistics.models import VariableStatistic
+from ddionrails.data.models.variable import Variable
+from ddionrails.statistics.models import IndependentVariables, VariableStatistic
 from ddionrails.studies.models import Study
+
+CACHE = set()
 
 
 def statistics_import(file: Path, study: Study) -> None:
@@ -34,9 +37,25 @@ def _import_single_variable(variable: Dict[str, str], study: Study) -> None:
         _import_single_type(variable_object, statistics_base_path, "categorical")
 
 
+def _import_independent_variables(path: Path) -> None:
+    with open(path.joinpath("meta.json"), "r", encoding="utf8") as metadata_file:
+        independent_variable_metadata = json.load(metadata_file)
+    for datum in independent_variable_metadata:
+        if datum["variable"] in CACHE:
+            continue
+        variable_object = Variable.objects.filter(name=datum["variable"]).first()
+        independent_variable = IndependentVariables()
+        independent_variable.labels = datum["values"]
+        independent_variable.variable = variable_object
+        independent_variable.save()
+        CACHE.add(datum["variable"])
+
+
 def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> None:
     """ Import alle statistics for a single value and of a single type. """
-    files = glob(f"{base_path}/{stat_type}/{variable.name}/{variable.name}*.csv")
+    statistics_path = base_path.joinpath(f"{stat_type}/{variable.name}")
+    _import_independent_variables(statistics_path)
+    files = glob(f"{statistics_path}/{variable.name}*.csv")
     for file in files:
         statistics = VariableStatistic()
         statistics.variable = variable
