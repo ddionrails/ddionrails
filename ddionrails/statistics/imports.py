@@ -3,17 +3,18 @@ import json
 from csv import DictReader
 from glob import glob
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 from ddionrails.data.models.variable import Variable
-from ddionrails.statistics.models import IndependentVariables, VariableStatistic
+from ddionrails.statistics.models import IndependentVariable, VariableStatistic
 from ddionrails.studies.models import Study
 
-CACHE = set()
+CACHE: Dict[str, IndependentVariable] = {}
 
 
 def statistics_import(file: Path, study: Study) -> None:
     """ Import variable statistics."""
+    VariableStatistic.objects.filter(variable__dataset__study=study).delete()
     with open(file, "r", encoding="utf8") as variables_file:
         variables = DictReader(variables_file)
         for variable in variables:
@@ -37,24 +38,30 @@ def _import_single_variable(variable: Dict[str, str], study: Study) -> None:
         _import_single_type(variable_object, statistics_base_path, "categorical")
 
 
-def _import_independent_variables(path: Path) -> None:
+def _import_independent_variables(path: Path) -> List[str]:
     with open(path.joinpath("meta.json"), "r", encoding="utf8") as metadata_file:
         independent_variable_metadata = json.load(metadata_file)
+    independent_variable_names = []
     for datum in independent_variable_metadata:
         if datum["variable"] in CACHE:
+            independent_variable_names.append(datum["variable"])
             continue
+        # TODO: Temporary solution while metadata is incomplete
+        # Change to specific retrieval when metadata changes.
         variable_object = Variable.objects.filter(name=datum["variable"]).first()
-        independent_variable = IndependentVariables()
-        independent_variable.labels = datum["values"]
-        independent_variable.variable = variable_object
-        independent_variable.save()
-        CACHE.add(datum["variable"])
+        independent_variable, _ = IndependentVariable.objects.get_or_create(
+            labels=datum["values"], variable=variable_object
+        )
+        CACHE[datum["variable"]] = independent_variable
+        independent_variable_names.append(datum["variable"])
+
+    return independent_variable_names
 
 
 def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> None:
     """ Import alle statistics for a single value and of a single type. """
     statistics_path = base_path.joinpath(f"{stat_type}/{variable.name}")
-    _import_independent_variables(statistics_path)
+    independent_variables = _import_independent_variables(statistics_path)
     files = glob(f"{statistics_path}/{variable.name}*.csv")
     for file in files:
         statistics = VariableStatistic()
@@ -64,6 +71,14 @@ def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> 
         statistics.start_year = start_year
         statistics.end_year = end_year
         statistics.statistics = data
+        independent_variable_names = []
+        for independent_variable in independent_variables:
+            if independent_variable in file:
+                independent_variable_names.append(independent_variable)
+        statistics.set_independent_variable_names(independent_variable_names)
+        statistics.save()
+        for name in independent_variable_names:
+            statistics.independent_variables.add(CACHE[name])
         statistics.save()
 
 

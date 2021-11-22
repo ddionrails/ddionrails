@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 from ddionrails.statistics.imports import statistics_import
-from ddionrails.statistics.models import IndependentVariables, VariableStatistic
+from ddionrails.statistics.models import IndependentVariable, VariableStatistic
 from ddionrails.studies.models import Study
 from tests.data.factories import VariableFactory
 
@@ -22,6 +22,12 @@ class TestStatisticsImport(unittest.TestCase):
         VariableFactory(name="some-variable")
         VariableFactory(name="some-other-variable")
         VariableFactory(name="some-third-variable")
+        VariableFactory(name="alter_gr")
+        VariableFactory(name="sex")
+        VariableFactory(name="bula_h")
+        VariableFactory(name="bildungsniveau")
+        VariableFactory(name="sampreg")
+        VariableFactory(name="migback")
         return super().setUp()
 
     def test_statistics_import(self) -> None:
@@ -36,12 +42,15 @@ class TestStatisticsImport(unittest.TestCase):
 
     def test_independent_variable_import(self) -> None:
         """ Test import of linked independent variables. """
-        VariableFactory(name="alter_gr")
-        VariableFactory(name="sex")
-        VariableFactory(name="bula_h")
-        VariableFactory(name="bildungsniveau")
-        VariableFactory(name="sampreg")
-        VariableFactory(name="migback")
         variables_file = self.import_path.joinpath("variables.csv")
         statistics_import(variables_file, self.study)
-        self.assertEqual(6, IndependentVariables.objects.all().count())
+        self.assertEqual(6, IndependentVariable.objects.all().count())
+        variable = VariableStatistic.objects.get(
+            independent_variable_names__contains=["alter_gr", "bildungsniveau"],
+            variable__name="some-variable",
+        )
+        self.assertEqual(2, variable.independent_variables.all().count())
+
+    def tearDown(self) -> None:
+        Study.objects.filter(name="some-study").delete()
+        return super().tearDown()

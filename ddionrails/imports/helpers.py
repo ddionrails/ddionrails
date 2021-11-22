@@ -42,13 +42,11 @@ def _hash_with_base_uuid(name: str) -> uuid.UUID:
 
 def hash_with_namespace_uuid(
     namespace: uuid.UUID, name: str, cache: bool = True
-) -> Optional[uuid.UUID]:
+) -> uuid.UUID:
     """ Compute the model instance's UUID inside a namespace.
 
     A namespace, in this instance, is defined by teh UUID of a related model instance.
     """
-    if not name:
-        return None
     if cache:
         return _hash_with_namespace_uuid(namespace, name)
     return uuid.uuid5(namespace, name)
