@@ -17,7 +17,9 @@ def tmp_import_path(
     """ Stage import test data in tmp folder. """
     tmp_path = Path(mkdtemp())
     csv_path = Path("tests/imports/test_data/").absolute()
+    statistics_path = Path("tests/imports/test_data/statistics").absolute()
     import_path = copytree(csv_path, tmp_path.joinpath("ddionrails"))
+    copytree(statistics_path, tmp_path.joinpath("statistics"))
 
     patch_dict = {
         "target": "ddionrails.studies.models.Study.import_path",

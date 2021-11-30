@@ -5,8 +5,14 @@ from glob import glob
 from pathlib import Path
 from typing import Dict, List, Tuple
 
+from django_rq import enqueue
+
 from ddionrails.data.models.variable import Variable
-from ddionrails.statistics.models import IndependentVariable, VariableStatistic
+from ddionrails.statistics.models import (
+    IndependentVariable,
+    StatisticsMetadata,
+    VariableStatistic,
+)
 from ddionrails.studies.models import Study
 
 CACHE: Dict[str, IndependentVariable] = {}
@@ -18,18 +24,67 @@ def statistics_import(file: Path, study: Study) -> None:
     with open(file, "r", encoding="utf8") as variables_file:
         variables = DictReader(variables_file)
         for variable in variables:
-            if variable["statistics"] == "False":
+            if not variable.get("statistics", "False") == "True":
                 continue
             _import_single_variable(variable, study)
+    prototype_variables = study.import_path().parent.joinpath(
+        "statistics/metadata/variables.csv"
+    )
+    if not prototype_variables.exists():
+        return None
+    with open(prototype_variables, "r", encoding="utf8") as prototype_file:
+        variables = DictReader(prototype_file)
+        for variable in variables:
+            if variable.get("statistics", "False") == "False":
+                continue
+            _import_single_variable(variable, study)
+    enqueue(_metadata_import, study)
+    return None
+
+
+def _metadata_import(study: Study) -> None:
+    objects = []
+    StatisticsMetadata.objects.filter(variable__dataset__study=study).delete()
+    for variable in (
+        Variable.objects.filter(dataset__study=study)
+        .exclude(statistics_data=None)
+        .prefetch_related("dataset")
+    ):
+        independent_variables = {}
+        for statistic in variable.statistics_data.all():
+            for independent_variable in statistic.independent_variables.all():
+                independent_variables[independent_variable.id] = independent_variable
+        metadata = StatisticsMetadata()
+        metadata.variable = variable
+        metadata.metadata = {
+            "study": study.name,
+            "title": variable.label_de,
+            "variable": variable.name,
+            "id": str(variable.id),
+            "dataset": variable.dataset.name,
+            "dimensions": [
+                {
+                    "variable": independent_variable.variable.name,
+                    "label": independent_variable.variable.label_de,
+                    "values": independent_variable.labels,
+                }
+                for independent_variable in independent_variables.values()
+            ],
+        }
+        objects.append(metadata)
+    StatisticsMetadata.objects.bulk_create(objects, ignore_conflicts=True)
 
 
 def _import_single_variable(variable: Dict[str, str], study: Study) -> None:
     """ Import statistics data for a single defined value. """
 
-    variable_object = Variable.objects.get(
-        name=variable["name"], dataset__name=variable["dataset"], dataset__study=study
-    )
-    import_base_path: Path = study.import_path()
+    try:
+        variable_object = Variable.objects.get(
+            name=variable["name"], dataset__name=variable["dataset"], dataset__study=study
+        )
+    except Exception as error:
+        raise ValueError(f"{variable}") from error
+    import_base_path: Path = study.import_path().parent
     statistics_base_path = import_base_path.joinpath("statistics")
     if variable["type"] in ["numerical", "categorical"]:
         _import_single_type(variable_object, statistics_base_path, variable["type"])
@@ -41,6 +96,8 @@ def _import_single_variable(variable: Dict[str, str], study: Study) -> None:
 def _import_independent_variables(path: Path) -> List[str]:
     with open(path.joinpath("meta.json"), "r", encoding="utf8") as metadata_file:
         independent_variable_metadata = json.load(metadata_file)
+    if "dimensions" in independent_variable_metadata:
+        independent_variable_metadata = independent_variable_metadata["dimensions"]
     independent_variable_names = []
     for datum in independent_variable_metadata:
         if datum["variable"] in CACHE:
@@ -49,9 +106,13 @@ def _import_independent_variables(path: Path) -> List[str]:
         # TODO: Temporary solution while metadata is incomplete
         # Change to specific retrieval when metadata changes.
         variable_object = Variable.objects.filter(name=datum["variable"]).first()
-        independent_variable, _ = IndependentVariable.objects.get_or_create(
-            labels=datum["values"], variable=variable_object
-        )
+        try:
+            independent_variable, _ = IndependentVariable.objects.get_or_create(
+                labels=datum["values"], variable=variable_object
+            )
+        except BaseException as error:
+            raise BaseException(f"{datum}  {variable_object}") from error
+
         CACHE[datum["variable"]] = independent_variable
         independent_variable_names.append(datum["variable"])
 

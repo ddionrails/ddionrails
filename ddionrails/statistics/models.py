@@ -39,8 +39,20 @@ class IndependentVariable(models.Model):
         )
 
 
+class StatisticsMetadata(models.Model):
+    """ Store data to be served by the REST API. """
+
+    variable = models.ForeignKey(
+        to=Variable,
+        null=False,
+        on_delete=models.CASCADE,
+        related_name="statistics_metadata",
+    )
+    metadata = models.JSONField()
+
+
 class VariableStatistic(models.Model):
-    """Stores CSV statistics Data for a data.Variable."""
+    """ Stores CSV statistics Data for a data.Variable."""
 
     class PlotType(models.TextChoices):
         """Define possible plot types."""
@@ -51,7 +63,9 @@ class VariableStatistic(models.Model):
 
     # Keys
     id = models.UUIDField(primary_key=True)
-    variable = models.ForeignKey(to=Variable, null=False, on_delete=models.CASCADE)
+    variable = models.ForeignKey(
+        to=Variable, null=False, on_delete=models.CASCADE, related_name="statistics_data"
+    )
 
     # Attributes
     plot_type = models.TextField(null=False, choices=PlotType.choices)

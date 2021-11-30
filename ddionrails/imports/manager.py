@@ -196,10 +196,7 @@ class StudyImportManager:
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
-                "statistics": (
-                    statistics_import,
-                    self.base_dir / "statistics/metadata/variables.csv",
-                ),
+                "statistics": (statistics_import, self.base_dir / "variables.csv"),
                 "questions_images": (
                     question_image_import.questions_images_import,
                     self.base_dir.joinpath("questions_images.csv"),
