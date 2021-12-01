@@ -35,7 +35,7 @@ from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.views import get_question_item_metadata
-from ddionrails.statistics.models import StatisticsMetadata
+from ddionrails.statistics.models import StatisticsMetadata, VariableStatistic
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket import Basket
 from ddionrails.workspace.models.basket_variable import BasketVariable
@@ -105,7 +105,7 @@ class StatisticsMetadataViewSet(viewsets.GenericViewSet):
     queryset = StatisticsMetadata.objects.all()
 
     @staticmethod
-    def list(request):
+    def list(request: Request) -> Response:
         """Retrieve metadata and serve as response."""
         variable_id = request.query_params.get("variable", None)
         if not variable_id:
@@ -115,6 +115,29 @@ class StatisticsMetadataViewSet(viewsets.GenericViewSet):
             raise Http404
 
         return Response(metadata.metadata)
+
+
+class StatisticViewSet(viewsets.GenericViewSet):
+    """ Display the statistical data in form of csv files. """
+
+    queryset = VariableStatistic.objects.all()
+
+    @staticmethod
+    def list(request: Request) -> HttpResponse:
+        """ Retrieve the statistical data in form of csv files. """
+        variable_id = request.query_params.get("variable", None)
+        dimensions = sorted(request.query_params.get("dimensions", ",").split(","))
+        _type = request.query_params.get("type", None)
+        variable = get_object_or_404(Variable, id=variable_id)
+        variable_statistic = VariableStatistic.objects.get(
+            variable__id=variable_id,
+            independent_variable_names=dimensions,
+            plot_type=_type,
+        )
+        response = HttpResponse(variable_statistic.statistics, content_type="text/csv")
+        response["Content-Disposition"] = f"attachement; filename={variable.label}.csv"
+
+        return response
 
 
 class TopicTreeViewSet(viewsets.GenericViewSet):
@@ -333,7 +356,7 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         "a topic or a concept fr9om which to add variables."
     )
 
-    def _basket_limit_error_message(self, basket_size: int, variables: int):
+    def _basket_limit_error_message(self, basket_size: int, variables: int) -> str:
         return (
             f"The basket contains {basket_size} variables, adding {variables}"
             f"variables would exceed the basket size limit of {self.basket_limit}."
