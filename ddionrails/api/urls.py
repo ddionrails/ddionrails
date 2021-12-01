@@ -12,6 +12,7 @@ from ddionrails.api.views import (
     QuestionComparisonViewSet,
     QuestionViewSet,
     SendFeedback,
+    StatisticsMetadataViewSet,
     StudyViewSet,
     TopicTreeViewSet,
     UserViewSet,
@@ -33,5 +34,8 @@ ROUTER.register(
     r"question-comparison", QuestionComparisonViewSet, basename="question-comparison"
 )
 ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
+ROUTER.register(
+    r"statistics-metadata", StatisticsMetadataViewSet, basename="statistics-metadata"
+)
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))

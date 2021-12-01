@@ -42,7 +42,7 @@ python-frontmatter = "*"
 gitpython = "*"
 paver = "*"
 requests = "*"
-
+djangorestframework-stubs = "*"
 
 [dev-packages]
 

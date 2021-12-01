@@ -33,8 +33,9 @@ from ddionrails.api.serializers import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.variable import Variable
-from ddionrails.instruments.models import Question
+from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.views import get_question_item_metadata
+from ddionrails.statistics.models import StatisticsMetadata
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket import Basket
 from ddionrails.workspace.models.basket_variable import BasketVariable
@@ -96,6 +97,24 @@ class QuestionComparisonViewSet(viewsets.GenericViewSet):
         )
 
         return HttpResponse(diff, content_type="text/html")
+
+
+class StatisticsMetadataViewSet(viewsets.GenericViewSet):
+    """ List metadata for a variables statistical data. """
+
+    queryset = StatisticsMetadata.objects.all()
+
+    @staticmethod
+    def list(request):
+        """Retrieve metadata and serve as response."""
+        variable_id = request.query_params.get("variable", None)
+        if not variable_id:
+            return Response({})
+        metadata = StatisticsMetadata.objects.filter(variable__id=variable_id).first()
+        if not metadata:
+            raise Http404
+
+        return Response(metadata.metadata)
 
 
 class TopicTreeViewSet(viewsets.GenericViewSet):
