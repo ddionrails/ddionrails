@@ -103,8 +103,8 @@ async function waitForIFrameContent(iFrame, init=false) {
 }
 
 
-const documentURL = new URL(document.URL);
-const documentVariable = documentURL.searchParams.get("variable");
+const firstFrameURL = new URL(FIRST_FRAME.src);
+const documentVariable = firstFrameURL.searchParams.get("variable");
 const serverMetadata = JSON.parse(
   document.getElementById("statistics-server-metadata").textContent
 );

@@ -51,7 +51,13 @@ def _metadata_import(study: Study) -> None:
         .prefetch_related("dataset")
     ):
         independent_variables = {}
+        start_year = 0
+        end_year = 0
         for statistic in variable.statistics_data.all():
+            if not start_year or start_year > statistic.start_year:
+                start_year = statistic.start_year
+            if not end_year or end_year > statistic.end_year:
+                end_year = statistic.end_year
             for independent_variable in statistic.independent_variables.all():
                 independent_variables[independent_variable.id] = independent_variable
         metadata = StatisticsMetadata()
@@ -70,6 +76,8 @@ def _metadata_import(study: Study) -> None:
                 }
                 for independent_variable in independent_variables.values()
             ],
+            "start_year": start_year,
+            "end_year": end_year,
         }
         objects.append(metadata)
     StatisticsMetadata.objects.bulk_create(objects, ignore_conflicts=True)

@@ -126,7 +126,13 @@ class StatisticViewSet(viewsets.GenericViewSet):
     def list(request: Request) -> HttpResponse:
         """ Retrieve the statistical data in form of csv files. """
         variable_id = request.query_params.get("variable", None)
-        dimensions = sorted(request.query_params.get("dimensions", ",").split(","))
+        if (
+            "dimensions" in request.query_params
+            and request.query_params["dimensions"] != ""
+        ):
+            dimensions = sorted(request.query_params["dimensions"].split(","))
+        else:
+            dimensions = []
         _type = request.query_params.get("type", None)
         variable = get_object_or_404(Variable, id=variable_id)
         variable_statistic = VariableStatistic.objects.get(
