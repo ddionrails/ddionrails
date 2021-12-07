@@ -7,6 +7,7 @@ from typing import List
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.db.models import Q
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
@@ -25,10 +26,26 @@ from ddionrails.api.serializers import (
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models import Question
+from ddionrails.instruments.views import get_question_item_metadata
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 
 # VIEWS
+
+
+class QuestionItemMetadataViewSet(viewsets.GenericViewSet):
+    """ Retrieve question and item metadata combined. """
+
+    queryset = Question.objects.none()
+
+    @staticmethod
+    def list(request) -> Response:
+        """ Retrieve question via id and return metadata"""
+        question_id = request.query_params.get("question")
+        if not question_id:
+            raise Http404
+        question = get_object_or_404(Question, id=question_id)
+        return Response(get_question_item_metadata(question))
 
 
 class TopicTreeViewSet(viewsets.GenericViewSet):
@@ -69,7 +86,7 @@ class VariableViewSet(viewsets.ModelViewSet):
         if not self.request.query_params.get("paginate", False):
             self.pagination_class = None
 
-        queryset_filter = dict()
+        queryset_filter = {}
         if topic and concept:
             raise NotAcceptable(
                 detail="Concept and topic are mutually exclusive parameters."
@@ -115,7 +132,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
-        queryset_filter = dict()
+        queryset_filter = {}
         if topic and concept:
             raise NotAcceptable(
                 detail="Concept and topic are mutually exclusive parameters."
@@ -170,7 +187,7 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin):
         """get queryset according to permissions."""
         user = self.request.user
         study = self.request.query_params.get("study", None)
-        query_filter = dict()
+        query_filter = {}
         if study:
             query_filter["study__name"] = study
         return Basket.objects.filter(user=user.id, **query_filter)
@@ -259,7 +276,7 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
         return self.BASKET_LIMIT
 
     def get_queryset(self):
-        _filter = dict()
+        _filter = {}
         basket = self.request.query_params.get("basket", None)
         variable = self.request.query_params.get("variable", None)
 
@@ -281,12 +298,12 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
             raise NotAcceptable(detail="Target basket needs to be specified.")
 
         basket = Basket.objects.get(id=data.get("basket"))
-        basket_variables = list()
+        basket_variables = []
         basket_size = BasketVariable.objects.filter(basket=basket.id).count()
 
         self._test_exclusivity(["variables" in data, "concept" in data, "topic" in data])
 
-        variable_filter = dict()
+        variable_filter = {}
 
         if "variables" in data:
             variable_filter = {"id__in": data["variables"]}

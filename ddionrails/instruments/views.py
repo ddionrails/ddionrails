@@ -96,7 +96,7 @@ def question_detail(
         instrument__name=instrument_name,
         name=question_name,
     )
-    question_items = _question_item_metadata(question)
+    question_items = get_question_item_metadata(question)
 
     concept_list = question.get_concepts()
     context = dict(
@@ -154,7 +154,8 @@ def question_comparison_partial(
     return HttpResponse(diff_text)
 
 
-def _question_item_metadata(question: Question):
+def get_question_item_metadata(question: Question) -> List[List[QuestionItemDict]]:
+    """ Get metadata for a question and all it's items. """
     question_items = list(
         question.question_items.all()
         .order_by("position")
