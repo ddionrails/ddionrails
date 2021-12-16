@@ -2,17 +2,21 @@
 
 """ Views for ddionrails.api app """
 
+import difflib
+import re
 import uuid
 from typing import List
 
+import yaml
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.db.models import Q
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from ddionrails.api.serializers import (
@@ -33,19 +37,58 @@ from ddionrails.workspace.models import Basket, BasketVariable
 # VIEWS
 
 
-class QuestionItemMetadataViewSet(viewsets.GenericViewSet):
+class QuestionComparisonViewSet(viewsets.GenericViewSet):
     """ Retrieve question and item metadata combined. """
 
     queryset = Question.objects.none()
 
     @staticmethod
-    def list(request) -> Response:
+    def list(request: Request) -> HttpResponse:
         """ Retrieve question via id and return metadata"""
-        question_id = request.query_params.get("question")
-        if not question_id:
+        questions_ids = request.query_params.get("questions", "").split(",")
+        if len(questions_ids) != 2 or "" in questions_ids:
             raise Http404
-        question = get_object_or_404(Question, id=question_id)
-        return Response(get_question_item_metadata(question))
+        ours_question = get_object_or_404(
+            Question.objects.select_related("instrument", "instrument__period"),
+            pk=questions_ids[0],
+        )
+        theirs_question = get_object_or_404(
+            Question.objects.select_related("instrument", "instrument__period"),
+            pk=questions_ids[1],
+        )
+        ours_metadata = re.sub(
+            "\n- - ",
+            "\n\n- - ",
+            yaml.dump(
+                get_question_item_metadata(ours_question, short=True),
+                sort_keys=False,
+                allow_unicode=True,
+            ),
+        )
+        theirs_metadata = re.sub(
+            "\n- - ",
+            "\n\n- - ",
+            yaml.dump(
+                get_question_item_metadata(theirs_question, short=True),
+                sort_keys=False,
+                allow_unicode=True,
+            ),
+        )
+
+        diff = difflib.HtmlDiff().make_table(
+            ours_metadata.split("\n"),
+            theirs_metadata.split("\n"),
+            fromdesc=(
+                f"{ours_question.instrument.period.name}: "
+                f"{ours_question.instrument.name}/{ours_question.name}"
+            ),
+            todesc=(
+                f"{theirs_question.instrument.period.name}: "
+                f"{theirs_question.instrument.name}/{theirs_question.name}"
+            ),
+        )
+
+        return HttpResponse(diff, content_type="text/html")
 
 
 class TopicTreeViewSet(viewsets.GenericViewSet):
@@ -54,7 +97,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
     @staticmethod
-    def list(request):
+    def list(request: Request):
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
         language = request.query_params.get("language", "en")

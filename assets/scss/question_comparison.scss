@@ -1,0 +1,20 @@
+.diff_chg {
+  background-color: rgba(238, 224, 23, 0.678);
+}
+
+.diff_sub {
+  background-color: rgba(205, 102, 102, 40%);
+}
+
+.diff_add {
+  background-color: rgba(64, 165, 69, 0.192);
+}
+
+.dropdown-menu {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+#question-diff-modal > .modal-xl {
+  max-width: 90vw;
+}

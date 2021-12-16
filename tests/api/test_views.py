@@ -7,9 +7,10 @@ import json
 import unittest
 from typing import Dict, List
 from unittest.mock import PropertyMock, patch
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import pytest
+from django.test.client import Client
 from rest_framework.test import APIClient, APIRequestFactory
 
 from ddionrails.instruments.models.concept_question import ConceptQuestion
@@ -18,13 +19,26 @@ from tests import status
 from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.data.factories import DatasetFactory, VariableFactory
 from tests.factories import UserFactory
-from tests.instruments.factories import InstrumentFactory, QuestionFactory
+from tests.instruments.factories import (
+    InstrumentFactory,
+    QuestionFactory,
+    QuestionItemFactory,
+)
 from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketVariableFactory
 
 LANGUAGE = "en"
 
 TEST_CASE = unittest.TestCase()
+
+
+@pytest.mark.usefixtures("client", "request")
+@pytest.fixture(name="unittest_web_client")
+def _client(request, client):
+    if request.instance:
+        request.instance.web_client = client
+        yield
+    return client
 
 
 @pytest.fixture(name="variable_with_concept_and_topic")
@@ -64,7 +78,7 @@ def test_topic_tree(client, topiclist, language, expected):
 class TestBasketViewSet(unittest.TestCase):
 
     API_PATH = "/api/baskets/"
-    variables: List[VariableFactory] = list()
+    variables: List[VariableFactory] = []
     request_factory: APIRequestFactory
 
     def setUp(self):
@@ -94,7 +108,7 @@ class TestBasketViewSet(unittest.TestCase):
     def _init_self_variables(self):
         if self.variables:
             return None
-        self.variables = list()
+        self.variables = []
         for number in range(1, 100):
             self.variables.append(VariableFactory(name=f"{number}"))
         return None
@@ -230,7 +244,7 @@ class TestQuestionViewSet(unittest.TestCase):
 
     def test_query_parameter_concept(self):
         concept_name = self.concept.name
-        question_list = list()
+        question_list = []
 
         for number in range(1, 11):
             _question = QuestionFactory(name=str(number))
@@ -253,7 +267,7 @@ class TestQuestionViewSet(unittest.TestCase):
         study_name = study.name
         instrument.study = study
         instrument.save()
-        question_list = list()
+        question_list = []
 
         for number in range(1, 11):
             _question = QuestionFactory(name=str(number))
@@ -291,7 +305,7 @@ class TestQuestionViewSet(unittest.TestCase):
     def test_get_variable_GET_data(self):
         """Is the get response as expected?"""
         question_amount = 10
-        questions = list()
+        questions = []
         for number in range(1, question_amount + 1):
             questions.append(QuestionFactory(name=f"{number}"))
         response = self.client.get(self.API_PATH)
@@ -305,7 +319,7 @@ class TestQuestionViewSet(unittest.TestCase):
     def test_scroll_limit(self):
         """There should be no scroll limit"""
         question_amount = 101
-        questions = list()
+        questions = []
         for number in range(1, question_amount + 1):
             questions.append(QuestionFactory(name=f"{number}"))
         response = self.client.get(self.API_PATH)
@@ -356,7 +370,7 @@ class TestVariableViewSet(unittest.TestCase):
 
     def test_query_parameter_concept(self):
         concept_name = self.concept.name
-        variable_list = list()
+        variable_list = []
 
         for number in range(1, 11):
             _variable = VariableFactory(name=str(number))
@@ -379,7 +393,7 @@ class TestVariableViewSet(unittest.TestCase):
         study_name = study.name
         dataset.study = study
         dataset.save()
-        variable_list = list()
+        variable_list = []
 
         for number in range(1, 11):
             _variable = VariableFactory(name=str(number))
@@ -417,7 +431,7 @@ class TestVariableViewSet(unittest.TestCase):
     def test_get_variable_GET_data(self):
         """Is the get response as expected?"""
         variable_amount = 10
-        variables = list()
+        variables = []
         for number in range(1, variable_amount + 1):
             variables.append(VariableFactory(name=f"{number}"))
         response = self.client.get(self.API_PATH)
@@ -431,7 +445,7 @@ class TestVariableViewSet(unittest.TestCase):
     def test_scroll_limit(self):
         """There should be no scroll limit"""
         variable_amount = 101
-        variables = list()
+        variables = []
         for number in range(1, variable_amount + 1):
             variables.append(VariableFactory(name=f"{number}"))
         response = self.client.get(self.API_PATH)
@@ -642,7 +656,7 @@ class TestBasketVariableSet(unittest.TestCase):
 
     def test_basket_variable_limit_topic_and_concept_POST(self):
         """Define how the basket limit should work."""
-        too_many_variables = list()
+        too_many_variables = []
         topic = TopicFactory(name="test-topic")
         concept = ConceptFactory(name="test-concept")
         concept.topics.set([topic])
@@ -671,3 +685,46 @@ class TestBasketVariableSet(unittest.TestCase):
             post_response = self.client.post(self.API_PATH, post_data, format="json")
             self.assertEqual(406, post_response.status_code)
             self.assertIn(b"basket size limit", post_response.content)
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("unittest_web_client")
+class TestQuestionComparison(unittest.TestCase):
+
+    API_PATH = "/api/question-comparison/"
+    client: APIClient
+    web_client: Client
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.from_question = QuestionFactory(name="some-question", sort_id=1)
+        self.to_question = QuestionFactory(name="some-other-question", sort_id=2)
+        QuestionItemFactory(question=self.from_question, name=self.from_question.name)
+        QuestionItemFactory(question=self.to_question, name=self.to_question.name)
+        return super().setUp()
+
+    def test_with_valid_ids(self):
+        response = self.client.get(
+            f"{self.API_PATH}?questions={self.from_question.id},{self.to_question.id}"
+        )
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
+        content = response.content.decode("utf-8")
+        self.assertIn(self.from_question.instrument.period.name, content)
+        self.assertIn(self.to_question.instrument.period.name, content)
+        self.assertIn(self.from_question.name, content)
+        self.assertIn(self.to_question.name, content)
+
+    def test_with_invalid_from_id(self):
+        false_uuid = uuid4()
+        response = self.client.get(
+            f"{self.API_PATH}?questions={false_uuid},{self.to_question.id}"
+        )
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+
+    def test_with_invalid_to_id(self):
+        false_uuid = uuid4()
+        response = self.client.get(
+            f"{self.API_PATH}?questions={self.from_question.id},{false_uuid}"
+        )
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)

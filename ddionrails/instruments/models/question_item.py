@@ -135,21 +135,31 @@ class QuestionItem(models.Model):
             update_fields=update_fields,
         )
 
-    def to_dict(self) -> QuestionItemDict:
+    def to_dict(self, short: bool = False) -> QuestionItemDict:
         """Map fields and values to dictionary key value pairs."""
-        self_dict = QuestionItemDict(
-            name=self.name,
-            scale=self.scale,
-            label=self.label,
-            label_de=self.label_de,
-            description=self.description,
-            description_de=self.description_de,
-            instruction=self.instruction,
-            instruction_de=self.instruction_de,
-            position=self.position,
-            input_filter=self.input_filter,
-            goto=self.goto,
-        )
+        if short:
+            self_dict = QuestionItemDict(
+                label=self.label,
+                label_de=self.label_de,
+                instruction=self.instruction,
+                instruction_de=self.instruction_de,
+                input_filter=self.input_filter,
+                goto=self.goto,
+            )
+        else:
+            self_dict = QuestionItemDict(
+                name=self.name,
+                scale=self.scale,
+                label=self.label,
+                label_de=self.label_de,
+                description=self.description,
+                description_de=self.description_de,
+                instruction=self.instruction,
+                instruction_de=self.instruction_de,
+                position=self.position,
+                input_filter=self.input_filter,
+                goto=self.goto,
+            )
         if self.scale == "cat":
             self_dict["answers"] = [
                 AnswerDict(

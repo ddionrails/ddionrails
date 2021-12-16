@@ -25,6 +25,10 @@ module.exports = {
     concept_table: ["./assets/js/concept_table.js", "./assets/scss/topics.scss"],
     variables: ["./assets/js/variables.js"],
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
+    question_comparison: [
+      "./assets/js/question_comparison.js",
+      "./assets/scss/question_comparison.scss",
+    ],
     description_modal: [
       "./assets/js/description_modal.js",
       "./assets/scss/description_modal.scss",
