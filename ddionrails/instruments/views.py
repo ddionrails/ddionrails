@@ -2,8 +2,6 @@
 
 """ Views for ddionrails.instruments app """
 
-import difflib
-import uuid
 from typing import Dict, List, TypedDict
 
 from django.conf import settings
@@ -136,25 +134,9 @@ def question_detail(
     return render(request, "questions/question_detail.html", context=context)
 
 
-# request is a required parameter
-# TODO: This is not integrated into rest of the system in a way that is usable.
-def question_comparison_partial(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    from_id: uuid.UUID,
-    to_id: uuid.UUID,
-) -> HttpResponse:
-    from_question = get_object_or_404(Question, pk=from_id)
-    to_question = get_object_or_404(Question, pk=to_id)
-    diff_text = difflib.HtmlDiff().make_file(
-        from_question.comparison_string(),
-        to_question.comparison_string(),
-        fromdesc=from_question.name,
-        todesc=to_question.name,
-    )
-    return HttpResponse(diff_text)
-
-
-def get_question_item_metadata(question: Question) -> List[List[QuestionItemDict]]:
+def get_question_item_metadata(
+    question: Question, short: bool = False
+) -> List[List[QuestionItemDict]]:
     """ Get metadata for a question and all it's items. """
     question_items = list(
         question.question_items.all()
@@ -171,18 +153,18 @@ def get_question_item_metadata(question: Question) -> List[List[QuestionItemDict
         block_counter += 1
         blocks[block_counter] = [item]
 
-    return _serialize_blocks(blocks)
+    return _serialize_blocks(blocks, short)
 
 
 def _serialize_blocks(
-    blocks: Dict[int, List[QuestionItem]]
+    blocks: Dict[int, List[QuestionItem]], short: bool = False
 ) -> List[List[QuestionItemDict]]:
 
     serialized: List[List[QuestionItemDict]]
     serialized = [[] for position in range(0, len(blocks))]
     for position, block in blocks.items():
         for item in block:
-            serialized[position].append(item.to_dict())
+            serialized[position].append(item.to_dict(short))
 
     return serialized
 

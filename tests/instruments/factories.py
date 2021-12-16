@@ -42,6 +42,7 @@ class QuestionFactory(factory.django.DjangoModelFactory):
 class QuestionItemFactory(factory.django.DjangoModelFactory):
 
     question = factory.SubFactory(QuestionFactory, name="some-question")
+    position = 1
 
     class Meta:
         model = QuestionItem

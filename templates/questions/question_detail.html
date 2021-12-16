@@ -8,6 +8,7 @@ BODY Their structure is convoluted and confusing.
 {% block styles %}
     <!-- Webpack bundle: "topics" CSS -->
     {% render_bundle 'questions' 'css' %}
+    {% render_bundle 'question_comparison' 'css' %}
 {% endblock styles %}
 
 {% block scripts %}
@@ -16,6 +17,7 @@ BODY Their structure is convoluted and confusing.
     {{ question.instrument.title }}/{{ question.name }}
 {% endblock %}
 {% block content %}
+    <div id="question-id" class="hidden">{{ question.id }}</div>
     {{ question_items|json_script:"question-meta" }}
     <div class="row">
         <div class="col-xl-9">
@@ -56,7 +58,7 @@ BODY Their structure is convoluted and confusing.
             {% include "questions/related_questions.html" with question_list=related_questions table_name="Related questions" %}
         </div>
         <div class="col-xl-3">
-            {% include "questions/question_info.html" %}
+            {% include "questions/question_info.html" with question_list=related_questions %}
             <div class="card">
                 <div class="card-header"><b>Variables</b>
                 </div>
@@ -89,6 +91,9 @@ BODY Their structure is convoluted and confusing.
             </div>
         </div>
     </div>
+    <div id="question-diff">
+    </div>
 {% render_bundle 'questions' 'js' %}
+{% render_bundle 'question_comparison' 'js' %}
 {% render_bundle 'description_modal' 'js' %}
 {% endblock content %}
