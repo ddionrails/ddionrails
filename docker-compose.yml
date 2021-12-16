@@ -74,7 +74,7 @@ services:
       - ddi-psql-logs:/var/log/postgresql
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    image: elasticsearch:7.16.1
     healthcheck:
       test:
         [
@@ -93,6 +93,7 @@ services:
       - bootstrap.memory_lock=true
       # Sets the RAM the java VM is allowed to use
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - logger.level=OFF
     networks:
       - ddi_net
     pids_limit: 5000
