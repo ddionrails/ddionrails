@@ -13,7 +13,7 @@
     "@appbaseio/reactivesearch-vue": "1.22.3",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@vue/compiler-sfc": "^3.2.20",
-    "acorn": ">=8.5.0",
+    "acorn": ">=8.7.0",
     "acorn-import-assertions": ">=1.8.0",
     "ansi-regex": ">=5.0.1",
     "bootstrap": "^4.6.1",
