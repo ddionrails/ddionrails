@@ -1,6 +1,9 @@
-/**
- * Add event listeners to compare the question of this page to related questions.
- */
+import {
+  duplicateDropdown,
+  oursQuestion,
+  setEventListener,
+  theirsQuestion,
+} from "./question_comparison_functions";
 
 const compareButton = document.createElement("button");
 const compareIcon = document.createElement("i");
@@ -11,73 +14,37 @@ compareButton.classList.add("btn");
 compareButton.classList.add("btn-link");
 compareButton.title = "Compare Question";
 
+const mainQuestion = document.getElementById("question-id").textContent;
 
-const apiURL = new URL(`${window.location.origin}/api/question-comparison`);
-const questionDiffModalContent = document.getElementById(
-  "question-diff-modal-content");
-
-const thisQuestion = document.getElementById("question-id").textContent;
-
-const relatedQuestionItems = document.getElementsByClassName("related-question-item");
-
-for ( questionItem of relatedQuestionItems) {
-  questionItem.addEventListener("click", (target) => {
-    // document.getElementById("show-question-diff").click();
-
-    const request = new XMLHttpRequest();
-    const diffApiUrl = new URL(apiURL);
-    diffApiUrl.searchParams.append(
-      "questions",
-      `${thisQuestion},${target.srcElement.id}`
-    );
-
-    request.open("GET", diffApiUrl, true);
-
-    request.onload = (_) => {
-      if (request.readyState ===4) {
-        if (request.status === 200) {
-          questionDiffModalContent.innerHTML = request.responseText;
-
-          questionDiffModalContent.querySelector(".diff").classList.add("table");
-        }
-      }
-    };
-
-    request.send(null);
-  });
-}
-
-
+const oursQuestionDropdownItems = document.getElementsByClassName(
+  "ours-question-dropdown-item"
+);
+const theirsQuestionDropdownItems = document.getElementsByClassName(
+  "theirs-question-dropdown-item"
+);
 const relatedQuestionLinks = document.getElementsByClassName("related-question-link");
 
-for ( questionLink of relatedQuestionLinks) {
+duplicateDropdown();
+
+for ( const questionLink of relatedQuestionLinks) {
   const relatedQuestionLinkDiff = compareButton.cloneNode(true);
   questionLink.parentNode.insertBefore(relatedQuestionLinkDiff, questionLink.nextSibling);
   const id = questionLink.href.substring(questionLink.href.lastIndexOf("/")+1);
-  relatedQuestionLinkDiff.id = id;
+  relatedQuestionLinkDiff.setAttribute("data-id", id);
+
+  oursQuestion.textContent = mainQuestion;
 
   relatedQuestionLinkDiff.addEventListener("click", (target) => {
     document.getElementById("show-question-diff").click();
-
-    const request = new XMLHttpRequest();
-    const diffApiUrl = new URL(apiURL);
-    diffApiUrl.searchParams.append(
-      "questions",
-      `${thisQuestion},${target.currentTarget.id}`
-    );
-
-    request.open("GET", diffApiUrl, true);
-
-    request.onload = (_) => {
-      if (request.readyState ===4) {
-        if (request.status === 200) {
-          questionDiffModalContent.innerHTML = request.responseText;
-
-          questionDiffModalContent.querySelector(".diff").classList.add("table");
-        }
-      }
-    };
-
-    request.send(null);
   });
+  setEventListener(relatedQuestionLinkDiff, theirsQuestion);
+}
+
+for ( const questionItem of oursQuestionDropdownItems) {
+  setEventListener(questionItem, oursQuestion);
+}
+
+
+for ( const questionItem of theirsQuestionDropdownItems) {
+  setEventListener(questionItem, theirsQuestion);
 }

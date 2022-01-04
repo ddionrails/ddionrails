@@ -18,3 +18,11 @@
 #question-diff-modal > .modal-xl {
   max-width: 90vw;
 }
+
+#diff-dropdown-container {
+  display: flex;
+  flex-direction: row;
+  align-content: space-around;
+  justify-content: space-around;
+  margin-bottom: 1em;
+}
