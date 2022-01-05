@@ -11,6 +11,13 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.3.0] - 2022-01-05
+
+### Changed
+
+- Refactored question view
+- Re-added and updated comparison of related questions
+
 ## [5.2.0] - 2021-10-29
 
 ### Changed
@@ -700,7 +707,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.2.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.0...develop
+[5.3.0]: https://github.com/ddionrails/ddionrails/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/ddionrails/ddionrails/compare/v5.1.4...v5.2.0
 [5.1.4]: https://github.com/ddionrails/ddionrails/compare/v5.1.3...v5.1.4
 [5.1.3]: https://github.com/ddionrails/ddionrails/compare/v5.1.2...v5.1.3
