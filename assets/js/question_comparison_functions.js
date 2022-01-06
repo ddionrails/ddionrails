@@ -27,13 +27,13 @@ function duplicateDropdown() {
  * @param {*} changedQuestion
  */
 function setEventListener(listenerTarget, changedQuestion) {
-  listenerTarget.addEventListener("click", (target) => {
+  listenerTarget.addEventListener("click", (event) => {
     const questionDiffModalContent = document.getElementById(
       "diff-table-container");
     const apiURL = new URL(`${window.location.origin}/api/question-comparison`);
     const request = new XMLHttpRequest();
     const diffApiUrl = new URL(apiURL);
-    changedQuestion.textContent = target.srcElement.getAttribute("data-id");
+    changedQuestion.textContent = event.currentTarget.getAttribute("data-id");
 
     diffApiUrl.searchParams.append(
       "questions",

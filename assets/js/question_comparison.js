@@ -34,7 +34,7 @@ for ( const questionLink of relatedQuestionLinks) {
 
   oursQuestion.textContent = mainQuestion;
 
-  relatedQuestionLinkDiff.addEventListener("click", (target) => {
+  relatedQuestionLinkDiff.addEventListener("click", (event) => {
     document.getElementById("show-question-diff").click();
   });
   setEventListener(relatedQuestionLinkDiff, theirsQuestion);
