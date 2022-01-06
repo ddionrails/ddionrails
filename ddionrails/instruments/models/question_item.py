@@ -143,8 +143,7 @@ class QuestionItem(models.Model):
                 label_de=self.label_de,
                 instruction=self.instruction,
                 instruction_de=self.instruction_de,
-                input_filter=self.input_filter,
-                goto=self.goto,
+                scale=self.scale,
             )
         else:
             self_dict = QuestionItemDict(
