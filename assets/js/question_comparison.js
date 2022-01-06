@@ -8,7 +8,7 @@ import {
 const compareButton = document.createElement("button");
 const compareIcon = document.createElement("i");
 compareIcon.classList.add("fa");
-compareIcon.classList.add("fa-not-equal");
+compareIcon.classList.add("fa-exchange-alt");
 compareButton.appendChild(compareIcon);
 compareButton.classList.add("btn");
 compareButton.classList.add("btn-link");
