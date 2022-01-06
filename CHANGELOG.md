@@ -11,7 +11,13 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
-## [5.3.1] - 2022-01-05
+## [5.3.2] - 2022-01-06
+
+### Changed
+
+- question comparison button icon
+
+## [5.3.1] - 2022-01-06
 
 ### Changed
 
@@ -717,7 +723,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.2...develop
+[5.3.2]: https://github.com/ddionrails/ddionrails/compare/v5.3.1...v5.3.2
 [5.3.1]: https://github.com/ddionrails/ddionrails/compare/v5.3.0...v5.3.1
 [5.3.0]: https://github.com/ddionrails/ddionrails/compare/v5.2.0...v5.3.0
 [5.2.0]: https://github.com/ddionrails/ddionrails/compare/v5.1.4...v5.2.0
