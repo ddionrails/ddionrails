@@ -57,23 +57,25 @@ class QuestionComparisonViewSet(viewsets.GenericViewSet):
             pk=questions_ids[1],
         )
         ours_metadata = re.sub(
-            "\n- - ",
-            "\n\n- - ",
+            r"((^\W+)|(\n\W+))",
+            "\n",
             yaml.dump(
                 get_question_item_metadata(ours_question, short=True),
                 sort_keys=False,
                 allow_unicode=True,
+                width=float("inf"),
             ),
-        )
+        )[1:]
         theirs_metadata = re.sub(
-            "\n- - ",
-            "\n\n- - ",
+            r"((^\W+)|(\n\W+))",
+            "\n",
             yaml.dump(
                 get_question_item_metadata(theirs_question, short=True),
                 sort_keys=False,
                 allow_unicode=True,
+                width=float("inf"),
             ),
-        )
+        )[1:]
 
         diff = difflib.HtmlDiff().make_table(
             ours_metadata.split("\n"),

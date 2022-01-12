@@ -9,7 +9,7 @@
                     {{ period_name }}:
                     <br>
                     {% for q in questions %}
-                      <a href="{{ q.get_direct_url }}" class="related-question-link">
+                      <a href="{{ q.get_direct_url }}" class="related-question-link" title="{{ q.instrument.label }}">
                           {{ q.instrument.name }}/{{ q.name }}
                       </a>
                       <br>

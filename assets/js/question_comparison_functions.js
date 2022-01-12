@@ -46,6 +46,15 @@ function setEventListener(listenerTarget, changedQuestion) {
       if (request.readyState ===4) {
         if (request.status === 200) {
           questionDiffModalContent.innerHTML = request.responseText;
+          // Pythons difflib replaces all spaces with non breakable spaces.
+          // This cannot be changed in the difflib function.
+          // It is reverted here to make the text wrap properly.
+          const textCells = questionDiffModalContent.querySelectorAll(
+            "td[nowrap=nowrap]"
+          );
+          textCells.forEach((cell) => {
+            cell.innerHTML = cell.innerHTML.replace(/&nbsp;/g, " ");
+          });
 
           questionDiffModalContent.querySelector(".diff").classList.add("table");
         }

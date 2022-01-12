@@ -26,3 +26,10 @@
   justify-content: space-around;
   margin-bottom: 1em;
 }
+
+//This selects all cells with text content from the diff table
+td[nowrap] {
+  min-width: 30vw;
+  max-width: 30vw;
+  white-space: break-spaces;
+}

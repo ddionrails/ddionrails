@@ -24,6 +24,8 @@ class QuestionItemDict(TypedDict, total=False):
     scale: str
     label: str
     label_de: str
+    text: str
+    text_de: str
     description: str
     description_de: str
     instruction: str
@@ -139,10 +141,10 @@ class QuestionItem(models.Model):
         """Map fields and values to dictionary key value pairs."""
         if short:
             self_dict = QuestionItemDict(
-                label=self.label,
-                label_de=self.label_de,
-                instruction=self.instruction,
-                instruction_de=self.instruction_de,
+                text=self.label.replace("\n", " "),
+                text_de=self.label_de.replace("\n", " "),
+                instruction=self.instruction.replace("\n", " "),
+                instruction_de=self.instruction_de.replace("\n", " "),
                 scale=self.scale,
             )
         else:
