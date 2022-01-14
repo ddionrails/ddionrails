@@ -27,19 +27,7 @@ def statistics_import(file: Path, study: Study) -> None:
             if not variable.get("statistics", "False") == "True":
                 continue
             _import_single_variable(variable, study)
-    prototype_variables = study.import_path().parent.joinpath(
-        "statistics/metadata/variables.csv"
-    )
-    if not prototype_variables.exists():
-        return None
-    with open(prototype_variables, "r", encoding="utf8") as prototype_file:
-        variables = DictReader(prototype_file)
-        for variable in variables:
-            if variable.get("statistics", "False") == "False":
-                continue
-            _import_single_variable(variable, study)
     enqueue(_metadata_import, study)
-    return None
 
 
 def _metadata_import(study: Study) -> None:
