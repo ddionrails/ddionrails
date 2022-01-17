@@ -25,10 +25,8 @@ def statistics_detail_view(
         "url": context["statistics_server_url"],
         "study": study.name,
     }
-    context["variable"] = (
-        Variable.objects.filter(name=request.GET["variable"])
-        .prefetch_related("dataset")
-        .first()
+    context["variable"] = Variable.objects.select_related("dataset").get(
+        id=request.GET["variable"]
     )
     return render(request, "statistics/statistics_detail.html", context=context)
 
@@ -41,8 +39,18 @@ class StatisticsView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
-        context["categorical_variables"] = VARIABLES["categorical"]
-        context["numerical_variables"] = VARIABLES["numerical"]
+        context["categorical_variables"] = {}
+        context["numerical_variables"] = {}
+        for variable in Variable.objects.filter(statistics_data__plot_type="categorical"):
+            context["categorical_variables"][
+                variable.id
+            ] = f"{variable.label_de}: {variable.name}"
+
+        for variable in Variable.objects.filter(statistics_data__plot_type="numerical"):
+            context["numerical_variables"][
+                variable.id
+            ] = f"{variable.label_de}: {variable.name}"
+
         return context
 
 

@@ -15,11 +15,11 @@
 	<div>
 	<h2>Categorical</h2>
 	<ul>
-	{% for variable, label in categorical_variables.items %}
+	{% for id, label in categorical_variables.items %}
 	<li>
 		<a
-		href="{% url 'statistics:statistics_detail' study=study.name plot_type='categorical' %}?variable={{variable}}">
-		{{label}}: {{variable}}
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='categorical' %}?variable={{id}}">
+		{{label}}
 		</a>
 	
 	</li>
@@ -30,11 +30,11 @@
 	<div>
 	<h2>Numerical</h2>
 	<ul>
-	{% for variable, label in numerical_variables.items %}
+	{% for id, label in numerical_variables.items %}
 	<li>
 		<a
-		href="{% url 'statistics:statistics_detail' study=study.name plot_type='numerical' %}?variable={{variable}}">
-		{{label}}: {{variable}}
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='numerical' %}?variable={{id}}">
+		{{label}}
 		</a>
 	
 	</li>
