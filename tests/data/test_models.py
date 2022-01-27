@@ -255,7 +255,7 @@ class TestVariableModel:
 
 class TestDatasetModel:
     def test_absolute_url_method(self, dataset):
-        expected = f"/{dataset.study.name}/data/{dataset.name}"
+        expected = f"/{dataset.study.name}/data/{dataset.name}/"
         assert dataset.get_absolute_url() == expected
 
     def test_direct_url_method(self, dataset):
