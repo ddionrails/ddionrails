@@ -67,25 +67,6 @@ class TestVariableDetailView:
         assert template in (t.name for t in response.templates)
 
 
-class TestVariableJsonView:
-    def test_json_view_with_existing_names(self, client, variable):
-        url = reverse(
-            "data:variable_json",
-            kwargs={
-                "study_name": variable.dataset.study.name,
-                "dataset_name": variable.dataset.name,
-                "variable_name": variable.name,
-            },
-        )
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-        assert response["Content-Type"] == "application/json"
-        content = response.json()
-        assert content["name"] == variable.name
-        assert content["scale"] == variable.scale
-        assert content["uni"] == variable.categories
-
-
 class TestVariableRedirectView:
     def test_redirect_view_with_valid_pk(self, rf, variable):
         request = rf.get("variable", kwargs={"pk": variable.pk})

@@ -4,8 +4,6 @@
 
 from copy import deepcopy
 
-from django.core.handlers.wsgi import WSGIRequest
-from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, RedirectView
 
@@ -204,20 +202,3 @@ class VariableDetailView(DetailView):
         _data["uni"] = statistics
 
         return _data
-
-
-# request is a required parameter
-def variable_json(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
-    dataset_name: str,
-    variable_name: str,
-):
-    """Get variable metadata to be visualized in JavaScript plot."""
-    variable = get_object_or_404(
-        Variable,
-        dataset__study__name=study_name,
-        dataset__name=dataset_name,
-        name=variable_name,
-    )
-    return JsonResponse(variable.content_dict)

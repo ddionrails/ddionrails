@@ -15,9 +15,4 @@ urlpatterns = [
         views.VariableDetailView.as_view(),
         name="variable_detail",
     ),
-    path(
-        "<slug:dataset_name>/<slug:variable_name>.json",
-        views.variable_json,
-        name="variable_json",
-    ),
 ]
