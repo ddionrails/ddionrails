@@ -27,6 +27,8 @@ def question_import(file: Path, study: Study) -> None:
     with open(file, "r", encoding="utf8") as csv_file:
         csv_reader = DictReader(csv_file)
         for line in csv_reader:
+            if line["scale"] == "":
+                line["scale"] = "txt"
             question_grouper.send(line)
         question_grouper.send({})
 
