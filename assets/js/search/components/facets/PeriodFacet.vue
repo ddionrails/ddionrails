@@ -3,7 +3,7 @@
     componentId="Period"
     data-field="period"
     title="Period"
-    :showSearch="false"
+    :showSearch="true"
     selectAllLabel="Select all"
     :URLParams="true"
     :react="react"
@@ -13,6 +13,7 @@
     }"
     showMissing="true"
     missingLabel="None"
+    sortBy="asc"
   />
 </template>
 
