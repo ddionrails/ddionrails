@@ -5,6 +5,7 @@ import csv
 import json
 import unittest
 from pathlib import Path
+from typing import Any
 
 import pytest
 from django.core.management import call_command
@@ -52,6 +53,81 @@ def _clean_search_index():
     call_command("search_index", "--delete", force=True)
 
 
+@pytest.fixture(name="unittest_settings")
+def _unittest_settings(request, settings):
+    if request.instance:
+        request.instance.settings = settings
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("unittest_settings", "tmp_dir")
+class TestStudyImportManagerUnittest(unittest.TestCase):
+
+    data_dir: Path
+    settings: Any
+    study: Study
+
+    def setUp(self) -> None:
+        self.settings.IMPORT_REPO_PATH = self.data_dir
+        self.study = Study(name="some-study")
+        self.study.save()
+        self.study_import_manager = StudyImportManager(study=self.study, redis=False)
+        return super().setUp()
+
+    def test_import_csv_topics_exception(self):
+        import_path: Path = self.study_import_manager.study.import_path()
+
+        faulty_row = {
+            "study": "some-nonexistent-study",
+            "name": "some-topic",
+            "label": "some-label",
+            "label_de": "some-german-label",
+            "description": "Some description",
+            "description_de": "Eine Beschreibung",
+            "parent": "some-other-topic",
+        }
+        with open(import_path.joinpath("topics.csv"), "a", encoding="utf8") as topic_file:
+            writer = csv.DictWriter(topic_file, fieldnames=list(faulty_row.keys()))
+            writer.writerow(faulty_row)
+
+        with self.assertRaises(Study.DoesNotExist):
+            self.study_import_manager.import_single_entity("topics.csv")
+
+    def test_import_attachments_exception(self):
+        TEST_CASE.assertEqual(0, Attachment.objects.count())
+        import_path = self.study_import_manager.study.import_path().joinpath(
+            "attachments.csv"
+        )
+        header = (
+            "type",
+            "study",
+            "dataset",
+            "variable",
+            "instrument",
+            "question",
+            "url",
+            "url_text",
+        )
+        row = dict(type="dataset", dataset="Nonexistent-dataset")
+        with open(import_path, "w", encoding="utf8") as attachements_file:
+            writer = csv.DictWriter(attachements_file, fieldnames=header)
+            writer.writeheader()
+            writer.writerow(row)
+        with TEST_CASE.assertRaises(Dataset.DoesNotExist) as error:
+            self.study_import_manager.import_single_entity("attachments")
+        error_dict = json.loads(error.exception.args[0])
+        TEST_CASE.assertDictContainsSubset(row, error_dict)
+
+    def test_import_attachments(self):
+        TEST_CASE.assertEqual(0, Attachment.objects.count())
+        self.study_import_manager.import_single_entity("attachments")
+        TEST_CASE.assertEqual(1, Attachment.objects.count())
+        attachment = Attachment.objects.first()
+        TEST_CASE.assertEqual(self.study, attachment.context_study)
+        TEST_CASE.assertEqual("https://some-study.de", attachment.url)
+        TEST_CASE.assertEqual("some-study", attachment.url_text)
+
+
 @pytest.mark.django_db
 @pytest.mark.usefixtures("mock_import_path", "clean_search_index")
 class TestStudyImportManager:
@@ -72,25 +148,6 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual("some-label", topic.label)
         TEST_CASE.assertEqual(parent_topic, topic.parent)
         TEST_CASE.assertEqual("some-other-label", parent_topic.label)
-
-    def test_import_csv_topics_exception(self, study_import_manager):
-        import_path: Path = study_import_manager.study.import_path()
-
-        faulty_row = {
-            "study": "some-nonexistent-study",
-            "name": "some-topic",
-            "label": "some-label",
-            "label_de": "some-german-label",
-            "description": "Some description",
-            "description_de": "Eine Beschreibung",
-            "parent": "some-other-topic",
-        }
-        with open(import_path.joinpath("topics.csv"), "a", encoding="utf8") as topic_file:
-            writer = csv.DictWriter(topic_file, fieldnames=list(faulty_row.keys()))
-            writer.writerow(faulty_row)
-
-        with TEST_CASE.assertRaises(Study.DoesNotExist):
-            study_import_manager.import_single_entity("topics.csv")
 
     def test_import_json_topics(
         self, study_import_manager
@@ -274,41 +331,6 @@ class TestStudyImportManager:
         relation = Transformation.objects.first()
         TEST_CASE.assertEqual(variable, relation.origin)
         TEST_CASE.assertEqual(other_variable, relation.target)
-
-    def test_import_attachments(self, study_import_manager, study):
-        TEST_CASE.assertEqual(0, Attachment.objects.count())
-        study_import_manager.import_single_entity("attachments")
-        TEST_CASE.assertEqual(1, Attachment.objects.count())
-        attachment = Attachment.objects.first()
-        TEST_CASE.assertEqual(study, attachment.context_study)
-        TEST_CASE.assertEqual("https://some-study.de", attachment.url)
-        TEST_CASE.assertEqual("some-study", attachment.url_text)
-
-    @pytest.mark.usefixtures("study")
-    def test_import_attachments_exception(self, study_import_manager):
-        TEST_CASE.assertEqual(0, Attachment.objects.count())
-        attachements_path = study_import_manager.study.import_path().joinpath(
-            "attachments.csv"
-        )
-        header = (
-            "type",
-            "study",
-            "dataset",
-            "variable",
-            "instrument",
-            "question",
-            "url",
-            "url_text",
-        )
-        row = dict(type="dataset", dataset="Nonexistent-dataset")
-        with open(attachements_path, "w", encoding="utf8") as attacheements_file:
-            writer = csv.DictWriter(attacheements_file, fieldnames=header)
-            writer.writeheader()
-            writer.writerow(row)
-        with TEST_CASE.assertRaises(Dataset.DoesNotExist) as error:
-            study_import_manager.import_single_entity("attachments")
-        error_dict = json.loads(error.exception.args[0])
-        TEST_CASE.assertDictContainsSubset(row, error_dict)
 
     @pytest.mark.usefixtures(("elasticsearch_indices"))
     def test_import_publications(self, study_import_manager, study):
