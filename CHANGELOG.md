@@ -11,6 +11,14 @@ Older versions are not not part of this Project.
 
 ## [Unreleased]
 
+## [5.3.4] - 2022-02-01
+
+### Changed
+
+- Allow empty scale field in questions.csv. (use txt as fallback)
+- Enabled quick-search for period search facet.
+- Period facet entries are now ordered alphabetically.
+
 ## [5.3.3] - 2022-01-27
 
 ### Changed
@@ -729,7 +737,8 @@ Older versions are not not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.3...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...develop
+[5.3.4]: https://github.com/ddionrails/ddionrails/compare/v5.3.3...v5.3.4
 [5.3.3]: https://github.com/ddionrails/ddionrails/compare/v5.3.2...v5.3.3
 [5.3.2]: https://github.com/ddionrails/ddionrails/compare/v5.3.1...v5.3.2
 [5.3.1]: https://github.com/ddionrails/ddionrails/compare/v5.3.0...v5.3.1
