@@ -7,7 +7,7 @@ and this project adheres to
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 from version [3.0.0] on.
 This Project entered open source status with version 2.1.0.
-Older versions are not not part of this Project.
+Older versions are not part of this Project.
 
 ## [Unreleased]
 
