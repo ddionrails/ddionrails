@@ -13,6 +13,8 @@ from django.core.mail import send_mail
 from django.db.models import Model, Q, QuerySet
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
@@ -100,7 +102,7 @@ class QuestionComparisonViewSet(viewsets.GenericViewSet):
 
 
 class StatisticsMetadataViewSet(viewsets.GenericViewSet):
-    """ List metadata for a variables statistical data. """
+    """List metadata for a variables statistical data."""
 
     queryset = StatisticsMetadata.objects.all()
 
@@ -118,13 +120,13 @@ class StatisticsMetadataViewSet(viewsets.GenericViewSet):
 
 
 class StatisticViewSet(viewsets.GenericViewSet):
-    """ Display the statistical data in form of csv files. """
+    """Display the statistical data in form of csv files."""
 
     queryset = VariableStatistic.objects.all()
 
     @staticmethod
     def list(request: Request) -> HttpResponse:
-        """ Retrieve the statistical data in form of csv files. """
+        """Retrieve the statistical data in form of csv files."""
         variable_id = request.query_params.get("variable", None)
         if (
             "dimensions" in request.query_params
@@ -152,7 +154,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
     @staticmethod
-    def list(request: Request):
+    def list(request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
         language = request.query_params.get("language", "en")
@@ -177,11 +179,18 @@ class VariableViewSet(viewsets.ModelViewSet):
 
     serializer_class = VariableSerializer
 
-    def get_queryset(self):
+    @method_decorator(cache_page(60 * 10))
+    def list(self, request, *args, **kwargs) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet[Variable]:
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
-        if not self.request.query_params.get("paginate", False):
+        statistics_data = self.request.query_params.get("statistics", False)
+
+        paginate = self.request.query_params.get("paginate", "False")
+        if paginate == "False":
             self.pagination_class = None
 
         queryset_filter = {}
@@ -195,13 +204,9 @@ class VariableViewSet(viewsets.ModelViewSet):
                 topic_object: Topic = get_object_or_404(
                     Topic, name=topic, study__name=study
                 )
-                children = [
-                    topic.id
-                    for topic in topic_object.get_topic_tree_leaves(
-                        topic_object=topic_object
-                    )
-                ]
-                queryset_filter["concept__topics__id__in"] = children
+                queryset_filter["concept__in"] = Concept.objects.filter(
+                    topics__in=topic_object.get_topic_tree_leaves()
+                ).distinct()
             else:
                 raise NotAcceptable(
                     detail=(
@@ -210,10 +215,17 @@ class VariableViewSet(viewsets.ModelViewSet):
                 )
         if concept:
             concept_object = get_object_or_404(Concept, name=concept)
-            queryset_filter["concept_id"] = concept_object.id
+            queryset_filter["concept"] = concept_object
         if study:
             study_object = get_object_or_404(Study, name=study)
-            queryset_filter["dataset__study_id"] = study_object.id
+            queryset_filter["dataset__study"] = study_object
+        if statistics_data:
+            return (
+                Variable.objects.filter(**queryset_filter)
+                .exclude(statistics_data=None)
+                .select_related("dataset", "dataset__study")
+                .prefetch_related("statistics_data")
+            )
 
         return Variable.objects.filter(**queryset_filter).select_related(
             "dataset", "dataset__study"
@@ -241,13 +253,10 @@ class QuestionViewSet(viewsets.ModelViewSet):
                 topic_object: Topic = get_object_or_404(
                     Topic, name=topic, study__name=study
                 )
-                children = [
-                    topic.id
-                    for topic in topic_object.get_topic_tree_leaves(
-                        topic_object=topic_object
-                    )
-                ]
-                queryset_filter["concepts_questions__concept__topics__id__in"] = children
+                concepts = Concept.objects.filter(
+                    topics__in=topic_object.get_topic_tree_leaves()
+                ).distinct()
+                queryset_filter["concepts_questions__concept__in"] = concepts
             else:
                 raise NotAcceptable(
                     detail=(
@@ -407,9 +416,11 @@ class BasketVariableSet(viewsets.ModelViewSet, CreateModelMixin):
             variable_filter = {"id__in": data["variables"]}
 
         if "topic" in data:
-            topic = Topic.objects.get(name=data["topic"], study=basket.study).id
+            topic_object: Topic = Topic.objects.get(
+                name=data["topic"], study=basket.study
+            )
             variable_filter = {
-                "concept__topics__in": Topic.get_topic_tree_leaves(topic_object=topic)
+                "concept__topics__in": topic_object.get_topic_tree_leaves()
             }
 
         if "concept" in data:

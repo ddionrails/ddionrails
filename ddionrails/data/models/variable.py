@@ -106,14 +106,6 @@ class Variable(ModelMixin, models.Model):
     #############
     # relations #
     #############
-    dataset = models.ForeignKey(
-        Dataset,
-        blank=True,
-        null=False,
-        related_name="variables",
-        on_delete=models.CASCADE,
-        help_text="Foreign key to data.Dataset",
-    )
     concept = models.ForeignKey(
         Concept,
         blank=True,
@@ -122,6 +114,20 @@ class Variable(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Concept",
     )
+    dataset = models.ForeignKey(
+        Dataset,
+        blank=True,
+        null=False,
+        related_name="variables",
+        on_delete=models.CASCADE,
+        help_text="Foreign key to data.Dataset",
+    )
+    image = FilerImageField(
+        null=True, related_name="variable_image", blank=True, on_delete=models.CASCADE
+    )
+    image_de = FilerImageField(
+        null=True, related_name="variable_image_de", blank=True, on_delete=models.CASCADE
+    )
     period = models.ForeignKey(
         Period,
         blank=True,
@@ -129,12 +135,6 @@ class Variable(ModelMixin, models.Model):
         related_name="variables",
         on_delete=models.CASCADE,
         help_text="Foreign key to concepts.Period",
-    )
-    image = FilerImageField(
-        null=True, related_name="variable_image", blank=True, on_delete=models.CASCADE
-    )
-    image_de = FilerImageField(
-        null=True, related_name="variable_image_de", blank=True, on_delete=models.CASCADE
     )
 
     # Non database attributes
@@ -150,7 +150,7 @@ class Variable(ModelMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.dataset_id, self.name, cache=False
         )
@@ -171,11 +171,11 @@ class Variable(ModelMixin, models.Model):
         id_fields = ["name", "dataset"]
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "dataset" and "name" fields """
+        """Returns a string representation using the "dataset" and "name" fields"""
         return f"{self.dataset}/{self.name}"
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model.
+        """Returns a canonical URL for the model.
 
         Uses the "dataset" and "name" fields
         """
@@ -191,7 +191,7 @@ class Variable(ModelMixin, models.Model):
         )
 
     def get_direct_url(self) -> str:
-        """ Returns a short self contained URL for the object.  """
+        """Returns a short self contained URL for the object."""
         return reverse("variable_redirect", kwargs={"id": self.id})
 
     @classmethod
@@ -203,16 +203,16 @@ class Variable(ModelMixin, models.Model):
 
     @classmethod
     def get_by_concept_id(cls, concept_id: int) -> QuerySet:
-        """ Return a QuerySet of Variable objects by a given concept id """
+        """Return a QuerySet of Variable objects by a given concept id"""
         return cls.objects.filter(concept_id=concept_id)
 
     def html_description(self) -> str:
-        """ Return a markdown rendered version of the "description_long" field """
+        """Return a markdown rendered version of the "description_long" field"""
         return render_markdown(self.description)
 
     @cached_property
     def category_list(self) -> List[Dict[str, str]]:
-        """ Return a list of dictionaries based on the "categories" field """
+        """Return a list of dictionaries based on the "categories" field"""
         if self.categories:
             categories = []
             if "labels_de" not in self.categories:
@@ -251,13 +251,13 @@ class Variable(ModelMixin, models.Model):
         return sorted_categories
 
     def get_study(self, study_id: bool = False) -> Union[Study, uuid.UUID]:
-        """ Returns the related study_id | Study instance """
+        """Returns the related study_id | Study instance"""
         if study_id:
             return self.dataset.study.id
         return self.dataset.study
 
     def get_concept(self, default=None, concept_id=False):
-        """ Returns the related concept_id | Concept instance | a default """
+        """Returns the related concept_id | Concept instance | a default"""
         if self.concept:
             if concept_id:
                 return self.concept.id
@@ -265,7 +265,7 @@ class Variable(ModelMixin, models.Model):
         return default
 
     def get_related_variables(self) -> Union[List, QuerySet]:
-        """ Returns the related variables by concept """
+        """Returns the related variables by concept"""
         # Only update if cache is empty or
         # if concept has changed.
         if self.related_cache is None or self.related_cache.id != getattr(
@@ -281,7 +281,7 @@ class Variable(ModelMixin, models.Model):
         return getattr(self.related_cache, "content", [])
 
     def get_related_variables_by_period(self) -> OrderedDict:
-        """ Returns the related variables by concept, ordered by period """
+        """Returns the related variables by concept, ordered by period"""
         results = {}
         periods = Period.objects.filter(study_id=self.dataset.study.id).all()
         period_names = self._period_model_to_name_dict(periods)
@@ -351,11 +351,11 @@ class Variable(ModelMixin, models.Model):
         return self._sort_related_variable_by_period(origin_variables)
 
     def has_translations(self) -> bool:
-        """ Returns True if Variable has translation_languages """
+        """Returns True if Variable has translation_languages"""
         return len(self.translation_languages()) > 0
 
     def translation_languages(self) -> List[str]:
-        """ Return a list of translation languages """
+        """Return a list of translation languages"""
         if not self.languages:
             members = inspect.getmembers(self)
             self.languages = [
@@ -382,7 +382,7 @@ class Variable(ModelMixin, models.Model):
         return translation_table
 
     def is_categorical(self) -> bool:
-        """ Returns True if the variable has categories """
+        """Returns True if the variable has categories"""
         # This is too much of a guess.
         # Variables can have labels denoting missing values, even if they are
         # not categorical.
@@ -390,7 +390,7 @@ class Variable(ModelMixin, models.Model):
 
     @property
     def content_dict(self) -> Dict:
-        """ Returns a dictionary representation of the Variable object """
+        """Returns a dictionary representation of the Variable object"""
         return dict(
             name=self.name,
             label=self.label,
@@ -401,7 +401,7 @@ class Variable(ModelMixin, models.Model):
         )
 
     def to_topic_dict(self, language="en") -> Dict:
-        """ Returns a topic dictionary representation of the Variable object """
+        """Returns a topic dictionary representation of the Variable object"""
 
         self.set_language(language)
 
@@ -424,8 +424,9 @@ class Variable(ModelMixin, models.Model):
         """Determine relation of variables according to their name."""
         if not isinstance(variable, Variable):
             raise TypeError(
-                "'<' not supported between instances of {} and {}".format(
-                    type(self), type(variable)
+                (
+                    "'<' not supported between instances of "
+                    f"{type(self)} and {type(variable)}"
                 )
             )
         return self.name < variable.name

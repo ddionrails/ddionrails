@@ -51,7 +51,7 @@ TEST_CASE = unittest.TestCase()
 
 @pytest.fixture
 def analysis_unit(db):
-    """ An analysis unit in the database """
+    """An analysis unit in the database"""
     return AnalysisUnitFactory(
         name="some-analysis-unit",
         label="Some analysis unit",
@@ -63,7 +63,7 @@ def analysis_unit(db):
 
 @pytest.fixture(name="basket")
 def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory):
-    """ A basket in the database, relates to study and user fixture """
+    """A basket in the database, relates to study and user fixture"""
     _factory = BasketFactory(name="some-basket", study=study, user=user)
     if request.instance:
         request.instance.basket = _factory
@@ -71,25 +71,38 @@ def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory):
 
 
 @pytest.fixture
-def concept(db):
-    """ A concept in the database """
-    return ConceptFactory(
+def concept(db, topic):
+    """A concept in the database"""
+    concept = ConceptFactory(
         name="some-concept",
         label="Some Concept",
         label_de="Ein Konzept",
         description="This is some concept",
     )
+    root_topic = TopicFactory(
+        name="root-topic",
+        label="root-topic",
+        label_de="root-topic",
+        description="root-topic",
+        description_de="root-topic",
+    )
+    topic.parent = root_topic
+    topic.save()
+
+    concept.topics.add(topic)
+    concept.save()
+    return concept
 
 
 @pytest.fixture
 def concept_question(db):  # pylint: disable=unused-argument,invalid-name
-    """ A concept_question in the database """
+    """A concept_question in the database"""
     return ConceptQuestionFactory()
 
 
 @pytest.fixture
 def conceptual_dataset(study):
-    """ A conceptual dataset in the database, relates to study fixture """
+    """A conceptual dataset in the database, relates to study fixture"""
     return ConceptualDatasetFactory(
         name="some-conceptual-dataset",
         label="Some conceptual dataset",
@@ -102,7 +115,7 @@ def conceptual_dataset(study):
 
 @pytest.fixture(name="dataset")
 def _dataset(request, db):
-    """ A dataset in the database """
+    """A dataset in the database"""
     _factory = DatasetFactory(
         name="some-dataset", label="Some Dataset", description="This is some dataset"
     )
@@ -113,7 +126,7 @@ def _dataset(request, db):
 
 @pytest.fixture(scope="session")
 def elasticsearch_indices():
-    """ Fixture that creates elasticsearch indices and cleans up after testing """
+    """Fixture that creates elasticsearch indices and cleans up after testing"""
 
     # setting ELASTICSEARCH_DSL_AUTOSYNC to
     # True enables indexing when saving model instances
@@ -134,13 +147,13 @@ def elasticsearch_indices():
 
 @pytest.fixture()
 def empty_data():
-    """ Empty dictionary is used as invalid data for form and import tests """
+    """Empty dictionary is used as invalid data for form and import tests"""
     return {}
 
 
 @pytest.fixture()
 def image_file(request) -> Generator[BytesIO, None, None]:
-    """ Provides an in memory image file. """
+    """Provides an in memory image file."""
     _file = BytesIO()
     _image = PIL.Image.new("RGBA", size=(1, 1))
     _image.save(_file, "png")
@@ -154,7 +167,7 @@ def image_file(request) -> Generator[BytesIO, None, None]:
 
 @pytest.fixture(name="variable_image_file")
 def _variable_image_file(request) -> Generator[Callable, None, None]:
-    """ Provides a function to create an in memory image file of chosen type. """
+    """Provides a function to create an in memory image file of chosen type."""
 
     def _image_file(file_type: str, size: int = 1) -> BytesIO:
         _file = BytesIO()
@@ -173,9 +186,9 @@ def _variable_image_file(request) -> Generator[Callable, None, None]:
 @pytest.fixture
 @pytest.mark.usefixtures("db")
 def instrument(
-    request: pytest.FixtureRequest
+    request: pytest.FixtureRequest,
 ) -> Generator[InstrumentFactory, InstrumentFactory, None]:
-    """ An instrument in the database """
+    """An instrument in the database"""
 
     if request.instance:
         request.instance.instrument = InstrumentFactory(
@@ -192,7 +205,7 @@ def instrument(
 
 @pytest.fixture
 def period(db):
-    """ A period in the database """
+    """A period in the database"""
     return PeriodFactory(
         name="some-period", label="Some period", description="This is some period"
     )
@@ -200,13 +213,13 @@ def period(db):
 
 @pytest.fixture
 def publication(study):
-    """ A publication in the database, relates to study fixture """
+    """A publication in the database, relates to study fixture"""
     return PublicationFactory(name="some-publication", study=study)
 
 
 @pytest.fixture
 def question(db, request):
-    """ A question in the database """
+    """A question in the database"""
     question = QuestionFactory(
         name="some-question",
         label="Some Question",
@@ -222,13 +235,13 @@ def question(db, request):
 
 @pytest.fixture
 def question_variable(db):  # pylint: disable=unused-argument,invalid-name
-    """ A question_variable in the database """
+    """A question_variable in the database"""
     return QuestionVariableFactory()
 
 
 @pytest.fixture(name="study")
 def _study(request: FixtureRequest, db: pytest.fixture):
-    """ A study in the database """
+    """A study in the database"""
     _factory = StudyFactory(name="some-study", label="Some Study")
     if request.instance:
         request.instance.study = _factory
@@ -237,13 +250,13 @@ def _study(request: FixtureRequest, db: pytest.fixture):
 
 @pytest.fixture
 def system(db):
-    """ A system model in the database """
+    """A system model in the database"""
     return SystemFactory()
 
 
 @pytest.fixture
 def topic(db):
-    """ A topic in the database """
+    """A topic in the database"""
     return TopicFactory(
         name="some-topic",
         label="some-topic",
@@ -255,7 +268,7 @@ def topic(db):
 
 @pytest.fixture
 def topiclist(db):
-    """ A topiclist in the database """
+    """A topiclist in the database"""
     body = [
         {"language": "en", "topics": [{"title": "some-topic"}]},
         {"language": "de", "topics": [{"title": "some-german-topic"}]},
@@ -265,20 +278,20 @@ def topiclist(db):
 
 @pytest.fixture
 def transformation(db):
-    """ A transformation in the database """
+    """A transformation in the database"""
     return TransformationFactory()
 
 
 @pytest.fixture
 def user(db):
-    """ A user in the database """
+    """A user in the database"""
     # ignore B106: hardcoded_password_funcarg
     return UserFactory(username="some-user", password="some-password")  # nosec
 
 
 @pytest.fixture(name="variable")
 def _variable(request: FixtureRequest, db: pytest.fixture):
-    """ A variable in the database """
+    """A variable in the database"""
     _factory = VariableFactory(
         name="some-variable",
         label="Some Variable",
@@ -306,7 +319,7 @@ def _variable(request: FixtureRequest, db: pytest.fixture):
 
 @pytest.fixture
 def variable_with_concept(variable, concept):
-    """ A variable in the database with a related concept """
+    """A variable in the database with a related concept"""
     variable.concept = concept
     variable.save()
     return variable
@@ -314,14 +327,14 @@ def variable_with_concept(variable, concept):
 
 @pytest.fixture
 def uuid_identifier():
-    """ A UUID that is used for testing views and URLConfigs """
+    """A UUID that is used for testing views and URLConfigs"""
     return uuid.UUID("12345678123456781234567812345678")
 
 
 @pytest.fixture
 def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-argument
-    """ Fixture that indexes a concept and cleans up after testing
-        uses the indices created by the "elasticsearch_indices" fixture
+    """Fixture that indexes a concept and cleans up after testing
+    uses the indices created by the "elasticsearch_indices" fixture
     """
     ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
@@ -339,8 +352,8 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
 
 @pytest.fixture
 def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argument
-    """ Fixture that indexes a topic and cleans up after testing
-        uses the indices created by the "elasticsearch_indices" fixture
+    """Fixture that indexes a topic and cleans up after testing
+    uses the indices created by the "elasticsearch_indices" fixture
     """
     TopicDocument.search().query("match_all").delete()
     # saving the topic, will index the topic as well
@@ -358,8 +371,8 @@ def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argume
 
 @pytest.fixture
 def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-argument
-    """ Fixture that indexes a question and cleans up after testing
-        uses the indices created by the "elasticsearch_indices" fixture
+    """Fixture that indexes a question and cleans up after testing
+    uses the indices created by the "elasticsearch_indices" fixture
     """
     QuestionDocument.search().query("match_all").delete()
     # saving the question, will index the question as well
@@ -377,8 +390,8 @@ def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-
 
 @pytest.fixture
 def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-argument
-    """ Fixture that indexes a variable and cleans up after testing
-        uses the indices created by the "elasticsearch_indices" fixture
+    """Fixture that indexes a variable and cleans up after testing
+    uses the indices created by the "elasticsearch_indices" fixture
     """
     VariableDocument.search().query("match_all").delete()
     time.sleep(0.1)
@@ -398,7 +411,7 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
 
 @pytest.fixture
 def publication_with_umlauts(db):  # pylint: disable=unused-argument
-    """ Provides a Publication containing Umlauts. """
+    """Provides a Publication containing Umlauts."""
     return PublicationFactory(
         name="1",
         title="Some publication with Umlauts",
@@ -413,8 +426,8 @@ def publication_with_umlauts(db):  # pylint: disable=unused-argument
 def publications_index(
     elasticsearch_indices, publication_with_umlauts  # pylint: disable=unused-argument
 ):
-    """ Fixture that indexes a publication and cleans up after testing
-        uses the indices created by the "elasticsearch_indices" fixture
+    """Fixture that indexes a publication and cleans up after testing
+    uses the indices created by the "elasticsearch_indices" fixture
     """
     PublicationDocument.search().query("match_all").delete()
     time.sleep(0.1)

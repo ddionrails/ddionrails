@@ -8,6 +8,7 @@ import uuid
 from typing import List
 
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 
 from config.validators import validate_lowercase
@@ -83,7 +84,7 @@ class Topic(models.Model, ModelMixin):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
         )
@@ -103,35 +104,28 @@ class Topic(models.Model, ModelMixin):
 
     @staticmethod
     def get_children(topic_id: int) -> List[Topic]:
-        """ Returns a list of all Topics, that have this Topic object as its ancestor """
+        """Returns a list of all Topics, that have this Topic object as its ancestor"""
         children = list(Topic.objects.filter(parent_id=topic_id).all())
         for child in children:
             children += list(Topic.get_children(child.id))
         return children
 
-    @staticmethod
-    def get_topic_tree_leaves(
-        topic_object: Topic = None, topic_id: uuid.UUID = ""
-    ) -> List[Topic]:
+    def get_topic_tree_leaves(self) -> List[Topic]:
         """Get all ancestor Topics with no further child topics.
 
         Works recursively similar to get_children but does not return
         intermediate Topics.
         """
-        if topic_object:
-            children = list(Topic.objects.filter(parent=topic_object).all())
-        elif topic_id:
-            children = list(Topic.objects.filter(parent_id=topic_id).all())
-            topic_object = Topic.objects.get(id=topic_id)
-        else:
-            return []
-        if not children:
-            return [topic_object]
 
-        grand_children = list()
-        for child in children:
-            grand_children += list(Topic.get_topic_tree_leaves(topic_object=child))
-        return grand_children
+        return list(
+            Topic.objects.filter(
+                Q(parent__parent__parent__parent=self)
+                | Q(parent__parent__parent=self)
+                | Q(parent__parent=self)
+                | Q(parent=self)
+                | Q(id=self.id)
+            ).exclude(concepts=None)
+        )
 
 
 class Concept(ModelMixin, models.Model):
@@ -194,13 +188,13 @@ class Concept(ModelMixin, models.Model):
         io_fields = ["name", "label", "description"]
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "name" field """
+        """Returns a string representation using the "name" field"""
         return f"/concept/{self.name}"
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save().
+        """ "Set id and call parents save().
 
         The creation of the value set for the id field is different than
         for most other models. Concepts are, like studies, not inside the
@@ -221,7 +215,7 @@ class Concept(ModelMixin, models.Model):
         )
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "name" field """
+        """Returns a canonical URL for the model using the "name" field"""
         return reverse("concepts:concept_detail_name", kwargs={"concept_name": self.name})
 
 
@@ -296,13 +290,13 @@ class Period(models.Model, ModelMixin):
         io_fields = ["study", "name", "label", "description", "definition"]
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "name" field """
+        """Returns a string representation using the "name" field"""
         return f"/period/{self.name}"
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
         )
@@ -379,13 +373,13 @@ class AnalysisUnit(models.Model, ModelMixin):
         id_fields = ("study", "name")
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "name" field """
+        """Returns a string representation using the "name" field"""
         return f"/analysis_unit/{self.name}"
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save()."""
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
         )
@@ -459,7 +453,7 @@ class ConceptualDataset(models.Model, ModelMixin):
         id_fields = ("study", "name")
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "name" field """
+        """Returns a string representation using the "name" field"""
         return f"/conceptual_dataset/{self.name}"
 
     def save(

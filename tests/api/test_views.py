@@ -43,7 +43,7 @@ def _client(request, client):
 
 @pytest.fixture(name="variable_with_concept_and_topic")
 def _variable_with_concept_and_topic(variable, concept, topic):
-    """ A variable with a related concept and topic """
+    """A variable with a related concept and topic"""
     concept.topics.add(topic)
     concept.save()
     variable.concept = concept
@@ -52,7 +52,7 @@ def _variable_with_concept_and_topic(variable, concept, topic):
 
 
 def response_is_json(response) -> bool:
-    """ Helper function to validate a response's content type is JSON """
+    """Helper function to validate a response's content type is JSON"""
     expected_content_type = "application/json"
     return expected_content_type == response["content-type"]
 
@@ -338,6 +338,8 @@ class TestVariableViewSet(unittest.TestCase):
         self.client = APIClient()
         self.concept = ConceptFactory(name="test-concept")
         self.topic = TopicFactory(name="test-topic")
+        self.concept.topics.add(self.topic)
+        self.concept.save()
         return super().setUp()
 
     def test_query_parameter_conflict(self):
@@ -448,7 +450,7 @@ class TestVariableViewSet(unittest.TestCase):
         variables = []
         for number in range(1, variable_amount + 1):
             variables.append(VariableFactory(name=f"{number}"))
-        response = self.client.get(self.API_PATH)
+        response = self.client.get(self.API_PATH + "?paginate=False")
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))

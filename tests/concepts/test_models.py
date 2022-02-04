@@ -35,6 +35,7 @@ class TestPeriodModel:
         assert str(period) == "/period/" + period.name
 
 
+@pytest.mark.django_db
 class TestTopicModel:
     def test_get_children_method(self, topic):
         child_topic = TopicFactory(name="child-topic", parent=topic)
@@ -43,16 +44,21 @@ class TestTopicModel:
         assert child_topic in children
         assert grand_child_topic in children
 
-    def test_get_topic_tree_leaves(self, topic):
+    def test_get_topic_tree_leaves(self, topic, concept):
         child_topic = TopicFactory(name="child-topic", parent=topic)
         grand_child_topic = TopicFactory(name="grand-child-topic", parent=child_topic)
         grand_grand_child_topic = TopicFactory(
             name="grand-grand-child-topic", parent=grand_child_topic
         )
+        grand_grand_child_topic.concepts.add(concept)
+        grand_grand_child_topic.save()
         other_grand_child_topic = TopicFactory(
             name="other-grand-grand-child-topic", parent=child_topic
         )
-        children = Topic.get_topic_tree_leaves(topic_id=topic.pk)
+        other_grand_child_topic.concepts.add(concept)
+        other_grand_child_topic.save()
+
+        children = topic.get_topic_tree_leaves()
         assert child_topic not in children
         assert grand_child_topic not in children
         assert grand_grand_child_topic in children

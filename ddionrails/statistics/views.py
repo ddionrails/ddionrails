@@ -39,14 +39,22 @@ class StatisticsView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
+        statistics_variables = Variable.objects.exclude(statistics_data=None).filter(
+            dataset__study=context["study"]
+        )
+
         context["categorical_variables"] = {}
         context["numerical_variables"] = {}
-        for variable in Variable.objects.filter(statistics_data__plot_type="categorical"):
+        for variable in statistics_variables.filter(
+            statistics_data__plot_type="categorical"
+        ):
             context["categorical_variables"][
                 variable.id
             ] = f"{variable.label_de}: {variable.name}"
 
-        for variable in Variable.objects.filter(statistics_data__plot_type="numerical"):
+        for variable in statistics_variables.filter(
+            statistics_data__plot_type="numerical"
+        ):
             context["numerical_variables"][
                 variable.id
             ] = f"{variable.label_de}: {variable.name}"

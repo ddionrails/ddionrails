@@ -12,11 +12,12 @@ from ddionrails.data.models import Transformation, Variable
 from tests.data.factories import VariableFactory
 
 pytestmark = [pytest.mark.data, pytest.mark.models]
+TEST_CASE = unittest.TestCase()
 
 
 @pytest.fixture(name="related_variables_by_concept")
 def _related_variables_by_concept(variable, concept):
-    """ Two variables that are related by concept """
+    """Two variables that are related by concept"""
     variable.concept = concept
     variable.save()
     other_variable = VariableFactory(name="other-variable")

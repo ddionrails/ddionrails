@@ -25,8 +25,8 @@ def test_concept_search_document_fields(variable_with_concept, topic):
 
     search = ConceptDocument.search().query("match_all")
 
-    expected: Any = 1
-    assert expected == search.count()
+    expected_count = 1
+    assert expected_count == search.count()
 
     response = search.execute()
     document = response.hits[0]
@@ -41,7 +41,7 @@ def test_concept_search_document_fields(variable_with_concept, topic):
         fields=("name", "label", "label_de", "description", "description_de"),
     )
     # add relations to expected dictionary
-    expected["study_name"] = [variable.dataset.study.name]
+    expected["study_name"] = [variable.dataset.study.label]
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result
