@@ -25,6 +25,6 @@ class TypeConverter:
 register_converter(TypeConverter, "type")
 
 urlpatterns = [
-    path("", views.StatisticsView.as_view(), name="statistics"),
+    path("", views.StatisticsNavView.as_view(), name="statistics"),
     path("<type:plot_type>/", views.statistics_detail_view, name="statistics_detail"),
 ]

@@ -42,6 +42,13 @@ class Variable(ModelMixin, models.Model):
     :model:`concepts.Concept` and :model:`concepts.Period`.
     """
 
+    class StatisticalType(models.TextChoices):
+        """Define possible plot types."""
+
+        CATEGORICAL = "categorical", "Categorical"
+        NUMERICAL = "numerical", "Numerical"
+        ORDINAL = "ordinal", "Ordinal"
+
     ##############
     # attributes #
     ##############
@@ -98,6 +105,9 @@ class Variable(ModelMixin, models.Model):
     )
     scale = models.CharField(
         max_length=255, null=True, blank=True, help_text="Scale of the variable"
+    )
+    statistics_type = models.TextField(
+        null=True, blank=True, choices=StatisticalType.choices
     )
     categories = JSONBField(
         default=dict, null=True, blank=True, help_text="Categories of the variable(JSON)"

@@ -8,7 +8,7 @@ import uuid
 from typing import List
 
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.urls import reverse
 
 from config.validators import validate_lowercase
@@ -110,22 +110,20 @@ class Topic(models.Model, ModelMixin):
             children += list(Topic.get_children(child.id))
         return children
 
-    def get_topic_tree_leaves(self) -> List[Topic]:
+    def get_topic_tree_leaves(self) -> QuerySet[Topic]:
         """Get all ancestor Topics with no further child topics.
 
         Works recursively similar to get_children but does not return
         intermediate Topics.
         """
 
-        return list(
-            Topic.objects.filter(
-                Q(parent__parent__parent__parent=self)
-                | Q(parent__parent__parent=self)
-                | Q(parent__parent=self)
-                | Q(parent=self)
-                | Q(id=self.id)
-            ).exclude(concepts=None)
-        )
+        return Topic.objects.filter(
+            Q(parent__parent__parent__parent=self)
+            | Q(parent__parent__parent=self)
+            | Q(parent__parent=self)
+            | Q(parent=self)
+            | Q(id=self.id)
+        ).exclude(concepts=None)
 
 
 class Concept(ModelMixin, models.Model):

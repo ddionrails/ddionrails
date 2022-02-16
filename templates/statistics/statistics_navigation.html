@@ -1,0 +1,111 @@
+{% extends "base_study.html" %}
+{% load render_bundle from webpack_loader %}
+
+
+{% block styles%}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% render_bundle "statistics_navigation" "css" %}
+{% endblock styles %}
+
+{% block content %}
+{{topics|json_script:"topics"}}
+{{api_metadata|json_script:"api-metadata"}}
+
+<div id="container" class="flex-row justify-content-between">
+	<div>
+	<h2>Categorical</h2>
+	<ul>
+	{% for id, label in categorical_variables.items %}
+	<li>
+		<a
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='categorical' %}?variable={{id}}">
+		{{label}}
+		</a>
+	
+	</li>
+
+	{% endfor %}
+	</ul>
+	</div>
+	<div>
+	<h2>Numerical</h2>
+	<ul>
+	{% for id, label in numerical_variables.items %}
+	<li>
+		<a
+		href="{% url 'statistics:statistics_detail' study=study.name plot_type='numerical' %}?variable={{id}}">
+		{{label}}
+		</a>
+	
+	</li>
+	{% endfor %}
+	</ul>
+	</div>
+</div>
+
+
+
+        <div class="flex-row d-flex px-5 justify-content-center"
+            id="statistics-button-container">
+
+
+		<button id="at" class="btn btn-info statistics-button" title="Einstellungen, Werte und Persönlichkeit">
+			<i class="far fa-compass"></i>
+			<p>Einstellungen, Werte und Persönlichkeit</p>
+		</button>
+		<button id="dp" class="btn btn-info statistics-button" title="Demographie und Bevölkerung">
+			<i class="fas fa-chart-area"></i>
+			<p>Demographie und Bevölkerung</p>
+		</button>
+		<button id="ed" class="btn btn-info statistics-button" title="Bildung und Qualifikation">
+			<i class="fas fa-user-graduate"></i>
+			<p>Bildung und Qualifikation</p>
+		</button>
+		<button id="fn" class="btn btn-info statistics-button" title="Familie und soziale Netzwerke">
+			<i class="fas fa-baby-carriage"></i>
+			<p>Familie und soziale Netzwerke</p>
+		</button>
+		<button id="hc" class="btn btn-info statistics-button" title="Gesundheit und Pflege">
+			<i class="far fa-hand-holding-medical"></i>
+			<p>Gesundheit und Pflege</p>
+		</button>
+		<button id="ha" class="btn btn-info statistics-button" title="Wohnen, Ausstattung und Leistungen privater HH">
+			<i class="fas fa-home"></i>
+			<p>Wohnen, Ausstattung und Leistungen privater HH</p>
+		</button>
+		<button id="it" class="btn btn-info statistics-button" title="Einkommen, Steuern und Soziale Sicherung">
+			<i class="fas fa-coins"></i>
+			<p>Einkommen, Steuern und Soziale Sicherung</p>
+		</button>
+		<button id="im" class="btn btn-info statistics-button" title="Integration, Migration und Transnationalisierung">
+			<i class="fas fa-globe"></i>
+			<p>Integration, Migration und Transnationalisierung</p>
+		</button>
+		<button id="tu" class="btn btn-info statistics-button" title="Zeitverwendung und Umweltverhalten">
+			<i class="far fa-clock"></i>
+			<p>Zeitverwendung und Umweltverhalten</p>
+		</button>
+		<button id="we" class="btn btn-info statistics-button" title="Arbeit und Beschäftigung">
+			<i class="fas fa-tools"></i>
+			<p>Arbeit und Beschäftigung</p>
+		</button>
+		<div id="sub-topics">
+			<h3></h3>
+			<div class="d-flex justify-content-center hidden" id="loading-spinner">
+				<div class="spinner-border" role="status">
+					<span class="sr-only">Loading...</span>
+				</div>
+			</div>
+			<!-- Temporary for prototyping REMOVE -->
+			<ul style="
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			max-height: 40vh;">
+			</ul>
+		</div>
+        </div>
+
+		{% render_bundle "statistics_navigation" "js" %}
+		{% endblock content %}

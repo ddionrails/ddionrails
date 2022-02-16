@@ -5,8 +5,10 @@ from django.conf import settings
 from django.http import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import TemplateView
 
+from ddionrails.concepts.models import Topic
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
@@ -31,17 +33,28 @@ def statistics_detail_view(
     return render(request, "statistics/statistics_detail.html", context=context)
 
 
-class StatisticsView(TemplateView):
+class StatisticsNavView(TemplateView):
     """Render overview for all numerical and categorical statistics views."""
 
-    template_name = "statistics/statistics.html"
+    template_name = "statistics/statistics_navigation.html"
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
 
+        context["api_metadata"] = {
+            "url": self.request.build_absolute_uri(reverse("api:variable-list")),
+            "study": context["study"].name,
+        }
+
         statistics_variables = Variable.objects.exclude(statistics_data=None).filter(
             dataset__study=context["study"]
         )
+        root_topics = Topic.objects.filter(study=context["study"], parent=None)
+
+        context["topics"] = {
+            topic.name: {"label": topic.label, "label_de": topic.label_de}
+            for topic in root_topics
+        }
 
         context["categorical_variables"] = {}
         context["numerical_variables"] = {}

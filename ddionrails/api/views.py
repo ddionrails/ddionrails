@@ -5,7 +5,7 @@
 import difflib
 import re
 import uuid
-from typing import List
+from typing import Any, List
 
 import yaml
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
@@ -29,6 +29,7 @@ from ddionrails.api.serializers import (
     BasketHyperlinkedSerializer,
     BasketVariableSerializer,
     QuestionSerializer,
+    StatisticsVariableSerializer,
     StudySerializer,
     UserSerializer,
     VariableSerializer,
@@ -179,8 +180,8 @@ class VariableViewSet(viewsets.ModelViewSet):
 
     serializer_class = VariableSerializer
 
-    @method_decorator(cache_page(60 * 10))
-    def list(self, request, *args, **kwargs) -> Response:
+    @method_decorator(cache_page(60 * 2))
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Variable]:
@@ -204,9 +205,9 @@ class VariableViewSet(viewsets.ModelViewSet):
                 topic_object: Topic = get_object_or_404(
                     Topic, name=topic, study__name=study
                 )
-                queryset_filter["concept__in"] = Concept.objects.filter(
-                    topics__in=topic_object.get_topic_tree_leaves()
-                ).distinct()
+                queryset_filter[
+                    "concept__topics__in"
+                ] = topic_object.get_topic_tree_leaves()
             else:
                 raise NotAcceptable(
                     detail=(
@@ -220,15 +221,18 @@ class VariableViewSet(viewsets.ModelViewSet):
             study_object = get_object_or_404(Study, name=study)
             queryset_filter["dataset__study"] = study_object
         if statistics_data:
+            self.serializer_class = StatisticsVariableSerializer
             return (
                 Variable.objects.filter(**queryset_filter)
                 .exclude(statistics_data=None)
+                .distinct()
                 .select_related("dataset", "dataset__study")
-                .prefetch_related("statistics_data")
             )
 
-        return Variable.objects.filter(**queryset_filter).select_related(
-            "dataset", "dataset__study"
+        return (
+            Variable.objects.filter(**queryset_filter)
+            .distinct()
+            .select_related("dataset", "dataset__study")
         )
 
 

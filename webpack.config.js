@@ -26,7 +26,7 @@ module.exports = {
     ],
     statistics: ["./assets/js/statistics.js", "./assets/scss/statistics.scss"],
     statistics_navigation: [
-      "./assets/js/statistics_navigation.js",
+      "./assets/js/statistics_navigation.ts",
       "./assets/scss/statistics_navigation.scss",
     ],
     variables: ["./assets/js/variables.js"],

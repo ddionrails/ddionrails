@@ -111,6 +111,25 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class StatisticsVariableSerializer(VariableSerializer):
+    """Expand VariableSerializer with fields needed for statistics functions."""
+
+    class Meta:
+        model = Variable
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset_name",
+            "study_name",
+            "study_label",
+            "dataset",
+            "study",
+            "statistics_type",
+        ]
+
+
 class QuestionSerializer(serializers.ModelSerializer):
     """Serialize systems Variables."""
 

@@ -24,6 +24,8 @@ LOGGER = logging.getLogger(__name__)
 
 
 class DatasetJsonImport(imports.Import):
+    """Import Variable data from JSON files."""
+
     def execute_import(self):
         self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(
             self.content
@@ -98,6 +100,8 @@ class DatasetImport(imports.CSVImport):
 
 
 class VariableImport(imports.CSVImport):
+    """Import Variable data from csv file."""
+
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
 
@@ -138,6 +142,7 @@ class VariableImport(imports.CSVImport):
         variable.description_de = element.get("description_de", "")
         variable.description_long = element.get("description_long", "")
         variable.image_url = element.get("image_url", "")
+        variable.statistics_type = element.get("type", "")
         if not variable.label:
             variable.label = element.get("label", "")
         if not variable.label_de:
@@ -146,7 +151,7 @@ class VariableImport(imports.CSVImport):
 
 
 class TransformationImport(imports.CSVImport):
-    """Import Object relations from the transformations.csv file. """
+    """Import Object relations from the transformations.csv file."""
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm

@@ -31,18 +31,18 @@ admin.site.index_title = "Welcome to DDI on Rails Admin"
 
 
 class StudyConverter:
-    """ Get study object from url component. """
+    """Get study object from url component."""
 
     regex = ".*"
 
     @staticmethod
     def to_python(value):
-        """ Get object """
+        """Get object"""
         return get_object_or_404(Study, name=value)
 
     @staticmethod
     def to_url(value):
-        """ Return string unchanged """
+        """Return string unchanged"""
         return value
 
 
