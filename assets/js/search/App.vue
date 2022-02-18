@@ -36,6 +36,12 @@
             Topics
           </router-link>
         </li>
+        <li>
+          <router-link class="nav-link" to="/statistics">
+            <i class="fa fa-chart-line"></i>
+            Statistics
+          </router-link>
+        </li>
       </ul>
       <router-view></router-view>
     </section>

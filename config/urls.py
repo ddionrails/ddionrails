@@ -62,7 +62,8 @@ urlpatterns = [
     path("workspace/", include("ddionrails.workspace.urls", namespace="workspace")),
     re_path(
         (
-            r"^search/((?:all|variables|concepts|questions|publications|topics)"
+            r"^search/"
+            r"((?:all|variables|concepts|questions|publications|topics|statistics)"
             r"\?{0,1}.*){0,1}$"
         ),
         TemplateView.as_view(template_name="search/search.html"),

@@ -18,6 +18,7 @@ import PublicationSearch from "./components/searches/PublicationSearch.vue";
 import QuestionSearch from "./components/searches/QuestionSearch.vue";
 import TopicSearch from "./components/searches/TopicSearch.vue";
 import VariableSearch from "./components/searches/VariableSearch.vue";
+import StatisticsSearch from "./components/searches/StatisticsSearch.vue";
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ const router = new Router({
       name: "topics",
       component: TopicSearch,
     },
+    {
+      path: "/statistics",
+      name: "statistics",
+      component: StatisticsSearch,
+    },
   ],
 });
 
@@ -71,7 +77,7 @@ router.beforeEach((to, _from, next) => {
   // To avoid chaining decode encode, we just replace + with the proper
   // encoding.
   const reroute = to.path + window.location.search
-      .replace(/\+/g, "%20").replace(/%2C/g, ",");
+    .replace(/\+/g, "%20").replace(/%2C/g, ",");
 
   // We don't want to go where we are already going.
   // This would cause an infinite regress.
