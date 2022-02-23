@@ -39,7 +39,7 @@ topicTreeAPI.searchParams.append("language", context["language"]);
 
 
 /**
-   * Iterate over the attributes of a generic object and add them do an HTML element.
+   * Iterate over the attributes of a generic object and add them to an HTML element.
    *
    * @param {Element} element The element to which the attributes should be added.
    * @param {Object} attributes The attributes, that should be added.
