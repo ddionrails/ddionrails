@@ -11,6 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
+          :fieldWeights="fieldWeights"
           placeholder="Search for variables"
         />
         <selected-filters />
@@ -96,6 +97,7 @@ export default {
         "label_de",
         "dataset",
       ],
+      fieldWeights: [2, 1, 1, 1.5],
     };
   },
   components: {
