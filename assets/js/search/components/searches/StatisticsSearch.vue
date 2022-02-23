@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for variables"
+          placeholder="Search for statistics"
         />
         <selected-filters />
       </div>
@@ -22,9 +22,6 @@
           :react="{
             and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search']
           }"
-        />
-        <conceptual-dataset-facet
-          :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
         />
         <analysis-unit-facet
           :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }"
