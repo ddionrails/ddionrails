@@ -96,10 +96,10 @@ class Dataset(ModelMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
-        self.id = hash_with_namespace_uuid(
+        """ "Set id and call parents save()."""
+        self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
             self.study_id, self.name, cache=False
-        )  # pylint: disable=C0103
+        )
         super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -114,12 +114,12 @@ class Dataset(ModelMixin, models.Model):
         id_fields = ["study", "name"]
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse(
             "data:dataset_detail",
             kwargs={"study_name": self.study.name, "dataset_name": self.name},
         )
 
     def get_direct_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse("dataset_redirect", kwargs={"id": self.id})

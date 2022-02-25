@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Search documents for indexing models from ddionrails.publications app into Elasticsearch
+""" Document class for indexing Publication model in Elasticsearch
 
 
 Authors:
@@ -16,33 +16,32 @@ License:
 
 from django.conf import settings
 from django.db.models import QuerySet
-from django_elasticsearch_dsl import Document, fields
+from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
+
+from ddionrails.base.generic_documents import GenericDocument
+from ddionrails.studies.models import Study
 
 from .models import Publication
 
 
 @registry.register_document
-class PublicationDocument(Document):
-    """ Search document for publications.Publication """
-
-    # doc_type was removed in Elasticsearch 7
-    type = fields.KeywordField()
-
-    @staticmethod
-    def prepare_type(publication: Publication) -> str:
-        return "publication"
+class PublicationDocument(GenericDocument):
+    """Search document for publications.Publication"""
 
     # facets
     sub_type = fields.KeywordField()
-    study = fields.KeywordField()
     year = fields.IntegerField()
 
-    # prepare_FIELD will be executed while indexing FIELD
     @staticmethod
-    def prepare_study(publication: Publication) -> str:
-        """ Return the related study """
-        return publication.study.title()
+    def prepare_description(publication: Publication) -> str:
+        """Store abstract in general description field."""
+        return publication.abstract
+
+    @staticmethod
+    def _get_study(model_object: Publication) -> Study:
+        """Return the related study"""
+        return model_object.study
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         # Name of the Elasticsearch index
@@ -52,7 +51,7 @@ class PublicationDocument(Document):
         model = Publication  # The model associated with this Document
 
         # The fields of the model you want to be indexed in Elasticsearch
-        fields = ("abstract", "author", "cite", "doi", "name", "title", "url")
+        fields = ("abstract", "author", "cite", "doi", "title", "url")
 
     def get_queryset(self) -> QuerySet:
         """

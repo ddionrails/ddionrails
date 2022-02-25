@@ -11,13 +11,12 @@ from ddionrails.instruments.documents import QuestionDocument
 pytestmark = [pytest.mark.search]
 
 
-def test_question_search_document_fields(
-    questions_index, question  # pylint: disable=unused-argument
-):
+@pytest.mark.usefixtures("questions_index")
+def test_question_search_document_fields(question):
     search = QuestionDocument.search().query("match_all")
 
-    expected = 1
-    assert expected == search.count()
+    expected_count = 1
+    assert expected_count == search.count()
     response = search.execute()
     document = response.hits[0]
 
@@ -33,10 +32,18 @@ def test_question_search_document_fields(
     # add facets to expected dictionary
     expected["analysis_unit"] = question.instrument.analysis_unit.title()
     expected["period"] = question.instrument.period.title()
-    expected["study"] = question.instrument.study.title()
+    expected["study_name"] = question.instrument.study.title()
+    expected["study"] = {
+        "name": question.instrument.study.name,
+        "label": question.instrument.study.label,
+    }
 
-    expected["instrument"] = question.instrument.title()
-    expected["type"] = "question"
+    expected["instrument"] = {
+        "name": question.instrument.name,
+        "label": question.instrument.label,
+        "label_de": question.instrument.label_de,
+    }
+    expected["id"] = str(question.id)
     # generate result dictionary from search document
     result = document.to_dict()
     assert expected == result

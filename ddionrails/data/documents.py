@@ -14,94 +14,70 @@ License:
       `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
 """
 
+import re
 from typing import Dict, List, Optional
 
 from django.conf import settings
 from django.db.models import QuerySet
-from django_elasticsearch_dsl import Document, fields
+from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
+
+from ddionrails.base.generic_documents import GenericDataDocument
+from ddionrails.studies.models import Study
 
 from .models import Variable
 
 
 @registry.register_document
-class VariableDocument(Document):
-    """ Search document data.Variable """
+class VariableDocument(GenericDataDocument):
+    """Search document data.Variable"""
 
-    # doc_type was removed in Elasticsearch 7
-    type = fields.KeywordField()
-
-    @staticmethod
-    def prepare_type(variable: Variable) -> str:
-        return "variable"
-
-    # attributes
-    name = fields.TextField()
-    label = fields.TextField(analyzer="english")
-    label_de = fields.TextField(analyzer="german")
-    description = fields.TextField(analyzer="english")
-    description_long = fields.TextField(analyzer="english")
-    description_de = fields.TextField(analyzer="german")
+    dataset = fields.ObjectField(
+        properties={
+            "name": fields.TextField(),
+            "label": fields.TextField(),
+            "label_de": fields.TextField(),
+        }
+    )
     categories = fields.ObjectField(
         properties={
             "labels": fields.ListField(fields.TextField(analyzer="english")),
             "labels_de": fields.ListField(fields.TextField(analyzer="german")),
         }
     )
-
-    # relations as attributes
-    concept = fields.ObjectField(
-        properties={
-            "name": fields.TextField(),
-            "label": fields.TextField(analyzer="english"),
-            "label_de": fields.TextField(analyzer="german"),
-        }
-    )
-    dataset = fields.TextField()
-
-    # facets
-    analysis_unit = fields.KeywordField()
     conceptual_dataset = fields.KeywordField()
-    period = fields.KeywordField()
-    study = fields.KeywordField()
 
     @staticmethod
-    def prepare_dataset(variable: Variable) -> str:
-        """ Return the related dataset's name """
-        return variable.dataset.name
+    def _get_study(model_object: Variable) -> Study:
+        study: Study = model_object.dataset.study
+        return study
 
-    @staticmethod
-    def prepare_study(variable: Variable) -> str:
-        """ Return the related study's title """
-        return variable.dataset.study.title()
-
-    @classmethod
-    def prepare_analysis_unit(cls, variable: Variable) -> Optional[str]:
-        """ Return the related analysis_unit's or None """
-        return cls._handle_missing_content(variable.dataset.analysis_unit)
-
-    @classmethod
-    def prepare_conceptual_dataset(cls, variable: Variable) -> Optional[str]:
-        """ Return the related conceptual_dataset' title or None """
-        return cls._handle_missing_content(variable.dataset.conceptual_dataset)
-
-    @classmethod
-    def prepare_period(cls, variable: Variable) -> Optional[str]:
-        """ Return the related period's title or None """
-        return cls._handle_missing_content(variable.dataset.period)
-
-    @staticmethod
-    def _handle_missing_content(content: str) -> str:
-        if content is None:
-            return "Not Categorized"
-        if str(content.title()).lower() in ["none", "unspecified"]:
-            return "Not Categorized"
-        return content.title()
+    def prepare_analysis_unit(self, variable: Variable) -> Optional[str]:
+        """Return the related analysis_unit's or None"""
+        return self._handle_missing_content(variable.dataset.analysis_unit)
 
     @staticmethod
     def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
-        """ Return the variable's categories, only labels and labels_de """
-        return {key: variable.categories.get(key) for key in ("labels", "labels_de")}
+        """Return the variable's categories, only labels and labels_de"""
+        output = {}
+        for key in ("labels", "labels_de"):
+            labels = variable.categories.get(key)
+            if labels:
+                output[key] = list(
+                    filter(
+                        lambda label: not re.match(r"\[-\d+\].*", label),
+                        labels,
+                    )
+                )
+        return output
+
+    def prepare_conceptual_dataset(self, variable: Variable) -> Optional[str]:
+        """Return the related conceptual_dataset' title or None"""
+        return self._handle_missing_content(variable.dataset.conceptual_dataset)
+
+    def prepare_period(self, variable: Variable) -> Optional[str]:
+        """Return the related period's title or None"""
+        return self._handle_missing_content(variable.dataset.period)
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}variables"

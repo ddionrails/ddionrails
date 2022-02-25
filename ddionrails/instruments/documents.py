@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Search documents for indexing models from ddionrails.instruments app into Elasticsearch
+""" Documents for indexing Instrument model into Elasticsearch
 
 
 Authors:
@@ -18,29 +18,25 @@ from typing import Dict, Optional
 
 from django.conf import settings
 from django.db.models.query import QuerySet
-from django_elasticsearch_dsl import Document, fields
+from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
 
-from .models import Question
+from ddionrails.base.generic_documents import GenericDataDocument
+from ddionrails.instruments.models.question import Question
+from ddionrails.studies.models import Study
 
 
 @registry.register_document
-class QuestionDocument(Document):
-    """ Search document instruments.Question """
+class QuestionDocument(GenericDataDocument):
+    """Search document instruments.Question"""
 
-    # doc_type was removed in Elasticsearch 7
-    type = fields.KeywordField()
-
-    @staticmethod
-    def prepare_type(question: Question) -> str:
-        return "question"
-
-    # attributes
-    name = fields.TextField()
-    label = fields.TextField(analyzer="english")
-    label_de = fields.TextField(analyzer="german")
-    description = fields.TextField(analyzer="english")
-    description_de = fields.TextField(analyzer="german")
+    instrument = fields.ObjectField(
+        properties={
+            "name": fields.TextField(),
+            "label": fields.TextField(),
+            "label_de": fields.TextField(),
+        }
+    )
     items = fields.ObjectField(
         properties={
             "en": fields.ListField(fields.TextField(analyzer="english")),
@@ -48,42 +44,31 @@ class QuestionDocument(Document):
         }
     )
 
-    # relations
-    analysis_unit = fields.KeywordField()
-    instrument = fields.TextField(fields={"raw": fields.KeywordField()})
-    period = fields.KeywordField()
-    study = fields.KeywordField()
+    @staticmethod
+    def _get_study(model_object: Question) -> Study:
+        study: Study = getattr(model_object.instrument, "study")
+        return study
 
     # lookup methods
     @staticmethod
     def prepare_analysis_unit(question: Question) -> Optional[str]:
-        """ Return the related analysis_unit's or None """
+        """Return the related analysis_unit's or None"""
         try:
             return question.instrument.analysis_unit.title()
         except AttributeError:
             return None
 
     @staticmethod
-    def prepare_instrument(question: Question) -> str:
-        """ Return the related instrument's title """
-        return question.instrument.title()
-
-    @staticmethod
     def prepare_period(question: Question) -> Optional[str]:
-        """ Return the related period's title or None """
+        """Return the related period's title or None"""
         try:
             return question.instrument.period.title()
         except AttributeError:
             return None
 
     @staticmethod
-    def prepare_study(question: Question) -> str:
-        """ Return the related study's title """
-        return question.instrument.study.title()
-
-    @staticmethod
     def prepare_items(question: Question) -> Dict:
-        """ Return the question's items, containing text, text_de and answers """
+        """Return the question's items, containing text, text_de and answers"""
         items = {"en": [], "de": []}
         for item in question.items:
             text = item.get("text")
@@ -92,7 +77,7 @@ class QuestionDocument(Document):
                 items["en"].append(text)
             if text_de:
                 items["de"].append(text_de)
-            answers = item.get("answers", list())
+            answers = item.get("answers", [])
             for answer in answers:
                 label = answer.get("label")
                 label_de = answer.get("label_de")
@@ -102,10 +87,10 @@ class QuestionDocument(Document):
                     items["de"].append(label_de)
         return items
 
-    class Index:  # pylint: disable=too-few-public-methods
+    class Index:  # pylint: disable=too-few-public-methods missing-class-docstring
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}questions"
 
-    class Django:  # pylint: disable=too-few-public-methods
+    class Django:  # pylint: disable=too-few-public-methods missing-class-docstring
         model = Question
 
     def get_queryset(self) -> QuerySet:

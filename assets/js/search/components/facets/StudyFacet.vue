@@ -1,7 +1,7 @@
 <template>
   <multi-list
     componentId="Study"
-    data-field="study"
+    dataField="study_name"
     title="Study"
     :showSearch="false"
     selectAllLabel="Select all"

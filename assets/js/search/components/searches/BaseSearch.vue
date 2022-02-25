@@ -35,19 +35,19 @@
           renderNoResults="Nothing found. Try to change your search query or filter options."
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
-            <div v-if="item.type === 'variable'">
+            <div v-if="item._index === 'variables'">
               <variable-result :item="item" />
             </div>
-            <div v-else-if="item.type === 'concept'">
+            <div v-else-if="item._index === 'concepts'">
               <concept-result :item="item" />
             </div>
-            <div v-else-if="item.type === 'question'">
+            <div v-else-if="item._index === 'questions'">
               <question-result :item="item" />
             </div>
-            <div v-else-if="item.type === 'publication'">
+            <div v-else-if="item._index === 'publications'">
               <publication-result :item="item" />
             </div>
-            <div v-else-if="item.type === 'topic'">
+            <div v-else-if="item._index === 'topics'">
               <topic-result :item="item" />
             </div>
           </div>

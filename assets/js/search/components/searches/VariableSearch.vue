@@ -12,6 +12,7 @@
           :URLParams="true"
           :showClear="true"
           :fieldWeights="fieldWeights"
+          :fuzziness="0"
           placeholder="Search for variables"
         />
         <selected-filters />

@@ -2,15 +2,23 @@
   <div class="card-body">
     <p class="card-title">
       <i class="fa fa-tasks"></i>
-      <a :href="baseUrl + '/' + item.type + '/' + item._id">
+      <a :href="'/question/' + item._id">
         [
         <span v-html="item.name"></span>]
         <span v-html="item.label"></span>
       </a>
     </p>
     <p class="card-text">
-      Question in study: {{ item.study }} |
-      instrument: {{ item.instrument }} |
+      Question in study:
+      <a :href="'/' + item.study.name">
+        {{ item.study.label }}
+      </a>
+      |
+      instrument:
+      <a :href="'/' + item.study.name + '/inst/' + item.instrument.name">
+        {{ item.instrument.label }}
+      </a>
+      |
       period:
       <span
         v-if="item.period"
@@ -27,10 +35,10 @@
 export default {
   name: "QuestionResult",
   props: ["item"],
-  data: function() {
+  data: () => {
     return {
-      baseUrl: window.location.origin
+      baseUrl: window.location.origin,
     };
-  }
+  },
 };
 </script>

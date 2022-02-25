@@ -15,9 +15,8 @@ pytestmark = [pytest.mark.search]
 TEST_CASE = TestCase()
 
 
-def test_variable_search_document_fields(
-    variables_index, variable  # pylint: disable=unused-argument
-):
+@pytest.mark.usefixtures("variables_index")
+def test_variable_search_document_fields(variable):
     search = VariableDocument.search().query("match_all")
 
     expected = 1
@@ -38,21 +37,22 @@ def test_variable_search_document_fields(
             "label_de",
             "description",
             "description_de",
-            "description_long",
         ),
     )
-    expected["categories"] = {
-        key: variable.categories.get(key) for key in ("labels", "labels_de")
-    }
+    expected["categories"] = {"labels": ["[1] Yes"], "labels_de": ["[1] Ja"]}
     # add facets to expected dictionary
     expected["analysis_unit"] = variable.dataset.analysis_unit.title()
     expected["conceptual_dataset"] = variable.dataset.conceptual_dataset.title()
     expected["period"] = variable.dataset.period.title()
-    expected["study"] = variable.dataset.study.title()
+    expected["id"] = str(variable.id)
+    expected["study_name"] = variable.dataset.study.title()
+    expected["study"] = {
+        "name": variable.dataset.study.name,
+        "label": variable.dataset.study.label,
+    }
 
     # add relations to expected dictionary
-    expected["dataset"] = variable.dataset.name
-    expected["type"] = "variable"
+    expected["dataset"] = {"name": variable.dataset.name, "label": variable.dataset.label}
     # generate result dictionary from search document
     result = document.to_dict()
     TEST_CASE.assertEqual(expected, result)

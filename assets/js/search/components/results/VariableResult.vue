@@ -9,12 +9,23 @@
       </a>
     </p>
     <p class="card-text">
-      Variable in study: {{ item.study }} | 
-      dataset: <span v-html="item.dataset"></span> |
-      period: 
+      Variable in study:
+      <a
+        :href="'/' + item.study.name"
+        v-html="item.study.label">
+      </a>
+      |
+      dataset:
+      <a
+        :href="'/' + item.study.name + '/data/' + item.dataset.name"
+        :title="item.dataset.label"
+        v-html="item.dataset.name">
+      </a>
+      |
+      period:
       <span v-if="item.period">{{ item.period }}</span>
       <span v-else>None</span> |
-      analysis unit: 
+      analysis unit:
       <span v-if="item.analysis_unit">{{ item.analysis_unit }}</span>
       <span v-else>None</span>
     </p>

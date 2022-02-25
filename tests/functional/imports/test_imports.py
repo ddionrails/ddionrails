@@ -235,7 +235,7 @@ class TestStudyImportManager:
         hit = response.hits[0]
         # TEST_CASE.assertEqual(study.name, hit.study)
         TEST_CASE.assertEqual("some-question", hit.name)
-        TEST_CASE.assertEqual("Some Instrument", hit.instrument)
+        TEST_CASE.assertEqual("Some Instrument", hit.instrument["label"])
         QuestionDocument.search().query("match_all").delete()
 
     @pytest.mark.usefixtures(("elasticsearch_indices"))
@@ -346,7 +346,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(1, search.count())
         response = search.execute()
         hit = response.hits[0]
-        TEST_CASE.assertEqual(study.title(), hit.study)
+        TEST_CASE.assertEqual(study.title(), hit.study_name)
         TEST_CASE.assertEqual("some-doi", hit.doi)
         TEST_CASE.assertEqual(2018, hit.year)
         PublicationDocument.search().query("match_all").delete()
