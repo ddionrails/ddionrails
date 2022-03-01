@@ -3,8 +3,9 @@ import json
 from csv import DictReader
 from glob import glob
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List
 
+from django.core.files import File
 from django_rq import enqueue
 
 from ddionrails.data.models.variable import Variable
@@ -19,7 +20,7 @@ CACHE: Dict[str, IndependentVariable] = {}
 
 
 def statistics_import(file: Path, study: Study) -> None:
-    """ Import variable statistics."""
+    """Import variable statistics."""
     VariableStatistic.objects.filter(variable__dataset__study=study).delete()
     with open(file, "r", encoding="utf8") as variables_file:
         variables = DictReader(variables_file)
@@ -72,7 +73,7 @@ def _metadata_import(study: Study) -> None:
 
 
 def _import_single_variable(variable: Dict[str, str], study: Study) -> None:
-    """ Import statistics data for a single defined value. """
+    """Import statistics data for a single defined value."""
 
     try:
         variable_object = Variable.objects.get(
@@ -116,7 +117,7 @@ def _import_independent_variables(path: Path) -> List[str]:
 
 
 def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> None:
-    """ Import alle statistics for a single value and of a single type. """
+    """Import alle statistics for a single value and of a single type."""
     statistics_path = base_path.joinpath(f"{stat_type}/{variable.name}")
     independent_variables = _import_independent_variables(statistics_path)
     files = glob(f"{statistics_path}/{variable.name}*.csv")
@@ -124,28 +125,29 @@ def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> 
         statistics = VariableStatistic()
         statistics.variable = variable
         statistics.plot_type = stat_type
-        start_year, end_year, data = _get_csv_data(file)
-        statistics.start_year = start_year
-        statistics.end_year = end_year
-        statistics.statistics = data
         independent_variable_names = []
         for independent_variable in independent_variables:
             if independent_variable in file:
                 independent_variable_names.append(independent_variable)
         statistics.set_independent_variable_names(independent_variable_names)
-        statistics.save()
+        # statistics.save() in _store_csv_data
+        _store_csv_data(Path(file), statistics)
         for name in independent_variable_names:
             statistics.independent_variables.add(CACHE[name])
         statistics.save()
 
 
-def _get_csv_data(file_path: str) -> Tuple[int, int, str]:
-    """ Get content and limited metadata from a csv statistics file. """
+def _store_csv_data(file_path: Path, statistics: VariableStatistic) -> None:
+    """Get content and limited metadata from a csv statistics file."""
     with open(file_path, "r", encoding="utf8") as file:
-        output = file.read()
         file.seek(0)
         reader = DictReader(file)
         years = set()
         for line in reader:
             years.add(int(line["year"]))
-    return min(years), max(years), output
+        statistics.start_year = min(years)
+        statistics.end_year = max(years)
+        statistics.statistics.save(
+            file_path.name + "/" + file_path.parent.parent.name, File(file)
+        )
+        statistics.save()

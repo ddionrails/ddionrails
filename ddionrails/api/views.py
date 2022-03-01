@@ -143,7 +143,9 @@ class StatisticViewSet(viewsets.GenericViewSet):
             independent_variable_names=dimensions,
             plot_type=_type,
         )
-        response = HttpResponse(variable_statistic.statistics, content_type="text/csv")
+        with variable_statistic.statistics.open("r") as file:
+            content = file.read()
+        response = HttpResponse(content, content_type="text/csv")
         response["Content-Disposition"] = f"attachement; filename={variable.label}.csv"
 
         return response
@@ -222,17 +224,12 @@ class VariableViewSet(viewsets.ModelViewSet):
             queryset_filter["dataset__study"] = study_object
         if statistics_data:
             self.serializer_class = StatisticsVariableSerializer
-            return (
-                Variable.objects.filter(**queryset_filter)
-                .exclude(statistics_data=None)
-                .distinct()
-                .select_related("dataset", "dataset__study")
-            )
+            queryset_filter["statistics_flag"] = True
 
         return (
             Variable.objects.filter(**queryset_filter)
-            .distinct()
             .select_related("dataset", "dataset__study")
+            .distinct()
         )
 
 

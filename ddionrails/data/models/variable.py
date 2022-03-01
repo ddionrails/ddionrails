@@ -109,6 +109,7 @@ class Variable(ModelMixin, models.Model):
     statistics_type = models.TextField(
         null=True, blank=True, choices=StatisticalType.choices
     )
+    statistics_flag = models.BooleanField(blank=False, null=False, default=False)
     categories = JSONBField(
         default=dict, null=True, blank=True, help_text="Categories of the variable(JSON)"
     )

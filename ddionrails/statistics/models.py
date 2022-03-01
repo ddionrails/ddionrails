@@ -11,7 +11,7 @@ from ddionrails.imports.helpers import hash_with_namespace_uuid
 
 
 class IndependentVariable(models.Model):
-    """ Information about valuelabels for independent variables (dimensions)."""
+    """Information about valuelabels for independent variables (dimensions)."""
 
     # Keys
     id = models.UUIDField(primary_key=True)
@@ -40,7 +40,7 @@ class IndependentVariable(models.Model):
 
 
 class StatisticsMetadata(models.Model):
-    """ Store data to be served by the REST API. """
+    """Store data to be served by the REST API."""
 
     variable = models.ForeignKey(
         to=Variable,
@@ -52,7 +52,7 @@ class StatisticsMetadata(models.Model):
 
 
 class VariableStatistic(models.Model):
-    """ Stores CSV statistics Data for a data.Variable."""
+    """Stores CSV statistics Data for a data.Variable."""
 
     class PlotType(models.TextChoices):
         """Define possible plot types."""
@@ -69,7 +69,7 @@ class VariableStatistic(models.Model):
 
     # Attributes
     plot_type = models.TextField(null=False, choices=PlotType.choices)
-    statistics = models.TextField(null=False, blank=False)
+    statistics = models.FileField(null=False, blank=False, upload_to="statistic_files/")
     independent_variables = models.ManyToManyField(
         null=True, blank=True, to=IndependentVariable
     )
@@ -78,7 +78,7 @@ class VariableStatistic(models.Model):
     end_year = models.IntegerField(null=False, blank=False)
 
     def set_independent_variable_names(self, names: list[str]) -> None:
-        """ Save the names of related indep. var. in a helper field. """
+        """Save the names of related indep. var. in a helper field."""
         self.independent_variable_names = sorted(names)
 
     def save(

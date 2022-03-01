@@ -65,6 +65,8 @@ class DatasetJsonImport(imports.Import):
 
 
 class DatasetImport(imports.CSVImport):
+    """Import Dataset data"""
+
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = DatasetForm
 
@@ -143,6 +145,7 @@ class VariableImport(imports.CSVImport):
         variable.description_long = element.get("description_long", "")
         variable.image_url = element.get("image_url", "")
         variable.statistics_type = element.get("type", "")
+        variable.statistics_flag = element.get("statistics", "False") == "True"
         if not variable.label:
             variable.label = element.get("label", "")
         if not variable.label_de:
