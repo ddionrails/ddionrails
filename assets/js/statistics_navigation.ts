@@ -17,7 +17,9 @@ const topicMetadata = JSON.parse(document.getElementById("topics").textContent);
 const apiMetadata = JSON.parse(
   document.getElementById("api-metadata").textContent
 );
-const loadingSpinnerNav = document.getElementById("loading-spinner")
+const buttonNavContainer = document.getElementById("statistics-button-container")
+const allVariablesContainer = document.getElementById("all-variables-container")
+const topicVariablesContainer = document.querySelector(".variables-container")
 
 function renderVariableStatisticsLink(variable: any, type: string): HTMLElement {
   const linkElement = document.createElement("a")
@@ -30,7 +32,7 @@ function renderVariableStatisticsLink(variable: any, type: string): HTMLElement 
 }
 
 /**
- *
+ * Get Statistics Variables for a Topic and add them to a node.
  * @param {*} topicName
  */
 function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
@@ -65,14 +67,14 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
 
 
       }
-      loadingSpinnerNav.classList.add("hidden")
+      containerNode.parentElement.querySelector(".loading-spinner").classList.add("hidden")
     }
   }
   request.send(null)
 }
 
 /**
- *
+ * Manage display of navigation buttons and associated content
  * @param {PointerEvent} event
  */
 function toggleNavigationButtons(event: MouseEvent) {
@@ -91,24 +93,33 @@ function toggleNavigationButtons(event: MouseEvent) {
     }
   });
 
-  const topicVariablesContainer = document.getElementById("sub-topics");
+  const topicVariablesContainer = button.parentElement.querySelector(".variables-container");
   topicVariablesContainer.classList.toggle("hidden");
   if (!topicVariablesContainer.classList.contains("hidden")) {
-    loadingSpinnerNav.classList.remove("hidden")
-    topicVariablesContainer.querySelector("h3").textContent = button.getAttribute("title");
     const variableList = topicVariablesContainer.querySelector("ul")
-    variableList.innerHTML = ""
-    matchVariablesToTopic(button.id, variableList)
+    if (variableList.textContent.trim() === '') {
+      topicVariablesContainer.querySelector(".loading-spinner").classList.remove("hidden")
+      topicVariablesContainer.querySelector("h3").textContent = button.getAttribute("title");
+      matchVariablesToTopic(button.id, variableList)
+
+    }
 
   }
 }
 
 window.addEventListener("load", function () {
-  const buttonContainer = document.getElementById("statistics-button-container");
-  const buttons = buttonContainer.querySelectorAll("button");
-  buttons.forEach((button) => {
+  const buttonContainer = buttonNavContainer;
+  const buttonContainers = Array.from(buttonContainer.getElementsByClassName("one-button"));
+  for (const container of buttonContainers) {
+    container.appendChild(topicVariablesContainer.cloneNode(true))
+    const button = container.querySelector("button")
     button.addEventListener("click", (toggleNavigationButtons));
-  });
-  document.getElementById("sub-topics").classList.toggle("hidden");
+  }
+
+  const navSwitch = document.getElementById("navigation-view-switch")
+  navSwitch.addEventListener("click", () => {
+    buttonNavContainer.classList.toggle("hidden");
+    allVariablesContainer.classList.toggle("hidden");
+  })
 });
 
