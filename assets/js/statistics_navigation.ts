@@ -17,6 +17,7 @@ const topicMetadata = JSON.parse(document.getElementById("topics").textContent);
 const apiMetadata = JSON.parse(
   document.getElementById("api-metadata").textContent
 );
+const navSwitch = document.getElementById("navigation-view-switch")
 const buttonNavContainer = document.getElementById("statistics-button-container")
 const allVariablesContainer = document.getElementById("all-variables-container")
 const topicVariablesContainer = document.querySelector(".variables-container")
@@ -77,21 +78,26 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
  * Manage display of navigation buttons and associated content
  * @param {PointerEvent} event
  */
-function toggleNavigationButtons(event: MouseEvent) {
+function toggleNavigationButtons(event: MouseEvent, button: HTMLElement = null) {
   const buttonContainer = document.getElementById("statistics-button-container");
-  buttonContainer.classList.toggle("justify-content-left");
-  buttonContainer.classList.toggle("justify-content-center");
-  const buttons: NodeList = buttonContainer.querySelectorAll("button");
-  let button = event.target as HTMLElement;
-  if (button.tagName != "BUTTON") {
-    button = button.closest("button");
-  }
+  const buttons: NodeList = buttonContainer.querySelectorAll(".one-button > button");
 
-  buttons.forEach((loopButton: HTMLElement) => {
-    if (loopButton != button) {
-      loopButton.classList.toggle("hidden");
+  if (button === null) {
+    button = event.currentTarget as HTMLElement;
+    if (button.classList.contains("disabled")) {
+      return
     }
-  });
+    navSwitch.classList.toggle("hidden")
+    buttonContainer.classList.toggle("justify-content-left");
+    buttonContainer.classList.toggle("justify-content-center");
+
+    buttons.forEach((loopButton: HTMLElement) => {
+      if (loopButton != button) {
+        loopButton.classList.toggle("hidden");
+      }
+    });
+
+  }
 
   const topicVariablesContainer = button.parentElement.querySelector(".variables-container");
   topicVariablesContainer.classList.toggle("hidden");
@@ -107,6 +113,7 @@ function toggleNavigationButtons(event: MouseEvent) {
   }
 }
 
+
 window.addEventListener("load", function () {
   const buttonContainer = buttonNavContainer;
   const buttonContainers = Array.from(buttonContainer.getElementsByClassName("one-button"));
@@ -116,10 +123,16 @@ window.addEventListener("load", function () {
     button.addEventListener("click", (toggleNavigationButtons));
   }
 
-  const navSwitch = document.getElementById("navigation-view-switch")
   navSwitch.addEventListener("click", () => {
-    buttonNavContainer.classList.toggle("hidden");
-    allVariablesContainer.classList.toggle("hidden");
+
+    const buttonsContainer = document.querySelectorAll("#statistics-button-container")
+    buttonContainer.classList.toggle("flex-column")
+    buttonContainer.classList.toggle("flex-row")
+    const buttons = document.querySelectorAll("#statistics-button-container >* button")
+    for (const button of Array.from(buttons)) {
+      button.classList.toggle("disabled")
+      toggleNavigationButtons(null, button as HTMLElement)
+    }
   })
 });
 

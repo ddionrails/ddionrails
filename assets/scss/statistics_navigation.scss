@@ -49,7 +49,7 @@ div#statistics-button-container {
   width: 80vw;
 }
 
-i {
+.statistics-button > i {
   font-size: 9vw;
   margin-bottom: 0.7vw;
   margin-top: 0.3vw;
@@ -61,4 +61,8 @@ button > p {
 .one-button {
   display: flex;
   flex-direction: row;
+}
+
+.one-button > * li {
+  padding-right: 2em;
 }
