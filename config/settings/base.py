@@ -27,6 +27,7 @@ else:
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default="").split(","))
+DEFAULT_FEEDBACK_TO_EMAIL = os.getenv("DEFAULT_FEEDBACK_TO_EMAIL", "paneldata.org@diw.de")
 WSGI_APPLICATION = "config.wsgi.application"
 
 IMPORT_BRANCH = os.getenv("IMPORT_BRANCH", default="master")
@@ -186,6 +187,7 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
+    "DEFAULT_THROTTLE_RATES": {"sendmail": "10/day"},
 }
 
 # DDI on Rails: imports

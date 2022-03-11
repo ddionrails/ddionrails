@@ -47,6 +47,11 @@ urlpatterns = [
         TemplateView.as_view(template_name="search/search.html"),
         name="search",
     ),
+    path(
+        "search/feedback/",
+        TemplateView.as_view(template_name="search/feedback.html"),
+        name="search_feedback",
+    ),
     path("api/", include("ddionrails.api.urls", namespace="api")),
     path("django-rq/", include("django_rq.urls")),
     path("user/", include("django.contrib.auth.urls")),

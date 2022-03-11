@@ -9,7 +9,8 @@ from typing import List
 
 import yaml
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
-from django.db.models import Q
+from django.core.mail import send_mail
+from django.db.models import Model, Q, QuerySet
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import permissions, status, viewsets
@@ -18,7 +19,10 @@ from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.throttling import AnonRateThrottle
+from rest_framework.views import APIView
 
+from config.settings.base import DEFAULT_FEEDBACK_TO_EMAIL
 from ddionrails.api.serializers import (
     BasketHyperlinkedSerializer,
     BasketVariableSerializer,
@@ -32,19 +36,20 @@ from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models import Question
 from ddionrails.instruments.views import get_question_item_metadata
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket, BasketVariable
+from ddionrails.workspace.models.basket import Basket
+from ddionrails.workspace.models.basket_variable import BasketVariable
 
 # VIEWS
 
 
 class QuestionComparisonViewSet(viewsets.GenericViewSet):
-    """ Retrieve question and item metadata combined. """
+    """Retrieve question and item metadata combined."""
 
     queryset = Question.objects.none()
 
     @staticmethod
     def list(request: Request) -> HttpResponse:
-        """ Retrieve question via id and return metadata"""
+        """Retrieve question via id and return metadata"""
         questions_ids = request.query_params.get("questions", "").split(",")
         if len(questions_ids) != 2 or "" in questions_ids:
             raise Http404
@@ -269,7 +274,7 @@ class BasketViewSet(viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin):
 
 
 class IsBasketOwner(permissions.BasePermission):
-    """ Limit creation and deletion premissions of BasketVariables.
+    """Limit creation and deletion premissions of BasketVariables.
 
     Users should only be allowed to create or delete BasketVariables for Baskets that
     they own.
@@ -412,3 +417,51 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAdminUser]
+
+
+class EmailThrottle(AnonRateThrottle):
+    """Sets custom throttling rate through the settings."""
+
+    scope = "sendmail"
+
+
+class SendFeedback(APIView):
+    """Process feedback form content to send feedback mails."""
+
+    throttle_classes = [EmailThrottle]
+
+    @staticmethod
+    def get_queryset() -> QuerySet[Model]:
+        """ApiView needs a queryset so we return an empty one here."""
+        return Variable.objects.none()
+
+    def post(self, request: Request) -> Response:
+        """Process posted form data."""
+        form_data = request.data
+        if "anon-submit-button" in form_data:
+            email = "Anonym"
+        else:
+            email = form_data["email"]
+
+        feedback = form_data["feedback"]
+
+        if form_data["source"]:
+            source = form_data["source"]
+        else:
+            source = "Es wurde kein Suchstring angegeben."
+
+        message = f"""Feedback kommt von {email}
+
+        URL: {source}
+        
+        {feedback}
+        """
+
+        send_mail(
+            f"Paneldata Suche Feedback: {form_data['feedback-type']}",
+            message,
+            None,
+            [DEFAULT_FEEDBACK_TO_EMAIL],
+            fail_silently=True,
+        )
+        return Response(str(request.data))

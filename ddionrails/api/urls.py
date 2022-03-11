@@ -3,7 +3,7 @@
 """ URLConf for ddionrails.api app """
 
 from django.conf.urls import include
-from django.urls import re_path
+from django.urls import path, re_path
 from rest_framework import routers
 
 from ddionrails.api.views import (
@@ -11,6 +11,7 @@ from ddionrails.api.views import (
     BasketViewSet,
     QuestionComparisonViewSet,
     QuestionViewSet,
+    SendFeedback,
     StudyViewSet,
     TopicTreeViewSet,
     UserViewSet,
@@ -19,7 +20,7 @@ from ddionrails.api.views import (
 
 app_name = "api"
 
-urlpatterns = []
+urlpatterns = [path("feedback/", SendFeedback.as_view(), name="send-feedback")]
 
 ROUTER = routers.SimpleRouter()
 ROUTER.register(r"users", UserViewSet, basename="user")
