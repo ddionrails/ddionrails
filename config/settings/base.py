@@ -7,9 +7,14 @@ import tempfile
 import uuid
 from pathlib import Path
 
+# Beta stage config flag
+# ------------------------------------------------------------------------------
+
+SHOW_STATISTICS = os.getenv("SHOW_STATISTICS") == "True"
+
 # PROJECT CONFIGURATION
 # ------------------------------------------------------------------------------
-BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY"))
+BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY", "/usr/src/app/"))
 BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=str(uuid.NAMESPACE_DNS)))
 
 APPS_DIR = BASE_DIR.joinpath("ddionrails")
@@ -111,6 +116,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "ddionrails.studies.context_processors.studies_processor",
+                "ddionrails.studies.context_processors.show_statistics",
             ]
         },
     }
