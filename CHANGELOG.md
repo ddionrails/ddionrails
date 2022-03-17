@@ -11,6 +11,21 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [5.4.0] - 2022-03-17
+
+### Added
+
+- Integrate shiny [transfer.server](https://github.com/ddionrails/transfer.server) to
+  display statistical data in plots.
+
+- models and imports to store statistical data for variables.
+- search feedback page.
+
+### Changed
+
+- menu navigation to work better with smaller Displays.
+- Configured weight scores for variable search.
+
 ## [5.3.4] - 2022-02-01
 
 ### Changed
@@ -737,7 +752,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...develop
+[5.4.0]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...v5.4.0
 [5.3.4]: https://github.com/ddionrails/ddionrails/compare/v5.3.3...v5.3.4
 [5.3.3]: https://github.com/ddionrails/ddionrails/compare/v5.3.2...v5.3.3
 [5.3.2]: https://github.com/ddionrails/ddionrails/compare/v5.3.1...v5.3.2
