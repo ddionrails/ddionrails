@@ -11,7 +11,7 @@ import yaml
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.mail import send_mail
 from django.db.models import Model, Q, QuerySet
-from django.http.response import Http404, HttpResponse
+from django.http.response import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -495,7 +495,7 @@ class SendFeedback(APIView):
         """ApiView needs a queryset so we return an empty one here."""
         return Variable.objects.none()
 
-    def post(self, request: Request) -> Response:
+    def post(self, request: Request) -> HttpResponseRedirect:
         """Process posted form data."""
         form_data = request.data
         if "anon-submit-button" in form_data:
@@ -510,12 +510,11 @@ class SendFeedback(APIView):
         else:
             source = "Es wurde kein Suchstring angegeben."
 
-        message = f"""Feedback kommt von {email}
-
-        URL: {source}
-        
-        {feedback}
-        """
+        message = (
+            f"Feedback wurde von {email} abgegeben\n\n"
+            f"Benutzte Such-URL: {source}\n\n"
+            f"Feedback Text:\n{feedback}"
+        )
 
         send_mail(
             f"Paneldata Suche Feedback: {form_data['feedback-type']}",
@@ -524,4 +523,4 @@ class SendFeedback(APIView):
             [DEFAULT_FEEDBACK_TO_EMAIL],
             fail_silently=True,
         )
-        return Response(str(request.data))
+        return HttpResponseRedirect(request.META["HTTP_REFERER"])

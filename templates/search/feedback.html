@@ -7,6 +7,10 @@
 
 {% block content %}
 
+<p id="feedback-success" class="alert alert-success hidden">
+     Your Feedback has been send.
+</p>
+
 <form id="feedback-form" action="/api/feedback/" method="post">
     <div class="form-group">
         <label for="feedback-type">

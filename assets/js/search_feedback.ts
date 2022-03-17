@@ -4,6 +4,10 @@ const email = document.getElementById("email")
 
 document.addEventListener("DOMContentLoaded", () => {
 	const source = document.getElementById("source") as HTMLInputElement
+	if (document.referrer.includes("search/feedback/")) {
+		document.getElementById("feedback-success").classList.remove("hidden")
+		return
+	}
 	source.value = decodeURI(document.referrer)
 })
 
