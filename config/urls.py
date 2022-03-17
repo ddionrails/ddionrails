@@ -113,12 +113,8 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    import debug_toolbar
-
-    urlpatterns = urlpatterns + static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
-    urlpatterns = [path(r"__debug__/", include(debug_toolbar.urls))] + urlpatterns
+    urlpatterns.extend(static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT))
+    urlpatterns.append(path(r"__debug__/", include("debug_toolbar.urls")))
 
 
 urlpatterns.append(
