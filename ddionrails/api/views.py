@@ -490,6 +490,12 @@ class SendFeedback(APIView):
 
     throttle_classes = [EmailThrottle]
 
+    def get_permissions(self):
+        """Allow feedback by anonymous users."""
+        if self.request.method == "POST":
+            return []
+        return super().get_permissions()
+
     @staticmethod
     def get_queryset() -> QuerySet[Model]:
         """ApiView needs a queryset so we return an empty one here."""
