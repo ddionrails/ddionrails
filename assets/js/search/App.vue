@@ -36,7 +36,7 @@
             Topics
           </router-link>
         </li>
-        <li>
+        <li v-if="showStatistics">
           <router-link class="nav-link" to="/statistics">
             <i class="fa fa-chart-line"></i>
             Statistics
@@ -49,14 +49,16 @@
 </template>
 
 <script>
-let searchUrl = window.location.origin + "/elastic/";
+const searchUrl = window.location.origin + "/elastic/";
+const showStatistics = process.env.SHOW_STATISTICS === "True";
 
 export default {
   data() {
     return {
-      searchUrl: searchUrl
+      searchUrl,
+      showStatistics,
     };
-  }
+  },
 };
 </script>
 

@@ -66,6 +66,9 @@ module.exports = {
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
       ),
+      "process.env.SHOW_STATISTICS": JSON.stringify(
+        process.env.SHOW_STATISTICS
+      ),
     }),
     // reactivesearch-vue breaks without this.
     // A false value breaks slider ui elements
