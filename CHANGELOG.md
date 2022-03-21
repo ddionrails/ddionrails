@@ -11,6 +11,14 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+
+## [5.4.1] - 2022-03-21
+
+### Fixed
+
+- Do not display Statistic search when SHOW_STATISTICS=False.
+- search result link rendering. 
+ 
 ## [5.4.0] - 2022-03-17
 
 ### Added
@@ -752,7 +760,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...develop
+[5.4.1]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...v5.4.1
 [5.4.0]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...v5.4.0
 [5.3.4]: https://github.com/ddionrails/ddionrails/compare/v5.3.3...v5.3.4
 [5.3.3]: https://github.com/ddionrails/ddionrails/compare/v5.3.2...v5.3.3
