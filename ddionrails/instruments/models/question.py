@@ -86,6 +86,8 @@ class Question(ModelMixin, models.Model):
     )
     question_items: models.manager.Manager[Any]
 
+    question_images = JSONBField(default=dict, null=True, blank=True)
+
     #############
     # relations #
     #############
@@ -108,7 +110,7 @@ class Question(ModelMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         if not self.period:
             self.period = self.instrument.period
 
@@ -128,7 +130,7 @@ class Question(ModelMixin, models.Model):
         io_fields = ["name", "label", "description", "instrument"]
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model
+        """Returns a canonical URL for the model
 
         Uses the "study", "instrument" and "name" fields
         """
@@ -142,7 +144,7 @@ class Question(ModelMixin, models.Model):
         )
 
     def get_direct_url(self) -> str:
-        """ Returns a canonical URL for the model
+        """Returns a canonical URL for the model
 
         Uses the "study", "instrument" and "name" fields
         """
@@ -150,12 +152,12 @@ class Question(ModelMixin, models.Model):
 
     @staticmethod
     def layout_class() -> str:
-        """ Returns the layout class (used in templates) """
+        """Returns the layout class (used in templates)"""
         return "question"
 
     def previous_question(self) -> Optional[Question]:
-        """ Returns the previous question object or None
-            i.e. the question object with the preceding sort_id
+        """Returns the previous question object or None
+        i.e. the question object with the preceding sort_id
         """
         try:
             return self.instrument.questions.get(sort_id=self.sort_id - 1).name
@@ -163,8 +165,8 @@ class Question(ModelMixin, models.Model):
             return None
 
     def next_question(self) -> Optional[Question]:
-        """ Returns the next question object or None
-            i.e. the question object with the following sort_id
+        """Returns the next question object or None
+        i.e. the question object with the following sort_id
         """
         try:
             return self.instrument.questions.get(sort_id=self.sort_id + 1).name
@@ -172,7 +174,7 @@ class Question(ModelMixin, models.Model):
             return None
 
     def get_related_questions(self) -> OrderedDict[str, Question]:
-        """ Get all related questions categorized by their period """
+        """Get all related questions categorized by their period"""
         study = self.instrument.study
         concept_list = self.get_concepts()
         questions = (
@@ -193,15 +195,15 @@ class Question(ModelMixin, models.Model):
         return result
 
     def get_concepts(self) -> QuerySet:
-        """ Retrieve the related Concepts of this Question
+        """Retrieve the related Concepts of this Question
 
-            A question and concept are related if
-            their relation is defined in ConceptQuestion.
+        A question and concept are related if
+        their relation is defined in ConceptQuestion.
         """
         return Concept.objects.filter(concepts_questions__question_id=self.pk).distinct()
 
     def translation_languages(self) -> List[str]:
-        """ Returns a list of translation languages, e.g. ["de"] """
+        """Returns a list of translation languages, e.g. ["de"]"""
         keys = list(self.items[0].keys())
         keys_first_item = copy.deepcopy(keys)
         return [key.replace("text_", "") for key in keys_first_item if "text_" in key]
@@ -217,7 +219,7 @@ class Question(ModelMixin, models.Model):
             answer["label"] = answer.get(f"label_{language}", answer.get("label", ""))
 
     def to_topic_dict(self, language: str = "en") -> Dict:
-        """ Returns a topic dictionary representation of the Question object """
+        """Returns a topic dictionary representation of the Question object"""
         if language == "de":
             title = self.label_de if self.label_de != "" else self.title()
         else:
@@ -229,14 +231,14 @@ class Question(ModelMixin, models.Model):
             concept_name = ""
         return dict(
             title=title,
-            key="question_%s" % self.id,
+            key=f"question_{self.id}",
             name=self.name,
             type="question",
-            concept_key="concept_%s" % concept_name,
+            concept_key=f"concept_{concept_name}",
         )
 
     def html_description(self) -> str:
-        """ Return question description as HTML. """
+        """Return question description as HTML."""
         return render_markdown(self.description)
 
     def comparison_string(
@@ -246,15 +248,15 @@ class Question(ModelMixin, models.Model):
         pylint: disable=fixme
         TODO: instruments.models.question.comparison_string needs docstring
         """
-        comparison_string_array = ["Question: %s" % self.title()]
+        comparison_string_array = [f"Question: {self.title()}"]
         for item in self.items:
             comparison_string_array += [
                 "",
-                "Item: %s (scale: %s)" % (item.get("item"), item.get("scale")),
+                f"Item: {item.get('item')} (scale: {item.get('scale')})",
                 item.get("text", ""),
             ]
             comparison_string_array += [
-                "%s: %s" % (a["value"], a["label"]) for a in item.get("answers", [])
+                f"{a['value']}: {a['label']}" for a in item.get("answers", [])
             ]
         if wrap:
             cs_temp = [textwrap.wrap(line, wrap) for line in comparison_string_array]

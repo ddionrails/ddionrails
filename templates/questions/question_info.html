@@ -38,28 +38,7 @@
                     <b>Period:</b> {{ question.instrument.period.name }}
             </p>
         {% endif %}
-        <p>
-            {% if image_urls.items %}
-                {{ image_urls.image_label }}:
-                {% if "en" in image_urls %}
-                    <button
-                    type="button"
-                    class="btn btn-link"
-                    data-toggle="modal"
-                    data-target="#image-en-modal">
-                        en
-                    </button>
-                {% endif %}
-                {% if "de" in image_urls %}
-                    <button
-                    type="button"
-                    class="btn btn-link"
-                    data-toggle="modal"
-                    data-target="#image-de-modal">
-                        de
-                    </button>
-                {% endif %}
-            {% endif %}
+        <p id="question-images-container">
         </p>
         {% include "publications/attachments_partial.html" with attachments=question.attachments %}
     </div>
@@ -111,7 +90,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <div class="modal-body" id="image-de-modal">
+        <div class="modal-body" id="image-de-modal-content">
             {% if image_urls.items %}
                 {% if "de" in image_urls %}
                     <image src="{{ image_urls.de }}">
@@ -130,7 +109,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-        <div class="modal-body" id="image-de-modal">
+        <div class="modal-body" id="image-en-modal-content">
             {% if image_urls.items %}
                 {% if "en" in image_urls %}
                     <image src="{{ image_urls.en }}">

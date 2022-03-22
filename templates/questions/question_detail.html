@@ -19,6 +19,7 @@ BODY Their structure is convoluted and confusing.
 {% block content %}
     <div id="question-id" class="hidden">{{ question.id }}</div>
     {{ question_items|json_script:"question-meta" }}
+    {{ question.question_images|json_script:"question-images" }}
     <div class="row">
         <div class="col-xl-9">
             <div class="card">
@@ -143,6 +144,7 @@ BODY Their structure is convoluted and confusing.
 </div>
 <button id="show-question-diff" type="button" data-toggle="modal" class="hidden" data-target="#question-diff-modal"></button>
 
+{% render_bundle 'question_images' 'js' %}
 {% render_bundle 'questions' 'js' %}
 {% render_bundle 'question_comparison' 'js' %}
 {% render_bundle 'description_modal' 'js' %}
