@@ -86,7 +86,7 @@ class Question(ModelMixin, models.Model):
     )
     question_items: models.manager.Manager[Any]
 
-    question_images = JSONBField(default=dict, null=True, blank=True)
+    images = JSONBField(default=dict, null=True, blank=True)
 
     #############
     # relations #

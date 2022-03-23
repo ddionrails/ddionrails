@@ -27,7 +27,7 @@ def questions_images_import(file: Path, study: Study) -> None:
                 instrument__name=row["instrument"],
                 name=row["question"],
             )
-            question.question_images = {
+            question.images = {
                 "de": {"url": row["url_de"], "label": row["label_de"]},
                 "en": {"url": row["url"], "label": row["label"]},
             }
