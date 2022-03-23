@@ -7,12 +7,12 @@ from model_utils.managers import InheritanceQuerySet
 
 from ddionrails.base.mixins import AdminMixin
 
-from .models import ConceptQuestion, Instrument, Question, QuestionImage, QuestionVariable
+from .models import ConceptQuestion, Instrument, Question, QuestionVariable
 
 
 @admin.register(Instrument)
 class InstrumentAdmin(AdminMixin, admin.ModelAdmin):
-    """ ModelAdmin for instruments.Instrument """
+    """ModelAdmin for instruments.Instrument"""
 
     list_display = ("name", "label", "study_name", "period_name", "analysis_unit_name")
     list_filter = ("study", "analysis_unit", "period")
@@ -31,7 +31,7 @@ class InstrumentAdmin(AdminMixin, admin.ModelAdmin):
 
 @admin.register(Question)
 class QuestionAdmin(AdminMixin, admin.ModelAdmin):
-    """ ModelAdmin for instruments.Question """
+    """ModelAdmin for instruments.Question"""
 
     list_display = (
         "sort_id",
@@ -47,7 +47,7 @@ class QuestionAdmin(AdminMixin, admin.ModelAdmin):
     list_select_related = ("instrument", "instrument__study")
 
     def get_queryset(self, request: WSGIRequest) -> InheritanceQuerySet:
-        """ Return an ordered queryset of questions """
+        """Return an ordered queryset of questions"""
         queryset = super().get_queryset(request)
         queryset = queryset.order_by("instrument", "sort_id")
         return queryset
@@ -60,7 +60,7 @@ class QuestionAdmin(AdminMixin, admin.ModelAdmin):
 
 @admin.register(ConceptQuestion)
 class ConceptQuestionAdmin(admin.ModelAdmin):
-    """ ModelAdmin for instruments.ConceptQuestion """
+    """ModelAdmin for instruments.ConceptQuestion"""
 
     list_display = ("concept_id", "question_id")
     list_per_page = 25
@@ -70,19 +70,9 @@ class ConceptQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(QuestionVariable)
 class QuestionVariableAdmin(admin.ModelAdmin):
-    """ ModelAdmin for instruments.QuestionVariable """
+    """ModelAdmin for instruments.QuestionVariable"""
 
     list_display = ("question_id", "variable_id")
     list_per_page = 25
     list_select_related = ("question", "variable")
     raw_id_fields = ("question", "variable")
-
-
-@admin.register(QuestionImage)
-class QuestionImageAdmin(admin.ModelAdmin):
-    """ ModelAdmin for instruments.QuestionImage """
-
-    list_display = ("id", "label", "language")
-    list_per_page = 25
-    list_select_related = True
-    raw_id_fields = ("question",)

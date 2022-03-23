@@ -68,7 +68,6 @@ THIRD_PARTY_APPS = (
     "django_extensions",
     "django_rq",
     "easy_thumbnails",
-    "filer",
     "import_export",
     "markdown",
     "mptt",
@@ -143,7 +142,6 @@ RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOU
 THUMBNAIL_PROCESSORS = (
     "easy_thumbnails.processors.colorspace",
     "easy_thumbnails.processors.autocrop",
-    "filer.thumbnail_processors.scale_and_crop_with_subject_location",
     "easy_thumbnails.processors.filters",
 )
 

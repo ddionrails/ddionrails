@@ -7,14 +7,12 @@ import csv
 import unittest
 from io import StringIO
 from random import choices
-from typing import Callable, Dict, List, Optional, Tuple, TypedDict
+from typing import Callable, Dict, List, Optional, Tuple
 
 import pytest
-import requests_mock
-from filer.models import Folder, Image
 from pytest_mock import MockerFixture
 
-from ddionrails.imports.helpers import download_image, read_csv, store_image
+from ddionrails.imports.helpers import read_csv
 from ddionrails.imports.types import QuestionsImages
 from tests.conftest import VariableImageFile
 
@@ -44,59 +42,6 @@ class TestHelpers(unittest.TestCase):
         mocked_open.assert_called_once_with(filename, "r", encoding="utf8")
         mocked_csv_dict_reader.assert_called_once()
         self.assertIn("study_name", content[0].keys())
-
-    def test_download_image(self):
-        """ Can we get a file from a web address? """
-        url = "http://test.de"
-        expected = self.variable_image_file("png").getvalue()
-        with requests_mock.mock() as mocked_request:
-            mocked_request.get(url, content=expected)
-            result = download_image(url).getvalue()
-        self.assertEqual(expected, result)
-
-    def test_download_image_too_large(self):
-        """ The download function should load anything above 200KB. """
-        url = "http://test.de"
-        # This is one byte too large.
-        image = b"A" * 200001
-        with requests_mock.mock() as mocked_request:
-            mocked_request.get(url, content=image)
-            result = download_image(url)
-        self.assertEqual(None, result)
-
-    def test_store_image(self):
-        """ Can the QuestionImage store an image file? """
-        image_file = self.variable_image_file(file_type="png", size=1)
-
-        class ImageTestInfo(TypedDict):
-            name: str
-            folders: Dict[str, str]
-
-        image_info: ImageTestInfo = {
-            "name": "test_image",
-            "folders": {"child": "test", "parent": "images"},
-        }
-        image_info["name"] = "test_image"
-        test_folder = "{parent}/{child}/".format(**image_info["folders"])
-
-        _, image_key = store_image(image_file, path=test_folder, name=image_info["name"])
-
-        # Has the propper folder structure been created?
-        parent, parent_created = Folder.objects.get_or_create(
-            name=image_info["folders"]["parent"]
-        )
-        self.assertFalse(parent_created)
-        _, child_created = Folder.objects.get_or_create(
-            parent=parent, name=image_info["folders"]["child"]
-        )
-        self.assertFalse(child_created)
-
-        # Is the Image inside the database?
-        result_image, created = Image.objects.get_or_create(pk=image_key)
-        self.assertFalse(created)
-        result_image_bytes = result_image.file.open().read()
-        self.assertEqual(image_file.getvalue(), result_image_bytes)
-        self.assertEqual(image_info["name"], result_image.name)
 
 
 @pytest.fixture(name="unittest_mock")

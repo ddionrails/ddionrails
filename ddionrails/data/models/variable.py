@@ -16,7 +16,6 @@ from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
-from filer.fields.image import FilerImageField
 
 from config.helpers import render_markdown
 from ddionrails.base.mixins import ModelMixin
@@ -133,12 +132,7 @@ class Variable(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to data.Dataset",
     )
-    image = FilerImageField(
-        null=True, related_name="variable_image", blank=True, on_delete=models.CASCADE
-    )
-    image_de = FilerImageField(
-        null=True, related_name="variable_image_de", blank=True, on_delete=models.CASCADE
-    )
+    images = JSONBField(default=dict, null=True, blank=True)
     period = models.ForeignKey(
         Period,
         blank=True,

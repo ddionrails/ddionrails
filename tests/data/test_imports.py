@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,misplaced-comparison-constant,protected-access
+# pylint: disable=missing-docstring,no-self-use,protected-access
 """ Test cases for importer classes in ddionrails.data app """
 
 import csv
@@ -11,7 +11,6 @@ from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
-import requests_mock
 
 from ddionrails.concepts.imports import ConceptImport
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
@@ -19,14 +18,13 @@ from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
     TransformationImport,
-    VariableImageImport,
     VariableImport,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory
-from tests.conftest import MockOpener, VariableImageFile
+from tests.conftest import VariableImageFile
 from tests.data.factories import DatasetFactory
 
 from .factories import VariableFactory
@@ -55,7 +53,7 @@ def _transformation_importer():
 
 
 class TestDatasetImport:
-    """ Tests for csv based dataset imports """
+    """Tests for csv based dataset imports"""
 
     @pytest.mark.django_db
     @patch(
@@ -225,7 +223,7 @@ class TestDatasetJsonImport:
         )
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
-        assert dict() == variable.statistics
+        assert {} == variable.statistics
 
     def test_import_variable_method_without_categories(
         self, dataset_json_importer, dataset
@@ -320,7 +318,7 @@ class TestVariableImport:
         )
         variable_path = variable_path.absolute()
         VariableImport.run_import(variable_path, study=some_dataset.study)
-        with open(variable_path, "r") as csv_file:
+        with open(variable_path, "r", encoding="utf8") as csv_file:
             variable_names = {row["name"] for row in csv.DictReader(csv_file)}
         result = Variable.objects.filter(name__in=list(variable_names))
         TEST_CASE.assertNotEqual(0, len(result))
@@ -340,7 +338,7 @@ class TestVariableImport:
         ConceptImport(concept_path).run_import(filename=concept_path)
         VariableImport.run_import(variable_path, study=some_dataset.study)
 
-        with open(variable_path, "r") as csv_file:
+        with open(variable_path, "r", encoding="utf8") as csv_file:
             variable_names = {row["name"] for row in csv.DictReader(csv_file)}
         result = Variable.objects.filter(name__in=list(variable_names))
         TEST_CASE.assertNotEqual(0, len(result))
@@ -433,26 +431,3 @@ class TestVariableImageImport(unittest.TestCase):
         csv_writer.writeheader()
         csv_writer.writerow(csv_file_content)
         self.csv_file = csv_file_handler.getvalue()
-
-    def test_variable_image_import(self):
-        with requests_mock.mock() as mocked_request:
-            for _, image in self.images.items():
-                mocked_request.get(image["url"], content=image["image_file"].getvalue())
-            self._call_image_import()
-            self.variable.refresh_from_db()
-            self.assertEqual(
-                self.images["image"]["image_file"].getvalue(),
-                self.variable.image.file.read(),
-            )
-            self.assertEqual(
-                self.images["image_de"]["image_file"].getvalue(),
-                self.variable.image_de.file.read(),
-            )
-
-    @patch("builtins.open", new_callable=MockOpener)
-    def _call_image_import(self, mocked_open: MockOpener = MockOpener):
-        """Detach of open mocking from the main test."""
-        csv_path = "/test/variables_images.csv"
-        mocked_open.register_file(csv_path, self.csv_file)
-        VariableImageImport(csv_path).image_import()
-        self.assertTrue(mocked_open.called_with_path(csv_path))

@@ -30,8 +30,8 @@ from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
     TransformationImport,
-    VariableImageImport,
     VariableImport,
+    variables_images_import,
 )
 from ddionrails.instruments.imports import (
     concept_question_import,
@@ -50,7 +50,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Repository:
-    """ A helper class to handle git related activities """
+    """A helper class to handle git related activities"""
 
     def __init__(self, study_or_system) -> None:
         self.study_or_system = study_or_system
@@ -63,13 +63,11 @@ class Repository:
             self.repo = None
 
     def set_branch(self, branch: str = settings.IMPORT_BRANCH) -> None:
-        """ Checkout a branch """
+        """Checkout a branch"""
         self.repo.git.checkout(branch)
 
     def pull_or_clone(self) -> None:
-        """ Clones a repository from remote if it does not exist yet,
-            otherwise pull
-        """
+        """Clones or update the study repository."""
         if self.path.exists() and self.repo is not None:
             print(f'Pulling "{self.name}" from "{self.link}"')
             self.repo.remotes.origin.pull()
@@ -201,6 +199,10 @@ class StudyImportManager:
                     question_image_import.questions_images_import,
                     self.base_dir.joinpath("questions_images.csv"),
                 ),
+                "variables_images": (
+                    variables_images_import,
+                    self.base_dir.joinpath("variables_images.csv"),
+                ),
             }
         )
 
@@ -311,10 +313,3 @@ class StudyImportManager:
         self.__log_import_start("all entities")
         for entity in self.import_order.keys():
             self.import_single_entity(entity)
-
-        # VariableImageImport Patch
-        variable_image_import = VariableImageImport(
-            self.base_dir / "variables_images.csv"
-        )
-        if variable_image_import:
-            self._execute(variable_image_import.image_import)

@@ -13,12 +13,7 @@ from django.views.generic.base import RedirectView
 
 from config.helpers import RowHelper
 from ddionrails.data.models import Variable
-from ddionrails.instruments.models import (
-    Instrument,
-    Question,
-    QuestionImage,
-    QuestionItem,
-)
+from ddionrails.instruments.models import Instrument, Question, QuestionItem
 from ddionrails.instruments.models.question_item import QuestionItemDict
 from ddionrails.studies.models import Study
 
@@ -27,7 +22,7 @@ from ddionrails.studies.models import Study
 def study_instrument_list(
     request: WSGIRequest, study_name: str  # pylint: disable=unused-argument
 ) -> HttpResponse:
-    """Render instruments of a study from template. """
+    """Render instruments of a study from template."""
     study = get_object_or_404(Study, name=study_name)
     context = dict(
         study=study, instrument_list=Instrument.objects.filter(study__name=study_name)
@@ -36,7 +31,7 @@ def study_instrument_list(
 
 
 class InstrumentRedirectView(RedirectView):
-    """ RedirectView for instruments.Instrument model """
+    """RedirectView for instruments.Instrument model"""
 
     permanent = False
 
@@ -47,7 +42,7 @@ class InstrumentRedirectView(RedirectView):
 
 # Disable pylint warning since DetailView comes from django.
 class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
-    """ DetailView for instruments.Instrument model """
+    """DetailView for instruments.Instrument model"""
 
     template_name = "instruments/instrument_detail.html"
 
@@ -67,7 +62,7 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
 
 class QuestionRedirectView(RedirectView):
-    """ RedirectView for instruments.Question model """
+    """RedirectView for instruments.Question model"""
 
     permanent = False
 
@@ -83,7 +78,7 @@ def question_detail(
     instrument_name: str,
     question_name: str,
 ) -> HttpResponse:
-    """ DetailView for instruments.question model """
+    """DetailView for instruments.question model"""
     question = Question.objects.select_related(
         "instrument",
         "instrument__study",
@@ -109,35 +104,14 @@ def question_detail(
         row_helper=RowHelper(),
         question_items=question_items,
     )
-    # TODO: Language setup is not centralized. There is no global switch.
-    # This would have to be overhauled if the a global switch is implemented.
-    images = QuestionImage.objects.filter(question_id=question.id).all()
 
-    class ImageContextMapping(TypedDict, total=False):
-        """Typing for image metadata"""
-
-        image_label: str  # One label for both languages
-        en: str  # URL of english image
-        de: str  # URL of german image
-
-    image_context: ImageContextMapping = ImageContextMapping()
-    for _image in images:
-        image_context[_image.language] = settings.MEDIA_URL + str(_image.image.file)
-        # English label will be default label without global switch.
-        # German label is the fallback if no english image exists.
-        if _image.language == "en":
-            image_context["image_label"] = _image.label
-        elif "image_label" not in image_context:
-            image_context["image_label"] = _image.label
-
-    context["image_urls"] = image_context
     return render(request, "questions/question_detail.html", context=context)
 
 
 def get_question_item_metadata(
     question: Question, short: bool = False
 ) -> List[List[QuestionItemDict]]:
-    """ Get metadata for a question and all it's items. """
+    """Get metadata for a question and all it's items."""
     question_items = list(
         question.question_items.all()
         .order_by("position")

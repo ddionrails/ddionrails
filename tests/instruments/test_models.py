@@ -3,15 +3,10 @@
 
 """ Test cases for ddionrails.instruments.models """
 
-import unittest
-from io import BytesIO
 
 import pytest
-from django.core.files import File
-from django.db import models
-from filer.models import Folder, Image
 
-from ddionrails.instruments.models import ConceptQuestion, Question, QuestionImage
+from ddionrails.instruments.models import ConceptQuestion
 from tests.instruments.factories import QuestionFactory
 
 pytestmark = [pytest.mark.instruments, pytest.mark.models]
@@ -58,13 +53,13 @@ class TestQuestionModel:
         assert expected == question.next_question()
 
     def test_get_concepts_method_no_concept(self, question):
-        """ Test Question.get_concepts() without concept-question-relation """
+        """Test Question.get_concepts() without concept-question-relation"""
         result = question.get_concepts()
         expected = 0
         assert expected == result.count()
 
     def test_get_concepts_method_single_concept(self, question, concept):
-        """ Test Question.get_concepts() with concept-question-relation"""
+        """Test Question.get_concepts() with concept-question-relation"""
 
         # create a relation between question and concept
         ConceptQuestion.objects.create(concept=concept, question=question)
@@ -87,45 +82,3 @@ class TestQuestionModel:
         result = question.comparison_string()
         expected = ["Question: Some Question", "", "Item: Item (scale: Scale)", "Text"]
         assert expected == result
-
-
-@pytest.mark.usefixtures("image_file", "question")
-class TestQuestionImageModel(unittest.TestCase):
-
-    image_file = BytesIO
-    question = Question
-    _filer_image = Image
-
-    def test_save_with_question_object(self):
-        django_file = File(self.image_file)
-
-        _folder = self.create_folder_structure()
-        self._filer_image, _ = Image.objects.get_or_create(
-            folder=_folder, file=django_file
-        )
-        image = self.create_question_image()
-
-        # Is the content in the correct type?
-        self.assertIsInstance(image.image, Image)
-        self.assertIsInstance(image.image, models.Model)
-        # Was the object correctly inserted?
-        self.assertIn(image, QuestionImage.objects.filter(id=image.id))
-
-    def create_folder_structure(self):
-        """Create folders and subfolders needed for the image storage."""
-        _path = str(self.question).split("/")
-        _path = [folder for folder in _path if folder]
-        _parent, _ = Folder.objects.get_or_create(name=_path[0])
-        for folder in _path[1:]:
-            _parent, _ = Folder.objects.get_or_create(name=folder, parent=_parent)
-        return _parent
-
-    def create_question_image(self):
-        """Create a QuestionImage object, that can be stored. """
-        image = QuestionImage()
-        image.image_id = self._filer_image.id
-        image.question = self.question
-        image.label = "test"
-        image.language = "de"
-        image.save()
-        return image

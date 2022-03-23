@@ -3,7 +3,6 @@
 
 from .answer import Answer
 from .concept_question import ConceptQuestion
-from .images import QuestionImage
 from .instrument import Instrument
 from .question import Question
 from .question_item import QuestionItem
