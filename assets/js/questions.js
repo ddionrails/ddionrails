@@ -61,8 +61,8 @@ function renderTableRow(content, header = false) {
  */
 function inputFilterIcon() {
   const icon = document.createElement("i");
-  icon.classList.add("far");
-  icon.classList.add("fa-sign-in-alt");
+  icon.classList.add("fa-solid");
+  icon.classList.add("fa-right-to-bracket");
   return icon;
 }
 
@@ -72,8 +72,8 @@ function inputFilterIcon() {
  */
 function gotoIcon() {
   const icon = document.createElement("i");
-  icon.classList.add("far");
-  icon.classList.add("fa-sign-out-alt");
+  icon.classList.add("fa-solid");
+  icon.classList.add("fa-right-from-bracket");
   return icon;
 }
 
