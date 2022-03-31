@@ -22,6 +22,7 @@ RUN apk add --no-cache \
     nodejs-npm \
     postgresql-dev \
     zlib-dev \
+    freetype-dev \
     && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
     && pip install --no-cache-dir --upgrade chardet==4.0.0 \
     && pipfile2req Pipfile.lock > Requirements.txt \

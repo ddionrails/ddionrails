@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = (
     "easy_thumbnails",
     "import_export",
     "markdown",
+    "filer",
     "mptt",
     "webpack_loader",
     "rest_framework",
@@ -200,7 +201,7 @@ REST_FRAMEWORK = {
 # Please ensure to include a trailing slash "/" for the path definitions.
 
 # This tmp folder is reused in .production
-DJANGO_TMP = tempfile.TemporaryDirectory()
+DJANGO_TMP = tempfile.TemporaryDirectory()  # pylint: disable=consider-using-with
 IMPORT_REPO_PATH = Path(os.getenv("IMPORT_REPO_PATH", default=DJANGO_TMP.name))
 
 # Create IMPORT_REPO_PATH on disk if it does not exist
