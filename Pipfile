@@ -12,7 +12,7 @@ name = "pypi"
 
 # Django
 # ------------------------------------------------------------------------------
-django = "*"
+django = "==3.2.12"
 django-crispy-forms = "*"
 django-extensions = "*"
 django-import-export = "*"
@@ -21,6 +21,7 @@ django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
 djangorestframework = "*"
+django_filer = "*"
 
 # PostgreSQL
 # ------------------------------------------------------------------------------
@@ -81,4 +82,5 @@ sphinx-rtd-theme = "*"
 django-debug-toolbar = "*"
 rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
-werkzeug = "*"
+werkzeug = "==2.0.0"
+
