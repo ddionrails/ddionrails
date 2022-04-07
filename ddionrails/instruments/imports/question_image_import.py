@@ -2,16 +2,12 @@
 
 """ Importer classes for ddionrails.instruments app """
 
-import logging
 from csv import DictReader
 from pathlib import Path
 from typing import List
 
 from ddionrails.instruments.models.question import Question
 from ddionrails.studies.models import Study
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-logger = logging.getLogger(__name__)
 
 
 def questions_images_import(file: Path, study: Study) -> None:

@@ -2,7 +2,6 @@
 
 """ Importer classes for ddionrails.instruments app """
 
-import logging
 from csv import DictReader
 from typing import Dict, Optional, Set, Tuple
 
@@ -12,9 +11,6 @@ from ddionrails.concepts.models import Concept
 from ddionrails.imports import imports
 from ddionrails.instruments.models import ConceptQuestion, Question
 from ddionrails.studies.models import Study
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-logger = logging.getLogger(__name__)
 
 
 class ConceptQuestionImport(imports.CSVImport):
@@ -53,7 +49,7 @@ class ConceptQuestionImport(imports.CSVImport):
     def execute_import(self):
         studies: Dict[str, Study] = {}
         for concept_question_data in self.content:
-            if concept_question_data[0] not in studies.keys():
+            if concept_question_data[0] not in studies:
                 try:
                     study = Study.objects.get(name=concept_question_data[0])
                     studies[study.name] = study

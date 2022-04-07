@@ -3,7 +3,6 @@
 """ Importer classes for ddionrails.data app """
 
 import json
-import logging
 from collections import OrderedDict
 from csv import DictReader
 from functools import lru_cache
@@ -18,9 +17,6 @@ from ddionrails.studies.models import Study
 
 from .forms import DatasetForm, VariableForm
 from .models import Dataset, Transformation, Variable
-
-logging.config.fileConfig("logging.conf")
-LOGGER = logging.getLogger(__name__)
 
 
 class DatasetJsonImport(imports.Import):
