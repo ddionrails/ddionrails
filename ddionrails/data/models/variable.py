@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import inspect
-import logging
 import uuid
 from collections import OrderedDict
 from copy import deepcopy
@@ -30,8 +29,6 @@ from .dataset import Dataset
 # Exclude this from test coverage since its not related to functionality.
 if TYPE_CHECKING:  # pragma: no cover
     from ddionrails.instruments.models.question import Question
-
-LOGGER = logging.getLogger(__name__)
 
 
 class Variable(ModelMixin, models.Model):

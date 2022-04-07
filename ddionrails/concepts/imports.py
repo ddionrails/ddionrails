@@ -3,7 +3,6 @@
 """ Importer classes for ddionrails.concepts app """
 
 import json
-import logging
 
 from django.db.transaction import atomic
 
@@ -19,9 +18,6 @@ from .forms import (
     TopicForm,
 )
 from .models import Topic
-
-logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
 
 
 class TopicImport(imports.CSVImport):
@@ -86,7 +82,7 @@ class ConceptImport(imports.CSVImport):
                 topic = Topic.objects.get(name=topic_name, study=self.study)
                 topic.concepts.add(concept)
             except Topic.DoesNotExist:
-                logger.error(
+                print(
                     (
                         'Could not link concept "%s" to topic "%s"',
                         concept.name,

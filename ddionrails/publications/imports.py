@@ -3,7 +3,6 @@
 """ Importer classes for ddionrails.publications app """
 
 import json
-import logging
 from collections import OrderedDict
 from typing import Dict
 
@@ -16,9 +15,6 @@ from ddionrails.instruments.models import Instrument, Question
 from ddionrails.publications.models import Attachment
 
 from .forms import AttachmentForm, PublicationForm
-
-logging.config.fileConfig("logging.conf")
-logger = logging.getLogger(__name__)
 
 
 class PublicationImport(imports.CSVImport):
@@ -77,7 +73,7 @@ class AttachmentImport(imports.CSVImport):
         Returns:
             New dictionairy with "_name" removed from keys.
         """
-        cleaned_dictionairy = dict()
+        cleaned_dictionairy = {}
         for key, value in dictionairy.items():
             if key[-5:] == "_name":
                 cleaned_dictionairy[key[:-5]] = value
