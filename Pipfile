@@ -2,14 +2,15 @@
 url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
-
-
+#
+#
 [packages]
-
-
+#
+#
 # Temporarily pinned
 # ------------------------------------------------------------------------------
-
+#
+#
 # Django
 # ------------------------------------------------------------------------------
 django = "==3.2.12"
@@ -21,30 +22,34 @@ django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
 djangorestframework = "*"
-
+#
+#
 # PostgreSQL
 # ------------------------------------------------------------------------------
 psycopg2-binary = "*"
-
+#
+#
 # Elasticsearch
 # ------------------------------------------------------------------------------
 django-elasticsearch-dsl = "*"
 elasticsearch-dsl = "<=8.*"
-
+#
+#
 # Markup
 # ------------------------------------------------------------------------------
 markdown = "*"
 python-frontmatter = "*"
-
+#
 # Other
 # ------------------------------------------------------------------------------
 gitpython = "*"
 paver = "*"
 requests = "*"
 djangorestframework-stubs = "*"
-
+#
 [dev-packages]
-
+#
+#
 # Code quality
 # ------------------------------------------------------------------------------
 autoflake = "*"
@@ -58,7 +63,8 @@ pylint = "*"
 pylint-django = "*"
 pylint-unittest = "*"
 types-markdown = "*"
-
+#
+#
 # Testing
 # ------------------------------------------------------------------------------
 pytest = "*"
@@ -70,17 +76,15 @@ splinter = "==0.17.0" # pin until pytest-splinter works with newer versions
 factory-boy = "*"
 django-coverage-plugin = "*"
 requests-mock = "*"
-
+#
 # Documentation
 # ------------------------------------------------------------------------------
 sphinx = "*"
 sphinx-rtd-theme = "*"
-
+#
 # Local
 # ------------------------------------------------------------------------------
 django-debug-toolbar = "*"
 rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "==2.0.0"
-
-django_filer = "*"

@@ -67,11 +67,8 @@ THIRD_PARTY_APPS = (
     "django_elasticsearch_dsl",
     "django_extensions",
     "django_rq",
-    "easy_thumbnails",
     "import_export",
     "markdown",
-    "filer",
-    "mptt",
     "webpack_loader",
     "rest_framework",
 )
