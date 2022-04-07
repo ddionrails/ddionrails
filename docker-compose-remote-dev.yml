@@ -9,6 +9,7 @@ services:
     command: >
       bash -c "
         pipenv install --system --dev &
+        pipenv install --system &
         npm run build &
         while [ 1 ];
         do 
