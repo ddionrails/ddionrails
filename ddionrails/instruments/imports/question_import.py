@@ -2,7 +2,6 @@
 
 """ Importer classes for ddionrails.instruments app """
 
-import logging
 import uuid
 from csv import DictReader
 from functools import lru_cache
@@ -15,9 +14,6 @@ from ddionrails.instruments.models import Instrument, Question
 from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.studies.models import Study
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-logger = logging.getLogger(__name__)
 
 
 def question_import(file: Path, study: Study) -> None:

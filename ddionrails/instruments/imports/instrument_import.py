@@ -3,15 +3,11 @@
 """ Importer classes for ddionrails.instruments app """
 
 import json
-import logging
 from collections import OrderedDict
 
 from ddionrails.concepts.models import AnalysisUnit, Period
 from ddionrails.imports import imports
 from ddionrails.instruments.models import Instrument, Question
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-logger = logging.getLogger(__name__)
 
 
 class InstrumentImport(imports.Import):

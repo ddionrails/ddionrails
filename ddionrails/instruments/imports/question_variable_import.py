@@ -2,14 +2,9 @@
 
 """ Importer classes for ddionrails.instruments app """
 
-import logging
-
 from ddionrails.data.models import Variable
 from ddionrails.imports import imports
 from ddionrails.instruments.models import Question, QuestionVariable
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-logger = logging.getLogger(__name__)
 
 
 class QuestionVariableImport(imports.CSVImport):

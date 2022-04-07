@@ -18,20 +18,20 @@ def filename():
 
 @pytest.fixture
 def csv_importer(study, filename):
-    """ A csv importer """
+    """A csv importer"""
     return CSVImport(filename, study=study)
 
 
 @pytest.fixture
 def jekyll_importer(study, filename):
-    """ A jekyll importer """
+    """A jekyll importer"""
     return JekyllImport(filename, study=study)
 
 
 class TestImport:
     @pytest.mark.django_db
     def test_run_import_method(self, mocker):
-        """ Need a child of Import, because execute_import is not implemented """
+        """Need a child of Import, because execute_import is not implemented"""
 
         class SampleImport(Import):
             def execute_import(self):
@@ -51,7 +51,7 @@ class TestImport:
         mocked_open = mocker.patch("builtins.open")
         importer.read_file()
         mocked_file_path.assert_called_once()
-        mocked_open.assert_called_once_with(filename, "r")
+        mocked_open.assert_called_once_with(filename, "r", encoding="utf8")
 
 
 class TestCSVImport:

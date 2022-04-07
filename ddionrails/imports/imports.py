@@ -2,7 +2,6 @@
 
 """ Importer base classes for ddionrails project """
 
-import logging
 import os
 from pathlib import Path
 from typing import Iterable, Optional, Union
@@ -15,9 +14,6 @@ from django.forms import Form
 from ddionrails.studies.models import Study
 
 from .helpers import read_csv
-
-logging.config.fileConfig("logging.conf")  # type: ignore
-LOGGER = logging.getLogger(__name__)
 
 
 class Import:
@@ -51,7 +47,7 @@ class Import:
         importer.execute_import()
 
     def read_file(self):
-        with open(self.file_path(), "r") as infile:
+        with open(self.file_path(), "r", encoding="utf8") as infile:
             self.content = infile.read()
 
     def file_path(self):
@@ -81,7 +77,7 @@ class JekyllImport(Import):
         self.data = None
 
     def read_file(self):
-        with open(self.file_path(), "r") as infile:
+        with open(self.file_path(), "r", encoding="utf8") as infile:
             jekyll_content = frontmatter.load(infile)
         self.content = jekyll_content.content
         self.data = jekyll_content.metadata
@@ -125,9 +121,6 @@ class CSVImport(Import):
             new_object = form.save()  # type: ignore
             print(".", end="")
             return new_object
-        LOGGER.error("Import error in %s", str(self.__class__))
-        LOGGER.error(form.data)
-        LOGGER.error(form.errors.as_data())  # type: ignore
         return None
 
     def process_element(self, element):
