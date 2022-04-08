@@ -29,7 +29,7 @@ def questions_images_import(file: Path, study: Study) -> None:
             }
             questions.append(question)
             if index % 1000:
-                Question.objects.bulk_update(questions, ["question_images"])
+                Question.objects.bulk_update(questions, ["images"])
                 questions = []
         if questions:
-            Question.objects.bulk_update(questions, ["question_images"])
+            Question.objects.bulk_update(questions, ["images"])

@@ -19,7 +19,7 @@ BODY Their structure is convoluted and confusing.
 {% block content %}
     <div id="question-id" class="hidden">{{ question.id }}</div>
     {{ question_items|json_script:"question-meta" }}
-    {{ question.question_images|json_script:"question-images" }}
+    {{ question.images|json_script:"question-images" }}
     <div class="row">
         <div class="col-xl-9">
             <div class="card">
