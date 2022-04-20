@@ -168,22 +168,6 @@ services:
     restart: on-failure:5
     security_opt:
       - no-new-privileges
-
-  #TODO: Replace before bringing to production
-  data-api:
-    image: transfer-api
-    build:
-      context: ./docker/data_api
-    ports:
-      - 5000:5000
-    networks:
-      - ddi_net
-    volumes:
-      - ./docker/data_api/platform-datasets:/opt/platform-datasets
-    restart: on-failure:5
-    security_opt:
-      - no-new-privileges
-
 volumes:
   backup:
   ddi-psql-config:
