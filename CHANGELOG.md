@@ -11,6 +11,17 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.0.0] - 2022-04-08
+
+### Removed
+
+- django_filer from dependencies (breaking change)
+
+  - Use migrations from commit tagged as filer-fade-out to prepare the database
+    for breaking changes in the migrations. 
+
+- prototype for data-api from project.
+- unessesairy logging in import. 
 
 ## [5.4.1] - 2022-03-21
 
@@ -760,7 +771,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.0.0...develop
+[6.0.0]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...v6.0.0
 [5.4.1]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...v5.4.1
 [5.4.0]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...v5.4.0
 [5.3.4]: https://github.com/ddionrails/ddionrails/compare/v5.3.3...v5.3.4
