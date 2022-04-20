@@ -23,6 +23,8 @@ jobs:
           docker --version
           docker-compose --version
           mkdir codecov
+          git submodule init
+          git submodule update --recursive
       - name: Install
         run: |
           docker-compose config
