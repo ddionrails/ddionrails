@@ -10,7 +10,8 @@ from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket, BasketVariable
+from ddionrails.workspace.models.basket import Basket
+from ddionrails.workspace.models.basket_variable import BasketVariable
 
 NAMESPACE = "api"
 
@@ -75,6 +76,40 @@ class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BasketVariable
         fields = ["id", "basket", "basket_id", "variable", "variable_id"]
+
+
+class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
+    """Serialize systems Variables."""
+
+    period_name = serializers.SlugRelatedField(
+        source="period", read_only=True, slug_field="name"
+    )
+    study = serializers.PrimaryKeyRelatedField(read_only=True)
+    study_name = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="name"
+    )
+    study_label = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="label"
+    )
+    study_label_de = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="label_de"
+    )
+    question_count = serializers.IntegerField()
+
+    class Meta:
+        model = Instrument
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "period_name",
+            "study",
+            "study_name",
+            "study_label",
+            "study_label_de",
+            "question_count",
+        ]
 
 
 class VariableSerializer(serializers.HyperlinkedModelSerializer):

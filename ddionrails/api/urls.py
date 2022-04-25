@@ -9,6 +9,7 @@ from rest_framework import routers
 from ddionrails.api.views import (
     BasketVariableSet,
     BasketViewSet,
+    InstrumentViewSet,
     QuestionComparisonViewSet,
     QuestionViewSet,
     SendFeedback,
@@ -25,19 +26,20 @@ app_name = "api"
 urlpatterns = [path("feedback/", SendFeedback.as_view(), name="send-feedback")]
 
 ROUTER = routers.SimpleRouter()
-ROUTER.register(r"users", UserViewSet, basename="user")
 ROUTER.register(r"baskets", BasketViewSet, basename="basket")
-ROUTER.register(r"studies", StudyViewSet, basename="study")
-ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
-ROUTER.register(r"variables", VariableViewSet, basename="variable")
+ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
+ROUTER.register(r"instruments", InstrumentViewSet, basename="instrument")
 ROUTER.register(r"questions", QuestionViewSet, basename="question")
 ROUTER.register(
     r"question-comparison", QuestionComparisonViewSet, basename="question-comparison"
 )
-ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
+ROUTER.register(r"users", UserViewSet, basename="user")
+ROUTER.register(r"statistic", StatisticViewSet, basename="statistic")
 ROUTER.register(
     r"statistics-metadata", StatisticsMetadataViewSet, basename="statistics-metadata"
 )
-ROUTER.register(r"statistic", StatisticViewSet, basename="statistic")
+ROUTER.register(r"studies", StudyViewSet, basename="study")
+ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
+ROUTER.register(r"variables", VariableViewSet, basename="variable")
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))

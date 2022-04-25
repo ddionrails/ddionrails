@@ -329,6 +329,40 @@ class TestQuestionViewSet(unittest.TestCase):
 
 
 @pytest.mark.django_db
+class TestInstrumentViewSet(unittest.TestCase):
+
+    API_PATH = "/api/instruments/"
+    client: APIClient
+
+    def setUp(self) -> None:
+        self.client = APIClient()
+        return super().setUp()
+
+    def test_no_parameter(self) -> None:
+        other_study = StudyFactory(name="some-other-study")
+        instrument = InstrumentFactory(name="some-instrument")
+        other_instrument = InstrumentFactory(
+            name="some-other-instrument", study=other_study
+        )
+
+        response = self.client.get(self.API_PATH)
+        content = json.loads(response.content)
+        self.assertEqual(2, content["count"])
+        result_instrument_names = [result["name"] for result in content["results"]]
+        self.assertIn(getattr(instrument, "name"), result_instrument_names)
+        self.assertIn(getattr(other_instrument, "name"), result_instrument_names)
+
+    def test_study_name_parameter(self) -> None:
+        instrument = InstrumentFactory(name="some-instrument")
+        study_name = getattr(instrument.study, "name")
+
+        response = self.client.get(self.API_PATH + f"?study={study_name}")
+        content = json.loads(response.content)
+        self.assertEqual(1, content["count"])
+        self.assertEqual(getattr(instrument, "name"), content["results"][0]["name"])
+
+
+@pytest.mark.django_db
 class TestVariableViewSet(unittest.TestCase):
 
     API_PATH = "/api/variables/"

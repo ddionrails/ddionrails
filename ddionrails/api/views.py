@@ -5,12 +5,12 @@
 import difflib
 import re
 import uuid
-from typing import Any, List
+from typing import Any, Dict, List
 
 import yaml
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.mail import send_mail
-from django.db.models import Model, Q, QuerySet
+from django.db.models import Count, Model, Q, QuerySet
 from django.http.response import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -28,6 +28,7 @@ from config.settings.base import DEFAULT_FEEDBACK_TO_EMAIL
 from ddionrails.api.serializers import (
     BasketHyperlinkedSerializer,
     BasketVariableSerializer,
+    InstrumentSerializer,
     QuestionSerializer,
     StatisticsVariableSerializer,
     StudySerializer,
@@ -36,7 +37,7 @@ from ddionrails.api.serializers import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.variable import Variable
-from ddionrails.instruments.models.question import Question
+from ddionrails.instruments.models.question import Instrument, Question
 from ddionrails.instruments.views import get_question_item_metadata
 from ddionrails.statistics.models import StatisticsMetadata, VariableStatistic
 from ddionrails.studies.models import Study
@@ -177,6 +178,38 @@ class StudyViewSet(viewsets.ModelViewSet):
     serializer_class = StudySerializer
 
 
+class InstrumentViewSet(viewsets.ModelViewSet):
+    """List metadata about all variables."""
+
+    serializer_class = InstrumentSerializer
+
+    @method_decorator(cache_page(60 * 2))
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet[Instrument]:
+        study_name = self.request.query_params.get("study", None)
+        instruments: QuerySet[Instrument]  # To help mypy recognize return type
+        paginate = self.request.query_params.get("paginate", "True")
+        if paginate == "False":
+            self.pagination_class = None
+        match study_name:
+            case None:
+                instruments = (
+                    Instrument.objects.filter()
+                    .prefetch_related("period", "questions")
+                    .annotate(question_count=Count("questions"))
+                )
+            case _:
+                instruments = (
+                    Instrument.objects.filter(study__name=study_name)
+                    .prefetch_related("period", "questions")
+                    .annotate(question_count=Count("questions"))
+                )
+
+        return instruments
+
+
 class VariableViewSet(viewsets.ModelViewSet):
     """List metadata about all variables."""
 
@@ -196,7 +229,7 @@ class VariableViewSet(viewsets.ModelViewSet):
         if paginate == "False":
             self.pagination_class = None
 
-        queryset_filter = {}
+        queryset_filter: Dict[str, Any] = {}
         if topic and concept:
             raise NotAcceptable(
                 detail="Concept and topic are mutually exclusive parameters."
@@ -340,8 +373,7 @@ class IsBasketOwner(permissions.BasePermission):
     Superusers are exempt and can manipulate all BasketVariables.
     """
 
-    @staticmethod
-    def has_permission(request, view):
+    def has_permission(self, request, _):
         if request.user.is_superuser:
             return True
         if request.method == "POST":
@@ -351,8 +383,7 @@ class IsBasketOwner(permissions.BasePermission):
             return False
         return True
 
-    @staticmethod
-    def has_object_permission(request, view, obj):
+    def has_object_permission(self, request, _, obj):
         if request.user.is_superuser:
             return True
         return obj.basket.user == request.user

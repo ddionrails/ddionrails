@@ -30,6 +30,7 @@ function renderEntityTable(entity, table, url) {
         url,
         "dataSrc":
          "",
+        "cache": true,
       },
       "columns": [
         {
