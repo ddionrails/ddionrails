@@ -138,18 +138,19 @@ table.dataTable thead th.sorting_desc:after {
 }
 
 table.dataTable thead th.sorting:after {
-  content: "\f0dc";
-  color: #ddd;
-  font-size: 0.8em;
+  content: "\2193";
+  color: rgb(0, 0, 0);
+  font-size: 1em;
+  font-weight: 1000;
   padding-top: 0.12em;
 }
 
 table.dataTable thead th.sorting_asc:after {
-  content: "\f0de";
+  content: "\2191";
 }
 
 table.dataTable thead th.sorting_desc:after {
-  content: "\f0dd";
+  content: "\2193";
 }
 
 div.dataTables_scrollBody table.dataTable thead th.sorting:after,
