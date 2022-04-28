@@ -106,7 +106,7 @@ body > div:first-of-type {
 
 // To display Fontawesome Icons
 i {
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
 }
 
 /**************************
@@ -131,26 +131,29 @@ table.dataTable thead th.sorting:after,
 table.dataTable thead th.sorting_asc:after,
 table.dataTable thead th.sorting_desc:after {
   position: absolute;
-  top: 12px;
+  display: inline-block;
   right: 8px;
-  display: block;
-  font-family: "Font Awesome 5 Free";
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
 }
 
 table.dataTable thead th.sorting:after {
-  content: "\2193";
+  font: var(--fa-font-solid);
+  content: "\f107";
   color: rgb(0, 0, 0);
   font-size: 1em;
   font-weight: 1000;
-  padding-top: 0.12em;
+  padding-top: 0.5em;
 }
 
 table.dataTable thead th.sorting_asc:after {
-  content: "\2191";
+  font: var(--fa-font-solid);
+  content: "\f106";
 }
 
 table.dataTable thead th.sorting_desc:after {
-  content: "\2193";
+  font: var(--fa-font-solid);
+  content: "\f107";
 }
 
 div.dataTables_scrollBody table.dataTable thead th.sorting:after,
@@ -184,35 +187,37 @@ div.dataTables_paginate li.last > a {
 
 div.dataTables_paginate li.first a:before,
 div.dataTables_paginate li.previous a:before {
-  position: absolute;
-  top: 7px;
-  left: 10px;
-  display: block;
-  font-family: "Font Awesome 5 Free";
+  display: inline-block;
+  text-rendering: auto;
+  padding-right: 5px;
+  -webkit-font-smoothing: antialiased;
 }
 
 div.dataTables_paginate li.next a:after,
 div.dataTables_paginate li.last a:after {
-  position: absolute;
-  top: 7px;
-  right: 10px;
-  display: block;
-  font-family: "Font Awesome 5 Free";
+  display: inline-block;
+  text-rendering: auto;
+  padding-left: 5px;
+  -webkit-font-smoothing: antialiased;
 }
 
 div.dataTables_paginate li.first a:before {
+  font: var(--fa-font-solid);
   content: "\f100";
 }
 
 div.dataTables_paginate li.previous a:before {
+  font: var(--fa-font-solid);
   content: "\f104";
 }
 
 div.dataTables_paginate li.next a:after {
+  font: var(--fa-font-solid);
   content: "\f105";
 }
 
 div.dataTables_paginate li.last a:after {
+  font: var(--fa-font-solid);
   content: "\f101";
 }
 
