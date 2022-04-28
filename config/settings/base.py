@@ -179,6 +179,18 @@ WEBPACK_LOADER = {
     }
 }
 
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "",
+    },
+    "instrument_api": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "api",
+        "OPTIONS": {"MAX_ENTRIES": 15},
+    },
+}
+
 # Rest API config
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,

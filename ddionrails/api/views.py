@@ -183,7 +183,7 @@ class InstrumentViewSet(viewsets.ModelViewSet):
 
     serializer_class = InstrumentSerializer
 
-    @method_decorator(cache_page(60 * 2))
+    @method_decorator(cache_page(60 * 60 * 2, cache="instrument_api"))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
