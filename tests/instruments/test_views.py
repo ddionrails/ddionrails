@@ -75,19 +75,3 @@ class TestQuestionRedirectView:
         url = reverse("question_redirect", kwargs={"id": uuid_identifier})
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
-
-
-class TestStudyInstrumentList:
-    def test_with_valid_study_name(self, client, instrument):
-        url = reverse(
-            "inst:study_instrument_list", kwargs={"study_name": instrument.study.name}
-        )
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
-
-    def test_with_invalid_study_name(self, client):
-        url = reverse(
-            "inst:study_instrument_list", kwargs={"study_name": "study-not-in-db"}
-        )
-        response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code

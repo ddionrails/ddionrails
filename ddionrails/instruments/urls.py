@@ -9,7 +9,6 @@ from . import views
 app_name = "instruments"
 
 urlpatterns = [
-    path("", views.study_instrument_list, name="study_instrument_list"),
     path(
         "<str:instrument_name>",
         views.InstrumentDetailView.as_view(),

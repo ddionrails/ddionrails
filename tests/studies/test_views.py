@@ -24,9 +24,6 @@ class TestStudyDetailView:
         expected_datasets = list(study.datasets.all())
         output_datasets = list(response.context["dataset_list"])
         assert expected_datasets == output_datasets
-        expected_instruments = list(study.instruments.all())
-        output_instruments = list(response.context["instrument_list"])
-        assert expected_instruments == output_instruments
 
     @pytest.mark.django_db
     def test_study_detail_view_with_non_existing_study_name(self, client):

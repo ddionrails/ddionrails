@@ -14,7 +14,7 @@ from .models import Study
 
 
 class StudyDetailView(DetailView):
-    """ DetailView for studies.Study model """
+    """DetailView for studies.Study model"""
 
     model = Study
     template_name = "studies/study_detail.html"
@@ -22,7 +22,7 @@ class StudyDetailView(DetailView):
     slug_field = "name"
 
     def get_queryset(self):
-        queryset = super(StudyDetailView, self).get_queryset()
+        queryset = super().get_queryset()
         return queryset.only("name", "label", "config", "description")
 
     def get_context_data(self, **kwargs):
@@ -47,19 +47,6 @@ class StudyDetailView(DetailView):
                 "study__name",
                 "conceptual_dataset__name",
                 "conceptual_dataset__label",
-                "period__name",
-                "period__label",
-                "analysis_unit__name",
-                "analysis_unit__label",
-            )
-        )
-        context["instrument_list"] = (
-            Instrument.objects.select_related("study", "period", "analysis_unit")
-            .filter(study=self.object)
-            .only(
-                "name",
-                "label",
-                "study__name",
                 "period__name",
                 "period__label",
                 "analysis_unit__name",

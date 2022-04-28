@@ -2,9 +2,8 @@
 
 """ Views for ddionrails.instruments app """
 
-from typing import Dict, List, TypedDict
+from typing import Dict, List
 
-from django.conf import settings
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -15,19 +14,6 @@ from config.helpers import RowHelper
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Instrument, Question, QuestionItem
 from ddionrails.instruments.models.question_item import QuestionItemDict
-from ddionrails.studies.models import Study
-
-
-# request is a required parameter
-def study_instrument_list(
-    request: WSGIRequest, study_name: str  # pylint: disable=unused-argument
-) -> HttpResponse:
-    """Render instruments of a study from template."""
-    study = get_object_or_404(Study, name=study_name)
-    context = dict(
-        study=study, instrument_list=Instrument.objects.filter(study__name=study_name)
-    )
-    return render(request, "instruments/study_instrument_list.html", context=context)
 
 
 class InstrumentRedirectView(RedirectView):
