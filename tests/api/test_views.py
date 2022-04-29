@@ -678,7 +678,7 @@ class TestBasketVariableSet(unittest.TestCase):
         ]
         too_many_variable_ids = [str(variable.id) for variable in too_many_variables]
         with patch(
-            "ddionrails.api.views.BasketVariableSet.basket_limit",
+            "ddionrails.api.views.user_tools.BasketVariableSet.basket_limit",
             new_callable=PropertyMock,
         ) as basket_limit:
             basket_limit.return_value = 10
@@ -704,7 +704,7 @@ class TestBasketVariableSet(unittest.TestCase):
             too_many_variables.append(variable)
 
         with patch(
-            "ddionrails.api.views.BasketVariableSet.basket_limit",
+            "ddionrails.api.views.user_tools.BasketVariableSet.basket_limit",
             new_callable=PropertyMock,
         ) as basket_limit:
             basket_limit.return_value = 10

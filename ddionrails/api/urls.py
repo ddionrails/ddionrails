@@ -6,19 +6,22 @@ from django.conf.urls import include
 from django.urls import path, re_path
 from rest_framework import routers
 
-from ddionrails.api.views import (
-    BasketVariableSet,
-    BasketViewSet,
+from ddionrails.api.views.datasets import (
+    StatisticsMetadataViewSet,
+    StatisticViewSet,
+    VariableViewSet,
+)
+from ddionrails.api.views.instruments import (
     InstrumentViewSet,
     QuestionComparisonViewSet,
     QuestionViewSet,
+)
+from ddionrails.api.views.studies import StudyViewSet, TopicTreeViewSet
+from ddionrails.api.views.user_tools import (
+    BasketVariableSet,
+    BasketViewSet,
     SendFeedback,
-    StatisticsMetadataViewSet,
-    StatisticViewSet,
-    StudyViewSet,
-    TopicTreeViewSet,
     UserViewSet,
-    VariableViewSet,
 )
 
 app_name = "api"

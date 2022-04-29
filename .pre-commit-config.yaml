@@ -36,7 +36,7 @@ repos:
       - id: pylint
         name: lint python code (pylint)
         entry: >-
-          pylint
+          python3.10 -m pylint
           --load-plugins=pylint_django,pylint_django.checkers.migrations
           --rcfile=setup.cfg
         language: system
