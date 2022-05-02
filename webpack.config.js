@@ -17,14 +17,15 @@ module.exports = {
   entry: {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
-    instrument_table: "./assets/js/instrument_table.js",
+    instrument_table: "./assets/js/tables/instrument_table.js",
     search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
-    concept_table: ["./assets/js/concept_table.js", "./assets/scss/topics.scss"],
-    variables: ["./assets/js/variables.js"],
-    search_feedback: [
-      "./assets/js/search_feedback.ts",
+    concept_table: [
+      "./assets/js/tables/concept_table.js",
+      "./assets/scss/topics.scss",
     ],
+    variables: ["./assets/js/variables.js"],
+    search_feedback: ["./assets/js/search_feedback.ts"],
     statistics: ["./assets/js/statistics.js", "./assets/scss/statistics.scss"],
     statistics_navigation: [
       "./assets/js/statistics_navigation.ts",
