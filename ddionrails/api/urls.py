@@ -7,6 +7,7 @@ from django.urls import path, re_path
 from rest_framework import routers
 
 from ddionrails.api.views.datasets import (
+    DatasetViewSet,
     StatisticsMetadataViewSet,
     StatisticViewSet,
     VariableViewSet,
@@ -31,6 +32,7 @@ urlpatterns = [path("feedback/", SendFeedback.as_view(), name="send-feedback")]
 ROUTER = routers.SimpleRouter()
 ROUTER.register(r"baskets", BasketViewSet, basename="basket")
 ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variables")
+ROUTER.register(r"datasets", DatasetViewSet, basename="dataset")
 ROUTER.register(r"instruments", InstrumentViewSet, basename="instrument")
 ROUTER.register(r"questions", QuestionViewSet, basename="question")
 ROUTER.register(

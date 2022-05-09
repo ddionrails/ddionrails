@@ -189,6 +189,11 @@ CACHES = {
         "LOCATION": "api",
         "OPTIONS": {"MAX_ENTRIES": 15},
     },
+    "dataset_api": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "api",
+        "OPTIONS": {"MAX_ENTRIES": 15},
+    },
 }
 
 # Rest API config

@@ -78,8 +78,48 @@ class BasketVariableSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "basket", "basket_id", "variable", "variable_id"]
 
 
+class DatasetSerializer(serializers.HyperlinkedModelSerializer):
+    """Serialize Datasets."""
+
+    conceptual_dataset_label = serializers.SlugRelatedField(
+        source="conceptual_dataset", read_only=True, slug_field="label"
+    )
+    period_name = serializers.SlugRelatedField(
+        source="period", read_only=True, slug_field="name"
+    )
+    analysis_unit_label = serializers.SlugRelatedField(
+        source="analysis_unit", read_only=True, slug_field="label"
+    )
+    study = serializers.PrimaryKeyRelatedField(read_only=True)
+    study_name = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="name"
+    )
+    study_label = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="label"
+    )
+    study_label_de = serializers.SlugRelatedField(
+        source="study", read_only=True, slug_field="label_de"
+    )
+
+    class Meta:
+        model = Instrument
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "conceptual_dataset_label",
+            "period_name",
+            "analysis_unit_label",
+            "study",
+            "study_name",
+            "study_label",
+            "study_label_de",
+        ]
+
+
 class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
-    """Serialize systems Variables."""
+    """Serialize Instruments."""
 
     period_name = serializers.SlugRelatedField(
         source="period", read_only=True, slug_field="name"

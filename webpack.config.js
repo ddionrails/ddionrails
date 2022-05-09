@@ -18,6 +18,7 @@ module.exports = {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
     instrument_table: "./assets/js/tables/instrument_table.js",
+    dataset_table: "./assets/js/tables/dataset_table.js",
     search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: [

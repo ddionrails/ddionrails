@@ -14,8 +14,13 @@ from rest_framework.exceptions import NotAcceptable
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from ddionrails.api.serializers import StatisticsVariableSerializer, VariableSerializer
+from ddionrails.api.serializers import (
+    DatasetSerializer,
+    StatisticsVariableSerializer,
+    VariableSerializer,
+)
 from ddionrails.concepts.models import Concept, Topic
+from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.variable import Variable
 from ddionrails.statistics.models import StatisticsMetadata, VariableStatistic
 from ddionrails.studies.models import Study
@@ -124,3 +129,29 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
             .select_related("dataset", "dataset__study")
             .distinct()
         )
+
+
+class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
+    """List metadata about all variables."""
+
+    serializer_class = DatasetSerializer
+
+    @method_decorator(cache_page(60 * 60 * 2, cache="dataset_api"))
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        return super().list(request, *args, **kwargs)
+
+    def get_queryset(self) -> QuerySet[Dataset]:
+        datasets: QuerySet[Dataset]  # To help mypy recognize return type
+        _filter = {}
+        if study_name := self.request.query_params.get("study", None):
+            _filter["study__name"] = study_name
+
+        paginate = self.request.query_params.get("paginate", "True")
+        if paginate == "False":
+            self.pagination_class = None
+
+        datasets = Dataset.objects.filter(**_filter).select_related(
+            "period", "study", "analysis_unit", "conceptual_dataset"
+        )
+
+        return datasets
