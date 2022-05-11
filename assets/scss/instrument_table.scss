@@ -3,6 +3,10 @@ tr > td.attachment {
   justify-content: center;
 }
 
+th.attachments {
+  width: 8em;
+}
+
 tr > td.attachment > div > a {
   margin-right: 0.5em;
 }
