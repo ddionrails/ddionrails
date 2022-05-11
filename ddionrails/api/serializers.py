@@ -9,6 +9,7 @@ from ddionrails.api.related_fields import BasketRelatedField, UserRelatedField
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
+from ddionrails.publications.models import Attachment
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket import Basket
 from ddionrails.workspace.models.basket_variable import BasketVariable
@@ -118,6 +119,14 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    """Serialize a single Attachment."""
+
+    class Meta:
+        model = Attachment
+        fields = ["url", "url_text"]
+
+
 class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
     """Serialize Instruments."""
 
@@ -135,6 +144,7 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
         source="study", read_only=True, slug_field="label_de"
     )
     question_count = serializers.IntegerField()
+    attachments = AttachmentSerializer(read_only=True, many=True)
 
     class Meta:
         model = Instrument
@@ -149,6 +159,7 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
             "study_label",
             "study_label_de",
             "question_count",
+            "attachments",
         ]
 
 

@@ -90,25 +90,19 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Instrument]:
-        study_name = self.request.query_params.get("study", None)
-        instruments: QuerySet[Instrument]  # To help mypy recognize return type
+        _filter = {}
         paginate = self.request.query_params.get("paginate", "True")
         if paginate == "False":
             self.pagination_class = None
-        match study_name:
-            case None:
-                instruments = (
-                    Instrument.objects.filter()
-                    .prefetch_related("period", "questions")
-                    .annotate(question_count=Count("questions"))
-                )
-            case _:
-                instruments = (
-                    Instrument.objects.filter(study__name=study_name)
-                    .prefetch_related("period", "questions")
-                    .annotate(question_count=Count("questions"))
-                )
+        if study_name := self.request.query_params.get("study", None):
+            _filter["study__name"] = study_name
 
+        instruments: QuerySet[Instrument] = (  # To help mypy recognize return type
+            Instrument.objects.filter(**_filter)
+            .select_related("period")
+            .prefetch_related("attachments", "questions")
+            .annotate(question_count=Count("questions"))
+        )
         return instruments
 
 
