@@ -1,6 +1,10 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
 
+{% block styles %}
+    {% render_bundle 'instrument_table' 'css' %}
+{% endblock styles %}
+
 {% block title %}
     {{ study.name }}
 {% endblock %}
@@ -58,11 +62,13 @@
                 <th class="instrument"></th>
                 <th class="label"></th>
                 <th class="period"></th>
+                <th class="attachments"></th>
             </tr>
             <tr class="header">
                 <th title="instrument" class="instrument">Instrument</th>
                 <th title="label" class="label">Label</th>
                 <th title="period" class="period">Period</th>
+                <th title="attachments" class="attachments">Attachments</th>
             </tr>
         </thead>
     </table>

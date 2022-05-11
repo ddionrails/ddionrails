@@ -11,6 +11,10 @@ const inputTemplate = document.createElement("input");
 inputTemplate.type = "text";
 inputTemplate.classList.add("form-control", "form-control-sm");
 
+const attachmentIcon = document.createElement("i");
+attachmentIcon.classList.add("fa-solid", "fa-file-lines");
+const attachmentLinkTemplate = document.createElement("a");
+attachmentLinkTemplate.appendChild(attachmentIcon);
 
 /**
  * Renders a table of instruments.
@@ -56,6 +60,25 @@ function renderInstrumentTable(table, url) {
           data: "period", // Actual name of the entity.
           render(_data, _type, row) {
             return row["period_name"];
+          },
+        },
+        {
+          data: "attachments", // Actual name of the entity.
+          className: "attachment",
+          orderable: false,
+          render(_data, _type, row) {
+            const linkContainer = document.createElement("div");
+            for (const attachment of row["attachments"]) {
+              const link = attachmentLinkTemplate.cloneNode(true);
+              link.href = attachment["url"];
+              link.title = attachment["url_text"];
+              linkContainer.appendChild(link);
+              const text = document.createElement("text");
+              text.classList.add("hidden");
+              text.textContent = attachment["url_text"];
+              linkContainer.appendChild(text);
+            }
+            return linkContainer.outerHTML;
           },
         },
       ],

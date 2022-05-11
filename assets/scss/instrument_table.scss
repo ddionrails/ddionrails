@@ -1,0 +1,8 @@
+tr > td.attachment {
+  display: flex;
+  justify-content: center;
+}
+
+tr > td.attachment > div > a {
+  margin-right: 0.5em;
+}
