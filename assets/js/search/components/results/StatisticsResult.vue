@@ -12,9 +12,8 @@
       </a>
       </span>
       <span v-else>
-        <span v-html="item.label_de"></span>
       <a :href="baseUrl + '/' + item.study.name + '/statistics/' + item.statistics_type +'/?variable=' + item._id">
-        <span v-html="item.statistics_type"></span>
+        <span v-html="item.label_de"></span>
       </a>
       </span>
     </p>

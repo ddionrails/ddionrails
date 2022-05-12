@@ -24,7 +24,7 @@ const topicVariablesContainer = document.querySelector(".variables-container")
 
 function renderVariableStatisticsLink(variable: any, type: string): HTMLElement {
   const linkElement = document.createElement("a")
-  linkElement.textContent = variable["label_de"] + ` ${type}`.toUpperCase()
+  linkElement.textContent = variable["label_de"]
   const url = new URL(window.location + `${type}/`)
   url.searchParams.append("variable", variable["id"])
 
