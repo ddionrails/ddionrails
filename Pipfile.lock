@@ -189,11 +189,11 @@
         },
         "django-stubs": {
             "hashes": [
-                "sha256:2ec21fc14dba392156e0ec8438e1863c86ddb295f1c8d88eecd7e0e04977c843",
-                "sha256:dfffa933e3c7f5cae92c860fbd6cf4ae58c4f78eed93843612f863207c9e0e1a"
+                "sha256:11a4aa094d3da0108d268386dfd0b9a5bf73fe1ab5919b5a292607671329bc4b",
+                "sha256:e9362c0992414560fc6d2f91aa4dd8339b1cbbf7ddacc95b06cc219b1792d217"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.10.1"
+            "version": "==1.11.0"
         },
         "django-stubs-ext": {
             "hashes": [
@@ -1150,7 +1150,7 @@
         },
         "coverage": {
             "extras": [
-                "toml"
+
             ],
             "hashes": [
                 "sha256:00c8544510f3c98476bbd58201ac2b150ffbcce46a8c3e4fb89ebf01998f806a",
@@ -1258,19 +1258,19 @@
         },
         "django-debug-toolbar": {
             "hashes": [
-                "sha256:644bbd5c428d3283aa9115722471769cac1bec189edf3a0c855fd8ff870375a9",
-                "sha256:6b633b6cfee24f232d73569870f19aa86c819d750e7f3e833f2344a9eb4b4409"
+                "sha256:42c1c2e9dc05bb57b53d641e3a6d131fc031b92377b34ae32e604a1fe439bb83",
+                "sha256:ae6bec2c1ce0e6900b0ab0443e1427eb233d8e6f57a84a0b2705eeecb8874e22"
             ],
             "index": "pypi",
-            "version": "==3.2.4"
+            "version": "==3.4.0"
         },
         "django-stubs": {
             "hashes": [
-                "sha256:2ec21fc14dba392156e0ec8438e1863c86ddb295f1c8d88eecd7e0e04977c843",
-                "sha256:dfffa933e3c7f5cae92c860fbd6cf4ae58c4f78eed93843612f863207c9e0e1a"
+                "sha256:11a4aa094d3da0108d268386dfd0b9a5bf73fe1ab5919b5a292607671329bc4b",
+                "sha256:e9362c0992414560fc6d2f91aa4dd8339b1cbbf7ddacc95b06cc219b1792d217"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==1.10.1"
+            "version": "==1.11.0"
         },
         "django-stubs-ext": {
             "hashes": [
