@@ -21,16 +21,23 @@ from django.conf import settings
 from django.db.models import QuerySet
 from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
+from elasticsearch_dsl import analyzer
 
 from ddionrails.base.generic_documents import GenericDataDocument
 from ddionrails.studies.models import Study
 
 from .models import Variable
 
+n_gram_analyzer = analyzer(
+    "n_gram", tokenizer="nGram", min_gram=3, max_gram=4, filter=["lowercase"]
+)
+
 
 @registry.register_document
 class VariableDocument(GenericDataDocument):
     """Search document data.Variable"""
+
+    name = fields.TextField(analyzer=n_gram_analyzer)
 
     dataset = fields.ObjectField(
         properties={
