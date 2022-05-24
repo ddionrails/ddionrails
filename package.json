@@ -19,7 +19,7 @@
     "bootstrap": "^4.6.1",
     "d3": "^7.3.0",
     "datatables.net": "^1.11.5",
-    "datatables.net-bs4": "1.11.4",
+    "datatables.net-bs4": "1.12.1",
     "datatables.net-buttons-bs4": "^2.2.2",
     "datatables.net-responsive-bs4": "2.2.9",
     "har-validator": "^5.1.5",
