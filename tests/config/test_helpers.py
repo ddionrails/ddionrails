@@ -3,7 +3,15 @@
 
 """ Test cases for helpers in ddionrails.config app """
 
-from config.helpers import RowHelper, lower_dict_names, render_markdown
+import unittest
+from typing import Dict
+
+from config.helpers import (
+    RowHelper,
+    lower_dict_names,
+    parse_env_variable_dict,
+    render_markdown,
+)
 
 MD_TEXT = """
 # heading
@@ -41,8 +49,8 @@ class TestRowHelper:
         assert expected is row_helper.row()
 
     def test_row_method_true(self):
-        """ Everytime row is called, row_index is incremented.
-            If it hits 4, it returns True
+        """Everytime row is called, row_index is incremented.
+        If it hits 4, it returns True
         """
         row_helper = RowHelper()
         row_helper.row_index = 3
@@ -55,3 +63,26 @@ class TestRowHelper:
         row_helper.reset()
         expected = 0
         assert expected == row_helper.row_index
+
+
+class TestParseEnvVariableDict(unittest.TestCase):
+    def test_correct_input(self) -> None:
+        expected = {"first_key": "1", "second_key": "value"}
+        inputs = [
+            "first_key:1,second_key:value",
+            "first_key:1, second_key:value",
+            "first_key: 1, second_key: value",
+            " first_key: 1, second_key: value ",
+        ]
+        for _input in inputs:
+            result = parse_env_variable_dict(_input)
+
+            self.assertDictEqual(expected, result)
+
+    def test_incorrect_input(self) -> None:
+        expected: Dict[str, str] = {}
+        inputs = ["first_key:,second_key:value", "first_key,second_key:value", ""]
+        for _input in inputs:
+            result = parse_env_variable_dict(_input)
+
+            self.assertDictEqual(expected, result)
