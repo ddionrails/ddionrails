@@ -7,6 +7,8 @@ import tempfile
 import uuid
 from pathlib import Path
 
+from config.helpers import parse_env_variable_dict
+
 # Beta stage config flag
 # ------------------------------------------------------------------------------
 
@@ -33,6 +35,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 EMAIL_HOST = "mail"
 ALLOWED_HOSTS = tuple(os.getenv("ALLOWED_HOSTS", default="").split(","))
 DEFAULT_FEEDBACK_TO_EMAIL = os.getenv("DEFAULT_FEEDBACK_TO_EMAIL", "paneldata.org@diw.de")
+FEEDBACK_TO_EMAILS = parse_env_variable_dict(os.getenv("FEEDBACK_TO_EMAILS", ""))
 WSGI_APPLICATION = "config.wsgi.application"
 
 IMPORT_BRANCH = os.getenv("IMPORT_BRANCH", default="master")
