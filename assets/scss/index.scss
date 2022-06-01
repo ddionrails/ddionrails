@@ -63,19 +63,18 @@ a:visited {
   color: black;
 }
 
-
-@media screen and (max-width:1200px) {
+@media screen and (max-width: 1200px) {
   .nav-item > a.btn {
     font-size: 1em;
   }
 }
 
-@media screen and (min-width:12001) and (max-width:1400px) {
+@media screen and (min-width: 12001) and (max-width: 1400px) {
   .nav-item > a.btn {
     font-size: 1.3vw;
   }
 }
-@media screen and (min-width:1401px) {
+@media screen and (min-width: 1401px) {
   .nav-item > a.btn {
     font-size: 1em;
   }
@@ -86,11 +85,11 @@ a:visited {
 }
 
 a.dropdown-item {
-  color: rgba(0,0,0,0.7) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
 }
 
 .nav-link {
-  color: rgba(0,0,0,0.7) !important;
+  color: rgba(0, 0, 0, 0.7) !important;
 }
 
 h1 {
@@ -237,7 +236,7 @@ div.dataTables_paginate li.last a:after {
   border-color: rgb(184, 181, 181);
 }
 
-.header-vline{
+.header-vline {
   border-left: 2px solid #afafaf;
   border-right: 2px solid #afafaf;
   border-radius: 25px;
@@ -245,6 +244,12 @@ div.dataTables_paginate li.last a:after {
   margin-left: 1em;
 }
 
-.nav-link{
+.nav-link {
   white-space: nowrap;
+}
+
+.button-feedback {
+  color: white !important;
+  font-weight: 700;
+  background-color: cornflowerblue;
 }
