@@ -139,10 +139,7 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
 
     while question:
         # Questions of a Block have the same name and the same instrument
-        if (question["instrument"], question["name"]) != (
-            question_block[-1]["instrument"],
-            question_block[-1]["name"],
-        ):
+        if _question_id_matches_block_id(question, question_block):
             _import_question_block(question_block, study)
             question_block = []
         question_block.append(question)
@@ -151,7 +148,16 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
     yield
 
 
-def _import_question_block(block: List[Dict[str, str]], study: Study):
+def _question_id_matches_block_id(
+    question: Dict[str, str], block: List[Dict[str, str]]
+) -> bool:
+    return (question["instrument"], question["name"]) != (
+        block[-1]["instrument"],
+        block[-1]["name"],
+    )
+
+
+def _import_question_block(block: List[Dict[str, str]], study: Study) -> None:
     instrument = _get_instrument(name=block[0]["instrument"], study=study)
     fields = [
         "label",
@@ -161,26 +167,12 @@ def _import_question_block(block: List[Dict[str, str]], study: Study):
         "instruction",
         "instruction_de",
     ]
-    item_specific_fields = ["input_filter", "goto", "scale", "name"]
 
     main_question, _ = Question.objects.get_or_create(
         name=block[0]["name"], instrument=instrument
     )
     _import_main_question(main_question, fields, block[0])
-
-    fields.extend(item_specific_fields)
-    question_items = []
-    for position, question in enumerate(block):
-        question_item, _ = QuestionItem.objects.get_or_create(
-            question=main_question, position=position
-        )
-        for field in fields:
-            setattr(question_item, field, question[_field_mapper(field)])
-
-        question_items.append(question_item)
-    QuestionItem.objects.bulk_update(question_items, fields)
-
-    main_question.save()
+    _import_question_items(main_question, fields, block)
 
 
 def _import_main_question(
@@ -188,6 +180,24 @@ def _import_main_question(
 ) -> None:
     for field in fields:
         setattr(question, field, metadata[_field_mapper(field)])
+    question.save()
+
+
+def _import_question_items(
+    question: Question, fields: List[str], items: List[Dict[str, str]]
+) -> None:
+    item_fields = fields + ["input_filter", "goto", "scale", "name"]
+
+    question_items = []
+    for position, item in enumerate(items):
+        question_item, _ = QuestionItem.objects.get_or_create(
+            question=question, position=position
+        )
+        for field in item_fields:
+            setattr(question_item, field, item[_field_mapper(field)])
+
+        question_items.append(question_item)
+    QuestionItem.objects.bulk_update(question_items, item_fields)
 
 
 def _field_mapper(field: str) -> str:

@@ -1,5 +1,6 @@
 """"Define answer object for categorical question items ."""
 from typing import Iterable, Optional
+from uuid import UUID
 
 from django.db import models
 
@@ -16,7 +17,7 @@ class Answer(models.Model):
     label_de = models.TextField()
     question_items = models.ManyToManyField(QuestionItem, related_name="answers")
 
-    def generate_id(self):
+    def generate_id(self) -> UUID:
         """Generate UUID used in the objects save method."""
         return hash_with_base_uuid(f"{self.value}{self.label}{self.label_de}", cache=True)
 
