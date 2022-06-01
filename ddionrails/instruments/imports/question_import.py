@@ -135,6 +135,7 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
     question_block = []
     question = yield
     question_block.append(question)
+    question = yield
 
     while question:
         # Questions of a Block have the same name and the same instrument
