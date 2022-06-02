@@ -15,6 +15,16 @@ from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.studies.models import Study
 
+QUESTION_FIELDS = [
+    "label",
+    "label_de",
+    "description",
+    "description_de",
+    "instruction",
+    "instruction_de",
+]
+ITEM_FIELDS = QUESTION_FIELDS + ["input_filter", "goto", "scale", "name"]
+
 
 def question_import(file: Path, study: Study) -> None:
     """Import Questions and QuestionItems from the questions.csv."""
@@ -137,14 +147,20 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
     question_block.append(question)
     question = yield
 
+    question_items = []
+
     while question:
         # Questions of a Block have the same name and the same instrument
         if _question_id_matches_block_id(question, question_block):
-            _import_question_block(question_block, study)
+            question_items.extend(_import_question_block(question_block, study))
             question_block = []
         question_block.append(question)
         question = yield
-    _import_question_block(question_block, study)
+    question_items.extend(_import_question_block(question_block, study))
+
+    QuestionItem.objects.filter(question__instrument__study=study).delete()
+
+    QuestionItem.objects.bulk_create(question_items)
     yield
 
 
@@ -157,47 +173,36 @@ def _question_id_matches_block_id(
     )
 
 
-def _import_question_block(block: List[Dict[str, str]], study: Study) -> None:
+def _import_question_block(
+    block: List[Dict[str, str]], study: Study
+) -> List[QuestionItem]:
     instrument = _get_instrument(name=block[0]["instrument"], study=study)
-    fields = [
-        "label",
-        "label_de",
-        "description",
-        "description_de",
-        "instruction",
-        "instruction_de",
-    ]
 
     main_question, _ = Question.objects.get_or_create(
         name=block[0]["name"], instrument=instrument
     )
-    _import_main_question(main_question, fields, block[0])
-    _import_question_items(main_question, fields, block)
+    _import_main_question(main_question, block[0])
+    return _import_question_items(main_question, block)
 
 
-def _import_main_question(
-    question: Question, fields: List[str], metadata: Dict[str, str]
-) -> None:
-    for field in fields:
+def _import_main_question(question: Question, metadata: Dict[str, str]) -> None:
+    for field in QUESTION_FIELDS:
         setattr(question, field, metadata[_field_mapper(field)])
     question.save()
 
 
 def _import_question_items(
-    question: Question, fields: List[str], items: List[Dict[str, str]]
-) -> None:
-    item_fields = fields + ["input_filter", "goto", "scale", "name"]
+    question: Question, items: List[Dict[str, str]]
+) -> List[QuestionItem]:
 
     question_items = []
     for position, item in enumerate(items):
-        question_item, _ = QuestionItem.objects.get_or_create(
-            question=question, position=position
-        )
-        for field in item_fields:
+        question_item = QuestionItem(question=question, position=position)
+        for field in ITEM_FIELDS:
             setattr(question_item, field, item[_field_mapper(field)])
 
         question_items.append(question_item)
-    QuestionItem.objects.bulk_update(question_items, item_fields)
+    return question_items
 
 
 def _field_mapper(field: str) -> str:
