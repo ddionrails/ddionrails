@@ -58,6 +58,23 @@ class Instrument(ModelMixin, models.Model):
         verbose_name="Description (Markdown, German)",
         help_text="Description of the instrument (Markdown, German)",
     )
+    mode = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Mode of inquiry.",
+        help_text="The procedure, technique, or mode of inquiry used to attain the data.",
+    )
+    type = models.JSONField(
+        blank=True,
+        default={},
+        verbose_name="Instrument type",
+        help_text="Categorization for instruments",
+    )
+    has_questions = models.BooleanField(
+        blank=False,
+        default=False,
+        help_text="Flag if instrument has Questions associated with it.",
+    )
 
     #############
     # relations #
@@ -90,7 +107,7 @@ class Instrument(ModelMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=invalid-name
             self.study_id, self.name, cache=False
         )
@@ -110,12 +127,12 @@ class Instrument(ModelMixin, models.Model):
         io_fields = ["study", "name", "label", "description", "period", "analysis_unit"]
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse(
             "inst:instrument_detail",
             kwargs={"study_name": self.study.name, "instrument_name": self.name},
         )
 
     def get_direct_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse("instrument_redirect", kwargs={"id": self.id})

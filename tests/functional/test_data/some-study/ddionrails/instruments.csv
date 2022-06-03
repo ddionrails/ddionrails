@@ -1,0 +1,2 @@
+study,name,label,label_de,description,description_de,analysis_unit,period,value,mode,type_position,type,type_de
+test-study,some-instrument,The english label,Das deutsche Label ÖÄÜß,The description,Die Beschreibung,some-analysis-unit,some-period,1,some-mode,1,some-type,ein-typ

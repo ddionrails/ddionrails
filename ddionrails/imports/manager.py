@@ -160,9 +160,13 @@ class StudyImportManager:
                     ConceptualDatasetImport,
                     self.base_dir / "conceptual_datasets.csv",
                 ),
-                "instruments": (
+                "instruments.json": (
                     instrument_import.InstrumentImport,
                     Path(self.base_dir / "instruments/").glob("*.json"),
+                ),
+                "instruments": (
+                    instrument_import.instrument_import,
+                    Path(self.base_dir / "instruments.csv"),
                 ),
                 "questions": (
                     question_import.question_import,

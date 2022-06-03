@@ -218,7 +218,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(0, Instrument.objects.count())
         TEST_CASE.assertEqual(0, Question.objects.count())
         with TEST_CASE.assertRaises(SystemExit) as _error:
-            call_command("update", study.name, "instruments", "-l")
+            call_command("update", study.name, "instruments.json", "-l")
             TEST_CASE.assertEqual(0, _error.exception.code)
         TEST_CASE.assertEqual(1, Instrument.objects.count())
         TEST_CASE.assertEqual(1, Question.objects.count())

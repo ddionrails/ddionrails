@@ -84,8 +84,8 @@ class Command(BaseCommand):
                 sys.exit(1)
 
         # if filename is given, validate that entity is "datasets.json" or "instruments"
-        if filename and not entity.intersection({"datasets.json", "instruments"}):
-            out = ", ".join(entity.intersection({"datasets.json", "instruments"}))
+        if filename and not entity.intersection({"datasets.json", "instruments.json"}):
+            out = ", ".join(entity.intersection({"datasets.json", "instruments.json"}))
             self.log_error(
                 f'Support for single file import not available for entity "{out}".'
             )
@@ -108,7 +108,7 @@ class Command(BaseCommand):
 
 
 def update_study_partial(manager: StudyImportManager, entity: tuple):
-    """ Update only selected entitites for study """
+    """Update only selected entitites for study"""
     for single_entity in entity:
         manager.import_single_entity(single_entity)
 
@@ -122,7 +122,7 @@ def update_single_study(  # pylint: disable=R0913
     clean_import=False,
     manager: StudyImportManager = None,
 ) -> None:
-    """ Update a single study """
+    """Update a single study"""
     backup_file = Path()
     if clean_import:
         backup_file = Basket.backup()
@@ -145,7 +145,7 @@ def update_single_study(  # pylint: disable=R0913
 
 
 def update_all_studies_completely(local: bool, clean_import=False, redis=True) -> None:
-    """ Update all studies in the database """
+    """Update all studies in the database"""
     for study in Study.objects.all():
         manager = StudyImportManager(study, redis=redis)
         update_single_study(study, local, clean_import=clean_import, manager=manager)
