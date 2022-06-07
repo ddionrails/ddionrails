@@ -25,66 +25,87 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
  */
 function renderInstrumentTable(table, url) {
   // eslint-disable-next-line new-cap
-  return $(table).DataTable(
-    {
-      "ajax":
+  return $(table).DataTable({
+    ajax: {
+      url,
+      dataSrc: "",
+      cache: true,
+    },
+    order: [
+      [2, "desc"],
+      [3, "asc"],
+      [5, "asc"],
+    ],
+    columns: [
       {
-        url,
-        "dataSrc":
-          "",
-        "cache": true,
+        data: "instrument", // Human readable label.
+        render(_data, _type, row) {
+          if (row["has_questions"] === true) {
+            const link = document.createElement("a");
+            link.href =
+              window.location.protocol +
+              "//" +
+              window.location.hostname +
+              `/${row["study_name"]}/${urlPart}/${row["name"]}`;
+            link.textContent = row["name"];
+            return link.outerHTML;
+          }
+          return row["name"];
+        },
       },
-      "order": [[2, "desc"]],
-      "columns": [
-        {
-          data: "instrument", // Human readable label.
-          render(_data, _type, row) {
-            if (row["question_count"] > 0) {
-              const link = document.createElement("a");
-              link.href = window.location.protocol + "//" +
-                window.location.hostname +
-                `/${row["study_name"]}/${urlPart}/${row["name"]}`;
-              link.textContent = row["name"];
-              return link.outerHTML;
-            }
-            return row["name"];
-          },
+      {
+        data: "label", // Human readable label.
+        render(_data, _type, row) {
+          return row["label"] ? row["label"] : row["name"];
         },
-        {
-          data: "label", // Human readable label.
-          render(_data, _type, row) {
-            return (row["label"] ? row["label"] : row["name"]);
-          },
+      },
+      {
+        data: "period", // Actual name of the entity.
+        render(_data, _type, row) {
+          return row["period_name"];
         },
-        {
-          data: "period", // Actual name of the entity.
-          render(_data, _type, row) {
-            return row["period_name"];
-          },
+      },
+      {
+        data: "type_position", // Actual name of the entity.
+        render(_data, _type, row) {
+          return row["type"]["position"];
         },
-        {
-          data: "attachments", // Actual name of the entity.
-          className: "attachment",
-          orderable: false,
-          render(_data, _type, row) {
-            const linkContainer = document.createElement("div");
-            for (const attachment of row["attachments"]) {
-              const link = attachmentLinkTemplate.cloneNode(true);
-              link.href = attachment["url"];
-              link.title = attachment["url_text"];
-              linkContainer.appendChild(link);
-              const text = document.createElement("text");
-              text.classList.add("hidden");
-              text.textContent = attachment["url_text"];
-              linkContainer.appendChild(text);
-            }
-            return linkContainer.outerHTML;
-          },
+        visible: false,
+      },
+      {
+        data: "type", // Actual name of the entity.
+        render(_data, _type, row) {
+          return row["type"]["en"];
         },
-      ],
-    }
-  );
-};
+      },
+      {
+        data: "mode", // Actual name of the entity.
+        render(_data, _type, row) {
+          return row["mode"];
+        },
+      },
+      {
+        data: "attachments", // Actual name of the entity.
+        className: "attachment",
+        orderable: false,
+        render(_data, _type, row) {
+          const linkContainer = document.createElement("div");
+          for (const attachment of row["attachments"]) {
+            const link = attachmentLinkTemplate.cloneNode(true);
+            link.href = attachment["url"];
+            link.title = attachment["url_text"];
+            linkContainer.appendChild(link);
+            const text = document.createElement("text");
+            text.classList.add("hidden");
+            text.textContent = attachment["url_text"];
+            linkContainer.appendChild(text);
+          }
+          return linkContainer.outerHTML;
+        },
+      },
+    ],
+  });
+}
 
 /**
  *
@@ -112,8 +133,9 @@ function addSearchInput(table) {
  * @param {*} tableAPI
  */
 function addSearchEvent(event) {
-  event.currentTarget.tableAPI.column(`.${event.currentTarget.column}`).search(
-    event.currentTarget.value)
+  event.currentTarget.tableAPI
+    .column(`.${event.currentTarget.column}`)
+    .search(event.currentTarget.value)
     .draw();
 }
 
@@ -128,8 +150,9 @@ window.addEventListener("load", function() {
   for (const columnName of Object.keys(columnInputMapping)) {
     columnInputMapping[columnName.toString()].column = columnName;
     columnInputMapping[columnName.toString()].tableAPI = tableAPI;
-    columnInputMapping[columnName.toString()].addEventListener( "input", addSearchEvent);
+    columnInputMapping[columnName.toString()].addEventListener(
+      "input",
+      addSearchEvent
+    );
   }
 });
-
-

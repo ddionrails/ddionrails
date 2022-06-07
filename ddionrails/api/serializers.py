@@ -143,7 +143,8 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
     study_label_de = serializers.SlugRelatedField(
         source="study", read_only=True, slug_field="label_de"
     )
-    question_count = serializers.IntegerField()
+    has_questions = serializers.BooleanField()
+    type = serializers.JSONField()
     attachments = AttachmentSerializer(read_only=True, many=True)
 
     class Meta:
@@ -158,7 +159,9 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
             "study_name",
             "study_label",
             "study_label_de",
-            "question_count",
+            "has_questions",
+            "type",
+            "mode",
             "attachments",
         ]
 

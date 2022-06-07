@@ -7,7 +7,7 @@ import re
 from typing import Any
 
 import yaml
-from django.db.models import Count, QuerySet
+from django.db.models import QuerySet
 from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -100,8 +100,7 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
         instruments: QuerySet[Instrument] = (  # To help mypy recognize return type
             Instrument.objects.filter(**_filter)
             .select_related("period")
-            .prefetch_related("attachments", "questions")
-            .annotate(question_count=Count("questions"))
+            .prefetch_related("attachments")
         )
         return instruments
 
