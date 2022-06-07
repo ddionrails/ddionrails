@@ -130,6 +130,9 @@ class AttachmentSerializer(serializers.ModelSerializer):
 class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
     """Serialize Instruments."""
 
+    analysis_unit_name = serializers.SlugRelatedField(
+        source="analysis_unit", read_only=True, slug_field="name"
+    )
     period_name = serializers.SlugRelatedField(
         source="period", read_only=True, slug_field="name"
     )
@@ -154,6 +157,7 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
             "name",
             "label",
             "label_de",
+            "analysis_unit_name",
             "period_name",
             "study",
             "study_name",

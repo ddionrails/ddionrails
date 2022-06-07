@@ -2,6 +2,7 @@
 
 """ Views for ddionrails.studies app """
 
+from django.db.models import Q
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
@@ -35,6 +36,13 @@ class StudyDetailView(DetailView):
         context["num_questions"] = Question.objects.filter(
             instrument__study=self.object
         ).count()
+
+        context["has_extended_metadata"] = (
+            Instrument.objects.filter(
+                Q(study__name=context["study"]) & ~Q(mode="")
+            ).count()
+            > 0
+        )
 
         context["dataset_list"] = (
             Dataset.objects.select_related(

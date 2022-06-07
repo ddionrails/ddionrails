@@ -11,7 +11,7 @@
 
 {% block content %}
 
-    <div id="study-name" value="{{ study.name }}"></div>
+    <div id="study-name" value="{{ study.name }}" has-extended-metadata="{{ has_extended_metadata }}"></div>
 
     <div class="row">
         <div class="col-lg-9">
@@ -62,18 +62,28 @@
                 <th class="instrument"></th>
                 <th class="label"></th>
                 <th class="period"></th>
-                <th class="type_position"></th>
-                <th class="type"></th>
-                <th class="mode"></th>
+                <!-- TODO: Temporary solution while metadata diverges -->
+                {% if has_extended_metadata %}
+                    <th class="type_position"></th>
+                    <th class="type"></th>
+                    <th class="mode"></th>
+                {% else %}
+                    <th class="analysis_unit"></th>
+                {% endif %}
                 <th class="attachments"></th>
             </tr>
             <tr class="header">
                 <th title="instrument" class="instrument">Instrument</th>
                 <th title="label" class="label">Label</th>
                 <th title="period" class="period">Period</th>
-                <th title="type_position" class="type_position"></th>
-                <th title="type" class="type">Type</th>
-                <th title="mode" class="mode">Mode</th>
+                <!-- TODO: Temporary solution while metadata diverges -->
+                {% if has_extended_metadata %}
+                    <th title="type_position" class="type_position"></th>
+                    <th title="type" class="type">Type</th>
+                    <th title="mode" class="mode">Mode</th>
+                {% else %}
+                    <th title="analysis_unit" class="analysis_unit">Analysis Unit</th>
+                {% endif %}
                 <th title="attachments" class="attachments">Attachments</th>
             </tr>
         </thead>

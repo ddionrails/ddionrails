@@ -99,7 +99,7 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
 
         instruments: QuerySet[Instrument] = (  # To help mypy recognize return type
             Instrument.objects.filter(**_filter)
-            .select_related("period")
+            .select_related("period", "analysis_unit")
             .prefetch_related("attachments")
         )
         return instruments
