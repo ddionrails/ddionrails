@@ -63,7 +63,7 @@ def instrument_import(file: Path, study: Study) -> None:
             for field, field_mapper in optional_nested_fields.items():
                 value = {}
                 for model_field, csv_field in field_mapper.items():
-                    value[model_field] = row[csv_field]
+                    value[model_field] = row.get(csv_field, "")
                 setattr(instrument, field, value)
             instrument.has_questions = instrument.name in instruments_with_questions
 
