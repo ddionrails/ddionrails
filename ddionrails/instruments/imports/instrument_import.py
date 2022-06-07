@@ -31,8 +31,7 @@ optional_nested_fields: Dict[str, Dict[str, str]] = {
 def _get_instruments_with_questions(base_path: Path) -> Set[str]:
     instruments_with_questions = set()
     with open(base_path / "questions.csv", encoding="utf8") as questions_csv:
-        question_reader = DictReader(questions_csv)
-        for row in question_reader:
+        for row in DictReader(questions_csv):
             instruments_with_questions.add(row["instrument"])
     return instruments_with_questions
 
@@ -73,7 +72,7 @@ def instrument_import(file: Path, study: Study) -> None:
     Instrument.objects.bulk_update(
         instruments,
         required_fields
-        + ["analysis_unit", "period"]
+        + ["analysis_unit", "period", "has_questions"]
         + optional_fields
         + list(optional_nested_fields.keys()),
     )
