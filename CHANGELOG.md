@@ -11,6 +11,31 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.1.0] - 2022-06-08
+
+### Added
+
+- improved instrument import.
+- instrument data API.
+- n_gram tokenizer for variable names.
+- column search for instrument and dataset DataTables.
+
+### Changed
+
+- construction of instrument and dataset DataTables.
+- Improved question import performance.
+- Made feedback button more visible.
+- fields used in instrument DataTable.
+
+### Fixed
+
+- faulty loop in question_item import.
+- usage of Font Awesome 6 icons.
+
+### Removed
+
+- unused django templates.
+
 ## [6.0.0] - 2022-04-08
 
 ### Removed
@@ -771,7 +796,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.0.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.1.0...develop
+[6.1.0]: https://github.com/ddionrails/ddionrails/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...v6.0.0
 [5.4.1]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...v5.4.1
 [5.4.0]: https://github.com/ddionrails/ddionrails/compare/v5.3.4...v5.4.0
