@@ -4,6 +4,7 @@
     componentId="Year"
     title="Year"
     :showFilter="true"
+    :size="100"
     :URLParams="true"
     :rangeLabels="function(min, max){
       return {

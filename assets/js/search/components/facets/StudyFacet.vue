@@ -4,6 +4,7 @@
     dataField="study_name"
     title="Study"
     :showSearch="false"
+    :size="100"
     selectAllLabel="Select all"
     :URLParams="true"
     :react="react"
@@ -17,6 +18,6 @@
 <script>
 export default {
   name: "StudyFacet",
-  props: ["react"]
+  props: ["react"],
 };
 </script>

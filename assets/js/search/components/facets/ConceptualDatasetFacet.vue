@@ -5,6 +5,7 @@
     title="Conceptual Dataset"
     :showSearch="false"
     selectAllLabel="Select all"
+    :size="100"
     :URLParams="true"
     :react="react"
     class="card facet"
