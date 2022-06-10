@@ -796,3 +796,51 @@ class TestQuestionComparison(unittest.TestCase):
             f"{self.API_PATH}?questions={self.from_question.id},{false_uuid}"
         )
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
+
+
+@pytest.mark.django_db
+@pytest.mark.usefixtures("unittest_web_client")
+class TestSendFeedback(unittest.TestCase):
+
+    API_PATH = "/api/feedback/"
+    client: APIClient
+    web_client: Client
+
+    def setUp(self):
+        self.client = APIClient()
+
+        return super().setUp()
+
+    @patch(
+        "ddionrails.api.views.user_tools.FEEDBACK_TO_EMAILS", new={"invalid": "test@mail"}
+    )
+    def test_anonymous_feedback(self) -> None:
+        with patch("ddionrails.api.views.user_tools.send_mail") as send_mail:
+            data = {
+                "anon-submit-button": "",
+                "feedback": "feedback",
+                "source": "",
+                "feedback-type": "praise",
+            }
+            response = self.client.post(
+                f"{self.API_PATH}?type=invalid",
+                data=data,
+                HTTP_REFERER="https://localhost",
+            )
+            self.assertEqual(status.HTTP_302_FOUND, response.status_code)
+            send_mail.assert_called_once()
+            self.assertIn(["test@mail"], send_mail.call_args.args)
+
+    def test_missing_feedback_type(self) -> None:
+        data = {
+            "anon-submit-button": "",
+            "feedback": "feedback",
+            "source": "",
+            "feedback-type": "praise",
+        }
+        response = self.client.post(
+            f"{self.API_PATH}",
+            data=data,
+            HTTP_REFERER="https://localhost",
+        )
+        self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)

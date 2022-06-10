@@ -259,3 +259,9 @@ div.dataTables_paginate li.last a:after {
   font-weight: 700;
   background-color: cornflowerblue;
 }
+
+#feedback-button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}

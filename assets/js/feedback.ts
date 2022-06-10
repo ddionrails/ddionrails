@@ -4,7 +4,7 @@ const email = document.getElementById("email")
 
 document.addEventListener("DOMContentLoaded", () => {
 	const source = document.getElementById("source") as HTMLInputElement
-	if (document.referrer.includes("search/feedback/")) {
+	if (document.referrer.includes(document.location.href)) {
 		document.getElementById("feedback-success").classList.remove("hidden")
 		return
 	}
