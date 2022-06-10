@@ -8,6 +8,7 @@ from typing import List
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.core.mail import send_mail
 from django.db.models import Model, Q, QuerySet
+from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
@@ -18,7 +19,7 @@ from rest_framework.response import Response
 from rest_framework.throttling import AnonRateThrottle
 from rest_framework.views import APIView
 
-from config.settings.base import DEFAULT_FEEDBACK_TO_EMAIL
+from config.settings.base import DEFAULT_FEEDBACK_TO_EMAIL, FEEDBACK_TO_EMAILS
 from ddionrails.api.serializers import (
     BasketHyperlinkedSerializer,
     BasketVariableSerializer,
@@ -253,9 +254,13 @@ class SendFeedback(APIView):
 
     def post(self, request: Request) -> HttpResponseRedirect:
         """Process posted form data."""
+        feedback_type = request.query_params.get("type", "")
+        if not feedback_type:
+            raise Http404
+
         form_data = request.data
         if "anon-submit-button" in form_data:
-            email = "Anonym"
+            email = "Anonymous"
         else:
             email = form_data["email"]
 
@@ -264,19 +269,21 @@ class SendFeedback(APIView):
         if form_data["source"]:
             source = form_data["source"]
         else:
-            source = "Es wurde kein Suchstring angegeben."
+            source = "No source url was given"
 
         message = (
-            f"Feedback wurde von {email} abgegeben\n\n"
-            f"Benutzte Such-URL: {source}\n\n"
-            f"Feedback Text:\n{feedback}"
+            f"Feedback was sent from {email} \n\n"
+            f"User entered feedback from: {source}\n\n"
+            f"Feedback text:\n{feedback}"
         )
 
+        to_email = FEEDBACK_TO_EMAILS.get(feedback_type, DEFAULT_FEEDBACK_TO_EMAIL)
+
         send_mail(
-            f"Paneldata Suche Feedback: {form_data['feedback-type']}",
+            f"Paneldata {type} Feedback: {form_data['feedback-type']}",
             message,
             None,
-            [DEFAULT_FEEDBACK_TO_EMAIL],
+            [to_email],
             fail_silently=True,
         )
         return HttpResponseRedirect(request.META["HTTP_REFERER"])

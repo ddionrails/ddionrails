@@ -4,6 +4,7 @@
 """ URLConf for ddionrails.data app """
 
 from django.urls import path, register_converter
+from django.views.generic.base import TemplateView
 
 from . import views
 
@@ -26,5 +27,10 @@ register_converter(TypeConverter, "type")
 
 urlpatterns = [
     path("", views.StatisticsNavView.as_view(), name="statistics"),
+    path(
+        "feedback/",
+        TemplateView.as_view(template_name="statistics/feedback.html"),
+        name="statistics_feedback",
+    ),
     path("<type:plot_type>/", views.statistics_detail_view, name="statistics_detail"),
 ]

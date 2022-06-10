@@ -11,32 +11,27 @@
      Your Feedback has been send.
 </p>
 
-<form id="feedback-form" action="/api/feedback/?type=search" method="post">
+<form id="feedback-form" action="/api/feedback/?type=statistics" method="post">
     <div class="form-group">
         <label for="feedback-type">
             Please select a type for the issue you want to report.
         </label>
         <select class="form-control" id="feedback-type" name="feedback-type">
             <option value="praise">
-                I want to highlight something I like about the search
+                I want to highlight something I like about the statistics app
                 (May help us to impove features even further)
             </option>
-            <option value="unknown-search">
-                I performed a general search for information
-                and did not find anything relevant to me
+            <option value="statistic-request">
+                I would like to request the addition of a new statistic
             </option>
-            <option value="known-search">
-                I can't find something, I know should be here
-            </option>
-            <option value="result-list">
-                I am not satisfied with the result list
-                (too many results, ordering, etc.)
+            <option value="statistic-missing">
+                I can't find a statistic, I know should be here
             </option>
             <option value="feature-suggestion">
-                I want to suggest a change to the search interface
+                I want to suggest a change to the statistics interface
             </option>
             <option value="ui-defect">
-                An element of the search interface does not work
+                An element of the statistics interface does not work
             </option>
             <option value="other">Something else</option>
         </select>
@@ -63,7 +58,7 @@
             required>
     </div>
     <div class="form-group">
-        <label for="source">My search url was:</label>
+        <label for="source">My feedback concerns:</label>
         <input
             class="form-control"
             id="source"

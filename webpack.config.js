@@ -28,8 +28,10 @@ module.exports = {
       "./assets/js/tables/concept_table.js",
       "./assets/scss/topics.scss",
     ],
+    feedback: [
+      "./assets/js/feedback.ts",
+    ],
     variables: ["./assets/js/variables.js"],
-    search_feedback: ["./assets/js/search_feedback.ts"],
     statistics: ["./assets/js/statistics.js", "./assets/scss/statistics.scss"],
     statistics_navigation: [
       "./assets/js/statistics_navigation.ts",
