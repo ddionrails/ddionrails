@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any, Dict, Generator, List, Tuple
 
 from ddionrails.base.helpers.ddionrails_typing import QuestionAnswer
-from ddionrails.imports.helpers import hash_with_base_uuid
+from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.instruments.models import Instrument, Question
 from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.question_item import QuestionItem
@@ -160,7 +160,7 @@ def _group_question_items(study: Study) -> Generator[None, Dict[str, Any], None]
 
     QuestionItem.objects.filter(question__instrument__study=study).delete()
 
-    QuestionItem.objects.bulk_create(question_items)
+    QuestionItem.objects.bulk_create(question_items, ignore_conflicts=True)
     yield
 
 
@@ -200,6 +200,10 @@ def _import_question_items(
         question_item = QuestionItem(question=question, position=position)
         for field in ITEM_FIELDS:
             setattr(question_item, field, item[_field_mapper(field)])
+
+        question_item.id = hash_with_namespace_uuid(
+            question.id, str(question_item.position), cache=False
+        )
 
         question_items.append(question_item)
     return question_items
