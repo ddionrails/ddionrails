@@ -87,7 +87,7 @@ class QuestionRedirectView(RedirectView):
 # request is a required parameter
 def question_detail(
     request: WSGIRequest,  # pylint: disable=unused-argument
-    study_name: str,
+    study: str,
     instrument_name: str,
     question_name: str,
 ) -> HttpResponse:
@@ -98,7 +98,7 @@ def question_detail(
         "instrument__period",
         "instrument__analysis_unit",
     ).get(
-        instrument__study__name=study_name,
+        instrument__study=study,
         instrument__name=instrument_name,
         name=question_name,
     )

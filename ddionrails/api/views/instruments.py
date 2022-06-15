@@ -81,7 +81,7 @@ class QuestionComparisonViewSet(viewsets.GenericViewSet):
 
 
 class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
-    """List metadata about all variables."""
+    """List metadata about all instruments."""
 
     serializer_class = InstrumentSerializer
 
