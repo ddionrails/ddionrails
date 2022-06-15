@@ -14,14 +14,17 @@ pytestmark = [pytest.mark.instruments, pytest.mark.models]
 
 @pytest.mark.django_db
 def test_get_absolute_url_method(instrument, study):
-    assert instrument.get_absolute_url() == "/" + study.name + "/inst/" + instrument.name
+    assert (
+        instrument.get_absolute_url()
+        == "/" + study.name + "/instruments/" + instrument.name
+    )
 
 
 class TestQuestionModel:
     def test_get_absolute_url_method(self, question):
         expected = (
             f"/{question.instrument.study.name}"
-            f"/inst/{question.instrument.name}"
+            f"/instruments/{question.instrument.name}"
             f"/{question.name}"
         )
         assert expected == question.get_absolute_url()

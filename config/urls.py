@@ -15,7 +15,7 @@ from config.views import HomePageView
 from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
-from ddionrails.instruments.views import QuestionRedirectView
+from ddionrails.instruments.views import InstRedirectView, QuestionRedirectView
 from ddionrails.studies.models import Study
 from ddionrails.studies.views import StudyDetailView, study_topics
 
@@ -91,9 +91,10 @@ urlpatterns = [
         include("ddionrails.publications.urls", namespace="publ"),
     ),
     path(
-        "<slug:study_name>/inst/",
-        include("ddionrails.instruments.urls", namespace="inst"),
+        "<study:study>/instruments/",
+        include("ddionrails.instruments.urls", namespace="instruments"),
     ),
+    re_path(r".*/inst/.*", InstRedirectView.as_view()),
     path("<slug:study_name>/topics/<slug:language>", study_topics, name="study_topics"),
     # Redirects for search interface
     path(
