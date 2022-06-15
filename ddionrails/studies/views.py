@@ -44,23 +44,6 @@ class StudyDetailView(DetailView):
             > 0
         )
 
-        context["dataset_list"] = (
-            Dataset.objects.select_related(
-                "study", "conceptual_dataset", "period", "analysis_unit"
-            )
-            .filter(study=self.object)
-            .only(
-                "name",
-                "label",
-                "study__name",
-                "conceptual_dataset__name",
-                "conceptual_dataset__label",
-                "period__name",
-                "period__label",
-                "analysis_unit__name",
-                "analysis_unit__label",
-            )
-        )
         return context
 
 

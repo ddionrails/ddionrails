@@ -10,6 +10,11 @@ app_name = "instruments"
 
 urlpatterns = [
     path(
+        "",
+        views.AllStudyInstrumentsView.as_view(),
+        name="all_study_instruments",
+    ),
+    path(
         "<str:instrument_name>",
         views.InstrumentDetailView.as_view(),
         name="instrument_detail",

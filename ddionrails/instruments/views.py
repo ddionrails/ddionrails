@@ -2,12 +2,14 @@
 
 """ Views for ddionrails.instruments app """
 
+from re import sub
 from typing import Dict, List
 
 from django.core.handlers.wsgi import WSGIRequest
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 from django.views.generic.base import RedirectView
 
 from config.helpers import RowHelper
@@ -35,7 +37,7 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_object(self, queryset=None):
         instrument = get_object_or_404(
             Instrument,
-            study__name=self.kwargs["study_name"],
+            study=self.kwargs["study"],
             name=self.kwargs["instrument_name"],
         )
         return instrument
@@ -45,6 +47,31 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context["study"] = self.object.study
         context["questions"] = context["instrument"].questions.all()
         return context
+
+
+class AllStudyInstrumentsView(TemplateView):  # pylint: disable=too-many-ancestors
+    """DetailView for instruments.Instrument model"""
+
+    template_name = "instruments/study_instruments.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["study"] = kwargs["study"]
+        context["has_extended_metadata"] = (
+            Instrument.objects.filter(Q(study=context["study"]) & ~Q(mode="")).count() > 0
+        )
+        return context
+
+
+class InstRedirectView(RedirectView):
+    """RedirectView for instruments.Question model"""
+
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        uri = self.request.build_absolute_uri()
+        uri = sub("/inst/", "/instruments/", uri)
+        return uri
 
 
 class QuestionRedirectView(RedirectView):

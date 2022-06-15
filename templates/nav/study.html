@@ -4,9 +4,12 @@
         {{ study.title }}
     </a>
     </li>
-        <li class="nav-item"><a href="{{ study.get_absolute_url }}#datasets" class="nav-link">Data</a>
+        <li class="nav-item"><a href="#datasets" class="nav-link">Data</a>
         </li>
-        <li class="nav-item"><a href="{{ study.get_absolute_url }}#instruments" class="nav-link">Instruments</a>
+        <li class="nav-item">
+            <a href="{% url 'instruments:all_study_instruments' study=study %}"
+               class="nav-link"
+               id="instruments-nav-link">Instruments</a>
         </li>
         {% if study.has_topics %}
             <li class="nav-item"><a href="{% url 'study_topics' study_name=study.name language='en' %}" class="nav-link">Topics</a>

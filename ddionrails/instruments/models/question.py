@@ -135,9 +135,9 @@ class Question(ModelMixin, models.Model):
         Uses the "study", "instrument" and "name" fields
         """
         return reverse(
-            "inst:question_detail",
+            "instruments:question_detail",
             kwargs={
-                "study_name": self.instrument.study.name,
+                "study": self.instrument.study,
                 "instrument_name": self.instrument.name,
                 "question_name": self.name,
             },

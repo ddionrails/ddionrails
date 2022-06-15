@@ -15,7 +15,7 @@
       </a>
       |
       instrument:
-      <a :href="'/' + item.study.name + '/inst/' + item.instrument.name">
+      <a :href="'/' + item.study.name + '/instruments/' + item.instrument.name">
         {{ item.instrument.label }}
       </a>
       |

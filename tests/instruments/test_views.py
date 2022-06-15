@@ -7,6 +7,7 @@
 import pytest
 from django.urls import reverse
 
+from ddionrails.studies.models import Study
 from tests import status
 
 pytestmark = [pytest.mark.django_db]
@@ -15,9 +16,9 @@ pytestmark = [pytest.mark.django_db]
 class TestInstrumentDetailView:
     def test_detail_view_with_existing_names(self, client, instrument):
         url = reverse(
-            "inst:instrument_detail",
+            "instruments:instrument_detail",
             kwargs={
-                "study_name": instrument.study.name,
+                "study": instrument.study,
                 "instrument_name": instrument.name,
             },
         )
@@ -33,17 +34,17 @@ class TestInstrumentDetailView:
 
     def test_detail_view_with_invalid_study_name(self, client, instrument):
         url = reverse(
-            "inst:instrument_detail",
-            kwargs={"study_name": "study-not-in-db", "instrument_name": instrument.name},
+            "instruments:instrument_detail",
+            kwargs={"study": Study.objects.none(), "instrument_name": instrument.name},
         )
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
     def test_detail_view_with_invalid_instrument_name(self, client, instrument):
         url = reverse(
-            "inst:instrument_detail",
+            "instruments:instrument_detail",
             kwargs={
-                "study_name": instrument.study.name,
+                "study": instrument.study,
                 "instrument_name": "instrument-not-in-db",
             },
         )

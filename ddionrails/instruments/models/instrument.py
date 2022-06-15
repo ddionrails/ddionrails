@@ -129,8 +129,8 @@ class Instrument(ModelMixin, models.Model):
     def get_absolute_url(self) -> str:
         """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse(
-            "inst:instrument_detail",
-            kwargs={"study_name": self.study.name, "instrument_name": self.name},
+            "instruments:instrument_detail",
+            kwargs={"study": self.study, "instrument_name": self.name},
         )
 
     def get_direct_url(self) -> str:
