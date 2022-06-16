@@ -23,6 +23,8 @@ class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # TODO: data vs datasets; data should probably switched to datasets everywhere.
+        context["namespace"] = "datasets"
         context["study"] = kwargs["study"]
         return context
 

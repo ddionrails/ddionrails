@@ -1,6 +1,10 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
 
+{% block view_metadata %}
+    <meta name="namespace" content="{{ namespace }}">
+{% endblock view_metadata %}
+
 {% block styles %}
     <!-- Webpack bundle: "topics" CSS -->
     {% render_bundle 'topics' 'css' %}

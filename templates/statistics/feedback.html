@@ -2,6 +2,10 @@
 {% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
 
+{% block view_metadata %}
+    <meta name="namespace" content="{{ namespace }}">
+{% endblock view_metadata %}
+
 {% block title %}Search Feedback | paneldata.org{% endblock title %}
 
 

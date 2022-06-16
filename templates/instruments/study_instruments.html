@@ -1,6 +1,10 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
 
+{% block view_metadata %}
+    <meta name="namespace" content="{{ namespace }}">
+{% endblock view_metadata %}
+
 {% block styles %}
     {% render_bundle 'instrument_table' 'css' %}
 {% endblock styles %}
