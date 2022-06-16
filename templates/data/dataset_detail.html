@@ -7,6 +7,10 @@
     <meta name="dataset" content="{{ dataset.name }}">
 {% endblock view_metadata %}
 
+{% block styles %}
+    {% render_bundle 'description_modal' 'css' %}
+{% endblock styles %}
+
 {% block title %}
     {{ dataset.name }}
 {% endblock %}
@@ -53,10 +57,43 @@
                     {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
                 </div>
             </div>
+            {% if dataset.description %}
+
+
+            <div class="card">
+                <div class="card-header"><b>Description</b>
+                </div>
+                <div class="card-body" id="description-card-content">
+                    {{ dataset.html_description | safe }}
+                </div>
+                <div class="card-footer text-center" id="description-footer">
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
+                    Show full description
+                    </button>
+                </div>
+            </div>
+            {% endif%}
         </div>
     </div>
 
+<div class="modal" tabindex="-1" role="dialog" id="description-modal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Description</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="description-modal-content">
+        </div>
+    </div>
+  </div>
+</div>
+
+
 {% render_bundle 'variable_table' 'js' %}
+{% render_bundle 'description_modal' 'js' %}
 
 
 {% endblock content %}
