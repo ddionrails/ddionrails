@@ -12,6 +12,8 @@ from ddionrails.concepts.models import Topic
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
+NAMESPACE = "statistics"
+
 
 def statistics_detail_view(
     request: HttpRequest, study: Study, plot_type: str
@@ -19,6 +21,7 @@ def statistics_detail_view(
     """Render numerical and categorical statistics views."""
     statistics_server_url = f"{request.get_host()}{settings.STATISTICS_SERVER_URL}"
     context: Dict[str, Any] = {}
+    context["namespace"] = NAMESPACE
     context[
         "statistics_server_url"
     ] = f"{request.scheme}://{statistics_server_url}{plot_type}/"
@@ -40,6 +43,7 @@ class StatisticsNavView(TemplateView):
 
     def get_context_data(self, **kwargs: Any) -> Dict[str, Any]:
         context = super().get_context_data(**kwargs)
+        context["namespace"] = NAMESPACE
 
         context["api_metadata"] = {
             "url": self.request.build_absolute_uri(reverse("api:variable-list")),

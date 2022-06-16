@@ -2,6 +2,10 @@
 {% load render_bundle from webpack_loader %}
 {% load metadata_display %}
 
+{% block view_metadata %}
+    <meta name="namespace" content="{{ namespace }}">
+{% endblock view_metadata %}
+
 
 {% block styles%}
 {% render_bundle "statistics" "css" %}
@@ -89,7 +93,7 @@
 				</p>
 				<p>
 					{% if variable %}
-					<a href="{% url 'data:variable_detail' study_name=variable.dataset.study.name dataset_name=variable.dataset.name variable_name=variable.name %}">
+					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
 						Wissenschaftliche Dokumentation
 					</a>
 					{% endif %}

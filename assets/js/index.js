@@ -28,5 +28,10 @@ if (ieTen > 0 || ieEleven > 0) {
 }
 $(window).on("load", function() {
   $(".datatable").dataTable();
+  const namespace = document.head.querySelector('meta[name="namespace"]');
+  if (namespace !== null ) {
+    const activeNavLink = document.getElementById(`${namespace.content}-nav-link`);
+    activeNavLink.classList.add("active-nav-link");
+  }
 }
 );

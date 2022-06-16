@@ -261,3 +261,9 @@ div.dataTables_paginate li.last a:after {
   flex-direction: row;
   justify-content: right;
 }
+
+.active-nav-link {
+  font-weight: 900;
+  background-color: #ffffff !important;
+  border-radius: 10px 10px 10px 10px;
+}

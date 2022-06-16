@@ -55,4 +55,5 @@ def study_topics(request: HttpRequest, study_name: str, language: str) -> HttpRe
         language=language,
         json_object={"study": study.name, "language": language},
     )
+    context["namespace"] = "topics"
     return render(request, "studies/study_topics.html", context=context)
