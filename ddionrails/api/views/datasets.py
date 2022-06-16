@@ -88,6 +88,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
+        dataset = self.request.query_params.get("dataset", None)
         statistics_data = self.request.query_params.get("statistics", False)
 
         paginate = self.request.query_params.get("paginate", "False")
@@ -100,26 +101,33 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
                 detail="Concept and topic are mutually exclusive parameters."
             )
 
-        if topic:
-            if study:
-                topic_object: Topic = get_object_or_404(
-                    Topic, name=topic, study__name=study
-                )
-                queryset_filter[
-                    "concept__topics__in"
-                ] = topic_object.get_topic_tree_leaves()
-            else:
-                raise NotAcceptable(
-                    detail=(
-                        "Topic parameter requires study parameter to be present as well."
-                    )
-                )
         if concept:
             concept_object = get_object_or_404(Concept, name=concept)
             queryset_filter["concept"] = concept_object
         if study:
             study_object = get_object_or_404(Study, name=study)
             queryset_filter["dataset__study"] = study_object
+
+            if topic:
+                topic_object: Topic = get_object_or_404(
+                    Topic, name=topic, study__name=study
+                )
+                queryset_filter[
+                    "concept__topics__in"
+                ] = topic_object.get_topic_tree_leaves()
+            if dataset:
+                dataset_object: Dataset = get_object_or_404(
+                    Dataset, name=dataset, study__name=study
+                )
+                queryset_filter["dataset"] = dataset_object
+        elif topic or dataset:
+            raise NotAcceptable(
+                detail=(
+                    "Topic and Dataset parameter requires "
+                    "study parameter to be present as well."
+                )
+            )
+
         if statistics_data:
             self.serializer_class = StatisticsVariableSerializer
             queryset_filter["statistics_flag"] = True

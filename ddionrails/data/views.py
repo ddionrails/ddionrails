@@ -15,6 +15,8 @@ from ddionrails.workspace.models import Basket, BasketVariable
 from .helpers import LabelTable
 from .models import Dataset, Variable
 
+NAMESPACE = "datasets"
+
 
 class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
     """Table with all datasets of a study."""
@@ -24,7 +26,7 @@ class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # TODO: data vs datasets; data should probably switched to datasets everywhere.
-        context["namespace"] = "datasets"
+        context["namespace"] = NAMESPACE
         context["study"] = kwargs["study"]
         return context
 
@@ -58,6 +60,7 @@ class DatasetDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context["study"] = self.object.study
         context["variables"] = self.object.variables.all()
+        context["namespace"] = NAMESPACE
         return context
 
 

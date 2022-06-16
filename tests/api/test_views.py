@@ -489,6 +489,7 @@ class TestVariableViewSet(unittest.TestCase):
             "study_label",
             "dataset",
             "study",
+            "position",
         ]
         VariableFactory(name="test_variable")
         response = self.client.get(self.API_PATH)

@@ -186,6 +186,7 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
     study_label = serializers.SlugRelatedField(
         source="dataset.study", read_only=True, slug_field="label"
     )
+    position = serializers.IntegerField(source="sort_id")
 
     class Meta:
         model = Variable
@@ -199,6 +200,7 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
             "study_label",
             "dataset",
             "study",
+            "position",
         ]
 
 
