@@ -14,7 +14,11 @@ import ddionrails.publications.views as publications_views
 from config.views import HomePageView
 from ddionrails.base.views import imprint
 from ddionrails.concepts.views import TopicRedirectView
-from ddionrails.data.views import DatasetRedirectView, VariableRedirectView
+from ddionrails.data.views import (
+    DataRedirectView,
+    DatasetRedirectView,
+    VariableRedirectView,
+)
 from ddionrails.instruments.views import InstRedirectView, QuestionRedirectView
 from ddionrails.studies.models import Study
 from ddionrails.studies.views import StudyDetailView, study_topics
@@ -85,7 +89,10 @@ urlpatterns = [
     # Study by name
     path("<slug:study_name>/", StudyDetailView.as_view(), name="study_detail"),
     # Study-specific links
-    path("<slug:study_name>/data/", include("ddionrails.data.urls", namespace="data")),
+    path(
+        "<study:study>/datasets/", include("ddionrails.data.urls", namespace="datasets")
+    ),
+    re_path(r".*/data/.*", DataRedirectView.as_view()),
     path(
         "<slug:study_name>/publ/",
         include("ddionrails.publications.urls", namespace="publ"),

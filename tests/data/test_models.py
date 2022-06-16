@@ -84,7 +84,9 @@ class TestVariable(unittest.TestCase):
 class TestVariableModel:
     def test_absolute_url_method(self, variable):
         expected = (
-            f"/{variable.dataset.study.name}/data/{variable.dataset.name}/{variable.name}"
+            f"/{variable.dataset.study.name}"
+            f"/datasets/"
+            f"{variable.dataset.name}/{variable.name}"
         )
         assert variable.get_absolute_url() == expected
 
@@ -256,7 +258,7 @@ class TestVariableModel:
 
 class TestDatasetModel:
     def test_absolute_url_method(self, dataset):
-        expected = f"/{dataset.study.name}/data/{dataset.name}/"
+        expected = f"/{dataset.study.name}/datasets/{dataset.name}/"
         assert dataset.get_absolute_url() == expected
 
     def test_direct_url_method(self, dataset):

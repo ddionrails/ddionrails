@@ -117,7 +117,7 @@ class Dataset(ModelMixin, models.Model):
         """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse(
             "data:dataset_detail",
-            kwargs={"study_name": self.study.name, "dataset_name": self.name},
+            kwargs={"study": self.study, "dataset_name": self.name},
         )
 
     def get_direct_url(self) -> str:

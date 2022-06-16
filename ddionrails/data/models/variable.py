@@ -185,7 +185,7 @@ class Variable(ModelMixin, models.Model):
             reverse(
                 "data:variable_detail",
                 kwargs={
-                    "study_name": self.dataset.study.name,
+                    "study": self.dataset.study,
                     "dataset_name": self.dataset.name,
                     "variable_name": self.name,
                 },

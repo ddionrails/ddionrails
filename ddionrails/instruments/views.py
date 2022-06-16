@@ -50,7 +50,7 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
 
 class AllStudyInstrumentsView(TemplateView):  # pylint: disable=too-many-ancestors
-    """DetailView for instruments.Instrument model"""
+    """Table with all instruments of a study."""
 
     template_name = "instruments/study_instruments.html"
 
