@@ -4,7 +4,10 @@
         {{ study.title }}
     </a>
     </li>
-        <li class="nav-item"><a href="#datasets" class="nav-link">Data</a>
+        <li class="nav-item">
+            <a href="{% url 'datasets:all_study_datasets' study=study %}"
+               class="nav-link"
+               id="datasets-nav-link">Data</a>
         </li>
         <li class="nav-item">
             <a href="{% url 'instruments:all_study_instruments' study=study %}"
@@ -12,7 +15,10 @@
                id="instruments-nav-link">Instruments</a>
         </li>
         {% if study.has_topics %}
-            <li class="nav-item"><a href="{% url 'study_topics' study_name=study.name language='en' %}" class="nav-link">Topics</a>
+            <li class="nav-item">
+                <a href="{% url 'study_topics' study_name=study.name language='en' %}"
+                   class="nav-link"
+                   id="topics-nav-link">Topics</a>
             </li>
         {% endif %}
         <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
@@ -21,7 +27,8 @@
             <li class="nav-item" id="statistics-nav-item">
                 <a
                     href="{% url 'statistics:statistics' study=study %}"
-                    class="nav-link">
+                    class="nav-link"
+                    id="statistics-nav-link">
                     Statistics
                 </a>
             </li>

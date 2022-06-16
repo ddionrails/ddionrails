@@ -3,9 +3,10 @@
 """ Views for ddionrails.data app """
 
 from copy import deepcopy
+from re import sub
 
 from django.shortcuts import get_object_or_404
-from django.views.generic import DetailView, RedirectView
+from django.views.generic import DetailView, RedirectView, TemplateView
 
 from config.helpers import RowHelper
 from ddionrails.instruments.models import Question
@@ -15,18 +16,29 @@ from .helpers import LabelTable
 from .models import Dataset, Variable
 
 
+class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
+    """Table with all datasets of a study."""
+
+    template_name = "data/study_datasets.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["study"] = kwargs["study"]
+        return context
+
+
 class DatasetDetailView(DetailView):
-    """ Dataset detail view
-        ---
+    """Dataset detail view
+    ---
 
-        the view expects two arguments:
-            - study_name (str)
-            - dataset_name (str)
+    the view expects two arguments:
+        - study_name (str)
+        - dataset_name (str)
 
-        the view returns a context dictionary including:
-            - the dataset object (Dataset)
-            - the related study object (Study)
-            - all related variable objects (Queryset Variable)
+    the view returns a context dictionary including:
+        - the dataset object (Dataset)
+        - the related study object (Study)
+        - all related variable objects (Queryset Variable)
     """
 
     model = Dataset
@@ -35,7 +47,7 @@ class DatasetDetailView(DetailView):
     def get_object(self, queryset=None):
         dataset = get_object_or_404(
             Dataset,
-            study__name=self.kwargs["study_name"],
+            study=self.kwargs["study"],
             name=self.kwargs["dataset_name"],
         )
         return dataset
@@ -48,11 +60,11 @@ class DatasetDetailView(DetailView):
 
 
 class VariableRedirectView(RedirectView):
-    """ The Variable redirect view redirects
-        from
-        /variable/<int:id>
-        to
-        /<str:study_name>/data/<str:dataset_name>/<str:variable_name>
+    """The Variable redirect view redirects
+    from
+    /variable/<int:id>
+    to
+    /<str:study_name>/data/<str:dataset_name>/<str:variable_name>
     """
 
     def get_redirect_url(self, *args, **kwargs):
@@ -60,8 +72,19 @@ class VariableRedirectView(RedirectView):
         return variable.get_absolute_url()
 
 
+class DataRedirectView(RedirectView):
+    """RedirectView for instruments.Question model"""
+
+    permanent = True
+
+    def get_redirect_url(self, *args, **kwargs):
+        uri = self.request.build_absolute_uri()
+        uri = sub("/data/", "/datasets/", uri)
+        return uri
+
+
 class DatasetRedirectView(RedirectView):
-    """ Redirect from uuid to full path url of a dataset. """
+    """Redirect from uuid to full path url of a dataset."""
 
     def get_redirect_url(self, *args, **kwargs):
         dataset = get_object_or_404(Dataset, id=kwargs["id"])
@@ -69,19 +92,19 @@ class DatasetRedirectView(RedirectView):
 
 
 class VariableDetailView(DetailView):
-    """ Variable detail view
-        ---
+    """Variable detail view
+    ---
 
-        the view expects three arguments:
-            - study_name (str)
-            - dataset_name (str)
-            - variable_name (str)
+    the view expects three arguments:
+        - study_name (str)
+        - dataset_name (str)
+        - variable_name (str)
 
-        the view returns a context dictionary including:
-            - the variable object (Dataset)
-            - the related dataset object (Study)
-            - the related study object (Study)
-            - all related variable objects (Queryset Variable)
+    the view returns a context dictionary including:
+        - the variable object (Dataset)
+        - the related dataset object (Study)
+        - the related study object (Study)
+        - all related variable objects (Queryset Variable)
     """
 
     model = Variable
@@ -96,7 +119,7 @@ class VariableDetailView(DetailView):
             "concept",
             "period",
         ).get(
-            dataset__study__name=self.kwargs["study_name"],
+            dataset__study=self.kwargs["study"],
             dataset__name=self.kwargs["dataset_name"],
             name=self.kwargs["variable_name"],
         )

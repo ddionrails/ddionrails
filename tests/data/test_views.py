@@ -8,6 +8,7 @@ from django.http.response import Http404
 from django.urls import reverse
 
 from ddionrails.data.views import VariableRedirectView
+from ddionrails.studies.models import Study
 from tests import status
 
 pytestmark = [pytest.mark.data, pytest.mark.views]
@@ -17,7 +18,7 @@ class TestDatasetDetailView:
     def test_detail_view_with_existing_names(self, client, dataset):
         url = reverse(
             "data:dataset_detail",
-            kwargs={"study_name": dataset.study.name, "dataset_name": dataset.name},
+            kwargs={"study": dataset.study, "dataset_name": dataset.name},
         )
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
@@ -30,10 +31,9 @@ class TestDatasetDetailView:
         assert expected_variables == output_variables
 
     def test_detail_view_with_invalid_study_name(self, client, dataset):
-        invalid_study_name = "invalid-study-name"
         url = reverse(
             "data:dataset_detail",
-            kwargs={"study_name": invalid_study_name, "dataset_name": dataset.name},
+            kwargs={"study": Study.objects.none(), "dataset_name": dataset.name},
         )
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
@@ -43,7 +43,7 @@ class TestDatasetDetailView:
         url = reverse(
             "data:dataset_detail",
             kwargs={
-                "study_name": dataset.study.name,
+                "study": dataset.study,
                 "dataset_name": invalid_dataset_name,
             },
         )
@@ -56,7 +56,7 @@ class TestVariableDetailView:
         url = reverse(
             "data:variable_detail",
             kwargs={
-                "study_name": variable.dataset.study.name,
+                "study": variable.dataset.study,
                 "dataset_name": variable.dataset.name,
                 "variable_name": variable.name,
             },
