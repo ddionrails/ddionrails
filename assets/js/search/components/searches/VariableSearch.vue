@@ -6,6 +6,7 @@
         <data-search
           componentId="Search"
           :dataField="dataField"
+          highlightField="label"
           iconPosition="left"
           :autosuggest="true"
           :highlight="true"
@@ -13,6 +14,7 @@
           :showClear="true"
           :fieldWeights="fieldWeights"
           :fuzziness="0"
+          :searchOperators="true"
           placeholder="Search for variables"
         />
         <selected-filters />
@@ -98,7 +100,7 @@ export default {
         "label_de",
         "dataset",
       ],
-      fieldWeights: [2, 1, 1, 1.5],
+      fieldWeights: [1, 2, 2, 1.5],
     };
   },
   components: {
