@@ -12,7 +12,7 @@ const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
-module.exports = {
+const config = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
@@ -28,9 +28,7 @@ module.exports = {
       "./assets/js/tables/concept_table.js",
       "./assets/scss/topics.scss",
     ],
-    feedback: [
-      "./assets/js/feedback.ts",
-    ],
+    feedback: ["./assets/js/feedback.ts"],
     variables: ["./assets/js/variables.js"],
     statistics: ["./assets/js/statistics.js", "./assets/scss/statistics.scss"],
     statistics_navigation: [
@@ -56,7 +54,7 @@ module.exports = {
   output: {
     path: path.resolve("./static/dist/"),
     publicPath: "",
-    filename: "[name].js",
+    // filename is defined later; value depends on mode
   },
 
   plugins: [
@@ -65,11 +63,6 @@ module.exports = {
       jQuery: "jquery",
     }),
     new BundleTracker({filename: "./webpack-stats.json"}),
-    new MiniCssExtractPlugin({
-      filename: "[name].css",
-      chunkFilename: "[id].css",
-      ignoreOrder: false, // Enable to remove warnings about conflicting order
-    }),
     new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
@@ -137,4 +130,29 @@ module.exports = {
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     modules: [path.resolve(__dirname, "node_modules")],
   },
+};
+
+module.exports = (env, argv) => {
+  let cssFilename = "";
+  let chunkFilename = "";
+  const hashFormat = ".[contenthash]";
+  if (argv.mode === "development") {
+    config["output"]["filename"] = "[name].js";
+    cssFilename = "[name].css";
+    chunkFilename = "[id].css";
+  } else {
+    config["output"]["filename"] = `[name]${hashFormat}.js`;
+    cssFilename = `[name]${hashFormat}.css`;
+    chunkFilename = `[id]${hashFormat}.css`;
+  }
+
+  config["plugins"].push(
+    new MiniCssExtractPlugin({
+      filename: cssFilename,
+      chunkFilename,
+      ignoreOrder: false, // Enable to remove warnings about conflicting order
+    })
+  );
+
+  return config;
 };
