@@ -114,15 +114,20 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
     def get_queryset(self):
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
+        instrument = self.request.query_params.get("instrument", None)
         study = self.request.query_params.get("study", None)
         queryset_filter = {}
+
         if topic and concept:
             raise NotAcceptable(
                 detail="Concept and topic are mutually exclusive parameters."
             )
 
-        if topic:
-            if study:
+        if study:
+            study_object = get_object_or_404(Study, name=study)
+            queryset_filter["instrument__study"] = study_object
+
+            if topic:
                 topic_object: Topic = get_object_or_404(
                     Topic, name=topic, study__name=study
                 )
@@ -130,18 +135,22 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
                     topics__in=topic_object.get_topic_tree_leaves()
                 ).distinct()
                 queryset_filter["concepts_questions__concept__in"] = concepts
-            else:
-                raise NotAcceptable(
-                    detail=(
-                        "Topic parameter requires study parameter to be present as well."
-                    )
+            if instrument:
+                dataset_object: Instrument = get_object_or_404(
+                    Instrument, name=instrument, study__name=study
                 )
+                queryset_filter["instrument"] = dataset_object
+        elif topic or instrument:
+            raise NotAcceptable(
+                detail=(
+                    "Topic and Instrument parameter requires "
+                    "study parameter to be present as well."
+                )
+            )
+
         if concept:
             concept_object = get_object_or_404(Concept, name=concept)
             queryset_filter["concepts_questions__concept__id"] = concept_object.id
-        if study:
-            study_object = get_object_or_404(Study, name=study)
-            queryset_filter["instrument__study_id"] = study_object.id
 
         return Question.objects.filter(**queryset_filter).select_related(
             "instrument", "instrument__study"

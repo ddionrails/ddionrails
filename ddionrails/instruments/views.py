@@ -17,6 +17,8 @@ from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Instrument, Question, QuestionItem
 from ddionrails.instruments.models.question_item import QuestionItemDict
 
+NAMESPACE = "instruments"
+
 
 class InstrumentRedirectView(RedirectView):
     """RedirectView for instruments.Instrument model"""
@@ -45,20 +47,19 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["study"] = self.object.study
-        context["questions"] = context["instrument"].questions.all()
+        context["namespace"] = NAMESPACE
         return context
 
 
 class AllStudyInstrumentsView(TemplateView):  # pylint: disable=too-many-ancestors
     """Table with all instruments of a study."""
 
-    namespace = "instruments"
-    template_name = f"{namespace}/study_instruments.html"
+    template_name = f"{NAMESPACE}/study_instruments.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["study"] = kwargs["study"]
-        context["namespace"] = self.namespace
+        context["namespace"] = NAMESPACE
         context["has_extended_metadata"] = (
             Instrument.objects.filter(Q(study=context["study"]) & ~Q(mode="")).count() > 0
         )

@@ -104,6 +104,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         if concept:
             concept_object = get_object_or_404(Concept, name=concept)
             queryset_filter["concept"] = concept_object
+
         if study:
             study_object = get_object_or_404(Study, name=study)
             queryset_filter["dataset__study"] = study_object

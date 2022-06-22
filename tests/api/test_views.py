@@ -295,6 +295,7 @@ class TestQuestionViewSet(unittest.TestCase):
             "study_label",
             "instrument",
             "study",
+            "position",
         ]
         QuestionFactory(name="test_question")
         response = self.client.get(self.API_PATH)
