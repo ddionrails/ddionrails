@@ -28,9 +28,6 @@ class TestInstrumentDetailView:
         assert template in (t.name for t in response.templates)
         assert response.context["instrument"] == instrument
         assert response.context["study"] == instrument.study
-        expected_questions = list(instrument.questions.all())
-        output_questions = list(response.context["questions"])
-        assert expected_questions == output_questions
 
     def test_detail_view_with_invalid_study_name(self, client, instrument):
         url = reverse(

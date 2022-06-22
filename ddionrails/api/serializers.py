@@ -241,6 +241,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     study_label = serializers.SlugRelatedField(
         source="instrument.study", read_only=True, slug_field="label"
     )
+    position = serializers.IntegerField(source="sort_id")
 
     class Meta:
         model = Question
@@ -254,6 +255,7 @@ class QuestionSerializer(serializers.ModelSerializer):
             "study_label",
             "instrument",
             "study",
+            "position",
         ]
 
 

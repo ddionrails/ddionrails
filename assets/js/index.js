@@ -8,11 +8,6 @@ require("../scss/index.scss");
 require("../favicon.ico");
 
 import "bootstrap";
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
-import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
-
 
 import {basketButton} from "./basket_button.js";
 window.basketButton = basketButton;
@@ -26,8 +21,8 @@ if (ieTen > 0 || ieEleven > 0) {
   const warning = document.getElementById("windowsWarning");
   warning.classList.remove("hidden");
 }
-$(window).on("load", function() {
-  $(".datatable").dataTable();
+
+window.addEventListener("load", function() {
   const namespace = document.head.querySelector('meta[name="namespace"]');
   if (namespace !== null ) {
     const activeNavLink = document.getElementById(`${namespace.content}-nav-link`);
