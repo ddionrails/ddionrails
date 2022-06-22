@@ -48,11 +48,14 @@
                 <div class="card-header"><b>Info</b>
                 </div>
                 <div class="card-body">
-                    <p><b>Study:</b>
-                        {{ study.name }}
+                    <p><b>Conceptual Dataset:</b>
+                        {{ dataset.conceptual_dataset.title }}
                     </p>
-                    <p><b>Dataset:</b>
-                        {{ dataset.name }}
+                    <p><b>Period:</b>
+                        {{ dataset.period.title }}
+                    </p>
+                    <p><b>Analysis Unit:</b>
+                        {{ dataset.analysis_unit.title}}
                     </p>
                     {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
                 </div>

@@ -7,13 +7,19 @@
     <meta name="instrument" content="{{ instrument.name }}">
 {% endblock view_metadata %}
 
+{% block styles %}
+    {% render_bundle 'description_modal' 'css' %}
+{% endblock styles %}
+
 {% block content %}
 
-    <h1>{{ instrument.title }}[instrument]</h1>
+    <h1>
+        <i class="fas fa-clipboard-list"></i>
+        {{ instrument.name}}: {{ instrument.title }}
+    </h1>
 
     <div class="row">
         <div class="col-md-9">
-            {{ instrument.html_description | safe }}
 
             
             <table id="question-table" class="table table-striped table-bordered">
@@ -38,18 +44,56 @@
                 <div class="card-header"><b>Instrument info</b>
                 </div>
                 <div class="card-body">
-                    <p><b>Name:</b>
-                        {{ instrument.name }}
+                    <p><b>Period:</b>
+                        {{ instrument.period.title }}
                     </p>
-                    <p><b>Label:</b>
-                        {{ instrument.label }}
+                    <p><b>Type:</b>
+                        {{ instrument.type.en }}
+                    </p>
+                    <p><b>Mode:</b>
+                        {{ instrument.mode }}
                     </p>
                     {% include "publications/attachments_partial.html" with attachments=instrument.attachments %}
                 </div>
             </div>
+
+        <div class="card">
+            <div class="card-header"><b>Description</b>
+            </div>
+            <div class="card-body" id="description-card-content">
+                {{ instrument.html_description | safe }}
+            </div>
+            <div class="card-footer text-center" id="description-footer">
+                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
+                Show full description
+                </button>
+            </div>
         </div>
+
+        </div>
+
+
     </div>
 
+
+<div class="modal" tabindex="-1" role="dialog" id="description-modal">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Description</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+        <div class="modal-body" id="description-modal-content">
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
 {% render_bundle 'question_table' 'js' %}
+{% render_bundle 'description_modal' 'js' %}
 
 {% endblock content %}
