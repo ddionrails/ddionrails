@@ -38,7 +38,7 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
 
     def get_object(self, queryset=None):
         instrument = get_object_or_404(
-            Instrument,
+            Instrument.objects.select_related("period"),
             study=self.kwargs["study"],
             name=self.kwargs["instrument_name"],
         )

@@ -50,7 +50,9 @@ class DatasetDetailView(DetailView):
 
     def get_object(self, queryset=None):
         dataset = get_object_or_404(
-            Dataset,
+            Dataset.objects.select_related(
+                "period", "analysis_unit", "conceptual_dataset"
+            ),
             study=self.kwargs["study"],
             name=self.kwargs["dataset_name"],
         )
