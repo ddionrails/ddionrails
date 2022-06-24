@@ -11,6 +11,18 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.2.0] - 2022-06-24
+
+### Added
+
+- Added separate views for dataset and instrument tables.
+
+### Changed
+
+- feedback system to allow several feedback forms with separate e-mail targets.
+- datatables for instruments and datasets to use API data.
+
+
 ## [6.1.0] - 2022-06-08
 
 ### Added
@@ -796,7 +808,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.1.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.2.0...develop
+[6.2.0]: https://github.com/ddionrails/ddionrails/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/ddionrails/ddionrails/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...v6.0.0
 [5.4.1]: https://github.com/ddionrails/ddionrails/compare/v5.4.0...v5.4.1
