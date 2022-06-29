@@ -72,7 +72,7 @@ pytest-cov = "*"
 pytest-django = "*"
 pytest-mock = "*"
 pytest-splinter = "*"
-splinter = "==0.17.0" # pin until pytest-splinter works with newer versions
+splinter = "==0.18.1" # pin until pytest-splinter works with newer versions
 factory-boy = "*"
 django-coverage-plugin = "*"
 requests-mock = "*"
