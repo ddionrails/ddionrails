@@ -13,7 +13,7 @@ name = "pypi"
 #
 # Django
 # ------------------------------------------------------------------------------
-django = "==4.0.4"
+django = "==4.0.6"
 django-crispy-forms = "*"
 django-extensions = "*"
 django-import-export = "*"
