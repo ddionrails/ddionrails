@@ -19,8 +19,8 @@
  * @return {string} Full name of the index to be used.
  */
 export function indexNameSwitch(baseName) {
-  if (typeof process.env.ELASTICSEARCH_DSL_INDEX_PREFIX !== "undefined") {
-    return process.env.ELASTICSEARCH_DSL_INDEX_PREFIX + baseName;
+  if (document.baseURI.startsWith("http://nginx/")) {
+    return "testing_" + baseName;
   } else {
     return baseName;
   }

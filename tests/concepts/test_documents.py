@@ -55,6 +55,7 @@ def test_search_concept_by_label_de():
 
 
 @pytest.mark.usefixtures("topics_index")
+@pytest.mark.django_db
 def test_topic_search_document_fields(topic):
     search = TopicDocument.search().query("match_all")
     expected: Any = 1

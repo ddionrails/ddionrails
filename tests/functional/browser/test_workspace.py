@@ -6,8 +6,14 @@
 from urllib.parse import urljoin
 
 import pytest
-from django.contrib.auth.models import User
-from splinter.exceptions import ElementDoesNotExist
+from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
+from django.test.testcases import LiveServerTestCase
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.select import Select
+
+from ddionrails.studies.models import Study
 
 pytestmark = [
     pytest.mark.functional,
@@ -15,73 +21,106 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
-def test_login_with_known_user(
-    browser, login_url, user
-):  # pylint: disable=unused-argument
-    browser.visit(login_url)
-    browser.fill("username", "some-user")
-    browser.fill("password", "some-password")
-    browser.find_by_value("Login").click()
-    browser.find_link_by_text("My baskets").click()
-    browser.find_link_by_text("My account").click()
-    browser.find_link_by_text("Logout").click()
+@pytest.mark.usefixtures("browser", "user", "study")
+@pytest.mark.django_db
+class TestWorkspace(LiveServerTestCase):
 
+    host = "web"
+    browser: WebDriver
+    study: Study
+    user: User
 
-def test_login_redirects_to_same_page(
-    browser, live_server, user
-):  # pylint: disable=unused-argument
-    """ When a user logs in from any page, after logging in, the system should take
+    def _login(
+        self,
+        browser: WebDriver,
+        user: str = "some-user",
+        password: str = "some-password",
+        go_to_login=True,
+    ) -> WebDriver:
+        if go_to_login:
+            browser.get(urljoin(self.live_server_url, "workspace/login/"))
+        username_input = browser.find_element(By.ID, "id_username")
+        username_input.send_keys(user)
+        password_input = browser.find_element(By.ID, "id_password")
+        password_input.send_keys(password)
+        browser.find_element(
+            By.CSS_SELECTOR,
+            (
+                "#main-container > div.row > div > div > "
+                "div.card-body > form > input.btn.btn-primary"
+            ),
+        ).click()
+        return browser
+
+    def test_login_with_known_user(self):
+        self.browser.get(urljoin(self.live_server_url, "workspace/login/"))
+        self.browser = self._login(
+            self.browser, user="some-user", password="some-password"
+        )
+
+        self.browser.find_element(By.LINK_TEXT, "My baskets").click()
+        self.browser.find_element(By.LINK_TEXT, "My account").click()
+        self.browser.find_element(By.LINK_TEXT, "Logout").click()
+
+    def test_login_redirects_to_same_page(self):  # pylint: disable=unused-argument
+        """When a user logs in from any page, after logging in, the system should take
         the user back to the page he was visiting before logging in.
-    """
-    # The user starts at the contact page
-    contact_url = urljoin(live_server.url, "contact/")
-    browser.visit(contact_url)
-    # Click log in button
-    browser.find_link_by_text("Register / log in").click()
-    browser.fill("username", "some-user")
-    browser.fill("password", "some-password")
-    browser.find_by_value("Login").click()
-    # After logging in, the user should be redirected back to the contact page
-    assert contact_url == browser.url
+        """
+        # The user starts at the contact page
 
+        contact_url = urljoin(self.live_server_url, "contact/")
+        self.browser.get(contact_url)
+        self.browser.find_element(By.LINK_TEXT, "Register / log in").click()
+        self.browser = self._login(self.browser, go_to_login=False)
+        # After logging in, the user should be redirected back to the contact page
+        assert contact_url == self.browser.current_url
 
-def test_login_with_unknown_user(browser, login_url):
-    browser.visit(login_url)
-    browser.fill("username", "unkown-user")
-    browser.fill("password", "some-password")
-    browser.find_by_value("Login").click()
-    assert (
-        "Please enter a correct username and password. "
-        "Note that both fields may be case-sensitive." in browser.html
-    )
+    def test_login_with_unknown_user(self):
 
+        self.browser.get(urljoin(self.live_server_url, "/workspace/login"))
+        self.browser = self._login(self.browser, user="unkown-user")
+        assert (
+            "Please enter a correct username and password. "
+            "Note that both fields may be case-sensitive." in self.browser.page_source
+        )
 
-def test_logout_with_known_user(authenticated_browser, login_url):
-    authenticated_browser.visit(login_url)
-    authenticated_browser.find_link_by_text("Logout").first.click()
-    assert "sessionid" not in authenticated_browser.cookies.all()
-    with pytest.raises(ElementDoesNotExist):
-        authenticated_browser.find_link_by_text("My baskets").first.click()
+    def test_logout_with_known_user(self):
+        authenticated_browser = self._login(self.browser)
+        authenticated_browser.get(self.live_server_url)
+        authenticated_browser.find_element(By.LINK_TEXT, "Logout").click()
+        assert "sessionid" not in str(authenticated_browser.get_cookies())
+        with pytest.raises(NoSuchElementException):
+            authenticated_browser.find_element(By.LINK_TEXT, "My baskets").click()
 
+    def test_register_user(self):
+        assert 1 == User.objects.count()
+        registration_url = urljoin(self.live_server_url, "workspace/register/")
 
-def test_register_user(browser, live_server):
-    assert 0 == User.objects.count()
-    registration_url = urljoin(live_server.url, "workspace/register/")
-    browser.visit(registration_url)
-    browser.fill("username", "some-user")
-    browser.fill("password1", "some-password")
-    browser.fill("password2", "some-password")
-    browser.find_by_value("Register").click()
-    assert 1 == User.objects.count()
+        self.browser.get(registration_url)
 
+        username_input = self.browser.find_element(By.ID, "id_username")
+        username_input.send_keys("some-other-user")
+        password1_input = self.browser.find_element(By.ID, "id_password1")
+        password1_input.send_keys("some-password")
+        password2_input = self.browser.find_element(By.ID, "id_password2")
+        password2_input.send_keys("some-password")
+        self.browser.find_element(By.CSS_SELECTOR, "input[type=submit]").click()
 
-def test_create_basket(authenticated_browser, live_server, study):
-    baskets_url = urljoin(live_server.url, "workspace/baskets/")
-    authenticated_browser.visit(baskets_url)
-    authenticated_browser.find_link_by_text("Create basket").click()
-    basket_data = dict(name="some-basket", label="Some basket")
-    authenticated_browser.fill("name", basket_data["name"])
-    authenticated_browser.fill("label", basket_data["label"])
-    authenticated_browser.select("study", study.id)
-    authenticated_browser.find_by_value("Create basket").click()
-    assert basket_data["name"] in authenticated_browser.html
+        assert 2 == User.objects.count()
+
+    def test_create_basket(self):
+        baskets_url = urljoin(self.live_server_url, "workspace/baskets/")
+        authenticated_browser = self._login(self.browser)
+        authenticated_browser.get(baskets_url)
+        authenticated_browser.find_element(By.LINK_TEXT, "Create basket").click()
+        basket_data = dict(name="some-basket", label="Some basket")
+        authenticated_browser.find_element(By.ID, "id_name").send_keys(
+            basket_data["name"]
+        )
+        authenticated_browser.find_element(By.ID, "id_label").send_keys(
+            basket_data["label"]
+        )
+        dropdown = Select(authenticated_browser.find_element(By.ID, "id_study"))
+        dropdown.select_by_visible_text(self.study.name)
+        authenticated_browser.find_element(By.CSS_SELECTOR, "input[type=submit]").click()
+        assert basket_data["name"] in authenticated_browser.page_source

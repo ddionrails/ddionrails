@@ -53,7 +53,7 @@ services:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
 
   selenium-firefox:
-    image: selenium/standalone-firefox:4.0.0-rc-2-prerelease-20210923
+    image: selenium/standalone-firefox:102.0-geckodriver-0.31
     shm_size: "2gb"
     ports:
       - 4444

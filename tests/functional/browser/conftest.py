@@ -3,23 +3,38 @@
 
 """ Pytest fixtures for browser interaction with the ddionrails project """
 
-from urllib.parse import urljoin
+from typing import Generator
 
 import pytest
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
+
+OPTS = Options()
+OPTS.headless = False
 
 SELENIUM_URL = "http://selenium-firefox:4444"
 
 
-@pytest.fixture(scope="session")
-def splinter_webdriver():
-    """Override splinter webdriver name."""
-    return "remote"
+@pytest.fixture(name="server_url")
+def server_url(live_server) -> str:
+    return live_server.url.replace("localhost", "web")
 
 
-@pytest.fixture(scope="session")
-def splinter_remote_url():
-    """Override splinter webdriver name."""
-    return SELENIUM_URL
+@pytest.fixture(name="browser")
+def selenium_browser(request) -> Generator[WebDriver, None, None]:
+    """Provide a selenium remote webdriver."""
+    profile = FirefoxProfile()
+    profile.set_preference("browser.download.folderList", 2)
+    profile.set_preference("browser.download.manager.showWhenStarting", False)
+
+    _browser = WebDriver(SELENIUM_URL, options=OPTS, browser_profile=profile)
+
+    if request.instance:
+        request.instance.browser = _browser
+
+    yield _browser
+    _browser.quit()
 
 
 @pytest.fixture()
@@ -34,13 +49,3 @@ def authenticated_browser(browser, client, live_server, user):
     browser.visit(live_server.url)
     browser.cookies.add({"sessionid": cookie.value})
     return browser
-
-
-@pytest.fixture
-def login_url(live_server):
-    return urljoin(live_server.url, "workspace/login/")
-
-
-@pytest.fixture
-def search_url(live_server):
-    return urljoin(live_server.url, "search/")

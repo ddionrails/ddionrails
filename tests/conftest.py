@@ -71,7 +71,7 @@ def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory):
 
 
 @pytest.fixture
-def concept(db, topic):
+def concept(db, topic, request):
     """A concept in the database"""
     concept = ConceptFactory(
         name="some-concept",
@@ -91,7 +91,10 @@ def concept(db, topic):
 
     concept.topics.add(topic)
     concept.save()
-    return concept
+
+    if request.instance:
+        request.instance.concept = concept
+    yield concept
 
 
 @pytest.fixture
@@ -255,15 +258,21 @@ def system(db):
 
 
 @pytest.fixture
-def topic(db):
+@pytest.mark.usefixtures("db")
+def topic(request):
     """A topic in the database"""
-    return TopicFactory(
+    topic = TopicFactory(
         name="some-topic",
         label="some-topic",
         label_de="some-topic",
         description="some-topic",
         description_de="some-topic",
     )
+
+    if request.instance:
+        request.instance.topic = topic
+
+    yield topic
 
 
 @pytest.fixture
@@ -338,6 +347,9 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     """
     ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
+
+    call_command("search_index", "--populate", force=True)
+
     concept.save()
     expected = 1
     TEST_CASE.assertEqual(expected, ConceptDocument.search().count())
