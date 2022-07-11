@@ -13,7 +13,7 @@ from tests.data.factories import VariableFactory
 @pytest.mark.usefixtures("tmp_import_path")
 @pytest.mark.django_db
 class TestStatisticsImport(unittest.TestCase):
-    """ Statistics import related tests. """
+    """Statistics import related tests."""
 
     import_path: Path
     study: Study
@@ -31,17 +31,19 @@ class TestStatisticsImport(unittest.TestCase):
         return super().setUp()
 
     def test_statistics_import(self) -> None:
-        """ Test basic functionality. """
+        """Test basic functionality."""
         variables_file = self.import_path.joinpath("variables.csv")
         statistics_import(variables_file, self.study)
         self.assertEqual(16, VariableStatistic.objects.all().count())
         linked_variables = set()
         for statistic in VariableStatistic.objects.all():
             linked_variables.add(statistic.variable)
+            self.assertEqual(1984, statistic.start_year)
+            self.assertEqual(2019, statistic.end_year)
         self.assertEqual(3, len(linked_variables))
 
     def test_independent_variable_import(self) -> None:
-        """ Test import of linked independent variables. """
+        """Test import of linked independent variables."""
         variables_file = self.import_path.joinpath("variables.csv")
         statistics_import(variables_file, self.study)
         self.assertEqual(6, IndependentVariable.objects.all().count())

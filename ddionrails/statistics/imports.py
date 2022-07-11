@@ -3,7 +3,7 @@ import json
 from csv import DictReader
 from glob import glob
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 from django.core.files import File
 from django_rq import enqueue
@@ -24,11 +24,14 @@ def statistics_import(file: Path, study: Study) -> None:
     VariableStatistic.objects.filter(variable__dataset__study=study).delete()
     with open(file, "r", encoding="utf8") as variables_file:
         variables = DictReader(variables_file)
+        if "statistics" not in variables.fieldnames:  # type: ignore
+            return None
         for variable in variables:
-            if not variable.get("statistics", "False") == "True":
+            if not variable["statistics"] == "True":
                 continue
             _import_single_variable(variable, study)
     enqueue(_metadata_import, study)
+    return None
 
 
 def _metadata_import(study: Study) -> None:
@@ -131,22 +134,28 @@ def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> 
                 independent_variable_names.append(independent_variable)
         statistics.set_independent_variable_names(independent_variable_names)
         # statistics.save() in _store_csv_data
+        statistics.start_year, statistics.end_year = _get_start_and_end_year(Path(file))
         _store_csv_data(Path(file), statistics)
         for name in independent_variable_names:
             statistics.independent_variables.add(CACHE[name])
         statistics.save()
 
 
-def _store_csv_data(file_path: Path, statistics: VariableStatistic) -> None:
-    """Get content and limited metadata from a csv statistics file."""
+def _get_start_and_end_year(file_path) -> Tuple[int, int]:
     with open(file_path, "r", encoding="utf8") as file:
         file.seek(0)
         reader = DictReader(file)
         years = set()
         for line in reader:
-            years.add(int(line["year"]))
-        statistics.start_year = min(years)
-        statistics.end_year = max(years)
+            years.add(line["year"])
+
+        return (int(min(years)), int(max(years)))
+
+
+def _store_csv_data(file_path: Path, statistics: VariableStatistic) -> None:
+    """Get content and limited metadata from a csv statistics file."""
+    with open(file_path, "r", encoding="utf8") as file:
+        file.seek(0)
         statistics.statistics.save(
             file_path.name + "/" + file_path.parent.parent.name, File(file)
         )
