@@ -32,7 +32,7 @@ const config = {
     ],
     feedback: ["./assets/js/feedback.ts"],
     variables: ["./assets/js/variables.js"],
-    statistics: ["./assets/js/statistics.js", "./assets/scss/statistics.scss"],
+    statistics: ["./assets/js/statistics.ts", "./assets/scss/statistics.scss"],
     statistics_navigation: [
       "./assets/js/statistics_navigation.ts",
       "./assets/scss/statistics_navigation.scss",

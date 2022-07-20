@@ -66,6 +66,9 @@
       "browser": true,
       "es6": true
     },
+    "ignorePatterns": [
+      "**/*.ts"
+    ],
     "extends": [
       "plugin:vue/essential",
       "google",
