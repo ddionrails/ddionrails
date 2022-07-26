@@ -1,6 +1,8 @@
 
 const FIRST_FRAME = document.getElementById("main-frame") as HTMLIFrameElement;
 const SECOND_FRAME = document.getElementById("second-frame") as HTMLIFrameElement;
+const VARIABLE_METADATA = JSON.parse(document.getElementById("variable-metadata").textContent)
+const STATISTIC_SERVER_METADATA = JSON.parse(document.getElementById("statistics-server-metadata").textContent)
 let loadingSpinner = document.getElementById("loading-spinner");
 const infoIcon = document.createElement("i");
 infoIcon.classList.add("fas");
@@ -12,6 +14,28 @@ infoIcon.style.cssText = `
   color: #007bff;
   font-size: 0.85em
 `;
+
+function setFirstFrameUrl() {
+  const firstFrameURL = new URL(STATISTIC_SERVER_METADATA["url"]);
+  firstFrameURL.searchParams.append("variable", VARIABLE_METADATA["variable"])
+  firstFrameURL.searchParams.append("no-title", "TRUE")
+  appendYLimitQueryParams(firstFrameURL)
+  FIRST_FRAME.src = String(firstFrameURL)
+}
+
+
+/**
+ * Add y-scale-limit query params to URL.
+ * 
+ * @param url URL to add query params to
+ */
+function appendYLimitQueryParams(url: URL) {
+  if ("y_limits" in VARIABLE_METADATA) {
+    url.searchParams.append("y-min", VARIABLE_METADATA["y_limits"]["min"])
+    url.searchParams.append("y-max", VARIABLE_METADATA["y_limits"]["max"])
+  }
+}
+
 
 
 /**
@@ -103,11 +127,6 @@ async function waitForIFrameContent(iFrame: HTMLIFrameElement, init: boolean = f
 }
 
 
-const firstFrameURL = new URL(FIRST_FRAME.src);
-const documentVariable = firstFrameURL.searchParams.get("variable");
-const serverMetadata = JSON.parse(
-  document.getElementById("statistics-server-metadata").textContent
-);
 
 /**
  * Add handlers to manage UI elements to display/hide secondary plot.
@@ -123,11 +142,13 @@ window.addEventListener("load", function () {
         ".irs-from").textContent;
       const sliderEndYearText = firstFrameContent.querySelector(
         ".irs-to").textContent;
-      const frameURL = new URL(serverMetadata["url"]);
-      frameURL.searchParams.append("variable", documentVariable);
+      const frameURL = new URL(STATISTIC_SERVER_METADATA["url"]);
+      frameURL.searchParams.append("variable", VARIABLE_METADATA["variable"]);
       frameURL.searchParams.append("no-title", "TRUE");
       frameURL.searchParams.append("start-year", sliderStartYearText);
       frameURL.searchParams.append("end-year", sliderEndYearText);
+      appendYLimitQueryParams(frameURL)
+
       SECOND_FRAME.src = String(frameURL);
 
       waitForIFrameContent(SECOND_FRAME, true);
@@ -144,8 +165,10 @@ window.addEventListener("load", function () {
     closeIcon.classList.add("hidden");
     addButton.classList.remove("hidden");
   });
+
+  waitForIFrameContent(FIRST_FRAME)
 });
 
 document.getElementById("statistics-nav-item").classList.add("nav-item-active");
+setFirstFrameUrl();
 
-document.addEventListener("load", () => {waitForIFrameContent(FIRST_FRAME)});

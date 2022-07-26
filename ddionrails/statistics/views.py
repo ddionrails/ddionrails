@@ -33,6 +33,21 @@ def statistics_detail_view(
     context["variable"] = Variable.objects.select_related("dataset").get(
         id=request.GET["variable"]
     )
+    categories = context["variable"].category_list
+    context["value_labels"] = []
+    context["values"] = []
+    for category in categories:
+        if category["value"] < 0:
+            continue
+        context["values"].append(category["value"])
+        context["value_labels"].append(category["label_de"])
+    context["variable_metadata"] = {"variable": context["variable"].id}
+    if context["values"]:
+        context["variable_metadata"]["y_limits"] = {
+            "min": min(context["values"]),
+            "max": max(context["values"]),
+        }
+
     return render(request, "statistics/statistics_detail.html", context=context)
 
 

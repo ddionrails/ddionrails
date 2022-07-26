@@ -19,6 +19,7 @@
 </div>
 
 {{ server_metadata|json_script:"statistics-server-metadata" }}
+{{ variable_metadata|json_script:"variable-metadata" }}
 <div id="container">
 	<div class="d-flex flex-row">
 		{% if variable %}
@@ -102,6 +103,28 @@
 
 				Infoboxen
 			</div>
+
+			{% if value_labels %}
+				<div class="modal-header">
+					<h5 class="modal-title">Skalenwerte</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>
+						<ul id="labels">
+						{% for label in value_labels %}
+						<li>
+							{{ label }}
+						</li>
+						{% endfor %}
+						</ul>
+					</p>
+				</div>
+			{% endif %}
+
+
 			<div class="modal-header">
 				<h5 class="modal-title">Information zu Statistikgrundlagen</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
