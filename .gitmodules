@@ -1,3 +1,4 @@
 [submodule "docker/transfer.server"]
 	path = docker/transfer.server
 	url = https://github.com/ddionrails/transfer.server
+	branch = master
