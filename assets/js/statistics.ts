@@ -1,8 +1,13 @@
-
 const FIRST_FRAME = document.getElementById("main-frame") as HTMLIFrameElement;
-const SECOND_FRAME = document.getElementById("second-frame") as HTMLIFrameElement;
-const VARIABLE_METADATA = JSON.parse(document.getElementById("variable-metadata").textContent)
-const STATISTIC_SERVER_METADATA = JSON.parse(document.getElementById("statistics-server-metadata").textContent)
+const SECOND_FRAME = document.getElementById(
+  "second-frame"
+) as HTMLIFrameElement;
+const VARIABLE_METADATA = JSON.parse(
+  document.getElementById("variable-metadata").textContent
+);
+const STATISTIC_SERVER_METADATA = JSON.parse(
+  document.getElementById("statistics-server-metadata").textContent
+);
 let loadingSpinner = document.getElementById("loading-spinner");
 const infoIcon = document.createElement("i");
 infoIcon.classList.add("fas");
@@ -17,26 +22,23 @@ infoIcon.style.cssText = `
 
 function setFirstFrameUrl() {
   const firstFrameURL = new URL(STATISTIC_SERVER_METADATA["url"]);
-  firstFrameURL.searchParams.append("variable", VARIABLE_METADATA["variable"])
-  firstFrameURL.searchParams.append("no-title", "TRUE")
-  appendYLimitQueryParams(firstFrameURL)
-  FIRST_FRAME.src = String(firstFrameURL)
+  firstFrameURL.searchParams.append("variable", VARIABLE_METADATA["variable"]);
+  firstFrameURL.searchParams.append("no-title", "TRUE");
+  appendYLimitQueryParams(firstFrameURL);
+  FIRST_FRAME.src = String(firstFrameURL);
 }
-
 
 /**
  * Add y-scale-limit query params to URL.
- * 
+ *
  * @param url URL to add query params to
  */
 function appendYLimitQueryParams(url: URL) {
   if ("y_limits" in VARIABLE_METADATA) {
-    url.searchParams.append("y-min", VARIABLE_METADATA["y_limits"]["min"])
-    url.searchParams.append("y-max", VARIABLE_METADATA["y_limits"]["max"])
+    url.searchParams.append("y-min", VARIABLE_METADATA["y_limits"]["min"]);
+    url.searchParams.append("y-max", VARIABLE_METADATA["y_limits"]["max"]);
   }
 }
-
-
 
 /**
  *  Resize given iframe so it does not display a scrollbar.
@@ -53,11 +55,14 @@ function resizeIFrameToFitContent(iFrame: HTMLIFrameElement) {
  * @param {*} observedElement shiny range slider DOM element to observe
  * @param {*} inputToUpdate shiny text input to update with slider element value
  */
-function initYearRangeObserver(observedElement: HTMLElement, inputToUpdate: HTMLInputElement) {
+function initYearRangeObserver(
+  observedElement: HTMLElement,
+  inputToUpdate: HTMLInputElement
+) {
   const rangeEndPointObserver = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
       inputToUpdate.value = mutation.target.textContent;
-      inputToUpdate.dispatchEvent(new KeyboardEvent("keyup", {"key": "13"}));
+      inputToUpdate.dispatchEvent(new KeyboardEvent("keyup", {key: "13"}));
     });
   });
   rangeEndPointObserver.observe(observedElement, {childList: true});
@@ -81,7 +86,8 @@ function setupYearRangeObserver(iFrame: HTMLIFrameElement) {
 
   const firstFrameContent = FIRST_FRAME.contentDocument;
 
-  const sliderStartYear: HTMLElement = firstFrameContent.querySelector(".irs-from");
+  const sliderStartYear: HTMLElement =
+    firstFrameContent.querySelector(".irs-from");
   const sliderEndYear: HTMLElement = firstFrameContent.querySelector(".irs-to");
 
   initYearRangeObserver(sliderStartYear, startYear.querySelector("input"));
@@ -110,8 +116,13 @@ function setupConfidenceIntervalModal(iFrame: HTMLIFrameElement) {
  * @param {*} iFrame An iframe DOM Element Object
  * @param {*} init Flag to denote second frames initialization
  */
-async function waitForIFrameContent(iFrame: HTMLIFrameElement, init: boolean = false) {
-  while (iFrame.contentDocument.getElementsByClassName("plot-container").length === 0) {
+async function waitForIFrameContent(
+  iFrame: HTMLIFrameElement,
+  init: boolean = false
+) {
+  while (
+    iFrame.contentDocument.getElementsByClassName("plot-container").length === 0
+  ) {
     await new Promise((r) => setTimeout(r, 100));
   }
   if (init) {
@@ -126,8 +137,6 @@ async function waitForIFrameContent(iFrame: HTMLIFrameElement, init: boolean = f
   }
 }
 
-
-
 /**
  * Add handlers to manage UI elements to display/hide secondary plot.
  */
@@ -138,16 +147,16 @@ window.addEventListener("load", function () {
   addButton.addEventListener("click", function () {
     if (SECOND_FRAME.getAttribute("src") === "") {
       const firstFrameContent = FIRST_FRAME.contentDocument;
-      const sliderStartYearText = firstFrameContent.querySelector(
-        ".irs-from").textContent;
-      const sliderEndYearText = firstFrameContent.querySelector(
-        ".irs-to").textContent;
+      const sliderStartYearText =
+        firstFrameContent.querySelector(".irs-from").textContent;
+      const sliderEndYearText =
+        firstFrameContent.querySelector(".irs-to").textContent;
       const frameURL = new URL(STATISTIC_SERVER_METADATA["url"]);
       frameURL.searchParams.append("variable", VARIABLE_METADATA["variable"]);
       frameURL.searchParams.append("no-title", "TRUE");
       frameURL.searchParams.append("start-year", sliderStartYearText);
       frameURL.searchParams.append("end-year", sliderEndYearText);
-      appendYLimitQueryParams(frameURL)
+      appendYLimitQueryParams(frameURL);
 
       SECOND_FRAME.src = String(frameURL);
 
@@ -166,9 +175,8 @@ window.addEventListener("load", function () {
     addButton.classList.remove("hidden");
   });
 
-  waitForIFrameContent(FIRST_FRAME)
+  waitForIFrameContent(FIRST_FRAME);
 });
 
 document.getElementById("statistics-nav-item").classList.add("nav-item-active");
 setFirstFrameUrl();
-
