@@ -20,6 +20,21 @@ infoIcon.style.cssText = `
   font-size: 0.85em
 `;
 
+/**
+ * Add y-scale-limit query params to URL.
+ *
+ * @param {URL} url URL to add query params to
+ */
+function appendYLimitQueryParams(url: URL) {
+  if ("y_limits" in VARIABLE_METADATA) {
+    url.searchParams.append("y-min", VARIABLE_METADATA["y_limits"]["min"]);
+    url.searchParams.append("y-max", VARIABLE_METADATA["y_limits"]["max"]);
+  }
+}
+
+/**
+ * Set src URL for the default statistics iFrame
+ */
 function setFirstFrameUrl() {
   const firstFrameURL = new URL(STATISTIC_SERVER_METADATA["url"]);
   firstFrameURL.searchParams.append("variable", VARIABLE_METADATA["variable"]);
@@ -28,17 +43,6 @@ function setFirstFrameUrl() {
   FIRST_FRAME.src = String(firstFrameURL);
 }
 
-/**
- * Add y-scale-limit query params to URL.
- *
- * @param url URL to add query params to
- */
-function appendYLimitQueryParams(url: URL) {
-  if ("y_limits" in VARIABLE_METADATA) {
-    url.searchParams.append("y-min", VARIABLE_METADATA["y_limits"]["min"]);
-    url.searchParams.append("y-max", VARIABLE_METADATA["y_limits"]["max"]);
-  }
-}
 
 /**
  *  Resize given iframe so it does not display a scrollbar.
@@ -59,8 +63,8 @@ function initYearRangeObserver(
   observedElement: HTMLElement,
   inputToUpdate: HTMLInputElement
 ) {
-  const rangeEndPointObserver = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
+  const rangeEndPointObserver = new MutationObserver(function(mutations) {
+    mutations.forEach(function(mutation) {
       inputToUpdate.value = mutation.target.textContent;
       inputToUpdate.dispatchEvent(new KeyboardEvent("keyup", {key: "13"}));
     });
@@ -102,7 +106,7 @@ function setupConfidenceIntervalModal(iFrame: HTMLIFrameElement) {
   const container = iFrame.contentDocument.getElementById("confidence_interval")
     .parentNode.parentNode;
   const button = infoIcon.cloneNode();
-  button.addEventListener("click", function () {
+  button.addEventListener("click", function() {
     document.getElementById("ci-button").click();
   });
   container.appendChild(button); // infoButton.cloneNode(deep=true));
@@ -140,11 +144,11 @@ async function waitForIFrameContent(
 /**
  * Add handlers to manage UI elements to display/hide secondary plot.
  */
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
   const addButton = document.getElementById("second-plot-button");
   const closeIcon = document.getElementById("close-icon");
 
-  addButton.addEventListener("click", function () {
+  addButton.addEventListener("click", function() {
     if (SECOND_FRAME.getAttribute("src") === "") {
       const firstFrameContent = FIRST_FRAME.contentDocument;
       const sliderStartYearText =
@@ -168,7 +172,7 @@ window.addEventListener("load", function () {
     waitForIFrameContent(SECOND_FRAME);
   });
 
-  closeIcon.addEventListener("click", function () {
+  closeIcon.addEventListener("click", function() {
     console.log("test");
     SECOND_FRAME.classList.add("hidden");
     closeIcon.classList.add("hidden");
