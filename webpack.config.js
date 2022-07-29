@@ -45,7 +45,7 @@ const config = {
       "./assets/scss/question_comparison.scss",
     ],
     description_modal: [
-      "./assets/js/description_modal.js",
+      "./assets/js/description_modal.ts",
       "./assets/scss/description_modal.scss",
     ],
     visualization: [
