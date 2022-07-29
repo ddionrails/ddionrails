@@ -15,7 +15,7 @@
     <img class="img-fluid mx-auto" src="{% static 'background.png' %}">
 
     <div class="list-group">
-        {% for study in study_list %}
+        {% for study in studies %}
             <li class="list-group-item" id="study_list">
                 <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
             </li>

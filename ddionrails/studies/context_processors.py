@@ -18,7 +18,7 @@ def studies_processor(
 ) -> Dict[str, QuerySet[Study]]:
     """Context processor returns all studies in a dictionary"""
 
-    return dict(studies=Study.objects.all().only("name", "label"))
+    return dict(studies=Study.objects.all().only("name", "label").order_by("label"))
 
 
 def show_statistics(_: WSGIRequest) -> Dict[str, List[Study]]:
