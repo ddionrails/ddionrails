@@ -21,6 +21,7 @@ const config = {
       "./assets/js/tables/instrument_table.js",
       "./assets/scss/instrument_table.scss",
     ],
+    basket_button: "./assets/js/basket_button.ts",
     dataset_table: "./assets/js/tables/dataset_table.js",
     variable_table: "./assets/js/tables/variable_table.js",
     question_table: "./assets/js/tables/question_table.js",

@@ -174,23 +174,20 @@ class VariableDetailView(DetailView):
         variable_data = self._sort_variable_data(self.object.content_dict)
         context["variable_baskets_context"] = {
             "variable": {
-                "id": str(context["variable"].id),
+                "id": context["variable"].id,
                 "name": context["variable"].name,
                 "data": variable_data,
             },
-            "baskets": {
-                basket.name: {
-                    "basket_variable": getattr(
-                        BasketVariable.objects.filter(
-                            variable=context["variable"], basket=basket
-                        ).first(),
-                        "id",
-                        "",
-                    ),
+            "baskets": [
+                {
+                    "name": basket.name,
+                    "variableIsInBasket": BasketVariable.objects.filter(
+                        variable=context["variable"], basket=basket
+                    ).exists(),
                     "id": basket.id,
                 }
                 for basket in context["basket_list"]
-            },
+            ],
         }
         for measure in ordering:
             if measure in self.object.statistics:

@@ -11,7 +11,6 @@ from django.views.generic.base import TemplateView
 from markdown import markdown
 
 from ddionrails.base.models import News
-from ddionrails.studies.models import Study
 
 
 # exception is a required parameter

@@ -10,6 +10,20 @@ const BasketVariableAPI = new URL(
 );
 
 /**
+ * 
+ */
+class BasketPostData {
+  basket: number;
+  variables: Array<string>;
+
+  // eslint-disable-next-line require-jsdoc
+  constructor(basket: number, variables: Array<string>) {
+    this.basket = basket;
+    this.variables = variables;
+  }
+}
+
+/**
  * Button onclick event to add a single variable to a Basket.
  * Changes the Button onlcick event to removeBasketVariable after adding
  * the variable.
@@ -17,29 +31,28 @@ const BasketVariableAPI = new URL(
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function addBasketVariable(basket, variable, basketButton) {
-  const postData = {
-    basket,
-  };
-  // eslint-disable-next-line security/detect-object-injection
-  postData["variables"] = [variable];
+function addBasketVariable(basket: number, variable: string, basketButton: HTMLElement) {
+  const postData = new BasketPostData(basket, [variable]);
 
   const client = new XMLHttpRequest();
   client.open("POST", BasketVariableAPI, true);
   client.setRequestHeader("Content-type", "application/json");
 
-  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+  const csrfToken = document.querySelector(
+    "input[name=csrfmiddlewaretoken]") as HTMLInputElement;
+
   client.withCredentials = true;
-  client.setRequestHeader("X-CSRFToken", csrfToken);
+  client.setRequestHeader("X-CSRFToken", csrfToken.value);
   client.setRequestHeader("Accept", "application/json");
 
   client.onreadystatechange = function() {
     if (client.readyState === XMLHttpRequest.DONE) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
-      if (200 <= status <= 201) {
+      if ([200, 201].includes(status)) {
         if (basketButton) {
-          basketButton.toggleClass("btn-success btn-danger add-var rm-var");
+          basketButton.classList.add("btn-danger", "rm-var");
+          basketButton.classList.remove("btn-success", "add-var");
         }
       }
       if (status >= 400) {
@@ -58,18 +71,19 @@ function addBasketVariable(basket, variable, basketButton) {
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function removeBasketVariable(basket, variable, basketButton) {
+function removeBasketVariable(basket: number, variable: string, basketButton: HTMLElement) {
   const url = new URL(BasketVariableAPI);
   url.searchParams.append("variable", variable);
-  url.searchParams.append("basket", basket);
+  url.searchParams.append("basket", String(basket));
 
   const getClient = new XMLHttpRequest();
   getClient.open("GET", url, true);
   getClient.setRequestHeader("Content-type", "application/json");
 
-  const csrfToken = $("[name=csrfmiddlewaretoken]").val();
+  const csrfToken = document.querySelector(
+    "input[name=csrfmiddlewaretoken]") as HTMLInputElement;
   getClient.withCredentials = true;
-  getClient.setRequestHeader("X-CSRFToken", csrfToken);
+  getClient.setRequestHeader("X-CSRFToken", csrfToken.value);
   getClient.onreadystatechange = function() {
     if (getClient.readyState === XMLHttpRequest.DONE) {
       try {
@@ -80,14 +94,15 @@ function removeBasketVariable(basket, variable, basketButton) {
         client.open("DELETE", basketVariableURL, true);
         client.setRequestHeader("Content-type", "application/json");
         client.withCredentials = true;
-        client.setRequestHeader("X-CSRFToken", csrfToken);
+        client.setRequestHeader("X-CSRFToken", csrfToken.value);
         client.send();
       } catch (SyntaxError) {
         window.alert("Variable is not part of this Basket.");
       }
 
       if (basketButton) {
-        basketButton.toggleClass("btn-success btn-danger add-var rm-var");
+        basketButton.classList.add("btn-success", "add-var");
+        basketButton.classList.remove("btn-danger", "rm-var");
       }
     }
   };
@@ -95,36 +110,34 @@ function removeBasketVariable(basket, variable, basketButton) {
   getClient.send();
 }
 
-
 /**
  * List all baskets on a VariableDetailView with buttons.
  * The Buttons are tied to onclick events to either remove or
  * add the variable from/to the basket.
  * @return {null}
  */
-function createBasketList() {
-  const basketList = $("#basket-list");
-  if ($("#context_data").length === 0) {
+function createBasketList(): null {
+  const basketList = document.getElementById("basket-list");
+  const contextData = document.getElementById("context_data");
+  if (contextData.textContent === "") {
     return null;
   }
-  const context = JSON.parse($("#context_data").text());
-  if (! context.hasOwnProperty("baskets")) {
+  const context = JSON.parse(document.getElementById("context_data").textContent);
+  if (!context.hasOwnProperty("baskets")) {
     return null;
   }
   // list-group-item
-  for (const [name, data] of Object.entries(context["baskets"])) {
-    const element = $("<div />", {
-      class: "list-group-item",
-    });
-    const basketButton = $("<button />", {
-      type: "button",
-      class: "float-right",
-    });
+  for (const basket of context["baskets"]) {
+    const element = document.createElement("div");
+    element.classList.add("list-group-item");
+    const basketButton = document.createElement("button");
+    basketButton.type = "button";
+    basketButton.classList.add("float-right");
+    basketButton.classList.add("btn");
 
-    const basketLink = $("<a />", {
-      href: `/workspace/baskets/${data["id"]}`,
-    });
-    basketLink.text(`${name} `);
+    const basketLink = document.createElement("a");
+    basketLink.href = `/workspace/baskets/${basket["id"]}`;
+    basketLink.textContent = `${basket["name"]} `;
 
     element.append(basketLink);
     element.append(basketButton);
@@ -133,73 +146,31 @@ function createBasketList() {
     // Dependant on the classes rm-var add-var
     // Text content of the button is also determined by rm-var and add-var
     // via index.scss.
-    const toggleFunction = function() {
-      if (basketButton.hasClass("add-var")) {
-        addBasketVariable(data["id"], context["variable"]["id"], basketButton);
-      } else if (basketButton.hasClass("rm-var")) {
+    const addOrRemoveVariable = function() {
+      if (basketButton.classList.contains("add-var")) {
+        addBasketVariable(basket["id"], context["variable"]["id"], basketButton);
+      } else if (basketButton.classList.contains("rm-var")) {
         removeBasketVariable(
-          data["id"],
+          basket["id"],
           context["variable"]["id"],
           basketButton
         );
       }
     };
 
-    if (data["basket_variable"]) {
-      basketButton.toggleClass("btn btn-danger rm-var");
+    if (basket["variableIsInBasket"]) {
+      basketButton.classList.add("btn-danger", "rm-var");
+      basketButton.classList.remove("btn-success", "add-var");
     } else {
-      basketButton.toggleClass("btn btn-success add-var");
+      basketButton.classList.add("btn-success", "add-var");
+      basketButton.classList.remove("btn-danger", "rm-var");
     }
-    basketButton.click(toggleFunction);
+    basketButton.addEventListener("click", () => addOrRemoveVariable());
     element.append(basketButton);
     basketList.append(element);
   }
   return null;
 }
 
-$(document).ready(createBasketList());
+window.addEventListener("load", createBasketList);
 
-/* !
- * ddionrails - basket_button.js
- * Copyright 2015-2019
- * Licensed under AGPL (https://github.com/ddionrails/ddionrails/blob/master/LICENSE.md)
- */
-
-const basketButton = (function() {
-  const addVariable = function($button, $count) {
-    addBasketVariable(
-      $button.attr("basket_id"),
-      $button.attr("variable_id"),
-      null
-    );
-    $button.toggleClass("btn-success btn-default");
-  };
-
-  const removeVariable = function($button, $count) {
-    removeBasketVariable(
-      $button.attr("basket_id"),
-      $button.attr("variable_id"),
-      null
-    );
-    $button.toggleClass("btn-success btn-default");
-  };
-
-  const handleButton = function() {
-    // eslint-disable-next-line no-invalid-this
-    const $button = $(this);
-    const $count = $("#basket-count").first();
-    if ($button.hasClass("btn-success")) {
-      removeVariable($button, $count);
-    } else {
-      addVariable($button, $count);
-    }
-  };
-
-  return function() {
-    $("body").on("click", "button.basket-button", handleButton);
-  };
-}());
-
-$(document).ready(basketButton());
-
-export {basketButton};

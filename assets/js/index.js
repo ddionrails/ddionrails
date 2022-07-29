@@ -9,9 +9,6 @@ require("../favicon.ico");
 
 import "bootstrap";
 
-import {basketButton} from "./basket_button.js";
-window.basketButton = basketButton;
-
 // Unhide Warning when using Internet Explorer
 const userAgent = window.navigator.userAgent;
 const ieTen = userAgent.indexOf("MSIE");
