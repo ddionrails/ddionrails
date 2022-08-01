@@ -42,7 +42,7 @@ const config = {
     question_images: ["./assets/js/question_images.ts"],
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
     question_comparison: [
-      "./assets/js/question_comparison.js",
+      "./assets/js/question_comparison.ts",
       "./assets/scss/question_comparison.scss",
     ],
     description_modal: [
