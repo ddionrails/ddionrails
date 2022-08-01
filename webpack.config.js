@@ -32,13 +32,12 @@ const config = {
       "./assets/scss/topics.scss",
     ],
     feedback: ["./assets/js/feedback.ts"],
-    variables: ["./assets/js/variables.js"],
     statistics: ["./assets/js/statistics.ts", "./assets/scss/statistics.scss"],
     statistics_navigation: [
       "./assets/js/statistics_navigation.ts",
       "./assets/scss/statistics_navigation.scss",
     ],
-    variables: ["./assets/js/variables.js"],
+    focus_anchor: ["./assets/js/focus_anchor.ts"],
     question_images: ["./assets/js/question_images.ts"],
     questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
     question_comparison: [
