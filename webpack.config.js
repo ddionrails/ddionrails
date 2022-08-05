@@ -39,7 +39,7 @@ const config = {
     ],
     focus_anchor: ["./assets/js/focus_anchor.ts"],
     question_images: ["./assets/js/question_images.ts"],
-    questions: ["./assets/js/questions.js", "./assets/scss/questions.scss"],
+    questions: ["./assets/js/questions.ts", "./assets/scss/questions.scss"],
     question_comparison: [
       "./assets/js/question_comparison.ts",
       "./assets/scss/question_comparison.scss",
