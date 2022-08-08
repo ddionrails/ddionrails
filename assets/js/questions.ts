@@ -1,10 +1,10 @@
-type AnswerDict = {
+type Answer = {
   value: number;
   label: string;
   label_de: string;
 };
 
-type QuestionItemDict = {
+type QuestionItem = {
   name: string;
   scale: string;
   label: string;
@@ -18,9 +18,9 @@ type QuestionItemDict = {
   position: number;
   input_filter: string;
   goto: string;
-  answers: Array<AnswerDict>;
+  answers: Array<Answer>;
 };
-type ItemBlocks = Array<Array<QuestionItemDict>>;
+type QuestionItemBlocks = Array<Array<QuestionItem>>;
 type languageCode = "en" | "de";
 
 const languageSpecificContainers = [
@@ -36,14 +36,14 @@ const languageSpecificContainers = [
 
 /**
  * Read question item data from the page.
- * @return {ItemBlocks}
+ * @return {QuestionItemBlocks}
  */
-function getItemBlocks(): ItemBlocks {
+function readItemBlockData(): QuestionItemBlocks {
   const questionMeta = document.getElementById("question-meta");
   if (questionMeta === null || questionMeta.textContent === null) {
-    return [[{}]] as ItemBlocks;
+    return [[{}]] as QuestionItemBlocks;
   }
-  return JSON.parse(questionMeta.textContent) as ItemBlocks;
+  return JSON.parse(questionMeta.textContent) as QuestionItemBlocks;
 }
 
 const createGotoIcon = (): HTMLElement => {
@@ -80,7 +80,6 @@ const createRadioButton = (): HTMLInputElement => {
   radioButton.disabled = true;
   return radioButton;
 };
-document.createElement("input") as HTMLElement;
 
 enum RowType {
   Header = "th",
@@ -95,7 +94,7 @@ enum RowType {
  */
 function renderTableRow(
   content: Array<HTMLElement>,
-  rowType: string = RowType.Row
+  rowType: "th" | "td" = RowType.Row
 ): HTMLTableRowElement {
   const row = document.createElement("tr");
 
@@ -111,7 +110,7 @@ function renderTableRow(
   return row;
 }
 
-const getLabelString = (item: AnswerDict, labelKey: string): string => {
+const getLabelWithValue = (item: Answer, labelKey: string): string => {
   const labelPart = labelKey === "de" ? item.label_de : item.label;
   if (labelPart === "") {
     return "";
@@ -125,7 +124,7 @@ const getLabelString = (item: AnswerDict, labelKey: string): string => {
 };
 
 const addInputAndGotoIcons = (
-  item: QuestionItemDict,
+  item: QuestionItem,
   labelContainer: HTMLElement,
   languageCode: string
 ) => {
@@ -155,14 +154,17 @@ const addInputAndGotoIcons = (
 
 /**
  *
- * @param {AnswerDict} item One element of an itemBlock
+ * @param {Answer} item One element of an itemBlock
  * @param {languageCode} itemLanguage
- * @return {document.Node}
+ * @return {HTMLElement}
  */
-function getLabel(item: AnswerDict, itemLanguage: languageCode) {
+function getMinimalLabel(
+  item: Answer,
+  itemLanguage: languageCode
+): HTMLElement {
   const labelContainer = document.createElement("text");
   const labelContent = document.createElement("text");
-  labelContent.innerHTML = getLabelString(item, itemLanguage);
+  labelContent.innerHTML = getLabelWithValue(item, itemLanguage);
 
   labelContainer.appendChild(labelContent);
   return labelContainer;
@@ -179,11 +181,14 @@ const createLabelContainer = (text: string) => {
 
 /**
  *
- * @param {QuestionItemDict} item One element of an itemBlock
+ * @param {QuestionItem} item
  * @param {languageCode} itemLanguage
- * @return {document.Node}
+ * @return {HTMLElement}
  */
-function getItemLabel(item: QuestionItemDict, itemLanguage: languageCode) {
+function getLabelWithInputAndGoto(
+  item: QuestionItem,
+  itemLanguage: languageCode
+): HTMLElement {
   const label = itemLanguage === "de" ? item.label_de : item.label;
 
   const labelContainer = createLabelContainer(label.replace(/\n/g, "<br />"));
@@ -194,12 +199,12 @@ function getItemLabel(item: QuestionItemDict, itemLanguage: languageCode) {
 
 /**
  * Render an item block containing simple text.
- * @param {Array<QuestionItemDict>} itemBlock item block object
+ * @param {Array<QuestionItem>} itemBlock item block object
  * @param {languageCode} language
  * @return {Node} A p node with the item text
  */
 function renderTXT(
-  itemBlock: Array<QuestionItemDict>,
+  itemBlock: Array<QuestionItem>,
   language: languageCode
 ): HTMLDivElement {
   const element = document.createElement("div");
@@ -207,25 +212,25 @@ function renderTXT(
   const text = document.createElement("p");
   element.appendChild(text);
   element.classList.add("question-item-text");
-  text.appendChild(getItemLabel(itemBlock[0], language));
+  text.appendChild(getLabelWithInputAndGoto(itemBlock[0], language));
   return element;
 }
 
 /**
  * Render a categorical block with only a single item
- * @param {Array<QuestionItemDict>} itemBlock
+ * @param {Array<QuestionItem>} itemBlock
  * @param {languageCode} language
  * @return {HTMLDivElement}
  */
 function renderCATSingle(
-  itemBlock: Array<QuestionItemDict>,
+  itemBlock: Array<QuestionItem>,
   language: languageCode
 ) {
   const element = document.createElement("div");
   element.classList.add("item-block");
   const questionText = document.createElement("p");
   questionText.classList.add("question-item-text");
-  questionText.appendChild(getItemLabel(itemBlock[0], language));
+  questionText.appendChild(getLabelWithInputAndGoto(itemBlock[0], language));
   element.appendChild(questionText);
   const answers = document.createElement("div");
   answers.classList.add("form-check");
@@ -240,7 +245,7 @@ function renderCATSingle(
     radioButton.disabled = true;
     inputContainer.appendChild(radioButton);
     const answerText = document.createElement("text");
-    answerText.appendChild(getLabel(answer, language));
+    answerText.appendChild(getMinimalLabel(answer, language));
     answerText.classList.add("item-answer-text");
     table.appendChild(renderTableRow([answerText, inputContainer]));
     answers.appendChild(table);
@@ -251,12 +256,12 @@ function renderCATSingle(
 
 /**
  * Render a categorical block with only a multiple items
- * @param {Array<QuestionItemDict>} itemBlock
+ * @param {Array<QuestionItem>} itemBlock
  * @param {languageCode} language
  * @return {HTMLDivElement}
  */
 function renderCATMultiple(
-  itemBlock: Array<QuestionItemDict>,
+  itemBlock: Array<QuestionItem>,
   language: languageCode
 ): HTMLDivElement {
   const blockContainer = document.createElement("div");
@@ -269,7 +274,7 @@ function renderCATMultiple(
   // Upper left corner of the matrix has no text
   const header = [document.createElement("text")];
   header.push(
-    ...answerCategories.map((category) => getLabel(category, language))
+    ...answerCategories.map((category) => getMinimalLabel(category, language))
   );
   table.appendChild(renderTableRow(header, RowType.Header));
 
@@ -296,38 +301,42 @@ function renderCATMultiple(
 }
 
 /**
- *
+ * Create a disabled Input field to visualize the type of a QuestionItem
  * @param {string} type
  * @return {HTMLInputElement}
  */
-function createItemAssociatedInput(type: string): HTMLInputElement {
+function createInputTypeVisualization(type: string): Array<HTMLElement> {
   const inputElement = document.createElement("input");
   inputElement.setAttribute("disabled", "");
+  const typeVisualizationElements = new Array<HTMLElement>(2);
+  typeVisualizationElements.push(inputElement);
 
   if (type === "int") {
     inputElement.setAttribute("type", "number");
     inputElement.setAttribute("placeholder", "123");
+    typeVisualizationElements.push(createHashIcon());
   }
   if (type === "chr") {
     inputElement.setAttribute("type", "text");
     inputElement.setAttribute("placeholder", "abc");
+    typeVisualizationElements.push(createPencilIcon());
   }
   if (type === "bin") {
     inputElement.setAttribute("type", "checkbox");
   }
-  return inputElement;
+  return typeVisualizationElements;
 }
 
 /**
- * Render a numerical block with multiple items
+ * Render lines of a Block of items of type chr, bin or int
  * @param {Array} itemBlock Array of question items
  * @param {string} blockScaleType object with subset of input element attributes
  * @param {string} blockLanguage icon to put into the input field
  * @return {document.blockNode}
  */
 function renderLines(
-  itemBlock: Array<QuestionItemDict>,
-  blockScaleType: string,
+  itemBlock: Array<QuestionItem>,
+  blockScaleType: "bin" | "chr" | "int",
   blockLanguage: languageCode
 ) {
   const element = document.createElement("div");
@@ -336,51 +345,64 @@ function renderLines(
   table.classList.add("answers-table");
   element.appendChild(table);
 
-  const itemContainer = document.createElement("div");
-  itemContainer.classList.add("item-input-container");
+  const inputTypeVisualization = () => {
+    const typeVisualizationElements = document.createElement("div");
+    typeVisualizationElements.classList.add("item-input-container");
 
-  itemContainer.appendChild(createItemAssociatedInput(blockScaleType));
-
-  if (blockScaleType === "int") {
-    itemContainer.appendChild(createHashIcon());
-  }
-  if (blockScaleType === "chr") {
-    itemContainer.appendChild(createPencilIcon());
-  }
+    for (const element of createInputTypeVisualization(blockScaleType)) {
+      typeVisualizationElements.appendChild(element);
+    }
+    return typeVisualizationElements;
+  };
 
   for (const item of itemBlock) {
-    const rowItemContainer = itemContainer.cloneNode(true) as HTMLElement;
-    const row = [getItemLabel(item, blockLanguage), rowItemContainer];
+    const row = [
+      getLabelWithInputAndGoto(item, blockLanguage),
+      inputTypeVisualization(),
+    ];
     table.appendChild(renderTableRow(row));
   }
   return element;
 }
 
-for (const itemBlock of getItemBlocks()) {
-  let blockNode;
-  const blockScale = itemBlock[0]["scale"];
-  for (const languageContainer of languageSpecificContainers) {
-    if (blockScale === "txt") {
-      blockNode = renderTXT(itemBlock, languageContainer.language);
-    }
-    if (blockScale === "cat") {
-      if (itemBlock.length === 1) {
-        blockNode = renderCATSingle(itemBlock, languageContainer.language);
-      } else {
-        blockNode = renderCATMultiple(itemBlock, languageContainer.language);
+const renderAllItems = () => {
+  for (const itemBlock of readItemBlockData()) {
+    let blockContentElement;
+    const blockScale = itemBlock[0]["scale"];
+    for (const languageContainer of languageSpecificContainers) {
+      if (blockScale === "txt") {
+        blockContentElement = renderTXT(itemBlock, languageContainer.language);
       }
-    }
-    if (["chr", "int", "bin"].includes(blockScale)) {
-      blockNode = renderLines(
-        itemBlock,
-        blockScale,
-        languageContainer.language
-      );
-    }
-    languageContainer.container.appendChild(blockNode);
-    languageContainer.container.appendChild(document.createElement("hr"));
-    if (languageContainer.container.textContent.trim() === "") {
-      languageContainer.container.parentElement.classList.add("hidden");
+      if (blockScale === "cat") {
+        if (itemBlock.length === 1) {
+          blockContentElement = renderCATSingle(
+            itemBlock,
+            languageContainer.language
+          );
+        } else {
+          blockContentElement = renderCATMultiple(
+            itemBlock,
+            languageContainer.language
+          );
+        }
+      }
+      if (["chr", "int", "bin"].includes(blockScale)) {
+        blockContentElement = renderLines(
+          itemBlock,
+          blockScale as "bin" | "chr" | "int",
+          languageContainer.language
+        );
+      }
+      languageContainer.container.appendChild(blockContentElement);
+      languageContainer.container.appendChild(document.createElement("hr"));
+      const hideMissingLanguageContent = (container: HTMLElement) => {
+        if (container.textContent.trim() === "") {
+          container.parentElement.classList.add("hidden");
+        }
+      };
+      hideMissingLanguageContent(languageContainer.container);
     }
   }
-}
+};
+
+renderAllItems();
