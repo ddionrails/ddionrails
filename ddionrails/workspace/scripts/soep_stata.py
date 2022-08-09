@@ -2,7 +2,6 @@
 
 """ Script generators for ddionrails.workspace app: SoepStata """
 
-import json
 from typing import Dict
 
 from ..mixins import SoepMixin
@@ -107,11 +106,11 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         script = []
         if self.settings["analysis_unit"] == "p":
             script.append("\nuse")
-            pfad_variables = ["hhnr", "persnr", "sex", "gebjahr", "psample"]
-            for year in self.years:
-                pfad_variables.append("%shhnr" % year)
-                pfad_variables.append("%snetto" % year)
-                pfad_variables.append("%spop" % year)
+            pfad_variables = ["hid", "persnr", "sex", "gebjahr", "psample"]
+            for prefix, year in self.years_mapping.items():
+                pfad_variables.append(f"hid_{year}")
+                pfad_variables.append(f"{prefix}snetto")
+                pfad_variables.append(f"{prefix}pop")
             if "ppfad" in special_datasets:
                 for variable in special_datasets["ppfad"]:
                     pfad_variables.append(variable)
@@ -244,7 +243,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             temp.append(script)
         return heading + "\n\n".join(temp)
 
-    def _render_merge(self, special_datasets) -> str:
+    def _render_merge(self, _) -> str:
         """Render a "merge" section of the script file"""
         heading = "\n\n* * * MERGE DATA * * *\n"
         script = '\nuse   "${MY_PATH_OUT}master.dta", clear'

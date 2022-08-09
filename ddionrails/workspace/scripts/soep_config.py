@@ -7,8 +7,9 @@ import json
 from ..mixins import SoepMixin
 from .script_config import ScriptConfig
 
+
 class SoepConfig(ScriptConfig, SoepMixin):
-    """ Prepare UI """
+    """Prepare UI"""
 
     DEFAULT_DICT = dict(
         path_in="data/",
@@ -76,4 +77,10 @@ class SoepConfig(ScriptConfig, SoepMixin):
             x: y for x, y in self.script_dict_raw.items() if x in valid_datasets
         }
         # years contains the prefixes of all years, including in the basket
-        self.years = set([d["prefix"] for d in self.script_dict.values() if d["prefix"] != ""])
+        self.years = {d["prefix"] for d in self.script_dict.values() if d["prefix"] != ""}
+
+        self.years_mapping = {
+            d["prefix"]: d["syear"]
+            for d in self.script_dict.values()
+            if d["prefix"] != ""
+        }
