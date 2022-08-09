@@ -8,10 +8,12 @@ from typing import Dict
 from ..mixins import SoepMixin
 from .script_config import ScriptConfig
 from .soep_config import SoepConfig
+
 # from ddionrails.workspace.scripts.soep_datasets import SoepDatasets # only for debug
 
+
 class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
-    """ Script Generator for Stata scripts """
+    """Script Generator for Stata scripts"""
 
     NAME = "soep-stata"
     COMMENT = "*"
@@ -31,12 +33,13 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             x: y for x, y in script_input["data"].items() if x in not_processed_datasets
         }
         script_input["is_special"] = {
-            x: y for x, y in script_input["data"].items() if x in {"hhrf", "phrf", "ppfad", "hpfad"}
+            x: y
+            for x, y in script_input["data"].items()
+            if x in {"hhrf", "phrf", "ppfad", "hpfad"}
         }
 
         script_input["text"] = "\n".join(
             [
-                # self._render_test(script_input["data"], script_input["valid_datasets"], script_input["not_processed"], script_input["is_special"]),
                 self._render_disclaimer(),
                 self._render_local_variables(),
                 self._render_not_processed(script_input["not_processed"]),
@@ -58,20 +61,12 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         """test"""
         heading = "\n\n* * * Debug * * *\n"
         script = "\n {}".format(data)
-        #script += "\n {}".format(old_valid)
-        #script += "\n {}".format(old_notp)
         script += "\n {}".format(special)
         script += "\n {}".format(self.script_dict.values())
-        #script += "\n {}".format(SoepDatasets().data.keys())
-        #script += "\n {}".format(SoepDatasets().data.items())
-        #script += "\n {}".format(self.settings["analysis_unit"])
-        #script += "\n {}".format(self.settings["private"])
-        #x = "ah" in SoepDatasets().data.keys()
-        #script += "\n {}".format(x)
         return heading + script
 
     def _render_disclaimer(self) -> str:
-        """ Render the disclaimer of the script file """
+        """Render the disclaimer of the script file"""
         return (
             "\n"
             f"{self.COMMENT} --------------------------------------------------------------------.\n"
@@ -87,7 +82,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         )
 
     def _render_local_variables(self) -> str:
-        """ Render a "local variables" section of the script file """
+        """Render a "local variables" section of the script file"""
         heading = "\n\n* * * LOCAL VARIABLES * * *\n"
         script = '\nglobal MY_PATH_IN   "%s"' % self.settings["path_in"]
         script += '\nglobal MY_PATH_OUT  "%s"' % self.settings["path_out"]
@@ -99,7 +94,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         return heading + script
 
     def _render_not_processed(self, not_processed) -> str:
-        """ Render a "not processed" section of the script file """
+        """Render a "not processed" section of the script file"""
         heading = "\n\n%s* * * NOT PROCESSED * * *.\n" % self.COMMENT
         script = ""
         for key, value in not_processed.items():
@@ -107,12 +102,12 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         return heading + script
 
     def _render_pfad(self, special_datasets) -> str:
-        """ Render a "load pfad" section of the script file """
+        """Render a "load pfad" section of the script file"""
         heading = "\n\n* * * PFAD * * *\n"
         script = []
         if self.settings["analysis_unit"] == "p":
             script.append("\nuse")
-            pfad_variables =["hhnr", "persnr", "sex", "gebjahr", "psample"]
+            pfad_variables = ["hhnr", "persnr", "sex", "gebjahr", "psample"]
             for year in self.years:
                 pfad_variables.append("%shhnr" % year)
                 pfad_variables.append("%snetto" % year)
@@ -134,7 +129,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         return heading + " ".join(script)
 
     def _render_balanced(self) -> str:
-        """ Render a "balanced" section of the script file """
+        """Render a "balanced" section of the script file"""
         heading = "\n\n* * * BALANCED VS UNBALANCED * * *\n"
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
@@ -154,7 +149,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             return heading + "\nkeep if (" + connector.join(temp) + ")"
 
     def _render_private(self) -> str:
-        """ Render a "private households" section of the script file """
+        """Render a "private households" section of the script file"""
         heading = "\n\n* * * ONLY PRIVATE HOUSEHOLDS * * *\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         temp = []
@@ -168,7 +163,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             return heading + "\n/* All households */"
 
     def _render_gender(self) -> str:
-        """ Render a "gender" section of the script file """
+        """Render a "gender" section of the script file"""
         if self.settings["analysis_unit"] == "p":
             options = {
                 "m": "\nkeep if (sex == 1)",
@@ -177,22 +172,28 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             }
             gender = self.settings.get("gender", "b")
             gender_selection = options[gender]
-            return "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
+            return (
+                "\n\n* * * GENDER ( male = 1 / female = 2) * * *\n" f"{gender_selection}"
+            )
         else:
             return "\n\n* * * GENDER NOT FOR HOUSEHOLDS * * *\n"
 
     @staticmethod
     def _render_sort_pfad() -> str:
-        """ Render a "sort pfad" section of the script file """
-        return "\n\n" "* * * SAVE PFAD * * *\n\n" 'save "${MY_PATH_OUT}pfad.dta", replace \nclear'
+        """Render a "sort pfad" section of the script file"""
+        return (
+            "\n\n"
+            "* * * SAVE PFAD * * *\n\n"
+            'save "${MY_PATH_OUT}pfad.dta", replace \nclear'
+        )
 
     def _render_hrf(self, special_datasets) -> str:
-        """ Render a "load hrf" section of the script file """
+        """Render a "load hrf" section of the script file"""
         heading = "\n\n* * * HRF * * *\n"
         script = ["\nuse"]
         hrf_dataset = ""
         if self.settings["analysis_unit"] == "p":
-            hrf_variables =["hhnr", "persnr", "prgroup"]
+            hrf_variables = ["hhnr", "persnr", "prgroup"]
             hrf_dataset = "phrf.dta"
             for year in self.years:
                 hrf_variables.append("{}phrf".format(year))
@@ -200,7 +201,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
                 for variable in special_datasets["phrf"]:
                     hrf_variables.append("{}".format(variable))
         else:
-            hrf_variables =["hhnr", "hhnrakt", "hrgroup"]
+            hrf_variables = ["hhnr", "hhnrakt", "hrgroup"]
             hrf_dataset = "hhrf.dta"
             for year in self.years:
                 hrf_variables.append("{}hhrf".format(year))
@@ -214,18 +215,19 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         return heading + " ".join(script)
 
     def _render_create_master(self) -> str:
-        """ Render a "create master" section of the script file """
+        """Render a "create master" section of the script file"""
         heading = "\n\n* * * CREATE MASTER * * *\n"
         key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
         script = '\nuse "${MY_PATH_OUT}pfad.dta", clear'
         script += (
-            '\nmerge 1:1 %s hhnr using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen' % key
+            '\nmerge 1:1 %s hhnr using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen'
+            % key
         )
         script += '\nsave "${MY_PATH_OUT}master.dta", replace'
         return heading + script
 
     def _render_read_data(self) -> str:
-        """ Render a "read data" section of the script file """
+        """Render a "read data" section of the script file"""
         heading = "\n\n* * * READ DATA * * *\n"
         temp = []
         for dataset in self.script_dict.values():
@@ -243,13 +245,15 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         return heading + "\n\n".join(temp)
 
     def _render_merge(self, special_datasets) -> str:
-        """ Render a "merge" section of the script file """
+        """Render a "merge" section of the script file"""
         heading = "\n\n* * * MERGE DATA * * *\n"
         script = '\nuse   "${MY_PATH_OUT}master.dta", clear'
         for dataset in self.script_dict.values():
             if dataset["is_special"] == True:
                 continue
-            elif self.settings["analysis_unit"] != dataset["analysis_unit"] or (self.settings["analysis_unit"] == "h" and self.settings["balanced"] == "f"):
+            elif self.settings["analysis_unit"] != dataset["analysis_unit"] or (
+                self.settings["analysis_unit"] == "h" and self.settings["balanced"] == "f"
+            ):
                 merge_factor = "m:1"
             else:
                 merge_factor = "1:1"
@@ -261,7 +265,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
 
     @staticmethod
     def _render_done() -> str:
-        """ Render an end section of the script file """
+        """Render an end section of the script file"""
         return (
             "\n\n"
             "* * * DONE * * *\n\n"
