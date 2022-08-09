@@ -121,6 +121,12 @@ class Study(ModelMixin, TimeStampedModel):
         default=list,
         help_text="Topic languages of the study (Array)",
     )
+    menu_order = models.PositiveSmallIntegerField(
+        blank=False,
+        null=False,
+        default=0,
+        help_text="Integer value to sort study in UI",
+    )
 
     #############
     # relations #
@@ -135,29 +141,22 @@ class Study(ModelMixin, TimeStampedModel):
         io_fields = ["name", "label", "description"]
         id_fields = ["name"]
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-        """"Set id and call parents save(). """
+    def save(self, *args, **kwargs):
+        """ "Set id and call parents save()."""
         self.id = hash_with_base_uuid(self.name, cache=False)  # pylint: disable=C0103
 
-        super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
-        )
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "name" field """
+        """Returns a string representation using the "name" field"""
         return str(self.name)
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "name" field """
+        """Returns a canonical URL for the model using the "name" field"""
         return reverse("study_detail", kwargs={"study_name": self.name})
 
     def repo_url(self) -> str:
-        """ Assembles the Git remote url. """
+        """Assembles the Git remote url."""
         if settings.GIT_PROTOCOL == "https":
             return f"https://{self.repo}.git"
         if settings.GIT_PROTOCOL == "ssh":
@@ -166,18 +165,18 @@ class Study(ModelMixin, TimeStampedModel):
         raise Exception("Specify a protocol for Git in your settings.")
 
     def set_topiclist(self, body: List) -> None:
-        """ Changes the topiclists content """
+        """Changes the topiclists content"""
         _topiclist, _ = TopicList.objects.get_or_create(study=self)
         _topiclist.topiclist = body
         _topiclist.save()
 
     def has_topics(self) -> bool:
-        """ Returns True if the study has topics. """
+        """Returns True if the study has topics."""
         topic_model = apps.get_model("concepts", "Topic")
         return bool(topic_model.objects.filter(study=self)[:1])
 
     def get_topiclist(self, language: str = "en") -> Optional[List]:
-        """ Returns the list of topics for a given language or None """
+        """Returns the list of topics for a given language or None"""
         try:
             for topiclist in self.topiclist.topiclist:
                 if topiclist.get("language", "") == language:
@@ -188,7 +187,7 @@ class Study(ModelMixin, TimeStampedModel):
             return None
 
     def import_path(self) -> Path:
-        """ Returns the studies import path """
+        """Returns the studies import path"""
         return settings.IMPORT_REPO_PATH.joinpath(
             self.name, settings.IMPORT_SUB_DIRECTORY
         )
