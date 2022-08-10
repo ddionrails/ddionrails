@@ -80,7 +80,7 @@ class SoepConfig(ScriptConfig, SoepMixin):
         self.years = {d["prefix"] for d in self.script_dict.values() if d["prefix"] != ""}
 
         self.years_mapping = {
-            d["prefix"]: d["syear"]
+            d["prefix"]: d["period"]
             for d in self.script_dict.values()
             if d["prefix"] != ""
         }
