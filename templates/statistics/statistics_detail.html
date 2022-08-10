@@ -88,20 +88,12 @@
 					{{variable.description_de | markdown_string | safe}}
 				</p>
 				<p>
-					<a
-						href="https://www.destatis.de/DE/Themen/Wirtschaft/Preise/Verbraucherpreisindex/Methoden/Erlaeuterungen/verbraucherpreisindex.html">More
-						Information</a>
-				</p>
-				<p>
 					{% if variable %}
 					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
 						Wissenschaftliche Dokumentation
 					</a>
 					{% endif %}
 				</p>
-
-
-				Infoboxen
 			</div>
 
 			{% if value_labels %}
