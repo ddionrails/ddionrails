@@ -109,7 +109,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             pfad_variables = ["hid", "persnr", "sex", "gebjahr", "psample"]
             for prefix, year in self.years_mapping.items():
                 pfad_variables.append(f"hid_{year}")
-                pfad_variables.append(f"{prefix}snetto")
+                pfad_variables.append(f"{prefix}netto")
                 pfad_variables.append(f"{prefix}pop")
             if "ppfad" in special_datasets:
                 for variable in special_datasets["ppfad"]:
@@ -118,9 +118,9 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             script.append("///")
             script.append('\nusing "${MY_PATH_IN}ppfad.dta", clear')
         else:
-            script.append("\nuse /// \nhhnr hhnrakt hsample ///")
-            for year in self.years:
-                script.append("\n%shhnr %shnetto %shpop ///" % (year, year, year))
+            script.append("\nuse /// \nhid cid hsample ///")
+            for prefix, year in self.years_mapping.items():
+                script.append(f"\nhid_{year} {prefix}hnetto {prefix}hpop ///")
             if "hpfad" in special_datasets:
                 for variable in special_datasets["hpfad"]:
                     script.append("\n%s ///" % variable)
