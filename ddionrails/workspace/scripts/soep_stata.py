@@ -248,9 +248,10 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         heading = "\n\n* * * MERGE DATA * * *\n"
         script = '\nuse   "${MY_PATH_OUT}master.dta", clear'
         for dataset in self.script_dict.values():
-            if dataset["is_special"] == True:
+            if dataset["is_special"] is True:
                 continue
-            elif self.settings["analysis_unit"] != dataset["analysis_unit"] or (
+
+            if self.settings["analysis_unit"] != dataset["analysis_unit"] or (
                 self.settings["analysis_unit"] == "h" and self.settings["balanced"] == "f"
             ):
                 merge_factor = "m:1"
