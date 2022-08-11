@@ -4,7 +4,7 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
-const urlPart = "data";
+const urlPart = "datasets";
 const study = document.querySelector("#study-name").getAttribute("value");
 
 const inputTemplate = document.createElement("input");
@@ -63,6 +63,35 @@ function renderDatasetTable(table, url) {
         data: "analysis_unit_name", // Actual name of the entity.
         render(_data, _type, row) {
           return row["analysis_unit_label"];
+        },
+      },
+      {
+        data: "folder", // Actual name of the entity.
+        render(_data, _type, row) {
+          return row["folder"];
+        },
+      },
+      {
+        data: "primary-key", // Actual name of the entity.
+        render(_data, _type, row) {
+          // http://localhost/soep-core/datasets/bipluecke/cid
+          const keyParts = row["primary_key"];
+          const linkContainer = document.createElement("p");
+
+          for ( const variable of keyParts) {
+            const link = document.createElement("a");
+            link.href =
+              window.location.protocol +
+              "//" +
+              window.location.hostname +
+              `/${row["study_name"]}/${urlPart}/${row["name"]}/${variable}`;
+            link.textContent = variable;
+            linkContainer.appendChild(link);
+            linkContainer.append(" ");
+          }
+
+
+          return linkContainer.outerHTML;
         },
       },
     ],

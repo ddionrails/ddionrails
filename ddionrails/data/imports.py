@@ -92,6 +92,10 @@ class DatasetImport(imports.CSVImport):
         dataset.conceptual_dataset = ConceptualDataset.objects.get_or_create(
             study=self.study, name=conceptual_dataset
         )[0]
+        dataset.folder = element.get("folder", "")
+        primary_key = element.get("primary_key", "").strip().split(" ")
+        primary_key.remove("")
+        dataset.primary_key = primary_key
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")
         dataset.save()

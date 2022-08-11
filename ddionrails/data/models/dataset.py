@@ -57,6 +57,20 @@ class Dataset(ModelMixin, models.Model):
         help_text="Description of the dataset (Markdown, German)",
     )
 
+    folder = models.TextField(
+        blank=True,
+        default="",
+        verbose_name="Folder of the Dataset",
+        help_text="Folder the dataset file is delivered in.",
+    )
+
+    primary_key = models.JSONField(
+        blank=True,
+        default=[],
+        verbose_name="Variables of the primary key.",
+        help_text="Names of variables in the dataset that constitute the primary key.",
+    )
+
     #############
     # relations #
     #############

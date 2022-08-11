@@ -6,6 +6,7 @@ from django.contrib.auth.models import User  # pylint: disable=imported-auth-use
 from rest_framework import serializers
 
 from ddionrails.api.related_fields import BasketRelatedField, UserRelatedField
+from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
@@ -101,9 +102,10 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     study_label_de = serializers.SlugRelatedField(
         source="study", read_only=True, slug_field="label_de"
     )
+    primary_key = serializers.JSONField(read_only=True)
 
     class Meta:
-        model = Instrument
+        model = Dataset
         fields = [
             "id",
             "name",
@@ -111,6 +113,8 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
             "label_de",
             "conceptual_dataset_label",
             "period_name",
+            "primary_key",
+            "folder",
             "analysis_unit_label",
             "study",
             "study_name",
