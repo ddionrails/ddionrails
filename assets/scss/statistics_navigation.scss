@@ -11,29 +11,70 @@ iframe {
 #statistics-button-container {
   margin-top: 1em !important;
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1610px) {
   #main-frame {
     height: 50vh;
   }
   #second-frame {
     height: 45vh;
   }
+  .statistics-button > i {
+    font-size: 9vw;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+  }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1609px) and (min-width: 1101px) {
   #main-frame {
     height: 100%;
   }
   #second-frame {
     height: 100%;
   }
+  .statistics-button > i {
+    font-size: 4vw;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+  }
+  .statistics-button {
+    font-size: 0.8em;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+  }
 }
+
+@media screen and (max-width: 1100px) and (min-width: 791px) {
+  .statistics-button > i {
+    font-size: 4vw;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+  }
+  .statistics-button {
+    font-size: 0.7em;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+    overflow-wrap: break-word;
+  }
+}
+
+@media screen and (max-width: 790px) {
+  .statistics-button > i {
+    display: none;
+  }
+  .statistics-button {
+    font-size: 0.7em;
+    margin-bottom: 0.7vw;
+    margin-top: 0.3vw;
+    overflow-wrap: break-word;
+  }
+}
+
 .statistics-button {
   margin: 0 1vw 1vw 0;
   width: 13vw;
   height: 13vw;
   background-color: #9e1310;
   line-height: 50%;
-  font-size: 1em;
 }
 
 .btn-info:hover {
@@ -49,11 +90,6 @@ div#statistics-button-container {
   width: 80vw;
 }
 
-.statistics-button > i {
-  font-size: 9vw;
-  margin-bottom: 0.7vw;
-  margin-top: 0.3vw;
-}
 button > p {
   line-height: 100%;
 }

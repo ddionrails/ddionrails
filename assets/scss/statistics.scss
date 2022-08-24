@@ -1,21 +1,24 @@
 #container {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 iframe {
-	width: 99%
+  width: 99%;
 }
 #main-container {
-	margin-top: 0em !important;
+  margin-top: 0em !important;
 }
 #second-frame {
-	margin-top: .5em;
+  margin-top: 0.5em;
 }
 #close-icon-container {
-	cursor: pointer;
-	position: absolute;
+  cursor: pointer;
+  position: absolute;
 }
-#second-plot-button{
-	width: 4em;
-	margin: 2em auto 0 auto
+#second-plot-button {
+  width: 4em;
+  margin: 2em auto 0 auto;
+}
+#main-container {
+  width: 100% !important;
 }
