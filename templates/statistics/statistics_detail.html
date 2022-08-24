@@ -77,31 +77,44 @@
 <div class="modal" tabindex="-1" role="dialog" id="description-modal">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Beschreibung der Variable</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>
-					{{variable.description_de | markdown_string | safe}}
-				</p>
-				<p>
-					{% if variable %}
-					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
-						Wissenschaftliche Dokumentation
-					</a>
-					{% endif %}
-				</p>
-			</div>
+
+
+
+
+
+
+<div class="modal-header">
+	<h5 class="modal-title">Informationen zur Datenbasis</h5>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+<div class="modal-body">
+
+ <ul>
+    <li>Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte.</li>
+    <li>Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen.</li>
+  </ul>
+</div>
+
+<div class="modal-header">
+	<h5 class="modal-title">Informationen zur Studie</h5>
+</div>
+<div class="modal-body">
+
+
+<p>Das Sozio-oekonomische Panel (SOEP) ist
+	die größte und am längsten laufende Wiederholungsbefragung
+	zur sozialen und wirtschaftlichen Lage in Deutschland,
+	für die jedes Jahr etwa 30.000 Menschen
+	in 15.000 Haushalten befragt werden.</p>
+
+</div>
+
 
 			{% if value_labels %}
 				<div class="modal-header">
 					<h5 class="modal-title">Skalenwerte</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
 				</div>
 				<div class="modal-body">
 					<p>
@@ -116,30 +129,27 @@
 				</div>
 			{% endif %}
 
+			<div class="modal-header">
+				<h5 class="modal-title">Beschreibung der Variable</h5>
+			</div>
+			<div class="modal-body">
+				<p>
+					{{variable.description_de | markdown_string | safe}}
+				</p>
+
+				<p>
+					{% if variable %}
+					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
+						Wissenschaftliche Dokumentation der Variable
+					</a>
+					{% endif %}
+				</p>
+			</div>
 
 			<div class="modal-header">
 				<h5 class="modal-title">Information zu Statistikgrundlagen</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
 			</div>
 			<div class="modal-body">
-
-<h5>Informationen zur Datenbasis</h5>
-
- <ul>
-    <li>Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte.</li>
-    <li>Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen.</li>
-  </ul>
-
-<h5>Informationen zur Studie</h5>
-
-<p>Das Sozio-oekonomische Panel (SOEP) ist
-	die größte und am längsten laufende Wiederholungsbefragung
-	zur sozialen und wirtschaftlichen Lage in Deutschland,
-	für die jedes Jahr etwa 30.000 Menschen
-	in 15.000 Haushalten befragt werden.</p>
-
 
 <h5>Mittelwert</h5>
 <p>
@@ -153,6 +163,12 @@ Der Median gibt den Wert an, bei dem exakt 50% der Beobachtungen darüber liegen
 <p>
 Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung abbilden, muss bei der statistischen Analyse sichergestellt werden, dass die Ergebnisse auf die Gesamtbevölkerung in Deutschland übertragen werden können. Dies geschieht über die Gewichtung. Um die Repräsentativität der Ergebnisse zu gewährleisten, erhält jede Person und jeder Haushalt ein Gewicht, sodass bestimmte Gruppen in den Analysen nicht über- bzw. unterrepräsentiert sind. Alle hier angegebenen Werte sind bereits gewichtet und daher repräsentativ für die deutsche Bevölkerung.
 </p>
+</div>
+
+
+
+
+
 			</div>
 		</div>
 	</div>
