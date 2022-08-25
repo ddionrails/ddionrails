@@ -4,6 +4,7 @@ verify_ssl = true
 name = "pypi"
 #
 #
+#
 [packages]
 #
 #
@@ -13,7 +14,7 @@ name = "pypi"
 #
 # Django
 # ------------------------------------------------------------------------------
-django = "==4.0.6"
+django = ">=4.0.7"
 django-crispy-forms = "*"
 django-extensions = "*"
 django-import-export = "*"
@@ -23,7 +24,6 @@ django-webpack-loader = "*"
 gunicorn = "*"
 djangorestframework = "*"
 django_filer = "*"
-
 # PostgreSQL
 # ------------------------------------------------------------------------------
 psycopg2-binary = "*"
@@ -46,6 +46,7 @@ gitpython = "*"
 paver = "*"
 requests = "*"
 djangorestframework-stubs = "*"
+#
 #
 [dev-packages]
 #
