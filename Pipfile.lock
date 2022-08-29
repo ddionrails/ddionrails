@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "2fd6993a6e287fa0a262e195f6e1c6008b2a86f0e7353b2f4c3478c334fa8cb6"
+            "sha256": "57299cf086423796ac070f2c11e4f3b8291fbaa0f4fc01161b48b615c5e34fb0"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -240,11 +240,11 @@
         },
         "elasticsearch": {
             "hashes": [
-                "sha256:540d646908761120926850e98230ffc08fee9a3f9b45073d42de08246f598652",
-                "sha256:81c1d15b0f9382b2dc40a896c634f8de09bfcd5079e19a8412940a9ddfbde64b"
+                "sha256:2c3400c9e9c7fee46c4732fb32b933577aebb07b5e94df025f6ff1a30d2397d0",
+                "sha256:f4b779fc2a035904b97bef0542110372efd94aa7ab2c13749af73158c08be110"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3' and python_version < '4'",
-            "version": "==7.17.4"
+            "version": "==7.17.6"
         },
         "elasticsearch-dsl": {
             "hashes": [
@@ -1036,10 +1036,11 @@
         },
         "autoflake": {
             "hashes": [
-                "sha256:61a353012cff6ab94ca062823d1fb2f692c4acda51c76ff83a8d77915fba51ea"
+                "sha256:275e05e3caa8307269ad4d46f2e058b76a5c41ca7d1a7f57158d64e9df3ffdd6",
+                "sha256:8272efbecf7c6d5e2b00fa3b2998478a3ad92d7c914a49a527d733dae7f800c5"
             ],
             "index": "pypi",
-            "version": "==1.4"
+            "version": "==1.5.1"
         },
         "babel": {
             "hashes": [
@@ -1187,10 +1188,10 @@
         },
         "distlib": {
             "hashes": [
-                "sha256:a7f75737c70be3b25e2bee06288cec4e4c221de18455b2dd037fe2a795cab2fe",
-                "sha256:b710088c59f06338ca514800ad795a132da19fda270e3ce4affc74abf955a26c"
+                "sha256:14bad2d9b04d3a36127ac97f30b12a19268f211063d8f8ee4f47108896e11b46",
+                "sha256:f35c4b692542ca110de7ef0bea44d73981caeb34ca0b9b6b2e6d7790dda8f80e"
             ],
-            "version": "==0.3.5"
+            "version": "==0.3.6"
         },
         "django": {
             "hashes": [
