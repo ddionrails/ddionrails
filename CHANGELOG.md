@@ -11,6 +11,31 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+
+## [6.3.0] - 2022-08-29
+
+### Added
+
+- Handle y-limits for numerically displayed ordinal variables.
+- new fields to datasets and view of datasets.
+- Studies can be sorted in the UI through the setting of their menu_order. 
+
+### Changed
+
+- Add more screen dependent css rules to statistics view
+  for better display on smaller screens. 
+- Migrated most JavaScript modules to TypeScript.
+- Updated script generator.
+
+### Fixed
+
+- an encoding problem caused by certain names of csv files served by the API.
+- statistics feedback link target.
+
+### Removed
+
+- splinter dependency.
+
 ## [6.2.0] - 2022-06-24
 
 ### Added
@@ -808,7 +833,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.2.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.3.0...develop
+[6.2.1]: https://github.com/ddionrails/ddionrails/compare/v6.2.0...v6.3.0
 [6.2.0]: https://github.com/ddionrails/ddionrails/compare/v6.1.0...v6.2.0
 [6.1.0]: https://github.com/ddionrails/ddionrails/compare/v6.0.0...v6.1.0
 [6.0.0]: https://github.com/ddionrails/ddionrails/compare/v5.4.1...v6.0.0
