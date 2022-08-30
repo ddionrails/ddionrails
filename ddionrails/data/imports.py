@@ -94,7 +94,8 @@ class DatasetImport(imports.CSVImport):
         )[0]
         dataset.folder = element.get("folder", "")
         primary_key = element.get("primary_key", "").strip().split(" ")
-        primary_key.remove("")
+        if "" in primary_key:
+            primary_key.remove("")
         dataset.primary_key = primary_key
         dataset.label = element.get("label", "")
         dataset.description = element.get("description", "")
