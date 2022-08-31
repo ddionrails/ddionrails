@@ -7,6 +7,7 @@
 
 {% block styles %}
     {% render_bundle 'dataset_table' 'css' %}
+    {% render_bundle 'table_attachment' 'css' %}
 {% endblock styles %}
 
 {% block content %}
@@ -26,6 +27,7 @@
                 <th class="analysis-unit"></th>
                 <th class="folder"></th>
                 <th class="primary-key"></th>
+                <th class="attachments"></th>
             </tr>
             <tr class="header">
                 <th title="dataset" class="dataset">Dataset</th>
@@ -35,6 +37,7 @@
                 <th title="analysis-unit" class="analysis-unit">Analysis Unit</th>
                 <th title="folder" class="folder">Stored in Folder</th>
                 <th title="primary-key" class="primary-key">Primary Key</th>
+                <th title="attachments" class="attachments">Attachments</th>
             </tr>
         </thead>
     </table>

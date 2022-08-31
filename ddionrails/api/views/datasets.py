@@ -159,8 +159,10 @@ class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancesto
         if paginate == "False":
             self.pagination_class = None
 
-        datasets = Dataset.objects.filter(**_filter).select_related(
-            "period", "study", "analysis_unit", "conceptual_dataset"
+        datasets = (
+            Dataset.objects.filter(**_filter)
+            .select_related("period", "study", "analysis_unit", "conceptual_dataset")
+            .prefetch_related("attachments")
         )
 
         return datasets

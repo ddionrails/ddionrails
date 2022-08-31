@@ -18,6 +18,14 @@ from ddionrails.workspace.models.basket_variable import BasketVariable
 NAMESPACE = "api"
 
 
+class AttachmentSerializer(serializers.ModelSerializer):
+    """Serialize a single Attachment."""
+
+    class Meta:
+        model = Attachment
+        fields = ["url", "url_text"]
+
+
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     """Serialize system users."""
@@ -102,6 +110,7 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     study_label_de = serializers.SlugRelatedField(
         source="study", read_only=True, slug_field="label_de"
     )
+    attachments = AttachmentSerializer(read_only=True, many=True)
     primary_key = serializers.JSONField(read_only=True)
 
     class Meta:
@@ -120,15 +129,8 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
             "study_name",
             "study_label",
             "study_label_de",
+            "attachments",
         ]
-
-
-class AttachmentSerializer(serializers.ModelSerializer):
-    """Serialize a single Attachment."""
-
-    class Meta:
-        model = Attachment
-        fields = ["url", "url_text"]
 
 
 class InstrumentSerializer(serializers.HyperlinkedModelSerializer):

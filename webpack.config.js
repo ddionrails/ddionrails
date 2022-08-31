@@ -19,7 +19,9 @@ const config = {
     index: "./assets/js/index.js",
     instrument_table: [
       "./assets/js/tables/instrument_table.js",
-      "./assets/scss/instrument_table.scss",
+    ],
+    table_attachment: [
+      "./assets/scss/table_attachment.scss",
     ],
     basket_button: "./assets/js/basket_button.ts",
     dataset_table: "./assets/js/tables/dataset_table.js",
