@@ -308,7 +308,7 @@ function renderCATMultiple(
 function createInputTypeVisualization(type: string): Array<HTMLElement> {
   const inputElement = document.createElement("input");
   inputElement.setAttribute("disabled", "");
-  const typeVisualizationElements = new Array<HTMLElement>(2);
+  const typeVisualizationElements = [] as Array<HTMLElement>;
   typeVisualizationElements.push(inputElement);
 
   if (type === "int") {
