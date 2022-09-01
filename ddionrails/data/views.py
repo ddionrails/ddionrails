@@ -25,7 +25,6 @@ class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # TODO: data vs datasets; data should probably switched to datasets everywhere.
         context["namespace"] = NAMESPACE
         context["study"] = kwargs["study"]
         return context
@@ -118,17 +117,21 @@ class VariableDetailView(DetailView):
     template_name = "data/variable_detail.html"
 
     def get_object(self, queryset=None):
-        variable = Variable.objects.select_related(
-            "dataset",
-            "dataset__study",
-            "dataset__conceptual_dataset",
-            "dataset__analysis_unit",
-            "concept",
-            "period",
-        ).get(
-            dataset__study=self.kwargs["study"],
-            dataset__name=self.kwargs["dataset_name"],
-            name=self.kwargs["variable_name"],
+        variable = (
+            Variable.objects.select_related(
+                "dataset",
+                "dataset__study",
+                "dataset__conceptual_dataset",
+                "dataset__analysis_unit",
+                "concept",
+                "period",
+            )
+            .prefetch_related("dataset__attachments")
+            .get(
+                dataset__study=self.kwargs["study"],
+                dataset__name=self.kwargs["dataset_name"],
+                name=self.kwargs["variable_name"],
+            )
         )
         return variable
 

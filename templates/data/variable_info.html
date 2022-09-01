@@ -56,6 +56,17 @@
         <p><b>Period:</b>
             {{ variable.period.title }}
         </p>
+        {% if variable.dataset.attachments.exists %}
+        <p >
+        <b>Attachments: </b>
+        <ul>
+            {% for attachment in variable.dataset.attachments.all %}
+            <li><a href={{attachment.url}}>{{ attachment.url_text }}</a></li>
+            {% endfor %}
+            
+        </ul>
+    </p>
+        {% endif %}
 
         <hr>
 
