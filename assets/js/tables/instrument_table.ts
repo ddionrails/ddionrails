@@ -59,38 +59,41 @@ function renderFullInstrumentTable(table: any, url: string) {
         },
       },
       {
-        data: "label", // Human readable label.
+        data: "label",
         render(_data, _type, row) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
-        data: "period", // Actual name of the entity.
-        render(_data, _type, row) {
+        data: "period",
+        render(_data: any, _type: any, row: any) {
+          if (row["period_label"] !== "") {
+            return row["period_label"];
+          }
           return row["period_name"];
         },
       },
       {
-        data: "type_position", // Actual name of the entity.
+        data: "type_position",
         render(_data, _type, row) {
           return row["type"]["position"];
         },
         visible: false,
       },
       {
-        data: "type", // Actual name of the entity.
+        data: "type",
         render(_data, _type, row) {
           return row["type"]["en"];
         },
       },
       {
-        data: "mode", // Actual name of the entity.
+        data: "mode",
         render(_data, _type, row) {
           return row["mode"];
         },
       },
       {
-        data: "attachments", // Actual name of the entity.
+        data: "attachments",
         className: "attachment",
         orderable: false,
         render(_data, _type, row) {
@@ -132,7 +135,7 @@ function renderInstrumentTable(table: any, url: string) {
     order: [[2, "desc"]],
     columns: [
       {
-        data: "instrument", // Human readable label.
+        data: "instrument",
         render(_data, _type, row) {
           if (row["has_questions"] === true) {
             const link = document.createElement("a");
@@ -148,25 +151,25 @@ function renderInstrumentTable(table: any, url: string) {
         },
       },
       {
-        data: "label", // Human readable label.
+        data: "label",
         render(_data, _type, row) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
-        data: "period", // Actual name of the entity.
+        data: "period",
         render(_data, _type, row) {
           return row["period_name"];
         },
       },
       {
-        data: "analysis_unit", // Actual name of the entity.
+        data: "analysis_unit",
         render(_data, _type, row) {
           return row["analysis_unit_name"];
         },
       },
       {
-        data: "attachments", // Actual name of the entity.
+        data: "attachments",
         className: "attachment",
         orderable: false,
         render(_data, _type, row) {
