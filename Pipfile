@@ -63,6 +63,7 @@ pre-commit = "*"
 pylint = "*"
 pylint-django = "*"
 pylint-unittest = "*"
+pylance = "*"
 types-markdown = "*"
 #
 #
