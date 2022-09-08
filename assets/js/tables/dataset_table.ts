@@ -21,6 +21,9 @@ const study = document.head
 function renderDatasetTable(table: string, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
+    language: {
+      searchPlaceholder: "Search all columns",
+    },
     ajax: {
       url,
       dataSrc: "",

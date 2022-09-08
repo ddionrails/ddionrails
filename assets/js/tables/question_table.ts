@@ -28,6 +28,9 @@ inputTemplate.classList.add("form-control", "form-control-sm");
 function renderQuestionTable(table: string, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
+    language: {
+      searchPlaceholder: "Search all columns",
+    },
     ajax: {
       url,
       dataSrc: "",
