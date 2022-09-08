@@ -1,27 +1,27 @@
 import type DataTable from "datatables.net";
 
-const inputTemplate = document.createElement("input");
+const inputTemplate = document.createElement("input") as HTMLInputElement;
 inputTemplate.type = "text";
 inputTemplate.classList.add("form-control", "form-control-sm");
 
 interface SearchInputs {
-  [details: string]: HTMLElement;
+  [details: string]: HTMLInputElement;
 }
 
 /**
+ * Generate text input field for every column in the DataTable
  *
  * @param {*} table    DOM element object of the table.
- * @param {*} tableAPI dataTable object of the table with full API.
  * @return {object}    Maps column names to input elements.
  */
-function addSearchInput(table: HTMLTableElement) {
+function addSearchInput(table: HTMLTableElement): SearchInputs {
   const header: NodeListOf<HTMLTableCellElement> =
     table.querySelectorAll(".header > th");
   const searchInputs: SearchInputs = {};
   for (const headerColumn of header) {
     const columnName = headerColumn.getAttribute("title") as string;
     const searchHead = table.querySelector(`.search-header > .${columnName}`);
-    const searchInput = inputTemplate.cloneNode() as HTMLElement;
+    const searchInput = inputTemplate.cloneNode() as HTMLInputElement;
     searchInput.setAttribute("placeholder", "Search");
     searchHead.appendChild(searchInput);
     searchInputs[columnName.toString()] = searchInput;
@@ -31,13 +31,16 @@ function addSearchInput(table: HTMLTableElement) {
 
 /**
  *
- * @param {*} event
- * @param {*} columnName
- * @param {*} tableAPI
+ * @param {string} searchInput
+ * @param {string} columnName
+ * @param {any} tableAPI
  */
-function addSearchEvent(event: Event, columnName: string, tableAPI: any) {
-  const target = event.currentTarget as HTMLInputElement;
-  tableAPI.column(`.${columnName}`).search(target.value, true, false).draw();
+function performSearch(
+  searchInput: string,
+  columnName: string,
+  tableAPI: any
+): void {
+  tableAPI.column(`.${columnName}`).search(searchInput, true, false).draw();
 }
 
 /**
@@ -47,7 +50,7 @@ function addSearchEvent(event: Event, columnName: string, tableAPI: any) {
  * @param {CallableFunction} tableRenderer
  * @param {string}tableSelector
  */
-function searchInitEventHandler(
+function initSearchEventHandler(
   metadataApiUrl: URL,
   study: string,
   tableRenderer: CallableFunction,
@@ -66,10 +69,11 @@ function searchInitEventHandler(
     columnInputMapping[columnName.toString()].addEventListener(
       "input",
       (event) => {
-        addSearchEvent(event, columnName, tableAPI);
+        const searchInputField = event.currentTarget as HTMLInputElement;
+        performSearch(searchInputField.value, columnName, tableAPI);
       }
     );
   }
 }
 
-export default searchInitEventHandler;
+export default initSearchEventHandler;
