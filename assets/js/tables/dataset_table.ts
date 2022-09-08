@@ -3,7 +3,7 @@ import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 import $ from "jquery";
-import searchInitEventHandler from "./search_input_handling";
+import initSearchEventHandler from "./search_input_handling";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
 const urlPart = "datasets";
@@ -122,7 +122,7 @@ function renderDatasetTable(table: string, url: string) {
 }
 
 window.addEventListener("load", () => {
-  searchInitEventHandler(
+  initSearchEventHandler(
     datasetsApiURL,
     study,
     renderDatasetTable,
