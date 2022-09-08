@@ -34,7 +34,7 @@ function renderDatasetTable(table: string, url: string) {
       dataSrc: "",
       cache: true,
     },
-    order: [[3, "desc"]],
+    order: [[0, "asc"]],
     columns: [
       {
         data: "dataset",
