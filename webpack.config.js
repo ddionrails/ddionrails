@@ -18,17 +18,17 @@ const config = {
     /* css and js libraries for ddionrails */
     index: "./assets/js/index.js",
     instrument_table: [
-      "./assets/js/tables/instrument_table.js",
+      "./assets/js/tables/instrument_table.ts",
       "./assets/scss/instrument_table.scss",
     ],
     basket_button: "./assets/js/basket_button.ts",
     dataset_table: "./assets/js/tables/dataset_table.ts",
-    variable_table: "./assets/js/tables/variable_table.js",
-    question_table: "./assets/js/tables/question_table.js",
+    variable_table: "./assets/js/tables/variable_table.ts",
+    question_table: "./assets/js/tables/question_table.ts",
     search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: [
-      "./assets/js/tables/concept_table.js",
+      "./assets/js/tables/concept_table.ts",
       "./assets/scss/topics.scss",
     ],
     feedback: ["./assets/js/feedback.ts"],

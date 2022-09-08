@@ -2,6 +2,8 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
+import $ from "jquery";
+import initSearchEventHandler from "./search_input_handling";
 
 const instrumentApiURL = new URL("api/instruments/", window.location.origin);
 const urlPart = "inst";
@@ -26,7 +28,7 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
  * @param {*} url         API URL to call for the metadata of the desired entities.
  * @return {DataTable}    A dataTable object with full API.
  */
-function renderFullInstrumentTable(table, url) {
+function renderFullInstrumentTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
     ajax: {
@@ -94,7 +96,9 @@ function renderFullInstrumentTable(table, url) {
         render(_data, _type, row) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
-            const link = attachmentLinkTemplate.cloneNode(true);
+            const link = attachmentLinkTemplate.cloneNode(
+              true
+            ) as HTMLLinkElement;
             link.href = attachment["url"];
             link.title = attachment["url_text"];
             linkContainer.appendChild(link);
@@ -117,7 +121,7 @@ function renderFullInstrumentTable(table, url) {
  * @param {*} url         API URL to call for the metadata of the desired entities.
  * @return {DataTable}    A dataTable object with full API.
  */
-function renderInstrumentTable(table, url) {
+function renderInstrumentTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
     ajax: {
@@ -168,7 +172,9 @@ function renderInstrumentTable(table, url) {
         render(_data, _type, row) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
-            const link = attachmentLinkTemplate.cloneNode(true);
+            const link = attachmentLinkTemplate.cloneNode(
+              true
+            ) as HTMLLinkElement;
             link.href = attachment["url"];
             link.title = attachment["url_text"];
             linkContainer.appendChild(link);
@@ -184,57 +190,17 @@ function renderInstrumentTable(table, url) {
   });
 }
 
-/**
- *
- * @param {*} table    DOM element object of the table.
- * @param {*} tableAPI dataTable object of the table with full API.
- * @return {object}    Maps column names to input elements.
- */
-function addSearchInput(table) {
-  const header = table.querySelectorAll(".header > th");
-  const searchInputs = {};
-  for (const headerColumn of header) {
-    const columnName = headerColumn.getAttribute("title");
-    const searchHead = table.querySelector(`.search-header > .${columnName}`);
-    const searchInput = inputTemplate.cloneNode();
-    searchHead.appendChild(searchInput);
-    searchInputs[columnName.toString()] = searchInput;
-  }
-  return searchInputs;
-}
-
-/**
- *
- * @param {*} event
- * @param {*} columnName
- * @param {*} tableAPI
- */
-function addSearchEvent(event) {
-  event.currentTarget.tableAPI
-    .column(`.${event.currentTarget.column}`)
-    .search(event.currentTarget.value)
-    .draw();
-}
-
-window.addEventListener("load", function() {
-  const instrumentTable = document.querySelector("#instrument-table");
-
-  const instrumentAPI = new URL(instrumentApiURL.toString());
-  instrumentAPI.searchParams.append("study", study);
-  instrumentAPI.searchParams.append("paginate", "False");
-  let tableAPI;
+window.addEventListener("load", () => {
+  let instrumentTableRenderer: any = null;
   if (hasExtendedMetadata === "True") {
-    tableAPI = renderFullInstrumentTable(instrumentTable, instrumentAPI);
+    instrumentTableRenderer = renderFullInstrumentTable;
   } else {
-    tableAPI = renderInstrumentTable(instrumentTable, instrumentAPI);
+    instrumentTableRenderer = renderInstrumentTable;
   }
-  const columnInputMapping = addSearchInput(instrumentTable);
-  for (const columnName of Object.keys(columnInputMapping)) {
-    columnInputMapping[columnName.toString()].column = columnName;
-    columnInputMapping[columnName.toString()].tableAPI = tableAPI;
-    columnInputMapping[columnName.toString()].addEventListener(
-      "input",
-      addSearchEvent
-    );
-  }
+  initSearchEventHandler(
+    instrumentApiURL,
+    study,
+    instrumentTableRenderer,
+    "#instrument-table"
+  );
 });
