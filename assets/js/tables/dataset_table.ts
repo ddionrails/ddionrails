@@ -7,7 +7,7 @@ import initSearchEventHandler from "./search_input_handling";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
 const urlPart = "datasets";
-const study = document.querySelector("#study-name").getAttribute("value");
+const study = document.querySelector("#study-name").getAttribute("content");
 
 /**
  * Renders a table of datasets.
