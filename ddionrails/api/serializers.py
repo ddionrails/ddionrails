@@ -89,6 +89,9 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     period_name = serializers.SlugRelatedField(
         source="period", read_only=True, slug_field="name"
     )
+    period_label = serializers.SlugRelatedField(
+        source="period", read_only=True, slug_field="label"
+    )
     analysis_unit_label = serializers.SlugRelatedField(
         source="analysis_unit", read_only=True, slug_field="label"
     )
@@ -113,6 +116,7 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
             "label_de",
             "conceptual_dataset_label",
             "period_name",
+            "period_label",
             "primary_key",
             "folder",
             "analysis_unit_label",
@@ -140,6 +144,9 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
     period_name = serializers.SlugRelatedField(
         source="period", read_only=True, slug_field="name"
     )
+    period_label = serializers.SlugRelatedField(
+        source="period", read_only=True, slug_field="label"
+    )
     study = serializers.PrimaryKeyRelatedField(read_only=True)
     study_name = serializers.SlugRelatedField(
         source="study", read_only=True, slug_field="name"
@@ -163,6 +170,7 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
             "label_de",
             "analysis_unit_name",
             "period_name",
+            "period_label",
             "study",
             "study_name",
             "study_label",

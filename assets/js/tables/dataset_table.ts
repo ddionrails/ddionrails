@@ -29,7 +29,7 @@ function renderDatasetTable(table: string, url: string) {
     order: [[3, "desc"]],
     columns: [
       {
-        data: "dataset", // Human readable label.
+        data: "dataset",
         render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
@@ -42,39 +42,41 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
       {
-        data: "label", // Human readable label.
+        data: "label",
         render(_data: any, _type: any, row: any) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
-        data: "conceptual-dataset", // Actual name of the entity.
+        data: "conceptual-dataset",
         render(_data: any, _type: any, row: any) {
           return row["conceptual_dataset_label"];
         },
       },
       {
-        data: "period", // Actual name of the entity.
+        data: "period",
         render(_data: any, _type: any, row: any) {
+          if (row["period_label"] !== "") {
+            return row["period_label"];
+          }
           return row["period_name"];
         },
       },
       {
-        data: "analysis_unit_name", // Actual name of the entity.
+        data: "analysis_unit_name",
         render(_data: any, _type: any, row: any) {
           return row["analysis_unit_label"];
         },
       },
       {
-        data: "folder", // Actual name of the entity.
+        data: "folder",
         render(_data: any, _type: any, row: any) {
           return row["folder"];
         },
       },
       {
-        data: "primary-key", // Actual name of the entity.
+        data: "primary-key",
         render(_data: any, _type: any, row: any) {
-          // http://localhost/soep-core/datasets/bipluecke/cid
           const keyParts = row["primary_key"];
           const linkContainer = document.createElement("p");
 
