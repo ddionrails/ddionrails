@@ -31,6 +31,9 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
 function renderFullInstrumentTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
+    language: {
+      searchPlaceholder: "Search all columns",
+    },
     ajax: {
       url,
       dataSrc: "",
@@ -127,6 +130,9 @@ function renderFullInstrumentTable(table: any, url: string) {
 function renderInstrumentTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
+    language: {
+      searchPlaceholder: "Search all columns",
+    },
     ajax: {
       url,
       dataSrc: "",
