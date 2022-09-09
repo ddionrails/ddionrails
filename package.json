@@ -32,6 +32,7 @@
     "vue-router": "^3.5.3"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.0",
     "@types/jquery": "^3.5.14",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "@typescript-eslint/parser": "^5.31.0",
