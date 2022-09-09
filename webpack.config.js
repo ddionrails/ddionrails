@@ -16,7 +16,10 @@ const config = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
-    index: "./assets/js/index.js",
+    index: [
+      "./assets/js/index.ts",
+      "./assets/scss/index.scss",
+    ],
     instrument_table: [
       "./assets/js/tables/instrument_table.ts",
       "./assets/scss/instrument_table.scss",
