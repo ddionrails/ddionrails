@@ -16,22 +16,15 @@ const config = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
-    index: [
-      "./assets/js/index.ts",
-      "./assets/scss/index.scss",
-    ],
-    instrument_table: [
-      "./assets/js/tables/instrument_table.ts",
-    ],
-    table_attachment: [
-      "./assets/scss/table_attachment.scss",
-    ],
+    index: ["./assets/js/index.ts", "./assets/scss/index.scss"],
+    instrument_table: ["./assets/js/tables/instrument_table.ts"],
+    table_attachment: ["./assets/scss/table_attachment.scss"],
     basket_button: "./assets/js/basket_button.ts",
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
     search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
-    topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
+    topics: ["./assets/js/topics.ts", "./assets/scss/topics.scss"],
     concept_table: [
       "./assets/js/tables/concept_table.ts",
       "./assets/scss/topics.scss",

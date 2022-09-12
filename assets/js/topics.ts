@@ -74,7 +74,7 @@ function renderEntityTable(entity: any, table: string, url: string) {
     columns: [
       {
         data: "label", // Human readable label.
-        render(data, type, row) {
+        render(_data: any, _type: any, row: StringHashMap) {
           if (window.location.pathname.endsWith("de")) {
             return row["label_de"] ? row["label_de"] : row["name"];
           } else {
@@ -84,7 +84,7 @@ function renderEntityTable(entity: any, table: string, url: string) {
       },
       {
         data: "entity", // Actual name of the entity.
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: StringHashMap) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
@@ -101,7 +101,7 @@ function renderEntityTable(entity: any, table: string, url: string) {
       },
       {
         data: "parent",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: StringHashMap) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
@@ -209,14 +209,14 @@ function renderQuestionTable(
  *
  * @param {HTMLButtonElement} node A button Element associated with a topic or concept
  */
-function renderRelatedEntities(node) {
+function renderRelatedEntities(node: any) {
   // Remove previous table
   const relatedEntitiesTableSection = document.querySelector(
     "#related-elements > div"
-  );
+  ) as HTMLElement;
   relatedEntitiesTableSection.innerHTML = "";
 
-  const activeNode = ($ as any).ui.fancytree.getNode(node);
+  const activeNode = $.ui.fancytree.getNode(node);
 
   if (node.classList.contains("variables")) {
     renderVariableTable(activeNode, relatedEntitiesTableSection);
@@ -230,21 +230,12 @@ function renderRelatedEntities(node) {
  *
  * @param {HTMLButtonElement} node - The button node inside the fancytree node
  */
-function copyUrlToClipboard(node) {
+function copyUrlToClipboard(node: any) {
   const activeNode = $.ui.fancytree.getNode(node);
 
-  // URL need to be selectable to be copied to clipboard,
-  // append temporary element
-  const text = document.createElement("textarea");
-  // Do not carry over old search params
   const url = new URL(window.location.href.split("?")[0]);
   url.searchParams.append("open", activeNode.key);
-
-  text.innerHTML = url;
-  document.body.append(text);
-  text.select();
-  document.execCommand("copy");
-  text.remove();
+  navigator.clipboard.writeText(url.toString());
 }
 
 /**
@@ -255,7 +246,7 @@ function copyUrlToClipboard(node) {
  *
  * @param {Node} buttonNode The Basket Button, that was pressed.
  */
-function addToBasket(buttonNode) {
+function addToBasket(buttonNode: HTMLElement) {
   const successMessage = document.getElementById("basket_success");
   const errorMessage = document.getElementById("basket_error");
   successMessage.classList.add("hidden");
@@ -266,7 +257,7 @@ function addToBasket(buttonNode) {
   const postData = {
     basket: buttonNode.getAttribute("basket-id"),
     study,
-  };
+  } as StringHashMap;
   if (type == "topic") {
     postData["topic"] = name;
   } else {
@@ -277,7 +268,9 @@ function addToBasket(buttonNode) {
   client.open("POST", basketVariableApiUrl, true);
   client.setRequestHeader("Content-type", "application/json");
 
-  const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]").value;
+  const csrfToken = document
+    .querySelector("[name=csrfmiddlewaretoken]")
+    .getAttribute("value");
   client.withCredentials = true;
   client.setRequestHeader("X-CSRFToken", csrfToken);
   client.setRequestHeader("Accept", "application/json");
@@ -304,12 +297,12 @@ function addToBasket(buttonNode) {
  * Prompt to add all variables of a topic or concept to a basket.
  * @param {HTMLButtonElement} node A button Element associated with a topic or concept
  */
-function renderBasketButtons(node) {
+function renderBasketButtons(node: any) {
   const basketInterfaceModal = document.querySelector(
     "#topic-list-add-to-basket >* .modal-body"
   );
-  const fancytreeNode = $.ui.fancytree.getNode(node);
-  const categoryType = fancytreeNode.type;
+  const fancytreeNode = $.ui.fancytree.getNode(node) as HTMLElement;
+  const categoryType = fancytreeNode.getAttribute("type");
   // The node key will be something like topic_name or concept_name.
   // To retrieve the name we can remove type+"_" from the key.
   const categoryName = fancytreeNode.key.substring(categoryType.length + 1);
@@ -320,8 +313,8 @@ function renderBasketButtons(node) {
   const variableApi = new URL(variablesApiUrl.toString());
   variableApi.searchParams.append("study", study);
   variableApi.searchParams.append(categoryType, categoryName);
-  variableApi.searchParams.append("paginate", true);
-  variableApi.searchParams.append("limit", 1);
+  variableApi.searchParams.append("paginate", "True");
+  variableApi.searchParams.append("limit", "1");
 
   const variableCountRequest = new XMLHttpRequest();
 
@@ -352,7 +345,7 @@ function renderBasketButtons(node) {
           createBasketLink.href = new URL(
             "/workspace/baskets",
             window.location.origin
-          );
+          ).toString();
           createBasketLink.innerHTML = "Create a basket for this study";
           basketInterfaceModal.querySelectorAll("*").forEach((n) => n.remove());
           basketInterfaceModal.append(createBasketLink);
@@ -372,13 +365,16 @@ function renderBasketButtons(node) {
           });
           basketButton.textContent = `Add to basket ${basket.name}`;
           basketButton.addEventListener("click", function (event) {
-            addToBasket(event.target);
+            addToBasket(event.target as HTMLElement);
           });
           basketInterfaceModal.append(basketButton);
         }
       } else if (basketListRequest.status == 403) {
         const loginLink = document.createElement("a");
-        loginLink.href = new URL("/workspace/login", window.location.origin);
+        loginLink.href = new URL(
+          "/workspace/login",
+          window.location.origin
+        ).toString();
         loginLink.innerHTML = "Please log in to use this function.";
         document.getElementById("basket_list").append(loginLink);
       }
@@ -412,7 +408,7 @@ window.addEventListener("load", function () {
       counter: false,
       mode: "hide",
     },
-    icon(_event, data) {
+    icon(_event: any, data: any) {
       return data.typeInfo.icon;
     },
     glyph: {
@@ -453,7 +449,7 @@ window.addEventListener("load", function () {
      * @param {*} _event _
      * @param {*} data Metadata for the node.
      */
-    createNode(_event, data) {
+    createNode(_event: any, data: any) {
       const filterOptionsString = document.createElement("span");
       filterOptionsString.classList.add(
         "btn-group",
@@ -474,8 +470,8 @@ window.addEventListener("load", function () {
         title: "Show all related variables",
       });
 
-      displayButtons[1] = displayButtons[0].cloneNode();
-      const basketButton = displayButtons[0].cloneNode();
+      displayButtons[1] = displayButtons[0].cloneNode() as HTMLButtonElement;
+      const basketButton = displayButtons[0].cloneNode() as HTMLButtonElement;
 
       displayButtons[1].setAttribute("title", "Show all related questions");
       displayButtons[0].innerHTML =
@@ -545,7 +541,7 @@ window.addEventListener("load", function () {
       if (categoryID != null) {
         const relatedEntitiesTableSection = document.querySelector(
           "#related-elements > div"
-        );
+        ) as HTMLElement;
         const categoryNode = $.ui.fancytree
           .getTree("#tree")
           .getNodeByKey(categoryID);
@@ -559,20 +555,22 @@ window.addEventListener("load", function () {
   });
 
   // Search the tree for search string
-  document.querySelector("#btn-search").addEventListener("click", (event) => {
-    $.ui.fancytree
-      .getTree("#tree")
-      .filterBranches(document.getElementById("search").value, {
-        autoExpand: true,
-      });
-  });
+  document
+    .querySelector("#btn-search")
+    .addEventListener("click", (_event: any) => {
+      const searchField = document.getElementById("search") as HTMLInputElement;
+      const tree = $.ui.fancytree.getTree("#tree") as Fancytree.Fancytree;
+      tree.filterBranches(searchField.value);
+    });
 
   // Trigger search on enter
-  document.querySelector("#search").addEventListener("keyup", (event) => {
-    if (event.keyCode == 13) {
-      document.querySelector("#btn-search").click();
-    }
-  });
+  document
+    .querySelector("#search")
+    .addEventListener("keyup", (event: KeyboardEvent) => {
+      if (event.key === "Enter") {
+        (document.querySelector("#btn-search") as HTMLButtonElement).click();
+      }
+    });
 });
 
 /**
@@ -583,8 +581,8 @@ window.addEventListener("load", function () {
 const modalObserver = new MutationObserver(function (mutations) {
   mutations.forEach(function (mutation) {
     if (mutation.attributeName === "class") {
-      if (!mutation.target.classList.contains("show")) {
-        mutation.target
+      if (!(mutation.target as HTMLElement).classList.contains("show")) {
+        (mutation.target as HTMLElement)
           .querySelectorAll(".modal-body > .alert")
           .forEach(function (node) {
             node.classList.add("hidden");
@@ -593,6 +591,7 @@ const modalObserver = new MutationObserver(function (mutations) {
     }
   });
 });
+
 modalObserver.observe(document.getElementById("topic-list-add-to-basket"), {
   attributes: true,
 });
