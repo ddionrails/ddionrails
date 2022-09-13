@@ -6,6 +6,8 @@
 
 require("../favicon.ico");
 
+import "bootstrap";
+
 // Unhide Warning when using Internet Explorer
 const userAgent = window.navigator.userAgent;
 const ieTen = userAgent.indexOf("MSIE");
