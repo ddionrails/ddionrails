@@ -201,7 +201,7 @@ function renderQuestionTable(
     parentURL: "inst",
     parentType: "instrument_name",
   };
-  renderEntityTable(question, `#${questionTable}`, api.toString());
+  renderEntityTable(question, `#${questionTable.id}`, api.toString());
 }
 
 /**
@@ -301,8 +301,8 @@ function renderBasketButtons(node: any) {
   const basketInterfaceModal = document.querySelector(
     "#topic-list-add-to-basket >* .modal-body"
   );
-  const fancytreeNode = $.ui.fancytree.getNode(node) as HTMLElement;
-  const categoryType = fancytreeNode.getAttribute("type");
+  const fancytreeNode = $.ui.fancytree.getNode(node) as any;
+  const categoryType = fancytreeNode.type;
   // The node key will be something like topic_name or concept_name.
   // To retrieve the name we can remove type+"_" from the key.
   const categoryName = fancytreeNode.key.substring(categoryType.length + 1);
@@ -347,7 +347,7 @@ function renderBasketButtons(node: any) {
             window.location.origin
           ).toString();
           createBasketLink.innerHTML = "Create a basket for this study";
-          basketInterfaceModal.querySelectorAll("*").forEach((n) => n.remove());
+          //basketInterfaceModal.querySelectorAll("*").forEach((n) => n.remove());
           basketInterfaceModal.append(createBasketLink);
           return;
         }
@@ -387,7 +387,7 @@ function renderBasketButtons(node: any) {
 // Define what the tree structure will look like, for more information and
 // options see https://github.com/mar10/fancytree.
 // Build and append tree to #tree.
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
   $("#tree").fancytree({
     extensions: ["filter", "glyph"],
     types: {
@@ -407,9 +407,6 @@ window.addEventListener("load", function () {
     filter: {
       counter: false,
       mode: "hide",
-    },
-    icon(_event: any, data: any) {
-      return data.typeInfo.icon;
     },
     glyph: {
       preset: "awesome5",
@@ -493,7 +490,7 @@ window.addEventListener("load", function () {
         renderBasketButtons(event.target);
       });
       for (const button of displayButtons) {
-        button.addEventListener("click", function (event) {
+        button.addEventListener("click", (event) => {
           renderRelatedEntities(event.target);
         });
         filterOptionsString.append(button);
