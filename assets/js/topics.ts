@@ -65,7 +65,7 @@ function setAttributes(element: HTMLElement, attributes: StringHashMap) {
  * @param {Element} table Empty table to be filled through dataTable instantiation.
  * @param {*} url         API URL to call for the metadata of the desired entities.
  */
-function renderEntityTable(entity: any, table: string, url: string) {
+function renderEntityTable(entity: any, table: HTMLElement, url: string) {
   $(table).dataTable({
     ajax: {
       url,
@@ -166,7 +166,7 @@ function renderVariableTable(
     parentURL: "data",
     parentType: "dataset_name",
   };
-  renderEntityTable(variable, `#${variableTable.id}`, api.toString());
+  renderEntityTable(variable, variableTable, api.toString());
 }
 
 /**
@@ -201,7 +201,7 @@ function renderQuestionTable(
     parentURL: "inst",
     parentType: "instrument_name",
   };
-  renderEntityTable(question, `#${questionTable.id}`, api.toString());
+  renderEntityTable(question, questionTable, api.toString());
 }
 
 /**
