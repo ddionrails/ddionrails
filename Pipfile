@@ -5,6 +5,7 @@ name = "pypi"
 #
 #
 #
+
 [packages]
 #
 #
@@ -48,6 +49,7 @@ requests = "*"
 djangorestframework-stubs = "*"
 #
 #
+
 [dev-packages]
 #
 #
@@ -88,3 +90,4 @@ django-debug-toolbar = "*"
 rope = "*" # python refactoring tool
 pygraphviz = "*" # used for python manage.py graph_models
 werkzeug = "==2.1.2"
+selenium = "*"
