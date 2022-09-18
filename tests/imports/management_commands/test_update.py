@@ -83,7 +83,7 @@ def test_update_single_study(study, mocker):
         "ddionrails.imports.manager.StudyImportManager.update_repo"
     )
     manager = StudyImportManager(study, redis=False)
-    update.update_single_study(study, False, (), None, manager=manager)
+    update.update_single_study(study, False, (), "", manager=manager)
     mocked_update_repo.assert_called_once()
     result = {variable.name for variable in Variable.objects.all()}
     TEST_CASE.assertNotEqual(0, len(result))

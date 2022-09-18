@@ -42,27 +42,6 @@ class TestUserResource:
         TEST_CASE.assertEqual(user.email, dataset["email"][0])
         TEST_CASE.assertEqual(user.password, dataset["password"][0])
 
-    def test_import(self):
-        TEST_CASE.assertEqual(0, User.objects.count())
-        now = timezone.now()
-        username = "some-user"
-        email = "some-email@some-mail.org"
-        password = "md5$salt$hashed-password"  # nosec
-        dataset = tablib.Dataset(
-            [username, email, password, now],
-            headers=["username", "email", "password", "date_joined"],
-        )
-
-        result = UserResource().import_data(dataset, dry_run=False)
-        TEST_CASE.assertFalse(result.has_errors())
-        TEST_CASE.assertEqual(1, User.objects.count())
-
-        user = User.objects.first()
-        TEST_CASE.assertEqual(username, user.username)
-        TEST_CASE.assertEqual(email, user.email)
-        TEST_CASE.assertEqual(password, user.password)
-        TEST_CASE.assertEqual(now, user.date_joined)
-
 
 class TestBasketResource:
     def test_export(self, basket):

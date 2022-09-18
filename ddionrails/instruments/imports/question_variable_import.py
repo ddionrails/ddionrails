@@ -2,45 +2,69 @@
 
 """ Importer classes for ddionrails.instruments app """
 
-from ddionrails.data.models import Variable
+from collections import namedtuple
+from csv import DictReader
+from typing import Dict, List, Set, Tuple
+from uuid import UUID
+
+from ddionrails.data.models import Dataset
 from ddionrails.imports import imports
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.instruments.models import Question, QuestionVariable
+from ddionrails.instruments.models.instrument import Instrument
+from ddionrails.studies.models import Study
+
+QuestionRelation = namedtuple("QuestionRelation", ["question", "variable"])
+InstrumentRelation = namedtuple("InstrumentRelation", ["instrument", "dataset"])
 
 
-class QuestionVariableImport(imports.CSVImport):
+def question_variable_import(file_path: str, study: Study) -> None:
     """Import relations between Variable and Question model objects."""
+    QuestionVariable.objects.filter(variable__dataset__study=study).delete()
+    Instrument.datasets.through.objects.filter(instrument__study=study).delete()
 
-    def execute_import(self):
-        for link in self.content:
-            self._import_link(link)
-
-    def _import_link(self, link):
-        try:
-            question = self._get_question(link)
-            variable = self._get_variable(link)
-            QuestionVariable.objects.get_or_create(question=question, variable=variable)
-        except BaseException as error:
-            raise type(error)(f"Could not import QuestionVariable: {link}")
-
-    @staticmethod
-    def _get_question(link):
-        question = (
-            Question.objects.filter(
-                instrument__study__name=link.get("study", link.get("study_name"))
+    datasets: Dict[str, UUID] = {}
+    instruments: Dict[str, UUID] = {}
+    instrument_dataset_relations: Set[InstrumentRelation] = set()
+    question_variable_relations: set[QuestionRelation] = set()
+    with open(file=file_path, mode="r", encoding="utf-8") as csv_file:
+        reader = DictReader(csv_file)
+        for row in reader:
+            if row["instrument"] not in instruments:
+                instruments[row["instrument"]] = hash_with_namespace_uuid(
+                    study.id, row["instrument"]
+                )
+            if row["dataset"] not in datasets:
+                datasets[row["dataset"]] = hash_with_namespace_uuid(
+                    study.id, row["dataset"]
+                )
+            instrument_dataset_relations.add(
+                InstrumentRelation(
+                    instruments[row["instrument"]], datasets[row["dataset"]]
+                )
             )
-            .filter(instrument__name=link.get("instrument", link.get("instrument_name")))
-            .get(name=link.get("question", link.get("question_name")))
-        )
-        return question
-
-    @staticmethod
-    def _get_variable(link):
-        variable = (
-            Variable.objects.filter(
-                dataset__study__name=link.get("study", link.get("study_name"))
+            variable_id = hash_with_namespace_uuid(
+                datasets[row["dataset"]], row["variable"]
             )
-            .filter(dataset__name=link.get("dataset", link.get("dataset_name")))
-            .filter(name=link.get("variable", link.get("variable_name")))
-            .first()
+            question_id = hash_with_namespace_uuid(
+                instruments[row["instrument"]], row["question"]
+            )
+            question_variable_relations.add(QuestionRelation(question_id, variable_id))
+    question_relations: List[QuestionVariable] = []
+    for question_relation in question_variable_relations:
+        question_relations.append(
+            QuestionVariable(
+                variable_id=question_relation.variable,
+                question_id=question_relation.question,
+            )
         )
-        return variable
+    QuestionVariable.objects.bulk_create(question_relations)
+    instrument_relations: List[Instrument.datasets.through] = []
+    for instrument_relation in instrument_dataset_relations:
+        instrument_relations.append(
+            Instrument.datasets.through(
+                instrument_id=instrument_relation.instrument,
+                dataset_id=instrument_relation.dataset,
+            )
+        )
+    Instrument.datasets.through.objects.bulk_create(instrument_relations)
