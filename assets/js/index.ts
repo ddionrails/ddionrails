@@ -18,6 +18,12 @@ if (ieTen > 0 || ieEleven > 0) {
   warning.classList.remove("hidden");
 }
 
+const cardsToHideChildren = document.getElementsByClassName("hide-card");
+
+for (const cardChild of cardsToHideChildren) {
+  cardChild.closest(".card").classList.add("hidden");
+}
+
 window.addEventListener("load", () => {
   const namespace = document.head.querySelector(
     'meta[name="namespace"]'

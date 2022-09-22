@@ -184,7 +184,7 @@ class StudyImportManager:
                 ),
                 "variables": (VariableImport, self.base_dir / "variables.csv"),
                 "questions_variables": (
-                    question_variable_import.QuestionVariableImport,
+                    question_variable_import.question_variable_import,
                     self.base_dir / "questions_variables.csv",
                 ),
                 "concepts_questions": (

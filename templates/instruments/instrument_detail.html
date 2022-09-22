@@ -56,11 +56,13 @@
                 </div>
             </div>
 
-        <div class="card hidden">
+        <div class="card">
             <div class="card-header"><b>Description</b>
             </div>
             <div class="card-body" id="description-card-content">
-                {{ instrument.html_description | safe }}
+                {% autoescape off %}
+                {% firstof instrument.html_description '<br class="hide-card" />'%}
+                {% endautoescape %}
             </div>
             <div class="card-footer text-center" id="description-footer">
                 <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
@@ -68,6 +70,24 @@
                 </button>
             </div>
         </div>
+
+            <div class="card">
+                <div class="card-header"><b>Related Datasets</b>
+                </div>
+                    <p>
+                    <ul>
+                        {% for dataset in instrument.datasets.all %}
+                        <li>
+                            <a href="{% url 'dataset_redirect' id=dataset.id %}">
+                                {{ dataset.name }}: {{ dataset.label }}
+                            </a>
+                        </li>
+                        {% empty %}
+                        <br class="hide-card" />
+                        {% endfor %}
+                    </ul>
+                    <p>
+            </div>
 
         </div>
 

@@ -87,6 +87,11 @@ class Instrument(ModelMixin, models.Model):
         on_delete=models.CASCADE,
         help_text="Foreign key to studies.Study",
     )
+    datasets = models.ManyToManyField(
+        "data.Dataset",
+        related_name="instruments",
+        help_text="Datasets related to this instrument through its questions.",
+    )
     period = models.ForeignKey(
         Period,
         blank=True,

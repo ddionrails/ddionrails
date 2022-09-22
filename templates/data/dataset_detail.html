@@ -72,6 +72,24 @@
                     </button>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="card-header"><b>Related Instruments</b>
+                </div>
+                    <p>
+                    <ul>
+                        {% for instrument in dataset.instruments.all %}
+                        <li>
+                            <a href="{% url 'instrument_redirect' id=instrument.id %}">
+                                {{ instrument.name }}: {{ instrument.label }}
+                            </a>
+                        </li>
+                        {% empty %}
+                        <br class="hide-card" />
+                        {% endfor %}
+                    <ul>
+                    </p>
+            </div>
             
         </div>
     </div>
