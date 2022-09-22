@@ -39,7 +39,7 @@ def hash_with_namespace_uuid(
 ) -> uuid.UUID:
     """Compute the model instance's UUID inside a namespace.
 
-    A namespace, in this instance, is defined by teh UUID of a related model instance.
+    A namespace, in this instance, is defined by the UUID of a related model instance.
     """
     if cache:
         return _hash_with_namespace_uuid(namespace, name)
