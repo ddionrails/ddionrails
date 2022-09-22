@@ -3,7 +3,14 @@
 
 """ Django settings for ddionrails project: Settings for development environment """
 
-from .base import *
+from pathlib import Path
+
+import debug_toolbar
+
+from config.settings.base import *  # pylint: disable=W0614
+from config.settings.base import BASE_DIR, INSTALLED_APPS, MIDDLEWARE, TEMPLATES
+
+debug_templates_path = Path(debug_toolbar.__file__).parent.joinpath("templates")
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -35,3 +42,11 @@ LOGGING = {
         "imports": {"handlers": ["file"], "level": "DEBUG", "propagate": True},
     },
 }
+
+del TEMPLATES[0]["APP_DIRS"]
+TEMPLATES[0]["OPTIONS"]["loaders"] = [
+    (
+        "django.template.loaders.filesystem.Loader",
+        [BASE_DIR.joinpath("templates"), debug_templates_path],
+    ),
+]
