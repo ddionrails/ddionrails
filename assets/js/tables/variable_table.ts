@@ -2,7 +2,7 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
-import $ from "jquery";
+import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
 
 const variableApiURL = new URL("api/variables/", window.location.origin);
@@ -41,7 +41,7 @@ function renderVariableTable(table: any, url: string) {
       {
         data: "name", // Human readable label.
         orderable: false,
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
@@ -55,13 +55,13 @@ function renderVariableTable(table: any, url: string) {
       {
         data: "label", // Human readable label.
         orderable: false,
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
         data: "position",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["position"];
         },
         visible: false,

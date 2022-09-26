@@ -2,7 +2,7 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
-import $ from "jquery";
+import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
@@ -107,7 +107,7 @@ function renderDatasetTable(table: string, url: string) {
         data: "attachments", // Actual name of the entity.
         className: "attachment",
         orderable: false,
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
             const link = attachmentLinkTemplate.cloneNode(

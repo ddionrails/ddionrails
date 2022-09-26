@@ -2,7 +2,7 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
-import $ from "jquery";
+import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
 
 const instrumentApiURL = new URL("api/instruments/", window.location.origin);
@@ -47,7 +47,7 @@ function renderFullInstrumentTable(table: any, url: string) {
     columns: [
       {
         data: "instrument", // Human readable label.
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           if (row["has_questions"] === true) {
             const link = document.createElement("a");
             link.href =
@@ -63,7 +63,7 @@ function renderFullInstrumentTable(table: any, url: string) {
       },
       {
         data: "label",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -78,20 +78,20 @@ function renderFullInstrumentTable(table: any, url: string) {
       },
       {
         data: "type_position",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["type"]["position"];
         },
         visible: false,
       },
       {
         data: "type",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["type"]["en"];
         },
       },
       {
         data: "mode",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["mode"];
         },
       },
@@ -99,7 +99,7 @@ function renderFullInstrumentTable(table: any, url: string) {
         data: "attachments",
         className: "attachment",
         orderable: false,
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
             const link = attachmentLinkTemplate.cloneNode(
@@ -142,7 +142,7 @@ function renderInstrumentTable(table: any, url: string) {
     columns: [
       {
         data: "instrument",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           if (row["has_questions"] === true) {
             const link = document.createElement("a");
             link.href =
@@ -158,19 +158,19 @@ function renderInstrumentTable(table: any, url: string) {
       },
       {
         data: "label",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
         data: "period",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["period_name"];
         },
       },
       {
         data: "analysis_unit",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["analysis_unit_name"];
         },
       },
@@ -178,7 +178,7 @@ function renderInstrumentTable(table: any, url: string) {
         data: "attachments",
         className: "attachment",
         orderable: false,
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
             const link = attachmentLinkTemplate.cloneNode(

@@ -2,7 +2,7 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
-import $ from "jquery";
+import * as $ from "jquery";
 
 const variablesApiUrl = new URL("api/variables/", window.location.origin);
 const questionsApiUrl = new URL("api/questions/", window.location.origin);
@@ -31,7 +31,7 @@ function renderEntityTable(entity: any, table: any, url: string) {
     columns: [
       {
         data: "study", // Human readable label.
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
@@ -45,13 +45,13 @@ function renderEntityTable(entity: any, table: any, url: string) {
       },
       {
         data: "label", // Human readable label.
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           return row["label"] ? row["label"] : row["name"];
         },
       },
       {
         data: "entity", // Actual name of the entity.
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
@@ -68,7 +68,7 @@ function renderEntityTable(entity: any, table: any, url: string) {
       },
       {
         data: "parent",
-        render(_data, _type, row) {
+        render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
             window.location.protocol +
