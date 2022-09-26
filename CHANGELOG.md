@@ -11,6 +11,15 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.4.0] - 2022-09-26
+
+### Added
+
+- Relationships between instruments and datasets.
+
+### Changed
+
+- sorting of datasets table
 
 ## [6.3.1] - 2022-08-29
 
@@ -843,7 +852,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.3.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.4.0...develop
+[6.4.0]: https://github.com/ddionrails/ddionrails/compare/v6.3.1...v6.4.0
 [6.3.1]: https://github.com/ddionrails/ddionrails/compare/v6.3.0...v6.3.1
 [6.3.0]: https://github.com/ddionrails/ddionrails/compare/v6.2.0...v6.3.0
 [6.2.0]: https://github.com/ddionrails/ddionrails/compare/v6.1.0...v6.2.0
