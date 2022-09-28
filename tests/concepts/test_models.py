@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for models in ddionrails.concepts app """
 
@@ -17,7 +17,7 @@ class TestConceptModel:
         assert str(concept) == "/concept/" + concept.name
 
     def test_get_absolute_url_method(self, concept):
-        assert concept.get_absolute_url() == "/concept/" + concept.name
+        assert concept.get_absolute_url() == "/concept/" + str(concept.id)
 
 
 class TestAnalysisUnitModel:
