@@ -214,7 +214,7 @@ class Concept(ModelMixin, models.Model):
 
     def get_absolute_url(self) -> str:
         """Returns a canonical URL for the model using the "name" field"""
-        return reverse("concepts:concept_detail_name", kwargs={"concept_name": self.name})
+        return reverse("concepts:concept_detail", kwargs={"id": self.id})
 
 
 class Period(models.Model, ModelMixin):
