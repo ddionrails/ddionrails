@@ -8,7 +8,12 @@
         <span v-html="item.label"></span>
       </a>
     </p>
-    <p class="card-text">Topic in study {{ item.study }}</p>
+    <p class="card-text">Topic in study:
+      <a
+        :href="'/' + item.study.name"
+        v-html="item.study.label">
+      </a>
+    </p>
   </div>
 </template>
 
