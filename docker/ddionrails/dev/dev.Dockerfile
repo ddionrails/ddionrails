@@ -1,4 +1,5 @@
-FROM python:3.11.0rc2-slim-buster
+FROM python:3.10.4-slim-buster
+
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -27,17 +28,18 @@ RUN apt-get update \
     gcc>=4:8 \
     libjpeg-dev>=1:1.5 \
     zlib1g-dev>=1:1.2 \
+    libfreetype6-dev>=2.9.1-3+deb10u2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
+    && pip install --no-cache-dir --upgrade pipenv==2022.10.12 \
     && pip install --no-cache-dir --upgrade chardet==4.0.0 \
-    && pipfile2req Pipfile.lock > Requirements.txt \
-    && pipfile2req --dev Pipfile.lock >> Requirements.txt \
+    && pipenv requirements --dev > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.* \
     && npm install \
     && npm run build \
+    && pip uninstall -y --no-input pipenv \
     && rm -rf ./node_modules/ \
     && rm -rf /var/lib/apt/lists/* 
 
