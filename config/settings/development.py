@@ -49,4 +49,8 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [
         "django.template.loaders.filesystem.Loader",
         [BASE_DIR.joinpath("templates"), debug_templates_path],
     ),
+    (
+        "django.template.loaders.app_directories.Loader",
+        [BASE_DIR.joinpath("templates"), debug_templates_path],
+    ),
 ]
