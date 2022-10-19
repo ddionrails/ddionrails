@@ -21,7 +21,7 @@ Older versions are not part of this Project.
 
 - sorting of datasets table
 
-## [6.3.1] - 2022-08-29
+## [6.3.1] - 2022-09-01
 
 ### Added
 
