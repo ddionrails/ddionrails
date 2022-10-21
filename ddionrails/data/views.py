@@ -4,6 +4,8 @@
 
 from copy import deepcopy
 from re import sub
+from typing import List
+from uuid import UUID
 
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, RedirectView, TemplateView
@@ -141,16 +143,7 @@ class VariableDetailView(DetailView):
         context["study"] = study
         context["related_variables"] = self.object.get_related_variables()
         context["label_table"] = LabelTable(context["related_variables"])
-        context["questions"] = Question.objects.filter(
-            questions_variables__variable=self.object.id
-        ).select_related("period", "instrument") | Question.objects.filter(
-            questions_variables__variable__target_variables__target_id=self.object.id
-        ).select_related(
-            "period", "instrument"
-        )
-        context["questions"] = sorted(
-            context["questions"], key=lambda question: question.period.label, reverse=True
-        )
+        context["questions"] = _get_related_questions(self.object.id)
         # All questions are intended to be displayed separately in a bootstrap modal.
         # The subset here is to be displayed directly on the page.
         context["questions_subset"] = context["questions"][:5]
@@ -232,3 +225,16 @@ class VariableDetailView(DetailView):
         _data["uni"] = statistics
 
         return _data
+
+
+def _get_related_questions(variable_id: UUID) -> List[Question]:
+    return list(
+        (
+            Question.objects.filter(
+                questions_variables__variable=variable_id
+            ).select_related("period", "instrument")
+            | Question.objects.filter(
+                questions_variables__variable__target_variables__target_id=variable_id
+            ).select_related("period", "instrument")
+        ).order_by("-period__name")
+    )
