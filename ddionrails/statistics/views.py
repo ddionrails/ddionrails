@@ -10,6 +10,7 @@ from django.views.generic import TemplateView
 
 from ddionrails.concepts.models import Topic
 from ddionrails.data.models.variable import Variable
+from ddionrails.instruments.models.question import Question
 from ddionrails.studies.models import Study
 
 NAMESPACE = "statistics"
@@ -19,20 +20,35 @@ def statistics_detail_view(
     request: HttpRequest, study: Study, plot_type: str
 ) -> HttpResponse:
     """Render numerical and categorical statistics views."""
-    statistics_server_url = f"{request.get_host()}{settings.STATISTICS_SERVER_URL}"
     context: Dict[str, Any] = {}
-    context["namespace"] = NAMESPACE
+    statistics_server_base_url = f"{request.get_host()}{settings.STATISTICS_SERVER_URL}"
     context[
         "statistics_server_url"
-    ] = f"{request.scheme}://{statistics_server_url}{plot_type}/"
+    ] = f"{request.scheme}://{statistics_server_base_url}{plot_type}/"
+
+    context["namespace"] = NAMESPACE
     context["study"] = study
     context["server_metadata"] = {
         "url": context["statistics_server_url"],
         "study": study.name,
     }
+
     context["variable"] = Variable.objects.select_related("dataset").get(
         id=request.GET["variable"]
     )
+    context["question"] = (
+        (
+            Question.objects.filter(questions_variables__variable=context["variable"].id)
+            | Question.objects.filter(
+                questions_variables__variable__target_variables__target_id=context[
+                    "variable"
+                ].id
+            )
+        )
+        .order_by("-period__name")
+        .first()
+    )
+
     categories = context["variable"].category_list
     context["value_labels"] = []
     context["values"] = []
