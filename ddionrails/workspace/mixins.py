@@ -11,7 +11,7 @@ class SoepMixin:
     """SoepMixin - utilities/helpers to get SOEP years and year prefixes"""
 
     def _generate_script_dict(self):
-        """ Map variables from basket to their dataset names """
+        """Map variables from basket to their dataset names"""
         script_dict = dict()
         for variable in self.basket.variables.all():
             dataset_name = variable.dataset.name
@@ -24,7 +24,7 @@ class SoepMixin:
 
     @staticmethod
     def _create_dataset_dict(dataset_name: str) -> Dict:
-        """ Returns dict with dataset information
+        """Returns dict with dataset information
 
         A possible empty dict from SoepDatasets().get_dict()
         Is handled with "" as default values.
@@ -54,8 +54,8 @@ class SoepMixin:
             dataset_dict["merge_id"] = dataset_dict["curr_hid"]
             dataset_dict["variables"].add(dataset_dict["curr_hid"])
         elif analysis_unit == "p":
-            dataset_dict["merge_id"] = "persnr"
-            dataset_dict["variables"].add("persnr")
+            dataset_dict["merge_id"] = "pid"
+            dataset_dict["variables"].add("pid")
             if dataset_dict["curr_hid"] != "":
                 dataset_dict["variables"].add(dataset_dict["curr_hid"])
         else:

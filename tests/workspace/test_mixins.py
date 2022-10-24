@@ -14,6 +14,7 @@ from ddionrails.workspace.mixins import SoepMixin
 def soepmixin():
     return SoepMixin()
 
+
 @pytest.fixture
 def script_dict():
     return {
@@ -31,9 +32,10 @@ def script_dict():
             period=2001,
             prefix="r",
             variables=set(),
-            matches=["p"]
-        )
+            matches=["p"],
+        ),
     }
+
 
 class TestSoepMixin:
     def test_generate_script_dict_method(self, soepmixin):
@@ -56,17 +58,53 @@ class TestSoepMixin:
         )
 
     def test_enrich_dataset_dict_method(self, soepmixin):
-        dataset_dict_p = {"analysis_unit": "p", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        dataset_dict_p = {
+            "analysis_unit": "p",
+            "variables": set(),
+            "merge_id": "",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
         soepmixin._enrich_dataset_dict(dataset_dict_p)
-        assert dataset_dict_p == {"analysis_unit": "p", "variables": {"persnr", "bahhnr"}, "merge_id": "persnr", "prefix": "ba", "curr_hid": "bahhnr"}
+        assert dataset_dict_p == {
+            "analysis_unit": "p",
+            "variables": {"pid", "bahhnr"},
+            "merge_id": "pid",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
 
-        dataset_dict_h = {"analysis_unit": "h", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        dataset_dict_h = {
+            "analysis_unit": "h",
+            "variables": set(),
+            "merge_id": "",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
         soepmixin._enrich_dataset_dict(dataset_dict_h)
-        assert dataset_dict_h == {"analysis_unit": "h", "variables": {"bahhnr"}, "merge_id": "bahhnr", "prefix": "ba", "curr_hid": "bahhnr"}
+        assert dataset_dict_h == {
+            "analysis_unit": "h",
+            "variables": {"bahhnr"},
+            "merge_id": "bahhnr",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
 
-        dataset_dict_other = {"analysis_unit": "", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        dataset_dict_other = {
+            "analysis_unit": "",
+            "variables": set(),
+            "merge_id": "",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
         soepmixin._enrich_dataset_dict(dataset_dict_other)
-        assert dataset_dict_other == {"analysis_unit": "", "variables": set(), "merge_id": "", "prefix": "ba", "curr_hid": "bahhnr"}
+        assert dataset_dict_other == {
+            "analysis_unit": "",
+            "variables": set(),
+            "merge_id": "",
+            "prefix": "ba",
+            "curr_hid": "bahhnr",
+        }
 
     def test_validate_datasets_method(self, script_dict, soepmixin):
         analysis_unit_p = "p"
@@ -74,5 +112,5 @@ class TestSoepMixin:
         analysis_unit_h = "h"
         valid_h = soepmixin._validate_datasets(script_dict, analysis_unit_h)
 
-        assert valid_p == ['bah', 'rp']
-        assert valid_h == ['bah']
+        assert valid_p == ["bah", "rp"]
+        assert valid_h == ["bah"]

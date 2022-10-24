@@ -90,6 +90,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         script += "\ncapture log close"
         script += '\nlog using "${MY_LOG_FILE}", text replace'
         script += "\nset more off"
+        script += "\nset varabbrev off"
         return heading + script
 
     def _render_not_processed(self, not_processed) -> str:
@@ -106,7 +107,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         script = []
         if self.settings["analysis_unit"] == "p":
             script.append("\nuse")
-            pfad_variables = ["hid", "persnr", "sex", "gebjahr", "psample"]
+            pfad_variables = ["cid", "pid", "sex", "gebjahr", "psample"]
             for prefix, year in self.years_mapping.items():
                 pfad_variables.append(f"hid_{year}")
                 pfad_variables.append(f"{prefix}netto")
@@ -192,7 +193,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
         script = ["\nuse"]
         hrf_dataset = ""
         if self.settings["analysis_unit"] == "p":
-            hrf_variables = ["hhnr", "persnr", "prgroup"]
+            hrf_variables = ["cid", "pid", "prgroup"]
             hrf_dataset = "phrf.dta"
             for year in self.years:
                 hrf_variables.append("{}phrf".format(year))
@@ -200,7 +201,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
                 for variable in special_datasets["phrf"]:
                     hrf_variables.append("{}".format(variable))
         else:
-            hrf_variables = ["hhnr", "hhnrakt", "hrgroup"]
+            hrf_variables = ["cid", "hid", "hrgroup"]
             hrf_dataset = "hhrf.dta"
             for year in self.years:
                 hrf_variables.append("{}hhrf".format(year))
@@ -216,10 +217,13 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
     def _render_create_master(self) -> str:
         """Render a "create master" section of the script file"""
         heading = "\n\n* * * CREATE MASTER * * *\n"
-        key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
+        if self.settings["analysis_unit"] == "p":
+            key = "pid"
+        else:
+            key = "hid"
         script = '\nuse "${MY_PATH_OUT}pfad.dta", clear'
         script += (
-            '\nmerge 1:1 %s hhnr using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen'
+            '\nmerge 1:1 %s cid using "${MY_PATH_OUT}hrf.dta", keep(master match) nogen'
             % key
         )
         script += '\nsave "${MY_PATH_OUT}master.dta", replace'
