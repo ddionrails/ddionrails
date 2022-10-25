@@ -3,7 +3,6 @@
 
 """ Test cases for mixins in ddionrails.workspace app """
 
-import string
 
 import pytest
 
@@ -37,6 +36,7 @@ def script_dict():
     }
 
 
+@pytest.mark.usefixtures("script_metadata")
 class TestSoepMixin:
     def test_generate_script_dict_method(self, soepmixin):
         """

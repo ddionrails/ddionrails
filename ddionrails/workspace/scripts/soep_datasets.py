@@ -21,6 +21,11 @@ import json
 from os import path
 from typing import Dict, Union
 
+from django.apps import apps
+
+from ddionrails.workspace.imports import script_metadata_import
+from ddionrails.workspace.models.script_metadata import ScriptMetadata
+
 ############################################################
 # File   : soep_datasets.py
 # Date   : 2020-02-04 / ISO 8601: YYYY-MM-DD
@@ -73,15 +78,14 @@ class SoepDatasets:
 
     # Default path to json file
     # _default_json_datasets_file = "../datafiles.json" # bash tests
-    _default_json_datasets_file = "ddionrails/workspace/datafiles.json"  # local tests
     # _default_json_datasets_file = "ddionrails/workspace/datafiles_with_long.json"
 
     ########################################################
-    def __init__(self, json_file=_default_json_datasets_file):
-        self.data = SoepDatasetsJsonLoader().load_json_data(json_file)
+    def __init__(self):
+        self.data = ScriptMetadata.objects.get(study__name="soep-core").data
 
     def get_dict(self, dataset_name) -> Union[Dict[str, str], Dict]:
-        """ Return dataset information
+        """Return dataset information
 
         Returns:
             The dataset information from the datafiles.json file

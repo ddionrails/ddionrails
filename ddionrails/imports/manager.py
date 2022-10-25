@@ -44,6 +44,7 @@ from ddionrails.publications.imports import AttachmentImport, PublicationImport
 from ddionrails.statistics.imports import statistics_import
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
+from ddionrails.workspace.imports import script_metadata_import
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
@@ -206,6 +207,10 @@ class StudyImportManager:
                 "variables_images": (
                     variables_images_import,
                     self.base_dir.joinpath("variables_images.csv"),
+                ),
+                "script_metadata": (
+                    script_metadata_import,
+                    self.base_dir.joinpath("script_metadata.json"),
                 ),
             }
         )

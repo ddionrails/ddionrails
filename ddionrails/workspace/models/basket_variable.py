@@ -36,13 +36,13 @@ class BasketVariable(models.Model):
     )
 
     class Meta:
-        """ Django's metadata options """
+        """Django's metadata options"""
 
         unique_together = ("basket", "variable")
 
     def clean(self):
-        """ Custom clean method for BasketVariable
-            the basket's study and the variable's dataset's study have to be the same.
+        """Custom clean method for BasketVariable
+        the basket's study and the variable's dataset's study have to be the same.
         """
         basket_study = self.basket.study  # pylint: disable=E1101
         variable_study = self.variable.dataset.study  # pylint: disable=E1101

@@ -40,11 +40,11 @@ class Script(TimeStampedModel):
     )
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "basket.id" and "id" fields """
+        """Returns a string representation using the "basket.id" and "id" fields"""
         return f"/workspace/baskets/{self.basket.id}/scripts/{self.id}"
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "basket.id" and "id" fields """
+        """Returns a canonical URL for the model using the "basket.id" and "id" fields"""
         return reverse(
             "workspace:script_detail",
             kwargs={"basket_id": self.basket.id, "script_id": self.id},
@@ -71,5 +71,5 @@ class Script(TimeStampedModel):
         return self.get_config().get_script_input()
 
     def title(self) -> str:
-        """ Returns a title representation using the "label" field, with "name" field as fallback """
+        """Returns a title representation using the "label" field, with "name" field as fallback"""
         return str(self.label) if self.label != "" else str(self.name)
