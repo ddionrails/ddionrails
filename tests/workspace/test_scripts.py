@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for scripts in ddionrails.workspace app """
 
@@ -11,27 +11,28 @@ from ddionrails.workspace.models import BasketVariable
 from ddionrails.workspace.scripts import ScriptConfig, SoepR, SoepSpss, SoepStata
 
 
+@pytest.mark.usefixtures("script_metadata")
 @pytest.fixture(name="soepstata")
 def _soepstata(script, basket):
-    """ An instantiated SoepStata object with related script and basket """
+    """An instantiated SoepStata object with related script and basket"""
     return SoepStata(script, basket)
 
 
 @pytest.fixture(name="soepspss")
 def _soepspss(script, basket):
-    """ An instantiated SoepSpss object with related script and basket """
+    """An instantiated SoepSpss object with related script and basket"""
     return SoepSpss(script, basket)
 
 
 @pytest.fixture(name="soepr")
 def _soepr(script, basket):
-    """ An instantiated SoepR object with related script and basket """
+    """An instantiated SoepR object with related script and basket"""
     return SoepR(script, basket)
 
 
 @pytest.fixture(name="script_config")
 def _script_config(script, basket):
-    """ An instantiated ScriptConfig object with related script and basket """
+    """An instantiated ScriptConfig object with related script and basket"""
     return ScriptConfig(script, basket)
 
 
@@ -44,12 +45,12 @@ class TestScriptConfig:
         mocked_get_script_input = mocker.patch.object(
             ScriptConfig, "get_datasets_and_variables"
         )
-        mocked_get_script_input.return_value = dict()
+        mocked_get_script_input.return_value = {}
         script_config.template = "some-template.html"
         result = script_config.get_script_input()
         assert result["template"] == script_config.template
         assert result["settings"] == json.loads(script_config.script.settings)
-        assert result["data"] == dict()
+        assert result["data"] == {}
 
     def test_get_datasets_and_variables_method(self, script_config, variable):
         # Add variable to basket
@@ -68,6 +69,7 @@ class TestScriptConfig:
         assert result == config
 
 
+@pytest.mark.usefixtures("db", "script_metadata")
 class TestSoepStata:
     def test_render_individual_gender_method_with_male(self, soepstata):
         soepstata.settings["gender"] = "m"
@@ -138,6 +140,7 @@ class TestSoepStata:
         assert expected == result
 
 
+@pytest.mark.usefixtures("db", "script_metadata")
 class TestSoepSpssClass:
     def test_render_individual_gender_method_with_male(self, soepspss):
         soepspss.settings["gender"] = "m"
@@ -184,6 +187,8 @@ class TestSoepSpssClass:
         assert expected == result
 
 
+@pytest.mark.django_db
+@pytest.mark.usefixtures("script_metadata")
 class TestSoepR:
     def test_render_individual_gender_method_with_male(self, soepr):
         soepr.settings["gender"] = "m"

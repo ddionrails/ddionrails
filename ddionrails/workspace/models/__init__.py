@@ -4,3 +4,4 @@
 from .basket import Basket
 from .basket_variable import BasketVariable
 from .script import Script
+from .script_metadata import ScriptMetadata

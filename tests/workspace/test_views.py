@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name,imported-auth-user
 
 """ Test cases for views in ddionrails.workspace app """
 
@@ -10,21 +10,23 @@ from django.contrib.auth.models import User
 from django.test import Client
 from django.urls import reverse
 
+from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
+from ddionrails.workspace.models.script_metadata import ScriptMetadata
 from tests import status
 
 from .factories import UserFactory
 
 
-@pytest.fixture
-def client_with_referer():
-    """ A django.test.Client with a HTTP_REFERER to test redirects """
+@pytest.fixture(name="client_with_referer")
+def _client_with_referer():
+    """A django.test.Client with a HTTP_REFERER to test redirects"""
     return Client(HTTP_REFERER="https://www.google.com")
 
 
-@pytest.fixture
-def basket_variable_with_concept(basket_variable, concept):
-    """ A variable with a related concept in a basket """
+@pytest.fixture(name="basket_variable_with_concept")
+def _basket_variable_with_concept(basket_variable, concept):
+    """A variable with a related concept in a basket"""
     basket_variable.variable.concept = concept
     basket_variable.variable.save()
     return basket_variable
@@ -54,13 +56,20 @@ class TestOwnBasketOnlyDecorator:
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
+@pytest.mark.usefixtures("db")
 class TestScriptDetailView:
     def test_script_detail_view_with_script_created_before_update(
         self, client, basket, script
     ):
-        """ This tests a regression that was introduced after updating the settings for scripts
-            with a 'gender' option
+        """This tests a regression that was
+        introduced after updating the settings for scripts
+        with a 'gender' option
         """
+        study = Study(name="soep-core")
+        study.save()
+        metadata = ScriptMetadata(study=study, metadata={})
+        metadata.save()
+
         script.basket = basket
         # Set the settings to the default values from before the update
         script.settings = (
@@ -347,11 +356,3 @@ class TestUserDelete:
         response = client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
         assert 0 == User.objects.count()
-
-    # TODO: you cannot delete an anonymous user -> NotImplementedError
-    # @pytest.mark.django_db
-    # def test_with_anonymous_user(self, client):
-    #     assert 0 == User.objects.count()
-    #     url = reverse("workspace:user_delete")
-    #     response = client.get(url)
-    #     assert status.HTTP_404_NOT_FOUND == response.status_code

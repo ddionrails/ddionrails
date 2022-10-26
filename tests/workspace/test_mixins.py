@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
+# pylint: disable=protected-access
 
 """ Test cases for mixins in ddionrails.workspace app """
-
-import string
 
 import pytest
 
 from ddionrails.workspace.mixins import SoepMixin
 
 
-@pytest.fixture
-def soepmixin():
+@pytest.fixture(name="soepmixin")
+def _soepmixin():
     return SoepMixin()
 
 
-@pytest.fixture
-def script_dict():
+@pytest.fixture(name="script_dict")
+def _script_dict():
     return {
         "bah": dict(
             name="bah",
@@ -38,25 +37,6 @@ def script_dict():
 
 
 class TestSoepMixin:
-    def test_generate_script_dict_method(self, soepmixin):
-        """
-        TODO: create test
-        """
-
-    def test_create_dataset_dict_method(self, soepmixin):
-        dataset_name = "bah"
-        testdict = soepmixin._create_dataset_dict(dataset_name)
-        assert testdict == dict(
-            name="bah",
-            analysis_unit="h",
-            period=2010,
-            prefix="ba",
-            variables=set(),
-            curr_hid="bahhnr",
-            is_matchable=True,
-            is_special=False,
-        )
-
     def test_enrich_dataset_dict_method(self, soepmixin):
         dataset_dict_p = {
             "analysis_unit": "p",
@@ -106,6 +86,7 @@ class TestSoepMixin:
             "curr_hid": "bahhnr",
         }
 
+    @pytest.mark.usefixtures("db", "script_metadata")
     def test_validate_datasets_method(self, script_dict, soepmixin):
         analysis_unit_p = "p"
         valid_p = soepmixin._validate_datasets(script_dict, analysis_unit_p)

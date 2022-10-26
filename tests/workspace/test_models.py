@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for models in ddionrails.workspace app """
 
@@ -236,6 +236,7 @@ class TestBasketVariableModel(unittest.TestCase):
 
 
 class TestScriptModel:
+    @pytest.mark.usefixtures("db", "script_metadata")
     def test_get_config_method(self, script):
         result = script.get_config()
         assert isinstance(result, SoepStata)

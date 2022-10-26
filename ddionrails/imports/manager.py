@@ -10,7 +10,7 @@ from collections import OrderedDict
 from inspect import isfunction, isgenerator
 from pathlib import Path
 from types import FunctionType
-from typing import Any, Generator, List, Tuple, Union
+from typing import Any, List, Tuple
 
 import django_rq
 import git
@@ -44,6 +44,7 @@ from ddionrails.publications.imports import AttachmentImport, PublicationImport
 from ddionrails.statistics.imports import statistics_import
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
+from ddionrails.workspace.imports import script_metadata_import
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
@@ -137,7 +138,7 @@ def system_import_manager(system):
 class StudyImportManager:
     """Manage the import of all study ressources."""
 
-    import_order: OrderedDict[str, Tuple[Any, Union[Path, Generator]]]
+    import_order: OrderedDict[str, Tuple[Any, Any]]
 
     def __init__(self, study: Study, redis: bool = True):
         self.study = study
@@ -206,6 +207,10 @@ class StudyImportManager:
                 "variables_images": (
                     variables_images_import,
                     self.base_dir.joinpath("variables_images.csv"),
+                ),
+                "script_metadata": (
+                    script_metadata_import,
+                    self.base_dir.joinpath("script_metadata.csv"),
                 ),
             }
         )
