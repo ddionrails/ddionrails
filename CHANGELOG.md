@@ -11,6 +11,12 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.5.0] - 2022-10-26
+
+### Changed
+
+- Moved datafiles.json, used for workspace script generation, into the database.
+
 ## [6.4.1] - 2022-10-24
 
 ### Added
@@ -862,7 +868,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.4.1...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.5.0...develop
+[6.5.0]: https://github.com/ddionrails/ddionrails/compare/v6.4.1...v6.5.0
 [6.4.1]: https://github.com/ddionrails/ddionrails/compare/v6.4.0...v6.4.1
 [6.4.0]: https://github.com/ddionrails/ddionrails/compare/v6.3.1...v6.4.0
 [6.3.1]: https://github.com/ddionrails/ddionrails/compare/v6.3.0...v6.3.1
