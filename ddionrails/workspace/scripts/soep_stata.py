@@ -239,7 +239,7 @@ class SoepStata(SoepConfig, ScriptConfig, SoepMixin):
             list_variables = set.copy(dataset["variables"])
             if dataset["analysis_unit"] == "p":
                 for var in dataset["variables"]:
-                    if var.endswith("hhnr"):
+                    if var.startswith("hid_"):
                         list_variables.remove(var)
             script = "\nuse %s" % " ".join(list_variables)
             script += ' using "${MY_PATH_IN}%s.dta", clear' % dataset["name"]

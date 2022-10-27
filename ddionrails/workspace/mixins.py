@@ -34,7 +34,7 @@ class SoepMixin:
         dataset = SoepDatasets().get_dict(dataset_name)
         return dict(
             name=dataset_name,
-            analysis_unit=dataset.get("analyse_unit", ""),
+            analysis_unit=dataset.get("analysis_unit", ""),
             period=dataset.get("syear", ""),
             prefix=dataset.get("prefix", ""),
             is_matchable=dataset.get("is_matchable", ""),
