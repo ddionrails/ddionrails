@@ -9,8 +9,16 @@ from .script_config import ScriptConfig
 from .soep_config import SoepConfig
 
 
+def add_wave_variables(variable_list, wave_mapping):
+    for prefix, year in wave_mapping:
+        variable_list.append(f'"hid_{year}"')
+        variable_list.append(f'"{prefix}netto"')
+        variable_list.append(f'"{prefix}pop"')
+    return variable_list
+
+
 class SoepR(SoepConfig, ScriptConfig, SoepMixin):
-    """ Script Generator for R scripts """
+    """Script Generator for R scripts"""
 
     NAME = "soep-r"
     COMMENT = "#"
@@ -30,7 +38,9 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
             x: y for x, y in script_input["data"].items() if x in not_processed_datasets
         }
         script_input["is_special"] = {
-            x: y for x, y in script_input["data"].items() if x in {"hhrf", "phrf", "ppfad", "hpfad"}
+            x: y
+            for x, y in script_input["data"].items()
+            if x in {"hhrf", "phrf", "ppfad", "hpfad"}
         }
 
         script_input["text"] = "\n".join(
@@ -44,7 +54,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
                 self._render_gender(),
                 self._render_sort_pfad(),
                 self._render_hrf(script_input["is_special"]),
-                self._render_create_master(),
+                self._render_create_main(),
                 self._render_read_data(),
                 self._render_merge(),
                 self._render_done(),
@@ -53,7 +63,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         return script_input
 
     def _render_disclaimer(self) -> str:
-        """ Render the disclaimer of the script file """
+        """Render the disclaimer of the script file"""
         return (
             "\n"
             f"{self.COMMENT} --------------------------------------------------------------------.\n"
@@ -69,15 +79,15 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         )
 
     def _render_local_variables(self) -> str:
-        """ Render a "local variables" section of the script file """
-        script = '\nlibrary("foreign")'
+        """Render a "local variables" section of the script file"""
+        script = '\nlibrary("haven")'
         script += "\n### LOCAL VARIABLES ###"
         script += '\npath_in <- "%s"' % self.settings["path_in"].replace("\\", "/")
         script += '\npath_out <- "%s"' % self.settings["path_out"].replace("\\", "/")
         return script
 
     def _render_not_processed(self, not_processed) -> str:
-        """ Render a "not processed" section of the script file """
+        """Render a "not processed" section of the script file"""
         heading = "\n\n%s* * * NOT PROCESSED * * *.\n" % self.COMMENT
         script = ""
         for key, value in not_processed.items():
@@ -85,29 +95,19 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         return heading + script
 
     def _render_pfad(self, special_datasets) -> str:
-        """ Render a "load pfad" section of the script file """
+        """Render a "load pfad" section of the script file"""
         script = "\n### LOAD [H|P]PFAD ###\n"
         if self.settings["analysis_unit"] == "p":
-            script += (
-                '\npfad <- read.dta(file.path(path_in, "ppfad.dta"), convert.factors=F)'
-            )
-            temp = ['"hhnr"', '"persnr"', '"sex"', '"gebjahr"', '"psample"']
-            for year in self.years:
-                temp.append('"%shhnr"' % year)
-                temp.append('"%snetto"' % year)
-                temp.append('"%spop"' % year)
+            script += '\npfad <- read_dta(file.path(path_in, "ppfad.dta"))'
+            temp = ['"cid"', '"pid"', '"sex"', '"gebjahr"', '"psample"']
+            temp = add_wave_variables(temp, self.years_mapping)
             if "ppfad" in special_datasets:
                 for variable in special_datasets["ppfad"]:
                     temp.append('"%s"' % variable)
         else:
-            script += (
-                '\npfad <- read.dta(file.path(path_in, "hpfad.dta"), convert.factors=F)'
-            )
-            temp = ['"hhnr"', '"hhnrakt"', '"hsample"']
-            for year in self.years:
-                temp.append('"%shhnr"' % year)
-                temp.append('"%shnetto"' % year)
-                temp.append('"%shpop"' % year)
+            script += '\npfad <- read_dta(file.path(path_in, "hpfad.dta"))'
+            temp = ['"cid"', '"hid"', '"hsample"']
+            temp = add_wave_variables(temp, self.years_mapping)
             if "hpfad" in special_datasets:
                 for variable in special_datasets["hpfad"]:
                     temp.append('"%s"' % variable)
@@ -116,7 +116,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         return script
 
     def _render_balanced(self) -> str:
-        """ Render a "balanced" section of the script file """
+        """Render a "balanced" section of the script file"""
         heading = "\n### [UN]BALANCED ###\n"
         connector = "&" if self.settings["balanced"] == "t" else "|"
         if self.settings["analysis_unit"] == "p":
@@ -136,7 +136,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
             return heading + "\npfad <- with(pfad, pfad[" + connector.join(temp) + ", ])"
 
     def _render_private(self) -> str:
-        """ Render a "private households" section of the script file """
+        """Render a "private households" section of the script file"""
         heading = "\n### PRIVATE HOUSEHOLDS ###\n"
         set_name = "pop" if self.settings["analysis_unit"] == "p" else "hpop"
         if self.settings["private"] == "t":
@@ -148,7 +148,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
             return heading + "\n# all households"
 
     def _render_gender(self) -> str:
-        """ Render a "gender" section of the script file """
+        """Render a "gender" section of the script file"""
         if self.settings["analysis_unit"] == "p":
             heading = "\n### GENDER ( male = 1 / female = 2) ###\n"
             gender = self.settings.get("gender", "b")
@@ -163,54 +163,50 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
 
     @staticmethod
     def _render_sort_pfad() -> str:
-        """ Render a "sort pfad" section of the script file """
+        """Render a "sort pfad" section of the script file"""
         script = "\n### SORT [H|P]PFAD ###\n"
         script += "\n# This is R -- no sorting neccessary :-)"
         script += "\n"
         return script
 
     def _render_hrf(self, special_datasets) -> str:
-        """ Render a "load hrf" section of the script file """
+        """Render a "load hrf" section of the script file"""
         script = "\n### LOAD [H|P]HRF ###\n"
         if self.settings["analysis_unit"] == "p":
-            script += (
-                '\nhrf <- read.dta(file.path(path_in, "phrf.dta"), convert.factors=F)'
-            )
+            script += '\nhrf <- read_dta(file.path(path_in, "phrf.dta"))'
             temp = []
-            temp.append('"hhnr"')
-            temp.append('"persnr"')
+            temp.append('"cid"')
+            temp.append('"pid"')
             temp.append('"prgroup"')
             for year in self.years:
                 temp.append('"{}phrf"'.format(year))
             if "phrf" in special_datasets:
                 for variable in special_datasets["phrf"]:
                     temp.append('"{}"'.format(variable))
-            script += '\nhrf <- hrf[,c(' + ", ".join(list(set(temp))) + ")]"
+            script += "\nhrf <- hrf[,c(" + ", ".join(list(set(temp))) + ")]"
         else:
-            script += (
-                '\nhrf <- read.dta(file.path(path_in, "hhrf.dta"), convert.factors=F)'
-            )
+            script += '\nhrf <- read_dta(file.path(path_in, "hhrf.dta"))'
             temp = []
-            temp.append('"hhnr"')
-            temp.append('"hhnrakt"')
+            temp.append('"cid"')
+            temp.append('"hid"')
             temp.append('"hrgroup"')
             for year in self.years:
                 temp.append('"{}hhrf"'.format(year))
             if "hhrf" in special_datasets:
                 for variable in special_datasets["hhrf"]:
                     temp.append('"{}"'.format(variable))
-            script += '\nhrf <- hrf[,c(' + ", ".join(list(set(temp))) + ")]"
+            script += "\nhrf <- hrf[,c(" + ", ".join(list(set(temp))) + ")]"
         return script
 
-    def _render_create_master(self) -> str:
-        """ Render a "create master" section of the script file """
-        key = "persnr" if self.settings["analysis_unit"] == "p" else "hhnrakt"
-        script = "\n### CREATE MASTER ###\n"
-        script += '\nmaster <- merge( pfad, hrf, by = c("%s", "hhnr"))' % key
+    def _render_create_main(self) -> str:
+        """Render a "create main" section of the script file"""
+        key = "pid" if self.settings["analysis_unit"] == "p" else "hid"
+        script = "\n### CREATE MAIN ###\n"
+        script += '\nmain <- merge( pfad, hrf, by = c("%s", "cid"))' % key
         return script
 
     def _render_read_data(self) -> str:
-        """ Render a "read data" section of the script file """
+        """Render a "read data" section of the script file"""
         heading = "\n### READ DATA ###\n"
         temp = ["\ndata <- list()"]
         for dataset in self.script_dict.values():
@@ -219,13 +215,13 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
             list_variables = set.copy(dataset["variables"])
             if dataset["analysis_unit"] == "p":
                 for var in dataset["variables"]:
-                    if var.endswith("hhnr"):
+                    if var.startswith("hid_"):
                         list_variables.remove(var)
             script = "\ntmp_variables <- c(%s)" % ", ".join(
                 ['"%s"' % x for x in list_variables]
             )
             script += (
-                '\ntmp_dataset <- read.dta(file.path(path_in, "%s.dta"), convert.factors=F)'
+                '\ntmp_dataset <- read_dta(file.path(path_in, "%s.dta"))'
                 % dataset["name"]
             )
             script += '\ndata[["%s"]] <- tmp_dataset[ , tmp_variables]' % dataset["name"]
@@ -233,24 +229,24 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         return heading + "\n\n".join(temp)
 
     def _render_merge(self) -> str:
-        """ Render a "merge" section of the script file """
+        """Render a "merge" section of the script file"""
         script = "\n### MERGE ###\n"
         for dataset in self.script_dict.values():
             if dataset["is_special"] == True:
                 continue
             script += (
-                '\nmaster <- merge(master, data[["%s"]], by = "%s", all.x=T, all.y=F)'
+                '\nmain <- merge(main, data[["%s"]], by = "%s", all.x=T, all.y=F)'
                 % (dataset["name"], dataset["merge_id"])
             )
         return script
 
     @staticmethod
     def _render_done() -> str:
-        """ Render a "done" section of the script file """
+        """Render a "done" section of the script file"""
         return (
             "\n"
             "### DONE ###\n\n"
-            'attr(master, "label") <- "paneldata.org"\n'
-            "str(master)\n"
-            'save(master, file=file.path(path_out, "master.RData"))'
+            'attr(main, "label") <- "paneldata.org"\n'
+            "str(main)\n"
+            'save(main, file=file.path(path_out, "main.RData"))'
         )
