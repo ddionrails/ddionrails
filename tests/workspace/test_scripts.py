@@ -225,8 +225,8 @@ class TestSoepR:
         expected = (
             "\n"
             "### DONE ###\n\n"
-            'attr(master, "label") <- "paneldata.org"\n'
-            "str(master)\n"
-            'save(master, file=file.path(path_out, "master.RData"))'
+            'attr(main, "label") <- "paneldata.org"\n'
+            "str(main)\n"
+            'save(main, file=file.path(path_out, "main.RData"))'
         )
         assert expected == result
