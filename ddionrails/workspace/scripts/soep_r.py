@@ -10,7 +10,7 @@ from .soep_config import SoepConfig
 
 
 def add_wave_variables(variable_list, wave_mapping):
-    for prefix, year in wave_mapping:
+    for prefix, year in wave_mapping.items():
         variable_list.append(f'"hid_{year}"')
         variable_list.append(f'"{prefix}netto"')
         variable_list.append(f'"{prefix}pop"')
