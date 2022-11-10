@@ -9,11 +9,11 @@ from .script_config import ScriptConfig
 from .soep_config import SoepConfig
 
 
-def add_wave_variables(variable_list, wave_mapping):
+def add_wave_variables(variable_list, wave_mapping, analysis_unit_prefix=""):
     for prefix, year in wave_mapping.items():
         variable_list.append(f'"hid_{year}"')
-        variable_list.append(f'"{prefix}netto"')
-        variable_list.append(f'"{prefix}pop"')
+        variable_list.append(f'"{prefix}{analysis_unit_prefix}netto"')
+        variable_list.append(f'"{prefix}{analysis_unit_prefix}pop"')
     return variable_list
 
 
@@ -107,7 +107,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
         else:
             script += '\npfad <- read_dta(file.path(path_in, "hpfad.dta"))'
             temp = ['"cid"', '"hid"', '"hsample"']
-            temp = add_wave_variables(temp, self.years_mapping)
+            temp = add_wave_variables(temp, self.years_mapping, "h")
             if "hpfad" in special_datasets:
                 for variable in special_datasets["hpfad"]:
                     temp.append('"%s"' % variable)
