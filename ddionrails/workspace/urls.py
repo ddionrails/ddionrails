@@ -22,16 +22,6 @@ urlpatterns = [
     path("baskets/<int:basket_id>/search", views.basket_search, name="basket_search"),
     path("baskets/<int:basket_id>/delete", views.basket_delete, name="basket_delete"),
     path(
-        "baskets/<int:basket_id>/add/<uuid:variable_id>/",
-        views.add_variable,
-        name="add_variable",
-    ),
-    path(
-        "baskets/<int:basket_id>/remove/<uuid:variable_id>/",
-        views.remove_variable,
-        name="remove_variable",
-    ),
-    path(
         "baskets/<int:basket_id>/add_concept/<uuid:concept_id>/",
         views.add_concept,
         name="add_concept",

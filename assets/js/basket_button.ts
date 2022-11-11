@@ -10,7 +10,7 @@ const BasketVariableAPI = new URL(
 );
 
 /**
- * 
+ *
  */
 class BasketPostData {
   basket: number;
@@ -31,7 +31,11 @@ class BasketPostData {
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function addBasketVariable(basket: number, variable: string, basketButton: HTMLElement) {
+export function addBasketVariable(
+  basket: number,
+  variable: string,
+  basketButton: HTMLElement
+) {
   const postData = new BasketPostData(basket, [variable]);
 
   const client = new XMLHttpRequest();
@@ -39,13 +43,14 @@ function addBasketVariable(basket: number, variable: string, basketButton: HTMLE
   client.setRequestHeader("Content-type", "application/json");
 
   const csrfToken = document.querySelector(
-    "input[name=csrfmiddlewaretoken]") as HTMLInputElement;
+    "input[name=csrfmiddlewaretoken]"
+  ) as HTMLInputElement;
 
   client.withCredentials = true;
   client.setRequestHeader("X-CSRFToken", csrfToken.value);
   client.setRequestHeader("Accept", "application/json");
 
-  client.onreadystatechange = function() {
+  client.onreadystatechange = function () {
     if (client.readyState === XMLHttpRequest.DONE) {
       const status = client.status;
       const _response = JSON.parse(client.responseText);
@@ -71,7 +76,11 @@ function addBasketVariable(basket: number, variable: string, basketButton: HTMLE
  * @param {string} variable The internal id of the variable
  * @param {string} basketButton The html node of the basket button
  */
-function removeBasketVariable(basket: number, variable: string, basketButton: HTMLElement) {
+export function removeBasketVariable(
+  basket: number,
+  variable: string,
+  basketButton: HTMLElement
+) {
   const url = new URL(BasketVariableAPI);
   url.searchParams.append("variable", variable);
   url.searchParams.append("basket", String(basket));
@@ -81,10 +90,11 @@ function removeBasketVariable(basket: number, variable: string, basketButton: HT
   getClient.setRequestHeader("Content-type", "application/json");
 
   const csrfToken = document.querySelector(
-    "input[name=csrfmiddlewaretoken]") as HTMLInputElement;
+    "input[name=csrfmiddlewaretoken]"
+  ) as HTMLInputElement;
   getClient.withCredentials = true;
   getClient.setRequestHeader("X-CSRFToken", csrfToken.value);
-  getClient.onreadystatechange = function() {
+  getClient.onreadystatechange = function () {
     if (getClient.readyState === XMLHttpRequest.DONE) {
       try {
         const _response = JSON.parse(getClient.responseText);
@@ -122,7 +132,9 @@ function createBasketList(): null {
   if (contextData.textContent === "") {
     return null;
   }
-  const context = JSON.parse(document.getElementById("context_data").textContent);
+  const context = JSON.parse(
+    document.getElementById("context_data").textContent
+  );
   if (!context.hasOwnProperty("baskets")) {
     return null;
   }
@@ -146,9 +158,13 @@ function createBasketList(): null {
     // Dependant on the classes rm-var add-var
     // Text content of the button is also determined by rm-var and add-var
     // via index.scss.
-    const addOrRemoveVariable = function() {
+    const addOrRemoveVariable = function () {
       if (basketButton.classList.contains("add-var")) {
-        addBasketVariable(basket["id"], context["variable"]["id"], basketButton);
+        addBasketVariable(
+          basket["id"],
+          context["variable"]["id"],
+          basketButton
+        );
       } else if (basketButton.classList.contains("rm-var")) {
         removeBasketVariable(
           basket["id"],
@@ -173,4 +189,3 @@ function createBasketList(): null {
 }
 
 window.addEventListener("load", createBasketList);
-

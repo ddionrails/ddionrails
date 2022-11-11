@@ -23,7 +23,7 @@ from .decorator import own_basket_only
 
 # request is a required parameter
 def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
-    """ ListView for workspace.Basket model """
+    """ListView for workspace.Basket model"""
     if request.user.is_authenticated:
         _basket_list = request.user.baskets.all()
     else:
@@ -48,10 +48,10 @@ NOTE = (
 def basket_detail(
     request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
 ):
-    """ DetailView for workspace.Basket model """
+    """DetailView for workspace.Basket model"""
     basket = get_object_or_404(Basket, pk=basket_id)
     variable_list = basket.variables.all()
-    vars_with_concept, vars_without_concept = list(), list()
+    vars_with_concept, vars_without_concept = [], []
     for variable in variable_list:
         if variable.concept:
             vars_with_concept.append(variable)
@@ -82,9 +82,9 @@ def basket_detail(
         related_variable_table[concept.name] = OrderedDict(
             id=concept.id,
             label=concept.label,
-            periods=OrderedDict([(period, list()) for period in period_list]),
+            periods=OrderedDict([(period, []) for period in period_list]),
         )
-    bad_variables = list()
+    bad_variables = []
     for variable in related_variable_list:
         try:
             period_name = variable.dataset.period.name
@@ -95,7 +95,7 @@ def basket_detail(
             related_variable_table[variable.concept.name]["periods"][period_name].append(
                 dict(
                     name=variable.name,
-                    link=str(variable),
+                    link=variable.get_direct_url(),
                     active=variable in variable_list,
                     id=variable.id,
                 )
@@ -128,7 +128,7 @@ def basket_detail(
 
 # request is a required parameter
 def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
-    """ CreateView for a new Basket """
+    """CreateView for a new Basket"""
     if request.method == "POST":
         form = BasketForm(request.POST)
         form.fields["user"].widget = HiddenInput()
@@ -150,7 +150,7 @@ def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
 def basket_search(
     request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
 ):
-    """ Search view in the context of a basket's study """
+    """Search view in the context of a basket's study"""
     basket = get_object_or_404(Basket, pk=basket_id)
     # e.g. Studies=["soep-is"]
     query_string = urlencode({"Study": f'["{basket.study.title()}"]'})
@@ -164,46 +164,10 @@ def basket_search(
 def basket_delete(
     request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
 ) -> HttpResponseRedirect:
-    """ Delete view for workspace.Basket model """
+    """Delete view for workspace.Basket model"""
     basket = get_object_or_404(Basket, pk=basket_id)
     basket.delete()
     return redirect(reverse("workspace:basket_list"))
-
-
-# request is a required parameter
-@own_basket_only
-def add_variable(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    basket_id: int,
-    variable_id: uuid.UUID,
-) -> HttpResponseRedirect:
-    """ Add a variable to a basket """
-
-    # make sure everything is found in the database
-    _ = get_object_or_404(Basket, id=basket_id)
-    _ = get_object_or_404(Variable, id=variable_id)
-    try:
-        basket_variable = BasketVariable(basket_id=basket_id, variable_id=variable_id)
-        basket_variable.clean()
-        basket_variable.save()
-    except:
-        pass
-    return redirect(request.META.get("HTTP_REFERER"))
-
-
-# request is a required parameter
-@own_basket_only
-def remove_variable(
-    request: WSGIRequest,  # pylint: disable=unused-argument
-    basket_id: int,
-    variable_id: uuid.UUID,
-) -> HttpResponseRedirect:
-    """ Remove a variable from a basket """
-    relation = get_object_or_404(
-        BasketVariable, basket_id=basket_id, variable_id=variable_id
-    )
-    relation.delete()
-    return redirect(request.META.get("HTTP_REFERER"))
 
 
 # request is a required parameter
@@ -213,7 +177,7 @@ def add_concept(
     basket_id: int,
     concept_id: uuid.UUID,
 ) -> HttpResponseRedirect:
-    """ Add variables to a basket by a given concept id """
+    """Add variables to a basket by a given concept id"""
     basket = get_object_or_404(Basket, pk=basket_id)
     study_id = basket.study_id
     variable_list = (
@@ -238,7 +202,7 @@ def remove_concept(
     basket_id: int,
     concept_id: uuid.UUID,
 ) -> HttpResponseRedirect:
-    """ Remove variables from a basket by a given concept id """
+    """Remove variables from a basket by a given concept id"""
 
     _ = get_object_or_404(Concept, id=concept_id)
     BasketVariable.objects.filter(
@@ -252,7 +216,7 @@ def remove_concept(
 def basket_to_csv(
     request: WSGIRequest, basket_id: int  # pylint: disable=unused-argument
 ) -> HttpResponse:
-    """ Export a basket to CSV """
+    """Export a basket to CSV"""
     basket = get_object_or_404(Basket, pk=basket_id)
     csv = basket.to_csv()
     response = HttpResponse(csv, content_type="text/csv")

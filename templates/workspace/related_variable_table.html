@@ -30,17 +30,17 @@
                         <span class="btn-group btn-group-xs btn-group-var" role="group">
               {% if variable.active %}
                   <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
-                          title="Remove variable" class="basket-button btn btn-success">
-                    <span class="fas fa-shopping-cart"></span>
+                          title="Remove variable" class="basket-button btn btn-danger">
+                    <span class="fas fa-times"></span>
                   </button>
               {% else %}
                   <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
-                          title="Add variable" class="basket-button btn btn-default">
+                          title="Add variable" class="basket-button btn btn-default btn-success">
                     <span class="fas fa-shopping-cart"></span>
                 </button>
               {% endif %}
                             <a href="{{ variable.link }}" class="btn btn-default"
-                               title="{{ variable.link }}">
+                               title="{{ variable.name }}">
                   {{ variable.name }} 
                 </a>
               </span>

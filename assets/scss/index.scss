@@ -16,14 +16,6 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   display: none !important;
 }
 
-.rm-var:after {
-  content: "Remove variable";
-}
-
-.add-var:after {
-  content: "Add variable";
-}
-
 // This padding seems to be big enough
 // so that the navbar does not overlap with the content
 body {
