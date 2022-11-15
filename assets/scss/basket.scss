@@ -1,3 +1,23 @@
-button {
+.basket-button {
   width: 2.6em;
+}
+
+.concept-button {
+  width: 7em;
+}
+
+.btn {
+  border-radius: .25rem !important;
+}
+
+.btn-danger {
+  color: #dc3545;
+  background-color: white;
+  border-color: white;
+}
+
+.btn-success {
+  color: #28a745;
+  background-color: white;
+  border-color:#28a745;
 }

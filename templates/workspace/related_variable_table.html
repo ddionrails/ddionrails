@@ -17,11 +17,15 @@
             </td>
             <td>
                 <a href="{% url 'workspace:add_concept' basket_id=basket.id concept_id=concept.id %}">
+                <button class="btn btn-success concept-button" basket_id="{{ basket.id }}" concept_id="{{ concept.id }}">
                     Add all
+                </button>
                 </a>
                 <br/>
                 <a href="{% url 'workspace:remove_concept' basket_id=basket.id concept_id=concept.id %}">
+                <button class="btn btn-danger concept-button" basket_id="{{ basket.id }}" concept_id="{{ concept.id }}">
                     Remove all
+                </button>
                 </a>
             </td>
             {% for period_name, period in concept.periods.items %}
