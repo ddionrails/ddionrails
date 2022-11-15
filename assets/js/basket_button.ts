@@ -64,6 +64,7 @@ export function addBasketVariable(
         window.alert(_response["detail"]);
       }
     }
+    return true;
   };
   client.send(JSON.stringify(postData));
 }
@@ -115,6 +116,7 @@ export function removeBasketVariable(
         basketButton.classList.remove("btn-danger", "rm-var");
       }
     }
+    return true;
   };
 
   getClient.send();
@@ -126,7 +128,7 @@ export function removeBasketVariable(
  * add the variable from/to the basket.
  * @return {null}
  */
-function createBasketList(): null {
+export function createBasketList(): null {
   const basketList = document.getElementById("basket-list");
   const contextData = document.getElementById("context_data");
   if (contextData.textContent === "") {
@@ -187,5 +189,3 @@ function createBasketList(): null {
   }
   return null;
 }
-
-window.addEventListener("load", createBasketList);

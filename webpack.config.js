@@ -16,19 +16,13 @@ const config = {
   context: __dirname,
   entry: {
     /* css and js libraries for ddionrails */
-    index: [
-      "./assets/js/index.ts",
-      "./assets/scss/index.scss",
-    ],
-    instrument_table: [
-      "./assets/js/tables/instrument_table.ts",
-    ],
-    table_attachment: [
-      "./assets/scss/table_attachment.scss",
-    ],
+    index: ["./assets/js/index.ts", "./assets/scss/index.scss"],
+    instrument_table: ["./assets/js/tables/instrument_table.ts"],
+    table_attachment: ["./assets/scss/table_attachment.scss"],
     basket: "./assets/scss/basket.scss",
     basket_button: "./assets/js/basket_button.ts",
     basket_view_variable_buttons: "./assets/js/basket_view_variable_buttons.ts",
+    variable_view_basket_button: "./assets/js/variable_view_basket_button.ts",
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
@@ -55,9 +49,7 @@ const config = {
       "./assets/js/description_modal.ts",
       "./assets/scss/description_modal.scss",
     ],
-    variables: [
-      "./assets/scss/variables.scss",
-    ],
+    variables: ["./assets/scss/variables.scss"],
     visualization: [
       "./assets/js/visualization.js",
       "./assets/scss/visualization.scss",
