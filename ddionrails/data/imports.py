@@ -223,11 +223,14 @@ def variables_images_import(file: Path, study: Study) -> None:
         reader = DictReader(csv)
         variables: List[Variable] = []
         for index, row in enumerate(reader):
-            variable = Variable.objects.get(
-                dataset__study=study,
-                dataset__name=row["dataset"],
-                name=row["variable"],
-            )
+            try:
+                variable = Variable.objects.get(
+                    dataset__study=study,
+                    dataset__name=row["dataset"],
+                    name=row["variable"],
+                )
+            except Variable.DoesNotExist as error:
+                raise Variable.DoesNotExist(f"Variable {row} does not exist") from error
             variable.images = {
                 "de": row["url_de"],
                 "en": row["url"],
