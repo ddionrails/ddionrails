@@ -148,6 +148,7 @@ export function createBasketList(): null {
     basketButton.type = "button";
     basketButton.classList.add("float-right");
     basketButton.classList.add("btn");
+    basketButton.classList.add("basket-button");
 
     const basketLink = document.createElement("a");
     basketLink.href = `/workspace/baskets/${basket["id"]}`;

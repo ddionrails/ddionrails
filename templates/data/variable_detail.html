@@ -110,11 +110,14 @@
                 <div class="list-group" id="basket-list">
                     {% if user.is_authenticated %}
                         </div>
-                        <div class="card-body text-right"><a href="{% url 'workspace:basket_new' %}" class="btn btn-secondary">
+                        <div class="card-body text-right">
+                        <button  class="btn btn-secondary basket-create-button">
+                            <a href="{% url 'workspace:basket_new' %}">
 
-                            Create a new basket
+                                Create a new basket
 
-                        </a>
+                            </a>
+                        </button>
                     {% else %}
                         </div>
                         <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>

@@ -5,3 +5,15 @@
 .add-var:after {
   content: "Add variable";
 }
+
+.basket-button {
+  width: 10em;
+}
+
+.basket-create-button {
+  width: 12em;
+}
+
+.basket-create-button > a {
+  color: white;
+}
