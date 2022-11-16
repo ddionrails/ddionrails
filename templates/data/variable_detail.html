@@ -17,7 +17,15 @@
     </h1>
     <div class="row">
         <div class="col-lg-8">
-            <div class="btn-toolbar" role="toolbar" aria-label="...">
+            {% if variable.images and False%}
+                {% if variable.images.de %}
+                <img src="{{ variable.images.de }}" class="img-fluid">
+                {% endif %}
+                {% if variable.images.en %}
+                <img src="{{ variable.images.en }}" class="img-fluid">
+                {% endif %}
+            {% else %}
+            <div class="btn-toolbar" id="chart-toolbar" role="toolbar" aria-label="...">
                 <div class="float-right" aria-label="..."
                      id="vis_menu">
                     <a type="button" class="btn opt btn-info chart_nav" id="percent">Percent</a>
@@ -28,8 +36,6 @@
             <div id="menu"></div>
             <div id="chart"></div>
             <div id="chart_missings"></div>
-            {% if variable.image_url %}
-                <img src="{{ variable.image_url }}" class="img-fluid">
             {% endif %}
             <div id="relation-tables">
                 <!-- Nav tabs -->
