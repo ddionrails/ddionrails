@@ -15,7 +15,7 @@ services:
         "-",
         "--log-level=info",
         "--access-logformat",
-        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"',
+        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
       ]
     depends_on:
       postgres:
@@ -50,12 +50,16 @@ services:
       - backup:/var/lib/ddionrails/backup
 
   postgres:
-    image: postgres:11.7-alpine
+    image: postgres:15.1-alpine3.16
     # Set your own variables, use of the example files at yout own risk.
     #env_file:
     #  - docker/environments/database.env
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -74,12 +78,12 @@ services:
       - ddi-psql-logs:/var/log/postgresql
 
   elasticsearch:
-    image: elasticsearch:7.16.2
+    image: elasticsearch:7.17.7
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "curl --silent --fail localhost:9200/_cluster/health || exit 1",
+          "curl --silent --fail -u elastic:$$ELASTIC_PASSWORD localhost:9200/_cluster/health || exit 1"
         ]
       interval: 10s
       timeout: 5s
@@ -118,7 +122,7 @@ services:
       - no-new-privileges
 
   nginx:
-    image: nginx:1.18-alpine
+    image: nginx:1.23.2-alpine
     ports:
       - 80:80
     depends_on:
@@ -142,7 +146,7 @@ services:
       - media:/var/django/media
 
   redis:
-    image: redis:4-alpine3.9
+    image: redis:7.0.5-alpine3.16
     networks:
       - ddi_net
     pids_limit: 500
@@ -176,6 +180,7 @@ volumes:
   elastic_data:
   media:
   static:
+
 
 networks:
   ddi_net:
