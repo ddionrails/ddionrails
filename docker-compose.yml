@@ -110,6 +110,7 @@ services:
         hard: -1
     volumes:
       - elastic_data:/usr/share/elasticsearch/data
+      - ./docker/environments/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   mail:
     build:

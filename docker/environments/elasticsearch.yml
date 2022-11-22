@@ -1,0 +1,7 @@
+cluster.name: "docker-cluster"
+network.host: 0.0.0.0
+xpack.security.authc:
+  anonymous:
+    username: viewer_anonymous
+    roles: viewer
+    authz_exception: true
