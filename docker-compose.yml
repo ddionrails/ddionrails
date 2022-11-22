@@ -78,7 +78,7 @@ services:
       - ddi-psql-logs:/var/log/postgresql
 
   elasticsearch:
-    image: elasticsearch:7.17.7
+    image: elasticsearch:8.5.1
     healthcheck:
       test:
         [
