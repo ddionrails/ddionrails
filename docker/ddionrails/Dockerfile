@@ -19,7 +19,7 @@ RUN apk add --no-cache \
     git \
     jpeg-dev \
     nodejs \
-    nodejs-npm \
+    npm \
     postgresql-dev \
     zlib-dev \
     freetype-dev \
@@ -31,7 +31,7 @@ RUN apk add --no-cache \
     && rm Requirements.txt \
     && npm install \
     && npm run build \
-    && apk del nodejs nodejs-npm \
+    && apk del nodejs npm \
     && rm -rf /var/cache/apk/* \
     && rm -rf node_modules \
     && mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
