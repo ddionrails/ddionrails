@@ -120,7 +120,7 @@ class QuestionItem(models.Model):
 
     def generate_id(self, cache=False):
         """Generate UUID used in the objects save method."""
-        return hash_with_namespace_uuid(self.question_id, str(self.position), cache=cache)
+        return hash_with_namespace_uuid(self.question.id, self.name, cache=cache)
 
     def save(
         self,

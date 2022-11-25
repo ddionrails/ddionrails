@@ -1,3 +1,4 @@
-study,dataset,variable,instrument,question
-some-study,some-dataset,some-other-variable,some-instrument,1
-some-study,some-dataset,some-variable,some-instrument,1
+study,dataset,variable,instrument,question,item
+some-study,some-dataset,some-other-variable,some-instrument,1,abc
+some-study,some-dataset,some-variable,some-instrument,1,efg
+some-study,some-dataset,some-nonexistent-variable,some-instrument,1,efg

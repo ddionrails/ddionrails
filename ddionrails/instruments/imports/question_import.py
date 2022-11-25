@@ -202,7 +202,7 @@ def _import_question_items(
             setattr(question_item, field, item[_field_mapper(field)])
 
         question_item.id = hash_with_namespace_uuid(
-            question.id, str(question_item.position), cache=False
+            question.id, question_item.name, cache=False
         )
 
         question_items.append(question_item)

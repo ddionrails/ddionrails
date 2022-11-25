@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring
 
 import csv
 import json
@@ -309,9 +309,13 @@ class TestStudyImportManager:
 
     def test_import_questions_variables(self, study_import_manager, variable, question):
         TEST_CASE.assertEqual(0, QuestionVariable.objects.count())
+        some_variable = Variable(dataset=variable.dataset, name="some-other-variable")
+        some_variable.save()
+        study_import_manager.import_single_entity("questions")
         study_import_manager.import_single_entity("questions_variables")
-        TEST_CASE.assertEqual(1, QuestionVariable.objects.count())
-        relation = QuestionVariable.objects.first()
+        question_variables = list(QuestionVariable.objects.all())
+        TEST_CASE.assertEqual(2, len(question_variables))
+        relation = QuestionVariable.objects.get(variable=variable)
         TEST_CASE.assertEqual(variable, relation.variable)
         TEST_CASE.assertEqual(question, relation.question)
 
@@ -381,7 +385,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(2, Question.objects.count())
         TEST_CASE.assertEqual(1, Transformation.objects.count())
         TEST_CASE.assertEqual(1, Instrument.objects.count())
-        TEST_CASE.assertEqual(1, QuestionVariable.objects.count())
+        TEST_CASE.assertEqual(2, QuestionVariable.objects.count())
         TEST_CASE.assertEqual(1, ConceptQuestion.objects.count())
 
         concept_search = ConceptDocument.search().query("match_all").execute()
