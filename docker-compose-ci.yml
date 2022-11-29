@@ -48,6 +48,10 @@ services:
     env_file:
       - docker/environments/database.env.example
 
+  elasticsearch:
+    env_file:
+      - docker/environments/elasticsearch.env.example
+
   nginx:
     volumes:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf

@@ -33,6 +33,10 @@ services:
       - media:/var/django/media
       - ~/.ssh/docker-dev/:/root/.ssh
 
+  elasticsearch:
+    env_file:
+      - docker/environments/elasticsearch.env.example
+
   postgres:
     env_file:
       - docker/environments/database.env.example
