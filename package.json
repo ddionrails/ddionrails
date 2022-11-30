@@ -42,7 +42,7 @@
     "eslint-plugin-jquery": "^1.5.1",
     "eslint-plugin-security": "^1.4.0",
     "eslint-plugin-vue": "^9.0.1",
-    "mini-css-extract-plugin": "^2.5.3",
+    "mini-css-extract-plugin": "^2.7.1",
     "node-sass": "^7.0.3",
     "prettier": "^2.5.1",
     "sass-loader": "^13.1.0",
