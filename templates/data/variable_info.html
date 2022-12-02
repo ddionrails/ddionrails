@@ -100,16 +100,20 @@
                 Question Text
                 </th>
             </tr>
-            {% for question in questions %}
+
+            {% for item in items %}
             <tr>
                 <td scope="row">
-                {{ question.period.label }}
+                {{ item.question.period.label }}
                 </td>
                 <td scope="row">
-                {{ question.instrument.label }}
+                {{ item.question.instrument.label }}
                 </td>
                 <td scope="row">
-                <a href="{{ question.get_direct_url }}">{{ question.label }}</a>
+                    <a href="{{ item.question.get_direct_url }}">
+                        {{ item.question.label }}
+                    </a>
+                    : {{ item.label }}
                 </td>
             </tr>
             {% endfor %}
@@ -142,20 +146,24 @@
 
 
 
-{% if questions_subset %}
+{% if items_subset %}
 
 <div class="card">
     <div class="card-header"><b>Questions</b>
     </div>
     <div class="card-body">
         <ul>
-            {% for question in questions_subset %}
-                <li><a href="{{ question.get_direct_url }}">{{ question.label }}</a>
+            {% for item in items_subset %}
+                <li>
+                    <a href="{{ item.question.get_direct_url }}">
+                    {{ item.question.label }}
+                    </a>
+                : {{ item.label }}
                 </li>
             {% endfor %}
         </ul>
     </div>
-    {% if questions_subset != questions %}
+    {% if items_subset != items %}
         <div class="card-footer text-center">
             <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#relatedQuestionsModal">
             Show all questions

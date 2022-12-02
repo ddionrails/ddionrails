@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, RedirectView, TemplateView
 
 from config.helpers import RowHelper
-from ddionrails.instruments.models import Question
+from ddionrails.instruments.models import QuestionItem
 from ddionrails.workspace.models import Basket, BasketVariable
 
 from .helpers import LabelTable
@@ -143,10 +143,10 @@ class VariableDetailView(DetailView):
         context["study"] = study
         context["related_variables"] = self.object.get_related_variables()
         context["label_table"] = LabelTable(context["related_variables"])
-        context["questions"] = _get_related_questions(self.object.id)
+        context["items"] = _get_related_items(self.object.id)
         # All questions are intended to be displayed separately in a bootstrap modal.
         # The subset here is to be displayed directly on the page.
-        context["questions_subset"] = context["questions"][:5]
+        context["items_subset"] = context["items"][:5]
         context["concept"] = self.object.get_concept()
         context["row_helper"] = RowHelper()
         context["basket_list"] = (
@@ -227,14 +227,14 @@ class VariableDetailView(DetailView):
         return _data
 
 
-def _get_related_questions(variable_id: UUID) -> List[Question]:
+def _get_related_items(variable_id: UUID) -> List[QuestionItem]:
     return list(
         (
-            Question.objects.filter(
-                questions_variables__variable=variable_id
-            ).select_related("period", "instrument")
-            | Question.objects.filter(
-                questions_variables__variable__target_variables__target_id=variable_id
-            ).select_related("period", "instrument")
-        ).order_by("-period__name")
+            QuestionItem.objects.filter(
+                variables__variable__id=variable_id
+            ).select_related("question", "question__period", "question__instrument")
+            | QuestionItem.objects.filter(
+                variables__variable__target_variables__target_id=variable_id
+            ).select_related("question", "question__period", "question__instrument")
+        ).order_by("-question__period__name")
     )
