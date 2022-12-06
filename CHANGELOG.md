@@ -11,6 +11,24 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [6.6.0] - 2022-12-06
+
+### Added
+
+- Relation between variables and question items.
+
+### Changed
+
+- Improved elasticsearch security.
+- Display related question items along with related questions in variable view.
+- Update script generators.
+- Update images and dependencies.
+
+### Fixed
+
+- buttons inside the basket view to add/remove variables.
+- variable images display.
+
 ## [6.5.2] - 2022-10-27
 
 ### Fixed
@@ -880,7 +898,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.5.2...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...develop
+[6.6.0]: https://github.com/ddionrails/ddionrails/compare/v6.5.2...v6.6.0
 [6.5.2]: https://github.com/ddionrails/ddionrails/compare/v6.5.1...v6.5.2
 [6.5.1]: https://github.com/ddionrails/ddionrails/compare/v6.5.0...v6.5.1
 [6.5.0]: https://github.com/ddionrails/ddionrails/compare/v6.4.1...v6.5.0
