@@ -158,7 +158,9 @@
                     <a href="{{ item.question.get_direct_url }}">
                     {{ item.question.label }}
                     </a>
-                - {{ item.label }}
+                {% if item.label != item.question.label %}
+                    - {{ item.label }} 
+                {% endif %}
                 </li>
             {% endfor %}
         </ul>
