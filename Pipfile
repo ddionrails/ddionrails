@@ -43,7 +43,7 @@ python-frontmatter = "*"
 #
 # Other
 # ------------------------------------------------------------------------------
-gitpython = "*"
+gitpython = "<=3.1.30"
 paver = "*"
 requests = "*"
 djangorestframework-stubs = "*"
