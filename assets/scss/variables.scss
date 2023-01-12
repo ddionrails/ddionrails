@@ -17,3 +17,18 @@
 .basket-create-button > a {
   color: white;
 }
+
+.related-periods {
+  display: flex;
+  flex-direction: row;
+  max-width: 66vw;
+  flex-wrap: wrap;
+}
+
+.related-variables {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 20vw;
+  padding: 1em;
+}
