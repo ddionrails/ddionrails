@@ -59,6 +59,7 @@ autoflake = "*"
 bandit = "*"
 black = "*"
 django-stubs = "*" # For mypy
+djlint = "*"
 isort = "*"
 mypy = "*"
 pre-commit = "*"
