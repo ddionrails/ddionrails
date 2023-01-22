@@ -2,94 +2,109 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        {% block study_metadata %}
-        {% endblock study_metadata %}
-        {% block view_metadata %}
-        {% endblock view_metadata %}
-        <title>
-            {% block title %}paneldata.org
-            {% endblock title %}
-        </title>
-        <link rel="shortcut icon" type="image/png" href="{% static 'dist/favicon.ico' %}"/>
-        <!-- Webpack bundle: "index" CSS -->
-        {% render_bundle 'index' 'css' %}
-        {% block styles %}
-        {% endblock styles %}
-    </head>
-
-    <body>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    {% block study_metadata %}
+    {% endblock study_metadata %}
+    {% block view_metadata %}
+    {% endblock view_metadata %}
+    <title>
+      {% block title %}
+        paneldata.org
+      {% endblock title %}
+    </title>
+    <link rel="shortcut icon"
+          type="image/png"
+          href="{% static 'dist/favicon.ico' %}"/>
+    <!-- Webpack bundle: "index" CSS -->
+    {% render_bundle 'index' 'css' %}
+    {% block styles %}
+    {% endblock styles %}
+  </head>
+  <body>
     {% block header %}
     {% endblock header %}
     <nav id="paneldata-navbar" id="nav-container" class="navbar-expand-xl">
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
-                data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse container-fluid" id="navbarSupportedContent">
-            <ul class="navbar-nav container-fluid">
-                <li class="nav-item">
-                    <a type="button" class="btn" href="{% url 'home' %}">paneldata.org</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        Studies
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for study in studies %}
-                            <a class="dropdown-item" href="{{ study.get_absolute_url }}">{{ study.title }}</a>
-                        {% endfor %}
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a type="button" class="btn" href="{% url 'search' %}">Search</a>
-                </li>
-
-            {% block study_header %}
-            {% endblock study_header %}
-            </ul>
-            <ul class="navbar-nav container-fluid justify-content-end">
-                {% if user.is_authenticated %}
-                    <li class="nav-item text-nowrap">
-                        <a type="button" class="btn" href="{% url 'workspace:basket_list' %}">My baskets</a>
-                    </li>
-                    <li class="nav-item text-nowrap">
-                        <a type="button" class="btn" href="{% url 'workspace:account_overview' %}">My account</a>
-                    </li>
-                    <li class="nav-item">
-                        <a type="button" class="btn" href="{% url 'workspace:logout' %}">Logout</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a type="button" class="btn" href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">Register / log in</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-
-        {% block studynav %}
-        {% endblock studynav %}
+      <button class="navbar-toggler navbar-toggler-right"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse container-fluid"
+           id="navbarSupportedContent">
+        <ul class="navbar-nav container-fluid">
+          <li class="nav-item">
+            <a type="button" class="btn" href="{% url 'home' %}">paneldata.org</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a type="button"
+               class="btn dropdown-toggle"
+               href="#"
+               id="navbarbarDropdown"
+               role="button"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false">
+              Studies
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {% for study in studies %}
+                <a class="dropdown-item" href="{{ study.get_absolute_url }}">{{ study.title }}</a>
+              {% endfor %}
+            </div>
+          </li>
+          <li class="nav-item">
+            <a type="button" class="btn" href="{% url 'search' %}">Search</a>
+          </li>
+          {% block study_header %}
+          {% endblock study_header %}
+        </ul>
+        <ul class="navbar-nav container-fluid justify-content-end">
+          {% if user.is_authenticated %}
+            <li class="nav-item text-nowrap">
+              <a type="button" class="btn" href="{% url 'workspace:basket_list' %}">My baskets</a>
+            </li>
+            <li class="nav-item text-nowrap">
+              <a type="button"
+                 class="btn"
+                 href="{% url 'workspace:account_overview' %}">My account</a>
+            </li>
+            <li class="nav-item">
+              <a type="button" class="btn" href="{% url 'workspace:logout' %}">Logout</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a type="button"
+                 class="btn"
+                 href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">Register / log in</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+      {% block studynav %}
+      {% endblock studynav %}
     </nav>
-
     <!-- Main Content -->
-    <div class="flex-column d-flex px-5 justify-content-center" id="main-container">
-
-        <!-- Nobody should use IE anymore -->
-        <div id="windowsWarning" class="hidden alert alert-danger" align="center">
-            <h1>Attention</h1>
-            <p>
-            You are using Internet Explorer.</br>
-            Content will likely not be displayed correctly.</br>
-            Please switch to a different Browser to use this site.
-            </p>
-        </div>
-        <!--[if IE]>
+    <div class="flex-column d-flex px-5 justify-content-center"
+         id="main-container">
+      <!-- Nobody should use IE anymore -->
+      <div id="windowsWarning" class="hidden alert alert-danger" align="center">
+        <h1>Attention</h1>
+        <p>
+          You are using Internet Explorer.
+        </br>
+        Content will likely not be displayed correctly.
+      </br>
+      Please switch to a different Browser to use this site.
+    </p>
+  </div>
+  <!--[if IE]>
         <div class="hidden alert alert-danger" align="center">
             <h1>Attention</h1>
             <p>
@@ -98,30 +113,25 @@
             Please switch to a different Browser to use this site.
             </p>
         </div>
-        <![endif]-->
-
-        {% block content %}
-        {% endblock content %}
-    </div>
-    <div>
-    <!-- Page Footer -->
-    <div class="container container-white" id="foot-container">
-        <hr>
-        <p><strong><a href="{% url 'contact' %}">Contact / feedback</a></strong>
-        </p>
-        <p class="text-muted">
-            <a href="https://www.diw.de/en/soep/" target="_blank">
-                German Socio-economic Panel
-            </a>
-            (SOEP)
-            <a href="{% url 'imprint' %}">Imprint</a>
-        </p>
-    </div>
-    <!-- Webpack bundle: "index" JS -->
-    {% render_bundle 'index' 'js' %}
-
-    {% block scripts %}
-    {% endblock scripts %}
-    </body>
-
+<![endif]-->
+  {% block content %}
+  {% endblock content %}
+</div>
+<!-- Page Footer -->
+<div class="container container-white" id="foot-container">
+  <hr/>
+  <p>
+    <strong><a href="{% url 'contact' %}">Contact / feedback</a></strong>
+  </p>
+  <p class="text-muted">
+    <a href="https://www.diw.de/en/soep/" target="_blank">German Socio-economic Panel</a>
+    (SOEP)
+    <a href="{% url 'imprint' %}">Imprint</a>
+  </p>
+</div>
+<!-- Webpack bundle: "index" JS -->
+{% render_bundle 'index' 'js' %}
+{% block scripts %}
+{% endblock scripts %}
+</body>
 </html>

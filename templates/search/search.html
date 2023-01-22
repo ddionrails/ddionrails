@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
-
-{% block title %}Search | paneldata.org{% endblock title %}
-
+{% block title %}
+  Search | paneldata.org
+{% endblock title %}
 {% block styles %}
   <!-- Webpack bundle: "search" CSS -->
   {% render_bundle "search" "css" %}
 {% endblock styles %}
-
 {% block content %}
-<div id="feedback-button-container">
-  <a href="/search/feedback/" type="button" class="btn button-feedback" title="Do you have a problem or a proposal? Missing something? Send us feedback.">
-    Send us Feedback
-  </a>
-</div>
+  <div id="feedback-button-container">
+    <a href="/search/feedback/"
+       type="button"
+       class="btn button-feedback"
+       title="Do you have a problem or a proposal? Missing something? Send us feedback.">
+      Send us Feedback
+    </a>
+  </div>
   <noscript>
-      <strong>We're sorry but search doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    <strong>We're sorry but search doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
   <!-- Webpack bundle: "search" js -->

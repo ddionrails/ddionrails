@@ -1,24 +1,25 @@
 {% extends "base.html" %}
 {% load static %}
-
-{% block title %}Home | paneldata.org{% endblock title %}
-
+{% block title %}
+  Home | paneldata.org
+{% endblock title %}
 {% block content %}
-
-    {% if not user.is_authenticated %}
-        {% if news %}
-            <div class="alert alert-success mx-auto p-4">
-                {{ news | safe }}
-            </div>
-        {% endif %}
+  {% if not user.is_authenticated %}
+    {% if news %}
+      <div class="alert alert-success mx-auto p-4">{{ news | safe }}</div>
     {% endif %}
-    <img class="img-fluid mx-auto" src="{% static 'background.png' %}">
-
-    <div class="list-group">
-        {% for study in studies %}
-            <li class="list-group-item" id="study_list">
-                <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
-            </li>
-        {% endfor %}
-    </div>
+  {% endif %}
+  <img class="img-fluid mx-auto"
+       title="Homepage banner"
+       alt=""
+       width="1198"
+       height="476"
+       src="{% static 'background.png' %}"/>
+  <div class="list-group">
+    {% for study in studies %}
+      <li class="list-group-item" id="study_list">
+        <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
+      </li>
+    {% endfor %}
+  </div>
 {% endblock content %}

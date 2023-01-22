@@ -1,216 +1,172 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
 {% load metadata_display %}
-
 {% block view_metadata %}
-    <meta name="namespace" content="{{ namespace }}">
+  <meta name="namespace" content="{{ namespace }}"/>
 {% endblock view_metadata %}
-
-
-{% block styles%}
-{% render_bundle "statistics" "css" %}
+{% block styles %}
+  {% render_bundle "statistics" "css" %}
 {% endblock styles %}
-
 {% block content %}
-<div id="feedback-button-container">
-  <a href="/{{study.name}}/statistics/feedback/" type="button" class="btn button-feedback" title="Do you have a problem or a proposal? Is the search missing something? Send us feedback.">
-    Send us Feedback
-  </a>
-</div>
-
-{{ server_metadata|json_script:"statistics-server-metadata" }}
-{{ variable_metadata|json_script:"variable-metadata" }}
-<div id="container">
-	<div class="d-flex flex-row">
-		{% if variable %}
-		<h2 id="plot-header">{{variable.label_de}}</h2>
-		{% endif %}
-		<button
-			type="button"
-			class="btn btn-link"
-			data-toggle="modal"
-			data-target="#description-modal"
-			id="description-button"
-			title="Variablenbeschreibung Anzeigen">
-			<i class="fas fa-info-circle"></i>
-		</button>
-		<button
-			type="button"
-			class="btn btn-link hidden"
-			data-toggle="modal"
-			data-target="#ci-modal"
-			id="ci-button">
-		</button>
-	</div>
-	<div>
-		{% if question %}
-		<p id="related-question">{{question.label_de}}</p>
-		{% endif %}
-	</div>
-
-	<div class="d-flex justify-content-center" id="loading-spinner">
-		<div class="spinner-border" role="status">
-			<span class="sr-only">Loading...</span>
-		</div>
-	</div>
-	<iframe id="main-frame"
-		src="{{ statistics_server_url }}?variable={{variable.id}}&no-title=TRUE"
-		width="500" height="50%"
-		frameborder="0"></iframe>
-
-	<div id="second-frame-container">
-		<div id="close-icon-container">
-			<span class="clickable hidden" id="close-icon">
-				<i class="fa fa-times"></i>
-			</span>
-		</div>
-		<iframe class="hidden"
-			id="second-frame"
-			src=""
-			frameborder="0"></iframe>
-	</div>
-	<button
-		type="button"
-		class="btn btn-secondary"
-		id="second-plot-button"
-		title="Vergleichsplot anzeigen">
-		<i class="fas fa-plus"></i>
-		<i class="fas fa-chart-line"></i>
-	</button>
-
-</div>
-
-<div class="modal" tabindex="-1" role="dialog" id="description-modal">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-
-
-
-
-
-
-<div class="modal-header">
-	<h5 class="modal-title">Informationen zur Datenbasis</h5>
-	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-</div>
-<div class="modal-body">
-
- <ul>
-    <li>Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte.</li>
-    <li>Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen.</li>
-  </ul>
-</div>
-
-<div class="modal-header">
-	<h5 class="modal-title">Informationen zur Studie</h5>
-</div>
-<div class="modal-body">
-
-
-<p>Das Sozio-oekonomische Panel (SOEP) ist
-	die größte und am längsten laufende Wiederholungsbefragung
-	zur sozialen und wirtschaftlichen Lage in Deutschland,
-	für die jedes Jahr etwa 30.000 Menschen
-	in 15.000 Haushalten befragt werden.</p>
-
-</div>
-
-
-			{% if value_labels %}
-				<div class="modal-header">
-					<h5 class="modal-title">Skalenwerte</h5>
-				</div>
-				<div class="modal-body">
-					<p>
-						<ul id="labels">
-						{% for label in value_labels %}
-						<li>
-							{{ label }}
-						</li>
-						{% endfor %}
-						</ul>
-					</p>
-				</div>
-			{% endif %}
-
-			<div class="modal-header">
-				<h5 class="modal-title">Beschreibung der Variable</h5>
-			</div>
-			<div class="modal-body">
-				<p>
-					{{variable.description_de | markdown_string | safe}}
-				</p>
-
-				<p>
-					{% if variable %}
-					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
-						Wissenschaftliche Dokumentation der Variable
-					</a>
-					{% endif %}
-				</p>
-			</div>
-
-			<div class="modal-header">
-				<h5 class="modal-title">Information zu Statistikgrundlagen</h5>
-			</div>
-			<div class="modal-body">
-
-<h5>Mittelwert</h5>
-<p>
-Der Mittelwert gibt den Durchschnittswert (arithmetisches Mittel) der Beobachtungen an. Beispiel Haushaltseinkommen: die Summe aller Haushaltseinkommen geteilt durch die Anzahl der Haushalte. Ein Beispiel: bei der Liste 5 10 20 50 100, ist der Mittelwert = (5+10+20+50+100) / 5=37.
-</p>
-<h5>Median</h5> 
-<p>
-Der Median gibt den Wert an, bei dem exakt 50% der Beobachtungen darüber liegen (im Sinne von größer gleich) und 50% darunter liegen (im Sinne von kleiner gleich). Beispiel Haushaltseinkommen: Der Median gibt das Haushaltseinkommen an, bei dem die Hälfte der Haushalte weniger oder gleich viel verdienen und die Hälfte der Haushalte mehr oder gleich viel verdienen. Einfaches Beispiel: bei der Liste 5 10 20 50 100, ist der Median = 20. (Achtung: Median ist nicht gleich Mittelwert!)
-</p>
-<h5>Gewichtung</h5>
-<p>
-Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung abbilden, muss bei der statistischen Analyse sichergestellt werden, dass die Ergebnisse auf die Gesamtbevölkerung in Deutschland übertragen werden können. Dies geschieht über die Gewichtung. Um die Repräsentativität der Ergebnisse zu gewährleisten, erhält jede Person und jeder Haushalt ein Gewicht, sodass bestimmte Gruppen in den Analysen nicht über- bzw. unterrepräsentiert sind. Alle hier angegebenen Werte sind bereits gewichtet und daher repräsentativ für die deutsche Bevölkerung.
-</p>
-</div>
-
-
-
-
-
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<div class="modal" tabindex="-1" role="dialog" id="ci-modal">
-	<div class="modal-dialog" role="document">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title">Was bedeutet das Konfidenzintervall?</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<p>
-				    Ein Konfidenzintervall gibt die Genauigkeit
-				    eines statistischen Wertes an.
-				    Ein 95%-Konfidenzintervall gibt zum Beispiel an,
-				    dass das Konfidenzintervall den wahren Wert mit einer
-				    Wahrscheinlichkeit von 95% umschließt.
-				    Man kann sich das Konfidenzintervall in etwa als einen
-				    Unsicherheitsbereich vorstellen, mit dem die
-				    statistische Untersuchung den wahren Wert trifft.
-				    Ein breites Konfidenzintervall deutet auf eine
-				    größere Unsicherheit des „wahren“ Wertes hin;
-				    es kann auf eine kleine Anzahl von Beobachtungen
-				    zurückzuführen sein oder auf eine große Streuung der
-				    Beobachtungen hinweisen. 
-				</p>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-{% render_bundle "statistics" "js" %}
+  <div id="feedback-button-container">
+    <a href="/{{ study.name }}/statistics/feedback/"
+       type="button"
+       class="btn button-feedback"
+       title="Do you have a problem or a proposal? Is the search missing something? Send us feedback.">
+      Send us Feedback
+    </a>
+  </div>
+  {{ server_metadata|json_script:"statistics-server-metadata" }}
+  {{ variable_metadata|json_script:"variable-metadata" }}
+  <div id="container">
+    <div class="d-flex flex-row">
+      {% if variable %}<h2 id="plot-header">{{ variable.label_de }}</h2>{% endif %}
+      <button type="button"
+              class="btn btn-link"
+              data-toggle="modal"
+              data-target="#description-modal"
+              id="description-button"
+              title="Variablenbeschreibung Anzeigen">
+        <i class="fas fa-info-circle"></i>
+      </button>
+      <button type="button"
+              class="btn btn-link hidden"
+              data-toggle="modal"
+              data-target="#ci-modal"
+              id="ci-button">
+      </button>
+    </div>
+    <div>
+      {% if question %}<p id="related-question">{{ question.label_de }}</p>{% endif %}
+    </div>
+    <div class="d-flex justify-content-center" id="loading-spinner">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <iframe id="main-frame"
+            src="{{ statistics_server_url }}?variable={{ variable.id }}&no-title=TRUE"
+            width="500"
+            height="50%"
+            frameborder="0"></iframe>
+    <div id="second-frame-container">
+      <div id="close-icon-container">
+        <span class="clickable hidden" id="close-icon">
+          <i class="fa fa-times"></i>
+        </span>
+      </div>
+      <iframe class="hidden" id="second-frame" src="" frameborder="0"></iframe>
+    </div>
+    <button type="button"
+            class="btn btn-secondary"
+            id="second-plot-button"
+            title="Vergleichsplot anzeigen">
+      <i class="fas fa-plus"></i>
+      <i class="fas fa-chart-line"></i>
+    </button>
+  </div>
+  <div class="modal" tabindex="-1" role="dialog" id="description-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Informationen zur Datenbasis</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul>
+            <li>Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte.</li>
+            <li>
+              Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen.
+            </li>
+          </ul>
+        </div>
+        <div class="modal-header">
+          <h5 class="modal-title">Informationen zur Studie</h5>
+        </div>
+        <div class="modal-body">
+          <p>
+            Das Sozio-oekonomische Panel (SOEP) ist
+            die größte und am längsten laufende Wiederholungsbefragung
+            zur sozialen und wirtschaftlichen Lage in Deutschland,
+            für die jedes Jahr etwa 30.000 Menschen
+            in 15.000 Haushalten befragt werden.
+          </p>
+        </div>
+        {% if value_labels %}
+          <div class="modal-header">
+            <h5 class="modal-title">Skalenwerte</h5>
+          </div>
+          <div class="modal-body">
+            <p>
+              <ul id="labels">
+                {% for label in value_labels %}<li>{{ label }}</li>{% endfor %}
+              </ul>
+            </p>
+          </div>
+        {% endif %}
+        <div class="modal-header">
+          <h5 class="modal-title">Beschreibung der Variable</h5>
+        </div>
+        <div class="modal-body">
+          <p>{{ variable.description_de | markdown_string | safe }}</p>
+          <p>
+            {% if variable %}
+              <a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
+                Wissenschaftliche Dokumentation der Variable
+              </a>
+            {% endif %}
+          </p>
+        </div>
+        <div class="modal-header">
+          <h5 class="modal-title">Information zu Statistikgrundlagen</h5>
+        </div>
+        <div class="modal-body">
+          <h5>Mittelwert</h5>
+          <p>
+            Der Mittelwert gibt den Durchschnittswert (arithmetisches Mittel) der Beobachtungen an. Beispiel Haushaltseinkommen: die Summe aller Haushaltseinkommen geteilt durch die Anzahl der Haushalte. Ein Beispiel: bei der Liste 5 10 20 50 100, ist der Mittelwert = (5+10+20+50+100) / 5=37.
+          </p>
+          <h5>Median</h5>
+          <p>
+            Der Median gibt den Wert an, bei dem exakt 50% der Beobachtungen darüber liegen (im Sinne von größer gleich) und 50% darunter liegen (im Sinne von kleiner gleich). Beispiel Haushaltseinkommen: Der Median gibt das Haushaltseinkommen an, bei dem die Hälfte der Haushalte weniger oder gleich viel verdienen und die Hälfte der Haushalte mehr oder gleich viel verdienen. Einfaches Beispiel: bei der Liste 5 10 20 50 100, ist der Median = 20. (Achtung: Median ist nicht gleich Mittelwert!)
+          </p>
+          <h5>Gewichtung</h5>
+          <p>
+            Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung abbilden, muss bei der statistischen Analyse sichergestellt werden, dass die Ergebnisse auf die Gesamtbevölkerung in Deutschland übertragen werden können. Dies geschieht über die Gewichtung. Um die Repräsentativität der Ergebnisse zu gewährleisten, erhält jede Person und jeder Haushalt ein Gewicht, sodass bestimmte Gruppen in den Analysen nicht über- bzw. unterrepräsentiert sind. Alle hier angegebenen Werte sind bereits gewichtet und daher repräsentativ für die deutsche Bevölkerung.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal" tabindex="-1" role="dialog" id="ci-modal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Was bedeutet das Konfidenzintervall?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            Ein Konfidenzintervall gibt die Genauigkeit
+            eines statistischen Wertes an.
+            Ein 95%-Konfidenzintervall gibt zum Beispiel an,
+            dass das Konfidenzintervall den wahren Wert mit einer
+            Wahrscheinlichkeit von 95% umschließt.
+            Man kann sich das Konfidenzintervall in etwa als einen
+            Unsicherheitsbereich vorstellen, mit dem die
+            statistische Untersuchung den wahren Wert trifft.
+            Ein breites Konfidenzintervall deutet auf eine
+            größere Unsicherheit des „wahren“ Wertes hin;
+            es kann auf eine kleine Anzahl von Beobachtungen
+            zurückzuführen sein oder auf eine große Streuung der
+            Beobachtungen hinweisen.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% render_bundle "statistics" "js" %}
 {% endblock content %}

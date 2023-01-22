@@ -1,55 +1,47 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block view_metadata %}
-    <meta name="namespace" content="{{ namespace }}">
+  <meta name="namespace" content="{{ namespace }}"/>
 {% endblock view_metadata %}
-
 {% block styles %}
-    {% render_bundle 'table_attachment' 'css' %}
+  {% render_bundle 'table_attachment' 'css' %}
 {% endblock styles %}
-
 {% block content %}
-<div
-    id="study-name"
-    value="{{ study.name }}"
-    has-extended-metadata="{{ has_extended_metadata }}">
-</div>
-
-    <table id="instrument-table" class="table table-striped table-bordered">
-        <thead>
-            <tr class="search-header">
-                <th class="instrument"></th>
-                <th class="label"></th>
-                <th class="period"></th>
-                <!-- TODO: Temporary solution while metadata diverges -->
-                {% if has_extended_metadata %}
-                    <th class="type_position"></th>
-                    <th class="type"></th>
-                    <th class="mode"></th>
-                {% else %}
-                    <th class="analysis_unit"></th>
-                {% endif %}
-                <th class="attachments"></th>
-            </tr>
-            <tr class="header">
-                <th title="instrument" class="instrument">Instrument</th>
-                <th title="label" class="label">Label</th>
-                <th title="period" class="period">Period</th>
-                <!-- TODO: Temporary solution while metadata diverges -->
-                {% if has_extended_metadata %}
-                    <th title="type_position" class="type_position"></th>
-                    <th title="type" class="type">Type</th>
-                    <th title="mode" class="mode">Mode</th>
-                {% else %}
-                    <th title="analysis_unit" class="analysis_unit">Analysis Unit</th>
-                {% endif %}
-                <th title="attachments" class="attachments">Attachments</th>
-            </tr>
-        </thead>
-    </table>
-
-    {% render_bundle 'instrument_table' 'js' %}
-
-    
+  <div id="study-name"
+       value="{{ study.name }}"
+       has-extended-metadata="{{ has_extended_metadata }}">
+  </div>
+  <table id="instrument-table" class="table table-striped table-bordered">
+    <thead>
+      <tr class="search-header">
+        <th class="instrument"></th>
+        <th class="label"></th>
+        <th class="period"></th>
+        <!-- TODO: Temporary solution while metadata diverges -->
+        {% if has_extended_metadata %}
+          <th class="type_position"></th>
+          <th class="type"></th>
+          <th class="mode"></th>
+        {% else %}
+          <th class="analysis_unit"></th>
+        {% endif %}
+        <th class="attachments"></th>
+      </tr>
+      <tr class="header">
+        <th title="instrument" class="instrument">Instrument</th>
+        <th title="label" class="label">Label</th>
+        <th title="period" class="period">Period</th>
+        <!-- TODO: Temporary solution while metadata diverges -->
+        {% if has_extended_metadata %}
+          <th title="type_position" class="type_position"></th>
+          <th title="type" class="type">Type</th>
+          <th title="mode" class="mode">Mode</th>
+        {% else %}
+          <th title="analysis_unit" class="analysis_unit">Analysis Unit</th>
+        {% endif %}
+        <th title="attachments" class="attachments">Attachments</th>
+      </tr>
+    </thead>
+  </table>
+  {% render_bundle 'instrument_table' 'js' %}
 {% endblock content %}

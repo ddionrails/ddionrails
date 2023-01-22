@@ -1,98 +1,103 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block view_metadata %}
-    <meta name="namespace" content="{{ namespace }}">
+  <meta name="namespace" content="{{ namespace }}"/>
 {% endblock view_metadata %}
-
 {% block styles %}
-    <!-- Webpack bundle: "topics" CSS -->
-    {% render_bundle 'topics' 'css' %}
+  <!-- Webpack bundle: "topics" CSS -->
+  {% render_bundle 'topics' 'css' %}
 {% endblock styles %}
-
 {% block scripts %}
-    {% render_bundle 'topics' 'js' %}
+  {% render_bundle 'topics' 'js' %}
 {% endblock scripts %}
-
 {% block content %}
-{% csrf_token %}
-
-
-{{ json_object|json_script:"context_data" }}
-    <p class="text-right">
-        Languages:
-        {% for link_language in study.topic_languages %}
-            {% if link_language == language %} <b>{% endif %}
-        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}" id="language-switch-{{link_language}}">{{ link_language }}</a>
-        {% if link_language == language %} </b>{% endif %}
-        {% endfor %}
-    </p>
-
-    <h2><i class="small fas fa-cogs"></i> Topics</h2>
-
-    <div class="row" id="topic-search-bar-container">
-        <div class="search-bar">
-            <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search node .." id="search">
-                <span class="input-group-btn">    
-            <button class="btn btn-secondary" type="button" aria-pressed="true" id="btn-search"><span
-                    class="fas fa-search"
-                    aria-hidden="true"></span></button>
+  {% csrf_token %}
+  {{ json_object|json_script:"context_data" }}
+  <p class="text-right">
+    Languages:
+    {% for link_language in study.topic_languages %}
+      {% if link_language == language %}<b>{% endif %}
+      &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}"
+   id="language-switch-{{ link_language }}">{{ link_language }}</a>
+      {% if link_language == language %}</b>{% endif %}
+    {% endfor %}
+  </p>
+  <h2>
+    <i class="small fas fa-cogs"></i> Topics
+  </h2>
+  <div class="row" id="topic-search-bar-container">
+    <div class="search-bar">
+      <div class="input-group">
+        <input type="text"
+               class="form-control"
+               placeholder="Search node .."
+               id="search"/>
+        <span class="input-group-btn">
+          <button class="btn btn-secondary"
+                  type="button"
+                  aria-pressed="true"
+                  id="btn-search">
+            <span class="fas fa-search" aria-hidden="true"></span>
+          </button>
         </span>
-            </div>
-        </div>
+      </div>
     </div>
-
-    <div id="topic-display">
-        <div id="topic-tree-content">
-            <div id="tree"></div>
-        </div>
-        <div id="related-elements">
-            <div id="related-table">
-            </div>
-            <table id="variable-table" class="table table-striped table-bordered hidden">
-            <thead>
-            <tr>
+  </div>
+  <div id="topic-display">
+    <div id="topic-tree-content">
+      <div id="tree"></div>
+    </div>
+    <div id="related-elements">
+      <div id="related-table"></div>
+      <table id="variable-table" class="table table-striped table-bordered hidden">
+        <thead>
+          <tr>
             <th>Label</th>
             <th>Variable</th>
             <th>Dataset</th>
-            </tr>
-            </thead>
-            </table>
-            <table id="question-table" class="table table-striped table-bordered hidden">
-            <thead>
-            <tr>
+          </tr>
+        </thead>
+      </table>
+      <table id="question-table" class="table table-striped table-bordered hidden">
+        <thead>
+          <tr>
             <th>Label</th>
             <th>Question</th>
             <th>Instrument</th>
-            </tr>
-            </thead>
-            </table>
-        </div>
+          </tr>
+        </thead>
+      </table>
     </div>
-
-    <div class="modal fade" tabindex="-1" role="dialog" id="topic-list-add-to-basket">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header d-flex bg-light">
-                    <h4 class="modal-title">Add to basket</h4>
-                    <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-success hidden" role="alert" id="basket_success">
-                        <strong>Successfully </strong>added to basket.
-                    </div>
-                    <div class="alert alert-danger hidden" role="alert" id="basket_error">
-                        <strong>An error occured. </strong>Please try again later.
-                    </div>
-                    <p>Do you really want to add <span id="number-of-variables"></span> element(s) to your basket?</p>
-                    <p>Select a basket:</p>
-                    <div id="basket_list"></div>
-                </div>
-            </div>
+  </div>
+  <div class="modal fade"
+       tabindex="-1"
+       role="dialog"
+       id="topic-list-add-to-basket">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header d-flex bg-light">
+          <h4 class="modal-title">Add to basket</h4>
+          <button type="button"
+                  class="close float-right"
+                  data-dismiss="modal"
+                  aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
         </div>
+        <div class="modal-body">
+          <div class="alert alert-success hidden" role="alert" id="basket_success">
+            <strong>Successfully</strong>added to basket.
+          </div>
+          <div class="alert alert-danger hidden" role="alert" id="basket_error">
+            <strong>An error occured.</strong>Please try again later.
+          </div>
+          <p>
+            Do you really want to add <span id="number-of-variables"></span> element(s) to your basket?
+          </p>
+          <p>Select a basket:</p>
+          <div id="basket_list"></div>
+        </div>
+      </div>
     </div>
-
+  </div>
 {% endblock content %}

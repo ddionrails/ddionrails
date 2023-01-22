@@ -1,27 +1,27 @@
 {{ row_helper.reset }}
 <div class="card">
-    <div class="card-header d-flex justify-content-between">
-        <b>Related questions</b>
-        <div>To compare questions use <i class="fa fa-exchange-alt"></i></div>
+  <div class="card-header d-flex justify-content-between">
+    <b>Related questions</b>
+    <div>
+      To compare questions use <i class="fa fa-exchange-alt"></i>
     </div>
-    <div class="card-body">
-        <div class="row">
-            {% for period_name, questions in question_list.items %}
-                <div class="col-xl-3">
-                    {{ period_name }}:
-                    <br>
-                    {% for q in questions %}
-                      <a href="{{ q.get_direct_url }}" class="related-question-link" title="{{ q.instrument.label }}">
-                          {{ q.instrument.name }}/{{ q.name }}
-                      </a>
-                      <br>
-                    {% endfor %}
-                </div>
-                {% if row_helper.row %}
-                    </div>
-                    <div class="row" style="margin-top: 15px">
-                {% endif %}
-            {% endfor %}
-            </div>
+  </div>
+  <div class="card-body">
+    <div class="related-periods">
+      {% for period_name, questions in question_list.items %}
+        <div class="related-questions">
+          <h5>{{ period_name }}:</h5>
+          {% for q in questions %}
+          <div>
+            <a href="{{ q.get_direct_url }}"
+               class="related-question-link"
+               title="{{ q.instrument.label }}">
+              {{ q.instrument.name }}/{{ q.name }}
+            </a>
+          </div>
+          {% endfor %}
+          </div>
+      {% endfor %}
     </div>
+  </div>
 </div>

@@ -4,148 +4,140 @@ BODY Their structure is convoluted and confusing.
  -->
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block styles %}
-    <!-- Webpack bundle: "topics" CSS -->
-    {% render_bundle 'questions' 'css' %}
-    {% render_bundle 'question_comparison' 'css' %}
+  <!-- Webpack bundle: "topics" CSS -->
+  {% render_bundle 'questions' 'css' %}
+  {% render_bundle 'question_comparison' 'css' %}
 {% endblock styles %}
-
-{% block scripts %}
-{% endblock %}
-{% block title %}
-    {{ question.instrument.title }}/{{ question.name }}
-{% endblock %}
+{% block scripts %}{% endblock %}
+{% block title %}{{ question.instrument.title }}/{{ question.name }}{% endblock %}
 {% block content %}
-    <div id="question-id" class="hidden">{{ question.id }}</div>
-    {{ question_items|json_script:"question-meta" }}
-    {{ question.images|json_script:"question-images" }}
-    <div class="row">
-        <div class="col-xl-9">
-            <div class="card">
-                <div class="card-header question-navigation-header">
-
-    
-                    {% if question.previous_question %}
-                        <a href="{{ question.previous_question }}"
-                           class="question-navigation">
-                            <i class="fa fa-arrow-circle-left" title="Previous question">
-                            </i>
-                        </a>
-                    {% endif %}
-                    <h2 class="text-center">
-                    {{ question.name }}
-                    </h2>
-                    {% if question.next_question %}
-                        <a href="{{ question.next_question }}"
-                           class="question-navigation">
-                            <i class="fas fa-arrow-circle-right" title="Next question">
-                            </i>
-                        </a>
-                    {% endif %}
-
-
-                </div>
-                <div class="card-body" id="question-items">
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="text-center">DE</h2>
-                </div>
-                <div class="card-body" id="question-items-de">
-                </div>
-            </div>
-            {% include "questions/related_questions.html" with question_list=related_questions %}
+  <div id="question-id" class="hidden">{{ question.id }}</div>
+  {{ question_items|json_script:"question-meta" }}
+  {{ question.images|json_script:"question-images" }}
+  <div class="row">
+    <div class="col-xl-9">
+      <div class="card">
+        <div class="card-header question-navigation-header">
+          {% if question.previous_question %}
+            <a href="{{ question.previous_question }}" class="question-navigation">
+              <i class="fa fa-arrow-circle-left" title="Previous question">
+              </i>
+            </a>
+          {% endif %}
+          <h2 class="text-center">{{ question.name }}</h2>
+          {% if question.next_question %}
+            <a href="{{ question.next_question }}" class="question-navigation">
+              <i class="fas fa-arrow-circle-right" title="Next question">
+              </i>
+            </a>
+          {% endif %}
         </div>
-        <div class="col-xl-3">
-            {% include "questions/question_info.html" with question_list=related_questions %}
-            <div class="card">
-                <div class="card-header"><b>Variables</b>
-                </div>
-                {% if variables %}
-                    <div class="list-group">
-                        {% for variable in variables %}
-                        <div class="list-group-item">
-                            <div>
-                                <i class="fa fa-table"></i>
-                                <a href="{{ variable.dataset.get_direct_url }}">
-                                    {{ variable.dataset.name }} &#x2013;
-                                    <small>{{ variable.dataset.label }}</small>
-                                </a>
-                            </div>
-                            <div>
-                                <i class="fa fa-chart-bar"></i> 
-                                <a href="{{ variable.get_direct_url }}">
-                                    {{ variable.name }} &#x2013;
-                                    <small>{{ variable.label }}</small>
-                                </a>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div class="card-body">
-                        <p>no related variables found</p>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-    <div id="question-diff">
-    </div>
-
-<div class="modal" tabindex="-1" role="dialog" id="question-diff-modal">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Question Comparison</h5>&nbsp;
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+        <div class="card-body" id="question-items"></div>
       </div>
-        <div class="modal-body" id="question-diff-modal-content">
-            <div id="ours-question" class="hidden"></div>
-            <div id="theirs-question" class="hidden"></div>
-            {% comment "Dropdown lives here" %}{% endcomment %}
-            <div id="diff-dropdown-container">
-                <div class="dropdown" id="primary-dropdown-menu">
-                    <button 
-                    class="btn btn-secondary dropdown-toggle"
-                    type="button"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false">
-                        Select related question
-                    </button>
-                    <div class="dropdown-menu">
-                    {% for period_name, questions in related_questions.items %}
-                        {% if questions %}
-                        <p>{{ period_name }}:<p>
-                            {% for q in questions %}
-                            <a href="#" data-id="{{ q.id }}" class="dropdown-item ours-question-dropdown-item">
-                                <div></div>
-                                {{ q.instrument.name }}/{{ q.name }}
-                            </a>
-                            {% endfor %}
-                        {% endif%}
-                    {% endfor %}
-                    </div>
-                </div>
-            </div>
-            <div id="diff-table-container">
-            </div>
-
-            <div id="modal-primary-question-id" class="hidden"></div>
-            <div id="modal-secondary-question-id" class="hidden"></div>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="text-center">DE</h2>
         </div>
+        <div class="card-body" id="question-items-de"></div>
+      </div>
+      {% include "questions/related_questions.html" with question_list=related_questions %}
+    </div>
+    <div class="col-xl-3">
+      {% include "questions/question_info.html" with question_list=related_questions %}
+      <div class="card">
+        <div class="card-header">
+          <b>Variables</b>
+        </div>
+        {% if variables %}
+          <div class="list-group">
+            {% for variable in variables %}
+              <div class="list-group-item">
+                <div>
+                  <i class="fa fa-table"></i>
+                  <a href="{{ variable.dataset.get_direct_url }}">
+                    {{ variable.dataset.name }} –
+                    <small>{{ variable.dataset.label }}</small>
+                  </a>
+                </div>
+                <div>
+                  <i class="fa fa-chart-bar"></i>
+                  <a href="{{ variable.get_direct_url }}">
+                    {{ variable.name }} –
+                    <small>{{ variable.label }}</small>
+                  </a>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="card-body">
+            <p>no related variables found</p>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
-</div>
-<button id="show-question-diff" type="button" data-toggle="modal" class="hidden" data-target="#question-diff-modal"></button>
-
-{% render_bundle 'question_images' 'js' %}
-{% render_bundle 'questions' 'js' %}
-{% render_bundle 'question_comparison' 'js' %}
-{% render_bundle 'description_modal' 'js' %}
+  <div id="question-diff"></div>
+  <div class="modal" tabindex="-1" role="dialog" id="question-diff-modal">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Question Comparison</h5>
+          &nbsp;
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body" id="question-diff-modal-content">
+          <div id="ours-question" class="hidden"></div>
+          <div id="theirs-question" class="hidden"></div>
+          {% comment "Dropdown lives here" %}{% endcomment %}
+          <div id="diff-dropdown-container">
+            <div class="dropdown" id="primary-dropdown-menu">
+              <button class="btn btn-secondary dropdown-toggle"
+                      type="button"
+                      data-toggle="dropdown"
+                      aria-haspopup="true"
+                      aria-expanded="false">
+                Select related question
+              </button>
+              <div class="dropdown-menu">
+                {% for period_name, questions in related_questions.items %}
+                  {% if questions %}
+                    <p>
+                      {{ period_name }}:
+                      <p>
+                        {% for q in questions %}
+                          <a href="#"
+                             data-id="{{ q.id }}"
+                             class="dropdown-item ours-question-dropdown-item">
+                            <div></div>
+                            {{ q.instrument.name }}/{{ q.name }}
+                          </a>
+                        </p>
+                      </p>
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          <div id="diff-table-container"></div>
+          <div id="modal-primary-question-id" class="hidden"></div>
+          <div id="modal-secondary-question-id" class="hidden"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button id="show-question-diff"
+          type="button"
+          data-toggle="modal"
+          class="hidden"
+          data-target="#question-diff-modal">
+  </button>
+  {% render_bundle 'question_images' 'js' %}
+  {% render_bundle 'questions' 'js' %}
+  {% render_bundle 'question_comparison' 'js' %}
+  {% render_bundle 'description_modal' 'js' %}
 {% endblock content %}

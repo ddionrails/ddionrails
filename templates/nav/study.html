@@ -1,42 +1,38 @@
-    <li class="header-vline"></li>
-    <li class="navbar-brand nav-item">
-    <a  href="{{ study.get_absolute_url }}">
-        {{ study.title }}
-    </a>
-    </li>
-        <li class="nav-item">
-            <a href="{% url 'datasets:all_study_datasets' study=study %}"
-               class="nav-link"
-               id="datasets-nav-link">Data</a>
-        </li>
-        <li class="nav-item">
-            <a href="{% url 'instruments:all_study_instruments' study=study %}"
-               class="nav-link"
-               id="instruments-nav-link">Instruments</a>
-        </li>
-        {% if study.has_topics %}
-            <li class="nav-item">
-                <a href="{% url 'study_topics' study_name=study.name language='en' %}"
-                   class="nav-link"
-                   id="topics-nav-link">Topics</a>
-            </li>
-        {% endif %}
-        <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
-        </li>
-        {% if study in STATISTICS_STUDIES %}
-            <li class="nav-item" id="statistics-nav-item">
-                <a
-                    href="{% url 'statistics:statistics' study=study %}"
-                    class="nav-link"
-                    id="statistics-nav-link">
-                    Statistics
-                </a>
-            </li>
-        {% endif %}
-        <li class="nav-item">
-        <a
-            href='{{ request.scheme }}://{{ request.get_host }}/search/all?Study="{{ study.label }}"'
-            class="nav-link">
-            Search in Study
-        </a>
-        </li>
+<li class="header-vline"></li>
+<li class="navbar-brand nav-item">
+  <a href="{{ study.get_absolute_url }}">{{ study.title }}</a>
+</li>
+<li class="nav-item">
+  <a href="{% url 'datasets:all_study_datasets' study=study %}"
+     class="nav-link"
+     id="datasets-nav-link">Data</a>
+</li>
+<li class="nav-item">
+  <a href="{% url 'instruments:all_study_instruments' study=study %}"
+     class="nav-link"
+     id="instruments-nav-link">Instruments</a>
+</li>
+{% if study.has_topics %}
+  <li class="nav-item">
+    <a href="{% url 'study_topics' study_name=study.name language='en' %}"
+       class="nav-link"
+       id="topics-nav-link">Topics</a>
+  </li>
+{% endif %}
+<li class="nav-item">
+  <a href="{% url 'publ:study_publication_list' study_name=study.name %}"
+     class="nav-link">Publications</a>
+</li>
+{% if study in STATISTICS_STUDIES %}
+  <li class="nav-item" id="statistics-nav-item">
+    <a href="{% url 'statistics:statistics' study=study %}"
+       class="nav-link"
+       id="statistics-nav-link">Statistics</a>
+  </li>
+{% endif %}
+<li class="nav-item">
+  <a href='{{ request.scheme }}://{{ request.get_host }}/search/all?Study="{{ study.label }}"'
+     class="nav-link">
+    Search in Study
+  </a>
+</li>

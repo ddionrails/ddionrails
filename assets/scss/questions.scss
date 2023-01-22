@@ -1,4 +1,5 @@
 @import "~bootstrap/scss/bootstrap";
+@import "related_by_period";
 
 .question-item-text {
   font-weight: bold;
@@ -90,4 +91,8 @@ input[type="radio"] {
 .image-de-modal-content {
   display: flex;
   justify-content: center;
+}
+
+.related-questions {
+  @extend .related-entities;
 }

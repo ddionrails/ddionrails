@@ -1,2 +1,6 @@
 [tool.black]
 line-length = 90
+
+[tool.djlint]
+indent=2
+max_line_length=90

@@ -1,48 +1,40 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block view_metadata %}
-    <meta name="namespace" content="{{ namespace }}">
+  <meta name="namespace" content="{{ namespace }}"/>
 {% endblock view_metadata %}
-
 {% block styles %}
-    {% render_bundle 'dataset_table' 'css' %}
-    {% render_bundle 'table_attachment' 'css' %}
+  {% render_bundle 'dataset_table' 'css' %}
+  {% render_bundle 'table_attachment' 'css' %}
 {% endblock styles %}
-
 {% block content %}
-<div
-    id="study-name"
-    value="{{ study.name }}"
-    has-extended-metadata="{{ has_extended_metadata }}">
-</div>
-
-    <table id="dataset-table" class="table table-striped table-bordered">
-        <thead>
-            <tr class="search-header">
-                <th class="dataset"></th>
-                <th class="label"></th>
-                <th class="conceptual-dataset"></th>
-                <th class="period"></th>
-                <th class="analysis-unit"></th>
-                <th class="folder"></th>
-                <th class="primary-key"></th>
-                <th class="attachments"></th>
-            </tr>
-            <tr class="header">
-                <th title="dataset" class="dataset">Dataset</th>
-                <th title="label" class="label">Label</th>
-                <th title="conceptual-dataset" class="conceptual-dataset">Conceptual Dataset</th>
-                <th title="period" class="period">Period</th>
-                <th title="analysis-unit" class="analysis-unit">Analysis Unit</th>
-                <th title="folder" class="folder">Stored in Folder</th>
-                <th title="primary-key" class="primary-key">Primary Key</th>
-                <th title="attachments" class="attachments">Attachments</th>
-            </tr>
-        </thead>
-    </table>
-
-    {% render_bundle 'dataset_table' 'js' %}
-
-    
+  <div id="study-name"
+       value="{{ study.name }}"
+       has-extended-metadata="{{ has_extended_metadata }}">
+  </div>
+  <table id="dataset-table" class="table table-striped table-bordered">
+    <thead>
+      <tr class="search-header">
+        <th class="dataset"></th>
+        <th class="label"></th>
+        <th class="conceptual-dataset"></th>
+        <th class="period"></th>
+        <th class="analysis-unit"></th>
+        <th class="folder"></th>
+        <th class="primary-key"></th>
+        <th class="attachments"></th>
+      </tr>
+      <tr class="header">
+        <th title="dataset" class="dataset">Dataset</th>
+        <th title="label" class="label">Label</th>
+        <th title="conceptual-dataset" class="conceptual-dataset">Conceptual Dataset</th>
+        <th title="period" class="period">Period</th>
+        <th title="analysis-unit" class="analysis-unit">Analysis Unit</th>
+        <th title="folder" class="folder">Stored in Folder</th>
+        <th title="primary-key" class="primary-key">Primary Key</th>
+        <th title="attachments" class="attachments">Attachments</th>
+      </tr>
+    </thead>
+  </table>
+  {% render_bundle 'dataset_table' 'js' %}
 {% endblock content %}

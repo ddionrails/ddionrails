@@ -1,0 +1,15 @@
+.related-periods {
+  display: flex;
+  flex-direction: row;
+  max-width: 60vw;
+  flex-wrap: wrap;
+}
+
+.related-entities {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  max-width: 33.33%;
+  min-width: 25%;
+  padding: 1em;
+}

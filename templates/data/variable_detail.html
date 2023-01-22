@@ -1,158 +1,148 @@
 {% extends "base_study.html" %}
 {% load render_bundle from webpack_loader %}
 {% block title %}
-    {{ variable.dataset.name}}/{{ variable.name }}
+  {{ variable.dataset.name }}/{{ variable.name }}
 {% endblock title %}
 {% block styles %}
-    <!-- Webpack bundle: "visualization" CSS -->
-    {% render_bundle 'visualization' 'css' %}
-    {% render_bundle 'variables' 'css' %}
-    {% render_bundle 'description_modal' 'css' %}
+  <!-- Webpack bundle: "visualization" CSS -->
+  {% render_bundle 'visualization' 'css' %}
+  {% render_bundle 'variables' 'css' %}
+  {% render_bundle 'description_modal' 'css' %}
 {% endblock styles %}
 {% block content %}
-    {% csrf_token %}
-    {{ variable_baskets_context|json_script:"context_data" }}
-    <h1><i class="fa fa-chart-bar" title="Variable"></i>
-        {{ variable.dataset.name}}/{{ variable.name }}: {{ variable.label }}
-    </h1>
-    <div class="row">
-        <div class="col-lg-8">
-            {% if variable.images %}
-                {% if variable.images.de %}
-                <img src="{{ variable.images.de }}" class="img-fluid">
-                {% endif %}
-                {% if variable.images.en %}
-                <img src="{{ variable.images.en }}" class="img-fluid">
-                {% endif %}
-            {% else %}
-            <div class="btn-toolbar" id="chart-toolbar" role="toolbar" aria-label="...">
-                <div class="float-right" aria-label="..."
-                     id="vis_menu">
-                    <a type="button" class="btn opt btn-info chart_nav" id="percent">Percent</a>
-                    <a type="button" class="btn opt btn-info chart_nav"
-                       id="missings">Hide Missings</a>
-                </div>
-            </div>
-            <div id="menu"></div>
-            <div id="chart"></div>
-            <div id="chart_missings"></div>
-            {% endif %}
-            <div id="relation-tables">
-                <!-- Nav tabs -->
-                <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="nav-item"
-                        title="Variables with the same concept">
-                        <a href="#related_variables"
-                        aria-controls="related_variables"
-                            data-toggle="tab"
-                            class="nav-link active"
-                        >
-                            Related variables
-                            <span class="badge badge-secondary">
-                                {{ variable.get_related_variables | length }}
-                            </span>
-                        </a>
-                    </li>
-                    <li role="presentation" class="nav-item">
-                        <a href="#origin_variables"
-                           aria-controls="origin_variables"
-                           data-toggle="tab"
-                           class="nav-link"
-                        >
-                            Input variables
-                            <span class="badge badge-secondary">
-                                {{ variable.origin_variables.count }}
-                            </span>
-                    </a>
-                    </li>
-                    <li role="presentation" class="nav-item">
-                        <a href="#target_variables"
-                           aria-controls="target_variables"
-                           data-toggle="tab"
-                           class="nav-link"
-                        >
-                            Output variables
-                            <span class="badge badge-secondary">
-                                {{ variable.target_variables.count }}
-                            </span>
-                    </a>
-                    </li>
-                </ul>
-                <!-- Tab panes -->
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="related_variables">
-                        {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="origin_variables">
-                        {% if origin_variables %}
-                            {% include "data/related_variables.html" with variable_list=origin_variables%}
-                        {% else %}
-                            <div class="card bg-light card-body mb-3">No input variables</div>
-                        {% endif %}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="target_variables">
-                        {% if target_variables %}
-                            {% include "data/related_variables.html" with variable_list=target_variables%}
-                        {% else %}
-                            <div class="card bg-light card-body mb-3">No output variables</div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% if variable.has_translations %}
-                {% include "data/translation_table.html" %}
-            {% endif %}
-        </div>
-        <div class="col-lg-4">
-            <div class="card">
-                <div class="card-header"><b>Basket</b>
-                </div>
-                <div class="list-group" id="basket-list">
-                    {% if user.is_authenticated %}
-                        </div>
-                        <div class="card-body text-right">
-                        <button  class="btn btn-secondary basket-create-button">
-                            <a href="{% url 'workspace:basket_new' %}">
-
-                                Create a new basket
-
-                            </a>
-                        </button>
-                    {% else %}
-                        </div>
-                        <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>
-                            or <a href="{% url 'workspace:register' %">register</a>
-                            to
-                            use the basket functionality.
-                    {% endif %}
-                </div>
-            </div>
-            {% include "data/variable_info.html" %}
-            {% include "data/statistics_partial.html" %}
-        </div>
-    </div>
-    {% if label_table %}
-        {% if label_table.render_table %}
-            <h2>Codes of related variables with the same concept</h2>
-            <p>This table provides you with an overview of label definitions across
-                related variables to identify changes over time in longitudinal variables.
-                The first number indicates the value code, the second number (in brackets)
-                represents the frequency in the data. Please note that labels are simplified
-                and values with frequency = 0 are hidden.</p>
-            <!-- End content -->
-            <div class="table-responsive">
-                {{ label_table.to_html | safe }}
-            </div>
-            <div class="content">
-            <!-- Restart content -->
+  {% csrf_token %}
+  {{ variable_baskets_context|json_script:"context_data" }}
+  <h1>
+    <i class="fa fa-chart-bar" title="Variable"></i>
+    {{ variable.dataset.name }}/{{ variable.name }}: {{ variable.label }}
+  </h1>
+  <div class="row">
+    <div class="col-lg-8">
+      {% if variable.images %}
+        {% if variable.images.de %}
+          <img src="{{ variable.images.de }}" class="img-fluid"/>
         {% endif %}
+        {% if variable.images.en %}
+          <img src="{{ variable.images.en }}" class="img-fluid"/>
+        {% endif %}
+      {% else %}
+        <div class="btn-toolbar"
+             id="chart-toolbar"
+             role="toolbar"
+             aria-label="...">
+          <div class="float-right" aria-label="..." id="vis_menu">
+            <a type="button" class="btn opt btn-info chart_nav" id="percent">Percent</a>
+            <a type="button" class="btn opt btn-info chart_nav" id="missings">Hide Missings</a>
+          </div>
+        </div>
+        <div id="menu"></div>
+        <div id="chart"></div>
+        <div id="chart_missings"></div>
+      {% endif %}
+      <div id="relation-tables">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation"
+              class="nav-item"
+              title="Variables with the same concept">
+            <a href="#related_variables"
+               aria-controls="related_variables"
+               data-toggle="tab"
+               class="nav-link active">
+              Related variables
+              <span class="badge badge-secondary">{{ variable.get_related_variables | length }}</span>
+            </a>
+          </li>
+          <li role="presentation" class="nav-item">
+            <a href="#origin_variables"
+               aria-controls="origin_variables"
+               data-toggle="tab"
+               class="nav-link">
+              Input variables
+              <span class="badge badge-secondary">{{ variable.origin_variables.count }}</span>
+            </a>
+          </li>
+          <li role="presentation" class="nav-item">
+            <a href="#target_variables"
+               aria-controls="target_variables"
+               data-toggle="tab"
+               class="nav-link">
+              Output variables
+              <span class="badge badge-secondary">{{ variable.target_variables.count }}</span>
+            </a>
+          </li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+          <div role="tabpanel" class="tab-pane active" id="related_variables">
+            {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
+          </div>
+          <div role="tabpanel" class="tab-pane" id="origin_variables">
+            {% if origin_variables %}
+              {% include "data/related_variables.html" with variable_list=origin_variables %}
+            {% else %}
+              <div class="card bg-light card-body mb-3">No input variables</div>
+            {% endif %}
+          </div>
+          <div role="tabpanel" class="tab-pane" id="target_variables">
+            {% if target_variables %}
+              {% include "data/related_variables.html" with variable_list=target_variables %}
+            {% else %}
+              <div class="card bg-light card-body mb-3">No output variables</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% if variable.has_translations %}
+        {% include "data/translation_table.html" %}
+      {% endif %}
+    </div>
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <b>Basket</b>
+        </div>
+        <div class="list-group" id="basket-list">{% if user.is_authenticated %}</div>
+        <div class="card-body text-right">
+          <button class="btn btn-secondary basket-create-button">
+            <a href="{% url 'workspace:basket_new' %}">Create a new basket</a>
+          </button>
+        {% else %}
+        </div>
+        <div class="card-body">
+          Please <a href="{% url 'workspace:login' %}">login</a>
+          or <a href="{% url 'workspace:register' %">register</a>
+          to
+          use the basket functionality.
+        {% endif %}
+      </div>
+    </div>
+    {% include "data/variable_info.html" %}
+    {% include "data/statistics_partial.html" %}
+  </div>
+</div>
+{% if label_table %}
+  {% if label_table.render_table %}
+    <h2>Codes of related variables with the same concept</h2>
+    <p>
+      This table provides you with an overview of label definitions across
+      related variables to identify changes over time in longitudinal variables.
+      The first number indicates the value code, the second number (in brackets)
+      represents the frequency in the data. Please note that labels are simplified
+      and values with frequency = 0 are hidden.
+    </p>
+    <!-- End content -->
+    <div class="table-responsive">{{ label_table.to_html | safe }}</div>
+    <div class="content">
+      <!-- Restart content -->
     {% endif %}
+  {% endif %}
 {% endblock content %}
 {% block scripts %}
-    <!-- Webpack bundle: "visualization" JS -->
-    {% render_bundle 'variable_view_basket_button' 'js' %}
-    {% render_bundle 'focus_anchor' 'js' %}
-    {% render_bundle 'visualization' 'js' %}
-    {% render_bundle 'description_modal' 'js' %}
+  <!-- Webpack bundle: "visualization" JS -->
+  {% render_bundle 'variable_view_basket_button' 'js' %}
+  {% render_bundle 'focus_anchor' 'js' %}
+  {% render_bundle 'visualization' 'js' %}
+  {% render_bundle 'description_modal' 'js' %}
 {% endblock scripts %}
 </div>

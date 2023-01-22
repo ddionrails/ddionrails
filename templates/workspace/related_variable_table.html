@@ -1,57 +1,63 @@
 <table class="table">
-    <thead>
+  <thead>
     <tr>
-        <th>Concept</th>
-        <th></th>
-        {% for p in period_list %}
-            <th>{{ p }}</th>
-        {% endfor %}
+      <th>Concept</th>
+      <th></th>
+      {% for p in period_list %}<th>{{ p }}</th>{% endfor %}
     </tr>
-    </thead>
-    <tbody>
+  </thead>
+  <tbody>
     {% for concept_name, concept in related_variable_table.items %}
-        <tr>
-            <td>
-                <a href="{{ concept.get_absolute_url }}">{{ concept_name }}</a><br/>
-                {{ concept.label }}
-            </td>
-            <td>
-                <a href="{% url 'workspace:add_concept' basket_id=basket.id concept_id=concept.id %}">
-                <button class="btn btn-success concept-button" basket_id="{{ basket.id }}" concept_id="{{ concept.id }}">
-                    Add all
-                </button>
-                </a>
-                <br/>
-                <a href="{% url 'workspace:remove_concept' basket_id=basket.id concept_id=concept.id %}">
-                <button class="btn btn-danger concept-button" basket_id="{{ basket.id }}" concept_id="{{ concept.id }}">
-                    Remove all
-                </button>
-                </a>
-            </td>
-            {% for period_name, period in concept.periods.items %}
-                <td>
-                    {% for variable in period %}
-                        <span class="btn-group btn-group-xs btn-group-var" role="group">
-              {% if variable.active %}
-                  <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
-                          title="Remove variable" class="basket-button btn btn-danger">
+      <tr>
+        <td>
+          <a href="{{ concept.get_absolute_url }}">{{ concept_name }}</a>
+          <br/>
+          {{ concept.label }}
+        </td>
+        <td>
+          <a href="{% url 'workspace:add_concept' basket_id=basket.id concept_id=concept.id %}">
+            <button class="btn btn-success concept-button"
+                    basket_id="{{ basket.id }}"
+                    concept_id="{{ concept.id }}">
+              Add all
+            </button>
+          </a>
+          <br/>
+          <a href="{% url 'workspace:remove_concept' basket_id=basket.id concept_id=concept.id %}">
+            <button class="btn btn-danger concept-button"
+                    basket_id="{{ basket.id }}"
+                    concept_id="{{ concept.id }}">
+              Remove all
+            </button>
+          </a>
+        </td>
+        {% for period_name, period in concept.periods.items %}
+          <td>
+            {% for variable in period %}
+              <span class="btn-group btn-group-xs btn-group-var" role="group">
+                {% if variable.active %}
+                  <button variable_id="{{ variable.id }}"
+                          basket_id="{{ basket.id }}"
+                          title="Remove variable"
+                          class="basket-button btn btn-danger">
                     <span class="fas fa-times"></span>
                   </button>
-              {% else %}
-                  <button variable_id="{{ variable.id }}" basket_id="{{ basket.id }}"
-                          title="Add variable" class="basket-button btn btn-default btn-success">
+                {% else %}
+                  <button variable_id="{{ variable.id }}"
+                          basket_id="{{ basket.id }}"
+                          title="Add variable"
+                          class="basket-button btn btn-default btn-success">
                     <span class="fas fa-shopping-cart"></span>
-                </button>
-              {% endif %}
-                            <a href="{{ variable.link }}" class="btn btn-default"
-                               title="{{ variable.name }}">
-                  {{ variable.name }} 
-                </a>
+                  </button>
+                {% endif %}
+                <a href="{{ variable.link }}"
+                   class="btn btn-default"
+                   title="{{ variable.name }}">{{ variable.name }}</a>
               </span>
-                    {% endfor %}
-                </td>
             {% endfor %}
-        </tr>
+          </td>
+        {% endfor %}
+      </tr>
     {% endfor %}
-    </tbody>
+  </tbody>
 </table>

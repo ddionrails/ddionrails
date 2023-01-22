@@ -1,18 +1,15 @@
 {% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block title %}
-    {{ basket.title }}
+  {{ basket.title }}
 {% endblock title %}
 {% block styles %}
-    {% render_bundle 'basket' 'css' %}
+  {% render_bundle 'basket' 'css' %}
 {% endblock styles %}
-
 {% block studynav %}
-    {% include "nav/basket.html" %}
+  {% include "nav/basket.html" %}
 {% endblock studynav %}
-
 {% block scripts %}
-    <!-- Webpack bundle: "visualization" JS -->
-    {% render_bundle 'basket_view_variable_buttons' 'js' %}
+  <!-- Webpack bundle: "visualization" JS -->
+  {% render_bundle 'basket_view_variable_buttons' 'js' %}
 {% endblock scripts %}

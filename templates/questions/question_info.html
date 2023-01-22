@@ -1,121 +1,104 @@
 <div class="card">
-    <div class="card-header">Info</div>
-    <div class="card-body">
-        <p title="Direct URL to question"><i class="fa fa-tasks"></i>
-            <a href="{{ question.get_direct_url }}"> {{ question.name }} </a>
-        </p>
-        <p>
-            
-            {% if concept_list %}
-                <div class="list-group" title="Concept of question item">
-                    {% for concept in concept_list %}
-                        <div>
-                            <i class="fa fa-cog"></i>
-                            <a href="{{ concept }}">{{ concept.title }}</a>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            {{ question.concept.name }}
-        </p>
-        <hr>
-        <p title="Instrument">
-            <i class="fas fa-clipboard-list"></i>
-            <a href="{{ question.instrument.get_direct_url }}">
-                {{ question.instrument.label }}
-            </a>
-
-
-            </a>
-        </p>
-        {% if question.instrument.analysis_unit.name != 'none' %}
-            <p>
-                    <b>Analysis Unit:</b> {{ question.instrument.analysis_unit.name }}
-            </p>
-        {% endif %}
-        {% if question.instrument.period.name != 'none' %}
-            <p>
-                    <b>Period:</b> {{ question.instrument.period.name }}
-            </p>
-        {% endif %}
-        <p id="question-images-container">
-        </p>
-        {% include "publications/attachments_partial.html" with attachments=question.attachments %}
-    </div>
+  <div class="card-header">Info</div>
+  <div class="card-body">
+    <p title="Direct URL to question">
+      <i class="fa fa-tasks"></i>
+      <a href="{{ question.get_direct_url }}">{{ question.name }}</a>
+    </p>
+    <p>
+      {% if concept_list %}
+        <div class="list-group" title="Concept of question item">
+          {% for concept in concept_list %}
+            <div>
+              <i class="fa fa-cog"></i>
+              <a href="{{ concept }}">{{ concept.title }}</a>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      {{ question.concept.name }}
+    </p>
+    <hr/>
+    <p title="Instrument">
+      <i class="fas fa-clipboard-list"></i>
+      <a href="{{ question.instrument.get_direct_url }}">{{ question.instrument.label }}</a>
+    </p>
+    {% if question.instrument.analysis_unit.name != 'none' %}
+      <p>
+        <b>Analysis Unit:</b> {{ question.instrument.analysis_unit.name }}
+      </p>
+    {% endif %}
+    {% if question.instrument.period.name != 'none' %}
+      <p>
+        <b>Period:</b> {{ question.instrument.period.name }}
+      </p>
+    {% endif %}
+    <p id="question-images-container"></p>
+    {% include "publications/attachments_partial.html" with attachments=question.attachments %}
+  </div>
 </div>
-
-<div calss="card" style="
-    margin-top: 1em;
-    justify-content: center;
-    display: flex;
-">
-</div>
-
+<div calss="card"
+     style="margin-top: 1em;
+            justify-content: center;
+            display: flex"></div>
 <div class="card hidden">
-    <div class="card-header"><b>Description</b>
-    </div>
-    <div class="card-body" id="description-card-content">
-        {{ question.html_description | safe }}
-    </div>
-    <div class="card-footer text-center" id="description-footer">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
-        Show full description
-        </button>
-    </div>
+  <div class="card-header">
+    <b>Description</b>
+  </div>
+  <div class="card-body" id="description-card-content">
+    {{ question.html_description | safe }}
+  </div>
+  <div class="card-footer text-center" id="description-footer">
+    <button type="button"
+            class="btn btn-secondary"
+            data-toggle="modal"
+            data-target="#description-modal">
+      Show full description
+    </button>
+  </div>
 </div>
-
-
 <div class="modal" tabindex="-1" role="dialog" id="description-modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Description</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">×</span>
         </button>
       </div>
-        <div class="modal-body" id="description-modal-content">
-        </div>
+      <div class="modal-body" id="description-modal-content"></div>
     </div>
   </div>
 </div>
-
-
-
 <div class="modal" tabindex="-1" role="dialog" id="image-de-modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">×</span>
         </button>
       </div>
-        <div class="modal-body" id="image-de-modal-content">
-            {% if image_urls.items %}
-                {% if "de" in image_urls %}
-                    <image src="{{ image_urls.de }}">
-                {% endif %}
-            {% endif %}
-        </div>
+      <div class="modal-body" id="image-de-modal-content">
+        {% if image_urls.items %}
+          {% if "de" in image_urls %}<image src="{{ image_urls.de }}">{% endif %}
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>
-
 <div class="modal" tabindex="-1" role="dialog" id="image-en-modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-hidden="true">×</span>
         </button>
       </div>
-        <div class="modal-body" id="image-en-modal-content">
-            {% if image_urls.items %}
-                {% if "en" in image_urls %}
-                    <image src="{{ image_urls.en }}">
-                {% endif %}
-            {% endif %}
-        </div>
+      <div class="modal-body" id="image-en-modal-content">
+        {% if image_urls.items %}
+          {% if "en" in image_urls %}<image src="{{ image_urls.en }}">{% endif %}
+        {% endif %}
+      </div>
     </div>
   </div>
 </div>

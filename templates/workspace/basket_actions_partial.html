@@ -1,32 +1,30 @@
 <div class="card">
-    <div class="card-header">
-        <b>Actions</b>
+  <div class="card-header">
+    <b>Actions</b>
+  </div>
+  <div class="list-group">
+    <div class="list-group-item">
+      <a href="{% url 'workspace:basket_to_csv' basket_id=basket.id %}">Export to CSV</a>
     </div>
-    <div class="list-group">
-        <div class="list-group-item">
-            <a href="{% url 'workspace:basket_to_csv' basket_id=basket.id %}">
-                Export to CSV
-            </a>
-        </div>
-        {% if study.name == "soep-core" %}
-        <div class="alert alert-danger" role="alert">
-            Warning:
-            The generator for Stata and R scripts is working for v37 data
-            but is not fully tested yet. (Feedback to kwenzig@diw.de is welcome!)
-            The generator for the SPSS script will not be updated and will be removed.
-        </div>
-        {% endif %}
-        {% for generator_name in basket.get_script_generators %}
-            <div class="list-group-item">
-                <a href="{% url 'workspace:script_new_lang' basket_id=basket.id generator_name=generator_name%}">
-                    New script using the <b>{{ generator_name }}</b> generator
-                </a>
-            </div>
-        {% endfor %}
-        <div class="list-group-item">
-            <a href="{% url 'workspace:basket_search' basket_id=basket.id %}">
-                <b>Add variables</b>
-            </a>
-        </div>
+    {% if study.name == "soep-core" %}
+      <div class="alert alert-danger" role="alert">
+        Warning:
+        The generator for Stata and R scripts is working for v37 data
+        but is not fully tested yet. (Feedback to kwenzig@diw.de is welcome!)
+        The generator for the SPSS script will not be updated and will be removed.
+      </div>
+    {% endif %}
+    {% for generator_name in basket.get_script_generators %}
+      <div class="list-group-item">
+        <a href="{% url 'workspace:script_new_lang' basket_id=basket.id generator_name=generator_name %}">
+          New script using the <b>{{ generator_name }}</b> generator
+        </a>
+      </div>
+    {% endfor %}
+    <div class="list-group-item">
+      <a href="{% url 'workspace:basket_search' basket_id=basket.id %}">
+        <b>Add variables</b>
+      </a>
     </div>
+  </div>
 </div>

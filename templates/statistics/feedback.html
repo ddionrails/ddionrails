@@ -1,93 +1,74 @@
-
 {% extends "base.html" %}
 {% load render_bundle from webpack_loader %}
-
 {% block view_metadata %}
-    <meta name="namespace" content="{{ namespace }}">
+  <meta name="namespace" content="{{ namespace }}"/>
 {% endblock view_metadata %}
-
-{% block title %}Search Feedback | paneldata.org{% endblock title %}
-
-
+{% block title %}
+  Search Feedback | paneldata.org
+{% endblock title %}
 {% block content %}
-
-<p id="feedback-success" class="alert alert-success hidden">
-     Your Feedback has been send.
-</p>
-
-<form id="feedback-form" action="/api/feedback/?type=statistics" method="post">
+  <p id="feedback-success" class="alert alert-success hidden">
+    Your Feedback has been send.
+  </p>
+  <form id="feedback-form"
+        action="/api/feedback/?type=statistics"
+        method="post">
     <div class="form-group">
-        <label for="feedback-type">
-            Please select a type for the issue you want to report.
-        </label>
-        <select class="form-control" id="feedback-type" name="feedback-type">
-            <option value="praise">
-                I want to highlight something I like about the statistics app
-                (May help us to impove features even further)
-            </option>
-            <option value="statistic-request">
-                I would like to request the addition of a new statistic
-            </option>
-            <option value="statistic-missing">
-                I can't find a statistic, I know should be here
-            </option>
-            <option value="feature-suggestion">
-                I want to suggest a change to the statistics interface
-            </option>
-            <option value="ui-defect">
-                An element of the statistics interface does not work
-            </option>
-            <option value="other">Something else</option>
-        </select>
+      <label for="feedback-type">Please select a type for the issue you want to report.</label>
+      <select class="form-control" id="feedback-type" name="feedback-type">
+        <option value="praise">
+          I want to highlight something I like about the statistics app
+          (May help us to impove features even further)
+        </option>
+        <option value="statistic-request">
+          I would like to request the addition of a new statistic
+        </option>
+        <option value="statistic-missing">
+          I can't find a statistic, I know should be here
+        </option>
+        <option value="feature-suggestion">
+          I want to suggest a change to the statistics interface
+        </option>
+        <option value="ui-defect">
+          An element of the statistics interface does not work
+        </option>
+        <option value="other">
+          Something else
+        </option>
+      </select>
     </div>
     <div class="form-group">
-        <label for="feedback">Please write your feedback here: </label>
-        <textarea
-            class="form-control"
-            rows="10"
-            id="feedback"
-            type="text"
-            name="feedback"
-            required></textarea>
+      <label for="feedback">Please write your feedback here:</label>
+      <textarea class="form-control"
+                rows="10"
+                id="feedback"
+                type="text"
+                name="feedback"
+                required></textarea>
     </div>
     <div class="form-group">
-        <label for="email">
-            Enter your E-Mail if you want us to be able to get back to you:
-        </label>
-        <input
-            class="form-control"
-            id="email"
-            type="email"
-            name="email"
-            required>
+      <label for="email">
+        Enter your E-Mail if you want us to be able to get back to you:
+      </label>
+      <input class="form-control" id="email" type="email" name="email" required/>
     </div>
     <div class="form-group">
-        <label for="source">My feedback concerns:</label>
-        <input
-            class="form-control"
-            id="source"
-            type="url"
-            name="source" >
+      <label for="source">My feedback concerns:</label>
+      <input class="form-control" id="source" type="url" name="source"/>
     </div>
     {% csrf_token %}
     <div class="form-group">
-        <input
-            id="submit-button"
-            class="btn btn-primary"
-            type="submit"
-            name="submit-button"
-            value="Submit">
-        <input
-            id="anon-submit-button"
-            class="btn btn-primary"
-            type="submit"
-            name="anon-submit-button"
-            value="Submit Anonymously">
+      <input id="submit-button"
+             class="btn btn-primary"
+             type="submit"
+             name="submit-button"
+             value="Submit"/>
+      <input id="anon-submit-button"
+             class="btn btn-primary"
+             type="submit"
+             name="anon-submit-button"
+             value="Submit Anonymously"/>
     </div>
-    </div>
-</form>
-
-
-{% render_bundle 'feedback' 'js' %}
+  </form>
+  {% render_bundle 'feedback' 'js' %}
 {% endblock content %}
-
