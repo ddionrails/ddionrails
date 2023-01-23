@@ -7,7 +7,7 @@
 ![System-Tests](https://github.com/ddionrails/ddionrails/actions/workflows/system-tests.yml/badge.svg)
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
-[![Codacy][codacy-badge]](https://app.codacy.com/project/ddionrails/ddionrails/dashboard)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0af735a0e3664fdb85ea6c92c99fe25f)](https://www.codacy.com/gh/ddionrails/ddionrails/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ddionrails/ddionrails&amp;utm_campaign=Badge_Grade)
 
 The data portal DDI on Rails accompanies researchers throughout the entire
 course of their research projects from conception to publication/citation.
