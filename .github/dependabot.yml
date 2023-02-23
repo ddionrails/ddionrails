@@ -56,7 +56,7 @@ updates:
       - "PostfixDockerImage"
       - "dependencies"
   - package-ecosystem: github-actions
-    directory: /
+    directory: "/.github/workflows"
     schedule:
       interval: daily
       time: "04:00"
