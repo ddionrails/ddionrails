@@ -17,6 +17,7 @@ name = "pypi"
 # ------------------------------------------------------------------------------
 django = ">=4.0.7"
 django-crispy-forms = "*"
+crispy-bootstrap4 = "*"
 django-extensions = "*"
 django-import-export = "*"
 django-model-utils = "*"
