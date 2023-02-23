@@ -23,7 +23,7 @@ django-model-utils = "*"
 django-rq = "*"
 django-webpack-loader = "*"
 gunicorn = "*"
-djangorestframework = "*"
+djangorestframework = ">=3.14.0"
 django_filer = "*"
 # PostgreSQL
 # ------------------------------------------------------------------------------
