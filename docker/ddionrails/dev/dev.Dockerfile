@@ -30,21 +30,21 @@ RUN apt-get update \
     zlib1g-dev>=1:1.2 \
     libfreetype6-dev>=2.9.1-3+deb10u2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade pipenv==2023.2.18 \
+    && pip install --no-cache-dir --upgrade poetry==1.3.2 \
     && pip install --no-cache-dir --upgrade chardet==4.0.0 \
-    && pipenv requirements --dev > Requirements.txt \
+    && poetry export --output=Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \
     && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
     && apt-get install -y --no-install-recommends nodejs=12.* \
     && npm install \
     && npm run build \
-    && pip uninstall -y --no-input pipenv \
+    && pip uninstall -y --no-input poetry \
     && rm -rf ./node_modules/ \
     && rm -rf /var/lib/apt/lists/* 
 
 # hadolint ignore=DL3013
-RUN pip install --upgrade pipenv
+RUN pip install --upgrade poetry
 # It turned out to be easier to work with the dev dependencies in a venv
 
 WORKDIR ${DOCKER_APP_DIRECTORY}

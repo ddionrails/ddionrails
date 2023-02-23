@@ -23,11 +23,11 @@ RUN apk add --no-cache \
     postgresql-dev \
     zlib-dev \
     freetype-dev \
-    && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
+    && pip install --no-cache-dir --upgrade poetry==1.3.2 \
     && pip install --no-cache-dir --upgrade chardet==4.0.0 \
-    && pipfile2req Pipfile.lock > Requirements.txt \
+    && poetry export --output=Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
-    && pip uninstall -y pipfile-requirements \
+    && pip uninstall -y poetry \
     && rm Requirements.txt \
     && npm install \
     && npm run build \

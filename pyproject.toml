@@ -1,2 +1,100 @@
+[tool.poetry]
+name = "ddionrails"
+version = "6.6.0"
+description = "Store panel study data and make it available through the power of django"
+authors = [
+    "Marcel Hebing <TODO>",
+    "Marius Pahl <TODO>",
+    "Carolin Stolpe <TODO>",
+    "Heinz-Alexander Fuetterer <hfuetterer@diw.de>",
+    "Dominique Hansen <dhansen@diw.de>",
+]
+readme = "README.md"
+license = "AGPL-3.0"
+repository = "https://github.com/ddionrails/ddionrails"
+
+[tool.poetry.dependencies]
+python = ">=3.10"
+
+# Django
+# ------------------------------------------------------------------------------
+django = ">=4.0.7"
+django-crispy-forms = "*"
+django-extensions = "*"
+django-import-export = "*"
+django-model-utils = "*"
+django-rq = "*"
+django-webpack-loader = "*"
+gunicorn = "*"
+djangorestframework = ">=3.14.0"
+django_filer = "*"
+
+# PostgreSQL
+# ------------------------------------------------------------------------------
+psycopg2-binary = "*"
+
+# Elasticsearch
+# ------------------------------------------------------------------------------
+django-elasticsearch-dsl = "*"
+elasticsearch-dsl = "<=8.*"
+
+# Markup
+# ------------------------------------------------------------------------------
+markdown = "*"
+python-frontmatter = "*"
+
+# Other
+# ------------------------------------------------------------------------------
+gitpython = "<=3.1.30"
+paver = "*"
+requests = "*"
+djangorestframework-stubs = "*"
+
+[tool.poetry.group.dev.dependencies]
+# Dependency incompatibility pin
+packaging = ">=22.0"
+
+# Code quality
+# ------------------------------------------------------------------------------
+autoflake = "*"
+bandit = "*"
+black = "*"
+django-stubs = "*" # For mypy
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+pylint = "*"
+pylint-django = "*"
+pylint-unittest = "*"
+pylance = "*"
+types-markdown = "*"
+
+# Testing
+# ------------------------------------------------------------------------------
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+pytest-mock = "*"
+factory-boy = "*"
+django-coverage-plugin = "*"
+requests-mock = "*"
+
+# Documentation
+# ------------------------------------------------------------------------------
+sphinx = "*"
+sphinx-rtd-theme = "*"
+
+# Local
+# ------------------------------------------------------------------------------
+django-debug-toolbar = "*"
+rope = "*" # python refactoring tool
+pygraphviz = "*" # used for python manage.py graph_models
+werkzeug = "==2.2.2"
+selenium = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.black]
 line-length = 90
