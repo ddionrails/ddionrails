@@ -5,13 +5,13 @@ repos:
     hooks:
       - id: isort
         name: sort python imports
-        entry: isort --settings-path setup.cfg
+        entry: isort --settings-path=pyproject.toml
         language: system
         files: '.*\.py'
         pass_filenames: true
       - id: black
         name: black (format)
-        entry: black --config pyproject.toml
+        entry: black --config=pyproject.toml
         language: system
         files: '.*\.py'
         pass_filenames: true
@@ -38,13 +38,13 @@ repos:
         entry: >-
           python3.10 -m pylint
           --load-plugins=pylint_django,pylint_django.checkers.migrations
-          --rcfile=setup.cfg
+          --rcfile=pyproject.toml
         language: system
         files: '.*\.py'
         pass_filenames: true
       - id: bandit
         name: check python security (bandit)
-        entry: bandit
+        entry: bandit --configfile=pyproject.toml
         language: system
         files: '.*\.py'
         pass_filenames: true
