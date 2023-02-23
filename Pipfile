@@ -51,6 +51,8 @@ djangorestframework-stubs = "*"
 #
 
 [dev-packages]
+# Dependency incompatibility pin
+packaging = ">=22.0"
 #
 #
 # Code quality
