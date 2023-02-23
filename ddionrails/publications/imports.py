@@ -12,7 +12,7 @@ from django.db.transaction import atomic
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.imports import imports
 from ddionrails.instruments.models import Instrument, Question
-from ddionrails.publications.models import Attachment
+from ddionrails.publications.models import Attachment, Publication
 
 from .forms import AttachmentForm, PublicationForm
 
@@ -24,6 +24,17 @@ class PublicationImport(imports.CSVImport):
     def process_element(self, element: OrderedDict) -> OrderedDict:
         element["study"] = self.study.id
         return element
+
+    def import_element(self, element):
+        publication, _ = Publication.objects.get_or_create(
+            study=self.study, name=element["name"]
+        )
+        for field in element.keys():
+            if field == "study":
+                continue
+            if hasattr(publication, field):
+                setattr(publication, field, element[field])
+        publication.save()
 
 
 class AttachmentImport(imports.CSVImport):
