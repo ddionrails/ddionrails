@@ -1,2 +1,128 @@
+# https://bandit.readthedocs.io/en/latest/config.html
+[tool.bandit]
+skips = ["B101"]
+
+
+# https://black.readthedocs.io/en/stable/usage_and_configuration/
 [tool.black]
 line-length = 90
+
+
+# https://coverage.readthedocs.io/en/7.1.0/config.html
+[tool.coverage.run]
+# plugins = django_coverage_plugin
+source = "."
+omit = [
+    "*/tests/*",
+    "htmlcov/*",
+    "*/migrations/*",
+    "*/wsgi*",
+    "manage.py",
+    "settings/*",
+]
+
+
+# https://pycqa.github.io/isort/docs/configuration/config_files.html
+[tool.isort]
+line_length = 90
+multi_line_output = 3
+include_trailing_comma = true
+src_paths = ["ddionrails", "tests"]
+known_first_party = [
+    "ddionrails",
+    "tests",
+]
+known_third_party= [
+    "PIL",
+    "click",
+    "dateutil",
+    "django",
+    "django_elasticsearch_dsl",
+    "django_rq",
+    "djclick",
+    "elasticsearch",
+    "elasticsearch_dsl",
+    "factory",
+    "fakeredis",
+    "filer",
+    "frontmatter",
+    "git",
+    "import_export",
+    "markdown",
+    "model_utils",
+    "paver",
+    "pytest",
+    "tablib",
+]
+
+
+# https://pylint.readthedocs.io/en/latest/user_guide/configuration/index.html
+[tool.pylint.master]
+load-plugins = [
+    "pylint_django",
+    "pylint_django.checkers.migrations"
+]
+ignore = ["migrations"]
+
+[tool.pylint.format]
+max-line-length=90
+
+[tool.pylint.messages_control]
+# Remove C0412 for the next pylint release
+# which works with isorts grouping 
+disable = [
+    "R0801",
+    "C0412",
+]
+
+[tool.pylint.reports]
+output-format = "colorized"
+
+
+# https://docs.pytest.org/en/stable/customize.html
+[tool.pytest.ini_options]
+addopts = '-p no:cacheprovider --no-migrations --reuse-db -rf -m "not functional"'
+DJANGO_SETTINGS_MODULE = "config.settings.testing"
+python_files = "test_*.py"
+testpaths = ["tests"]
+markers = [
+    # Markers for each django app
+    "concepts",
+    "data",
+    "ddionrails",
+    "imports_app",
+    "instruments",
+    "publications",
+    "studies",
+    "workspace",
+    # Markers for each type of test
+    "forms",
+    "views",
+    "models",
+    "urlconf",
+    "search",
+    "imports",
+    "mixins",
+    "functional",
+]
+
+
+# https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
+[tool.mypy]
+python_version = "3.10"
+check_untyped_defs = true
+ignore_errors = false
+ignore_missing_imports = true
+strict_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+plugins = ["mypy_django_plugin.main"]
+
+[[tool.mypy.overrides]]
+# Django migrations should not produce any errors
+module = ["*/migrations/*"]
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "config.settings.base"
