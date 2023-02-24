@@ -32,10 +32,7 @@ jobs:
           docker images
           docker ps -a
           docker exec ddionrails_web_1 bash -c \
-          'pip install pipenv==2023.2.18'
-          docker exec ddionrails_web_1 bash -c \
           'pipenv requirements --dev > Requirements.txt'
-          docker exec ddionrails_web_1 pip uninstall -y djangorestframework
           docker exec ddionrails_web_1 cat Requirements.txt
           docker exec ddionrails_web_1 pip install -r Requirements.txt
           docker exec ddionrails_web_1 npm install
