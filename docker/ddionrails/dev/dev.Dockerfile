@@ -30,7 +30,7 @@ RUN apt-get update \
     zlib1g-dev>=1:1.2 \
     libfreetype6-dev>=2.9.1-3+deb10u2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade pipenv==2022.10.12 \
+    && pip install --no-cache-dir --upgrade pipenv==2023.2.18 \
     && pip install --no-cache-dir --upgrade chardet==4.0.0 \
     && pipenv requirements --dev > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
