@@ -4,7 +4,7 @@
  */
 window.addEventListener("load", () => {
   const anchor = window.top.location.hash;
-  if (anchor.length === 1) {
+  if (anchor.length <= 1) {
     return;
   }
   const anchorLink = document.querySelector(
