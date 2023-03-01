@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pipenv"
-      - run: pipx install pipenv
+      - run: pip install pipenv
       - run: pipenv install --dev
       - run: pipenv run pre-commit run --all-files
 
