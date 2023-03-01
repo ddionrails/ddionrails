@@ -21,7 +21,10 @@ jobs:
         with:
           python-version: "3.11"
           cache: "pipenv"
-      - run: pip install pipenv
+      # TODO: this is required by pygraphviz in the Pipfile dev requirements
+      # TODO: a switch to poetry would enable dependency groups, like local, ci etc.
+      - run: sudo apt-get install -y graphviz graphviz-dev
+      - run: pipx install pipenv
       - run: pipenv install --dev
       - run: pipenv run pre-commit run --all-files
 
