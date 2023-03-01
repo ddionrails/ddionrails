@@ -12,8 +12,22 @@ env:
   COMPOSE_FILE: docker-compose.yml:docker-compose-ci.yml
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@d27e3f3d7c64b4bbf8e4abfb9b63b83e846e0435 # v4.5.0
+        with:
+          python-version: "3.11"
+          cache: "pipenv"
+      - run: pipx install pipenv
+      - run: pipenv install --dev
+      - run: pipenv run pre-commit run --all-files
+
   tests:
     runs-on: ubuntu-latest
+    needs: [lint]
 
     steps:
       - uses: actions/checkout@v3
