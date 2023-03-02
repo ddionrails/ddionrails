@@ -155,12 +155,10 @@ services:
       - no-new-privileges
 
   statistics-server:
-    image: statistics-server
+    image: paneldata/statistics-server:latest
     command: >
       bash -c "
         xtail /var/log/shiny-server/ & shiny-server 2>&1"
-    build:
-      context: ./docker/transfer.server
     depends_on:
       - web
     expose:
