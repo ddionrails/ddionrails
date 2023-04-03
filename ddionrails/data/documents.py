@@ -29,7 +29,7 @@ from ddionrails.studies.models import Study
 from .models import Variable
 
 n_gram_analyzer = analyzer(
-    "n_gram", tokenizer="nGram", min_gram=3, max_gram=7, filter=["lowercase"]
+    "n_gram", tokenizer="ngram", min_gram=3, max_gram=7, filter=["lowercase"]
 )
 
 
