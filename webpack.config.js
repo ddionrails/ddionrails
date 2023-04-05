@@ -25,6 +25,7 @@ const config = {
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
+    search: ["./assets/js/react_search/index.js"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: [
       "./assets/js/tables/concept_table.ts",
@@ -90,7 +91,7 @@ const config = {
       },
       {
         test: /\.(js|jsx)$/,
-        exclude: [/node_modules/, /.*search/],
+        exclude: [/node_modules/],
         use: ["babel-loader"],
       },
       /* Loads scss files, e.g. Bootstrap */
