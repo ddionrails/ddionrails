@@ -10,7 +10,6 @@ const path = require("path");
 const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 const config = {
   context: __dirname,
@@ -26,7 +25,6 @@ const config = {
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
-    search: ["./assets/js/search/main.js", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: [
       "./assets/js/tables/concept_table.ts",
@@ -67,7 +65,6 @@ const config = {
       jQuery: "jquery",
     }),
     new BundleTracker({filename: "./webpack-stats.json"}),
-    new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
@@ -88,8 +85,13 @@ const config = {
       /* Typescript? */
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: "babel-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(js|jsx)$/,
+        exclude: [/node_modules/, /.*search/],
+        use: ["babel-loader"],
       },
       /* Loads scss files, e.g. Bootstrap */
       {
@@ -118,15 +120,10 @@ const config = {
           filename: "[name][ext]",
         },
       },
-      /* Loads vue single file components */
-      {
-        test: /\.vue$/,
-        use: "vue-loader",
-      },
       /* Loads style block in vue single file components */
       {
         test: /\.css$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader"],
+        use: ["css-loader", "sass-loader"],
       },
     ],
   },

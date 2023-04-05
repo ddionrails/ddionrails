@@ -1,0 +1,64 @@
+
+> ddionrails@4.2.1 build /usr/src/app
+> webpack --config webpack.config.js
+
+assets by status 397 KiB [cached] 14 assets
+assets by status 1.83 MiB [emitted]
+  assets by path *.js 1.75 MiB
+    asset topics.1ef05ca7688991bc647e.js 320 KiB [emitted] [immutable] [minimized] [big] (name: topics) 1 related asset
+    + 17 assets
+  assets by path *.css 88.4 KiB
+    asset concept_table.90106ed81daa2c7188b5.css 44.2 KiB [emitted] [immutable] (name: concept_table)
+    asset topics.90106ed81daa2c7188b5.css 44.2 KiB [emitted] [immutable] (name: topics)
+assets by status 535 KiB [compared for emit]
+  assets by chunk 533 KiB (auxiliary name: index)
+    asset fonts/fa-solid-900.ttf 386 KiB [compared for emit] [from: node_modules/@fortawesome/fontawesome-free/webfonts/fa-solid-900.ttf] [big] (auxiliary name: index)
+    + 2 assets
+  assets by path *.gif 1.65 KiB
+    asset vline.gif 844 bytes [compared for emit] [from: node_modules/jquery.fancytree/dist/skin-bootstrap/vline.gif] (auxiliary name: concept_table, topics)
+    asset vline-rtl.gif 842 bytes [compared for emit] [from: node_modules/jquery.fancytree/dist/skin-bootstrap/vline-rtl.gif] (auxiliary name: concept_table, topics)
+orphan modules 1.17 MiB (javascript) 534 KiB (asset) 10.3 KiB (runtime) [orphan] 651 modules
+runtime modules 6.24 KiB 30 modules
+cacheable modules 1.81 MiB (javascript) 1.12 KiB (asset) 442 KiB (css/mini-extract)
+  modules by path ./assets/ 572 KiB (javascript) 1.12 KiB (asset) 320 KiB (css/mini-extract)
+    modules by layer 572 KiB (javascript) 1.12 KiB (asset) 31 modules
+    css modules 320 KiB
+      css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./assets/scss/index.scss 169 KiB [built] [code generated]
+      css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./assets/scss/table_attachment.scss 103 bytes [built] [code generated]
+      + 9 modules
+  modules by path ./node_modules/ 1.25 MiB (javascript) 122 KiB (css/mini-extract)
+    javascript modules 1.25 MiB 10 modules
+    css modules 122 KiB
+      css ./node_modules/css-loader/dist/cjs.js!./node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css 78.9 KiB [built] [code generated]
+      css ./node_modules/css-loader/dist/cjs.js!./node_modules/jquery.fancytree/dist/skin-bootstrap/ui.fancytree.css 22.4 KiB [built] [code generated]
+      + 2 modules
+
+WARNING in configuration
+The 'mode' option has not been set, webpack will fallback to 'production' for this value.
+Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
+
+WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+This can impact web performance.
+Assets: 
+  fonts/fa-solid-900.ttf (386 KiB)
+  index.790cdf5da5b9f101083c.css (248 KiB)
+  topics.1ef05ca7688991bc647e.js (320 KiB)
+
+WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+Entrypoints:
+  index (418 KiB)
+      index.790cdf5da5b9f101083c.css
+      index.60c87677316f3248def8.js
+  topics (364 KiB)
+      topics.90106ed81daa2c7188b5.css
+      topics.1ef05ca7688991bc647e.js
+  concept_table (267 KiB)
+      concept_table.90106ed81daa2c7188b5.css
+      concept_table.f30d1bbea9388a2170c5.js
+
+WARNING in webpack performance recommendations: 
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+For more info visit https://webpack.js.org/guides/code-splitting/
+
+webpack 5.77.0 compiled with 4 warnings in 10313 ms
