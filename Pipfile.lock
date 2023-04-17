@@ -1664,13 +1664,13 @@
         },
         "pylance": {
             "hashes": [
-                "sha256:07d798c2e564d1d42a2ec1924ec75c057721a83d5921f58835cbce667d0e0c71",
-                "sha256:6d7c53a69164cfe7183a0d139dd5823bfe2f6bfb141d017b218a5b5e70a984ba",
-                "sha256:b979cd058032623c9af07870da0a3baf0259e11729492aea8090bf2f11f83d6c",
-                "sha256:c90f1a8c00e1d5d9158dc787fa991447ca6529e462566aa00ab83e35820f47c2"
+                "sha256:077ee1939f780ac0fe2b176e274595f5b925303a3f893cba7494bc04f65bbd0c",
+                "sha256:0d94070b8bac22c79123af035dd81d852fd8a82471d0cae1ac24b634bf109a29",
+                "sha256:bc37729ffd2cda0b426020dd08aae8d8f4c404d303528042bd5433beaf73a59f",
+                "sha256:e5da8d7b507c20c62469efe134ea6ea48c89d20da704fa12452cbaf89d4bd9d5"
             ],
             "index": "pypi",
-            "version": "==0.4.1"
+            "version": "==0.4.2"
         },
         "pylint": {
             "hashes": [
