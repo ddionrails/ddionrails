@@ -96,6 +96,7 @@ class Variable(ModelMixin, models.Model):
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"
     )
+    pid = models.TextField(default="", verbose_name="Persistent identifier")
     statistics = JSONBField(
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
     )
@@ -225,13 +226,13 @@ class Variable(ModelMixin, models.Model):
                     len(self.categories["labels_de"]) :
                 ]
             for index, _ in enumerate(self.categories["values"]):
-                category = dict(
-                    value=self.categories["values"][index],
-                    label=self.categories["labels"][index],
-                    frequency=self.categories["frequencies"][index],
-                    valid=(not self.categories["missings"][index]),
-                    label_de=self.categories["labels_de"][index],
-                )
+                category = {
+                    "value": self.categories["values"][index],
+                    "label": self.categories["labels"][index],
+                    "frequency": self.categories["frequencies"][index],
+                    "valid": (not self.categories["missings"][index]),
+                    "label_de": self.categories["labels_de"][index],
+                }
                 categories.append(category)
             return self._sort_categories(categories)
 
@@ -375,7 +376,7 @@ class Variable(ModelMixin, models.Model):
 
         categories = self.category_list
         for category in categories:
-            translation_table[category["value"]] = dict(en=category["label"])
+            translation_table[category["value"]] = {"en": category["label"]}
         for language in self.translation_languages():
             for category in categories:
                 translation_table[category["value"]][language] = category.get(
@@ -393,14 +394,14 @@ class Variable(ModelMixin, models.Model):
     @property
     def content_dict(self) -> Dict:
         """Returns a dictionary representation of the Variable object"""
-        return dict(
-            name=self.name,
-            label=self.label,
-            label_de=self.label_de,
-            concept_id=self.concept_id,
-            scale=self.scale,
-            uni=deepcopy(self.categories),
-        )
+        return {
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "concept_id": self.concept_id,
+            "scale": self.scale,
+            "uni": deepcopy(self.categories),
+        }
 
     def to_topic_dict(self, language="en") -> Dict:
         """Returns a topic dictionary representation of the Variable object"""
@@ -414,13 +415,13 @@ class Variable(ModelMixin, models.Model):
         else:
             concept_key = None
 
-        return dict(
-            key=f"variable_{self.id}",
-            name=self.name,
-            title=self.title(),
-            concept_key=concept_key,
-            type="variable",
-        )
+        return {
+            "key": f"variable_{self.id}",
+            "name": self.name,
+            "title": self.title(),
+            "concept_key": concept_key,
+            "type": "variable",
+        }
 
     def __lt__(self, variable: Variable) -> bool:
         """Determine relation of variables according to their name."""
