@@ -1,5 +1,5 @@
 default_language_version:
-  python: python3.10
+  python: python3.11
 repos:
   - repo: local
     hooks:
@@ -36,7 +36,7 @@ repos:
       - id: pylint
         name: lint python code (pylint)
         entry: >-
-          python3.10 -m pylint
+          python3.11 -m pylint
           --load-plugins=pylint_django,pylint_django.checkers.migrations
           --rcfile=pyproject.toml
         language: system
