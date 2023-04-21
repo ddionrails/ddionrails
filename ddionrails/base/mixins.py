@@ -2,11 +2,9 @@
 
 """ Mixins for ddionrails.base app """
 
-import pathlib
 from typing import Dict
 
 from django import forms
-from django.conf import settings
 
 from config.helpers import render_markdown
 
@@ -76,8 +74,8 @@ class ModelMixin:
         Creates a default form for all attributes defined in ``DOR.io_fields``.
         """
 
-        class DefaultForm(forms.ModelForm):
-            class Meta:
+        class DefaultForm(forms.ModelForm):  # pylint: disable=missing-class-docstring
+            class Meta:  # pylint: disable=missing-class-docstring
                 model = cls
                 fields = cls.DOR.io_fields
 
@@ -88,7 +86,7 @@ class ModelMixin:
         Uses the ``DOR.io_fields`` attribute to generate a default
         dict object for the current instance.
         """
-        dictionary = dict()
+        dictionary = {}
         for field in self.DOR.io_fields:
             value = getattr(self, field)
             try:
@@ -98,14 +96,14 @@ class ModelMixin:
         return dictionary
 
     def set_language(self, language: str = "en") -> None:
-        """ Set the current language of the data object. """
+        """Set the current language of the data object."""
 
         if language in ("en", "de"):
             self.language = language
 
     def title(self) -> str:
-        """ Returns a title representation using the "label" or "label_de" field,
-            with "name" field as fallback
+        """Returns a title representation using the "label" or "label_de" field,
+        with "name" field as fallback
         """
         name = getattr(self, "name", "")
         label = getattr(self, "label", "")
@@ -128,11 +126,11 @@ class ModelMixin:
 
 
 class AdminMixin:
-    """ A mixin for ModelAdmins to query related models via methods """
+    """A mixin for ModelAdmins to query related models via methods"""
 
     @staticmethod
     def study_name(obj):
-        """ Return the name of the related study """
+        """Return the name of the related study"""
         try:
             return obj.study.name
         except AttributeError:
@@ -140,7 +138,7 @@ class AdminMixin:
 
     @staticmethod
     def period_name(obj):
-        """ Return the name of the related period """
+        """Return the name of the related period"""
         try:
             return obj.period.name
         except AttributeError:
@@ -148,7 +146,7 @@ class AdminMixin:
 
     @staticmethod
     def analysis_unit_name(obj):
-        """ Return the name of the related analysis_unit """
+        """Return the name of the related analysis_unit"""
         try:
             return obj.analysis_unit.name
         except AttributeError:
@@ -156,7 +154,7 @@ class AdminMixin:
 
     @staticmethod
     def dataset_name(obj):
-        """ Return the name of the related dataset """
+        """Return the name of the related dataset"""
         try:
             return obj.dataset.name
         except AttributeError:
@@ -164,7 +162,7 @@ class AdminMixin:
 
     @staticmethod
     def dataset_study_name(obj):
-        """ Return the name of the related dataset.study """
+        """Return the name of the related dataset.study"""
         try:
             return obj.dataset.study.name
         except AttributeError:
@@ -172,7 +170,7 @@ class AdminMixin:
 
     @staticmethod
     def instrument_name(obj):
-        """ Return the name of the related instrument """
+        """Return the name of the related instrument"""
         try:
             return obj.instrument.name
         except AttributeError:
@@ -180,7 +178,7 @@ class AdminMixin:
 
     @staticmethod
     def instrument_study_name(obj):
-        """ Return the name of the related instrument.study """
+        """Return the name of the related instrument.study"""
         try:
             return obj.instrument.study.name
         except AttributeError:
@@ -188,7 +186,7 @@ class AdminMixin:
 
     @staticmethod
     def basket_name(obj):
-        """ Return the name of the related basket """
+        """Return the name of the related basket"""
         try:
             return obj.basket.name
         except AttributeError:
@@ -196,7 +194,7 @@ class AdminMixin:
 
     @staticmethod
     def basket_study_name(obj):
-        """ Return the name of the related basket.study """
+        """Return the name of the related basket.study"""
         try:
             return obj.basket.study.name
         except AttributeError:
@@ -204,7 +202,7 @@ class AdminMixin:
 
     @staticmethod
     def user_name(obj):
-        """ Return the name of the related basket.user """
+        """Return the name of the related basket.user"""
         try:
             return obj.basket.user.username
         except AttributeError:

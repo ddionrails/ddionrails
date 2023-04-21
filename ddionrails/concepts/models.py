@@ -11,6 +11,7 @@ from django.db import models
 from django.db.models import Q, QuerySet
 from django.urls import reverse
 
+from config.helpers import render_markdown
 from config.validators import validate_lowercase
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
@@ -215,6 +216,20 @@ class Concept(ModelMixin, models.Model):
     def get_absolute_url(self) -> str:
         """Returns a canonical URL for the model using the "name" field"""
         return reverse("concepts:concept_detail", kwargs={"id": self.id})
+
+    @property
+    def html_description_de(self) -> str:
+        """Render description from markdown as HTML."""
+        if self.description:
+            return render_markdown(self.description)
+        return ""
+
+    @property
+    def title_de(self) -> str:
+        """Returns a title representation using the "label" or "label_de" field,
+        with "name" field as fallback
+        """
+        return getattr(self, "label_de", getattr(self, "name", ""))
 
 
 class Period(models.Model, ModelMixin):

@@ -11,28 +11,31 @@
 {% endblock scripts %}
 
 {% block content %}
-    <h1>{{ concept.title }}</h1>
+    <h1 data-en="{{ concept.title }}" data-de="{{ concept.title_de }}">{{ concept.title }}</h1>
     <p id="concept-name" value="{{ concept.name }}">[{{ concept.name }}]</p>
-    <p>{{ concept.html_description }}</p>
+    <p 
+        data-en="{{ concept.html_description }}"
+        data-de="{{ concept.html_description_de }}">
+    </p>
     <div id="concept-tables">
-        <h2>Variables</h2>
+        <h2 data-en="Variables" data-de="Variablen"></h2>
         <table id="variable-table" class="table table-striped table-bordered">
         <thead>
         <tr>
-        <th>Study</th>
+        <th data-en="Study" data-de="Studie" ></th>
         <th>Label</th>
         <th>Variable</th>
-        <th>Dataset</th>
+        <th data-en="Dataset" data-de="Datensatz" ></th>
         </tr>
         </thead>
         </table>
-        <h2>Questions</h2>
+        <h2 data-en="Questions" data-de="Fragen"></h2>
         <table id="question-table" class="table table-striped table-bordered">
         <thead>
         <tr>
-        <th>Study</th>
+        <th data-en="Study" data-de="Studie"></th>
         <th>Label</th>
-        <th>Question</th>
+        <th data-en="Question" data-de="Frage" ></th>
         <th>Instrument</th>
         </tr>
         </thead>
