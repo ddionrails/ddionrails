@@ -24,6 +24,18 @@ for (const cardChild of cardsToHideChildren) {
   cardChild.closest(".card").classList.add("hidden");
 }
 
+/**
+ * Switch language of content.
+ * @param {Document} content Pages DOM tree
+ * @param {str} language Language Code to set the content to
+ */
+function switchLanguage(content: Document, language = "en") {
+  const nodes = content.querySelectorAll(`[data-${language}]`);
+  nodes.forEach((node) => {
+    node.innerHTML = node.getAttribute(`data-${language}`);
+  });
+}
+
 window.addEventListener("load", () => {
   const namespace = document.head.querySelector(
     'meta[name="namespace"]'
@@ -34,4 +46,5 @@ window.addEventListener("load", () => {
     ) as HTMLElement;
     activeNavLink.classList.add("active-nav-link");
   }
+  switchLanguage(document);
 });
