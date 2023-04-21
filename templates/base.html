@@ -38,8 +38,10 @@
                 <li class="nav-item dropdown">
                     <a type="button" class="btn dropdown-toggle" href="#" id="navbarbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true"
-                       aria-expanded="false">
-                        Studies
+                       aria-expanded="false"
+                       data-en="Studies"
+                       data-de="Studien"
+                       >
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {% for study in studies %}
@@ -48,7 +50,13 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a type="button" class="btn" href="{% url 'search' %}">Search</a>
+                    <a
+                        type="button"
+                        class="btn"
+                        href="{% url 'search' %}"
+                        data-en="Search"
+                        data-de="Suche"
+                    ></a>
                 </li>
 
             {% block study_header %}
@@ -57,17 +65,41 @@
             <ul class="navbar-nav container-fluid justify-content-end">
                 {% if user.is_authenticated %}
                     <li class="nav-item text-nowrap">
-                        <a type="button" class="btn" href="{% url 'workspace:basket_list' %}">My baskets</a>
+                        <a
+                            type="button"
+                            class="btn"
+                            href="{% url 'workspace:basket_list' %}"
+                            data-en="My Baskets"
+                            data-de="Warenkörbe"
+                        ></a>
                     </li>
                     <li class="nav-item text-nowrap">
-                        <a type="button" class="btn" href="{% url 'workspace:account_overview' %}">My account</a>
+                        <a
+                            type="button"
+                            class="btn"
+                            href="{% url 'workspace:account_overview' %}"
+                            data-en="My Account"
+                            data-de="Mein Konto"
+                        ></a>
                     </li>
                     <li class="nav-item">
-                        <a type="button" class="btn" href="{% url 'workspace:logout' %}">Logout</a>
+                        <a
+                            type="button"
+                            class="btn"
+                            href="{% url 'workspace:logout' %}"
+                            data-en="Logout"
+                            data-de="Ausloggen"
+                        ></a>
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a type="button" class="btn" href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">Register / log in</a>
+                        <a
+                            type="button"
+                            class="btn"
+                            href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}"
+                            data-en="Log In / Register"
+                            data-de="Einloggen / Registrieren"
+                        ></a>
                     </li>
                 {% endif %}
             </ul>
@@ -107,14 +139,14 @@
     <!-- Page Footer -->
     <div class="container container-white" id="foot-container">
         <hr>
-        <p><strong><a href="{% url 'contact' %}">Contact / feedback</a></strong>
+        <p><strong><a href="{% url 'contact' %}" data-en="Contact / feedback" data-de="Kontakt / Feedback"></a></strong>
         </p>
         <p class="text-muted">
             <a href="https://www.diw.de/en/soep/" target="_blank">
                 German Socio-economic Panel
             </a>
             (SOEP)
-            <a href="{% url 'imprint' %}">Imprint</a>
+            <a href="{% url 'imprint' %}" data-en="Imprint" data-de="Impressum"></a>
         </p>
     </div>
     <!-- Webpack bundle: "index" JS -->

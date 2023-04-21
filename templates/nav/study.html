@@ -7,36 +7,53 @@
         <li class="nav-item">
             <a href="{% url 'datasets:all_study_datasets' study=study %}"
                class="nav-link"
-               id="datasets-nav-link">Data</a>
+               id="datasets-nav-link"
+               data-en="Data"
+               data-de="Daten"
+            ></a>
         </li>
         <li class="nav-item">
             <a href="{% url 'instruments:all_study_instruments' study=study %}"
                class="nav-link"
-               id="instruments-nav-link">Instruments</a>
+               id="instruments-nav-link"
+               data-en="Instruments"
+               data-de="Instrumente"
+            ></a>
         </li>
         {% if study.has_topics %}
             <li class="nav-item">
                 <a href="{% url 'study_topics' study_name=study.name language='en' %}"
                    class="nav-link"
-                   id="topics-nav-link">Topics</a>
+                   id="topics-nav-link"
+                   data-en="Topics"
+                   data-de="Themen"
+                ></a>
             </li>
         {% endif %}
-        <li class="nav-item"><a href="{% url 'publ:study_publication_list' study_name=study.name %}" class="nav-link">Publications</a>
+        <li class="nav-item">
+            <a href="{% url 'publ:study_publication_list' study_name=study.name %}"
+               class="nav-link"
+               data-en="Publications"
+               data-de="Publikationen"
+            ></a>
         </li>
         {% if study in STATISTICS_STUDIES %}
             <li class="nav-item" id="statistics-nav-item">
                 <a
                     href="{% url 'statistics:statistics' study=study %}"
                     class="nav-link"
-                    id="statistics-nav-link">
-                    Statistics
+                    id="statistics-nav-link"
+                    data-en="Statistics"
+                    data-de="Statistiken"
+                    >
                 </a>
             </li>
         {% endif %}
         <li class="nav-item">
         <a
             href='{{ request.scheme }}://{{ request.get_host }}/search/all?Study="{{ study.label }}"'
-            class="nav-link">
-            Search in Study
-        </a>
+            class="nav-link"
+            data-en="Search in Study"
+            data-de="Studie Durchsuchen"
+        ></a>
         </li>
