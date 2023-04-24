@@ -105,13 +105,9 @@ class ModelMixin:
         """Returns a title representation using the "label" or "label_de" field,
         with "name" field as fallback
         """
-        name = getattr(self, "name", "")
-        label = getattr(self, "label", "")
-        if self.language == "de":
-            label = getattr(self, "label_de", "")
-        if label:
-            return str(label)
-        return str(name)
+        if output := getattr(self, "label", getattr(self, "name", "")):
+            return output
+        return ""
 
     def html_description(self):
         """
@@ -123,6 +119,22 @@ class ModelMixin:
         except AttributeError:
             html = ""
         return html
+
+    @property
+    def html_description_de(self) -> str:
+        """Render description from markdown as HTML."""
+        if self.description:
+            return render_markdown(self.description)
+        return self.html_description()
+
+    @property
+    def title_de(self) -> str:
+        """Returns a title representation using the "label" or "label_de" field,
+        with "name" field as fallback
+        """
+        if output := getattr(self, "label_de", ""):
+            return output
+        return self.title()
 
 
 class AdminMixin:
