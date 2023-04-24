@@ -217,20 +217,6 @@ class Concept(ModelMixin, models.Model):
         """Returns a canonical URL for the model using the "name" field"""
         return reverse("concepts:concept_detail", kwargs={"id": self.id})
 
-    @property
-    def html_description_de(self) -> str:
-        """Render description from markdown as HTML."""
-        if self.description:
-            return render_markdown(self.description)
-        return ""
-
-    @property
-    def title_de(self) -> str:
-        """Returns a title representation using the "label" or "label_de" field,
-        with "name" field as fallback
-        """
-        return getattr(self, "label_de", getattr(self, "name", ""))
-
 
 class Period(models.Model, ModelMixin):
     """
