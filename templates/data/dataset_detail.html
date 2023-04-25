@@ -4,6 +4,7 @@
 {% block view_metadata %}
     <meta name="namespace" content="{{ namespace }}">
     <meta name="dataset" content="{{ dataset.name }}">
+    <meta name="language" content="de">
 {% endblock view_metadata %}
 
 {% block styles %}
@@ -18,7 +19,8 @@
 
     <h1>
         <i class="fa fa-table"></i>
-        {{ dataset.name }}: {{ dataset.title }}
+        {{ dataset.name }}:
+        <span data-en="{{ dataset.title }}" data-de="{{ dataset.title_de }}"></span> 
     </h1>
     <div class="row">
         <div class="col-lg-9">
@@ -35,7 +37,7 @@
                     <tr class="header">
                         <th title="name" class="name">Name</th>
                         <th title="label" class="label">Label</th>
-                        <th title="position" class="position">Name</th>
+                        <th title="position" class="position">Position</th>
                     </tr>
                 </thead>
             </table>
@@ -47,13 +49,26 @@
                 <div class="card-header"><b>Info</b>
                 </div>
                 <div class="card-body">
-                    <p><b>Conceptual Dataset:</b>
-                        {{ dataset.conceptual_dataset.title }}
+                    <p>
+                        <b
+                            <span
+                            data-en="Conceptual Dataset"
+                            data-de="Konzeptioneller Datensatz">
+                            </span>:
+                        </b>
+                        <span
+                            data-en="{{ dataset.conceptual_dataset.title }}"
+                            data-de="{{ dataset.conceptual_dataset.title_de }}">
+                        </span>
+                            
                     </p>
-                    <p><b>Period:</b>
+                    <p><b><span data-en="Period" data-de="Zeitraum"></span>:</b>
                         {{ dataset.period.title }}
                     </p>
-                    <p><b>Analysis Unit:</b>
+                    <p><b>
+                        <span
+                            data-en="Analysis Unit"
+                            data-de="Analyseeinheit"></span>:</b>
                         {{ dataset.analysis_unit.title}}
                     </p>
                     {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
@@ -61,20 +76,30 @@
             </div>
 
             <div class="card hidden">
-                <div class="card-header"><b>Description</b>
+                <div class="card-header">
+                    <b data-en="Description" data-de="Beschreibung"></b>
                 </div>
                 <div class="card-body" id="description-card-content">
-                    {{ dataset.html_description | safe }}
+                    <span
+                        data-en="{{ dataset.html_description | safe }}"
+                        data-de="{{ dataset.html_description_de | safe }}"
+                    ></span>
                 </div>
                 <div class="card-footer text-center" id="description-footer">
                     <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
-                    Show full description
+                    <span
+                        data-en="Show full description"
+                        data-de="Vollständige Beschreibung"></span>
                     </button>
                 </div>
             </div>
 
             <div class="card">
-                <div class="card-header"><b>Related Instruments</b>
+                <div class="card-header"><b>
+                    <span
+                        data-en="Related Instruments"
+                        data-de="Verwandte Fragebögen"></span>
+                </b>
                 </div>
                     <p>
                     <ul>
@@ -98,7 +123,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Description</h5>
+        <h5 class="modal-title" data-en="Description" data-de="Beschreibung"></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
