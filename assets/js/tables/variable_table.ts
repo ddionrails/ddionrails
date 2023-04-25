@@ -4,6 +4,7 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
+import {languageCode, languageConfig} from "../language_management";
 
 const variableApiURL = new URL("api/variables/", window.location.origin);
 const urlPart = "variable";
@@ -28,9 +29,7 @@ inputTemplate.classList.add("form-control", "form-control-sm");
 function renderVariableTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
-    language: {
-      searchPlaceholder: "Search all columns",
-    },
+    language: languageConfig(),
     ajax: {
       url,
       dataSrc: "",
@@ -56,6 +55,9 @@ function renderVariableTable(table: any, url: string) {
         data: "label", // Human readable label.
         orderable: false,
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de") {
+            return row["label_de"] ? row["label_de"] : row["name"];
+          }
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -78,4 +80,30 @@ window.addEventListener("load", () => {
     renderVariableTable,
     "#variable-table"
   );
+});
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    if (record.type == "attributes") {
+      const target = record.target as Element;
+      if (
+        target.nodeName == "META" &&
+        target.getAttribute("name") == "language"
+      ) {
+        variableApiURL.searchParams.append("dataset", dataset);
+        initSearchEventHandler(
+          variableApiURL,
+          study,
+          renderVariableTable,
+          "#variable-table"
+        );
+      }
+    }
+  });
+});
+
+const languageElement = document.querySelector("meta[name='language']") as Node;
+
+languageObserver.observe(languageElement, {
+  attributes: true,
 });

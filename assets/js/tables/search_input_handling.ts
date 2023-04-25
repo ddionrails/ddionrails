@@ -1,4 +1,5 @@
 import type DataTable from "datatables.net";
+import {languageCode} from "../language_management";
 
 const inputTemplate = document.createElement("input") as HTMLInputElement;
 inputTemplate.type = "text";
@@ -22,7 +23,11 @@ function addSearchInput(table: HTMLTableElement): SearchInputs {
     const columnName = headerColumn.getAttribute("title") as string;
     const searchHead = table.querySelector(`.search-header > .${columnName}`);
     const searchInput = inputTemplate.cloneNode() as HTMLInputElement;
-    searchInput.setAttribute("placeholder", "Search");
+    if (languageCode() == "de") {
+      searchInput.setAttribute("placeholder", "Suche");
+    } else {
+      searchInput.setAttribute("placeholder", "Search");
+    }
     searchHead.appendChild(searchInput);
     searchInputs[columnName.toString()] = searchInput;
   }

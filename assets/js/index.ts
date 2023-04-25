@@ -46,5 +46,6 @@ window.addEventListener("load", () => {
     ) as HTMLElement;
     activeNavLink.classList.add("active-nav-link");
   }
-  switchLanguage(document);
+  const language = document.querySelector("meta[name='language']");
+  switchLanguage(document, language ? language.getAttribute("content") : "en");
 });
