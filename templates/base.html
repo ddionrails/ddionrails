@@ -105,9 +105,15 @@
                 {% endif %}
                 <!-- -->
             </ul>
+        {% if request.COOKIES.paneldata_language == "de" %}
+        <button id="language-switch" data-current-language="de">
+            de
+        </button>
+        {% else %}
         <button id="language-switch" data-current-language="en">
             en
         </button>
+        {% endif %}
         </div>
 
         {% block studynav %}
