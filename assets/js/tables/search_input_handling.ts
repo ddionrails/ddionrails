@@ -1,4 +1,3 @@
-import type DataTable from "datatables.net";
 import {languageCode} from "../language_management";
 
 const inputTemplate = document.createElement("input") as HTMLInputElement;
@@ -59,8 +58,9 @@ function initSearchEventHandler(
   metadataApiUrl: URL,
   study: string,
   tableRenderer: CallableFunction,
-  tableSelector: string
-): void {
+  tableSelector: string,
+  search: boolean = true
+): any {
   const datasetsTable = document.querySelector(
     tableSelector
   ) as HTMLTableElement;
@@ -68,7 +68,10 @@ function initSearchEventHandler(
   const datasetsAPI = new URL(metadataApiUrl.toString());
   datasetsAPI.searchParams.append("study", study);
   datasetsAPI.searchParams.append("paginate", "False");
-  const tableAPI = tableRenderer(datasetsTable, datasetsAPI) as DataTable<any>;
+  const tableAPI = tableRenderer(datasetsTable, datasetsAPI) as any;
+  if (!search) {
+    return tableAPI;
+  }
   const columnInputMapping = addSearchInput(datasetsTable);
   for (const columnName of Object.keys(columnInputMapping)) {
     columnInputMapping[columnName.toString()].addEventListener(
@@ -79,6 +82,7 @@ function initSearchEventHandler(
       }
     );
   }
+  return tableAPI;
 }
 
 export default initSearchEventHandler;
