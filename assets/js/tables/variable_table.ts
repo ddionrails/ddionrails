@@ -72,9 +72,11 @@ function renderVariableTable(table: any, url: string) {
   });
 }
 
+let VariableTable: any;
+
 window.addEventListener("load", () => {
   variableApiURL.searchParams.append("dataset", dataset);
-  initSearchEventHandler(
+  VariableTable = initSearchEventHandler(
     variableApiURL,
     study,
     renderVariableTable,
@@ -90,12 +92,14 @@ const languageObserver = new MutationObserver((mutations) => {
         target.nodeName == "META" &&
         target.getAttribute("name") == "language"
       ) {
+        VariableTable.destroy();
         variableApiURL.searchParams.append("dataset", dataset);
         initSearchEventHandler(
           variableApiURL,
           study,
           renderVariableTable,
-          "#variable-table"
+          "#variable-table",
+          false
         );
       }
     }
