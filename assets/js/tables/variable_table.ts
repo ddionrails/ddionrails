@@ -73,6 +73,7 @@ function renderVariableTable(table: any, url: string) {
 }
 
 let VariableTable: any;
+const TableElement = document.getElementById("variable-table").cloneNode(true);
 
 window.addEventListener("load", () => {
   variableApiURL.searchParams.append("dataset", dataset);
@@ -89,10 +90,13 @@ const languageObserver = new MutationObserver((mutations) => {
     if (record.type == "attributes") {
       const target = record.target as Element;
       if (
-        target.nodeName == "META" &&
-        target.getAttribute("name") == "language"
+        target.nodeName == "BUTTON" &&
+        target.hasAttribute("data-current-language")
       ) {
         VariableTable.destroy();
+        const tableContainer = document.getElementById("table-container");
+        tableContainer.innerHTML = "";
+        tableContainer.appendChild(TableElement.cloneNode(true));
         variableApiURL.searchParams.append("dataset", dataset);
         initSearchEventHandler(
           variableApiURL,
@@ -106,7 +110,7 @@ const languageObserver = new MutationObserver((mutations) => {
   });
 });
 
-const languageElement = document.querySelector("meta[name='language']") as Node;
+const languageElement = document.getElementById("language-switch") as Node;
 
 languageObserver.observe(languageElement, {
   attributes: true,

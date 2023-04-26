@@ -3,9 +3,9 @@
  * @returns
  */
 function languageCode() {
-  const language = document.head
-    .querySelector("meta[name='language']")
-    .getAttribute("content");
+  const language = document
+    .getElementById("language-switch")
+    .getAttribute("data-current-language");
   if (language) {
     return language;
   }
