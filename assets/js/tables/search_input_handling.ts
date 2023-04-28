@@ -58,8 +58,7 @@ function initSearchEventHandler(
   metadataApiUrl: URL,
   study: string,
   tableRenderer: CallableFunction,
-  tableSelector: string,
-  search: boolean = true
+  tableSelector: string
 ): any {
   const datasetsTable = document.querySelector(
     tableSelector
@@ -69,9 +68,6 @@ function initSearchEventHandler(
   datasetsAPI.searchParams.append("study", study);
   datasetsAPI.searchParams.append("paginate", "False");
   const tableAPI = tableRenderer(datasetsTable, datasetsAPI) as any;
-  if (!search) {
-    return tableAPI;
-  }
   const columnInputMapping = addSearchInput(datasetsTable);
   for (const columnName of Object.keys(columnInputMapping)) {
     columnInputMapping[columnName.toString()].addEventListener(
