@@ -30,12 +30,27 @@ const basketVariableApiUrl = new URL("api/basket-variables/", window.location.or
 const basketApiUrl = new URL("api/baskets/", window.location.origin);
 const variablesApiUrl = new URL("api/variables/", window.location.origin);
 const questionsApiUrl = new URL("api/questions/", window.location.origin);
-const topicTreeAPI = new URL(
-  `/api/topic-tree/`,
-  window.location.origin
-);
-topicTreeAPI.searchParams.append("study", study);
-topicTreeAPI.searchParams.append("language", context["language"]);
+
+/**
+ * @return {str} language set by user
+ */
+function language() {
+  return document.getElementById("language-switch")
+    .getAttribute("data-current-language");
+}
+
+/**
+ * @return {URL} language specific api endpoint
+ */
+function topicTreeAPI() {
+  const api = new URL(
+    `/api/topic-tree/`,
+    window.location.origin
+  );
+  api.searchParams.append("study", study);
+  api.searchParams.append("language", language());
+  return api;
+}
 
 
 /**
@@ -356,11 +371,10 @@ function renderBasketButtons(node) {
   basketListRequest.send();
 }
 
-
-// Define what the tree structure will look like, for more information and
-// options see https://github.com/mar10/fancytree.
-// Build and append tree to #tree.
-window.addEventListener("load", function() {
+/**
+ * Create topic tree.
+ */
+function initTree() {
   $("#tree").fancytree({
     extensions: ["filter", "glyph"],
     types: {
@@ -414,7 +428,7 @@ window.addEventListener("load", function() {
       },
     },
     source: {
-      url: topicTreeAPI, // load data from api (topic and concepts only)
+      url: topicTreeAPI(), // load data from api (topic and concepts only)
       cache: true,
     },
     /**
@@ -536,6 +550,16 @@ window.addEventListener("load", function() {
       document.querySelector("#btn-search").click();
     }
   });
+}
+
+let topicTreeTemplate;
+
+// Define what the tree structure will look like, for more information and
+// options see https://github.com/mar10/fancytree.
+// Build and append tree to #tree.
+window.addEventListener("load", function() {
+  topicTreeTemplate = document.getElementById("topic-tree-container").cloneNode(true);
+  initTree();
 });
 
 
@@ -558,5 +582,38 @@ const modalObserver = new MutationObserver(function(mutations) {
   });
 });
 modalObserver.observe(document.getElementById("topic-list-add-to-basket"), {
+  attributes: true,
+});
+
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    if (record.type == "attributes") {
+      const target = record.target;
+      if (
+        target.nodeName == "BUTTON" &&
+        target.hasAttribute("data-current-language")
+      ) {
+        const treeContainer = document.getElementById("topic-tree-container");
+        treeContainer.innerHTML = "";
+        const nodes = Array.from(topicTreeTemplate.childNodes);
+        nodes.forEach((node) => {
+          treeContainer.appendChild(node.cloneNode(true));
+        });
+        initTree();
+        const searchBar = document.getElementById("search");
+        if (language() == "de") {
+          searchBar.setAttribute("placeholder", "Suche");
+        } else {
+          searchBar.setAttribute("placeholder", "Search");
+        }
+      }
+    }
+  });
+});
+
+const languageElement = document.getElementById("language-switch");
+
+languageObserver.observe(languageElement, {
   attributes: true,
 });
