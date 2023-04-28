@@ -102,8 +102,7 @@ const languageObserver = new MutationObserver((mutations) => {
           variableApiURL,
           study,
           renderVariableTable,
-          "#variable-table",
-          false
+          "#variable-table"
         );
       }
     }
