@@ -85,6 +85,8 @@ window.addEventListener("load", () => {
   );
 });
 
+// TODO: Generalize the observer to use with other tables
+
 const languageObserver = new MutationObserver((mutations) => {
   mutations.forEach((record) => {
     if (record.type == "attributes") {
