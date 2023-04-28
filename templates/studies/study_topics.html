@@ -19,21 +19,26 @@
 
 
 {{ json_object|json_script:"context_data" }}
-    <p class="text-right">
-        Languages:
-        {% for link_language in study.topic_languages %}
-            {% if link_language == language %} <b>{% endif %}
-        &nbsp;<a href="{% url 'study_topics' study_name=study.name language=link_language %}" id="language-switch-{{link_language}}">{{ link_language }}</a>
-        {% if link_language == language %} </b>{% endif %}
-        {% endfor %}
-    </p>
 
-    <h2><i class="small fas fa-cogs"></i> Topics</h2>
-
+    <div id="topic-tree-container">
     <div class="row" id="topic-search-bar-container">
         <div class="search-bar">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search node .." id="search">
+
+                {% if request.COOKIES.paneldata_language == "de" %}
+                    <input 
+                        type="text"
+                        class="form-control"
+                        placeholder="Suche"
+                        id="search">
+                {% else %}
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Search"
+                        id="search">
+                {% endif %}
+
                 <span class="input-group-btn">    
             <button class="btn btn-secondary" type="button" aria-pressed="true" id="btn-search"><span
                     class="fas fa-search"
@@ -70,6 +75,7 @@
             </table>
         </div>
     </div>
+</div>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="topic-list-add-to-basket">
         <div class="modal-dialog" role="document">
