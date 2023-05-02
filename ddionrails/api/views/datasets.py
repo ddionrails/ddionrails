@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
-from rest_framework.exceptions import NotAcceptable
+from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -89,6 +89,8 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
         dataset = self.request.query_params.get("dataset", None)
+        if dataset is None and topic is None and concept is None:
+            raise PermissionDenied()
         statistics_data = self.request.query_params.get("statistics", False)
 
         paginate = self.request.query_params.get("paginate", "False")

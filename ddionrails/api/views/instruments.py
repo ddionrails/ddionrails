@@ -13,7 +13,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
-from rest_framework.exceptions import NotAcceptable
+from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -116,6 +116,9 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         concept = self.request.query_params.get("concept", None)
         instrument = self.request.query_params.get("instrument", None)
         study = self.request.query_params.get("study", None)
+
+        if instrument is None and topic is None and concept is None:
+            raise PermissionDenied()
         queryset_filter = {}
 
         if topic and concept:
