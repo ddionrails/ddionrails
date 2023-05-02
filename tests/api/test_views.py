@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.api app """
 
@@ -76,7 +76,6 @@ def test_topic_tree(client, topiclist, language, expected):
 
 @pytest.mark.django_db
 class TestBasketViewSet(unittest.TestCase):
-
     API_PATH = "/api/baskets/"
     variables: List[VariableFactory] = []
     request_factory: APIRequestFactory
@@ -204,7 +203,6 @@ class TestBasketViewSet(unittest.TestCase):
 
 @pytest.mark.django_db
 class TestQuestionViewSet(unittest.TestCase):
-
     API_PATH = "/api/questions/"
     client: APIClient
 
@@ -231,7 +229,7 @@ class TestQuestionViewSet(unittest.TestCase):
 
     def test_404_errors(self):
         study = "some-nonexistent-study"
-        call_string = f"{self.API_PATH}?study={study}"
+        call_string = f"{self.API_PATH}?study={study}&instrument=some-instrument"
         self.assertEqual(404, self.client.get(call_string).status_code)
 
         concept = "some-nonexistent-concept"
@@ -279,7 +277,11 @@ class TestQuestionViewSet(unittest.TestCase):
             _question = QuestionFactory(name=str(number))
             question_list.append(_question)
 
-        response = self.client.get(self.API_PATH + f"?study={study_name}")
+        instrument = question_list[0].instrument.name
+
+        response = self.client.get(
+            self.API_PATH + f"?study={study_name}&instrument={instrument}"
+        )
         content = json.loads(response.content)
         self.assertEqual(10, len(content))
 
@@ -297,8 +299,12 @@ class TestQuestionViewSet(unittest.TestCase):
             "study",
             "position",
         ]
-        QuestionFactory(name="test_question")
-        response = self.client.get(self.API_PATH)
+        question_object = QuestionFactory(name="test_question")
+        study = question_object.instrument.study.name
+        instrument = question_object.instrument.name
+        response = self.client.get(
+            self.API_PATH + f"?study={study}&instrument={instrument}"
+        )
         results = json.loads(response.content)
         question = results[0]
         self.assertListEqual(expected_fields, list(question.keys()))
@@ -309,7 +315,13 @@ class TestQuestionViewSet(unittest.TestCase):
         questions = []
         for number in range(1, question_amount + 1):
             questions.append(QuestionFactory(name=f"{number}"))
-        response = self.client.get(self.API_PATH)
+
+        study = questions[0].instrument.study.name
+        instrument = questions[0].instrument.name
+
+        response = self.client.get(
+            self.API_PATH + f"?study={study}&instrument={instrument}"
+        )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(question_amount, len(content))
@@ -323,7 +335,12 @@ class TestQuestionViewSet(unittest.TestCase):
         questions = []
         for number in range(1, question_amount + 1):
             questions.append(QuestionFactory(name=f"{number}"))
-        response = self.client.get(self.API_PATH)
+        study = questions[0].instrument.study.name
+        instrument = questions[0].instrument.name
+
+        response = self.client.get(
+            self.API_PATH + f"?study={study}&instrument={instrument}"
+        )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(question_amount, len(content))
@@ -331,7 +348,6 @@ class TestQuestionViewSet(unittest.TestCase):
 
 @pytest.mark.django_db
 class TestDatasetViewSet(unittest.TestCase):
-
     API_PATH = "/api/datasets/"
     client: APIClient
 
@@ -363,7 +379,6 @@ class TestDatasetViewSet(unittest.TestCase):
 
 @pytest.mark.django_db
 class TestInstrumentViewSet(unittest.TestCase):
-
     API_PATH = "/api/instruments/"
     client: APIClient
 
@@ -397,7 +412,6 @@ class TestInstrumentViewSet(unittest.TestCase):
 
 @pytest.mark.django_db
 class TestVariableViewSet(unittest.TestCase):
-
     API_PATH = "/api/variables/"
     client: APIClient
 
@@ -426,7 +440,7 @@ class TestVariableViewSet(unittest.TestCase):
 
     def test_404_errors(self):
         study = "some-nonexistent-study"
-        call_string = f"{self.API_PATH}?study={study}"
+        call_string = f"{self.API_PATH}?study={study}&dataset=some-dataset"
         self.assertEqual(404, self.client.get(call_string).status_code)
 
         concept = "some-nonexistent-concept"
@@ -474,7 +488,11 @@ class TestVariableViewSet(unittest.TestCase):
             _variable = VariableFactory(name=str(number))
             variable_list.append(_variable)
 
-        response = self.client.get(self.API_PATH + f"?study={study_name}")
+        dataset = variable_list[0].dataset.name
+
+        response = self.client.get(
+            self.API_PATH + f"?study={study_name}&dataset={dataset}"
+        )
         content = json.loads(response.content)
         self.assertEqual(10, len(content))
 
@@ -492,8 +510,10 @@ class TestVariableViewSet(unittest.TestCase):
             "study",
             "position",
         ]
-        VariableFactory(name="test_variable")
-        response = self.client.get(self.API_PATH)
+        variable_object = VariableFactory(name="test_variable")
+        study = variable_object.dataset.study.name
+        dataset = variable_object.dataset.name
+        response = self.client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
         results = json.loads(response.content)
         variable = results[0]
         self.assertListEqual(expected_fields, list(variable.keys()))
@@ -504,7 +524,9 @@ class TestVariableViewSet(unittest.TestCase):
         variables = []
         for number in range(1, variable_amount + 1):
             variables.append(VariableFactory(name=f"{number}"))
-        response = self.client.get(self.API_PATH)
+        study = variables[0].dataset.study.name
+        dataset = variables[0].dataset.name
+        response = self.client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))
@@ -518,7 +540,11 @@ class TestVariableViewSet(unittest.TestCase):
         variables = []
         for number in range(1, variable_amount + 1):
             variables.append(VariableFactory(name=f"{number}"))
-        response = self.client.get(self.API_PATH + "?paginate=False")
+        study = variables[0].dataset.study.name
+        dataset = variables[0].dataset.name
+        response = self.client.get(
+            self.API_PATH + f"?paginate=False&study={study}&dataset={dataset}"
+        )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))
@@ -526,7 +552,6 @@ class TestVariableViewSet(unittest.TestCase):
 
 @pytest.mark.django_db
 class TestBasketVariableSet(unittest.TestCase):
-
     API_PATH = "/api/basket-variables/"
     client: APIClient
 
@@ -760,7 +785,6 @@ class TestBasketVariableSet(unittest.TestCase):
 @pytest.mark.django_db
 @pytest.mark.usefixtures("unittest_web_client")
 class TestQuestionComparison(unittest.TestCase):
-
     API_PATH = "/api/question-comparison/"
     client: APIClient
     web_client: Client
@@ -803,7 +827,6 @@ class TestQuestionComparison(unittest.TestCase):
 @pytest.mark.django_db
 @pytest.mark.usefixtures("unittest_web_client")
 class TestSendFeedback(unittest.TestCase):
-
     API_PATH = "/api/feedback/"
     client: APIClient
     web_client: Client
