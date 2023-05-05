@@ -1,5 +1,5 @@
 {% if attachments.count > 0 %}
-    <p><b>Attachments:</b></p>
+    <p><b><span data-en="Attachments" data-de="Anhang"></span>:</b></p>
     <ul>
         {% for attachment in attachments.all %}
             <li><a href="{{ attachment.url }}" target="_blank">{{ attachment.url_text }}</a></li>

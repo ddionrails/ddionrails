@@ -5,6 +5,7 @@ import "datatables.net-responsive-bs4";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
 import {languageCode, languageConfig} from "../language_management";
+import {switchTableLanguage} from "./table_language_management";
 
 const variableApiURL = new URL("api/variables/", window.location.origin);
 const urlPart = "variable";
@@ -14,10 +15,18 @@ const study = document.head
 const dataset = document.head
   .querySelector('meta[name="dataset"]')
   .getAttribute("content");
+const variableTableId = "variable-table";
+
+variableApiURL.searchParams.append("dataset", dataset);
+variableApiURL.searchParams.append("study", study);
 
 const inputTemplate = document.createElement("input");
 inputTemplate.type = "text";
 inputTemplate.classList.add("form-control", "form-control-sm");
+
+const TableElement = document
+  .getElementById(variableTableId)
+  .cloneNode(true) as HTMLElement;
 
 /**
  * Renders a table of datasets.
@@ -72,47 +81,30 @@ function renderVariableTable(table: any, url: string) {
   });
 }
 
-let VariableTable: any;
-const TableElement = document.getElementById("variable-table").cloneNode(true);
+document
+  .getElementById("table-container")
+  .setAttribute("data-type", variableTableId);
 
 window.addEventListener("load", () => {
-  variableApiURL.searchParams.append("dataset", dataset);
-  VariableTable = initSearchEventHandler(
+  initSearchEventHandler(
     variableApiURL,
-    study,
     renderVariableTable,
-    "#variable-table"
+    `#${variableTableId}`
   );
 });
 
-// TODO: Generalize the observer to use with other tables
-
 const languageObserver = new MutationObserver((mutations) => {
   mutations.forEach((record) => {
-    if (record.type == "attributes") {
-      const target = record.target as Element;
-      if (
-        target.nodeName == "BUTTON" &&
-        target.hasAttribute("data-current-language")
-      ) {
-        VariableTable.destroy();
-        const tableContainer = document.getElementById("table-container");
-        tableContainer.innerHTML = "";
-        tableContainer.appendChild(TableElement.cloneNode(true));
-        variableApiURL.searchParams.append("dataset", dataset);
-        initSearchEventHandler(
-          variableApiURL,
-          study,
-          renderVariableTable,
-          "#variable-table"
-        );
-      }
-    }
+    switchTableLanguage(
+      record,
+      renderVariableTable,
+      TableElement,
+      variableApiURL
+    );
   });
 });
 
 const languageElement = document.getElementById("language-switch") as Node;
-
 languageObserver.observe(languageElement, {
   attributes: true,
 });

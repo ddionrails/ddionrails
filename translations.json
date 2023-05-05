@@ -1,13 +1,20 @@
 {
-    "Variables": "Variablen",
-    "Study": "Studie",
-    "Dataset": "Datensatz",
-    "Questions": "Fragen",
-    "Question": "Frage",
-    "Conceptual Dataset": "Konzeptioneller Datensatz",
-    "Period": "Zeitraum",
     "Analysis Unit": "Analyseeinheit",
+    "Attachments": "Anhang",
+    "Conceptual Dataset": "Konzeptioneller Datensatz",
+    "Dataset": "Datensatz",
     "Description": "Beschreibung",
+    "Mode": "Modus",
+    "Period": "Zeitraum",
+    "Primary Key": "Primärschlüssel",
+    "Question": "Frage",
+    "Questions": "Fragen",
+    "Related Instruments": "Verwandte Fragebögen",
     "Show full description": "Vollständige Beschreibung",
-    "Related Instruments": "Verwandte Fragebögen"
+    "Stored in Folder": "Beinhaltender Ordner",
+    "Study": "Studie",
+    "Type": "Typ",
+    "Variables": "Variablen",
+    "Instrument": "Messwerkzeug",
+    "Instrument info": "Messwerkzeug Info"
 }

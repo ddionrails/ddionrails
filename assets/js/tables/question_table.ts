@@ -4,6 +4,8 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
+import {languageCode, languageConfig} from "../language_management";
+import {getTable, switchTableLanguage} from "./table_language_management";
 
 const questionsApiURL = new URL("api/questions/", window.location.origin);
 const urlPart = "question";
@@ -13,6 +15,11 @@ const study = document.head
 const instrument = document.head
   .querySelector('meta[name="instrument"]')
   .getAttribute("content");
+
+const TableElement = getTable().cloneNode(true) as HTMLElement;
+
+questionsApiURL.searchParams.append("instrument", instrument);
+questionsApiURL.searchParams.append("study", study);
 
 const inputTemplate = document.createElement("input");
 inputTemplate.type = "text";
@@ -28,9 +35,7 @@ inputTemplate.classList.add("form-control", "form-control-sm");
 function renderQuestionTable(table: string, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
-    language: {
-      searchPlaceholder: "Search all columns",
-    },
+    language: languageConfig(),
     ajax: {
       url,
       dataSrc: "",
@@ -56,6 +61,9 @@ function renderQuestionTable(table: string, url: string) {
         data: "label", // Human readable label.
         orderable: false,
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de" && row["label_de"]) {
+            return row["label_de"];
+          }
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -70,12 +78,28 @@ function renderQuestionTable(table: string, url: string) {
   });
 }
 
+const questionTableId = "question-table";
+
 window.addEventListener("load", () => {
-  questionsApiURL.searchParams.append("instrument", instrument);
   initSearchEventHandler(
     questionsApiURL,
-    study,
     renderQuestionTable,
-    "#question-table"
+    `#${questionTableId}`
   );
+});
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    switchTableLanguage(
+      record,
+      renderQuestionTable,
+      TableElement,
+      questionsApiURL
+    );
+  });
+});
+
+const languageElement = document.getElementById("language-switch") as Node;
+languageObserver.observe(languageElement, {
+  attributes: true,
 });

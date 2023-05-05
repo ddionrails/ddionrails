@@ -21,6 +21,8 @@ import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 
+import {languageConfig, languageCode} from "./language_management";
+
 $.ui.fancytree.debugLevel = 0; // set debug level; 0:quiet, 1:info, 2:debug
 
 const context = JSON.parse(document.getElementById("context_data").textContent);
@@ -81,6 +83,7 @@ function setAttributes(element, attributes) {
 function renderEntityTable(entity, table, url) {
   $(table).dataTable(
     {
+      "language": languageConfig(),
       "ajax":
       {
         url,
@@ -91,7 +94,7 @@ function renderEntityTable(entity, table, url) {
         {
           data: "label", // Human readable label.
           render(data, type, row) {
-            if (window.location.pathname.endsWith("de")) {
+            if (languageCode() == "de") {
               return (row["label_de"] ? row["label_de"] : row["name"] );
             } else {
               return (row["label"] ? row["label"] : row["name"] );
@@ -125,20 +128,6 @@ function renderEntityTable(entity, table, url) {
   );
 };
 
-/**
- * Update language switching links to maintain displayed related elements.
- * @param {Object} params key-value pairs to identify currently opened related elements.
- */
-function updateLanguageSwitch(params) {
-  for (const id of ["language-switch-de", "language-switch-en"]) {
-    const switchLink = document.getElementById(id);
-    const url = new URL(switchLink.href);
-    for (const [key, value] of Object.entries(params)) {
-      url.searchParams.set(key, value);
-    }
-    switchLink.setAttribute("href", url);
-  }
-}
 
 /**
  * Load and display variable data through a dataTable
@@ -147,7 +136,6 @@ function updateLanguageSwitch(params) {
  * @param {HTMLTableElement} relatedVariableSection Target table to fill with the data
  */
 function renderVariableTable(fancytreeNode, relatedVariableSection) {
-  updateLanguageSwitch({"related-id": fancytreeNode.key, "related-type": "variables"});
   const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
   const api = new URL(variablesApiUrl.toString());
   api.searchParams.append("study", study);
@@ -172,7 +160,6 @@ function renderVariableTable(fancytreeNode, relatedVariableSection) {
  * @param {HTMLTableElement} relatedQuestionSection Target table to fill with the data
  */
 function renderQuestionTable(fancytreeNode, relatedQuestionSection) {
-  updateLanguageSwitch({"related-id": fancytreeNode.key, "related-type": "questions"});
   const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
   const api = new URL(questionsApiUrl.toString());
   api.searchParams.append("study", study);

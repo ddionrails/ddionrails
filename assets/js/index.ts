@@ -7,6 +7,7 @@
 require("../favicon.ico");
 
 import "bootstrap";
+import {switchLanguage} from "./language_management";
 
 // Unhide Warning when using Internet Explorer
 const userAgent = window.navigator.userAgent;
@@ -22,18 +23,6 @@ const cardsToHideChildren = document.getElementsByClassName("hide-card");
 
 for (const cardChild of cardsToHideChildren) {
   cardChild.closest(".card").classList.add("hidden");
-}
-
-/**
- * Switch language of content.
- * @param {Document} content Pages DOM tree
- * @param {str} language Language Code to set the content to
- */
-function switchLanguage(content: Document, language = "en") {
-  const nodes = content.querySelectorAll(`[data-${language}]`);
-  nodes.forEach((node) => {
-    node.innerHTML = node.getAttribute(`data-${language}`);
-  });
 }
 
 window.addEventListener("load", () => {

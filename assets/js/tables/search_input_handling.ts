@@ -56,7 +56,6 @@ function performSearch(
  */
 function initSearchEventHandler(
   metadataApiUrl: URL,
-  study: string,
   tableRenderer: CallableFunction,
   tableSelector: string
 ): any {
@@ -65,7 +64,6 @@ function initSearchEventHandler(
   ) as HTMLTableElement;
 
   const datasetsAPI = new URL(metadataApiUrl.toString());
-  datasetsAPI.searchParams.append("study", study);
   datasetsAPI.searchParams.append("paginate", "False");
   const tableAPI = tableRenderer(datasetsTable, datasetsAPI) as any;
   const columnInputMapping = addSearchInput(datasetsTable);
