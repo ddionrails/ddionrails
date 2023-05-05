@@ -42,5 +42,18 @@ function languageConfig() {
   };
 }
 
+/**
+ * Switch language of content.
+ * @param {Document} content Pages DOM tree
+ * @param {str} language Language Code to set the content to
+ */
+function switchLanguage(content: Document, language = "en") {
+  const nodes = content.querySelectorAll(`[data-${language}]`);
+  nodes.forEach((node) => {
+    node.innerHTML = node.getAttribute(`data-${language}`);
+  });
+}
+
 export {languageCode};
 export {languageConfig};
+export {switchLanguage};

@@ -17,30 +17,32 @@
     has-extended-metadata="{{ has_extended_metadata }}">
 </div>
 
-    <table id="dataset-table" class="table table-striped table-bordered">
-        <thead>
-            <tr class="search-header">
-                <th class="dataset"></th>
-                <th class="label"></th>
-                <th class="conceptual-dataset"></th>
-                <th class="period"></th>
-                <th class="analysis-unit"></th>
-                <th class="folder"></th>
-                <th class="primary-key"></th>
-                <th class="attachments"></th>
-            </tr>
-            <tr class="header">
-                <th title="dataset" class="dataset">Dataset</th>
-                <th title="label" class="label">Label</th>
-                <th title="conceptual-dataset" class="conceptual-dataset">Conceptual Dataset</th>
-                <th title="period" class="period">Period</th>
-                <th title="analysis-unit" class="analysis-unit">Analysis Unit</th>
-                <th title="folder" class="folder">Stored in Folder</th>
-                <th title="primary-key" class="primary-key">Primary Key</th>
-                <th title="attachments" class="attachments">Attachments</th>
-            </tr>
-        </thead>
-    </table>
+    <div id="table-container">
+        <table id="dataset-table" class="table table-striped table-bordered">
+            <thead>
+                <tr class="search-header">
+                    <th class="dataset"></th>
+                    <th class="label"></th>
+                    <th class="conceptual-dataset"></th>
+                    <th class="period"></th>
+                    <th class="analysis-unit"></th>
+                    <th class="folder"></th>
+                    <th class="primary-key"></th>
+                    <th class="attachments"></th>
+                </tr>
+                <tr class="header">
+                    <th title="dataset" class="dataset" data-en="Dataset" data-de="Datensatz"></th>
+                    <th title="label" class="label">Label</th>
+                    <th title="conceptual-dataset" class="conceptual-dataset" data-en="Conceptual Dataset" data-de="Konzeptioneller Datensatz"></th>
+                    <th title="period" class="period" data-en="Period" data-de="Zeitraum"></th>
+                    <th title="analysis-unit" class="analysis-unit" data-en="Analysis Unit" data-de="Analyseeinheit"></th>
+                    <th title="folder" class="folder" data-en="Stored in Folder" data-de="Beinhaltender Ordner"></th>
+                    <th title="primary-key" class="primary-key" data-en="Primary Key" data-de="Primärschlüssel"></th>
+                    <th title="attachments" class="attachments" data-en="Attachments" data-de="Anhang"></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
 
     {% render_bundle 'dataset_table' 'js' %}
 

@@ -4,6 +4,8 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
+import {switchTableLanguage} from "./table_language_management";
+import {languageCode, languageConfig} from "../language_management";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
 const urlPart = "datasets";
@@ -16,6 +18,8 @@ attachmentIcon.classList.add("fa-solid", "fa-file-lines");
 const attachmentLinkTemplate = document.createElement("a");
 attachmentLinkTemplate.appendChild(attachmentIcon);
 
+datasetsApiURL.searchParams.append("study", study);
+
 /**
  * Renders a table of datasets.
  *
@@ -26,9 +30,7 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
 function renderDatasetTable(table: string, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
-    language: {
-      searchPlaceholder: "Search all columns",
-    },
+    language: languageConfig(),
     ajax: {
       url,
       dataSrc: "",
@@ -52,6 +54,11 @@ function renderDatasetTable(table: string, url: string) {
       {
         data: "label",
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de") {
+            if (row["label_de"]) {
+              return row["label_de"];
+            }
+          }
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -128,11 +135,35 @@ function renderDatasetTable(table: string, url: string) {
   });
 }
 
+const datasetTableId = "dataset-table";
+
+const TableElement = document
+  .getElementById(datasetTableId)
+  .cloneNode(true) as HTMLElement;
+document
+  .getElementById("table-container")
+  .setAttribute("data-type", datasetTableId);
+
 window.addEventListener("load", () => {
   initSearchEventHandler(
     datasetsApiURL,
-    study,
     renderDatasetTable,
-    "#dataset-table"
+    `#${datasetTableId}`
   );
+});
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    switchTableLanguage(
+      record,
+      renderDatasetTable,
+      TableElement,
+      datasetsApiURL
+    );
+  });
+});
+
+const languageElement = document.getElementById("language-switch") as Node;
+languageObserver.observe(languageElement, {
+  attributes: true,
 });

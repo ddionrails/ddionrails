@@ -16,6 +16,7 @@
     has-extended-metadata="{{ has_extended_metadata }}">
 </div>
 
+<div id="table-container" data-type="instrument-table">
     <table id="instrument-table" class="table table-striped table-bordered">
         <thead>
             <tr class="search-header">
@@ -33,21 +34,22 @@
                 <th class="attachments"></th>
             </tr>
             <tr class="header">
-                <th title="instrument" class="instrument">Instrument</th>
+                <th title="instrument" class="instrument" data-en="Instrument" data-de="Messwerkzeug"></th>
                 <th title="label" class="label">Label</th>
-                <th title="period" class="period">Period</th>
+                <th title="period" class="period" data-en="Period" data-de="Zeitraum"></th>
                 <!-- TODO: Temporary solution while metadata diverges -->
                 {% if has_extended_metadata %}
                     <th title="type_position" class="type_position"></th>
-                    <th title="type" class="type">Type</th>
-                    <th title="mode" class="mode">Mode</th>
+                    <th title="type" class="type" data-en="Type" data-de="Typ"></th>
+                    <th title="mode" class="mode" data-en="Mode" data-de="Modus"></th>
                 {% else %}
-                    <th title="analysis_unit" class="analysis_unit">Analysis Unit</th>
+                    <th title="analysis_unit" class="analysis_unit" data-en="Analysis Unit" data-de="Analyseeinheit"></th>
                 {% endif %}
-                <th title="attachments" class="attachments">Attachments</th>
+                <th title="attachments" class="attachments" data-en="Attachments" data-de="Anhang"></th>
             </tr>
         </thead>
     </table>
+</div>
 
     {% render_bundle 'instrument_table' 'js' %}
 

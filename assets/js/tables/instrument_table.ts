@@ -4,10 +4,16 @@ import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
+import {switchTableLanguage, getTable} from "./table_language_management";
+import {languageCode, languageConfig} from "../language_management";
 
 const instrumentApiURL = new URL("api/instruments/", window.location.origin);
 const urlPart = "inst";
 const study = document.querySelector("#study-name").getAttribute("value");
+instrumentApiURL.searchParams.append("study", study);
+
+const TableElement = getTable().cloneNode(true) as HTMLElement;
+
 const hasExtendedMetadata = document
   .querySelector("#study-name")
   .getAttribute("has-extended-metadata");
@@ -31,9 +37,7 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
 function renderFullInstrumentTable(table: any, url: string) {
   // eslint-disable-next-line new-cap
   return $(table).DataTable({
-    language: {
-      searchPlaceholder: "Search all columns",
-    },
+    language: languageConfig(),
     ajax: {
       url,
       dataSrc: "",
@@ -64,6 +68,9 @@ function renderFullInstrumentTable(table: any, url: string) {
       {
         data: "label",
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de" && row["label_de"]) {
+            return row["label_de"];
+          }
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -159,6 +166,9 @@ function renderInstrumentTable(table: any, url: string) {
       {
         data: "label",
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de" && row["label_de"]) {
+            return row["label_de"];
+          }
           return row["label"] ? row["label"] : row["name"];
         },
       },
@@ -199,17 +209,30 @@ function renderInstrumentTable(table: any, url: string) {
   });
 }
 
+const instrumentTableRenderer: CallableFunction = hasExtendedMetadata
+  ? renderFullInstrumentTable
+  : renderInstrumentTable;
+
 window.addEventListener("load", () => {
-  let instrumentTableRenderer: any = null;
-  if (hasExtendedMetadata === "True") {
-    instrumentTableRenderer = renderFullInstrumentTable;
-  } else {
-    instrumentTableRenderer = renderInstrumentTable;
-  }
   initSearchEventHandler(
     instrumentApiURL,
-    study,
     instrumentTableRenderer,
     "#instrument-table"
   );
+});
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    switchTableLanguage(
+      record,
+      instrumentTableRenderer,
+      TableElement,
+      instrumentApiURL
+    );
+  });
+});
+
+const languageElement = document.getElementById("language-switch") as Node;
+languageObserver.observe(languageElement, {
+  attributes: true,
 });

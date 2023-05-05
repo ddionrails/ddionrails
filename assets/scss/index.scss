@@ -259,3 +259,7 @@ div.dataTables_paginate li.last a:after {
   background-color: #ffffff !important;
   border-radius: 10px 10px 10px 10px;
 }
+
+#table-container > * th {
+  vertical-align: top !important;
+}
