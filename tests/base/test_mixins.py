@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,no-member,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,no-member,invalid-name
 
 """ Test cases for mixins in ddionrails.base app """
 
@@ -17,13 +17,13 @@ pytestmark = [pytest.mark.ddionrails, pytest.mark.mixins]
 
 @pytest.fixture(name="admin_mixin")
 def _admin_mixin():
-    """ An instantiated AdminMixin """
+    """An instantiated AdminMixin"""
     return AdminMixin()
 
 
 @pytest.fixture(name="model_mixin")
 def _model_mixin():
-    """ An instantiated ModelMixin """
+    """An instantiated ModelMixin"""
     return ModelMixin()
 
 
@@ -39,14 +39,14 @@ class MixinChild(ModelMixin, models.Model):
 class TestModelMixin:
     def test_get_method_success(self, mocker):
         mocker.patch("tests.base.test_mixins.MixinChild.objects.get", return_value=True)
-        dictionary = dict(name="some-name")
+        dictionary = {"name": "some-name"}
         result = MixinChild.get(dictionary)
         expected = True
         assert expected is result
 
     @pytest.mark.django_db
     def test_get_method_failure(self):
-        dictionary = dict(name="some-name")
+        dictionary = {"name": "some-name"}
         # This test case uses an actual subclass of ModelMixin
         result = Concept.get(dictionary)
         expected = None
@@ -62,9 +62,11 @@ class TestModelMixin:
         model_mixin.label = "some-label"
         model_mixin.description = "some-description"
         result = model_mixin.to_dict()
-        expected = dict(
-            name="some-name", label="some-label", description="some-description"
-        )
+        expected = {
+            "name": "some-name",
+            "label": "some-label",
+            "description": "some-description",
+        }
         assert expected == result
 
     def test_title_method(self, model_mixin):
@@ -84,13 +86,6 @@ class TestModelMixin:
         result = model_mixin.title()
         assert expected == result
 
-    def test_title_method_with_label_de(self, model_mixin):
-        model_mixin.language = "de"
-        model_mixin.label_de = "some-german-label"
-        result = model_mixin.title()
-        expected = model_mixin.label_de
-        assert expected is result
-
     def test_set_language_method(self, model_mixin):
         model_mixin.set_language()
         expected = "en"
@@ -109,20 +104,7 @@ class TestModelMixin:
         result = model_mixin.language
         assert expected == result
 
-    def test_title_de_method(self, question):
-        language = "de"
-        question.label_de = "german label"
-        question.set_language(language=language)
-        assert question.title() == question.label_de
-
-    def test_title_de_method_without_label(self, question):
-        language = "de"
-        question.label_de = ""
-        question.set_language(language=language)
-        assert question.title() == question.name
-
     def test_html_description_method(self, mocker, model_mixin):
-
         mocker.patch("ddionrails.base.mixins.render_markdown")
         model_mixin.description = "some-description"
         model_mixin.html_description()

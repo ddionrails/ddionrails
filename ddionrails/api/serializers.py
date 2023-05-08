@@ -94,6 +94,9 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     conceptual_dataset_label = serializers.SlugRelatedField(
         source="conceptual_dataset", read_only=True, slug_field="label"
     )
+    conceptual_dataset_label_de = serializers.SlugRelatedField(
+        source="conceptual_dataset", read_only=True, slug_field="label_de"
+    )
     period_name = serializers.SlugRelatedField(
         source="period", read_only=True, slug_field="name"
     )
@@ -102,6 +105,9 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
     )
     analysis_unit_label = serializers.SlugRelatedField(
         source="analysis_unit", read_only=True, slug_field="label"
+    )
+    analysis_unit_label_de = serializers.SlugRelatedField(
+        source="analysis_unit", read_only=True, slug_field="label_de"
     )
     study = serializers.PrimaryKeyRelatedField(read_only=True)
     study_name = serializers.SlugRelatedField(
@@ -124,11 +130,13 @@ class DatasetSerializer(serializers.HyperlinkedModelSerializer):
             "label",
             "label_de",
             "conceptual_dataset_label",
+            "conceptual_dataset_label_de",
             "period_name",
             "period_label",
             "primary_key",
             "folder",
             "analysis_unit_label",
+            "analysis_unit_label_de",
             "study",
             "study_name",
             "study_label",

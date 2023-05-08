@@ -69,7 +69,7 @@
                         <span
                             data-en="Analysis Unit"
                             data-de="Analyseeinheit"></span>:</b>
-                        {{ dataset.analysis_unit.title}}
+                            <span data-en="{{ dataset.analysis_unit.title }}"" data-de="{{ dataset.analysis_unit.title_de }}"></span>
                     </p>
                     {% include "publications/attachments_partial.html" with attachments=dataset.attachments %}
                 </div>
@@ -106,7 +106,10 @@
                         {% for instrument in dataset.instruments.all %}
                         <li>
                             <a href="{% url 'instrument_redirect' id=instrument.id %}">
-                                {{ instrument.name }}: {{ instrument.label }}
+                                {{ instrument.name }}:
+                                <span
+                                    data-en="{{ instrument.label }}"
+                                    data-de="{{ instrument.label_de }}"></span>
                             </a>
                         </li>
                         {% empty %}

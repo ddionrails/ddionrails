@@ -65,6 +65,11 @@ function renderDatasetTable(table: string, url: string) {
       {
         data: "conceptual-dataset",
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de") {
+            if (row["conceptual_dataset_label_de"]) {
+              return row["conceptual_dataset_label_de"];
+            }
+          }
           return row["conceptual_dataset_label"];
         },
       },
@@ -80,6 +85,11 @@ function renderDatasetTable(table: string, url: string) {
       {
         data: "analysis_unit_name",
         render(_data: any, _type: any, row: any) {
+          if (languageCode() == "de") {
+            if (row["analysis_unit_label_de"]) {
+              return row["analysis_unit_label_de"];
+            }
+          }
           return row["analysis_unit_label"];
         },
       },
