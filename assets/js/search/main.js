@@ -21,3 +21,8 @@ new Vue({
   router,
   render: (h) => h(App),
 }).$mount("#app");
+
+const languageSwitch = document.getElementById("language-switch");
+languageSwitch.addEventListener("click", (button) => {
+  location.reload();
+});
