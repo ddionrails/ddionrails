@@ -5,11 +5,13 @@
       <a :href="baseUrl + '/variable/' + item._id">
         [
         <span v-html="item.name"></span>]
-        <span v-html="item.label"></span>
+        <span v-if="language == 'de'" v-html="item.label_de"></span>
+        <span v-if="language == 'en'" v-html="item.label"></span>
       </a>
     </p>
     <p class="card-text">
-      Variable in study:
+        <span v-if="language == 'de'">Variable Teil von Studie</span>
+        <span v-if="language == 'en'">Variable in study:</span>
       <a
         :href="'/' + item.study.name"
         v-html="item.study.label">
@@ -38,7 +40,8 @@ export default {
   props: ["item"],
   data: function() {
     return {
-      baseUrl: window.location.origin
+      baseUrl: window.location.origin,
+      language: document.getElementById("language-switch").getAttribute("data-current-language")
     };
   }
 };
