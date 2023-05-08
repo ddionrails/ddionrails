@@ -93,7 +93,7 @@ function renderFullInstrumentTable(table: any, url: string) {
       {
         data: "type",
         render(_data: any, _type: any, row: any) {
-          return row["type"]["en"];
+          return row["type"][languageCode()];
         },
       },
       {

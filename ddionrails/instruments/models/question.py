@@ -8,7 +8,7 @@ import copy
 import textwrap
 import uuid
 from collections import OrderedDict
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Optional, Union
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -217,25 +217,6 @@ class Question(ModelMixin, models.Model):
         )
         for answer in item.get("answers", []):
             answer["label"] = answer.get(f"label_{language}", answer.get("label", ""))
-
-    def to_topic_dict(self, language: str = "en") -> Dict:
-        """Returns a topic dictionary representation of the Question object"""
-        if language == "de":
-            title = self.label_de if self.label_de != "" else self.title()
-        else:
-            title = self.title()
-        try:
-            concept_name = self.questions_variables.first().variable.concept.name
-        # afuetterer: there might be no concept?
-        except AttributeError:
-            concept_name = ""
-        return dict(
-            title=title,
-            key=f"question_{self.id}",
-            name=self.name,
-            type="question",
-            concept_key=f"concept_{concept_name}",
-        )
 
     def html_description(self) -> str:
         """Return question description as HTML."""

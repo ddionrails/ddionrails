@@ -3,6 +3,7 @@
     "Attachments": "Anhang",
     "Conceptual Dataset": "Konzeptioneller Datensatz",
     "Dataset": "Datensatz",
+    "Datasets": "Datensätze",
     "Description": "Beschreibung",
     "Mode": "Modus",
     "Period": "Zeitraum",
@@ -13,8 +14,10 @@
     "Show full description": "Vollständige Beschreibung",
     "Stored in Folder": "Beinhaltender Ordner",
     "Study": "Studie",
+    "Study info": "Studieninformation",
     "Type": "Typ",
     "Variables": "Variablen",
     "Instrument": "Messwerkzeug",
+    "Instruments": "Messwerkzeuge",
     "Instrument info": "Messwerkzeug Info"
 }

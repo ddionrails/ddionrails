@@ -48,7 +48,7 @@
                         {{ instrument.period.title }}
                     </p>
                     <p><b><span data-en="Type" data-de="Typ"></span>:</b>
-                        {{ instrument.type.en }}
+                        <span data-en="{{ instrument.type.en }}" data-de="{{ instrument.type.de }}"></span>
                     </p>
                     <p><b><span data-en="Mode" data-de="Modus"></span>:</b>
                         {{ instrument.mode }}
@@ -80,7 +80,10 @@
                         {% for dataset in instrument.datasets.all %}
                         <li>
                             <a href="{% url 'dataset_redirect' id=dataset.id %}">
-                                {{ dataset.name }}: {{ dataset.label }}
+                                {{ dataset.name }}:
+                                <span
+                                    data-en="{{ dataset.label }}" 
+                                    data-de="{{ dataset.label_de }}"></span>
                             </a>
                         </li>
                         {% empty %}

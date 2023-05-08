@@ -17,15 +17,41 @@
         <div class="col-lg-3">
             <div class="card info-panel">
                 <div class="card-header">
-                    <b>Study info</b>
+                    <b>
+                        <span
+                            data-en="Study info"
+                            data-de="Studieninformation"></span>
+                    </b>
                 </div>
                 <div class="card-body">
-                    <p>Name: {{ study.name }}</p>
-                    <p>Label: {{ study.label }}</p>
-                    <p>Datasets: {{ num_datasets }}</p>
-                    <p>Variables: {{ num_variables }}</p>
-                    <p>Instruments: {{ num_instruments }}</p>
-                    <p>Questions: {{ num_questions }}</p>
+                    <ul class="card-listing">
+                    <li><span>Name</span>: {{ study.name }}</li>
+                    <li><span>Label</span>: {{ study.label }}</li>
+                    <li>
+                        <span
+                            data-en="Datasets"
+                            data-de="Datensätze"></span>:
+                        {{ num_datasets }}
+                    </li>
+                    <li>
+                        <span 
+                            data-en="Variables"
+                            data-de="Variablen"></span>:
+                        {{ num_variables }}
+                    </li>
+                    <li>
+                        <span
+                            data-en="Instruments"
+                            data-de="Messwerkzeuge"></span>:
+                        {{ num_instruments }}
+                    </li>
+                    <li>
+                        <span
+                            data-en="Questions"
+                            data-de="Fragen"></span>:
+                        {{ num_questions }}
+                    </li>
+                    </ul>
                     {% include "publications/attachments_partial.html" with attachments=study.attachments %}
                 </div>
             </div>

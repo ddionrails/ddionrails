@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name,too-many-public-methods
+# pylint: disable=missing-docstring,invalid-name,too-many-public-methods
 
 """ Test cases for models in ddionrails.data app """
 
@@ -29,7 +29,6 @@ def _related_variables_by_concept(variable, concept):
 @pytest.mark.django_db
 @pytest.mark.usefixtures("variable")
 class TestVariable(unittest.TestCase):
-
     variable: Variable
 
     def test_target_variables_dict(self):
@@ -91,11 +90,11 @@ class TestVariableModel:
         assert variable.get_absolute_url() == expected
 
     def test_get_method(self, variable):
-        select_dictionary = dict(
-            study_name=variable.dataset.study.name,
-            dataset_name=variable.dataset.name,
-            name=variable.name,
-        )
+        select_dictionary = {
+            "study_name": variable.dataset.study.name,
+            "dataset_name": variable.dataset.name,
+            "name": variable.name,
+        }
         result = Variable.get(parameters=select_dictionary)
         assert variable == result
 
@@ -198,7 +197,7 @@ class TestVariableModel:
         assert expected in result
 
     def test_is_categorical_method(self, variable):
-        variable.categories = dict(labels="some-category")
+        variable.categories = {"labels": "some-category"}
         variable.save()
         assert variable.is_categorical()
 
@@ -231,29 +230,6 @@ class TestVariableModel:
         assert result["name"] == variable.name
         assert result["scale"] == variable.scale
         assert result["uni"] == variable.categories
-
-    def test_to_topic_dict(self, variable):
-        result = variable.to_topic_dict()
-        expected = dict(
-            key=f"variable_{variable.id}",
-            name=variable.name,
-            title=variable.label,
-            concept_key=None,
-            type="variable",
-        )
-        assert expected == result
-
-    def test_to_topic_dict_de(self, variable):
-        result = variable.to_topic_dict("de")["title"]
-        expected = variable.label_de
-        assert expected == result
-
-    def test_to_topic_dict_concept(self, variable, concept):
-        variable.concept = concept
-        variable.save()
-        result = variable.to_topic_dict()["concept_key"]
-        expected = f"concept_{concept.name}"
-        assert expected == result
 
 
 class TestDatasetModel:

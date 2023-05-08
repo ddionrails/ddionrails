@@ -263,3 +263,17 @@ div.dataTables_paginate li.last a:after {
 #table-container > * th {
   vertical-align: top !important;
 }
+
+.card-listing {
+   list-style-type: none;
+   list-style: none;
+   padding-left: 0;
+}
+
+.card-listing > li {
+   padding-bottom: .5em;
+}
+
+.card-listing > li > span {
+  font-weight: bold;
+}

@@ -403,26 +403,6 @@ class Variable(ModelMixin, models.Model):
             "uni": deepcopy(self.categories),
         }
 
-    def to_topic_dict(self, language="en") -> Dict:
-        """Returns a topic dictionary representation of the Variable object"""
-
-        self.set_language(language)
-
-        # A variable might not have a related concept
-        concept_key: Optional[str]
-        if self.concept:
-            concept_key = f"concept_{self.concept.name}"
-        else:
-            concept_key = None
-
-        return {
-            "key": f"variable_{self.id}",
-            "name": self.name,
-            "title": self.title(),
-            "concept_key": concept_key,
-            "type": "variable",
-        }
-
     def __lt__(self, variable: Variable) -> bool:
         """Determine relation of variables according to their name."""
         if not isinstance(variable, Variable):
