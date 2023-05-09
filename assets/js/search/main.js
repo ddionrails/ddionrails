@@ -22,7 +22,21 @@ new Vue({
   render: (h) => h(App),
 }).$mount("#app");
 
-const languageSwitch = document.getElementById("language-switch");
-languageSwitch.addEventListener("click", (button) => {
-  location.reload();
+const language = Vue.observable({
+  language: document
+    .getElementById("language-switch")
+    .getAttribute("data-current-language"),
+});
+
+Vue.prototype.$language = document
+  .getElementById("language-switch")
+  .getAttribute("data-current-language");
+
+Object.defineProperty(Vue.prototype, "$language", {
+  get() {
+    return language.language;
+  },
+  set(value) {
+    language.language = value;
+  },
 });

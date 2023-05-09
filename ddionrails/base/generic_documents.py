@@ -74,9 +74,37 @@ class GenericDataDocument(GenericDocument):
         }
     )
 
+    @staticmethod
+    def _handle_missing_dict_content(content: "AnalysisUnit") -> dict[str, str]:
+        output = {}
+        if content is None:
+            output["label"] = "Not Categorized"
+            output["label_de"] = "Nicht Kategorisiert"
+            return output
+        if content.label is None or content.label in ["none", "unspecified"]:
+            output["label"] = "Not Categorized"
+        else:
+            output["label"] = content.label
+
+        if content.label_de is None or content.label_de in ["none", "unspecified"]:
+            output["label_de"] = "Nicht Kategorisiert"
+        else:
+            output["label_de"] = content.label_de
+        return output
+
     # facets
-    analysis_unit = fields.KeywordField()
-    period = fields.KeywordField()
+    analysis_unit = fields.ObjectField(
+        properties={
+            "label": fields.TextField(analyzer="english"),
+            "label_de": fields.TextField(analyzer="german"),
+        }
+    )
+    period = fields.ObjectField(
+        properties={
+            "label": fields.TextField(analyzer="english"),
+            "label_de": fields.TextField(analyzer="german"),
+        }
+    )
 
     @staticmethod
     def _get_study(model_object: Any) -> Study:

@@ -59,6 +59,34 @@ export default {
       showStatistics,
     };
   },
+  async mounted(props) {
+    await this.$nextTick();
+    this.languageObserver = new MutationObserver((mutations) => {
+      mutations.forEach((record) => {
+        if (record.type == "attributes") {
+          const target = record.target;
+          if (
+            target.nodeName == "BUTTON" &&
+            target.hasAttribute("data-current-language")
+          ) {
+            this.$language = target.getAttribute("data-current-language");
+            this.$forceUpdate();
+          }
+        }
+      });
+    });
+
+    this.languageElement = document.getElementById("language-switch");
+    this.languageObserver.observe(this.languageElement, {
+      attributes: true,
+    });
+  },
+  watch: {
+    $language() {
+      console.log("BBBBBBBBBBBBBBBBB");
+      this.$forceUpdate();
+    },
+  },
 };
 </script>
 
