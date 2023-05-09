@@ -5,6 +5,9 @@
     "Dataset": "Datensatz",
     "Datasets": "Datensätze",
     "Description": "Beschreibung",
+    "Instrument": "Messwerkzeug",
+    "Instrument info": "Messwerkzeug Info",
+    "Instruments": "Messwerkzeuge",
     "Mode": "Modus",
     "Period": "Zeitraum",
     "Primary Key": "Primärschlüssel",
@@ -16,8 +19,6 @@
     "Study": "Studie",
     "Study info": "Studieninformation",
     "Type": "Typ",
-    "Variables": "Variablen",
-    "Instrument": "Messwerkzeug",
-    "Instruments": "Messwerkzeuge",
-    "Instrument info": "Messwerkzeug Info"
+    "Variable in study:": "Variable Teil von Studie",
+    "Variables": "Variablen"
 }

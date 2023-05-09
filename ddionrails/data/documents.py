@@ -59,9 +59,9 @@ class VariableDocument(GenericDataDocument):
         study: Study = model_object.dataset.study
         return study
 
-    def prepare_analysis_unit(self, variable: Variable) -> Optional[str]:
+    def prepare_analysis_unit(self, variable: Variable) -> dict[str, str]:
         """Return the related analysis_unit's or None"""
-        return self._handle_missing_content(variable.dataset.analysis_unit)
+        return self._handle_missing_dict_content(variable.dataset.analysis_unit)
 
     @staticmethod
     def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
@@ -84,7 +84,7 @@ class VariableDocument(GenericDataDocument):
 
     def prepare_period(self, variable: Variable) -> Optional[str]:
         """Return the related period's title or None"""
-        return self._handle_missing_content(variable.dataset.period)
+        return self._handle_missing_dict_content(variable.dataset.period)
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}variables"
