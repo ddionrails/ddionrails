@@ -22,6 +22,45 @@ import StatisticsSearch from "./components/searches/StatisticsSearch.vue";
 
 Vue.use(Router);
 
+const language = Vue.observable({
+  language: document
+    .getElementById("language-switch")
+    .getAttribute("data-current-language"),
+});
+
+Vue.prototype.$language = document
+  .getElementById("language-switch")
+  .getAttribute("data-current-language");
+
+Object.defineProperty(Vue.prototype, "$language", {
+  get() {
+    return language.language;
+  },
+  set(value) {
+    language.language = value;
+  },
+});
+
+const languageObserver = new MutationObserver((mutations) => {
+  mutations.forEach((record) => {
+    if (record.type == "attributes") {
+      const target = record.target;
+      if (
+        target.nodeName == "BUTTON" &&
+        target.hasAttribute("data-current-language")
+      ) {
+        Vue.prototype.$language = target.getAttribute("data-current-language");
+      }
+    }
+  });
+});
+
+const languageElement = document.getElementById("language-switch");
+languageObserver.observe(languageElement, {
+  attributes: true,
+});
+
+
 const router = new Router({
   mode: "history",
   base: "/search/",
