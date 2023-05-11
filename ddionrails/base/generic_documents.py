@@ -95,8 +95,8 @@ class GenericDataDocument(GenericDocument):
     # facets
     analysis_unit = fields.ObjectField(
         properties={
-            "label": fields.TextField(analyzer="english"),
-            "label_de": fields.TextField(analyzer="german"),
+            "label": fields.KeywordField(),
+            "label_de": fields.KeywordField(),
         }
     )
     period = fields.ObjectField(
