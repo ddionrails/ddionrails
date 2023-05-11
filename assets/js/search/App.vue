@@ -9,7 +9,8 @@
         <li>
           <router-link class="nav-link" to="/variables">
             <i class="fa fa-chart-bar"></i>
-            Variables
+            <span v-if="$language == 'en'">Variables</span>
+            <span v-if="$language == 'de'">Variablen</span>
           </router-link>
         </li>
         <li>
@@ -80,12 +81,6 @@ export default {
     this.languageObserver.observe(this.languageElement, {
       attributes: true,
     });
-  },
-  watch: {
-    $language() {
-      console.log("BBBBBBBBBBBBBBBBB");
-      this.$forceUpdate();
-    },
   },
 };
 </script>
