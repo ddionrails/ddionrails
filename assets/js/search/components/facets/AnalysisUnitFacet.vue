@@ -1,10 +1,11 @@
 <template>
   <multi-list
     componentId="AnalysisUnit"
-    data-field="analysis_unit"
-    title="Analysis Unit"
+    :data-field="$language =='en' ? 'analysis_unit.label' : 'analysis_unit.label_de' "
+    :title="$language =='en' ? 'Analysis Unit' : 'Analyseeinheit'"
     :showSearch="false"
-    selectAllLabel="Select all"
+    :placeholder="$language == 'en' ? 'Search' : 'Suche'"
+    :selectAllLabel="$language =='en' ? 'Select all' : 'Alle auswählen'"
     :size="100"
     :URLParams="true"
     :react="react"
@@ -18,8 +19,13 @@
 </template>
 
 <script>
+import {setLanguageObserver} from "../../helpers.js";
+
 export default {
   name: "AnalysisUnitFacet",
-  props: ["react"]
+  props: ["react"],
+  async mounted(props) {
+    await setLanguageObserver(this);
+  },
 };
 </script>
