@@ -11,7 +11,9 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for questions"
+          :placeholder="{
+            en: 'Search for questions',
+            de: 'Fragen durchsuchen'}[$language]"
         />
         <selected-filters />
       </div>
@@ -36,15 +38,7 @@
           class="result-list-container"
           :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
           renderNoResults="No Results found. Try to change your search query or filter options."
-          :sortOptions="[
-            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
-            {
-              label: 'Period (descending)',
-              dataField: 'period',
-              sortBy: 'desc'
-            },
-            { label: 'Period (ascending)', dataField: 'period', sortBy: 'asc' }
-          ]"
+          :sortOptions="_sortOptions($language)"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <question-result :item="item" />
@@ -60,11 +54,12 @@ import AnalysisUnitFacet from "../facets/AnalysisUnitFacet.vue";
 import PeriodFacet from "../facets/PeriodFacet.vue";
 import StudyFacet from "../facets/StudyFacet.vue";
 import QuestionResult from "../results/QuestionResult.vue";
+import {setLanguageObserver} from "../../helpers.js";
 const helpers = require("./helpers.js");
 
 export default {
   name: "QuestionSearch",
-  data: function() {
+  data() {
     return {
       index: helpers.indexNameSwitch("questions"),
       dataField: [
@@ -74,20 +69,26 @@ export default {
         "description",
         "description_de",
         "items.en",
-        "items.de"
-      ]
+        "items.de",
+      ],
     };
+  },
+  async mounted(_) {
+    await setLanguageObserver(this);
   },
   components: {
     AnalysisUnitFacet,
     PeriodFacet,
     StudyFacet,
-    QuestionResult
+    QuestionResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+    _sortOptions(language) {
+      return helpers.sortOptions(language);
+    },
+  },
 };
 </script>

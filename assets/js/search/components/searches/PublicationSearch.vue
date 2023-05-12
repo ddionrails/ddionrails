@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for publications"
+          :placeholder="placeholder($language, entityPluralNames)"
         />
         <selected-filters />
       </div>
@@ -35,12 +35,8 @@
           :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study', 'Type', 'Year'] }"
-          renderNoResults="No Publications found. Try to change your search query or filter options."
-          :sortOptions="[
-            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
-            { label: 'Year (descending)', dataField: 'year', sortBy: 'desc' },
-            { label: 'Year (ascending)', dataField: 'year', sortBy: 'asc' }
-          ]"
+          :renderNoResults="noResults($language, entityPluralNames)"
+          :sortOptions="sortOptions($language)"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <publication-result :item="item" />
@@ -60,22 +56,47 @@ const helpers = require("./helpers.js");
 
 export default {
   name: "PublicationSearch",
-  data: function() {
+  data() {
     return {
       index: helpers.indexNameSwitch("publications"),
-      dataField: ["name", "title", "author", "abstract", "cite", "doi"]
+      dataField: ["name", "title", "author", "abstract", "cite", "doi"],
+      entityPluralNames: {en: "publications", de: "Publikationen"},
     };
   },
   components: {
     StudyFacet,
     PublicationTypeFacet,
     PublicationYearFacet,
-    PublicationResult
+    PublicationResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+    placeholder(language, entityPluralNames) {
+      return helpers.placeholderTemplate(
+        language, entityPluralNames
+      );
+    },
+    noResults(language, entityPluralNames) {
+      return helpers.noResultsTemplate(language, entityPluralNames);
+    },
+    sortOptions(language) {
+      if (language == "en") {
+        return [
+          {label: "Relevance", dataField: "_score", sortBy: "desc"},
+          {label: "Year (descending)", dataField: "year", sortBy: "desc"},
+          {label: "Year (ascending)", dataField: "year", sortBy: "asc"},
+        ];
+      }
+      if (language =="de") {
+        return [
+          {label: "Relevanz", dataField: "_score", sortBy: "desc"},
+          {label: "Jahr (absteigend)", dataField: "year", sortBy: "desc"},
+          {label: "Jahr (aufsteigend)", dataField: "year", sortBy: "asc"},
+        ];
+      }
+    },
+  },
 };
 </script>

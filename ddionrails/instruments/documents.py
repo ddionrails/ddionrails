@@ -14,7 +14,7 @@ License:
       `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
 """
 
-from typing import Dict, Optional
+from typing import Dict
 
 from django.conf import settings
 from django.db.models.query import QuerySet
@@ -50,21 +50,13 @@ class QuestionDocument(GenericDataDocument):
         return study
 
     # lookup methods
-    @staticmethod
-    def prepare_analysis_unit(question: Question) -> Optional[str]:
+    def prepare_analysis_unit(self, question: Question) -> dict[str, str]:
         """Return the related analysis_unit's or None"""
-        try:
-            return question.instrument.analysis_unit.title()
-        except AttributeError:
-            return None
+        return self._handle_missing_dict_content(question.instrument.analysis_unit)
 
-    @staticmethod
-    def prepare_period(question: Question) -> Optional[str]:
+    def prepare_period(self, question: Question) -> dict[str, str]:
         """Return the related period's title or None"""
-        try:
-            return question.instrument.period.title()
-        except AttributeError:
-            return None
+        return self._handle_missing_dict_content(question.instrument.period)
 
     @staticmethod
     def prepare_items(question: Question) -> Dict:

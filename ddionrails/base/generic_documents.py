@@ -63,17 +63,6 @@ class GenericDocument(Document):
             return "Not Categorized"
         return content.title()
 
-
-class GenericDataDocument(GenericDocument):
-    """Base for variable and question documents."""
-
-    concept = fields.ObjectField(
-        properties={
-            "label": fields.TextField(analyzer="english"),
-            "label_de": fields.TextField(analyzer="german"),
-        }
-    )
-
     @staticmethod
     def _handle_missing_dict_content(content: "AnalysisUnit") -> dict[str, str]:
         output = {}
@@ -91,6 +80,17 @@ class GenericDataDocument(GenericDocument):
         else:
             output["label_de"] = content.label_de
         return output
+
+
+class GenericDataDocument(GenericDocument):
+    """Base for variable and question documents."""
+
+    concept = fields.ObjectField(
+        properties={
+            "label": fields.TextField(analyzer="english"),
+            "label_de": fields.TextField(analyzer="german"),
+        }
+    )
 
     # facets
     analysis_unit = fields.ObjectField(

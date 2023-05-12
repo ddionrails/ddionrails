@@ -6,7 +6,11 @@
         <span v-html="item.title"></span>
       </a>
     </p>
-    <p class="card-text">Publication by: <span v-html="item.author"></span> ({{ item.year }})</p>
+    <p class="card-text">
+      <span v-if="$language =='en'">Publication by:</span>
+      <span v-if="$language =='de'">Publikation von:</span>
+      <span v-html="item.author"></span> ({{ item.year }})
+    </p>
   </div>
 </template>
 
@@ -14,10 +18,10 @@
 export default {
   name: "PublicationResult",
   props: ["item"],
-  data: function() {
+  data() {
     return {
-      baseUrl: window.location.origin
+      baseUrl: window.location.origin,
     };
-  }
+  },
 };
 </script>
