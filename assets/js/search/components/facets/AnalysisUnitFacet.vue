@@ -24,7 +24,7 @@ import {setLanguageObserver} from "../../helpers.js";
 export default {
   name: "AnalysisUnitFacet",
   props: ["react"],
-  async mounted(props) {
+  async mounted(_) {
     await setLanguageObserver(this);
   },
 };

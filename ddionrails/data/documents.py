@@ -15,7 +15,7 @@ License:
 """
 
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from django.conf import settings
 from django.db.models import QuerySet
@@ -52,7 +52,12 @@ class VariableDocument(GenericDataDocument):
             "labels_de": fields.ListField(fields.TextField(analyzer="german")),
         }
     )
-    conceptual_dataset = fields.KeywordField()
+    conceptual_dataset = fields.ObjectField(
+        properties={
+            "label": fields.KeywordField(),
+            "label_de": fields.KeywordField(),
+        }
+    )
 
     @staticmethod
     def _get_study(model_object: Variable) -> Study:
@@ -78,11 +83,11 @@ class VariableDocument(GenericDataDocument):
                 )
         return output
 
-    def prepare_conceptual_dataset(self, variable: Variable) -> Optional[str]:
+    def prepare_conceptual_dataset(self, variable: Variable) -> dict[str, str]:
         """Return the related conceptual_dataset' title or None"""
-        return self._handle_missing_content(variable.dataset.conceptual_dataset)
+        return self._handle_missing_dict_content(variable.dataset.conceptual_dataset)
 
-    def prepare_period(self, variable: Variable) -> Optional[str]:
+    def prepare_period(self, variable: Variable) -> dict[str, str]:
         """Return the related period's title or None"""
         return self._handle_missing_dict_content(variable.dataset.period)
 

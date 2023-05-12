@@ -2,9 +2,11 @@
   <multi-list
     componentId="ConceptualDataset"
     data-field="conceptual_dataset"
-    title="Conceptual Dataset"
+    :data-field="$language == 'en' ? 'conceptual_dataset.label' : 'conceptual_dataset.label_de'"
+    :title="$language == 'en' ? 'Conceptual Dataset' : 'Konzeptioneller Datensatz'"
     :showSearch="false"
-    selectAllLabel="Select all"
+    :placeholder="$language == 'en' ? 'Search' : 'Suche'"
+    :selectAllLabel="$language =='en' ? 'Select all' : 'Alle auswählen'"
     :size="100"
     :URLParams="true"
     :react="react"
@@ -18,8 +20,13 @@
 </template>
 
 <script>
+import {setLanguageObserver} from "../../helpers.js";
+
 export default {
   name: "ConceptualDatasetFacet",
-  props: ["react"]
+  props: ["react"],
+  async mounted(_) {
+    await setLanguageObserver(this);
+  },
 };
 </script>
