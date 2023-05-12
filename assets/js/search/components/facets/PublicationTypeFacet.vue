@@ -2,9 +2,9 @@
   <multi-list
     componentId="Type"
     data-field="sub_type"
-    title="Type"
+    :title="$language =='en' ? 'Type' : 'Typ'"
     :showSearch="false"
-    selectAllLabel="Select all"
+    :selectAllLabel="$language =='en' ? 'Select all' : 'Alle auswählen'"
     :size="100"
     :URLParams="true"
     :react="react"
@@ -16,8 +16,13 @@
 </template>
 
 <script>
+import {setLanguageObserver} from "../../helpers.js";
+
 export default {
   name: "PublicationTypeFacet",
-  props: ["react"]
+  props: ["react"],
+  async mounted(_) {
+    await setLanguageObserver(this);
+  },
 };
 </script>

@@ -2,7 +2,7 @@
   <dynamic-range-slider
     dataField="year"
     componentId="Year"
-    title="Year"
+    :title="$language == 'en' ? 'Year': 'Jahr'"
     :showFilter="true"
     :size="100"
     :URLParams="true"
@@ -20,7 +20,12 @@
 </template>
 
 <script>
+import {setLanguageObserver} from "../../helpers.js";
+
 export default {
-  name: "PublicationYearFacet"
+  name: "PublicationYearFacet",
+  async mounted(_) {
+    await setLanguageObserver(this);
+  },
 };
 </script>
