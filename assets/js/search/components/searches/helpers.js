@@ -48,15 +48,93 @@ export function indexNameSwitch(baseName) {
  * @param {object} stats Contains quantitative data about the search results.
  * @return {VNode} A paragraph VNode with the result text.
  */
-export function customRenderStats(vueInstance, stats) {
-  return vueInstance.$createElement("p", {
-    "class": "css-1e7votj",
-  },
-  [
-    stats.totalResults>=10000?"More than ":"",
-    stats.totalResults,
-    " results found in ",
-    stats.time,
-    "ms",
-  ]);
+export function customRenderStats(vueInstance, stats, language) {
+  if ( language == "en") {
+    return vueInstance.$createElement("p", {
+      "class": "css-1e7votj",
+    },
+    [
+      stats.totalResults>=10000?"More than ":"",
+      stats.totalResults,
+      " results found in ",
+      stats.time,
+      "ms",
+    ]);
+  }
+  if (language == "de") {
+    return vueInstance.$createElement("p", {
+      "class": "css-1e7votj",
+    },
+    [
+      stats.totalResults>=10000?"Mehr als ":"",
+      `${stats.totalResults}`,
+      " Treffer, gefunden in ",
+      stats.time,
+      "ms",
+    ]);
+  }
 };
+
+
+/**
+ *
+ * @param {string} language
+ * @returns
+ */
+export function sortOptions(language) {
+  if (language == "en") {
+    return [
+      {label: "Relevance", dataField: "_score", sortBy: "desc"},
+      {
+        label: "Period (descending)",
+        dataField: "period",
+        sortBy: "desc",
+      },
+      {label: "Period (ascending)", dataField: "period", sortBy: "asc"},
+    ];
+  }
+  if (language =="de") {
+    return [
+      {label: "Relevanz", dataField: "_score", sortBy: "desc"},
+      {
+        label: "Zeitraum (absteigend)",
+        dataField: "period",
+        sortBy: "desc",
+      },
+      {label: "Zeitraum (aufsteigend)", dataField: "period", sortBy: "asc"},
+    ];
+  }
+}
+
+/**
+ *
+ * @param {*} language
+ * @param {*} enityNames
+ * @returns
+ */
+export function placeholderTemplate(language, enityNames) {
+  if (language == "en") {
+    return `Search for ${enityNames["en"]}`;
+  }
+  if (language =="de") {
+    return `${enityNames["de"]} durchsuchen`;
+  }
+}
+
+/**
+ *
+ * @param {*} language
+ * @param {*} enityNames
+ * @returns
+ */
+export function noResultsTemplate(language, enityNames) {
+  if (language == "en") {
+    return `No ${enityNames["en"]} found.` +
+    "Try to change your search query or filter options.";
+  }
+  if (language =="de") {
+    return `Keine ${enityNames["de"]} gefunden. ` +
+    "Versuchen Sie Ihre Suchanfrage oder Filter anzupassen.";
+  }
+}
+

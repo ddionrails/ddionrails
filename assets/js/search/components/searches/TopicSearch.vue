@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for topics"
+          :placeholder="placeholder($language, entityPluralNames)"
         />
         <selected-filters />
       </div>
@@ -35,7 +35,7 @@
           :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study'] }"
-          renderNoResults="No Topics found. Try to change your search query or filter options."
+          :renderNoResults="noResults($language, entityPluralNames)"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <topic-result :item="item" />
@@ -53,20 +53,27 @@ const helpers = require("./helpers.js");
 
 export default {
   name: "TopicSearch",
-  data: function() {
+  data() {
     return {
       index: helpers.indexNameSwitch("topics"),
-      dataField: ["name", "label", "label_de", "description", "description_de"]
+      dataField: ["name", "label", "label_de", "description", "description_de"],
+      entityPluralNames: {en: "topics", de: "Themen"},
     };
   },
   components: {
     StudyFacet,
-    TopicResult
+    TopicResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+    placeholder(language, entityPluralNames) {
+      return helpers.placeholderTemplate(language, entityPluralNames);
+    },
+    noResults(language, entityPluralNames) {
+      return helpers.noResultsTemplate(language, entityPluralNames);
+    },
+  },
 };
 </script>

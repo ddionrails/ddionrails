@@ -10,7 +10,9 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for concepts"
+          :placeholder="{
+            en: 'Search for concepts',
+            de: 'Konzepte durchsuchen'}[$language]"
         />
         <selected-filters />
       </div>
@@ -51,20 +53,20 @@ const helpers = require("./helpers.js");
 
 export default {
   name: "ConceptSearch",
-  data: function() {
+  data() {
     return {
       index: helpers.indexNameSwitch("concepts"),
-      dataField: ["name", "label", "label_de", "description", "description_de"]
+      dataField: ["name", "label", "label_de", "description", "description_de"],
     };
   },
   components: {
     StudyFacet,
-    ConceptResult
+    ConceptResult,
   },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
-    }
-  }
+    },
+  },
 };
 </script>

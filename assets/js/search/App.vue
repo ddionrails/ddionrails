@@ -4,7 +4,10 @@
       <h1>Search</h1>
       <ul class="nav nav-tabs">
         <li>
-          <router-link class="nav-link" to="/all">All</router-link>
+          <router-link class="nav-link" to="/all">
+            <span v-if="$language == 'en'">Search all</span>
+            <span v-if="$language == 'de'">Alles durchsuchen</span>
+          </router-link>
         </li>
         <li>
           <router-link class="nav-link" to="/variables">
@@ -16,31 +19,37 @@
         <li>
           <router-link class="nav-link" to="/concepts">
             <i class="fa fa-cog"></i>
-            Concepts
+            <span v-if="$language == 'en'">Concepts</span>
+            <span v-if="$language == 'de'">Konzepte</span>
+
           </router-link>
         </li>
         <li>
           <router-link class="nav-link" to="/questions">
             <i class="fa fa-tasks"></i>
-            Questions
+            <span v-if="$language == 'en'">Questions</span>
+            <span v-if="$language == 'de'">Fragen</span>
           </router-link>
         </li>
         <li>
           <router-link class="nav-link" to="/publications">
             <i class="fa fa-newspaper"></i>
-            Publications
+            <span v-if="$language == 'en'">Publications</span>
+            <span v-if="$language == 'de'">Publikationen</span>
           </router-link>
         </li>
         <li>
           <router-link class="nav-link" to="/topics">
             <i class="fa fa-cogs"></i>
-            Topics
+            <span v-if="$language == 'en'">Topics</span>
+            <span v-if="$language == 'de'">Themen</span>
           </router-link>
         </li>
         <li v-if="showStatistics">
           <router-link class="nav-link" to="/statistics">
             <i class="fa fa-chart-line"></i>
-            Statistics
+            <span v-if="$language == 'en'">Statistics</span>
+            <span v-if="$language == 'de'">Statistiken</span>
           </router-link>
         </li>
       </ul>

@@ -41,10 +41,5 @@ export default {
       baseUrl: window.location.origin,
     };
   },
-  watch: {
-    $language() {
-      this.$forceUpdate();
-    },
-  },
 };
 </script>
