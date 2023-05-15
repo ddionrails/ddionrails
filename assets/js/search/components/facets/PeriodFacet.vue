@@ -27,7 +27,7 @@ import {setLanguageObserver} from "../../helpers.js";
 export default {
   name: "PeriodFacet",
   props: ["react"],
-  async mounted(props) {
+  async mounted(_) {
     await setLanguageObserver(this);
   },
 };

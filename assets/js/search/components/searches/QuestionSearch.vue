@@ -11,9 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          :placeholder="{
-            en: 'Search for questions',
-            de: 'Fragen durchsuchen'}[$language]"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -37,8 +35,8 @@
           :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
-          renderNoResults="No Results found. Try to change your search query or filter options."
-          :sortOptions="_sortOptions($language)"
+          :renderNoResults="noResults()"
+          :sortOptions="sortOptions()"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <question-result :item="item" />
@@ -71,6 +69,7 @@ export default {
         "items.en",
         "items.de",
       ],
+      entityPluralNames: {"en": "questions", "de": "Fragen"},
     };
   },
   async mounted(_) {
@@ -86,8 +85,14 @@ export default {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
     },
-    _sortOptions(language) {
-      return helpers.sortOptions(language);
+    sortOptions() {
+      return helpers.sortOptions(this.$language);
+    },
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames);
+    },
+    noResults() {
+      return helpers.noResultsTemplate(this.$language, this.entityPluralNames);
     },
   },
 };

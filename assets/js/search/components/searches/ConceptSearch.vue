@@ -10,9 +10,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          :placeholder="{
-            en: 'Search for concepts',
-            de: 'Konzepte durchsuchen'}[$language]"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -34,7 +32,7 @@
           :showResultStats="true"
           :renderResultStats="customRenderStats"
           :react="{ and: ['Search', 'Study'] }"
-          renderNoResults="No Concepts found. Try to change your search query or filter options."
+          :renderNoResults="noResults()"
           class="result-list-container m-0 p-0 col-12"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
@@ -57,6 +55,7 @@ export default {
     return {
       index: helpers.indexNameSwitch("concepts"),
       dataField: ["name", "label", "label_de", "description", "description_de"],
+      entityPluralNames: {"en": "concepts", "de": "Konzepte"},
     };
   },
   components: {
@@ -66,6 +65,12 @@ export default {
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
+    },
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames);
+    },
+    noResults() {
+      return helpers.noResultsTemplate(this.$language, this.entityPluralNames);
     },
   },
 };

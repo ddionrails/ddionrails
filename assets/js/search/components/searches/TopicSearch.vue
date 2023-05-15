@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          :placeholder="placeholder($language, entityPluralNames)"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -68,8 +68,8 @@ export default {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
     },
-    placeholder(language, entityPluralNames) {
-      return helpers.placeholderTemplate(language, entityPluralNames);
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames);
     },
     noResults(language, entityPluralNames) {
       return helpers.noResultsTemplate(language, entityPluralNames);

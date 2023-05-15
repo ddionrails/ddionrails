@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for concepts, publications, questions, topics and variables"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -32,7 +32,10 @@
           :renderResultStats="customRenderStats"
           class="result-list-container"
           :react="{ and: ['Search', 'Study'] }"
-          renderNoResults="Nothing found. Try to change your search query or filter options."
+          :renderNoResults="
+            $language == 'en' ?
+            'Nothing found. Try to change your search query or filter options.':
+            'Keine Suchtreffer. Versuchen Sie Ihre Suchanfrage oder Filter anzupassen.'"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <div v-if="item._index === 'variables'">
@@ -98,6 +101,11 @@ export default {
         "categories.labels_de",
         "dataset",
       ],
+      entityPluralNames: {
+        "en": "concepts, publications, questions, topics and variables",
+        "de": "Konzepte, Publikationen, Fragen, Themen und Variablen",
+
+      },
     };
   },
   components: {
@@ -111,6 +119,9 @@ export default {
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
+    },
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames);
     },
   },
 };
