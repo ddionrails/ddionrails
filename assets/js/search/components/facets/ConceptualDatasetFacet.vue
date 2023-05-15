@@ -9,6 +9,7 @@
     :selectAllLabel="$language =='en' ? 'Select all' : 'Alle auswählen'"
     :size="100"
     :URLParams="true"
+    defaultValue={[]}
     :react="react"
     class="card facet"
     :innerClass="{

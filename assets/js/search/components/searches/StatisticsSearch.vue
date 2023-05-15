@@ -11,7 +11,7 @@
           :highlight="true"
           :URLParams="true"
           :showClear="true"
-          placeholder="Search for statistics"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -53,17 +53,8 @@
               'Study'
             ]
           }"
-          renderNoResults=
-            "No Variables found. Try to change your search query or filter options."
-          :sortOptions="[
-            { label: 'Relevance', dataField: '_score', sortBy: 'desc' },
-            {
-              label: 'Period (descending)',
-              dataField: 'period',
-              sortBy: 'desc'
-            },
-            { label: 'Period (ascending)', dataField: 'period', sortBy: 'asc' }
-          ]"
+          :renderNoResults="noResults()"
+          :sortOptions="sortOptions()"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <statistics-result :item="item" />
@@ -93,6 +84,7 @@ export default {
         "label_de",
         "dataset",
       ],
+      entityPluralNames: {"en": "statistics", "de": "Statistiken"},
     };
   },
   components: {
@@ -101,9 +93,21 @@ export default {
     // StudyFacet,
     StatisticsResult,
   },
+  async mounted(_) {
+    await setLanguageObserver(this);
+  },
   methods: {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats);
+    },
+    sortOptions() {
+      return helpers.sortOptions(this.$language);
+    },
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames);
+    },
+    noResults() {
+      return helpers.noResultsTemplate(this.$language, this.entityPluralNames);
     },
   },
 };

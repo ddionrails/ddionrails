@@ -13,9 +13,8 @@
           :URLParams="true"
           :showClear="true"
           :fieldWeights="fieldWeights"
-          :fuzziness="0"
           :searchOperators="true"
-          :placeholder="$language == 'en' ? 'Search for variables' : 'Variablen durchsuchen'"
+          :placeholder="placeholder()"
         />
         <selected-filters />
       </div>
@@ -60,9 +59,8 @@
               'Study'
             ]
           }"
-          renderNoResults=
-            "No Variables found. Try to change your search query or filter options."
-          :sortOptions="_sortOptions($language)"
+          :renderNoResults="noResults()"
+          :sortOptions="sortOptions()"
         >
           <div slot="renderItem" class="card" slot-scope="{ item }">
             <variable-result :item="item" />
@@ -80,7 +78,6 @@ import PeriodFacet from "../facets/PeriodFacet.vue";
 import StudyFacet from "../facets/StudyFacet.vue";
 import VariableResult from "../results/VariableResult.vue";
 const helpers = require("./helpers.js");
-import {setLanguageObserver} from "../../helpers.js";
 
 export default {
   name: "VariableSearch",
@@ -94,10 +91,8 @@ export default {
         "dataset",
       ],
       fieldWeights: [1, 2, 2, 1.5],
+      entityPluralNames: {en: "variables", de: "Variablen"},
     };
-  },
-  async mounted(_) {
-    await setLanguageObserver(this);
   },
   components: {
     AnalysisUnitFacet,
@@ -110,8 +105,14 @@ export default {
     customRenderStats(stats) {
       return helpers.customRenderStats(this, stats, this.$language);
     },
-    _sortOptions(language) {
-      return helpers.sortOptions(language);
+    sortOptions() {
+      return helpers.sortOptions(this.$language);
+    },
+    placeholder() {
+      return helpers.placeholderTemplate(this.$language, this.entityPluralNames );
+    },
+    noResults() {
+      return helpers.noResultsTemplate(this.$language, this.entityPluralNames);
     },
   },
 };
