@@ -13,7 +13,8 @@
     {% csrf_token %}
     {{ variable_baskets_context|json_script:"context_data" }}
     <h1><i class="fa fa-chart-bar" title="Variable"></i>
-        {{ variable.dataset.name}}/{{ variable.name }}: {{ variable.label }}
+        {{ variable.dataset.name}}/{{ variable.name }}: 
+        <span data-en="{{ variable.label }}" data-de="{{ variable.label_de }}"></span>
     </h1>
     <div class="row">
         <div class="col-lg-8">
@@ -47,7 +48,9 @@
                             data-toggle="tab"
                             class="nav-link active"
                         >
-                            Related variables
+                            <span
+                                data-en="Related variables"
+                                data-de="Verwandte Variablen"></span>
                             <span class="badge badge-secondary">
                                 {{ variable.get_related_variables | length }}
                             </span>
@@ -59,7 +62,9 @@
                            data-toggle="tab"
                            class="nav-link"
                         >
-                            Input variables
+                            <span
+                                data-en="Input variables"
+                                data-de="Input Variablen"></span>
                             <span class="badge badge-secondary">
                                 {{ variable.origin_variables.count }}
                             </span>
@@ -71,7 +76,9 @@
                            data-toggle="tab"
                            class="nav-link"
                         >
-                            Output variables
+                            <span
+                                data-en="Output variables"
+                                data-de="Output Variablen"></span>
                             <span class="badge badge-secondary">
                                 {{ variable.target_variables.count }}
                             </span>
@@ -105,7 +112,8 @@
         </div>
         <div class="col-lg-4">
             <div class="card">
-                <div class="card-header"><b>Basket</b>
+                <div class="card-header">
+                    <b><span data-en="Basket" data-de="Variablensammlung"></span></b>
                 </div>
                 <div class="list-group" id="basket-list">
                     {% if user.is_authenticated %}
@@ -113,17 +121,25 @@
                         <div class="card-body text-right">
                         <button  class="btn btn-secondary basket-create-button">
                             <a href="{% url 'workspace:basket_new' %}">
-
-                                Create a new basket
-
+                                <span
+                                    data-en="Create a new basket"
+                                    data-de="Neue Variablensammlung anlegen"></span>
                             </a>
                         </button>
                     {% else %}
                         </div>
-                        <div class="card-body">Please <a href="{% url 'workspace:login' %}">login</a>
+                        {% if request.COOKIES.paneldata_language == "de" %}
+                            <div class="card-body">
+                            Bitte <a href="{% url 'workspace:login' %}">melden Sie sich an</a>
+                            oder <a href="{% url 'workspace:register' %">registrieren ein Nutzerkonto</a>
+                            um Ihre Variablensammlungen zu verwalten. 
+                        {% else %}
+                            <div class="card-body">
+                            Please <a href="{% url 'workspace:login' %}">login</a>
                             or <a href="{% url 'workspace:register' %">register</a>
                             to
                             use the basket functionality.
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>
