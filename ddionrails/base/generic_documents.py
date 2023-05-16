@@ -70,12 +70,15 @@ class GenericDocument(Document):
             output["label"] = "Not Categorized"
             output["label_de"] = "Nicht Kategorisiert"
             return output
-        if content.label is None or content.label in ["none", "unspecified"]:
+        if content.label is None or content.label.lower() in ["none", "unspecified"]:
             output["label"] = "Not Categorized"
         else:
             output["label"] = content.label
 
-        if content.label_de is None or content.label_de in ["none", "unspecified"]:
+        if content.label_de is None or content.label_de.lower() in [
+            "none",
+            "unspecified",
+        ]:
             output["label_de"] = "Nicht Kategorisiert"
         else:
             output["label_de"] = content.label_de

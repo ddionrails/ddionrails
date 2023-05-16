@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for documents in ddionrails.instruments app """
 
@@ -30,8 +30,8 @@ def test_question_search_document_fields(question):
     )
     expected["label"] = question.label
     # add facets to expected dictionary
-    expected["analysis_unit"] = question.instrument.analysis_unit.title()
-    expected["period"] = question.instrument.period.title()
+    expected["analysis_unit"] = {"label": "", "label_de": ""}
+    expected["period"] = {"label": "", "label_de": ""}
     expected["study_name"] = question.instrument.study.title()
     expected["study"] = {
         "name": question.instrument.study.name,
@@ -61,6 +61,6 @@ def test_variable_search_document_fields_missing_related_objects(
     response = search.execute()
     document = response.hits[0]
 
-    expected = None
-    assert expected is document.analysis_unit
-    assert expected is document.period
+    expected = {"label": "Not Categorized", "label_de": "Nicht Kategorisiert"}
+    assert expected == document.analysis_unit
+    assert expected == document.period

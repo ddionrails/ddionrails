@@ -123,8 +123,8 @@ class ModelMixin:
     @property
     def html_description_de(self) -> str:
         """Render description from markdown as HTML."""
-        if self.description:
-            return render_markdown(self.description)
+        if self.description_de:
+            return render_markdown(self.description_de)
         return self.html_description()
 
     @property

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for documents in ddionrails.data app """
 
@@ -41,9 +41,9 @@ def test_variable_search_document_fields(variable):
     )
     expected["categories"] = {"labels": ["[1] Yes"], "labels_de": ["[1] Ja"]}
     # add facets to expected dictionary
-    expected["analysis_unit"] = variable.dataset.analysis_unit.title()
-    expected["conceptual_dataset"] = variable.dataset.conceptual_dataset.title()
-    expected["period"] = variable.dataset.period.title()
+    expected["analysis_unit"] = {"label": "", "label_de": ""}
+    expected["conceptual_dataset"] = {"label": "", "label_de": ""}
+    expected["period"] = {"label": "", "label_de": ""}
     expected["id"] = str(variable.id)
     expected["study_name"] = variable.dataset.study.title()
     expected["study"] = {
@@ -71,9 +71,9 @@ def test_variable_search_document_fields_missing_related_objects(variable):
     document = response.hits[0]
 
     expected = "Not Categorized"
-    TEST_CASE.assertEqual(expected, document.analysis_unit)
-    TEST_CASE.assertEqual(expected, document.conceptual_dataset)
-    TEST_CASE.assertEqual(expected, document.period)
+    TEST_CASE.assertEqual(expected, document.analysis_unit.label)
+    TEST_CASE.assertEqual(expected, document.conceptual_dataset.label)
+    TEST_CASE.assertEqual(expected, document.period.label)
 
 
 @pytest.mark.usefixtures("variables_index")
@@ -97,7 +97,7 @@ def test_variable_search_document_fields_string_representing_missing(
     response = search.execute()
     document = response.hits[0]
 
-    expected = "Not Categorized"
-    TEST_CASE.assertEqual(expected, document.analysis_unit)
-    TEST_CASE.assertEqual(expected, document.conceptual_dataset)
-    TEST_CASE.assertEqual(expected, document.period)
+    excepted = "Not Categorized"
+    TEST_CASE.assertEqual(excepted, document.analysis_unit.label)
+    TEST_CASE.assertEqual(excepted, document.conceptual_dataset.label)
+    TEST_CASE.assertEqual(excepted, document.period.label)

@@ -26,12 +26,14 @@
         </p>
         {% if variable.label %}
         <p>
-            <b>English label</b>: {{ variable.label }}
+            <b><span data-en="English label" data-de="Englischer Bezeichner"></span></b>:
+            {{ variable.label }}
         </p>
         {% endif %}
         {% if variable.label_de %}
         <p>
-            <b>German label</b>: {{ variable.label_de }} 
+            <b><span data-en="German label" data-de="Deutscher Bezeichner"></span></b>:
+                {{ variable.label_de }} 
         </p>
         {% endif %}
         {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
@@ -47,21 +49,23 @@
 
             </a>
         </p>
-        <p><b>Analysis Unit:</b>
+        <p><b>
+            <span data-en="Analysis Unit" data-de="Analyseeinheit"></span> :</b>
             {{ variable.dataset.analysis_unit.title }}
         </p>
-        <p><b>Dataset Type:</b>
+        <p><b><span data-en="Dataset Type" data-de="Datensatztyp"></span>:</b>
             {{ variable.dataset.conceptual_dataset.title }}
         </p>
-        <p><b>Period:</b>
+        <p><b><span data-en="Period" data-de="Zeitraum"></span>:</b>
             {{ variable.period.title }}
         </p>
         {% if variable.dataset.attachments.exists %}
         <p >
-        <b>Attachments: </b>
+        <b><span data-en="Attachments" data-de="Anhang"></span>: </b>
         <ul>
             {% for attachment in variable.dataset.attachments.all %}
-            <li><a href={{attachment.url}}>{{ attachment.url_text }}</a></li>
+            <li><a href={{attachment.url}}>
+                {{ attachment.url_text }}</a></li>
             {% endfor %}
             
         </ul>
@@ -70,7 +74,7 @@
 
         <hr>
 
-        <p><b>Study:</b>
+        <p><b><span data-en="Study" data-de="Studie"></span>:</b>
             <a href="{{ study.get_absolute_url }}">{{ study.title }}</a>
         </p>
     </div>
@@ -81,7 +85,7 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Questions</h5>
+        <h5 class="modal-title"><span data-en="Questions" data-de="Fragen"></span></h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -91,29 +95,39 @@
         <table class="table">
             <tr>
                 <th scope="col">
-                Period
+                <span data-en="Period" data-de="Zeitraum"></span>
                 </th>
                 <th scope="col">
-                Instrument
+                <span data-en="Instrument" data-de="Messwerkzeuge"</span>
                 </th>
                 <th scope="col">
-                Question Text
+                <span data-en="Question Text" data-de="Fragentext"></span>
                 </th>
             </tr>
 
             {% for item in items %}
             <tr>
                 <td scope="row">
-                {{ item.question.period.label }}
+                <span
+                    data-en="{{ item.question.period.label }}"
+                    data-de="{{ item.question.period.label_de }}"></span>
                 </td>
                 <td scope="row">
-                {{ item.question.instrument.label }}
+                <span
+                    data-en="{{ item.question.instrument.label }}"
+                    data-de="{{ item.question.instrument.label_de }}"></span>
                 </td>
                 <td scope="row">
                     <a href="{{ item.question.get_direct_url }}">
-                        {{ item.question.label }}
+                        <span
+                            data-en="{{ item.question.label }}"
+                            data-de="{{ item.question.label_de }}"></span>
+                        
                     </a>
-                    - {{ item.label }}
+                        - <span
+                            data-en="{{ item.label }}"
+                            data-de="{{ item.label_de }"></span>
+                     
                 </td>
             </tr>
             {% endfor %}
@@ -156,10 +170,15 @@
             {% for item in items_subset %}
                 <li>
                     <a href="{{ item.question.get_direct_url }}">
-                    {{ item.question.label }}
+                    <span
+                        data-en="{{ item.question.label }}"
+                        data-de="{{ item.question.label_de }}"></span>
                     </a>
                 {% if item.label != item.question.label %}
-                    - {{ item.label }} 
+                    - <span
+                        data-en="{{ item.label }}"
+                        data-de="{{ item.label_de }}"></span>
+                      
                 {% endif %}
                 </li>
             {% endfor %}

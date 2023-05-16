@@ -11,7 +11,11 @@
                     {% for concept in concept_list %}
                         <div>
                             <i class="fa fa-cog"></i>
-                            <a href="{{ concept }}">{{ concept.title }}</a>
+                            <a href="{{ concept }}">
+                              <span
+                                  data-en="{{ concept.label }}"
+                                  data-de="{{ concept.label_de }}"></span>
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
@@ -22,7 +26,9 @@
         <p title="Instrument">
             <i class="fas fa-clipboard-list"></i>
             <a href="{{ question.instrument.get_direct_url }}">
-                {{ question.instrument.label }}
+              <span
+                  data-en="{{ question.instrument.label }}"
+                  data-de="{{ question.instrument.label_de }}"></span>
             </a>
 
 
@@ -30,12 +36,16 @@
         </p>
         {% if question.instrument.analysis_unit.name != 'none' %}
             <p>
-                    <b>Analysis Unit:</b> {{ question.instrument.analysis_unit.name }}
+                    <b>
+                      <span data-en="Analysis Unit" data-de="Analyseeinheit"></span>:
+                    </b> {{ question.instrument.analysis_unit.name }}
             </p>
         {% endif %}
         {% if question.instrument.period.name != 'none' %}
             <p>
-                    <b>Period:</b> {{ question.instrument.period.name }}
+                    <b>
+                      <span data-en="Period" data-de="Zeitraum"></span>:
+                    </b> {{ question.instrument.period.name }}
             </p>
         {% endif %}
         <p id="question-images-container">
@@ -52,14 +62,19 @@
 </div>
 
 <div class="card hidden">
-    <div class="card-header"><b>Description</b>
+    <div class="card-header">
+      <b><span data-en="Description" data-de="Beschreibung"></span></b>
     </div>
     <div class="card-body" id="description-card-content">
-        {{ question.html_description | safe }}
+       <span
+        data-en="{{ question.html_description | safe }}"
+        data-de="{{ question.html_description_de | safe }}"></span>
     </div>
     <div class="card-footer text-center" id="description-footer">
         <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
-        Show full description
+          <span
+            data-en="Show full description"
+            data-de="Vollständige Beschreibung anzeigen"></span>
         </button>
     </div>
 </div>
@@ -69,7 +84,9 @@
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Description</h5>
+        <h5 class="modal-title">
+          <span data-en="Description" data-de="Beschreibung"></span>
+        </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

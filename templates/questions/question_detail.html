@@ -61,7 +61,10 @@ BODY Their structure is convoluted and confusing.
         <div class="col-xl-3">
             {% include "questions/question_info.html" with question_list=related_questions %}
             <div class="card">
-                <div class="card-header"><b>Variables</b>
+                <div class="card-header">
+                    <b>
+                        <span data-en="Variables" data-de="Variablen"></span>
+                    </b>
                 </div>
                 {% if variables %}
                     <div class="list-group">
@@ -71,14 +74,25 @@ BODY Their structure is convoluted and confusing.
                                 <i class="fa fa-table"></i>
                                 <a href="{{ variable.dataset.get_direct_url }}">
                                     {{ variable.dataset.name }} &#x2013;
-                                    <small>{{ variable.dataset.label }}</small>
+                                    <small>
+                                        <span
+                                            data-en="{{ variable.dataset.label }}"
+                                            data-de="{{ variable.dataset.label_de }}"
+                                        ></span>
+                                    </small>
                                 </a>
                             </div>
                             <div>
                                 <i class="fa fa-chart-bar"></i> 
                                 <a href="{{ variable.get_direct_url }}">
                                     {{ variable.name }} &#x2013;
-                                    <small>{{ variable.label }}</small>
+                                    <small>
+                                        <span 
+                                            data-en="{{ variable.label }}"
+                                            data-de="{{ variable.label_de }}">
+                                        </span>
+
+                                    </small>
                                 </a>
                             </div>
                         </div>
