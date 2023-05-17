@@ -24,6 +24,8 @@ APPS_DIR = BASE_DIR.joinpath("ddionrails")
 BACKUP_DIR = Path("/var/lib/ddionrails/backup/")
 os.makedirs(BACKUP_DIR, exist_ok=True)
 
+FEATURES = os.getenv("FEATURES", "limited")
+
 if os.getenv("DJANGO_DEBUG") == "True":
     DEBUG = True
     STATICFILES_DIRS = (str(BASE_DIR.joinpath("static")),)
@@ -118,6 +120,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "ddionrails.studies.context_processors.studies_processor",
                 "ddionrails.studies.context_processors.show_statistics",
+                "config.context_processors.server_features",
             ]
         },
     }

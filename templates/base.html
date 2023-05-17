@@ -105,13 +105,17 @@
                 {% endif %}
                 <!-- -->
             </ul>
-        {% if request.COOKIES.paneldata_language == "de" %}
-            <button id="language-switch" data-current-language="de"
-            type="button" class="btn btn-outline-dark">de</button>
-        {% else %}
-            <button id="language-switch" data-current-language="en"
-            type="button" class="btn btn-outline-dark">en</button>
+
+        {% if FEATURES == "extended" %}
+            {% if request.COOKIES.paneldata_language == "de" %}
+                <button id="language-switch" data-current-language="de"
+                type="button" class="btn btn-outline-dark">de</button>
+            {% else %}
+                <button id="language-switch" data-current-language="en"
+                type="button" class="btn btn-outline-dark">en</button>
+            {% endif %}
         {% endif %}
+
         </div>
 
         {% block studynav %}
