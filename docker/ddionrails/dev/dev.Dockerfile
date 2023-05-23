@@ -25,6 +25,7 @@ RUN apt-get update \
     openssh-client>=1:7 \
     python-psycopg2>=2 \
     libpq-dev>=11.5 \
+    pkg-config libcairo2-dev libjpeg-dev libgif-dev \
     gcc>=4:8 \
     libjpeg-dev>=1:1.5 \
     zlib1g-dev>=1:1.2 \
