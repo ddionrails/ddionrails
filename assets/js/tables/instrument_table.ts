@@ -209,9 +209,10 @@ function renderInstrumentTable(table: any, url: string) {
   });
 }
 
-const instrumentTableRenderer: CallableFunction = hasExtendedMetadata
-  ? renderFullInstrumentTable
-  : renderInstrumentTable;
+const instrumentTableRenderer: CallableFunction =
+  hasExtendedMetadata == "True"
+    ? renderFullInstrumentTable
+    : renderInstrumentTable;
 
 window.addEventListener("load", () => {
   initSearchEventHandler(
