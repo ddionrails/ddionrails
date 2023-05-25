@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.studies app """
 
@@ -32,9 +32,7 @@ class TestStudyDetailView:
 
 class TestStudyTopicsView:
     def test_study_topics_view_with_existing_study_name(self, client, study):
-        url = reverse(
-            "study_topics", kwargs={"study_name": study.name, "language": LANGUAGE}
-        )
+        url = reverse("study_topics", kwargs={"study_name": study.name})
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
 
@@ -43,7 +41,7 @@ class TestStudyTopicsView:
         non_existing_study_name = "not-in-database"
         url = reverse(
             "study_topics",
-            kwargs={"study_name": non_existing_study_name, "language": LANGUAGE},
+            kwargs={"study_name": non_existing_study_name},
         )
         response = client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code

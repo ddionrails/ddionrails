@@ -102,7 +102,7 @@ urlpatterns = [
         include("ddionrails.instruments.urls", namespace="instruments"),
     ),
     re_path(r".*/inst/.*", InstRedirectView.as_view()),
-    path("<slug:study_name>/topics/<slug:language>", study_topics, name="study_topics"),
+    path("<slug:study_name>/topics", study_topics, name="study_topics"),
     # Redirects for search interface
     path(
         "publication/<uuid:id>",

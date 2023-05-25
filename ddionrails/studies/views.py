@@ -47,13 +47,12 @@ class StudyDetailView(DetailView):
         return context
 
 
-def study_topics(request: HttpRequest, study_name: str, language: str) -> HttpResponse:
+def study_topics(request: HttpRequest, study_name: str) -> HttpResponse:
     """Display topic tree for a study."""
     study = get_object_or_404(Study, name=study_name)
-    context = dict(
-        study=study,
-        language=language,
-        json_object={"study": study.name, "language": language},
-    )
+    context = {
+        "study": study,
+        "json_object": {"study": study.name},
+    }
     context["namespace"] = "topics"
     return render(request, "studies/study_topics.html", context=context)

@@ -22,7 +22,7 @@
         </li>
         {% if study.has_topics %}
             <li class="nav-item">
-                <a href="{% url 'study_topics' study_name=study.name language='en' %}"
+                <a href="{% url 'study_topics' study_name=study.name %}"
                    class="nav-link"
                    id="topics-nav-link"
                    data-en="Topics"
