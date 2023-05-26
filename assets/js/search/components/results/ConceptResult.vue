@@ -5,8 +5,7 @@
       <a :href="baseUrl + '/concept/' + item._id">
         [
         <span v-html="item.name"></span>]
-        <span v-if="$language == 'en'" v-html="item.label"></span>
-        <span v-if="$language == 'de'" v-html="item.label_de"></span>
+        {{ getLabelWithFallback(item, $language) }}
       </a>
     </p>
     <p class="card-text">
@@ -17,9 +16,14 @@
 </template>
 
 <script>
+import {getLabelWithFallback} from "../../helpers";
+
 export default {
   name: "ConceptResult",
   props: ["item"],
+  methods: {
+    getLabelWithFallback,
+  },
   data() {
     return {
       baseUrl: window.location.origin,

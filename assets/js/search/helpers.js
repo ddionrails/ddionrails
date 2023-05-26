@@ -1,5 +1,9 @@
 
 
+/**
+ * Set up observer to switch language content
+ * @param {HTMLElement} component
+ */
 async function setLanguageObserver(component) {
   const languageObserver = new MutationObserver((mutations) => {
     mutations.forEach((record) => {
@@ -22,4 +26,27 @@ async function setLanguageObserver(component) {
   });
 }
 
-export {setLanguageObserver};
+/**
+ * Return label or fallback according to langauge
+ * @param {object} item
+ * @param {str} language
+ * @return {str}
+ */
+function getLabelWithFallback(item, language) {
+  let label = item.label;
+  if (item.label_de != "") {
+    if (language == "de" || label =="") {
+      label = item.label_de;
+    }
+  }
+  if (label == "") {
+    if (language == "de") {
+      label = "Nicht angegeben";
+    } else {
+      label = "Not defined";
+    }
+  }
+  return label;
+}
+
+export {getLabelWithFallback, setLanguageObserver};
