@@ -81,7 +81,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header d-flex bg-light">
-                    <h4 class="modal-title">Add to basket</h4>
+                    <h4 class="modal-title" data-en="Add to basket" data-de="Zum Warenkorb hinzufügen"></h4>
                     <button type="button" class="close float-right" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -93,8 +93,18 @@
                     <div class="alert alert-danger hidden" role="alert" id="basket_error">
                         <strong>An error occured. </strong>Please try again later.
                     </div>
-                    <p>Do you really want to add <span id="number-of-variables"></span> element(s) to your basket?</p>
-                    <p>Select a basket:</p>
+                    <p>
+                        <span data-en="Do you really want to add" data-de="Wollen Sie"></span>
+                        <span id="number-of-variables"></span>
+                        <span
+                            data-en="variable(s) to your basket?"
+                            data-de="Variablen zu Ihrem Warenkorb hinzufügen?">
+                        </span>
+                    </p>
+                    <p
+                        data-en="Select a basket:"
+                        data-de="Wählen Sie einen Warenkorb aus:">
+                    </p>
                     <div id="basket_list"></div>
                 </div>
             </div>

@@ -33,6 +33,34 @@ const basketApiUrl = new URL("api/baskets/", window.location.origin);
 const variablesApiUrl = new URL("api/variables/", window.location.origin);
 const questionsApiUrl = new URL("api/questions/", window.location.origin);
 
+const labels = {
+  "AddToBasket": {"en": "Add to basket", "de": "Zum Warenkorb hinzufügen"},
+  "PleaseLogin": {
+    "en": "Please log in to use this function.",
+    "de": "Bitte melden Sie sich an um diese Funktion zu nutzen.",
+  },
+  "CreateBasket": {
+    "en": "Create a basket for this study",
+    "de": "Warenkorb für diese Studie erstellen",
+  },
+  "ShowRelatedVariables": {
+    "en": "Show all related variables",
+    "de": "Verwandte Variablen anzeigen",
+  },
+  "ShowRelatedQuestions": {
+    "en": "Show all related questions",
+    "de": "Verwandte Fragen anzeigen",
+  },
+  "AddAllRelatedToBasket": {
+    "en": "Add all related variables to one of your baskets",
+    "de": "Alle verwandten Variablen zum Warenkorb hinzufügen",
+  },
+  "CopyUrl": {
+    "en": "Copy URL",
+    "de": "URL kopieren",
+  },
+};
+
 /**
  * @return {str} language set by user
  */
@@ -323,7 +351,7 @@ function renderBasketButtons(node) {
         if (response["count"] == 0) {
           const createBasketLink = document.createElement("a");
           createBasketLink.href = new URL("/workspace/baskets", window.location.origin);
-          createBasketLink.innerHTML = "Create a basket for this study";
+          createBasketLink.innerHTML = labels["CreateBasket"][languageCode()];
           basketInterfaceModal.querySelectorAll("*").forEach((n) => n.remove());
           basketInterfaceModal.append(createBasketLink);
           return;
@@ -333,14 +361,15 @@ function renderBasketButtons(node) {
         for (const basket of response["results"]) {
           const basketButton = document.createElement("button");
           basketButton.classList.add("btn", "btn-primary");
+          const buttonLabel =`${labels["AddToBasket"][languageCode()]} ${basket.name}`;
           setAttributes(basketButton, {
             "type": "button",
-            "title": `Add to basket ${basket.name}`,
+            "title": buttonLabel,
             "basket-id": basket.id,
             "element-type": categoryType,
             "element-name": categoryName,
           });
-          basketButton.textContent = `Add to basket ${basket.name}`;
+          basketButton.textContent = buttonLabel;
           basketButton.addEventListener("click", function(event) {
             addToBasket(event.target);
           });
@@ -349,7 +378,7 @@ function renderBasketButtons(node) {
       } else if (basketListRequest.status == 403) {
         const loginLink = document.createElement("a");
         loginLink.href = new URL("/workspace/login", window.location.origin);
-        loginLink.innerHTML = "Please log in to use this function.";
+        loginLink.innerHTML = labels["PleaseLogin"][languageCode()];
         document.getElementById("basket_list").append(loginLink);
       }
     }
@@ -440,14 +469,16 @@ function initTree() {
           "type": "button",
           "data-tooltip": "tooltip",
           "data-container": "body",
-          "title": "Show all related variables",
+          "title": labels["ShowRelatedVariables"][languageCode()],
         }
       );
 
       displayButtons[1] = displayButtons[0].cloneNode();
       const basketButton = displayButtons[0].cloneNode();
 
-      displayButtons[1].setAttribute("title", "Show all related questions");
+      displayButtons[1].setAttribute(
+        "title", labels["ShowRelatedQuestions"][languageCode()]
+      );
       displayButtons[0].innerHTML =
         "<span class='fas fa-chart-bar' aria-hidden='true'></span>";
       displayButtons[0].classList.add("variables");
@@ -457,7 +488,7 @@ function initTree() {
 
       setAttributes(basketButton,
         {
-          "title": "Add all related variables to one of your baskets",
+          "title": labels["AddAllRelatedToBasket"][languageCode()],
           "data-toggle": "modal",
           "data-target": "#topic-list-add-to-basket",
         }
@@ -484,7 +515,7 @@ function initTree() {
             "type": "button",
             "data-tooltip": "tooltip",
             "data-container": "body",
-            "title": "Copy URL",
+            "title": labels["CopyUrl"][languageCode()],
           }
         );
         clipboard.innerHTML = "<span class='fas fa-copy' aria-hidden='true'></span>";
