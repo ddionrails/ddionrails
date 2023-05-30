@@ -15,15 +15,15 @@
         {{ item.study.label }}
       </a>
       |
-      <span v-if="$language =='en'">instrument:</span>
-      <span v-if="$language == 'de'">Messwerkzeuge:</span>
+      <span v-if="$language == 'en'">instrument:</span>
+      <span v-if="$language == 'de'">Instrumente:</span>
       <a :href="'/' + item.study.name + '/instruments/' + item.instrument.name">
         <span v-if="$language == 'de'"> {{ item.instrument.label_de }} </span>
         {{ getLabelWithFallback(item.instrument, $language) }}
       </a>
       |
-      <span v-if="$language == 'en'" >period:</span>
-      <span v-if="$language == 'de'" >Zeitraum:</span>
+      <span v-if="$language == 'en'">period:</span>
+      <span v-if="$language == 'de'">Zeitraum:</span>
       {{ getLabelWithFallback(item.period, $language) }}
       |
       <span v-if="$language == 'en'">analysis unit:</span>
