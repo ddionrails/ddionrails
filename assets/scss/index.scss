@@ -277,3 +277,29 @@ div.dataTables_paginate li.last a:after {
 .card-listing > li > span {
   font-weight: bold;
 }
+
+// Tooltips
+
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-container .tooltip-text {
+  visibility: hidden;
+  background-color: white;
+  color: black;
+  border-width: 2px;
+  border-style: solid;
+  text-align: center;
+  border-radius: 6px;
+  margin: 1em 10em 0 0;
+  padding: .5em .5em .5em .5em;
+ 
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+}

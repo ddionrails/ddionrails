@@ -41,16 +41,23 @@
             <div id="relation-tables">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" class="nav-item"
-                        title="Variables with the same concept">
+                    <li role="presentation" class="nav-item">
                         <a href="#related_variables"
                         aria-controls="related_variables"
                             data-toggle="tab"
                             class="nav-link active"
                         >
+                            <span class="tooltip-container">
                             <span
                                 data-en="Related variables"
                                 data-de="Verwandte Variablen"></span>
+                            <span
+                                class=tooltip-text
+                                data-en="Variables with the same concept"
+                                data-de="Variablen mit gleichem Konzept"
+                            ></span>
+                            </span>
+
                             <span class="badge badge-secondary">
                                 {{ variable.get_related_variables | length }}
                             </span>
