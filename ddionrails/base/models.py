@@ -40,12 +40,12 @@ class System(Singleton):
 
     @staticmethod
     def repo_url() -> str:
-        """ Returns the system's repo url from the settings """
+        """Returns the system's repo url from the settings"""
         return settings.SYSTEM_REPO_URL
 
     @classmethod
     def get(cls) -> System:
-        """ Returns a single system instance """
+        """Returns a single system instance"""
         fallback_system: System
         system = System.objects.first()
         fallback_system = System()
@@ -62,4 +62,5 @@ class News(Singleton):
         verbose_name_plural = "news"
 
     date = models.DateTimeField(auto_now=True)
-    content = models.TextField()
+    content = models.TextField(default="")
+    content_de = models.TextField(default="")

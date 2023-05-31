@@ -55,21 +55,28 @@ class HomePageView(TemplateView):
         return context
 
     @cached_property
-    def news(self) -> str:
+    def news(self) -> dict[str, str]:
         """Construct the html for the home news bubble.
 
         The start page displays a badge containing news about the development
         of the system itself and the study data contained in it.
         """
-        news: str = ""
+        news: dict[str, str] = {}
         _news_entry: Optional[News] = News.objects.first()
         if _news_entry is not None:
             news = self._format_news(_news_entry)
         return news
 
     @staticmethod
-    def _format_news(news: News) -> str:
+    def _format_news(news: News) -> dict[str, str]:
+        from babel.dates import format_date
+
         date: datetime = news.date
-        header_text = date.strftime("**Update %B %Y**\n\r")
-        text_body = header_text + news.content
-        return markdown(text_body, extension=["nl2br"])
+        header_date = date.strftime("%B %Y")
+        header_date_de = format_date(date, "MMMM Y", locale="de_DE")
+        text_body = f"**Update {header_date}**\n\r" + news.content
+        text_body_de = f"**Neuerungen {header_date_de}**\n\r" + news.content_de
+        return {
+            "en": markdown(text_body, extension=["nl2br"]),
+            "de": markdown(text_body_de, extension=["nl2br"]),
+        }
