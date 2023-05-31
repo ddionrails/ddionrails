@@ -24,7 +24,7 @@ function switchTableLanguage(
       tableContainer.innerHTML = "";
       tableContainer.appendChild(emptyTableElement.cloneNode(true));
       initSearchEventHandler(apiURL, tableRenderFunction, `#${tableId}`);
-      switchLanguage(document, languageCode());
+      switchLanguage(document.documentElement, languageCode());
     }
   }
 }

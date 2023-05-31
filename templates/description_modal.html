@@ -1,0 +1,32 @@
+<div class="card hidden" id="description-card">
+<div class="card-header">
+	<b data-en="Description" data-de="Beschreibung"></b>
+</div>
+<div class="card-body" id="description-card-content">
+	<span class="lang en hidden">{{ entity.html_description | safe }}</span>
+	<span class="lang de hidden">{{ entity.html_description_de | safe }}</span>
+</div>
+<div class="card-footer text-center" id="description-footer">
+	<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#description-modal">
+	<span
+	data-en="Show full description"
+	data-de="Vollständige Beschreibung anzeigen"></span>
+	</button>
+</div>
+</div>
+
+
+<div class="modal" tabindex="-1" role="dialog" id="description-modal">
+<div class="modal-dialog modal-xl" role="document">
+<div class="modal-content">
+<div class="modal-header">
+	<h5 class="modal-title" data-en="Description" data-de="Beschreibung"></h5>
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	<span aria-hidden="true">&times;</span>
+	</button>
+</div>
+	<div class="modal-body" id="description-modal-content">
+	</div>
+</div>
+</div>
+</div>

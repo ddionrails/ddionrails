@@ -37,7 +37,7 @@ window.addEventListener("load", () => {
   }
   const language = document.getElementById("language-switch");
   switchLanguage(
-    document,
+    document.documentElement,
     language ? language.getAttribute("data-current-language") : "en"
   );
 });
@@ -53,6 +53,6 @@ languageSwitch.addEventListener("click", (button) => {
   }
   _switch.setAttribute("data-current-language", language);
   _switch.innerHTML = language;
-  switchLanguage(document, language);
+  switchLanguage(document.documentElement, language);
   document.cookie = `paneldata_language=${language}; path=/`;
 });
