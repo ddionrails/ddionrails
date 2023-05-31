@@ -62,6 +62,8 @@
 
             {% block study_header %}
             {% endblock study_header %}
+            {% block studynav %}
+            {% endblock studynav %}
             </ul>
             <ul class="navbar-nav container-fluid justify-content-end">
                 {% if user.is_authenticated %}
@@ -121,8 +123,6 @@
 
         </div>
 
-        {% block studynav %}
-        {% endblock studynav %}
     </nav>
 
     <!-- Main Content -->
