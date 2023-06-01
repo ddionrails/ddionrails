@@ -37,7 +37,7 @@
     "github.vscode-pull-request-github",
     "gruntfuggly.todo-tree",
     "alefragnani.bookmarks",
-    "ms-python.vscode-pylance"
-
+    "ms-python.vscode-pylance",
+    "ms-python.isort"
   ]
 }
