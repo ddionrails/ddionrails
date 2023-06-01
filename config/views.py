@@ -5,6 +5,7 @@
 from datetime import datetime
 from typing import Optional
 
+from babel.dates import format_date
 from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic.base import TemplateView
@@ -69,8 +70,6 @@ class HomePageView(TemplateView):
 
     @staticmethod
     def _format_news(news: News) -> dict[str, str]:
-        from babel.dates import format_date
-
         date: datetime = news.date
         header_date = date.strftime("%B %Y")
         header_date_de = format_date(date, "MMMM Y", locale="de_DE")
