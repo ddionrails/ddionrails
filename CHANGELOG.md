@@ -11,6 +11,16 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [7.0.0] - 2023-06-02
+
+### Changed
+
+- several smaller UI elements.
+
+### Fixed
+
+- publication import problems.
+
 ## [6.6.0] - 2022-12-06
 
 ### Added
@@ -898,7 +908,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...develop
+[7.0.0]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...7.0.0
 [6.6.0]: https://github.com/ddionrails/ddionrails/compare/v6.5.2...v6.6.0
 [6.5.2]: https://github.com/ddionrails/ddionrails/compare/v6.5.1...v6.5.2
 [6.5.1]: https://github.com/ddionrails/ddionrails/compare/v6.5.0...v6.5.1
