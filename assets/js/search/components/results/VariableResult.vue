@@ -5,7 +5,7 @@
       <a :href="baseUrl + '/variable/' + item._id">
         [
         <span v-html="item.name"></span>]
-        {{ getLabelWithFallback(item, $language) }}
+        <span v-html="getLabelWithFallback(item, $language)"></span>
       </a>
     </p>
     <p class="card-text">
@@ -22,11 +22,11 @@
       </a>
       | <span v-if="$language == 'en'">period:</span>
       <span v-if="$language == 'de'">Zeitraum:</span>
-      {{ getLabelWithFallback(item.period, $language ) }}
+      {{ getLabelWithFallback(item.period, $language) }}
       |
       <span v-if="$language == 'en'">analysis unit:</span
       ><span v-if="$language == 'de'">Analyseeinheit:</span>
-        {{ getLabelWithFallback(item.analysis_unit, $language) }}
+      {{ getLabelWithFallback(item.analysis_unit, $language) }}
     </p>
   </div>
 </template>
