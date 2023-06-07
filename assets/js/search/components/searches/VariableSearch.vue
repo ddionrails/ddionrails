@@ -13,7 +13,6 @@
           :URLParams="true"
           :showClear="true"
           :fieldWeights="fieldWeights"
-          :searchOperators="true"
           :placeholder="placeholder()"
         />
         <selected-filters />
@@ -23,18 +22,18 @@
         <!-- begin facets -->
         <study-facet
           :react="{
-            and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search']
+            and: ['AnalysisUnit', 'ConceptualDataset', 'Period', 'Search'],
           }"
         />
         <conceptual-dataset-facet
-          :react="{ and: ['AnalysisUnit', 'Period', 'Search', 'Study'] }"
+          :react="{and: ['AnalysisUnit', 'Period', 'Search', 'Study']}"
         />
         <analysis-unit-facet
-          :react="{ and: ['ConceptualDataset', 'Period', 'Search', 'Study'] }"
+          :react="{and: ['ConceptualDataset', 'Period', 'Search', 'Study']}"
         />
         <period-facet
           :react="{
-            and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study']
+            and: ['AnalysisUnit', 'ConceptualDataset', 'Search', 'Study'],
           }"
         />
         <!-- end facets -->
@@ -56,13 +55,13 @@
               'ConceptualDataset',
               'Period',
               'Search',
-              'Study'
-            ]
+              'Study',
+            ],
           }"
           :renderNoResults="noResults()"
           :sortOptions="sortOptions()"
         >
-          <div slot="renderItem" class="card" slot-scope="{ item }">
+          <div slot="renderItem" class="card" slot-scope="{item}">
             <variable-result :item="item" />
           </div>
         </reactive-list>
@@ -84,12 +83,7 @@ export default {
   data() {
     return {
       index: helpers.indexNameSwitch("variables"),
-      dataField: [
-        "name",
-        "label",
-        "label_de",
-        "dataset",
-      ],
+      dataField: ["name", "label", "label_de", "dataset"],
       fieldWeights: [1, 2, 2, 1.5],
       entityPluralNames: {en: "variables", de: "Variablen"},
     };
@@ -109,7 +103,10 @@ export default {
       return helpers.sortOptions(this.$language);
     },
     placeholder() {
-      return helpers.placeholderTemplate(this.$language, this.entityPluralNames );
+      return helpers.placeholderTemplate(
+        this.$language,
+        this.entityPluralNames
+      );
     },
     noResults() {
       return helpers.noResultsTemplate(this.$language, this.entityPluralNames);
