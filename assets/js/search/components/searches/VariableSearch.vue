@@ -6,7 +6,7 @@
         <data-search
           componentId="Search"
           :dataField="dataField"
-          highlightField="label"
+          :highlightField="$language == 'en' ? 'label' : 'label_de'"
           iconPosition="left"
           :autosuggest="true"
           :highlight="true"
