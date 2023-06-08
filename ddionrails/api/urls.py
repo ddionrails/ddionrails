@@ -10,6 +10,7 @@ from ddionrails.api.views.datasets import (
     DatasetViewSet,
     StatisticsMetadataViewSet,
     StatisticViewSet,
+    VariableLabelsViewSet,
     VariableViewSet,
 )
 from ddionrails.api.views.instruments import (
@@ -46,5 +47,6 @@ ROUTER.register(
 ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
+ROUTER.register(r"variable_labels", VariableLabelsViewSet)
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))

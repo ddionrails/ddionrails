@@ -17,6 +17,7 @@ from rest_framework.response import Response
 from ddionrails.api.serializers import (
     DatasetSerializer,
     StatisticsVariableSerializer,
+    VariableLabelsSerializer,
     VariableSerializer,
 )
 from ddionrails.concepts.models import Concept, Topic
@@ -140,6 +141,24 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
             .select_related("dataset", "dataset__study")
             .distinct()
         )
+
+
+class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
+    """List label metadata about all variables."""
+
+    queryset = Variable.objects.none()
+
+    serializer_class = VariableLabelsSerializer
+
+    def get_queryset(self) -> QuerySet[Variable]:
+        study = self.request.query_params.get("study", None)
+        concept = self.request.query_params.get("concept", None)
+
+        query = {"concept__name": concept}
+        if study:
+            query["study__name"] = study
+
+        return Variable.objects.filter(**query)
 
 
 class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors

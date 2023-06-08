@@ -2,6 +2,8 @@
 
 Serializers are used to serialize django ORM objects to standard data formats.
 """
+from typing import Any
+
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from rest_framework import serializers
 
@@ -189,6 +191,32 @@ class InstrumentSerializer(serializers.HyperlinkedModelSerializer):
             "type",
             "mode",
             "attachments",
+        ]
+
+
+class _subsetDict(serializers.DictField):
+    def to_representation(self, value: dict[Any, Any]) -> dict[Any, Any]:
+        value = super().to_representation(value)
+        return {
+            "labels": value["labels"],
+            "labels_de": value["labels_de"],
+            "values": value["values"],
+        }
+
+
+class VariableLabelsSerializer(serializers.ModelSerializer):
+    """Serialize labels of Variables related by concept."""
+
+    variable = serializers.CharField(source="name")
+    dataset = serializers.SlugRelatedField(read_only=True, slug_field="name")
+    labels = _subsetDict(source="categories")
+
+    class Meta:
+        model = Variable
+        fields = [
+            "variable",
+            "dataset",
+            "labels",
         ]
 
 
