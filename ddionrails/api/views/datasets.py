@@ -154,6 +154,9 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
         study = self.request.query_params.get("study", None)
         concept = self.request.query_params.get("concept", None)
 
+        if concept is None:
+            raise Http404
+
         query = {"concept__name": concept}
         if study:
             query["study__name"] = study
