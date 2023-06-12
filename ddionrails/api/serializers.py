@@ -198,9 +198,9 @@ class _subsetDict(serializers.DictField):
     def to_representation(self, value: dict[Any, Any]) -> dict[Any, Any]:
         value = super().to_representation(value)
         return {
-            "labels": value["labels"],
-            "labels_de": value["labels_de"],
-            "values": value["values"],
+            "labels": value.get("labels", []),
+            "labels_de": value.get("labels_de", []),
+            "values": value.get("values"),
         }
 
 
