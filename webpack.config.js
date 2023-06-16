@@ -23,6 +23,7 @@ const config = {
     basket_button: "./assets/js/basket_button.ts",
     basket_view_variable_buttons: "./assets/js/basket_view_variable_buttons.ts",
     variable_view_basket_button: "./assets/js/variable_view_basket_button.ts",
+    variable_labels: "./assets/js/variable_labels.ts",
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
