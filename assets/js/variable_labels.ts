@@ -1,5 +1,7 @@
 const VariableName: string = document.getElementById("variable-name").innerHTML;
 
+const labelRegex = /^\[.*?\]\s/;
+
 /**
  *
  */
@@ -35,10 +37,12 @@ type variableType = {
  * @param labels
  * @returns
  */
-function removeCodesFromLabelsSet(labels: Array<string>): Set<string> {
-  const out: Set<string> = new Set();
-  labels.forEach((label) => {
-    out.add(label.replace(/^\[.*?\]\s/, ""));
+export function removeCodesFromLabelsMap(
+  labels: Array<string>
+): Map<string, number> {
+  const out: Map<string, number> = new Map();
+  labels.forEach((label, index) => {
+    out.set(label.replace(labelRegex, ""), index);
   });
   return out;
 }
@@ -48,10 +52,12 @@ function removeCodesFromLabelsSet(labels: Array<string>): Set<string> {
  * @param labels
  * @returns
  */
-function removeCodesFromLabelsArray(labels: Array<string>): Array<string> {
+export function removeCodesFromLabelsArray(
+  labels: Array<string>
+): Array<string> {
   const out: Array<string> = [];
   labels.forEach((label) => {
-    out.push(label.replace(/^\[.*?\]\s/, ""));
+    out.push(label.replace(labelRegex, ""));
   });
   return out;
 }
@@ -67,7 +73,7 @@ function parseVariables(apiResponse: {results: Array<variableType>}) {
   );
   variables.splice(variables.indexOf(mainVariable), 1);
   console.log(variables);
-  const mainLabels = removeCodesFromLabelsSet(mainVariable["labels"]["labels"]);
+  const mainLabels = removeCodesFromLabelsMap(mainVariable["labels"]["labels"]);
   const mainValues = mainVariable["labels"]["values"];
   const table = new Map();
   table.set("labels", mainLabels);
@@ -80,5 +86,3 @@ function parseVariables(apiResponse: {results: Array<variableType>}) {
     });
   });
 }
-
-getLabelData();

@@ -36,8 +36,8 @@ RUN apt-get update \
     && pipenv requirements --dev > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \
-    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs=12.* \
+    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends nodejs=20.* \
     && npm install \
     && npm run build \
     && pip uninstall -y --no-input pipenv \

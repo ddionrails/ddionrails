@@ -33,6 +33,12 @@ repos:
         language: system
         files: '.*\.js$'
         pass_filenames: true
+      - id: jest
+        name: TypeScript unittests
+        entry: jest
+        language: system
+        files: '.*\.ts$'
+        pass_filenames: false
       - id: pylint
         name: lint python code (pylint)
         entry: >-
