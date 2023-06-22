@@ -3,9 +3,10 @@ const VariableName: string = document.getElementById("variable-name").innerHTML;
 const labelRegex = /^\[.*?\]\s/;
 
 /**
- *
+ * 
+ * @returns 
  */
-async function getLabelData() {
+export async function getAPIData() {
   const apiURL = new URL(`${window.location.origin}/api/variable_labels/`);
 
   const concept = document
@@ -19,8 +20,9 @@ async function getLabelData() {
       Accept: "application/json",
     },
   });
-  parseVariables(await response.json());
+  return response.json();
 }
+
 
 type variableType = {
   variable: string;
@@ -85,4 +87,11 @@ function parseVariables(apiResponse: {results: Array<variableType>}) {
       }
     });
   });
+}
+
+/**
+ *
+ */
+async function getLabelData() {
+  parseVariables(await getAPIData());
 }

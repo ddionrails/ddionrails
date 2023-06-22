@@ -144,3 +144,5 @@ webpack-stats.json
 # Docker Setup
 **/docker-compose.override.[yY][mM][lL]
 **/docker-compose.override.[yY][aA][mM][lL]
+
+coverage
