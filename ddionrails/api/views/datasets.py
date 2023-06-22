@@ -161,7 +161,7 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
         if study:
             query["study__name"] = study
 
-        return Variable.objects.filter(**query)
+        return Variable.objects.filter(**query).select_related("period")
 
 
 class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors

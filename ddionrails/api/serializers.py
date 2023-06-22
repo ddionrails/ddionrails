@@ -210,14 +210,11 @@ class VariableLabelsSerializer(serializers.ModelSerializer):
     variable = serializers.CharField(source="name")
     dataset = serializers.SlugRelatedField(read_only=True, slug_field="name")
     labels = _subsetDict(source="categories")
+    period = serializers.SlugRelatedField(read_only=True, slug_field="name")
 
     class Meta:
         model = Variable
-        fields = [
-            "variable",
-            "dataset",
-            "labels",
-        ]
+        fields = ["variable", "dataset", "period", "labels"]
 
 
 class VariableSerializer(serializers.HyperlinkedModelSerializer):
