@@ -23,16 +23,18 @@ export async function getAPIData() {
   return response.json();
 }
 
+type labelsContainer = {
+  labels: Array<string>;
+  labels_de: Array<string>;
+  values: Array<number>;
+};
+
 
 type variableType = {
   variable: string;
   dataset: string;
   period: string;
-  labels: {
-    labels: Array<string>;
-    labels_de: Array<string>;
-    values: Array<number>;
-  };
+  labels: labelsContainer
 };
 
 /**
@@ -41,13 +43,18 @@ type variableType = {
  * @returns
  */
 export function removeCodesFromLabelsMap(
-  labels: Array<string>
-): Map<string, number> {
+  labels: labelsContainer
+): {"labels": Map<string, number>, "labelsDE": Map<string, number>} {
   const out: Map<string, number> = new Map();
-  labels.forEach((label, index) => {
+  const outDE: Map<string, number> = new Map();
+  labels["labels"].forEach((label, index) => {
+    if (labels["values"][Number(index)] < 0) {
+      return;
+    }
     out.set(label.replace(labelRegex, ""), index);
+    outDE.set(labels["labels_de"][Number(index)].replace(labelRegex, ""), index);
   });
-  return out;
+  return {"labels": out, "labelsDE": outDE};
 }
 
 /**
@@ -56,13 +63,18 @@ export function removeCodesFromLabelsMap(
  * @returns
  */
 export function removeCodesFromLabelsArray(
-  labels: Array<string>
-): Array<string> {
+  labels: labelsContainer
+): {"labels": Array<string>, "labelsDE": Array<string>} {
   const out: Array<string> = [];
-  labels.forEach((label) => {
+  const outDE: Array<string> = [];
+  labels["labels"].forEach((label, index) => {
+    if (labels["values"][Number(index)] < 0) {
+      return;
+    }
     out.push(label.replace(labelRegex, ""));
+    outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
   });
-  return out;
+  return {"labels": out, "labelsDE": outDE};
 }
 
 /**
@@ -79,20 +91,35 @@ export function parseVariables(apiResponse: {results: Array<variableType>}) {
 
   variables.splice(variables.indexOf(mainVariable), 1);
 
-  const mainLabels = removeCodesFromLabelsMap(mainVariable["labels"]["labels"]);
+  const mainLabels = removeCodesFromLabelsMap(mainVariable["labels"]);
   const mainValues = mainVariable["labels"]["values"];
   const table = new Map();
   table.set("labels", mainLabels);
   table.set(mainVariable["variable"], mainValues);
   variables.forEach((variable) => {
     periods.set(variable["variable"], variable["period"]);
-    const labels = removeCodesFromLabelsArray(variable["labels"]["labels"]);
-    labels.forEach((label, index) => {
-      if (mainLabels.has(label)) {
+    const labels = removeCodesFromLabelsArray(
+      variable["labels"]
+    );
+    labels["labels"].forEach((label, index) => {
+      if (mainLabels["labels"].has(label)) {
+      } else {
+        mainLabels["labels"].set(label, mainLabels["labels"].size - 1);
+        mainLabels["labelsDE"].set(
+          labels["labelsDE"][Number(index)], mainLabels["labelsDE"].size - 1
+        );
       }
     });
   });
-  return {periods};
+  return {
+    "labels": new Map(
+      [
+        ["labels", Array.from(mainLabels["labels"].keys())],
+        ["labels_de", Array.from(mainLabels["labelsDE"].keys())],
+      ]
+    ),
+    periods,
+  };
 }
 
 /**
