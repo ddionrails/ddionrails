@@ -1,6 +1,7 @@
 import {NONE} from "../../../docker/transfer.server/renv/library/R-4.1/x86_64-pc-linux-gnu/DT/htmlwidgets/lib/datatables-extensions/Buttons/js/pdfmake";
 import {
   getAPIData,
+  parseVariables,
   removeCodesFromLabelsArray,
   removeCodesFromLabelsMap,
 } from "../variable_labels";
@@ -32,10 +33,35 @@ describe("Test API call", () => {
   });
 });
 
+const expectedVariables = new Map([
+  ["third_variable_name", [NONE, NONE, NONE, NONE, NONE, NONE]],
+  ["other_variable_name", [1, 2, 3, NONE, 5, NONE]],
+  ["variable_name", [1, 2, 3, 4, 5, 6, NONE]],
+]
+)
 
-const expectedParsedOutput = [
-  ["one", "two", "three", "four", "five", "six", "for"],
-  [NONE, NONE, NONE, NONE, NONE, NONE],
-  [1, 2, 3, NONE, 5, NONE],
-  [1, 2, 3, 4, 5, 6, NONE],
-];
+const expectedPeriods = new Map([
+  ["third_variable_name", "1990"],
+  ["other_variable_name", "1992"],
+  ["variable_name", "1993"],
+]
+);
+
+const expectedParsedLabels = new Map([
+  ["labels", ["one", "two", "three", "four", "five", "six", "for"]],
+  ["labels_de", ["eins", "zwei", "drei", "vier", "fünf", "sechs", "vair"]],
+]);
+
+const expectedParsedOutput = {
+  "variables": expectedVariables,
+  "labels": expectedParsedLabels,
+  "periods": expectedPeriods,
+};
+
+describe("Test Parsing of API call content", () => {
+  test("Test period output", async () => {
+    expect(parseVariables(apiResponse)["periods"]).toEqual(expectedPeriods);
+  });
+});
+
+

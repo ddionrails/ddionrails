@@ -5,7 +5,7 @@
 	"results": [
 		{
 			"variable": "other_variable_name",
-			"dataset": "some_other_dataset",
+			"dataset": "other_dataset_name",
 			"period": "1992",
 			"labels": {
 				"labels": [
@@ -54,7 +54,7 @@
 		},
 		{
 			"variable": "variable_name",
-			"dataset": "some_dataset",
+			"dataset": "dataset_name",
 			"period": "1993",
 			"labels": {
 				"labels": [
@@ -105,8 +105,8 @@
 			}
 		},
 		{
-			"variable": "ip95c",
-			"dataset": "some_third_dataset",
+			"variable": "third_variable_name",
+			"dataset": "third_dataset_name",
 			"period": "1990",
 			"labels": {
 				"labels": [],

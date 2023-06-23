@@ -27,6 +27,7 @@ export async function getAPIData() {
 type variableType = {
   variable: string;
   dataset: string;
+  period: string;
   labels: {
     labels: Array<string>;
     labels_de: Array<string>;
@@ -68,25 +69,30 @@ export function removeCodesFromLabelsArray(
  *
  * @param variables
  */
-function parseVariables(apiResponse: {results: Array<variableType>}) {
+export function parseVariables(apiResponse: {results: Array<variableType>}) {
+  const periods = new Map();
   const variables: Array<variableType> = apiResponse["results"];
   const mainVariable = variables.find(
     (variable) => variable["variable"] == VariableName
   );
+  periods.set(mainVariable["variable"], mainVariable["period"]);
+
   variables.splice(variables.indexOf(mainVariable), 1);
-  console.log(variables);
+
   const mainLabels = removeCodesFromLabelsMap(mainVariable["labels"]["labels"]);
   const mainValues = mainVariable["labels"]["values"];
   const table = new Map();
   table.set("labels", mainLabels);
   table.set(mainVariable["variable"], mainValues);
   variables.forEach((variable) => {
+    periods.set(variable["variable"], variable["period"]);
     const labels = removeCodesFromLabelsArray(variable["labels"]["labels"]);
     labels.forEach((label, index) => {
       if (mainLabels.has(label)) {
       }
     });
   });
+  return {periods};
 }
 
 /**
