@@ -40,6 +40,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends nodejs=20.* \
     && npm install \
     && npm run build \
+    && npm install -g jest ts-node \
     && pip uninstall -y --no-input pipenv \
     && rm -rf ./node_modules/ \
     && rm -rf /var/lib/apt/lists/* 
