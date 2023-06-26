@@ -3,8 +3,8 @@ const VariableName: string = document.getElementById("variable-name").innerHTML;
 const labelRegex = /^\[.*?\]\s/;
 
 /**
- * 
- * @returns 
+ *
+ * @returns
  */
 export async function getAPIData() {
   const apiURL = new URL(`${window.location.origin}/api/variable_labels/`);
@@ -29,12 +29,11 @@ type labelsContainer = {
   values: Array<number>;
 };
 
-
 type variableType = {
   variable: string;
   dataset: string;
   period: string;
-  labels: labelsContainer
+  labels: labelsContainer;
 };
 
 /**
@@ -42,9 +41,10 @@ type variableType = {
  * @param labels
  * @returns
  */
-export function removeCodesFromLabelsMap(
-  labels: labelsContainer
-): {"labels": Map<string, number>, "labelsDE": Map<string, number>} {
+export function removeCodesFromLabelsMap(labels: labelsContainer): {
+  labels: Map<string, number>;
+  labelsDE: Map<string, number>;
+} {
   const out: Map<string, number> = new Map();
   const outDE: Map<string, number> = new Map();
   labels["labels"].forEach((label, index) => {
@@ -52,9 +52,12 @@ export function removeCodesFromLabelsMap(
       return;
     }
     out.set(label.replace(labelRegex, ""), index);
-    outDE.set(labels["labels_de"][Number(index)].replace(labelRegex, ""), index);
+    outDE.set(
+      labels["labels_de"][Number(index)].replace(labelRegex, ""),
+      index
+    );
   });
-  return {"labels": out, "labelsDE": outDE};
+  return {labels: out, labelsDE: outDE};
 }
 
 /**
@@ -62,9 +65,10 @@ export function removeCodesFromLabelsMap(
  * @param labels
  * @returns
  */
-export function removeCodesFromLabelsArray(
-  labels: labelsContainer
-): {"labels": Array<string>, "labelsDE": Array<string>} {
+export function removeCodesFromLabelsArray(labels: labelsContainer): {
+  labels: Array<string>;
+  labelsDE: Array<string>;
+} {
   const out: Array<string> = [];
   const outDE: Array<string> = [];
   labels["labels"].forEach((label, index) => {
@@ -74,7 +78,7 @@ export function removeCodesFromLabelsArray(
     out.push(label.replace(labelRegex, ""));
     outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
   });
-  return {"labels": out, "labelsDE": outDE};
+  return {labels: out, labelsDE: outDE};
 }
 
 /**
@@ -98,26 +102,23 @@ export function parseVariables(apiResponse: {results: Array<variableType>}) {
   table.set(mainVariable["variable"], mainValues);
   variables.forEach((variable) => {
     periods.set(variable["variable"], variable["period"]);
-    const labels = removeCodesFromLabelsArray(
-      variable["labels"]
-    );
+    const labels = removeCodesFromLabelsArray(variable["labels"]);
     labels["labels"].forEach((label, index) => {
       if (mainLabels["labels"].has(label)) {
       } else {
         mainLabels["labels"].set(label, mainLabels["labels"].size - 1);
         mainLabels["labelsDE"].set(
-          labels["labelsDE"][Number(index)], mainLabels["labelsDE"].size - 1
+          labels["labelsDE"][Number(index)],
+          mainLabels["labelsDE"].size - 1
         );
       }
     });
   });
   return {
-    "labels": new Map(
-      [
-        ["labels", Array.from(mainLabels["labels"].keys())],
-        ["labels_de", Array.from(mainLabels["labelsDE"].keys())],
-      ]
-    ),
+    labels: new Map([
+      ["labels", Array.from(mainLabels["labels"].keys())],
+      ["labels_de", Array.from(mainLabels["labelsDE"].keys())],
+    ]),
     periods,
   };
 }
