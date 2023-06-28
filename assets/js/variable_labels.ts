@@ -1,14 +1,43 @@
-import {filter} from "vue/types/umd";
-
 const VariableName: string = document.getElementById("variable-name").innerHTML;
 
 const labelRegex = /^\[.*?\]\s/;
 
+type labelsContainerType = {
+  labels: Array<string>;
+  labels_de: Array<string>;
+  values: Array<number>;
+};
+
+type variableType = {
+  variable: string;
+  dataset: string;
+  period: string;
+  labels: labelsContainerType;
+};
+
+type APIResponse = {results: Array<variableType>}
+
+type labelsMappingType = {
+  labels: Map<string, number>;
+  labelsDE: Map<string, number>;
+}
+
+type labelsArrayType = {
+  labels: Array<string>;
+  labelsDE: Array<string>;
+}
+
+type parsedVariables = {
+  labels: Map<string, Array<string>>,
+  periods: Map<string, string>,
+  values: Map<string, Array<number>>
+}
+
 /**
- *
- * @returns
+ * Request variable label data from API
+ * @return {Promise<APIResponse>}
  */
-export async function getAPIData() {
+export async function getAPIData(): Promise<APIResponse> {
   const apiURL = new URL(`${window.location.origin}/api/variable_labels/`);
 
   const concept = document
@@ -25,30 +54,13 @@ export async function getAPIData() {
   return response.json();
 }
 
-type labelsContainer = {
-  labels: Array<string>;
-  labels_de: Array<string>;
-  values: Array<number>;
-};
-
-type variableType = {
-  variable: string;
-  dataset: string;
-  period: string;
-  labels: labelsContainer;
-};
-
-type labelContainerType = {
-  labels: Map<string, number>;
-  labelsDE: Map<string, number>;
-}
 
 /**
- *
- * @param labels
- * @returns
+ * Remove label codes in [] from labels and store in Map with index as value.
+ * @param {labelsContainerType} labels
+ * @return {labelsMappingType}
  */
-export function removeCodesFromLabelsMap(labels: labelsContainer): labelContainerType {
+export function removeCodesFromLabelsMap(labels: labelsContainerType): labelsMappingType {
   const out: Map<string, number> = new Map();
   const outDE: Map<string, number> = new Map();
   let indexWithoutMissings = 0;
@@ -64,33 +76,31 @@ export function removeCodesFromLabelsMap(labels: labelsContainer): labelContaine
 }
 
 /**
- *
- * @param labels
- * @returns
+ * Remove label codes in [] from labels and store in Array.
+ * @param {labelsMappingType} labels
+ * @return {labelsArrayType}
  */
-export function removeCodesFromLabelsArray(labels: labelsContainer): {
-  labels: Array<string>;
-  labelsDE: Array<string>;
-} {
+export function removeCodesFromLabelsArray(labels: labelsContainerType):
+  labelsArrayType {
   const out: Array<string> = [];
   const outDE: Array<string> = [];
   labels["labels"].forEach((label, index) => {
     out.push(label.replace(labelRegex, ""));
     outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
   });
-  return {labels: out, labelsDE: outDE};
+  return {"labels": out, "labelsDE": outDE};
 }
 
 /**
- * 
- * @param label 
- * @param index 
- * @param labelContainer 
+ * Add new labels to labelContainer in place
+ * @param {string} label
+ * @param {string} labelDE
+ * @param {labelsMappingType} labelContainer
  */
 function addNewLabel(
   label: string,
   labelDE: string,
-  labelContainer: labelContainerType) {
+  labelContainer: labelsMappingType) {
   if (labelContainer["labels"].has(label)) {
   } else {
     labelContainer["labels"].set(label, labelContainer["labels"].size);
@@ -99,15 +109,16 @@ function addNewLabel(
       labelContainer["labelsDE"].size
     );
   }
-
 }
 
 /**
- * 
- * @param variables 
- * @param labelMapping 
+ * Fills array of values according to all possible labels
+ * @param {Array<variableType>} variables
+ * @param {labelsMappingType} labelMapping
+ * @return {Map<string, Array<number>>} a
  */
-function fillValues(variables: Array<variableType>, labelMapping: labelContainerType) {
+function fillValues(variables: Array<variableType>, labelMapping: labelsMappingType):
+  Map<string, Array<number>> {
   const variableValues: Map<string, Array<number>> = new Map();
   const labelCount = labelMapping.labels.size;
   variables.forEach((variable) => {
@@ -125,8 +136,9 @@ function fillValues(variables: Array<variableType>, labelMapping: labelContainer
 
 
 /**
- * 
- * @param variables 
+ * Remove all labels and values from variables where values are 0 or less.
+ * @param {Array<variableType>} variables
+ * @return {Array<variableType>}
  */
 function removeMissings(variables: Array<variableType>) {
   variables.forEach((variable) => {
@@ -139,15 +151,17 @@ function removeMissings(variables: Array<variableType>) {
         variable.labels.values.splice(reversePosition, 1);
       }
     });
-  })
-  return variables
+  });
+  return variables;
 }
 
 /**
- *
- * @param variables
+ * Parse information from API response to display in table.
+ * @param {APIResponse} apiResponse
+ * @return {parsedVariables}
  */
-export function parseVariables(apiResponse: {results: Array<variableType>}) {
+export function parseVariables(apiResponse: APIResponse):
+  parsedVariables {
   const periods = new Map();
   const variables: Array<variableType> = removeMissings(apiResponse["results"]);
 
