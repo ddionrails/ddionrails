@@ -43,8 +43,8 @@ describe("Test API call", () => {
 });
 
 const expectedVariables = new Map([
-  ["third_variable_name", [null, null, null, null, null, null]],
-  ["other_variable_name", [1, 2, 3, null, 5, null]],
+  ["third_variable_name", [null, null, null, null, null, null, null]],
+  ["other_variable_name", [1, 2, 3, null, 5, null, 4]],
   ["variable_name", [1, 2, 3, 4, 5, 6, null]],
 ]);
 
@@ -72,5 +72,8 @@ describe("Test Parsing of API call content", () => {
   });
   test("Test labels output", async () => {
     expect(result["labels"]).toEqual(expectedParsedLabels);
+  });
+  test("Test values output", async () => {
+    expect(result["values"]).toEqual(expectedVariables);
   });
 });
