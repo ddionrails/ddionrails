@@ -196,10 +196,3 @@ export function parseVariables(apiResponse: APIResponse):
     values,
   };
 }
-
-/**
- *
- */
-async function getLabelData() {
-  parseVariables(await getAPIData());
-}
