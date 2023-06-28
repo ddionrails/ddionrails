@@ -53,9 +53,6 @@ export function removeCodesFromLabelsMap(labels: labelsContainer): labelContaine
   const outDE: Map<string, number> = new Map();
   let indexWithoutMissings = 0;
   labels["labels"].forEach((label, index) => {
-    if (label.match(/\[-\d+\]/)) {
-      return;
-    }
     out.set(label.replace(labelRegex, ""), indexWithoutMissings);
     outDE.set(
       labels["labels_de"][Number(index)].replace(labelRegex, ""),
@@ -78,9 +75,6 @@ export function removeCodesFromLabelsArray(labels: labelsContainer): {
   const out: Array<string> = [];
   const outDE: Array<string> = [];
   labels["labels"].forEach((label, index) => {
-    if (label.match(/\[-\d+\]/)) {
-      return;
-    }
     out.push(label.replace(labelRegex, ""));
     outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
   });
@@ -129,8 +123,24 @@ function fillValues(variables: Array<variableType>, labelMapping: labelContainer
   return variableValues;
 }
 
-function removeMissings(value: number) {
-  return Number(value) >= 0;
+
+/**
+ * 
+ * @param variables 
+ */
+function removeMissings(variables: Array<variableType>) {
+  variables.forEach((variable) => {
+    const labelsCopy = variable.labels.values.slice()
+    labelsCopy.reverse().forEach((element, index) => {
+      if (element <= 0) {
+        const reversePosition = labelsCopy.length - index - 1;
+        variable.labels.labels.splice(reversePosition, 1);
+        variable.labels.labels_de.splice(reversePosition, 1);
+        variable.labels.values.splice(reversePosition, 1);
+      }
+    });
+  })
+  return variables
 }
 
 /**
@@ -139,7 +149,9 @@ function removeMissings(value: number) {
  */
 export function parseVariables(apiResponse: {results: Array<variableType>}) {
   const periods = new Map();
-  const variables: Array<variableType> = apiResponse["results"];
+  const variables: Array<variableType> = removeMissings(apiResponse["results"]);
+
+
   const mainVariable = variables.find(
     (variable) => variable["variable"] == VariableName
   );
@@ -150,11 +162,7 @@ export function parseVariables(apiResponse: {results: Array<variableType>}) {
   const mainLabels = removeCodesFromLabelsMap(mainVariable["labels"]);
   mainVariable.labels.labels = Array.from(mainLabels.labels.keys());
   mainVariable.labels.labels_de = Array.from(mainLabels.labelsDE.keys());
-  mainVariable["labels"]["values"] = mainVariable["labels"]["values"].filter(
-    removeMissings
-  );
   variables.forEach((variable) => {
-    variable.labels.values = variable.labels.values.filter(removeMissings);
     periods.set(variable["variable"], variable["period"]);
     const labels = removeCodesFromLabelsArray(variable["labels"]);
     variable.labels.labels = labels.labels;
