@@ -7,7 +7,10 @@ document.body.innerHTML =
   "<a href='/concept/concept-id'>" +
   "Concept Label</a>" +
   "<a id='variable-name' href=''>variable_name</a>" +
-  "</p></html>";
+  "</p>" +
+  "<div id='table-container' data-type='label-table'>" +
+  "</div>" +
+  "</html>";
 
 global.window.location = {
   ancestorOrigins: null,

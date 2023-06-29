@@ -1,3 +1,12 @@
+import "datatables.net-bs4";
+import "datatables.net-buttons-bs4";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import "datatables.net-responsive-bs4";
+import * as $ from "jquery";
+import {switchTableLanguage, getTable} from "./tables/table_language_management";
+import {languageCode, languageConfig} from "./language_management";
+
+
 const VariableName: string = document.getElementById("variable-name").innerHTML;
 
 const labelRegex = /^\[.*?\]\s/;
@@ -30,7 +39,7 @@ type labelsArrayType = {
 type parsedVariables = {
   labels: Map<string, Array<string>>,
   periods: Map<string, string>,
-  values: Map<string, Array<number>>
+  values: Array<Map<string, string>>
 }
 
 /**
@@ -134,6 +143,44 @@ function fillValues(variables: Array<variableType>, labelMapping: labelsMappingT
   return variableValues;
 }
 
+/**
+ * Fills array of values according to all possible labels
+ * @param {Array<variableType>} variables
+ * @param {labelsMappingType} labelMapping
+ * @return {Map<string, Array<number>>} a
+ */
+function fillRows(variables: Array<variableType>, labelMapping: labelsMappingType):
+  Array<Map<string, string>> {
+  const labels = labelMapping.labels.keys();
+  const labelsDE = labelMapping.labelsDE.keys();
+  const rows: Array<Map<string, string>> = [];
+
+  let labelIteration = labels.next();
+  let labelDEIteration = labelsDE.next();
+  let done = labelIteration.done;
+  while (!done) {
+    const label = labelIteration.value;
+    const labelDE = labelDEIteration.value;
+
+    variables.forEach((variable) => {
+      const row = new Map();
+      row.set("label", label);
+      row.set("label_de", labelDE);
+      if (variable.labels.labels.includes(label)) {
+        row.set(variable.variable, labelMapping.labels.get(label));
+      } else {
+        row.set(variable.variable, null);
+      }
+      rows.push(row);
+    });
+    labelIteration = labels.next();
+    labelDEIteration = labelsDE.next();
+    done = labelIteration.done;
+  }
+  return rows;
+}
+
+
 
 /**
  * Remove all labels and values from variables where values are 0 or less.
@@ -186,7 +233,7 @@ export function parseVariables(apiResponse: APIResponse):
     });
   });
   variables.push(mainVariable);
-  const values = fillValues(variables, mainLabels);
+  const values = fillRows(variables, mainLabels);
   return {
     labels: new Map([
       ["labels", Array.from(mainLabels["labels"].keys())],
@@ -196,3 +243,16 @@ export function parseVariables(apiResponse: APIResponse):
     values,
   };
 }
+
+/**
+ * 
+ * @param variableColumns 
+ */
+export function constructBarebonesTable(variableColumns: Array<string>): HTMLTableElement {
+  const table = document.createElement("table");
+
+  return table;
+}
+
+
+
