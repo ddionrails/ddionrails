@@ -136,11 +136,9 @@ function fillRows(
     row.set("label", label);
     row.set("label_de", labelDE);
     variables.forEach((variable) => {
-      if (variable.labels.labels.includes(label)) {
-        row.set(
-          variable.variable,
-          variable.labels.values[labelMapping.labels.get(label)]
-        );
+      const labelIndex: number = variable.labels.labels.indexOf(label);
+      if (labelIndex >= 0) {
+        row.set(variable.variable, variable.labels.values[Number(labelIndex)]);
       } else {
         row.set(variable.variable, null);
       }
