@@ -1,12 +1,3 @@
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
-import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
-import * as $ from "jquery";
-import {switchTableLanguage, getTable} from "./tables/table_language_management";
-import {languageCode, languageConfig} from "./language_management";
-
-
 const VariableName: string = document.getElementById("variable-name").innerHTML;
 
 const labelRegex = /^\[.*?\]\s/;
@@ -24,23 +15,23 @@ type variableType = {
   labels: labelsContainerType;
 };
 
-type APIResponse = {results: Array<variableType>}
+type APIResponse = {results: Array<variableType>};
 
 type labelsMappingType = {
   labels: Map<string, number>;
   labelsDE: Map<string, number>;
-}
+};
 
 type labelsArrayType = {
   labels: Array<string>;
   labelsDE: Array<string>;
-}
+};
 
 type parsedVariables = {
-  labels: Map<string, Array<string>>,
-  periods: Map<string, string>,
-  values: Array<Map<string, string>>
-}
+  labels: Map<string, Array<string>>;
+  periods: Map<string, string>;
+  values: Array<Map<string, string>>;
+};
 
 /**
  * Request variable label data from API
@@ -63,13 +54,14 @@ export async function getAPIData(): Promise<APIResponse> {
   return response.json();
 }
 
-
 /**
  * Remove label codes in [] from labels and store in Map with index as value.
  * @param {labelsContainerType} labels
  * @return {labelsMappingType}
  */
-export function removeCodesFromLabelsMap(labels: labelsContainerType): labelsMappingType {
+export function removeCodesFromLabelsMap(
+  labels: labelsContainerType
+): labelsMappingType {
   const out: Map<string, number> = new Map();
   const outDE: Map<string, number> = new Map();
   let indexWithoutMissings = 0;
@@ -89,15 +81,16 @@ export function removeCodesFromLabelsMap(labels: labelsContainerType): labelsMap
  * @param {labelsMappingType} labels
  * @return {labelsArrayType}
  */
-export function removeCodesFromLabelsArray(labels: labelsContainerType):
-  labelsArrayType {
+export function removeCodesFromLabelsArray(
+  labels: labelsContainerType
+): labelsArrayType {
   const out: Array<string> = [];
   const outDE: Array<string> = [];
   labels["labels"].forEach((label, index) => {
     out.push(label.replace(labelRegex, ""));
     outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
   });
-  return {"labels": out, "labelsDE": outDE};
+  return {labels: out, labelsDE: outDE};
 }
 
 /**
@@ -109,14 +102,12 @@ export function removeCodesFromLabelsArray(labels: labelsContainerType):
 function addNewLabel(
   label: string,
   labelDE: string,
-  labelContainer: labelsMappingType) {
+  labelContainer: labelsMappingType
+) {
   if (labelContainer["labels"].has(label)) {
   } else {
     labelContainer["labels"].set(label, labelContainer["labels"].size);
-    labelContainer["labelsDE"].set(
-      labelDE,
-      labelContainer["labelsDE"].size
-    );
+    labelContainer["labelsDE"].set(labelDE, labelContainer["labelsDE"].size);
   }
 }
 
@@ -126,31 +117,10 @@ function addNewLabel(
  * @param {labelsMappingType} labelMapping
  * @return {Map<string, Array<number>>} a
  */
-function fillValues(variables: Array<variableType>, labelMapping: labelsMappingType):
-  Map<string, Array<number>> {
-  const variableValues: Map<string, Array<number>> = new Map();
-  const labelCount = labelMapping.labels.size;
-  variables.forEach((variable) => {
-    const values = Array(labelCount).fill(null);
-    variable.labels.labels.forEach((label, index) => {
-      if (labelMapping.labels.has(label)) {
-        const labelPosition: number = labelMapping.labels.get(label);
-        values[Number(labelPosition)] = variable.labels.values[Number(index)];
-      };
-    });
-    variableValues.set(variable.variable, values);
-  });
-  return variableValues;
-}
-
-/**
- * Fills array of values according to all possible labels
- * @param {Array<variableType>} variables
- * @param {labelsMappingType} labelMapping
- * @return {Map<string, Array<number>>} a
- */
-function fillRows(variables: Array<variableType>, labelMapping: labelsMappingType):
-  Array<Map<string, string>> {
+function fillRows(
+  variables: Array<variableType>,
+  labelMapping: labelsMappingType
+): Array<Map<string, string>> {
   const labels = labelMapping.labels.keys();
   const labelsDE = labelMapping.labelsDE.keys();
   const rows: Array<Map<string, string>> = [];
@@ -162,25 +132,26 @@ function fillRows(variables: Array<variableType>, labelMapping: labelsMappingTyp
     const label = labelIteration.value;
     const labelDE = labelDEIteration.value;
 
+    const row = new Map();
+    row.set("label", label);
+    row.set("label_de", labelDE);
     variables.forEach((variable) => {
-      const row = new Map();
-      row.set("label", label);
-      row.set("label_de", labelDE);
       if (variable.labels.labels.includes(label)) {
-        row.set(variable.variable, labelMapping.labels.get(label));
+        row.set(
+          variable.variable,
+          variable.labels.values[labelMapping.labels.get(label)]
+        );
       } else {
         row.set(variable.variable, null);
       }
-      rows.push(row);
     });
+    rows.push(row);
     labelIteration = labels.next();
     labelDEIteration = labelsDE.next();
     done = labelIteration.done;
   }
   return rows;
 }
-
-
 
 /**
  * Remove all labels and values from variables where values are 0 or less.
@@ -189,7 +160,7 @@ function fillRows(variables: Array<variableType>, labelMapping: labelsMappingTyp
  */
 function removeMissings(variables: Array<variableType>) {
   variables.forEach((variable) => {
-    const labelsCopy = variable.labels.values.slice()
+    const labelsCopy = variable.labels.values.slice();
     labelsCopy.reverse().forEach((element, index) => {
       if (element <= 0) {
         const reversePosition = labelsCopy.length - index - 1;
@@ -207,11 +178,9 @@ function removeMissings(variables: Array<variableType>) {
  * @param {APIResponse} apiResponse
  * @return {parsedVariables}
  */
-export function parseVariables(apiResponse: APIResponse):
-  parsedVariables {
+export function parseVariables(apiResponse: APIResponse): parsedVariables {
   const periods = new Map();
   const variables: Array<variableType> = removeMissings(apiResponse["results"]);
-
 
   const mainVariable = variables.find(
     (variable) => variable["variable"] == VariableName
@@ -239,20 +208,9 @@ export function parseVariables(apiResponse: APIResponse):
       ["labels", Array.from(mainLabels["labels"].keys())],
       ["labels_de", Array.from(mainLabels["labelsDE"].keys())],
     ]),
-    periods,
+    periods: new Map(
+      [...periods.entries()].sort((left, right) => left[1] - right[1])
+    ),
     values,
   };
 }
-
-/**
- * 
- * @param variableColumns 
- */
-export function constructBarebonesTable(variableColumns: Array<string>): HTMLTableElement {
-  const table = document.createElement("table");
-
-  return table;
-}
-
-
-
