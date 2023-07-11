@@ -2,7 +2,7 @@ import {
   getAPIData,
   parseVariables,
   removeCodesFromLabelsArray,
-  removeCodesFromLabelsMap,
+  removeCodesFromLabelsSet,
 } from "../variable_labels";
 const apiResponse = require("./testdata/response.json");
 
@@ -18,14 +18,14 @@ const labelsWithoutMissings = {
 
 describe("Test function to remove codes from labels", () => {
   test("Result should be a Map with former indices as values", () => {
-    const labels = new Map();
-    labels.set("Test", 0);
-    labels.set("Test2", 1);
-    const labelsDE = new Map();
-    labelsDE.set("TestDE", 0);
-    labelsDE.set("TestDE2", 1);
+    const labels = new Set();
+    labels.add("Test");
+    labels.add("Test2");
+    const labelsDE = new Set();
+    labelsDE.add("TestDE");
+    labelsDE.add("TestDE2");
     const expected = {labels, labelsDE};
-    expect(removeCodesFromLabelsMap(labelsWithoutMissings)).toEqual(expected);
+    expect(removeCodesFromLabelsSet(labelsWithoutMissings)).toEqual(expected);
   });
   test("Result should be an Array", () => {
     const expected = {
