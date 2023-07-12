@@ -30,6 +30,7 @@ type labelsArrayType = {
 type parsedVariables = {
   labels: Map<string, Array<string>>;
   periods: Map<string, string>;
+  datasets: Map<string, string>
   values: Array<Map<string, string>>;
 };
 
@@ -157,12 +158,14 @@ function removeMissings(variables: Array<variableType>) {
  */
 export function parseVariables(apiResponse: APIResponse): parsedVariables {
   const periods = new Map();
+  const datasets = new Map();
   const variables: Array<variableType> = removeMissings(apiResponse["results"]);
 
   const mainVariable = variables.find(
     (variable) => variable["variable"] == VariableName
   );
   periods.set(mainVariable["variable"], mainVariable["period"]);
+  datasets.set(mainVariable["variable"], mainVariable["dataset"]);
 
   variables.splice(variables.indexOf(mainVariable), 1);
 
@@ -171,6 +174,7 @@ export function parseVariables(apiResponse: APIResponse): parsedVariables {
   mainVariable.labels.labels_de = Array.from(mainLabels.labelsDE.keys());
   for (const variable of variables) {
     periods.set(variable["variable"], variable["period"]);
+    datasets.set(variable["variable"], variable["dataset"]);
     const labels = removeCodesFromLabelsArray(variable["labels"]);
     variable.labels.labels = labels.labels;
     variable.labels.labels_de = labels.labelsDE;
@@ -189,6 +193,7 @@ export function parseVariables(apiResponse: APIResponse): parsedVariables {
     periods: new Map(
       [...periods.entries()].sort((left, right) => left[1] - right[1])
     ),
+    datasets,
     values,
   };
 }
