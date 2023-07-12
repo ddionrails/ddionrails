@@ -24,7 +24,7 @@ function languageConfig() {
       emptyTable: "Tabelle ist leer",
       search: "Suche:",
       zeroRecords: "Keine Suchergebnisse",
-      info: "Zeige Seite _PAGE_ von _PAGES_",
+      info: "Zeige Einträge _START_ bis _END_ von _TOTAL_",
       infoEmpty: "Keine Einträge vorhanden",
       infoFiltered: "(Auswahl von insgesamt _MAX_ Einträgen)",
       searchPlaceholder: "Alle Spalten durchsuchen",
