@@ -2,7 +2,7 @@ version: "2.4"
 
 services:
   web:
-    image: paneldata/ddionrails:local-dev
+    image: hansendz/ddionrails:local-dev
     build:
       context: ./
       dockerfile: ./docker/ddionrails/dev/dev.Dockerfile
