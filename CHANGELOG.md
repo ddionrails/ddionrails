@@ -11,6 +11,13 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [7.1.0] - 2023-07-19
+
+### Changed
+
+- Switched variable label comparison (label table) from django template generation
+  to a combination of REST-API and Typescript.
+
 ## [7.0.0] - 2023-06-02
 
 ### Added
@@ -914,7 +921,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.1.0...develop
+[7.1.0]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...v7.1.0
 [7.0.0]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...v7.0.0
 [6.6.0]: https://github.com/ddionrails/ddionrails/compare/v6.5.2...v6.6.0
 [6.5.2]: https://github.com/ddionrails/ddionrails/compare/v6.5.1...v6.5.2
