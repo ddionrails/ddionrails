@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}PID Archive | paneldata.org{% endblock title %}
+
+{% block content %}
+
+    <h1>Variable {{ variable }} of dataset {{ dataset }}</h1>
+    <p>This variable was part of the study {{ study }} in version {{ version }}</p>
+    {% if url %}
+    <p>There exists documentation for the
+	<a href="{{ url }}" title="Equivalent">equivalent variable</a>
+	in the current version {{ current_version }}.
+    </p>
+    {% endif %}
+
+{% endblock content %} 

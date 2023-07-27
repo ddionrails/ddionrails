@@ -96,6 +96,7 @@ class Study(ModelMixin, TimeStampedModel):
         verbose_name="DOI",
         help_text="DOI of the study (DOI only, not the URL to the DOI)",
     )
+    version = models.CharField(blank=True)
     repo = models.CharField(
         max_length=255,
         blank=True,
@@ -162,7 +163,7 @@ class Study(ModelMixin, TimeStampedModel):
         if settings.GIT_PROTOCOL == "ssh":
             return f"git@{self.repo}.git"
 
-        raise Exception("Specify a protocol for Git in your settings.")
+        raise ValueError("Specify a protocol for Git in your settings.")
 
     def set_topiclist(self, body: List) -> None:
         """Changes the topiclists content"""
@@ -183,8 +184,7 @@ class Study(ModelMixin, TimeStampedModel):
                     return topiclist.get("topics")
         except TopicList.DoesNotExist:
             return None
-        else:
-            return None
+        return None
 
     def import_path(self) -> Path:
         """Returns the studies import path"""

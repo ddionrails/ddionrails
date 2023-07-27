@@ -12,7 +12,7 @@ from django.views.generic.base import TemplateView
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
 from config.views import HomePageView
-from ddionrails.base.views import imprint
+from ddionrails.base.views import imprint, pid
 from ddionrails.concepts.views import TopicRedirectView
 from ddionrails.data.views import (
     DataRedirectView,
@@ -55,6 +55,7 @@ register_converter(StudyConverter, "study")
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("imprint/", imprint, name="imprint"),
+    path("pid", pid, name="pid"),
     path(
         "contact/",
         TemplateView.as_view(template_name="pages/contact.html"),
