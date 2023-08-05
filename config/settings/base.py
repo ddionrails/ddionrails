@@ -257,7 +257,7 @@ ELASTICSEARCH_PASSWORD = os.getenv("ELASTIC_PASSWORD")
 # Prefix for index names.
 # Overwritten in testing settings to separate testings indices which get deleted a lot
 ELASTICSEARCH_DSL_INDEX_PREFIX = os.getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
-# https://github.com/sabricot/django-elasticsearch-dsl#quickstart
+# https://django-elasticsearch-dsl.readthedocs.io/en/latest/quickstart.html
 ELASTICSEARCH_DSL = {
     "default": {
         "hosts": (
@@ -266,7 +266,9 @@ ELASTICSEARCH_DSL = {
         )
     }
 }
-# https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_autosync
+# https://django-elasticsearch-dsl.readthedocs.io/en/latest/settings.html#elasticsearch-dsl-autosync
 ELASTICSEARCH_DSL_AUTOSYNC = False
-# https://github.com/sabricot/django-elasticsearch-dsl#elasticsearch_dsl_index_settings
+# https://django-elasticsearch-dsl.readthedocs.io/en/latest/settings.html#elasticsearch-dsl-index-settings
 ELASTICSEARCH_DSL_INDEX_SETTINGS = {"number_of_shards": 1, "number_of_replicas": 0}
+# https://django-elasticsearch-dsl.readthedocs.io/en/latest/settings.html#elasticsearch-dsl-parallel
+ELASTICSEARCH_DSL_PARALLEL = True
