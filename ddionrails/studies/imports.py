@@ -12,7 +12,7 @@ class StudyDescriptionImport(imports.JekyllImport):
         study = self.study
         study.description = self.content
         study.label = self.data["label"]
-        study.config = self.data["config"]
+        study.config = self.data.get("config", {})
         study.save()
 
 
