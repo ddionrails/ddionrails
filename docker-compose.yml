@@ -112,8 +112,7 @@ services:
       - ./docker/environments/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   mail:
-    build:
-      context: ./docker/postfix/
+    image: hansendz/mail:latest
     networks:
       - ddi_net
     pids_limit: 30
