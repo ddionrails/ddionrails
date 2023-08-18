@@ -15,7 +15,7 @@ services:
         "-",
         "--log-level=info",
         "--access-logformat",
-        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"',
       ]
     depends_on:
       postgres:
@@ -55,11 +55,7 @@ services:
     #env_file:
     #  - docker/environments/database.env
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
-        ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -83,7 +79,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl --silent --fail elastic:$$ELASTIC_PASSWORD@localhost:9200/_cluster/health || exit 1",
+          "curl --silent --fail elastic:$ELASTIC_PASSWORD@localhost:9200/_cluster/health || exit 1",
         ]
       interval: 10s
       timeout: 5s
@@ -177,7 +173,6 @@ volumes:
   elastic_data:
   media:
   static:
-
 
 networks:
   ddi_net:
