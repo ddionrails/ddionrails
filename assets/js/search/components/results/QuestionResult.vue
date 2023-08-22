@@ -5,7 +5,7 @@
       <a :href="'/question/' + item._id">
         [
         <span v-html="item.name"></span>]
-        {{ getLabelWithFallback(item, $language) }}
+        <span v-html="getLabelWithFallback(item, $language)"></span>]
       </a>
     </p>
     <p class="card-text">
@@ -19,7 +19,7 @@
       <span v-if="$language == 'de'">Instrumente:</span>
       <a :href="'/' + item.study.name + '/instruments/' + item.instrument.name">
         <span v-if="$language == 'de'"> {{ item.instrument.label_de }} </span>
-        {{ getLabelWithFallback(item.instrument, $language) }}
+        <span v-html="getLabelWithFallback(item.instrument, $language)"></span>
       </a>
       |
       <span v-if="$language == 'en'">period:</span>
@@ -28,7 +28,7 @@
       |
       <span v-if="$language == 'en'">analysis unit:</span>
       <span v-if="$language == 'de'">Analyseeinheit:</span>
-      {{ getLabelWithFallback(item.analysis_unit, $language) }}
+      <span v-html="getLabelWithFallback(item.analysis_unit, $language)"></span>
     </p>
   </div>
 </template>

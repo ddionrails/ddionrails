@@ -5,13 +5,14 @@
       <a :href="baseUrl + '/concept/' + item._id">
         [
         <span v-html="item.name"></span>]
-        {{ getLabelWithFallback(item, $language) }}
+        <span v-html="getLabelWithFallback(item, $language)"></span>
       </a>
     </p>
     <p class="card-text">
       <span v-if="$language == 'en'">Concept in study</span>
       <span v-if="$language == 'de'">Konzept in Studie</span>
-      {{ item.study_name.join(', ') }}</p>
+      {{ item.study_name.join(", ") }}
+    </p>
   </div>
 </template>
 
