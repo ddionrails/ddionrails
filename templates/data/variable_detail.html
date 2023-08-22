@@ -19,10 +19,12 @@
     <div class="row">
         <div class="col-lg-8">
             {% if variable.images %}
-                {% if variable.images.de %}
+                {% if variable.images.de and variable.images.en%}
+                <img src="{{ variable.images.de }}" class="img-fluid lang de">
+                <img src="{{ variable.images.en }}" class="img-fluid lang en">
+                {% elif variable.images.de %}
                 <img src="{{ variable.images.de }}" class="img-fluid">
-                {% endif %}
-                {% if variable.images.en %}
+                {% elif variable.images.en %}
                 <img src="{{ variable.images.en }}" class="img-fluid">
                 {% endif %}
             {% else %}
