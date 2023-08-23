@@ -11,9 +11,9 @@
         {% if study.name == "soep-core" %}
         <div class="alert alert-danger" role="alert">
             Warning:
-            The generator for Stata and R scripts is working for v37 data
+            The generator for Stata and R scripts is working for v38 data
             but is not fully tested yet. (Feedback to kwenzig@diw.de is welcome!)
-            The generator for the SPSS script will not be updated and will be removed.
+            The generator for the SPSS script has been removed.
         </div>
         {% endif %}
         {% for generator_name in basket.get_script_generators %}
