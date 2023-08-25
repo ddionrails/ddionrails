@@ -52,7 +52,6 @@ languageSwitch.addEventListener("click", (button) => {
     language = "en";
   }
   _switch.setAttribute("data-current-language", language);
-  _switch.innerHTML = language;
   switchLanguage(document.documentElement, language);
   document.cookie = `paneldata_language=${language}; path=/`;
 });
