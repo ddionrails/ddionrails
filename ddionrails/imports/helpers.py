@@ -8,6 +8,14 @@ import uuid
 from functools import lru_cache
 
 from django.conf import settings
+from django.core.cache import caches
+
+
+def clear_caches():
+    """Clear all caches."""
+    for cache in settings.CACHES.keys():
+        _cache = caches[cache]
+        _cache.clear()
 
 
 def read_csv(filename, path=None):

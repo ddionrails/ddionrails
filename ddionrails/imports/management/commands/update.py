@@ -6,7 +6,9 @@ from pathlib import Path
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
+from django_rq import enqueue
 
+from ddionrails.imports.helpers import clear_caches
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
@@ -94,6 +96,8 @@ class Command(BaseCommand):
         update_single_study(
             study, local, tuple(entity), filename, clean_import, manager=manager
         )
+
+        enqueue(clear_caches)
 
         # Populate the search index from the database (indexes everything)
         sys.exit(0)
