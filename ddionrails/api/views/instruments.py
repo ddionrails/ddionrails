@@ -106,7 +106,7 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
 
 
 class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
-    """List metadata about all variables."""
+    """List metadata about all questions."""
 
     serializer_class = QuestionSerializer
     pagination_class = None
@@ -155,6 +155,8 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
             concept_object = get_object_or_404(Concept, name=concept)
             queryset_filter["concepts_questions__concept__id"] = concept_object.id
 
-        return Question.objects.filter(**queryset_filter).select_related(
-            "instrument", "instrument__study"
+        return (
+            Question.objects.filter(**queryset_filter)
+            .select_related("instrument", "instrument__study")
+            .distinct()
         )

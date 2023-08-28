@@ -236,5 +236,7 @@ def _get_related_items(variable_id: UUID) -> List[QuestionItem]:
             | QuestionItem.objects.filter(
                 variables__variable__target_variables__target_id=variable_id
             ).select_related("question", "question__period", "question__instrument")
-        ).order_by("-question__period__name")
+        )
+        .order_by("-question__period__name")
+        .distinct()
     )
