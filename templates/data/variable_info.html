@@ -39,10 +39,14 @@
         </p>
         <p><b>
             <span data-en="Analysis Unit" data-de="Analyseeinheit"></span> :</b>
-            {{ variable.dataset.analysis_unit.title }}
+            <span data-en="{{ variable.dataset.analysis_unit.label }}"
+                  data-de="{{ variable.dataset.analysis_unit.label_de }}"></span>
+            
         </p>
         <p><b><span data-en="Dataset Type" data-de="Datensatztyp"></span>:</b>
-            {{ variable.dataset.conceptual_dataset.title }}
+            <span data-en="{{ variable.dataset.conceptual_dataset.label }}"
+                  data-de="{{ variable.dataset.conceptual_dataset.label_de }}"></span>
+            
         </p>
         <p><b><span data-en="Period" data-de="Zeitraum"></span>:</b>
             {{ variable.period.title }}
