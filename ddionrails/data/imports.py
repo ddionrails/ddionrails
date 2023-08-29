@@ -98,6 +98,7 @@ class DatasetImport(imports.CSVImport):
             primary_key.remove("")
         dataset.primary_key = primary_key
         dataset.label = element.get("label", "")
+        dataset.label_de = element.get("label_de", "")
         dataset.description = element.get("description", "")
         dataset.save()
 
@@ -165,7 +166,6 @@ class TransformationImport(imports.CSVImport):
         return super().execute_import()
 
     def import_element(self, element):
-
         origin, target = self._get_origin_and_target(element)
         Transformation.objects.get_or_create(origin=origin, target=target)
 
