@@ -24,7 +24,6 @@ pytestmark = [
 @pytest.mark.usefixtures("browser", "user", "study")
 @pytest.mark.django_db
 class TestWorkspace(LiveServerTestCase):
-
     host = "web"
     browser: WebDriver
     study: Study
@@ -58,9 +57,9 @@ class TestWorkspace(LiveServerTestCase):
             self.browser, user="some-user", password="some-password"
         )
 
-        self.browser.find_element(By.LINK_TEXT, "My baskets").click()
-        self.browser.find_element(By.LINK_TEXT, "My account").click()
-        self.browser.find_element(By.LINK_TEXT, "Logout").click()
+        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My baskets']").click()
+        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My account']").click()
+        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='Logout']").click()
 
     def test_login_redirects_to_same_page(self):  # pylint: disable=unused-argument
         """When a user logs in from any page, after logging in, the system should take
@@ -70,13 +69,14 @@ class TestWorkspace(LiveServerTestCase):
 
         contact_url = urljoin(self.live_server_url, "contact/")
         self.browser.get(contact_url)
-        self.browser.find_element(By.LINK_TEXT, "Register / log in").click()
+        self.browser.find_element(
+            By.CSS_SELECTOR, "a[data-en='Log In / Register']"
+        ).click()
         self.browser = self._login(self.browser, go_to_login=False)
         # After logging in, the user should be redirected back to the contact page
         assert contact_url == self.browser.current_url
 
     def test_login_with_unknown_user(self):
-
         self.browser.get(urljoin(self.live_server_url, "/workspace/login"))
         self.browser = self._login(self.browser, user="unkown-user")
         assert (
@@ -87,10 +87,13 @@ class TestWorkspace(LiveServerTestCase):
     def test_logout_with_known_user(self):
         authenticated_browser = self._login(self.browser)
         authenticated_browser.get(self.live_server_url)
-        authenticated_browser.find_element(By.LINK_TEXT, "Logout").click()
+        authenticated_browser.implicitly_wait(2)
+        authenticated_browser.find_element(By.CSS_SELECTOR, "a[data-en='Logout']").click()
         assert "sessionid" not in str(authenticated_browser.get_cookies())
         with pytest.raises(NoSuchElementException):
-            authenticated_browser.find_element(By.LINK_TEXT, "My baskets").click()
+            authenticated_browser.find_element(
+                By.CSS_SELECTOR, "a[data-en='My baskets']"
+            ).click()
 
     def test_register_user(self):
         assert 1 == User.objects.count()
