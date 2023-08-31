@@ -109,9 +109,51 @@
 			"dataset": "third_dataset_name",
 			"period": "1990",
 			"labels": {
-				"labels": [],
-				"labels_de": [],
-				"values": []
+				"labels": [
+					"[-7] Only available in less restricted edition",
+					"[-6] Version of questionnaire with modified filtering",
+					"[-5] Not included in this version of the questionnaire",
+					"[-4] Inadmissible multiple response",
+					"[-3] Answer improbable",
+					"[-2] Does not apply",
+					"[-1] No Answer",
+					"[1] one",
+					"[2] two",
+					"[3] three",
+					"[4] four",
+					"[5] five",
+					"[6] six"
+				],
+				"labels_de": [
+					"[-7] Nur in weniger eingeschränkter Edition verfügbar",
+					"[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+					"[-5] In Fragebogenversion nicht enthalten",
+					"[-4] Unzulaessige Mehrfachantwort",
+					"[-3] nicht valide",
+					"[-2] trifft nicht zu",
+					"[-1] keine Angabe",
+					"[1] eins",
+					"[2] zwei",
+					"[3] drei",
+					"[4] vier",
+					"[5] fünf",
+					"[6] sechs"
+				],
+				"values": [
+					-7,
+					-6,
+					-5,
+					-4,
+					-3,
+					-2,
+					-1,
+					1,
+					2,
+					3,
+					4,
+					5,
+					6
+				]
 			}
 		}
 	]

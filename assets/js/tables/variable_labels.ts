@@ -18,6 +18,9 @@ const datasetBaseURL = new URL(`${study}/datasets`, window.location.origin);
  */
 async function initTable() {
   const variableData = parseVariables(await getAPIData());
+  if (variableData == null) {
+    return;
+  }
   const columns = [];
   columns.push({
     title: "Label",
@@ -68,6 +71,7 @@ async function initTable() {
   }
   const modifiedLanguageConfig = languageConfig();
   modifiedLanguageConfig.info = "";
+  document.getElementById("label-table").classList.remove("hidden");
   $("#value-labels-table").DataTable({
     language: modifiedLanguageConfig,
     scrollX: true,

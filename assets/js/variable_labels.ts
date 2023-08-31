@@ -138,6 +138,7 @@ function fillRows(
  */
 function removeMissings(variables: Array<variableType>) {
   for (const variable of variables) {
+    if (variable.labels.values == null) {continue;}
     const labelsCopy = variable.labels.values.slice();
     labelsCopy.reverse().forEach((element, index) => {
       if (element <= 0) {
@@ -152,6 +153,23 @@ function removeMissings(variables: Array<variableType>) {
 }
 
 /**
+ *
+ * @param {variableType} variable
+ * @param {any} _
+ * @param {any} __
+ * @return {boolean}
+ */
+function filterEmptyMetadata(variable: variableType, _: any, __: any): boolean {
+  if (variable.labels.values == null) {
+    return false;
+  }
+  if (variable.labels.values.length == 0) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Parse information from API response to display in table.
  * @param {APIResponse} apiResponse
  * @return {parsedVariables}
@@ -159,7 +177,10 @@ function removeMissings(variables: Array<variableType>) {
 export function parseVariables(apiResponse: APIResponse): parsedVariables {
   const periods = new Map();
   const datasets = new Map();
-  const variables: Array<variableType> = removeMissings(apiResponse["results"]);
+  const variables: Array<variableType> = removeMissings(
+    apiResponse["results"]
+  ).filter(filterEmptyMetadata);
+  if (variables.length <= 1) {return null}
 
   const mainVariable = variables.find(
     (variable) => variable["variable"] == VariableName

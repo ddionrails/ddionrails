@@ -14,7 +14,6 @@ from config.helpers import RowHelper
 from ddionrails.instruments.models import QuestionItem
 from ddionrails.workspace.models import Basket, BasketVariable
 
-from .helpers import LabelTable
 from .models import Dataset, Variable
 
 NAMESPACE = "datasets"
@@ -142,7 +141,6 @@ class VariableDetailView(DetailView):
         study = self.object.get_study()
         context["study"] = study
         context["related_variables"] = self.object.get_related_variables()
-        context["label_table"] = LabelTable(context["related_variables"])
         context["items"] = _get_related_items(self.object.id)
         # All questions are intended to be displayed separately in a bootstrap modal.
         # The subset here is to be displayed directly on the page.

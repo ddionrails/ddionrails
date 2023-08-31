@@ -108,7 +108,7 @@
                     </div>
                 </div>
             </div>
-            {% if variable.has_translations %}
+            {% if variable.has_translations and variable.translation_table %}
                 {% include "data/translation_table.html" %}
             {% endif %}
         </div>
@@ -149,16 +149,18 @@
             {% include "data/statistics_partial.html" %}
         </div>
     </div>
-    {% if label_table %}
-            <h2>Codes of related variables with the same concept</h2>
-            <p>This table provides you with an overview of label definitions across
-                related variables to identify changes over time in longitudinal variables.
-                The first number indicates the value code, the second number (in brackets)
-                represents the frequency in the data. Please note that labels are simplified
-                and values with frequency = 0 are hidden.</p>
-    {% endif %}
-    <div id="table-container" data-type="label-table">
-    <table id="value-labels-table" class="display table table-striped table-bordered" width="100%"></table>
+    <div id="label-table" class="hidden">
+        <h2>Codes of related variables with the same concept</h2>
+        <p>This table provides you with an overview of label definitions across
+            related variables to identify changes over time in longitudinal variables.
+            The first number indicates the value code, the second number (in brackets)
+            represents the frequency in the data. Please note that labels are simplified
+            and values with frequency = 0 are hidden.</p>
+        <div id="table-container" data-type="label-table">
+        <table id="value-labels-table"
+               class="display table table-striped table-bordered"
+               width="100%"></table>
+        </div>
     </div>
 
 {% endblock content %}
