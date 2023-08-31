@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring
 
 """ Pytest fixtures for browser interaction with the ddionrails project """
 
 from typing import Generator
 
 import pytest
-from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
 from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -24,11 +23,11 @@ def server_url(live_server) -> str:
 @pytest.fixture(name="browser")
 def selenium_browser(request) -> Generator[WebDriver, None, None]:
     """Provide a selenium remote webdriver."""
-    profile = FirefoxProfile()
-    profile.set_preference("browser.download.folderList", 2)
-    profile.set_preference("browser.download.manager.showWhenStarting", False)
+    options = Options()
+    options.add_argument("browser.download.folderList=2")
+    options.add_argument("browser.download.manager.showWhenStarting=False")
 
-    _browser = WebDriver(SELENIUM_URL, options=OPTS, browser_profile=profile)
+    _browser = WebDriver(SELENIUM_URL, options=options)
 
     if request.instance:
         request.instance.browser = _browser
