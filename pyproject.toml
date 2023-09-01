@@ -11,7 +11,7 @@ line-length = 90
 # https://coverage.readthedocs.io/en/7.1.0/config.html
 [tool.coverage.run]
 # plugins = django_coverage_plugin
-source = "."
+source = ["."]
 omit = [
     "*/tests/*",
     "htmlcov/*",
