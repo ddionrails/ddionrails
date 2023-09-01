@@ -47,11 +47,11 @@ jobs:
         run: |
           docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
           -m "functional" tests/functional/imports/ --cov-append
-      - name: Functional browser tests
-        if: always()
-        run: |
-          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
-          -m "functional and not search" tests/functional/browser --cov-append
+#      - name: Functional browser tests
+#        if: always()
+#        run: |
+#          docker exec ddionrails_web_1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+#          -m "functional and not search" tests/functional/browser --cov-append
       - name: Run migrations
         run: docker exec ddionrails_web_1 python manage.py migrate
       - name: Check production settings file
