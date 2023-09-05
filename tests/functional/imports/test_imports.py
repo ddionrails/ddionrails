@@ -50,7 +50,7 @@ def _study_import_manager(study, settings):
 @pytest.fixture(name="clean_search_index")
 def _clean_search_index():
     yield
-    call_command("search_index", "--delete", force=True)
+    call_command("search_index", "--delete", "--no-parallel", force=True)
 
 
 @pytest.fixture(name="unittest_settings")
@@ -62,7 +62,6 @@ def _unittest_settings(request, settings):
 @pytest.mark.django_db
 @pytest.mark.usefixtures("unittest_settings", "tmp_dir")
 class TestStudyImportManagerUnittest(unittest.TestCase):
-
     data_dir: Path
     settings: Any
     study: Study
@@ -108,7 +107,7 @@ class TestStudyImportManagerUnittest(unittest.TestCase):
             "url",
             "url_text",
         )
-        row = dict(type="dataset", dataset="Nonexistent-dataset")
+        row = {"type": "dataset", "dataset": "Nonexistent-dataset"}
         with open(import_path, "w", encoding="utf8") as attachements_file:
             writer = csv.DictWriter(attachements_file, fieldnames=header)
             writer.writeheader()
@@ -228,7 +227,7 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(analysis_unit, instrument.analysis_unit)
         TEST_CASE.assertEqual(period, instrument.period)
 
-        call_command("search_index", "--populate")
+        call_command("search_index", "--populate", "--no-parallel")
         search = QuestionDocument.search().query("match_all")
         TEST_CASE.assertEqual(1, search.count())
         response = search.execute()
@@ -357,8 +356,7 @@ class TestStudyImportManager:
 
     @pytest.mark.usefixtures("elasticsearch_indices")
     def test_import_all(self, study):
-
-        call_command("search_index", "--delete", force=True)
+        call_command("search_index", "--delete", "--no-parallel", force=True)
         TEST_CASE.assertEqual(1, Study.objects.count())
 
         TEST_CASE.assertEqual(0, Concept.objects.count())
