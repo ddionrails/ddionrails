@@ -137,7 +137,7 @@ def elasticsearch_indices():
 
     # Create search indices if they do not exist
     try:
-        call_command("search_index", "--create", force=True)
+        call_command("search_index", "--create", "--no-parallel", force=True)
     except RequestError:
         pass
 
@@ -145,7 +145,7 @@ def elasticsearch_indices():
     yield
 
     # Delete search indices after testing
-    call_command("search_index", "--delete", force=True)
+    call_command("search_index", "--delete", "--no-parallel", force=True)
 
 
 @pytest.fixture()
@@ -306,7 +306,7 @@ def _variable(request: FixtureRequest, db: pytest.fixture):
         label="Some Variable",
         label_de="Eine Variable",
         description="This is some variable",
-        statistics=dict(valid="1", invalid="0"),
+        statistics={"valid": "1", "invalid": "0"},
         categories={
             "frequencies": [1, 0],
             "labels": [
@@ -348,7 +348,7 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
 
-    call_command("search_index", "--populate", force=True)
+    call_command("search_index", "--populate", "--no-parallel", force=True)
 
     concept.save()
     expected = 1
@@ -541,8 +541,7 @@ class MockOpener:
             _file = self.files[Path(path)]
         except KeyError as error:
             raise ValueError("Path is not registered.") from error
-        else:
-            return bool(_file["mocker"])
+        return bool(_file["mocker"])
 
     @staticmethod
     def _stitch_together_write_output(mocker):
