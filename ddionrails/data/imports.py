@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 from django.db.transaction import atomic
+from django.db.utils import DataError
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.imports import imports
@@ -57,7 +58,12 @@ class DatasetJsonImport(imports.Import):
             if values and len(values) > 0:
                 variable.categories = var["categories"]
         variable.scale = var.get("scale", "")
-        variable.save()
+        try:
+            variable.save()
+        except DataError as error:
+            raise DataError(
+                f"Variable: {json.dumps(variable.__dict__, indent=2)}"
+            ) from error
 
 
 class DatasetImport(imports.CSVImport):
