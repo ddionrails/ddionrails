@@ -59,7 +59,7 @@ class JekyllImport(Import):
     This import is based on the design for `Jekyll <http://jekyllrb.com>`__
     pages, which combine a YAML front matter with Markdown content.
 
-    The front matter is seperated with three dashes (``---``).
+    The front matter is separated with three dashes (``---``).
 
     Example::
 

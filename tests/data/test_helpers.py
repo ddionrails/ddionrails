@@ -18,8 +18,8 @@ from .factories import DatasetFactory, VariableFactory
 
 @pytest.fixture(name="variables")
 def _variables(db):  # pylint: disable=unused-argument,invalid-name
-    """ This fixture contains two variables from two datasets from two periods
-        they appear in an unsorted order
+    """This fixture contains two variables from two datasets from two periods
+    they appear in an unsorted order
     """
     dataset = DatasetFactory(name="d1")
     other_dataset = DatasetFactory(name="d2")
@@ -36,14 +36,14 @@ def _variables(db):  # pylint: disable=unused-argument,invalid-name
 
 @pytest.fixture(name="label_table")
 def _label_table(variables):
-    """ A label table with the variables from the variables fixture """
+    """A label table with the variables from the variables fixture"""
     return LabelTable(variables)
 
 
 class TestLabelTable:
     def test_init_method(self, variables):
         """LabelTables Init should sort passed variables by their datasets periods."""
-        # Save teh variables to get their period data from the dataset.
+        # Save the variables to get their period data from the dataset.
         for variable in variables:
             variable.save()
         label_table = LabelTable(variables)
@@ -114,7 +114,7 @@ class TestLabelTable:
                 test.assertIn(variable.name, html_output)
 
     def test_init_method_without_period(self, variables):
-        """ The first variable has no period in this test """
+        """The first variable has no period in this test"""
         variables[0].dataset.period = None
         label_table = LabelTable(variables)
         assert label_table.variables == variables

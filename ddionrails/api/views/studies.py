@@ -28,7 +28,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
 
 
 # pylint: disable=too-many-ancestors
-# Propper REST views start here
+# Proper REST views start here
 
 
 class StudyViewSet(viewsets.ModelViewSet):

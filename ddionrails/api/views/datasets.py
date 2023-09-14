@@ -71,7 +71,7 @@ class StatisticViewSet(viewsets.GenericViewSet):
         with variable_statistic.statistics.open("r") as file:
             content = file.read()
         response = HttpResponse(content, content_type="text/csv")
-        response["Content-Disposition"] = f"attachement; filename={variable.name}.csv"
+        response["Content-Disposition"] = f"attachment; filename={variable.name}.csv"
 
         return response
 

@@ -70,5 +70,5 @@ class TestCSVImport:
 
     def test_process_element_method(self, csv_importer):
         element = "element"
-        respone = csv_importer.process_element(element)
-        assert respone == element
+        response = csv_importer.process_element(element)
+        assert response == element

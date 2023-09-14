@@ -158,7 +158,7 @@ export function createBasketList(): null {
     element.append(basketButton);
 
     // Call either addBasketVariable or removeBasketVariable
-    // Dependant on the classes rm-var add-var
+    // Dependent on the classes rm-var add-var
     // Text content of the button is also determined by rm-var and add-var
     // via index.scss.
     const addOrRemoveVariable = function () {

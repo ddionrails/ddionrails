@@ -93,7 +93,7 @@ class AttachmentImport(imports.CSVImport):
         return cleaned_dictionairy
 
     def _get_related_object(self, element: Dict[str, str]) -> Dict[str, Model]:
-        """Retrieve the attachement target from the database.
+        """Retrieve the attachment target from the database.
 
         Arguments:
             element: Metadata about the target object of the attachment.

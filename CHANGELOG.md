@@ -271,7 +271,7 @@ Older versions are not part of this Project.
 - Make use of models.AutoField explicit for id fields.
 ### Fixed
 
-- issue where attachements with the same target url overwrite each other.
+- issue where attachments with the same target url overwrite each other.
 - Removed use of string representation of database objects in templates.
 - routing for study view; to fix relative links.
 
@@ -356,7 +356,7 @@ Older versions are not part of this Project.
 - Refactor import to better work with data specifications.
 - Refactor variable view to make content more understandable.
 - Removed unique constraint on Topic name field.
-  Unique identifier is now dependant on study name + topic name.
+  Unique identifier is now dependent on study name + topic name.
 
 ### Fixed
 
@@ -423,7 +423,7 @@ Older versions are not part of this Project.
 
 ### Fixed
 
-- Import no longer fails, whe no concepts.csv is present.
+- Import no longer fails, when no concepts.csv is present.
 - `Remove all` link in Basket view now works again.
 - `Search in Study` navigational link now works on all pages it occurs.
 

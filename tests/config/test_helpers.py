@@ -49,7 +49,7 @@ class TestRowHelper:
         assert expected is row_helper.row()
 
     def test_row_method_true(self):
-        """Everytime row is called, row_index is incremented.
+        """Every time row is called, row_index is incremented.
         If it hits 4, it returns True
         """
         row_helper = RowHelper()

@@ -136,7 +136,7 @@ def system_import_manager(system):
 
 
 class StudyImportManager:
-    """Manage the import of all study ressources."""
+    """Manage the import of all study resources."""
 
     import_order: OrderedDict[str, Tuple[Any, Any]]
 

@@ -245,7 +245,7 @@ function render() {
   // Control active option in menu 2, default is 'Univariate'
   const menu2Active = "uni";
 
-  // Add option 'weighted' to menu 3 if available in data modell
+  // Add option 'weighted' to menu 3 if available in data model
   if (!("weighted" in context.variable.data.uni)) {
     d3.select("#weighted").attr("disabled", "disabled");
   }

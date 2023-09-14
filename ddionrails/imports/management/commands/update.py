@@ -112,7 +112,7 @@ class Command(BaseCommand):
 
 
 def update_study_partial(manager: StudyImportManager, entity: tuple):
-    """Update only selected entitites for study"""
+    """Update only selected entities for study"""
     for single_entity in entity:
         manager.import_single_entity(single_entity)
 
