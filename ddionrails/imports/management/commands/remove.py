@@ -63,7 +63,7 @@ class Command(BaseCommand):
         self.stderr.write(self.style.WARNING(message))
 
     def summary(self, study: Study) -> None:
-        """ Display a summary of all related objects that are going to be removed """
+        """Display a summary of all related objects that are going to be removed"""
 
         counts = dict(
             datasets=study.datasets.count(),
@@ -82,7 +82,7 @@ class Command(BaseCommand):
                 self.log_warning(f"# {related_object}: {count}")
 
     def remove_from_database(self, study: Study) -> None:
-        """ Remove the study and all related objects from the database """
+        """Remove the study and all related objects from the database"""
 
         study.delete()
-        self.log_success(f'Study "{study.name}" succesfully removed from database.')
+        self.log_success(f'Study "{study.name}" successfully removed from database.')

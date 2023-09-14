@@ -17,12 +17,12 @@ TEST_CASE = unittest.TestCase()
 
 @pytest.fixture(name="mocked_delete_method")
 def _mocked_delete_method(mocker):
-    """ Mocked Study.delete method for test cases """
+    """Mocked Study.delete method for test cases"""
     return mocker.patch.object(Study, "delete")
 
 
 def test_remove_command_without_study_name():
-    """ Test remove management command displays "missing argument" message """
+    """Test remove management command displays "missing argument" message"""
     with TEST_CASE.assertRaisesRegex(
         CommandError, "Error: the following arguments are required: study_name"
     ):
@@ -31,7 +31,7 @@ def test_remove_command_without_study_name():
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
 def test_remove_command_displays_help(option, capsys):
-    """ Test remove management command displays help with "-h" and "--help" """
+    """Test remove management command displays help with "-h" and "--help" """
     with TEST_CASE.assertRaises(SystemExit):
         call_command("remove", option)
     TEST_CASE.assertRegex(capsys.readouterr().out, ".*usage:.*-h.*")
@@ -39,7 +39,7 @@ def test_remove_command_displays_help(option, capsys):
 
 @pytest.mark.django_db
 def test_remove_command_with_non_existing_study(capsys):
-    """ Test remove management command displays "does not exist" message """
+    """Test remove management command displays "does not exist" message"""
     with TEST_CASE.assertRaises(SystemExit):
         try:
             call_command("remove", "some-study")
@@ -54,7 +54,7 @@ def test_remove_command_with_non_existing_study(capsys):
 def test_remove_command_aborts(
     study, mocked_delete_method, capsys
 ):  # pylint: disable=unused-argument
-    """ Test remove management command aborts when given "N" as input """
+    """Test remove management command aborts when given "N" as input"""
     study_name = "some-study"
     with patch("builtins.input", side_effect="N"):
         # command should sys.exit with exit code 0
@@ -74,12 +74,12 @@ def test_remove_command_aborts(
 def test_remove_command_removes_study(
     study, mocked_delete_method, capsys
 ):  # pylint: disable=unused-argument
-    """ Test remove management command removes study when given "y" as input """
+    """Test remove management command removes study when given "y" as input"""
     study_name = "some-study"
     with patch("builtins.input", side_effect="Y"):
         call_command("remove", study_name)
         TEST_CASE.assertEqual(
-            f'Study "{study.name}" succesfully removed from database.\n',
+            f'Study "{study.name}" successfully removed from database.\n',
             capsys.readouterr().out,
         )
     mocked_delete_method.assert_called_once()
@@ -89,11 +89,11 @@ def test_remove_command_removes_study(
 def test_remove_command_force_removes_study(
     option, study, mocked_delete_method, capsys
 ):  # pylint: disable=unused-argument
-    """ Test remove management command with "-y" and "--yes" does not ask for continue """
+    """Test remove management command with "-y" and "--yes" does not ask for continue"""
     study_name = "some-study"
     call_command("remove", option, study_name)
     TEST_CASE.assertEqual(
-        f'Study "{study.name}" succesfully removed from database.\n',
+        f'Study "{study.name}" successfully removed from database.\n',
         capsys.readouterr().out,
     )
     mocked_delete_method.assert_called_once()

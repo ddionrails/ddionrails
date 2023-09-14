@@ -510,7 +510,7 @@ class MockOpener:
 
     Attributes:
         files: Registered paths and their content.
-        call_history: The registered pathes, that were called at least once.
+        call_history: The registered paths, that were called at least once.
     """
 
     call_history: Set[Path]

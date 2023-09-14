@@ -27,7 +27,7 @@ async function setLanguageObserver(component) {
 }
 
 /**
- * Return label or fallback according to langauge
+ * Return label or fallback according to language
  * @param {object} item
  * @param {str} language
  * @return {str}

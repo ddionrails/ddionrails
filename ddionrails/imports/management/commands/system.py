@@ -24,6 +24,6 @@ class Command(BaseCommand):
         system_import_manager(system)
         self.stdout.write(
             self.style.SUCCESS(
-                f"System settings succesfully imported from {settings.SYSTEM_REPO_URL}."
+                f"System settings successfully imported from {settings.SYSTEM_REPO_URL}."
             )
         )

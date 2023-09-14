@@ -161,7 +161,7 @@ class SoepR(SoepConfig, ScriptConfig, SoepMixin):
     def _render_sort_pfad() -> str:
         """Render a "sort pfad" section of the script file"""
         script = "\n### SORT [H|P]PFAD ###\n"
-        script += "\n# This is R -- no sorting neccessary :-)"
+        script += "\n# This is R -- no sorting necessary :-)"
         script += "\n"
         return script
 
