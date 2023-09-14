@@ -29,7 +29,7 @@ djangorestframework = ">=3.14.0"
 django_filer = "*"
 # PostgreSQL
 # ------------------------------------------------------------------------------
-psycopg2-binary = "*"
+psycopg = {extras = ["binary"], version = "*"}
 #
 #
 # Elasticsearch
