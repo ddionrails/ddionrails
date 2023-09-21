@@ -23,7 +23,7 @@ const concept = document.querySelector("#concept-name").getAttribute("value");
  * @param {*} url         API URL to call for the metadata of the desired entities.
  */
 function renderEntityTable(entity: any, table: any, url: string) {
-  $(table).dataTable({
+  $(table).DataTable({
     ajax: {
       url,
       dataSrc: "",

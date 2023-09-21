@@ -2,6 +2,9 @@ import "datatables.net-bs4";
 import "datatables.net-buttons-bs4";
 import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs4";
+import "datatables.net-fixedcolumns";
+import "datatables.net-fixedcolumns-bs4";
+
 import * as $ from "jquery";
 import {getTable} from "./table_language_management";
 import {languageCode, languageConfig} from "../language_management";
@@ -10,7 +13,9 @@ import {getAPIData, parseVariables} from "../variable_labels";
 
 const TableElement = getTable().cloneNode(true) as HTMLElement;
 
-const study = document.querySelector("meta[name=study]").getAttribute("content");
+const study = document
+  .querySelector("meta[name=study]")
+  .getAttribute("content");
 const datasetBaseURL = new URL(`${study}/datasets`, window.location.origin);
 
 /**
@@ -39,16 +44,13 @@ async function initTable() {
       `datasets/${variableData.datasets.get(variableName)}/`,
       datasetBaseURL
     );
-    const variableURL = new URL(
-      variableName,
-      datasetURL
-    );
+    const variableURL = new URL(variableName, datasetURL);
     const header = document.createElement("div");
     const periodElement = document.createElement("p");
     let period = variableData.periods.get(variableName);
     if (period == "0") {
       period = "Long";
-    };
+    }
     periodElement.innerHTML = period;
     header.appendChild(periodElement);
 
@@ -72,7 +74,8 @@ async function initTable() {
   const modifiedLanguageConfig = languageConfig();
   modifiedLanguageConfig.info = "";
   document.getElementById("label-table").classList.remove("hidden");
-  $("#value-labels-table").DataTable({
+  // FixedColumns does not work well with tables that are filled during creation.
+  const table = $("#value-labels-table").DataTable({
     language: modifiedLanguageConfig,
     scrollX: true,
     scrollY: "40em",
@@ -82,8 +85,18 @@ async function initTable() {
     paging: false,
     columns,
   });
+  table.destroy();
+  // Thats why the filled table is reinitialized with fixedColumns.
+  $("#value-labels-table").DataTable({
+    language: modifiedLanguageConfig,
+    scrollX: true,
+    scrollY: "40em",
+    scrollCollapse: true,
+    ordering: false,
+    paging: false,
+    fixedColumns: {leftColumns: 1},
+  });
 }
-
 
 const languageObserver = new MutationObserver((mutations) => {
   mutations.forEach((record) => {
@@ -99,8 +112,7 @@ const languageObserver = new MutationObserver((mutations) => {
         initTable();
       }
     }
-  }
-  );
+  });
 });
 
 const languageElement = document.getElementById("language-switch") as Node;
