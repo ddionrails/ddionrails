@@ -47,6 +47,6 @@ ROUTER.register(
 ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
-ROUTER.register(r"variable_labels", VariableLabelsViewSet)
+ROUTER.register(r"variable_labels", VariableLabelsViewSet, basename="variable_labels")
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))
