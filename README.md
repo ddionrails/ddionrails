@@ -1,7 +1,7 @@
 # DDI on Rails
 
-[![Python version][python-badge]](https://www.python.org/downloads/release/python-374/)
-[![Django version][django-badge]](https://docs.djangoproject.com/en/2.2/releases/2.2.6/)
+[![Python version][python-badge]](https://www.python.org/downloads/release/python-311/)
+[![Django version][django-badge]](https://docs.djangoproject.com/en/4.2/releases/4.2.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
 ![System-Tests](https://github.com/ddionrails/ddionrails/actions/workflows/system-tests.yml/badge.svg)
