@@ -1,6 +1,6 @@
 # DDI on Rails
 
-[![Python version][python-badge]](https://www.python.org/downloads/release/python-311/)
+[![Python version][python-badge]](https://www.python.org/downloads/release/python-3113/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/4.2/releases/4.2.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
