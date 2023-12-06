@@ -104,3 +104,4 @@ class VariableStatisticDocument(Document):
 
     class Django:
         model = Variable
+        queryset_pagination = 5000  # TODO: Find out if this is the best fix
