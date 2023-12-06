@@ -261,7 +261,7 @@ ELASTICSEARCH_DSL_INDEX_PREFIX = os.getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 ELASTICSEARCH_DSL = {
     "default": {
         "hosts": (
-            f"elastic:{ELASTICSEARCH_PASSWORD}@"
+            f"http://elastic:{ELASTICSEARCH_PASSWORD}@"
             f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"
         )
     }
