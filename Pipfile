@@ -34,8 +34,9 @@ psycopg2-binary = "*"
 #
 # Elasticsearch
 # ------------------------------------------------------------------------------
-django-elasticsearch-dsl = "*"
-elasticsearch-dsl = "<=8.*"
+django-elasticsearch-dsl = ">=8.0"
+elasticsearch-dsl = ">=8.*"
+elasticsearch = ">=8.*"
 #
 #
 # Markup
@@ -48,6 +49,7 @@ python-frontmatter = "*"
 gitpython = "<3.1.41"
 paver = "*"
 requests = "*"
+urllib3 = ">=1.26.18"
 #
 #
 
