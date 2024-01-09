@@ -1565,11 +1565,11 @@
         },
         "pygraphviz": {
             "hashes": [
-                "sha256:a97eb5ced266f45053ebb1f2c6c6d29091690503e3a5c14be7f908b37b06f2d4"
+                "sha256:8b0b9207954012f3b670e53b8f8f448a28d12bdbbcf69249313bd8dbe680152f"
             ],
             "index": "pypi",
-            "markers": "python_version >= '3.8'",
-            "version": "==1.11"
+            "markers": "python_version >= '3.10'",
+            "version": "==1.12"
         },
         "pylance": {
             "hashes": [
