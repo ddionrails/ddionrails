@@ -4,11 +4,14 @@
     "noImplicitAny": true,
     "module": "es6",
     "target": "es2017",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "paths": {
+      "react": ["./node_modules/@types/react"]
+    },
   },
-  "exclude": ["node_modules", "static"]
+  "exclude": ["node_modules", "static"],
 }
