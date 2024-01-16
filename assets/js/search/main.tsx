@@ -1,9 +1,8 @@
-import { createRoot } from 'react-dom/client';
+import {createRoot} from "react-dom/client";
+import ReactDOM from "react-dom";
 
-function Search() {
-  return <h1>SEARCH</h1>;
-}
+import App from "./app";
 
-const domNode = document.getElementById('app');
+const domNode = document.getElementById("app");
 const root = createRoot(domNode);
-root.render(<Search />);
+ReactDOM.render(<App />, document.getElementById("app"));
