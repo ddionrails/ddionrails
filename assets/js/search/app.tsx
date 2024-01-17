@@ -16,6 +16,8 @@ import {
 } from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 
+import {VariableResultView} from "./view_customisations/variable_result_view";
+
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
   index: "variables",
@@ -35,6 +37,12 @@ const config = {
         snippet: {},
       },
       label: {
+        snippet: {},
+      },
+      study: {
+        snippet: {},
+      },
+      dataset: {
         snippet: {},
       },
     },
@@ -99,9 +107,7 @@ export default function App() {
                   }
                   sideContent={
                     <div>
-                      {wasSearched && (
-                        <Sorting label={"Sort by"} sortOptions={[]} />
-                      )}
+                      <Sorting label={"Sort by"} sortOptions={[{name: "Name", value: "label", direction: "asc"}]} />
                       <Facet
                         key={"1"}
                         field={"analysis_unit.label"}
@@ -114,7 +120,7 @@ export default function App() {
                       />
                     </div>
                   }
-                  bodyContent={<Results shouldTrackClickThrough={true} />}
+                  bodyContent={<Results resultView={VariableResultView} titleField="name" shouldTrackClickThrough={false} />}
                   bodyHeader={
                     <React.Fragment>
                       {wasSearched && <PagingInfo />}

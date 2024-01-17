@@ -1,3 +1,5 @@
+// TODO: remove styles that are now irrelevant
+
 /** Search box size */
 .css-m1gst5 {
   width: 100% !important;
@@ -14,4 +16,16 @@ ul.css-bbs1vb {
 /* Stops facet checkbox from shrinking when facet text is long. */
 .css-1x5fnvc + label::before {
   min-width: 15px;
+}
+
+.sui-result__header {
+  padding: 0 !important;
+}
+
+.sui-result {
+  padding: 1em !important;
+}
+
+.fa {
+  margin-right: 0.2em;
 }
