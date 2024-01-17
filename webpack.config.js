@@ -10,7 +10,6 @@ const path = require("path");
 const webpack = require("webpack");
 const BundleTracker = require("webpack-bundle-tracker");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 const config = {
   context: __dirname,
@@ -68,7 +67,6 @@ const config = {
       jQuery: "jquery",
     }),
     new BundleTracker({filename: "./webpack-stats.json"}),
-    new VueLoaderPlugin(),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
@@ -76,11 +74,6 @@ const config = {
       "process.env.SHOW_STATISTICS": JSON.stringify(
         process.env.SHOW_STATISTICS
       ),
-    }),
-    // reactivesearch-vue breaks without this.
-    // A false value breaks slider ui elements
-    new webpack.DefinePlugin({
-      "process.browser": true,
     }),
   ],
 
@@ -119,15 +112,10 @@ const config = {
           filename: "[name][ext]",
         },
       },
-      /* Loads vue single file components */
-      {
-        test: /\.vue$/,
-        use: "vue-loader",
-      },
-      /* Loads style block in vue single file components */
+      /* Loads style block single file components */
       {
         test: /\.css$/,
-        use: ["vue-style-loader", "css-loader", "sass-loader"],
+        use: ["style-loader", "css-loader", "sass-loader"],
       },
     ],
   },
