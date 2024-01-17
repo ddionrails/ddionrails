@@ -15,10 +15,9 @@ import {
   WithSearch,
 } from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
-import "@elastic/react-search-ui-views/lib/styles/styles.css";
 
 const connector = new ElasticsearchAPIConnector({
-  host: window.location.hostname + "/elastic/",
+  host: "/elastic/",
   index: "variables",
 });
 
@@ -45,24 +44,24 @@ const config = {
       "period.label": {type: "value"},
     },
   },
-  //  autocompleteQuery: {
-  //    results: {
-  //      resultsPerPage: 5,
-  //      search_fields: {
-  //        label: {
-  //          weight: 3,
-  //        },
-  //      },
-  //      result_fields: {
-  //        label: {
-  //          snippet: {
-  //            size: 100,
-  //            fallback: true,
-  //          },
-  //        },
-  //      },
-  //    },
-  //  },
+  autocompleteQuery: {
+    results: {
+      resultsPerPage: 5,
+      search_fields: {
+        label: {
+          weight: 3,
+        },
+      },
+      result_fields: {
+        label: {
+          snippet: {
+            size: 100,
+            fallback: true,
+          },
+        },
+      },
+    },
+  },
   apiConnector: connector,
   alwaysSearchOnInitialLoad: true,
 };
