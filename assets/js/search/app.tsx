@@ -17,6 +17,7 @@ import {
 import {Layout} from "@elastic/react-search-ui-views";
 
 import {VariableResultView} from "./view_customisations/variable_result_view";
+import SortedMultiCheckboxFacet from "./view_customisations/SortedFacet_view";
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
@@ -107,20 +108,34 @@ export default function App() {
                   }
                   sideContent={
                     <div>
-                      <Sorting label={"Sort by"} sortOptions={[{name: "Name", value: "label", direction: "asc"}]} />
+                      <Sorting
+                        label={"Sort by"}
+                        sortOptions={[
+                          {name: "Name", value: "name.raw", direction: "asc"},
+                          {name: "Label", value: "label.raw", direction: "asc"},
+                        ]}
+                      />
                       <Facet
                         key={"1"}
                         field={"analysis_unit.label"}
                         label={"analysis unit"}
+                        view={SortedMultiCheckboxFacet}
                       />
                       <Facet
                         key={"2"}
                         field={"period.label"}
                         label={"period"}
+                        view={SortedMultiCheckboxFacet}
                       />
                     </div>
                   }
-                  bodyContent={<Results resultView={VariableResultView} titleField="name" shouldTrackClickThrough={false} />}
+                  bodyContent={
+                    <Results
+                      resultView={VariableResultView}
+                      titleField="name"
+                      shouldTrackClickThrough={false}
+                    />
+                  }
                   bodyHeader={
                     <React.Fragment>
                       {wasSearched && <PagingInfo />}
