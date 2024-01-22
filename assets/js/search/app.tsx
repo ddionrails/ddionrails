@@ -46,6 +46,9 @@ const config = {
       dataset: {
         snippet: {},
       },
+      period: {
+        snippet: {},
+      },
     },
     disjunctiveFacets: ["analysis_unit.label", "period.label"],
     facets: {
@@ -108,13 +111,35 @@ export default function App() {
                   }
                   sideContent={
                     <div>
-                      <Sorting
-                        label={"Sort by"}
-                        sortOptions={[
-                          {name: "Name", value: "name.raw", direction: "asc"},
-                          {name: "Label", value: "label.raw", direction: "asc"},
-                        ]}
-                      />
+                      {wasSearched && (
+                        <Sorting
+                          label={"Sort by"}
+                          sortOptions={[
+                            {
+                              name: "Relevance",
+                              value: [],
+                            },
+                            {
+                              name: "Period (ascending)",
+                              value: [
+                                {
+                                  field: "period.label",
+                                  direction: {order: "asc"},
+                                },
+                              ],
+                            },
+                            {
+                              name: "Period (descending)",
+                              value: [
+                                {
+                                  field: "period.label",
+                                  direction: {order: "desc"},
+                                },
+                              ],
+                            },
+                          ]}
+                        />
+                      )}
                       <Facet
                         key={"1"}
                         field={"analysis_unit.label"}
