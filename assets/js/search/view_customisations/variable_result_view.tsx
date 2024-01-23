@@ -18,7 +18,10 @@ export function VariableResultView({
         <h3>
           <i className="fa fa-cog"></i>
           <a onClick={onClickLink} href={"/variable/" + result._meta.id}>
-            [{result.name.raw}] {result.label.raw}
+            [{result.name.raw}]{" "}
+            <span
+              dangerouslySetInnerHTML={{__html: result.label.snippet}}
+            ></span>
           </a>
         </h3>
       </div>
