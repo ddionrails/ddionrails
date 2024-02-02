@@ -18,6 +18,7 @@ import {Layout} from "@elastic/react-search-ui-views";
 
 import {VariableResultView} from "./view_customisations/variable_result_view";
 import SortedMultiCheckboxFacet from "./view_customisations/SortedFacet_view";
+import Autocomplete from "./view_customisations/Autocomplete_view";
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
@@ -60,11 +61,20 @@ const config = {
     results: {
       resultsPerPage: 5,
       search_fields: {
-        label: {
+        name: {
           weight: 3,
+        },
+        label: {
+          weight: 1,
         },
       },
       result_fields: {
+        name: {
+          snippet: {
+            size: 100,
+            fallback: true,
+          },
+        },
         label: {
           snippet: {
             size: 100,
@@ -77,6 +87,7 @@ const config = {
   apiConnector: connector,
   alwaysSearchOnInitialLoad: true,
 };
+
 
 /**
  *
@@ -103,10 +114,11 @@ export default function App() {
                         sectionTitle: "Results",
                         urlField: "",
                         titleField: "name",
-                        shouldTrackClickThrough: true,
+                        shouldTrackClickThrough: false,
                       }}
                       autocompleteSuggestions={true}
                       debounceLength={0}
+                      autocompleteView={Autocomplete}
                     />
                   }
                   sideContent={
