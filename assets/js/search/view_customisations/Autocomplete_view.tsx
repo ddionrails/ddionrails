@@ -21,9 +21,9 @@ function appendClassName(
 ): string {
   if (!newClassName) {
     return (
-      (Array.isArray(baseClassName) ?
-        baseClassName.join(" ") :
-        baseClassName) || ""
+      (Array.isArray(baseClassName)
+        ? baseClassName.join(" ")
+        : baseClassName) || ""
     );
   }
   if (!baseClassName) return getNewClassName(newClassName) || "";
@@ -111,13 +111,13 @@ function Autocomplete({
                     autocompleteSuggestions
                   ) &&
                     suggestions.length > 0 && (
-                    <div className="sui-search-box__section-title">
-                      {getSuggestionTitle(
-                        suggestionType,
-                        autocompleteSuggestions
-                      )}
-                    </div>
-                  )}
+                      <div className="sui-search-box__section-title">
+                        {getSuggestionTitle(
+                          suggestionType,
+                          autocompleteSuggestions
+                        )}
+                      </div>
+                    )}
                   {suggestions.length > 0 && (
                     <ul className="sui-search-box__suggestion-list">
                       {suggestions.map(
@@ -193,45 +193,57 @@ function Autocomplete({
           typeof autocompleteResults !== "boolean" &&
           autocompletedResults.length > 0 &&
           autocompleteResults.sectionTitle && (
-          <div className="sui-search-box__section-title">
-            {autocompleteResults.sectionTitle}
-          </div>
-        )}
+            <div className="sui-search-box__section-title">
+              {autocompleteResults.sectionTitle}
+            </div>
+          )}
         {!!autocompleteResults &&
           !!autocompletedResults &&
           autocompletedResults.length > 0 && (
-          <ul className="sui-search-box__results-list">
-            {autocompletedResults.map((result) => {
-              index++;
-              const titleField =
-                  typeof autocompleteResults === "boolean" ?
-                    null :
-                    autocompleteResults.titleField;
-              const labelSnippet = getSnippet(result, "label");
-              const titleSnippet = getSnippet(result, "name") + " | " + labelSnippet;
-              const titleRaw = getRaw(result, titleField);
-              return (
-                <li
-                  {...getItemProps({
-                    key: result.id.raw,
-                    index: index - 1,
-                    item: result,
-                  })}
-                >
-                  {titleSnippet ? (
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: titleSnippet,
-                      }}
-                    />
-                  ) : (
-                    <span>{titleRaw}</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+            <ul className="sui-search-box__results-list">
+              {autocompletedResults.map((result) => {
+                index++;
+                const titleField =
+                  typeof autocompleteResults === "boolean"
+                    ? null
+                    : autocompleteResults.titleField;
+                let labelSnippet = getSnippet(result, "label");
+                if (!labelSnippet) {
+                  console.log(JSON.stringify(result));
+                  labelSnippet = result.label.raw;
+                }
+                let titleSnippet = getSnippet(result, "name");
+                if (titleSnippet === undefined) {
+                  titleSnippet = `${getRaw(
+                    result,
+                    titleField
+                  )} | ${labelSnippet}`;
+                }
+                const titleRaw = getRaw(result, titleField);
+                return (
+                  <a href={"/variable/" + result._meta.id}>
+                    <li
+                      {...getItemProps({
+                        key: result.id.raw,
+                        index: index - 1,
+                        item: result,
+                      })}
+                    >
+                      {titleSnippet ? (
+                        <span
+                          dangerouslySetInnerHTML={{
+                            __html: titleSnippet,
+                          }}
+                        />
+                      ) : (
+                        <span>{titleRaw}</span>
+                      )}
+                    </li>
+                  </a>
+                );
+              })}
+            </ul>
+          )}
       </div>
     </div>
   );
