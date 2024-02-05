@@ -59,7 +59,7 @@ const config = {
   },
   autocompleteQuery: {
     results: {
-      resultsPerPage: 5,
+      resultsPerPage: 10,
       search_fields: {
         name: {
           weight: 3,
@@ -87,7 +87,6 @@ const config = {
   apiConnector: connector,
   alwaysSearchOnInitialLoad: true,
 };
-
 
 /**
  *
