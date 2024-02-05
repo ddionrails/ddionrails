@@ -1,5 +1,3 @@
-import React from "react";
-
 import type {
   AutocompletedResult,
   AutocompletedResultSuggestion,
@@ -40,34 +38,6 @@ function getSnippet(result: any, value: any) {
   return result[value].snippet;
 }
 
-function getSuggestionTitle(suggestionType: any, autocompleteSuggestions: any) {
-  if (autocompleteSuggestions.sectionTitle) {
-    return autocompleteSuggestions.sectionTitle;
-  }
-
-  if (
-    autocompleteSuggestions[suggestionType] &&
-    autocompleteSuggestions[suggestionType].sectionTitle
-  ) {
-    return autocompleteSuggestions[suggestionType].sectionTitle;
-  }
-}
-
-function getSuggestionDisplayField(
-  suggestionType: string,
-  autocompleteSuggestions: any
-): string {
-  if (autocompleteSuggestions.queryType === "results") {
-    return autocompleteSuggestions.displayField as string;
-  }
-  if (
-    autocompleteSuggestions[suggestionType] &&
-    autocompleteSuggestions[suggestionType].queryType === "results"
-  ) {
-    return autocompleteSuggestions[suggestionType].displayField;
-  }
-}
-
 export type SearchBoxAutocompleteViewProps = {
   allAutocompletedItemsCount: number;
   autocompleteResults?: boolean | AutocompleteResult;
@@ -80,6 +50,40 @@ export type SearchBoxAutocompleteViewProps = {
   className?: string;
 };
 
+/**
+ *
+ * @param result
+ * @param index
+ * @param autocompleteResults
+ * @returns
+ */
+function renderResults(result: any, index: any, autocompleteResults: any) {
+  let titleField = null;
+  if (autocompleteResults.hasOwnProperty("titleField")) {
+    titleField = autocompleteResults.titleField;
+  }
+  let labelSnippet = getSnippet(result, "label");
+  if (labelSnippet === undefined) {
+    labelSnippet = result.label.raw;
+  }
+  let titleSnippet = getSnippet(result, "name");
+  if (titleSnippet === undefined) {
+    titleSnippet = getRaw(result, titleField);
+  }
+  titleSnippet = `${titleSnippet} | ${labelSnippet}`;
+  return (
+    <a href={"/variable/" + result.id.raw} key={result.id.raw}>
+      <li>
+        <span
+          dangerouslySetInnerHTML={{
+            __html: titleSnippet,
+          }}
+        />
+      </li>
+    </a>
+  );
+}
+
 // eslint-disable-next-line require-jsdoc, complexity
 function Autocomplete({
   autocompleteResults,
@@ -90,7 +94,6 @@ function Autocomplete({
   getItemProps,
   getMenuProps,
 }: SearchBoxAutocompleteViewProps) {
-  let index = 0;
   return (
     <div
       {...getMenuProps({
@@ -101,93 +104,6 @@ function Autocomplete({
       })}
     >
       <div>
-        {!!autocompleteSuggestions &&
-          Object.entries(autocompletedSuggestions).map(
-            ([suggestionType, suggestions]) => {
-              return (
-                <React.Fragment key={suggestionType}>
-                  {getSuggestionTitle(
-                    suggestionType,
-                    autocompleteSuggestions
-                  ) &&
-                    suggestions.length > 0 && (
-                      <div className="sui-search-box__section-title">
-                        {getSuggestionTitle(
-                          suggestionType,
-                          autocompleteSuggestions
-                        )}
-                      </div>
-                    )}
-                  {suggestions.length > 0 && (
-                    <ul className="sui-search-box__suggestion-list">
-                      {suggestions.map(
-                        (
-                          suggestion:
-                            | AutocompletedSuggestion
-                            | AutocompletedResultSuggestion
-                        ) => {
-                          index++;
-                          if (suggestion.queryType === "results") {
-                            let displayField = null;
-                            if (autocompleteSuggestions === true) {
-                              displayField = Object.keys(suggestion.result)[0];
-                            } else {
-                              displayField = getSuggestionDisplayField(
-                                suggestionType,
-                                autocompleteSuggestions
-                              );
-                            }
-                            const suggestionValue =
-                              suggestion.result[displayField]?.raw;
-
-                            return (
-                              <li
-                                {...getItemProps({
-                                  key: suggestionValue,
-                                  index: index - 1,
-                                  item: {
-                                    suggestion: suggestionValue,
-                                  },
-                                })}
-                                data-transaction-name="query suggestion"
-                              >
-                                <span>{suggestionValue}</span>
-                              </li>
-                            );
-                          }
-
-                          return (
-                            <li
-                              {...getItemProps({
-                                key:
-                                  suggestion.suggestion || suggestion.highlight,
-                                index: index - 1,
-                                item: {
-                                  ...suggestion,
-                                  index: index - 1,
-                                },
-                              })}
-                              data-transaction-name="query suggestion"
-                            >
-                              {suggestion.highlight ? (
-                                <span
-                                  dangerouslySetInnerHTML={{
-                                    __html: suggestion.highlight,
-                                  }}
-                                />
-                              ) : (
-                                <span>{suggestion.suggestion}</span>
-                              )}
-                            </li>
-                          );
-                        }
-                      )}
-                    </ul>
-                  )}
-                </React.Fragment>
-              );
-            }
-          )}
         {!!autocompleteResults &&
           !!autocompletedResults &&
           typeof autocompleteResults !== "boolean" &&
@@ -201,46 +117,8 @@ function Autocomplete({
           !!autocompletedResults &&
           autocompletedResults.length > 0 && (
             <ul className="sui-search-box__results-list">
-              {autocompletedResults.map((result) => {
-                index++;
-                const titleField =
-                  typeof autocompleteResults === "boolean"
-                    ? null
-                    : autocompleteResults.titleField;
-                let labelSnippet = getSnippet(result, "label");
-                if (!labelSnippet) {
-                  console.log(JSON.stringify(result));
-                  labelSnippet = result.label.raw;
-                }
-                let titleSnippet = getSnippet(result, "name");
-                if (titleSnippet === undefined) {
-                  titleSnippet = `${getRaw(
-                    result,
-                    titleField
-                  )} | ${labelSnippet}`;
-                }
-                const titleRaw = getRaw(result, titleField);
-                return (
-                  <a href={"/variable/" + result._meta.id}>
-                    <li
-                      {...getItemProps({
-                        key: result.id.raw,
-                        index: index - 1,
-                        item: result,
-                      })}
-                    >
-                      {titleSnippet ? (
-                        <span
-                          dangerouslySetInnerHTML={{
-                            __html: titleSnippet,
-                          }}
-                        />
-                      ) : (
-                        <span>{titleRaw}</span>
-                      )}
-                    </li>
-                  </a>
-                );
+              {autocompletedResults.map((result, index: number) => {
+                return renderResults(result, index, autocompleteResults);
               })}
             </ul>
           )}
