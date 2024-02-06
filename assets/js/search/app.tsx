@@ -17,8 +17,8 @@ import {
 import {Layout} from "@elastic/react-search-ui-views";
 
 import {VariableResultView} from "./view_customisations/variable_result_view";
-import SortedMultiCheckboxFacet from "./view_customisations/SortedFacet_view";
-import Autocomplete from "./view_customisations/Autocomplete_view";
+import SortedMultiCheckboxFacet from "./view_customisations/sorted_facet_view";
+import Autocomplete from "./view_customisations/autocomplete_view";
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
