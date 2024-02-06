@@ -27,8 +27,8 @@ export function VariableResultView({
       </div>
       <div className="sui-result__body">
         <p>
-          Period: {result.period.raw.label} | Study: {result.study.raw.name} |
-          Dataset: {result.dataset.raw.name}
+          Study: {result.study.raw.name} | Dataset: {result.dataset.raw.name}
+          | Period: {result.period.raw.label}
         </p>
         <div className="sui-result__image">
           <img src={""} alt="" />
