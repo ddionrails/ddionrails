@@ -3,14 +3,16 @@
 
 """ Test cases for importer classes in ddionrails.concepts app """
 
+from pathlib import Path
+
 import pytest
 
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
-    ConceptualDatasetImport,
     PeriodImport,
     TopicJsonImport,
+    conceptual_dataset_import,
 )
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.studies.models import TopicList
@@ -25,31 +27,31 @@ def filename():
 
 @pytest.fixture
 def concept_importer(db, filename):  # pylint: disable=unused-argument
-    """ A concept importer """
+    """A concept importer"""
     return ConceptImport(filename)
 
 
 @pytest.fixture
 def analysis_unit_importer(db, filename, study):  # pylint: disable=unused-argument
-    """ An analysis unit importer """
+    """An analysis unit importer"""
     return AnalysisUnitImport(filename, study)
 
 
 @pytest.fixture
 def conceptual_dataset_importer(db, filename, study):  # pylint: disable=unused-argument
-    """ A conceptual dataset importer """
+    """A conceptual dataset importer"""
     return ConceptualDatasetImport(filename, study)
 
 
 @pytest.fixture
 def period_importer(db, filename, study):  # pylint: disable=unused-argument
-    """ A period importer """
+    """A period importer"""
     return PeriodImport(filename, study)
 
 
 @pytest.fixture
 def topic_json_importer(db, filename, study):  # pylint: disable=unused-argument
-    """ A topic json importer """
+    """A topic json importer"""
     return TopicJsonImport(filename, study)
 
 
@@ -80,19 +82,14 @@ class TestAnalysisUnitImport:
 
 
 class TestConceptualDatasetImport:
-    def test_import_with_valid_data(
-        self, conceptual_dataset_importer, valid_conceptual_dataset_data
-    ):
-        response = conceptual_dataset_importer.import_element(
-            valid_conceptual_dataset_data
-        )
-        assert isinstance(response, ConceptualDataset)
-        assert response.name == valid_conceptual_dataset_data["conceptual_dataset_name"]
+    def test_import_with_valid_data(self, valid_conceptual_dataset_data, study):
+        csv_path = Path(
+            "tests/functional/test_data/some-study/ddionrails/conceptual_datasets.csv"
+        ).absolute()
 
-    def test_import_with_invalid_data(self, conceptual_dataset_importer, empty_data):
-        response = conceptual_dataset_importer.import_element(empty_data)
-        expected = None
-        assert expected is response
+        response = conceptual_dataset_import(file_path=csv_path, study=study)
+        cd = ConceptualDataset.objects.get(name="some-conceptual-dataset")
+        assert cd.label == "some-conceptual-dataset"
 
 
 class TestPeriodImport:
@@ -109,7 +106,7 @@ class TestPeriodImport:
 
 class TestTopicJsonImport:
     def test_execute_import_method(self, topic_json_importer, mocker):
-        """ Test that JSON string gets converted to dictionary and "_import_topic_list" gets called """
+        """Test that JSON string gets converted to dictionary and "_import_topic_list" gets called"""
         mocked_import_topic_list = mocker.patch.object(
             TopicJsonImport, "_import_topic_list"
         )
@@ -119,7 +116,7 @@ class TestTopicJsonImport:
         mocked_import_topic_list.assert_called_once()
 
     def test_import_topic_list_method(self, topic_json_importer):
-        """ Test that _import_topic_list adds "topic_languages" to Study object and creates a TopicList object """
+        """Test that _import_topic_list adds "topic_languages" to Study object and creates a TopicList object"""
         study = topic_json_importer.study
         assert [] == study.topic_languages
         assert 0 == len(study.topic_languages)

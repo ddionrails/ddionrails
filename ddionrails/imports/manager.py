@@ -21,10 +21,10 @@ from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     ConceptImport,
-    ConceptualDatasetImport,
     PeriodImport,
     TopicImport,
     TopicJsonImport,
+    conceptual_dataset_import,
 )
 from ddionrails.data.imports import (
     DatasetImport,
@@ -159,7 +159,7 @@ class StudyImportManager:
                 ),
                 "periods": (PeriodImport, self.base_dir / "periods.csv"),
                 "conceptual_datasets": (
-                    ConceptualDatasetImport,
+                    conceptual_dataset_import,
                     self.base_dir / "conceptual_datasets.csv",
                 ),
                 "instruments.json": (
