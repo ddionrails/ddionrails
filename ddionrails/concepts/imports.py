@@ -3,20 +3,17 @@
 """ Importer classes for ddionrails.concepts app """
 
 import json
+from csv import DictReader
+from pathlib import Path
+from typing import Optional, Union
 
 from django.db.transaction import atomic
 
-from ddionrails.concepts.models import Concept
+from ddionrails.concepts.models import Concept, ConceptualDataset
 from ddionrails.imports import imports
 from ddionrails.studies.models import Study
 
-from .forms import (
-    AnalysisUnitForm,
-    ConceptForm,
-    ConceptualDatasetForm,
-    PeriodForm,
-    TopicForm,
-)
+from .forms import AnalysisUnitForm, ConceptForm, PeriodForm, TopicForm
 from .models import Topic
 
 
@@ -110,10 +107,18 @@ class PeriodImport(imports.CSVImport):
         return element
 
 
-class ConceptualDatasetImport(imports.CSVImport):
-    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
-        form = ConceptualDatasetForm
-
-    def process_element(self, element):
-        element["study"] = self.study.id
-        return element
+@atomic
+def conceptual_dataset_import(file_path: Union[Path, str], study: Optional[Study] = None):
+    """Import Conceptual Dataset Metadata."""
+    with open(file_path, "r", encoding="utf8") as file:
+        reader = DictReader(file)
+        conceptual_datasets = []
+        fields_to_update = ["label", "label_de", "description", "description_de"]
+        for line in reader:
+            conceptual_dataset, _ = ConceptualDataset.objects.get_or_create(
+                study=study, name=line["name"]
+            )
+            for key in fields_to_update:
+                setattr(conceptual_dataset, key, line.get(key, ""))
+            conceptual_datasets.append(conceptual_dataset)
+        ConceptualDataset.objects.bulk_update(conceptual_datasets, fields_to_update)
