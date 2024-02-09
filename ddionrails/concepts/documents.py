@@ -55,7 +55,7 @@ class ConceptDocument(Document):
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Concept
-        queryset_pagination = 5000  # TODO: Find out if this is the best fix
+        queryset_pagination = 5000 
 
     def get_queryset(self) -> Any:
         """
