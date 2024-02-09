@@ -55,7 +55,7 @@ register_converter(StudyConverter, "study")
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
     path("imprint/", imprint, name="imprint"),
-    re_path("pid/?", pid, name="pid"),
+    path("pid/", pid, name="pid"),
     path(
         "contact/",
         TemplateView.as_view(template_name="pages/contact.html"),
