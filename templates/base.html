@@ -86,13 +86,10 @@
                         ></a>
                     </li>
                     <li class="nav-item">
-                        <a
-                            type="button"
-                            class="btn"
-                            href="{% url 'workspace:logout' %}"
-                            data-en="Logout"
-                            data-de="Ausloggen"
-                        ></a>
+                        <form action="{% url 'logout' %}" method="post">
+                                {% csrf_token %}
+                                <button class="btn" type="submit">Log Out</button>
+                        </form>
                     </li>
                 {% else %}
                     <li class="nav-item">

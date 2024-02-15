@@ -2,7 +2,7 @@
 
 """ URLConf for ddionrails.workspace app """
 
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
+from django.contrib.auth.views import LoginView, PasswordResetView
 from django.urls import path
 
 from . import views
@@ -11,7 +11,6 @@ app_name = "workspace"
 
 urlpatterns = [
     path("login/", LoginView.as_view(redirect_authenticated_user=True), name="login"),
-    path("logout/", LogoutView.as_view(), {"next_page": "/"}, name="logout"),
     path("register/", views.register, name="register"),
     path("delete_account/", views.user_delete, name="user_delete"),
     path("password_reset/", PasswordResetView.as_view(), name="password_reset"),
