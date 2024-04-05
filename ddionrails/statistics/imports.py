@@ -1,4 +1,5 @@
 """ Import functions for statistical data used in data visualization."""
+
 import json
 from csv import DictReader
 from glob import glob
@@ -29,7 +30,11 @@ def statistics_import(file: Path, study: Study) -> None:
         for variable in variables:
             if not variable["statistics"] == "True":
                 continue
-            _import_single_variable(variable, study)
+            # If meta.json is missing skip import
+            try:
+                _import_single_variable(variable, study)
+            except FileNotFoundError:
+                continue
     enqueue(_metadata_import, study)
     return None
 
@@ -64,7 +69,8 @@ def _metadata_import(study: Study) -> None:
                 {
                     "variable": independent_variable.variable.name,
                     "label": independent_variable.variable.label_de,
-                    "values": independent_variable.labels,
+                    "labels": independent_variable.labels,
+                    "values": independent_variable.values,
                 }
                 for independent_variable in independent_variables.values()
             ],
@@ -108,7 +114,7 @@ def _import_independent_variables(path: Path) -> List[str]:
         variable_object = Variable.objects.filter(name=datum["variable"]).first()
         try:
             independent_variable, _ = IndependentVariable.objects.get_or_create(
-                labels=datum["values"], variable=variable_object
+                labels=datum["labels"], values=datum["values"], variable=variable_object
             )
         except BaseException as error:
             raise BaseException(f"{datum}  {variable_object}") from error

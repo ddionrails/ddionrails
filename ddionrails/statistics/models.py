@@ -17,6 +17,7 @@ class IndependentVariable(models.Model):
     id = models.UUIDField(primary_key=True)
     variable = models.ForeignKey(to=Variable, null=False, on_delete=models.CASCADE)
 
+    values = models.JSONField(default=list)
     labels = models.JSONField()
 
     def save(
