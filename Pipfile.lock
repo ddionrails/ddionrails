@@ -1570,15 +1570,16 @@
         },
         "pylance": {
             "hashes": [
-                "sha256:5834b2aa53377fe7616c9171153071cf7172273dd0d28505e85a56e6de7739e8",
-                "sha256:929b162f69b85ce3419fdce877e0dcdd858350f943c2af6459a26834434cca74",
-                "sha256:9eb842fd06f238d81e2775ac471471ca9220a25d7305544d15c7a7413741a49d",
-                "sha256:ce7b123537ab441c8c24a2632e0bba44dbb98d00b5728037030c73622772b58f",
-                "sha256:cecd1e19d9700f8e8162c9710af7b0c643c199667172a29d7db44b3414f205ad"
+                "sha256:02705f1c653cce6a687126d0e1d9f0e6d145cad35ca60c6902efb48a2329482e",
+                "sha256:38eb5d2e470b1bdd58007b71e02f1bbd8dec71a479619b16050fecf768b60939",
+                "sha256:660b6d39af187dad4995109a15863775fa329dccf8428193a98f32465e9d220f",
+                "sha256:b4d78d0c10e6d09a77bbf16fea3f2e78194e7c58c9e9238b0117f5780f41c1f6",
+                "sha256:db500b5816010ee4fb71807f6a799ff50d6a401c61e009d507705e6d4a0d55ba",
+                "sha256:ddda28d69e2a998fd4bf846abff51f8a08af789d2061199d6dec50d3a260a5a6"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==0.9.14"
+            "version": "==0.10.10"
         },
         "pylint": {
             "hashes": [
