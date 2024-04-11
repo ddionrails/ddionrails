@@ -117,7 +117,7 @@ def _import_independent_variables(path: Path) -> List[str]:
                 labels=datum["labels"], values=datum["values"], variable=variable_object
             )
         except BaseException as error:
-            raise BaseException(f"{datum}  {variable_object}") from error
+            raise RuntimeError(f"{datum}  {variable_object}") from error
 
         CACHE[datum["variable"]] = independent_variable
         independent_variable_names.append(datum["variable"])
@@ -128,7 +128,11 @@ def _import_independent_variables(path: Path) -> List[str]:
 def _import_single_type(variable: Variable, base_path: Path, stat_type: str) -> None:
     """Import alle statistics for a single value and of a single type."""
     statistics_path = base_path.joinpath(f"{stat_type}/{variable.name}")
-    independent_variables = _import_independent_variables(statistics_path)
+    # TODO: Temporary solution for missing metadata
+    try:
+        independent_variables = _import_independent_variables(statistics_path)
+    except FileNotFoundError:
+        return None
     files = glob(f"{statistics_path}/{variable.name}*.csv")
     for file in files:
         statistics = VariableStatistic()
