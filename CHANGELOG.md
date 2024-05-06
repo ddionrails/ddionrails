@@ -11,6 +11,19 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [7.2.4] - 2024-06-06
+
+### Changed
+
+- Apply language switch to variable images
+- Clear cache during data import
+- Move study import to beginning of imports
+
+### Fixed
+
+- search highlighting
+- several breaking changes from django and elastic upgrades
+
 ## [7.1.0] - 2023-07-19
 
 ### Changed
@@ -921,7 +934,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.1.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.2.4...develop
+[7.2.4]: https://github.com/ddionrails/ddionrails/compare/v7.1.0...v7.2.4
 [7.1.0]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...v7.1.0
 [7.0.0]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...v7.0.0
 [6.6.0]: https://github.com/ddionrails/ddionrails/compare/v6.5.2...v6.6.0
