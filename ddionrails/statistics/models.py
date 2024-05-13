@@ -4,10 +4,16 @@ from typing import Iterable, Optional
 
 from django.db import models
 
+from ddionrails.base.models import Singleton
 from ddionrails.data.models.variable import Variable
 from ddionrails.imports.helpers import hash_with_namespace_uuid
 
 # Create your models here.
+
+
+class GroupMetadata(Singleton):
+
+    metadata = models.JSONField()
 
 
 class IndependentVariable(models.Model):

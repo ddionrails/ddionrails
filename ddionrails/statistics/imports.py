@@ -11,6 +11,7 @@ from django_rq import enqueue
 
 from ddionrails.data.models.variable import Variable
 from ddionrails.statistics.models import (
+    GroupMetadata,
     IndependentVariable,
     StatisticsMetadata,
     VariableStatistic,
@@ -18,6 +19,13 @@ from ddionrails.statistics.models import (
 from ddionrails.studies.models import Study
 
 CACHE: Dict[str, IndependentVariable] = {}
+
+
+def group_metadata_import(file: Path):
+    with open(file, "r", encoding="utf-8") as json_file:
+        file_content = json.load(json_file)
+
+    GroupMetadata.objects.create(metadata=file_content)
 
 
 def statistics_import(file: Path, study: Study) -> None:
