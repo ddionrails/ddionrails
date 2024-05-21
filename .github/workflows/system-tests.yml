@@ -64,7 +64,7 @@ jobs:
           docker exec ddionrails_web_1 mv coverage.xml codecov/
       - name: Upload codecov report
         if: always()
-        uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865 # v3.1.2
+        uses: codecov/codecov-action@125fc84a9a348dbcf27191600683ec096ec9021c # v4.4.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./codecov/coverage.xml
