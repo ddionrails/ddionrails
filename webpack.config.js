@@ -34,7 +34,7 @@ const config = {
       "./assets/scss/topics.scss",
     ],
     feedback: ["./assets/js/feedback.ts"],
-    statistics: ["./assets/js/statistics.ts", "./assets/scss/statistics.scss"],
+    statistics: ["./assets/scss/statistics.scss"],
     statistics_navigation: [
       "./assets/js/statistics_navigation.ts",
       "./assets/scss/statistics_navigation.scss",

@@ -1,4 +1,5 @@
 """Views for the statistics data visualization app."""
+
 from typing import Any, Dict
 
 from django.conf import settings
@@ -22,12 +23,11 @@ def statistics_detail_view(
     """Render numerical and categorical statistics views."""
     context: Dict[str, Any] = {}
     statistics_server_base_url = f"{request.get_host()}{settings.STATISTICS_SERVER_URL}"
-    context[
-        "statistics_server_url"
-    ] = f"{request.scheme}://{statistics_server_base_url}{plot_type}/"
+    context["statistics_server_url"] = f"{request.scheme}://{statistics_server_base_url}"
 
     context["namespace"] = NAMESPACE
     context["study"] = study
+    context["plot_type"] = plot_type
     context["server_metadata"] = {
         "url": context["statistics_server_url"],
         "study": study.name,

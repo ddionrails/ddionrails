@@ -15,7 +15,7 @@ services:
         "-",
         "--log-level=info",
         "--access-logformat",
-        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"'
+        '[gunicorn] %(h)s %(l)s %(t)s "%(r)s" %(s)s %(b)s "%(f)s" "%(a)s"',
       ]
     depends_on:
       postgres:
@@ -48,6 +48,7 @@ services:
       - media:/var/django/media
       # Hardcoded again in ./config/settings/base.py
       - backup:/var/lib/ddionrails/backup
+      - statistics-data:/var/statistics_data
 
   postgres:
     image: postgres:15.1-alpine3.16
@@ -55,11 +56,7 @@ services:
     #env_file:
     #  - docker/environments/database.env
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"
-        ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -83,7 +80,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl --silent --fail elastic:$$ELASTIC_PASSWORD@localhost:9200/_cluster/health || exit 0"
+          "curl --silent --fail elastic:$$ELASTIC_PASSWORD@localhost:9200/_cluster/health || exit 0",
         ]
       interval: 10s
       timeout: 5s
@@ -154,18 +151,20 @@ services:
       - no-new-privileges
 
   statistics-server:
-    image: paneldata/statistics-server:latest
-    command: >
-      bash -c "
-        xtail /var/log/shiny-server/ & shiny-server 2>&1"
+    image: paneldata/statistics-server:dash
+    build: https://github.com/ddionrails/statistics-server.git#main:.
     depends_on:
       - web
     expose:
-      - 3838
+      - 8081
     networks:
       - ddi_net
     volumes:
-      - ./docker/transfer.server/R:/srv/transfer.server/R
+      - statistics-data:/statistics_data
+    environment:
+      - STATISTICS_BASE_PATH=/statistics_data
+      - UI_TRANSLATIONS_PATH=statistics_server/tests/test_data/ui_translations.yaml
+      - URL_BASE_PATHNAME=/statistics-server/
     restart: on-failure:5
     security_opt:
       - no-new-privileges
@@ -177,7 +176,7 @@ volumes:
   elastic_data:
   media:
   static:
-
+  statistics-data:
 
 networks:
   ddi_net:
