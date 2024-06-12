@@ -41,7 +41,6 @@ from ddionrails.instruments.imports import (
     question_variable_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
-from ddionrails.statistics.imports import statistics_import
 from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
 from ddionrails.studies.models import Study
 from ddionrails.workspace.imports import script_metadata_import
@@ -199,7 +198,6 @@ class StudyImportManager:
                 ),
                 "attachments": (AttachmentImport, self.base_dir / "attachments.csv"),
                 "publications": (PublicationImport, self.base_dir / "publications.csv"),
-                "statistics": (statistics_import, self.base_dir / "variables.csv"),
                 "questions_images": (
                     question_image_import.questions_images_import,
                     self.base_dir.joinpath("questions_images.csv"),

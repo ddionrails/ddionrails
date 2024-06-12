@@ -8,8 +8,6 @@ from rest_framework import routers
 
 from ddionrails.api.views.datasets import (
     DatasetViewSet,
-    StatisticsMetadataViewSet,
-    StatisticViewSet,
     VariableLabelsViewSet,
     VariableViewSet,
 )
@@ -40,10 +38,6 @@ ROUTER.register(
     r"question-comparison", QuestionComparisonViewSet, basename="question-comparison"
 )
 ROUTER.register(r"users", UserViewSet, basename="user")
-ROUTER.register(r"statistic", StatisticViewSet, basename="statistic")
-ROUTER.register(
-    r"statistics-metadata", StatisticsMetadataViewSet, basename="statistics-metadata"
-)
 ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")

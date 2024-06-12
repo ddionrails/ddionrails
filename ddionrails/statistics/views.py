@@ -81,8 +81,8 @@ class StatisticsNavView(TemplateView):
             "study": context["study"].name,
         }
 
-        statistics_variables = Variable.objects.exclude(statistics_data=None).filter(
-            dataset__study=context["study"]
+        statistics_variables = Variable.objects.filter(
+            dataset__study=context["study"], statistics_flag=True
         )
         root_topics = Topic.objects.filter(study=context["study"], parent=None)
 
@@ -93,16 +93,12 @@ class StatisticsNavView(TemplateView):
 
         context["categorical_variables"] = {}
         context["numerical_variables"] = {}
-        for variable in statistics_variables.filter(
-            statistics_data__plot_type="categorical"
-        ):
+        for variable in statistics_variables.filter(statistics_type="categorical"):
             context["categorical_variables"][
                 variable.id
             ] = f"{variable.label_de}: {variable.name}"
 
-        for variable in statistics_variables.filter(
-            statistics_data__plot_type="numerical"
-        ):
+        for variable in statistics_variables.filter(statistics_type="numerical"):
             context["numerical_variables"][
                 variable.id
             ] = f"{variable.label_de}: {variable.name}"

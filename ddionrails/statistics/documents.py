@@ -24,7 +24,6 @@ from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
 from ddionrails.data.models.variable import Variable
-from ddionrails.statistics.models import VariableStatistic
 
 
 @registry.register_document
@@ -80,17 +79,12 @@ class VariableStatisticDocument(Document):
 
     def get_queryset(self) -> QuerySet[Variable]:
         """Only index variables with statistics data."""
-        return (
-            super()
-            .get_queryset()
-            .exclude(statistics_data=None)
-            .select_related(
-                "concept",
-                "dataset",
-                "dataset__analysis_unit",
-                "dataset__period",
-                "dataset__study",
-            )
+        return Variable.objects.filter(statistics_flag=True).select_related(
+            "concept",
+            "dataset",
+            "dataset__analysis_unit",
+            "dataset__period",
+            "dataset__study",
         )
 
     @staticmethod
