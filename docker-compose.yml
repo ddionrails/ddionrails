@@ -80,7 +80,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl --silent --fail elastic:$$ELASTIC_PASSWORD@localhost:9200/_cluster/health || exit 0",
+          "curl --silent --fail -u elastic:$$ELASTIC_PASSWORD localhost:9200/_cluster/health",
         ]
       interval: 10s
       timeout: 5s
@@ -164,7 +164,7 @@ services:
       - statistics-data:/statistics_data
     environment:
       - STATISTICS_BASE_PATH=/statistics_data
-      - UI_TRANSLATIONS_PATH=statistics_server/tests/test_data/ui_translations.yaml
+      - UI_TRANSLATIONS_PATH=statistics_server/ui_translations.yaml
       - URL_BASE_PATHNAME=/statistics-server/
     restart: on-failure:5
     security_opt:
