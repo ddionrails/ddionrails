@@ -223,12 +223,12 @@
         },
         "django-import-export": {
             "hashes": [
-                "sha256:0c342c48fdf70e4e65f0bb22c136508835a91664222d3b1da56e3c9059423756",
-                "sha256:8e6194c952e29efc6851a2a4796a3dce13022ae8aa04a2cb8c2ecd6be4320fad"
+                "sha256:0c9cbc4f973ddf1cc0d88f075974d44645c34f45e896a02a6d358c3e9bd8bb6d",
+                "sha256:3caf9fd57304eac78d3ac0bde216fb03f388a96b4d55a71889734bc92ea6dd69"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.8'",
-            "version": "==4.0.2"
+            "version": "==4.0.8"
         },
         "django-model-utils": {
             "hashes": [
