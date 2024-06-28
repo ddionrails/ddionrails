@@ -92,7 +92,6 @@ services:
       - discovery.type=single-node
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - logger.level=OFF
       # Sets the RAM the java VM is allowed to use
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     networks:
