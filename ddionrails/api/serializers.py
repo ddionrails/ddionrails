@@ -2,6 +2,7 @@
 
 Serializers are used to serialize django ORM objects to standard data formats.
 """
+
 from typing import Any
 
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
@@ -248,11 +249,19 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
             "dataset",
             "study",
             "position",
+            "topics",
         ]
 
 
 class StatisticsVariableSerializer(VariableSerializer):
     """Expand VariableSerializer with fields needed for statistics functions."""
+
+    topics = serializers.SlugRelatedField(
+        source="concept.topics", read_only=True, slug_field="label", many=True
+    )
+    topics_de = serializers.SlugRelatedField(
+        source="concept.topics", read_only=True, slug_field="label_de", many=True
+    )
 
     class Meta:
         model = Variable
@@ -267,6 +276,8 @@ class StatisticsVariableSerializer(VariableSerializer):
             "dataset",
             "study",
             "statistics_type",
+            "topics",
+            "topics_de",
         ]
 
 

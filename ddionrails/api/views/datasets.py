@@ -85,6 +85,12 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         if statistics_data:
             self.serializer_class = StatisticsVariableSerializer
             queryset_filter["statistics_flag"] = True
+            return (
+                Variable.objects.filter(**queryset_filter)
+                .select_related("dataset", "dataset__study", "concept")
+                .prefetch_related("concept__topics")
+                .distinct()
+            )
 
         return (
             Variable.objects.filter(**queryset_filter)
