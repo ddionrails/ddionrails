@@ -1590,16 +1590,16 @@
         },
         "pylance": {
             "hashes": [
-                "sha256:2f3d6f9eec1f59f45dccb01075ba79868b8d37c8371d6210bcf6418217a0dd8b",
-                "sha256:4018ba016f1445874960a4ba2ad5c80cb380f3116683282ee8beabd38fa8989d",
-                "sha256:c51d4b6e59cf4dc97c11a35b299f11e80dbdf392e2d8dc498573c26474a3c19e",
-                "sha256:d1ddd7700924bc6b6b0774ea63d2aa23f9210a86cd6d6af0cdfa987df776d50d",
-                "sha256:e3cb92547e145f5bfb0ea7d6f483953913b9bdd44c45bea84fc95a18da9f5853",
-                "sha256:f4861ab466c94b0f9a4b4e6de6e1dfa02f40e7242d8db87447bc7bb7d89606ac"
+                "sha256:21dfcee2d599a306e1ab6a2c79ffe72ff3ea6e544074e08c1702347f2421d333",
+                "sha256:33d46b088eae4d4f0d6ca6b05667f549d700cab8b0466543eedd1a670cf08b95",
+                "sha256:4de53b9def8ecc1219e2ad48e66b986fea13a21f4fa208ea0a0524dbaa6a2f37",
+                "sha256:51576d849f60f7f0019f9792633af70331b866dabb455434835392777f3280de",
+                "sha256:793029fc787a4fe173869650f1d2c5e663febe919a1e535028b75b60ae66f82b",
+                "sha256:d3b3b87415e72cc9899c4de4f2f118bce6448d73a78379a318c2982b4110481d"
             ],
             "index": "pypi",
             "markers": "python_version >= '3.9'",
-            "version": "==0.13.0"
+            "version": "==0.14.0"
         },
         "pylint": {
             "hashes": [
