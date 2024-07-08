@@ -64,20 +64,9 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
       for (const variable of sortedVariables) {
         const listElement = document.createElement("li");
         containerNode.appendChild(listElement);
-        if (variable["statistics_type"] === "ordinal") {
-          listElement.appendChild(
-            renderVariableStatisticsLink(variable, "categorical")
-          );
-          const nextListNode = document.createElement("li");
-          containerNode.appendChild(nextListNode);
-          nextListNode.appendChild(
-            renderVariableStatisticsLink(variable, "numerical")
-          );
-        } else {
-          listElement.appendChild(
-            renderVariableStatisticsLink(variable, variable["statistics_type"])
-          );
-        }
+        listElement.appendChild(
+          renderVariableStatisticsLink(variable, variable["statistics_type"])
+        );
       }
       containerNode.parentElement
         .querySelector(".loading-spinner")
@@ -147,9 +136,6 @@ window.addEventListener("load", function () {
   }
 
   navSwitch.addEventListener("click", () => {
-    const buttonsContainer = document.querySelectorAll(
-      "#statistics-button-container"
-    );
     buttonContainer.classList.toggle("flex-column");
     buttonContainer.classList.toggle("flex-row");
     const buttons = document.querySelectorAll(
