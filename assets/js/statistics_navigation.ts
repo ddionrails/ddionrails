@@ -117,8 +117,14 @@ function toggleNavigationButtons(
       topicVariablesContainer
         .querySelector(".loading-spinner")
         .classList.remove("hidden");
-      topicVariablesContainer.querySelector("h3").textContent =
-        button.getAttribute("title");
+      const heading = topicVariablesContainer.querySelector("h3");
+      for (const langAttr of ["data-en", "data-de"]) {
+        heading.setAttribute(
+          langAttr,
+          button.querySelector("p").getAttribute(langAttr)
+        );
+      }
+      heading.innerHTML = button.querySelector("p").textContent;
       matchVariablesToTopic(button.id, variableList);
     }
   }

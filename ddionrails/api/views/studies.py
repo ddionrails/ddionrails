@@ -4,6 +4,8 @@
 
 
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -35,8 +37,8 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
 class TopicRootAndLeaves(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
-    @staticmethod
-    def list(request: Request) -> Response:
+    @method_decorator(cache_page(60 * 2))
+    def list(self, request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
         language = request.query_params.get("language", "en")
