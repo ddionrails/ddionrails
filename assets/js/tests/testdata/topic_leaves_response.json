@@ -1,0 +1,30 @@
+{
+    "dp": {
+        "label": "demography and population",
+        "children": [
+            "birth date / age / year of death",
+            "household size and structure",
+            "birth history",
+            "sex"
+        ]
+    },
+    "im": {
+        "label": "integration, migration, transnationalization",
+        "children": [
+            "emigration",
+            "migration background",
+            "inner-german migration",
+            "migration history",
+            "own nationality",
+            "broad definition of migration background",
+            "cultural integration / language",
+            "education in country of origin",
+            "interethnic contacts / segregation",
+            "discrimination / attitude toward migrants",
+            "general intentions to emigrate",
+            "transnational relationships",
+            "identification",
+            "intentions to stay / desires to return"
+        ]
+    }
+}
