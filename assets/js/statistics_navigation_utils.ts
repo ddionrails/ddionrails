@@ -2,7 +2,7 @@
  *
  */
 export async function setUpSubTopics() {
-  const apiCall: URL = new URL("http://0.0.0.0");
+  const apiCall: URL = new URL(window.location.origin);
   let value: string | undefined = "";
 
   const request = new XMLHttpRequest();

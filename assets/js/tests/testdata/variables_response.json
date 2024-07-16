@@ -1,0 +1,128 @@
+[
+    {
+        "id": "35c7bced-8bbc-5760-9159-5863cc42287e",
+        "name": "pli0098_h",
+        "label": "",
+        "label_de": "Frequency going to church, attending religious events",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "4a232a90-4cb8-5713-a91c-9c38e4752b5b",
+        "name": "pli0089",
+        "label": "",
+        "label_de": "Visit Sport Events",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "5e1885da-6dee-5d5f-b93b-721b4ae7e3fa",
+        "name": "pli0081",
+        "label": "",
+        "label_de": "Visit Family, Relatives",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "672e6557-45ad-5d53-a332-179f120479f3",
+        "name": "pli0091_h",
+        "label": "",
+        "label_de": "Frequency visiting the cinema, pop or jazz concerts, dance events / discos",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "687e84cc-5b72-5e2d-8382-10f85772b08c",
+        "name": "pli0083",
+        "label": "",
+        "label_de": "Watch Television, Video",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "837ed65a-0df5-5b97-988c-d5519729e75d",
+        "name": "pli0080",
+        "label": "",
+        "label_de": "Visit Neighbors, Friends",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "categorical",
+        "topics": [
+            "leisure time"
+        ],
+        "topics_de": [
+            "Freizeit"
+        ]
+    },
+    {
+        "id": "a96ec9fb-eeb6-517c-9c5a-51776c58a5f5",
+        "name": "pli0059",
+        "label": "",
+        "label_de": "hours of sleep, normal workday",
+        "dataset_name": "p_statistics",
+        "study_name": "soep-core",
+        "study_label": "SOEP-Core",
+        "dataset": "1d0a9495-e1a5-525d-9464-a47988ad05dd",
+        "study": "d3a16810-46b8-5853-a304-21d3a12046ca",
+        "statistics_type": "numerical",
+        "topics": [
+            "time use"
+        ],
+        "topics_de": [
+            "Zeitverwendung"
+        ]
+    }
+]
