@@ -1,7 +1,11 @@
 {% load render_bundle from webpack_loader %}
 {% load static %}
 <!DOCTYPE html>
+{% if request.COOKIES.paneldata_language == "de" %}
+<html lang="de">
+{% else %}
 <html lang="en">
+{% endif %}
 
     <head>
         <meta charset="utf-8">
