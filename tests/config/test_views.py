@@ -49,7 +49,6 @@ class TestPageViews:
 
 @pytest.mark.usefixtures("news")
 class TestViewFunctions(unittest.TestCase):
-
     news: News = News()
     news_bullets: List[str] = []
 
@@ -67,7 +66,6 @@ class TestViewFunctions(unittest.TestCase):
 
 
 class TestErrorTemplates:
-
     url = reverse("home")
 
     def test_400_template(self, rf):

@@ -249,7 +249,6 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
             "dataset",
             "study",
             "position",
-            "topics",
         ]
 
 
