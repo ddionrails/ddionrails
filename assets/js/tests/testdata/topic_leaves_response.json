@@ -6,6 +6,12 @@
             "household size and structure",
             "birth history",
             "sex"
+        ],
+        "children_de": [
+            "Geburtsdatum / Alter / Todesjahr",
+            "Haushaltsgroesse und -struktur",
+            "Geburtsbiographie",
+            "Geschlecht"
         ]
     },
     "im": {
@@ -25,6 +31,22 @@
             "transnational relationships",
             "identification",
             "intentions to stay / desires to return"
+        ],
+        "children_de": [
+            "Auswanderung",
+            "Migrationshintergrund",
+            "innerdeutsche Migration",
+            "Migrationsbiographie",
+            "eigene Nationalitaet",
+            "weite Definition von Migrationshintergrund",
+            "kulturelle Eingliederung/Sprache",
+            "im Herkunftsland erworbene Bildung",
+            "interethnische Kontakte/Segregation",
+            "Diskriminierung/Einstellung zu Migranten",
+            "allgemeine Auswanderungsabsichten",
+            "transnationale Beziehungen",
+            "Identifikation",
+            "Bleibeabsichten/Rueckkehrwunsch"
         ]
     },
     "tu": {
@@ -34,6 +56,12 @@
             "time use",
             "mobility",
             "leisure time"
+        ],
+        "children_de": [
+            "Energieverbrauch",
+            "Zeitverwendung",
+            "Mobilitaet",
+            "Freizeit"
         ]
     }
 }

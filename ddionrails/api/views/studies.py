@@ -38,12 +38,12 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
 class TopicRootAndLeaves(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
-    @method_decorator(cache_page(60 * 2))
+    # @method_decorator(cache_page(60 * 2))
     def list(self, request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
         topic = request.query_params.get("topic", None)
-        language = request.query_params.get("language", "en")
+        language = request.query_params.get("language")
         language_prefix = ""
         if language == "de":
             language_prefix = "_de"
@@ -62,6 +62,10 @@ class TopicRootAndLeaves(viewsets.GenericViewSet):
                     getattr(leave, f"label{language_prefix}") for leave in leaves
                 ],
             }
+            if not language:
+                output[topic.name]["children_de"] = [
+                    getattr(leave, f"label_de") for leave in leaves
+                ]
 
         return Response(output)
 

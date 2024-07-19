@@ -3,6 +3,7 @@ import {Variable} from "./types";
 type topicLeaveMetadata = {
   label: string;
   children: Array<string>;
+  children_de: Array<string>;
 };
 
 type topicLeaveResponse = {
@@ -14,6 +15,8 @@ export function renderVariableStatisticsLink(
   type: string,
 ): HTMLElement {
   const linkElement = document.createElement("a");
+  linkElement.setAttribute("data-en", variable["label"])
+  linkElement.setAttribute("data-de", variable["label_de"])
   if (document.querySelector("html").getAttribute("lang") === "de") {
     linkElement.textContent = variable["label_de"];
   } else {
@@ -32,8 +35,10 @@ function nestIntoList(element: Element) {
   return listElement
 }
 
+
+//TODO: Look into refactoring language handling
 /**
- *
+ * 
  */
 export async function setUpSubTopics(
   variableMetadata: Array<Variable>,
@@ -45,12 +50,6 @@ export async function setUpSubTopics(
   const apiURL = new URL(window.location.origin + "/api/topic-leaves");
   apiURL.searchParams.append("study", study);
   apiURL.searchParams.append("topic", topicName);
-  apiURL.searchParams.append("language", language);
-
-  let languageLabel: "topics" | "topics_de" = "topics";
-  if (language === "de") {
-    languageLabel = "topics_de";
-  }
 
   const response = await fetch(apiURL);
   if (!response.ok) {
@@ -59,11 +58,15 @@ export async function setUpSubTopics(
   const data: topicLeaveResponse =
     (await response.json()) as topicLeaveResponse;
   const topicToVariableMap: Map<string, Array<Element>> = new Map();
+  const translationMap: Map<string, string> = new Map();
+  let index = 0;
   for (const child of data[topicName]["children"]) {
     topicToVariableMap.set(child, new Array());
+    translationMap.set(child, data[topicName]["children_de"][index])
+    index = index + 1;
   }
   for (const variable of variableMetadata) {
-    for (const topic of variable[languageLabel]) {
+    for (const topic of variable["topics"]) {
       if (topicToVariableMap.has(topic)) {
         topicToVariableMap
           .get(topic)
@@ -81,7 +84,14 @@ export async function setUpSubTopics(
     }
     const subTopicHeaderListElement = document.createElement("li")
     const subTopicHeader = document.createElement("h4")
+
     subTopicHeader.textContent = topicKey
+    if (language === "de") {
+      subTopicHeader.textContent = translationMap.get(topicKey)
+    }
+    subTopicHeader.setAttribute("data-de", translationMap.get(topicKey))
+    subTopicHeader.setAttribute("data-en", topicKey)
+
     subTopicHeaderListElement.appendChild(subTopicHeader)
     containerNode.appendChild(subTopicHeaderListElement)
     const variableLinks = topicToVariableMap.get(topicKey).map((variableLink) => nestIntoList(variableLink))
