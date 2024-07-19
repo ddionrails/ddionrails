@@ -38,7 +38,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
 class TopicRootAndLeaves(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
-    # @method_decorator(cache_page(60 * 2))
+    @method_decorator(cache_page(60 * 2))
     def list(self, request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
