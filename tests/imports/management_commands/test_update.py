@@ -346,7 +346,7 @@ class TestUpdate(unittest.TestCase):
         self.assertNotIn(self.dataset.id, datasets_ids)
 
     def test_basket_protection(self):
-        """A clean update should leave baskets intact."""
+        """A clean update should leaf baskets intact."""
         clean_import = False
 
         basket = BasketFactory(name="study_basket")

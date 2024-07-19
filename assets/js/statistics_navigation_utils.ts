@@ -1,13 +1,13 @@
 import {Variable} from "./types";
 
-type topicLeaveMetadata = {
+type topicLeafMetadata = {
   label: string;
   children: Array<string>;
   children_de: Array<string>;
 };
 
-type topicLeaveResponse = {
-  [id: string]: topicLeaveMetadata;
+type topicLeafResponse = {
+  [id: string]: topicLeafMetadata;
 };
 
 export function renderVariableStatisticsLink(
@@ -47,7 +47,7 @@ export async function setUpSubTopics(
 ) {
   const language = document.querySelector("html").getAttribute("lang");
   const study: string = variableMetadata[0]["study_name"];
-  const apiURL = new URL(window.location.origin + "/api/topic-leaves");
+  const apiURL = new URL(window.location.origin + "/api/topic-leafs");
   apiURL.searchParams.append("study", study);
   apiURL.searchParams.append("topic", topicName);
 
@@ -55,8 +55,8 @@ export async function setUpSubTopics(
   if (!response.ok) {
     throw new Error(`Response status: ${response.status}`);
   }
-  const data: topicLeaveResponse =
-    (await response.json()) as topicLeaveResponse;
+  const data: topicLeafResponse =
+    (await response.json()) as topicLeafResponse;
   const topicToVariableMap: Map<string, Array<Element>> = new Map();
   const translationMap: Map<string, string> = new Map();
   let index = 0;

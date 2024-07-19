@@ -180,7 +180,7 @@ class BasketVariableSet(  # pylint: disable=too-many-ancestors
                 name=data["topic"], study=basket.study
             )
             variable_filter = {
-                "concept__topics__in": topic_object.get_topic_tree_leaves()
+                "concept__topics__in": topic_object.get_topic_tree_leafs()
             }
 
         if "concept" in data:

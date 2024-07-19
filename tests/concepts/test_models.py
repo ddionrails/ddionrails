@@ -44,7 +44,7 @@ class TestTopicModel:
         assert child_topic in children
         assert grand_child_topic in children
 
-    def test_get_topic_tree_leaves(self, topic, concept):
+    def test_get_topic_tree_leafs(self, topic, concept):
         child_topic = TopicFactory(name="child-topic", parent=topic)
         grand_child_topic = TopicFactory(name="grand-child-topic", parent=child_topic)
         grand_grand_child_topic = TopicFactory(
@@ -58,7 +58,7 @@ class TestTopicModel:
         other_grand_child_topic.concepts.add(concept)
         other_grand_child_topic.save()
 
-        children = topic.get_topic_tree_leaves()
+        children = topic.get_topic_tree_leafs()
         assert child_topic not in children
         assert grand_child_topic not in children
         assert grand_grand_child_topic in children

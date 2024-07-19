@@ -111,7 +111,7 @@ class Topic(models.Model, ModelMixin):
             children += list(Topic.get_children(child.id))
         return children
 
-    def get_topic_tree_leaves(self) -> QuerySet[Topic]:
+    def get_topic_tree_leafs(self) -> QuerySet[Topic]:
         """Get all ancestor Topics with no further child topics.
 
         Works recursively similar to get_children but does not return

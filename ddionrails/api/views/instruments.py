@@ -135,7 +135,7 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
                     Topic, name=topic, study__name=study
                 )
                 concepts = Concept.objects.filter(
-                    topics__in=topic_object.get_topic_tree_leaves()
+                    topics__in=topic_object.get_topic_tree_leafs()
                 ).distinct()
                 queryset_filter["concepts_questions__concept__in"] = concepts
             if instrument:

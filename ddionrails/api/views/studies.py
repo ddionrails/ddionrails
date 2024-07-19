@@ -35,7 +35,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
 # Proper REST views start here
 
 
-class TopicRootAndLeaves(viewsets.GenericViewSet):
+class TopicRootAndLeafs(viewsets.GenericViewSet):
     queryset = Study.objects.all()
 
     @method_decorator(cache_page(60 * 2))
@@ -55,16 +55,16 @@ class TopicRootAndLeaves(viewsets.GenericViewSet):
         output = {}
         for topic in root_topics:
             topic: Topic
-            leaves = topic.get_topic_tree_leaves()
+            leafs = topic.get_topic_tree_leafs()
             output[topic.name] = {
                 "label": getattr(topic, f"label{language_prefix}"),
                 "children": [
-                    getattr(leave, f"label{language_prefix}") for leave in leaves
+                    getattr(leaf, f"label{language_prefix}") for leaf in leafs
                 ],
             }
             if not language:
                 output[topic.name]["children_de"] = [
-                    getattr(leave, f"label_de") for leave in leaves
+                    getattr(leaf, f"label_de") for leaf in leafs
                 ]
 
         return Response(output)

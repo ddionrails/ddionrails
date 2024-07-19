@@ -18,7 +18,7 @@ from ddionrails.api.views.instruments import (
 )
 from ddionrails.api.views.studies import (
     StudyViewSet,
-    TopicRootAndLeaves,
+    TopicRootAndLeafs,
     TopicTreeViewSet,
 )
 from ddionrails.api.views.user_tools import (
@@ -44,7 +44,7 @@ ROUTER.register(
 ROUTER.register(r"users", UserViewSet, basename="user")
 ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
-ROUTER.register(r"topic-leaves", TopicRootAndLeaves, basename="topic-leaves")
+ROUTER.register(r"topic-leafs", TopicRootAndLeafs, basename="topic-leafs")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
 ROUTER.register(r"variable_labels", VariableLabelsViewSet, basename="variable_labels")
 

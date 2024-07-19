@@ -67,7 +67,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
                     Topic, name=topic, study__name=study
                 )
                 queryset_filter["concept__topics__in"] = (
-                    topic_object.get_topic_tree_leaves()
+                    topic_object.get_topic_tree_leafs()
                 )
             if dataset:
                 dataset_object: Dataset = get_object_or_404(

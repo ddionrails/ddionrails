@@ -1,6 +1,6 @@
 import {setUpSubTopics} from "../statistics_navigation_utils";
 
-const topicLeavesApiResponse = require("./testdata/topic_leaves_response.json");
+const topicLeafsApiResponse = require("./testdata/topic_leafs_response.json");
 const variableApiResponse = require("./testdata/variables_response.json");
 
 const origin = "http://localhost";
@@ -15,7 +15,7 @@ Object.defineProperty(window, "location", {
 });
 
 global.fetch = jest.fn(() => {
-  return Promise.resolve({json: () => Promise.resolve({"tu": topicLeavesApiResponse["tu"]}), ok: true});
+  return Promise.resolve({json: () => Promise.resolve({"tu": topicLeafsApiResponse["tu"]}), ok: true});
 }) as jest.Mock;
 
 global.document = Object.create(document);
