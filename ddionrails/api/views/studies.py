@@ -19,6 +19,7 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
     """Retrieve the topic tree of a study from a JSON field."""
 
     queryset = Study.objects.all()
+    pagination_class = None
 
     @staticmethod
     def list(request: Request) -> Response:
@@ -41,12 +42,16 @@ class TopicRootAndLeaves(viewsets.GenericViewSet):
     def list(self, request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
         study = request.query_params.get("study", None)
+        topic = request.query_params.get("topic", None)
         language = request.query_params.get("language", "en")
         language_prefix = ""
         if language == "de":
             language_prefix = "_de"
         study_object = get_object_or_404(Study, name=study)
-        root_topics = Topic.objects.filter(study=study_object, parent=None)
+        if topic:
+            root_topics = Topic.objects.filter(study=study_object, name=topic)
+        else:
+            root_topics = Topic.objects.filter(study=study_object, parent=None)
         output = {}
         for topic in root_topics:
             topic: Topic

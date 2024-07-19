@@ -1,15 +1,6 @@
-type Variable = {
-  id: string;
-  name: string;
-  label: string;
-  label_de: string;
-  dataset_name: string;
-  study_name: string;
-  study_label: string;
-  dataset: string;
-  study: string;
-  statistics_type: string;
-};
+import {Variable} from "./types";
+import {renderVariableStatisticsLink} from "./statistics_navigation_utils";
+import {setUpSubTopics} from "./statistics_navigation_utils";
 
 const topicMetadata = JSON.parse(document.getElementById("topics").textContent);
 const apiMetadata = JSON.parse(
@@ -23,19 +14,6 @@ const allVariablesContainer = document.getElementById(
   "all-variables-container"
 );
 const topicVariablesContainer = document.querySelector(".variables-container");
-
-const renderVariableStatisticsLink = (
-  variable: any,
-  type: string
-): HTMLElement => {
-  const linkElement = document.createElement("a");
-  linkElement.textContent = variable["label_de"];
-  const url = new URL(window.location + `${type}/`);
-  url.searchParams.append("variable", variable["id"]);
-
-  linkElement.href = url.toString();
-  return linkElement;
-};
 
 const sortVariables = (first: Variable, second: Variable): number => {
   if (first["label_de"] < second["label_de"]) {
@@ -58,9 +36,17 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
   apiCall.searchParams.append("paginate", "False");
   request.open("GET", apiCall, true);
   request.responseType = "json";
-  request.onload = (_) => {
+  request.onload = async (_) => {
     if (request.readyState === 4 && request.status === 200) {
       const sortedVariables: Variable[] = request.response.sort(sortVariables);
+      if (sortedVariables.length > 10) {
+        await setUpSubTopics(sortedVariables, topicName, containerNode)
+
+        containerNode.parentElement
+          .querySelector(".loading-spinner")
+          .classList.add("hidden");
+        return
+      }
       for (const variable of sortedVariables) {
         const listElement = document.createElement("li");
         containerNode.appendChild(listElement);
@@ -130,7 +116,7 @@ function toggleNavigationButtons(
   }
 }
 
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
   const buttonContainer = buttonNavContainer;
   const buttonContainers = Array.from(
     buttonContainer.getElementsByClassName("one-button")

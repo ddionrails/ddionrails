@@ -26,5 +26,14 @@
             "identification",
             "intentions to stay / desires to return"
         ]
+    },
+    "tu": {
+        "label": "time use and environmental behavior",
+        "children": [
+            "energy use",
+            "time use",
+            "mobility",
+            "leisure time"
+        ]
     }
 }

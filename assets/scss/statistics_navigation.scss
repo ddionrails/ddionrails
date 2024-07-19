@@ -102,3 +102,22 @@ button > p {
 .one-button > * li {
   padding-right: 2em;
 }
+
+.variables-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: 80vh;
+  max-width: 40vw;
+}
+
+.variables-list > :has(h4) {
+  list-style-type: none;
+  padding-left: 0;
+  margin-left: 0;
+  offset: 10px;
+}
+
+.variables-list > li:not(:has(h4)) {
+  margin-left: 2em;
+}
