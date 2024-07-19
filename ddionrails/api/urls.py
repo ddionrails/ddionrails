@@ -16,11 +16,7 @@ from ddionrails.api.views.instruments import (
     QuestionComparisonViewSet,
     QuestionViewSet,
 )
-from ddionrails.api.views.studies import (
-    StudyViewSet,
-    TopicRootAndLeafs,
-    TopicTreeViewSet,
-)
+from ddionrails.api.views.studies import StudyViewSet, TopicRootAndLeafs, TopicTreeViewSet
 from ddionrails.api.views.user_tools import (
     BasketVariableSet,
     BasketViewSet,

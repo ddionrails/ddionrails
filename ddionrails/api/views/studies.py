@@ -58,9 +58,7 @@ class TopicRootAndLeafs(viewsets.GenericViewSet):
             leafs = topic.get_topic_tree_leafs()
             output[topic.name] = {
                 "label": getattr(topic, f"label{language_prefix}"),
-                "children": [
-                    getattr(leaf, f"label{language_prefix}") for leaf in leafs
-                ],
+                "children": [getattr(leaf, f"label{language_prefix}") for leaf in leafs],
             }
             if not language:
                 output[topic.name]["children_de"] = [

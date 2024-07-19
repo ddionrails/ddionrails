@@ -104,7 +104,6 @@ def test_update_single_study_local(study):
 
 @pytest.mark.usefixtures(("mock_import_path"))
 def test_update_single_study_entity(study):
-
     entities = ("periods",)
 
     local = True
@@ -278,7 +277,6 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
 
 @pytest.mark.usefixtures("mock_import_path", "period", "analysis_unit")
 def test_instrument_import(study, period, analysis_unit):
-
     with TEST_CASE.assertRaises(Instrument.DoesNotExist):
         Instrument.objects.get(name="some-instrument")
 
@@ -318,7 +316,6 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
 
 @pytest.mark.usefixtures(("mock_import_path"))
 class TestUpdate(unittest.TestCase):
-
     patch_argument_dict: PatchImportPathArguments
 
     def setUp(self):

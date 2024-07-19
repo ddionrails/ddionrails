@@ -30,7 +30,7 @@ class TestPageViews:
         assert status.HTTP_200_OK == response.status_code
         content = str(response.content)
         assert "Contact / feedback" in content
-        assert "SOEP Hotline" in content
+        assert "SOEP Community Management" in content
         assert "GitHub" in content
 
     def test_home_page(self, client):
