@@ -23,7 +23,10 @@
 <div id="container">
 	<div class="d-flex flex-row">
 		{% if variable %}
-		<h2 id="plot-header">{{variable.label_de}}</h2>
+			<h2
+				data-de="{{variable.label_de}}"
+				data-en="{{variable.label}}"
+				id="plot-header"></h2>
 		{% endif %}
 		<button
 			type="button"
@@ -44,12 +47,15 @@
 	</div>
 	<div>
 		{% if question %}
-		<p id="related-question">{{question.label_de}}</p>
+			<p
+				data-de="{{question.label_de}}"
+				data-en="{{question.label}}"
+				id="related-question"></p>
 		{% endif %}
 	</div>
 
 	<iframe id="main-frame"
-		src="{{ statistics_server_url }}?variable={{variable.name}}&type={{plot_type}}"
+		src="{{ statistics_server_url }}?variable={{variable.name}}&type={{plot_type}}&language={{ request.COOKIES.paneldata_language }}"
 		width="500" height="70%"
 		frameborder="0"></iframe>
 
