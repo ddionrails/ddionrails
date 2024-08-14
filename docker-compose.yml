@@ -51,7 +51,7 @@ services:
       - statistics-data:/var/statistics_data
 
   postgres:
-    image: postgres:15.1-alpine3.16
+    image: postgres:15.8-alpine3.20
     # Set your own variables, use of the example files at yout own risk.
     #env_file:
     #  - docker/environments/database.env
