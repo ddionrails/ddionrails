@@ -31,7 +31,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
 
     serializer_class = VariableSerializer
 
-    @method_decorator(cache_page(60 * 2))
+    # @method_decorator(cache_page(60 * 2))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
@@ -66,9 +66,9 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
                 topic_object: Topic = get_object_or_404(
                     Topic, name=topic, study__name=study
                 )
-                queryset_filter[
-                    "concept__topics__in"
-                ] = topic_object.get_topic_tree_leafs()
+                queryset_filter["concept__in"] = Concept.objects.filter(
+                    topics__in=topic_object.get_topic_tree_leafs()
+                )
             if dataset:
                 dataset_object: Dataset = get_object_or_404(
                     Dataset, name=dataset, study__name=study

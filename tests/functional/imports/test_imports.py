@@ -179,6 +179,8 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual("Some concept", concept.label)
         TEST_CASE.assertEqual(topic, concept.topics.first())
 
+        for concept in Concept.objects.all():
+            concept.save()
         search = ConceptDocument.search().query("match_all")
         TEST_CASE.assertEqual(2, search.count())
         response = search.execute()
@@ -386,6 +388,8 @@ class TestStudyImportManager:
         TEST_CASE.assertEqual(2, QuestionVariable.objects.count())
         TEST_CASE.assertEqual(1, ConceptQuestion.objects.count())
 
+        for concept in Concept.objects.all():
+            concept.save()
         concept_search = ConceptDocument.search().query("match_all").execute()
         variable_search = VariableDocument.search().query("match_all").execute()
         publication_search = PublicationDocument.search().query("match_all").execute()

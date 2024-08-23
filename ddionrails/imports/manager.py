@@ -20,10 +20,10 @@ from git.exc import InvalidGitRepositoryError, NoSuchPathError
 from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
-    ConceptImport,
     PeriodImport,
     TopicImport,
     TopicJsonImport,
+    concept_import,
     conceptual_dataset_import,
 )
 from ddionrails.data.imports import (
@@ -151,7 +151,7 @@ class StudyImportManager:
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
                 "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
-                "concepts": (ConceptImport, self.base_dir / "concepts.csv"),
+                "concepts": (concept_import, self.base_dir / "concepts.csv"),
                 "analysis_units": (
                     AnalysisUnitImport,
                     self.base_dir / "analysis_units.csv",
@@ -217,10 +217,10 @@ class StudyImportManager:
         """Add missing concepts, only present in the variable.csv, to the concepts.csv"""
         if self._concepts_fixed:
             return None
-        concept_path = Path(self.import_order["concepts"][1])
+        concept_path = Path(self.import_order["concepts"][1]).resolve()
         if not concept_path.exists():
             return None
-        variable_path = self.import_order["variables"][1]
+        variable_path = Path(self.import_order["variables"][1]).resolve()
         with open(variable_path, "r", encoding="utf8") as variable_csv:
             variable_concepts = {
                 row.get("concept", row.get("concept_name"))

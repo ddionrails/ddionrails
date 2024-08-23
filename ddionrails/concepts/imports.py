@@ -11,6 +11,7 @@ from django.db.transaction import atomic
 
 from ddionrails.concepts.models import Concept, ConceptualDataset
 from ddionrails.imports import imports
+from ddionrails.imports.helpers import hash_with_base_uuid
 from ddionrails.studies.models import Study
 
 from .forms import AnalysisUnitForm, ConceptForm, PeriodForm, TopicForm
@@ -57,36 +58,58 @@ class TopicJsonImport(imports.Import):
         study.set_topiclist(body)
 
 
-class ConceptImport(imports.CSVImport):
-    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
-        form = ConceptForm
+def concept_import(file_path: Union[Path, str], study: Optional[Study] = None):
+    """Import Conceptual Dataset Metadata."""
+    with open(file_path, "r", encoding="utf8") as file:
+        reader = DictReader(file)
+        concepts = []
+        concepts_to_create = []
+        relations = []
+        fields_to_update = ["label", "label_de"]
+        concept_objects = {concept.name: concept for concept in Concept.objects.all()}
+        topic_objects = {topic.name: topic for topic in Topic.objects.filter(study=study)}
+        for line in reader:
+            concept_name = line.get("name", "")
+            if not concept_name:
+                continue
+            if concept_name in concept_objects:
+                concept = concept_objects[concept_name]
+            else:
+                concept = Concept()
+                concept.id = hash_with_base_uuid(  # pylint: disable=C0103
+                    "concept:" + concept_name, cache=False
+                )
+                concept.name = concept_name
+                concept.label = line.get("label", "")
+                concept.label_de = line.get("label_de", "")
+                concepts_to_create.append(concept)
+            if (
+                concept.label != line.get("label", "")
+                or concept.label_de != line.get("label_de", "")
+            ) and concept_name in concept_objects:
+                concept.label = line.get("label", "")
+                concept.label_de = line.get("label_de", "")
+                concepts.append(concept)
 
-    @atomic
-    def execute_import(self):
-        super().execute_import()
-
-    def import_element(self, element):
-        concept_name = element.get("name", "")
-        if not concept_name:
-            return None
-        concept, _ = Concept.objects.get_or_create(name=concept_name)
-        concept.label = element.get("label", "")
-        concept.label_de = element.get("label_de", "")
-        concept.save()
-        topic_name = element.get("topic", element.get("topic_name"))
-        if topic_name:
-            try:
-                topic = Topic.objects.get(name=topic_name, study=self.study)
-                topic.concepts.add(concept)
-            except Topic.DoesNotExist:
-                print(
-                    (
-                        'Could not link concept "%s" to topic "%s"',
-                        concept.name,
-                        topic_name,
+            topic_name = line.get("topic", line.get("topic_name"))
+            if concept_name == "_pgen_pgfamstd":
+                print(line)
+            if str(concept.id) == "a688696e-5b11-512d-bb4c-d82e84cb0865":
+                print(line)
+            if topic_name:
+                topic = topic_objects[topic_name]
+                relations.append(
+                    Concept.topics.through(
+                        concept_id=concept.id,
+                        topic_id=topic.id,
                     )
                 )
-        return concept
+
+        print("bulk_update")
+        Concept.objects.bulk_update(concepts, fields_to_update)
+        Concept.objects.bulk_create(concepts_to_create)
+        print("update_topics")
+        Concept.topics.through.objects.bulk_create(relations, ignore_conflicts=True)
 
 
 class AnalysisUnitImport(imports.CSVImport):

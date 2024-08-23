@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from ddionrails.concepts.imports import ConceptImport
+from ddionrails.concepts.imports import concept_import
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.imports import (
     DatasetImport,
@@ -23,7 +23,7 @@ from ddionrails.data.imports import (
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
-from tests.concepts.factories import ConceptFactory
+from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.conftest import VariableImageFile
 from tests.data.factories import DatasetFactory
 
@@ -325,17 +325,17 @@ class TestVariableImport:
         TEST_CASE.assertEqual(len(variable_names), len(result))
 
     def test_variable_import_with_orphaned_concept(self):
-
         csv_path = Study().import_path()
         concept_path = csv_path.joinpath("concepts.csv")
 
         some_dataset = DatasetFactory(name="some-dataset")
         some_dataset.save()
         StudyImportManager(study=some_dataset.study).fix_concepts_csv()
+        TopicFactory(name="some-topic")
         ConceptFactory(name="some-concept").save()
         variable_path = csv_path.joinpath("variables.csv")
         variable_path = variable_path.absolute()
-        ConceptImport(concept_path).run_import(filename=concept_path)
+        concept_import(concept_path, some_dataset.study)
         VariableImport.run_import(variable_path, study=some_dataset.study)
 
         with open(variable_path, "r", encoding="utf8") as csv_file:
@@ -345,7 +345,6 @@ class TestVariableImport:
         TEST_CASE.assertEqual(len(variable_names), len(result))
 
     def test_variable_import_without_concept_csv(self):
-
         csv_path = Study().import_path()
         concept_path = csv_path.joinpath("concepts.csv")
 
@@ -403,7 +402,6 @@ class ImageDummy(TypedDict, total=False):
 @pytest.mark.django_db
 @pytest.mark.usefixtures("variable", "variable_image_file")
 class TestVariableImageImport(unittest.TestCase):
-
     variable: Variable
     variable_image_file: VariableImageFile
     images: Dict[str, ImageDummy]

@@ -124,14 +124,15 @@ class VariableImport(imports.CSVImport):
         # Incomplete imports are highly undesirable.
         # The exceptions handling should remain here for a while till it is clear
         # what exceptions were actually meant to be handled here.
+        self._import_variable(variable_metadata)
         try:
-            self._import_variable(variable_metadata)
+            ...
         except BaseException as error:
             variable = variable_metadata.get("name")
             dataset = variable_metadata.get("dataset", element.get("dataset_name"))
             raise type(error)(
                 f'Failed to import variable "{variable}" from dataset "{dataset}"'
-            )
+            ) from error
 
     def execute_import(self):
         for row in self.content:

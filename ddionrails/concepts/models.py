@@ -190,29 +190,6 @@ class Concept(ModelMixin, models.Model):
         """Returns a string representation using the "name" field"""
         return f"/concept/{self.name}"
 
-    def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
-    ):
-        """ "Set id and call parents save().
-
-        The creation of the value set for the id field is different than
-        for most other models. Concepts are, like studies, not inside the
-        namespace of any other object, meaning the uuid is derived from
-        the overall base uuid. This could cause a collision of uuids, if
-        a Concept shares a name with a study. While this seems unlikely to
-        happen, it is circumvented by concatenating each name with the
-        literal string `concept:`.
-        """
-        self.id = hash_with_base_uuid(  # pylint: disable=C0103
-            "concept:" + self.name, cache=False
-        )
-        super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
-        )
-
     def get_absolute_url(self) -> str:
         """Returns a canonical URL for the model using the "name" field"""
         return reverse("concepts:concept_detail", kwargs={"id": self.id})
