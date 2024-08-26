@@ -11,6 +11,23 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [7.3.0] - 2024-08-26
+
+### Added
+
+- language switch for statistics UI section
+
+### Changed
+
+- API endpoints to accomodate statistics language switch.
+- Replaced R-Shiney statistics server with Python Dash server.
+- statistics variable navigation to subdivide into sub topics.
+- Updated several dependencies.
+
+### Removed
+
+- Statistics data and metadata is no longer stored in the database.
+
 ## [7.2.4] - 2024-06-06
 
 ### Changed
@@ -934,7 +951,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.2.4...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.3.0...develop
+[7.3.0]: https://github.com/ddionrails/ddionrails/compare/v7.2.4...v7.3.0
 [7.2.4]: https://github.com/ddionrails/ddionrails/compare/v7.1.0...v7.2.4
 [7.1.0]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...v7.1.0
 [7.0.0]: https://github.com/ddionrails/ddionrails/compare/v6.6.0...v7.0.0
