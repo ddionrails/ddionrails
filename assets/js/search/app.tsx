@@ -51,10 +51,17 @@ const config = {
         snippet: {},
       },
     },
-    disjunctiveFacets: ["analysis_unit.label", "period.label"],
+    disjunctiveFacets: [
+      "analysis_unit.label",
+      "period.label",
+      "study_name",
+      "conceptual_dataset.label",
+    ],
     facets: {
       "analysis_unit.label": {type: "value"},
       "period.label": {type: "value"},
+      "study_name": {type: "value"},
+      "conceptual_dataset.label": {type: "value"},
     },
   },
   autocompleteQuery: {
@@ -152,6 +159,12 @@ export default function App() {
                         />
                       )}
                       <Facet
+                        key={"3"}
+                        field={"study_name"}
+                        label={"Study"}
+                        view={SortedMultiCheckboxFacet}
+                      />
+                      <Facet
                         key={"1"}
                         field={"analysis_unit.label"}
                         label={"analysis unit"}
@@ -161,6 +174,12 @@ export default function App() {
                         key={"2"}
                         field={"period.label"}
                         label={"period"}
+                        view={SortedMultiCheckboxFacet}
+                      />
+                      <Facet
+                        key={"4"}
+                        field={"conceptual_dataset.label"}
+                        label={"Conceptual Dataset"}
                         view={SortedMultiCheckboxFacet}
                       />
                     </div>
