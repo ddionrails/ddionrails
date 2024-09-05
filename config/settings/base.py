@@ -263,7 +263,8 @@ ELASTICSEARCH_DSL = {
         "hosts": (
             f"http://elastic:{ELASTICSEARCH_PASSWORD}@"
             f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"
-        )
+        ),
+        "timeout": 1000,
     }
 }
 # https://django-elasticsearch-dsl.readthedocs.io/en/latest/settings.html#elasticsearch-dsl-autosync
