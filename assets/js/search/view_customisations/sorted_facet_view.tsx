@@ -1,8 +1,7 @@
-import React from "react";
 
 import {MultiCheckboxFacet} from "@elastic/react-search-ui-views";
 
-import {getFilterValueDisplay} from "@elastic/react-search-ui-views/lib/cjs/view-helpers/";
+
 import {FacetViewProps} from "@elastic/react-search-ui-views/lib/cjs/types/";
 import type {FacetValue} from "@elastic/search-ui";
 
@@ -13,7 +12,7 @@ import type {FacetValue} from "@elastic/search-ui";
  * @returns
  */
 function sortByDisplayedLabel(a: FacetValue, b: FacetValue): number {
-  if (getFilterValueDisplay(a.value) > getFilterValueDisplay(b.value)) {
+  if (a.value > b.value) {
     return 1;
   }
   return -1;

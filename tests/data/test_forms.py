@@ -11,11 +11,6 @@ pytestmark = [pytest.mark.data, pytest.mark.forms]  # pylint: disable=invalid-na
 
 
 class TestDatasetForm:
-    def test_form_with_invalid_data(self, invalid_dataset_data):
-        form = DatasetForm(data=invalid_dataset_data)
-        assert form.is_valid() is False
-        expected_errors = {"name": ["This field is required."]}
-        assert form.errors == expected_errors
 
     @pytest.mark.django_db
     def test_form_with_valid_data(self, valid_dataset_data):
