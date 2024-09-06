@@ -76,8 +76,8 @@ class Dataset(ModelMixin, models.Model):
     #############
     study = models.ForeignKey(
         Study,
-        blank=True,
-        null=True,
+        blank=False,
+        null=False,
         related_name="datasets",
         on_delete=models.CASCADE,
         help_text="Foreign key to studies.Study",

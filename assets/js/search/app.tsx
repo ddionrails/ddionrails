@@ -4,25 +4,25 @@ import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connecto
 
 import {
   ErrorBoundary,
-  Facet,
   SearchBox,
   SearchProvider,
   Results,
   PagingInfo,
   ResultsPerPage,
   Paging,
-  Sorting,
   WithSearch,
 } from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
 
-import {VariableResultView} from "./view_customisations/variable_result_view";
-import SortedMultiCheckboxFacet from "./view_customisations/sorted_facet_view";
+// import {VariableResultView} from "./view_customisations/variable_result_view";
+import {QuestionResultView} from "./view_customisations/question_result_view";
 import Autocomplete from "./view_customisations/autocomplete_view";
+import {sorting, facets} from "./search_variants/question_search";
+
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
-  index: "variables",
+  index: "questions",
 });
 
 const config = {
@@ -39,12 +39,17 @@ const config = {
         snippet: {},
       },
       label: {
-        snippet: {},
+        snippet: {
+          size: 200,
+          fallback: true,
+        },
       },
       study: {
-        snippet: {},
+        snippet: {
+          fallback: true,
+        },
       },
-      dataset: {
+      instrument: {
         snippet: {},
       },
       period: {
@@ -55,13 +60,11 @@ const config = {
       "analysis_unit.label",
       "period.label",
       "study_name",
-      "conceptual_dataset.label",
     ],
     facets: {
       "analysis_unit.label": {type: "value"},
       "period.label": {type: "value"},
       "study_name": {type: "value"},
-      "conceptual_dataset.label": {type: "value"},
     },
   },
   autocompleteQuery: {
@@ -130,63 +133,14 @@ export default function App() {
                   sideContent={
                     <div>
                       {wasSearched && (
-                        <Sorting
-                          label={"Sort by"}
-                          sortOptions={[
-                            {
-                              name: "Relevance",
-                              value: [],
-                            },
-                            {
-                              name: "Period (ascending)",
-                              value: [
-                                {
-                                  field: "period.label",
-                                  direction: {order: "asc"},
-                                },
-                              ],
-                            },
-                            {
-                              name: "Period (descending)",
-                              value: [
-                                {
-                                  field: "period.label",
-                                  direction: {order: "desc"},
-                                },
-                              ],
-                            },
-                          ]}
-                        />
+                        sorting()
                       )}
-                      <Facet
-                        key={"3"}
-                        field={"study_name"}
-                        label={"Study"}
-                        view={SortedMultiCheckboxFacet}
-                      />
-                      <Facet
-                        key={"1"}
-                        field={"analysis_unit.label"}
-                        label={"analysis unit"}
-                        view={SortedMultiCheckboxFacet}
-                      />
-                      <Facet
-                        key={"2"}
-                        field={"period.label"}
-                        label={"period"}
-                        view={SortedMultiCheckboxFacet}
-                      />
-                      <Facet
-                        key={"4"}
-                        field={"conceptual_dataset.label"}
-                        label={"Conceptual Dataset"}
-                        view={SortedMultiCheckboxFacet}
-                      />
+                      {facets()}
                     </div>
                   }
                   bodyContent={
                     <Results
-                      resultView={VariableResultView}
+                      resultView={QuestionResultView}
                       titleField="name"
                       shouldTrackClickThrough={false}
                     />

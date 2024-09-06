@@ -30,6 +30,10 @@ from ddionrails.studies.models import Study
 class QuestionDocument(GenericDataDocument):
     """Search document instruments.Question"""
 
+    name = fields.TextField()
+
+    label = fields.TextField()
+
     instrument = fields.ObjectField(
         properties={
             "name": fields.TextField(),
@@ -37,7 +41,7 @@ class QuestionDocument(GenericDataDocument):
             "label_de": fields.TextField(),
         }
     )
-    items = fields.ObjectField(
+    question_items = fields.ObjectField(
         properties={
             "en": fields.ListField(fields.TextField(analyzer="english")),
             "de": fields.ListField(fields.TextField(analyzer="german")),
@@ -53,6 +57,14 @@ class QuestionDocument(GenericDataDocument):
     def prepare_analysis_unit(self, question: Question) -> dict[str, str]:
         """Return the related analysis_unit's or None"""
         return self._handle_missing_dict_content(question.instrument.analysis_unit)
+
+    def prepare_instrument(self, question: Question) -> dict[str, str]:
+        """Return the related analysis_unit's or None"""
+        return {
+            "label": question.instrument.label,
+            "label_de": question.instrument.label_de,
+            "name": question.instrument.name,
+        }
 
     def prepare_period(self, question: Question) -> dict[str, str]:
         """Return the related period's title or None"""
@@ -98,19 +110,5 @@ class QuestionDocument(GenericDataDocument):
                 "instrument__analysis_unit",
                 "instrument__period",
                 "instrument__study",
-            )
-            .only(
-                "items",
-                "name",
-                "label",
-                "label_de",
-                "instrument__name",
-                "instrument__label",
-                "instrument__analysis_unit__name",
-                "instrument__analysis_unit__label",
-                "instrument__period__name",
-                "instrument__period__label",
-                "instrument__study__name",
-                "instrument__study__label",
             )
         )

@@ -82,7 +82,10 @@ class Question(ModelMixin, models.Model):
         help_text="Sort order of questions within one instrument",
     )
     items = JSONBField(
-        default=list, null=True, blank=True, help_text="Items are elements in a question"
+        default=list,
+        null=False,
+        blank=False,
+        help_text="Items are elements in a question",
     )
     question_items: models.manager.Manager[Any]
 
