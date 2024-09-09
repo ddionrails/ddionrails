@@ -39,7 +39,7 @@
     "minimist": "^1.2.8",
     "popper.js": "^1.16.1",
     "spinkit": "^2.0.1",
-    "vue": "^2.7.14",
+    "vue": "^3.5.3",
     "vue-router": "^3.6.5",
     "vuetify-loader": "^1.9.2"
   },
