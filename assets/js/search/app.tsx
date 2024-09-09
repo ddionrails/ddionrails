@@ -1,6 +1,6 @@
 import React from "react";
 
-import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
+import {Route, NavLink, HashRouter, BrowserRouter, Routes} from "react-router-dom";
 
 import {
   ErrorBoundary,
@@ -16,93 +16,28 @@ import {Layout} from "@elastic/react-search-ui-views";
 
 // import {VariableResultView} from "./view_customisations/variable_result_view";
 import {QuestionResultView} from "./view_customisations/question_result_view";
+import {VariableResultView} from "./view_customisations/variable_result_view";
 import Autocomplete from "./view_customisations/autocomplete_view";
-import {sorting, facets} from "./search_variants/question_search";
+import {
+  questionConfig,
+  questionSorting,
+  questionFacets,
+} from "./search_variants/question_search";
 
-
-const connector = new ElasticsearchAPIConnector({
-  host: "/elastic/",
-  index: "questions",
-});
-
-const config = {
-  searchQuery: {
-    search_fields: {
-      name: {
-        weight: 3,
-      },
-      label: {},
-      label_de: {},
-    },
-    result_fields: {
-      name: {
-        snippet: {},
-      },
-      label: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      study: {
-        snippet: {
-          fallback: true,
-        },
-      },
-      instrument: {
-        snippet: {},
-      },
-      period: {
-        snippet: {},
-      },
-    },
-    disjunctiveFacets: [
-      "analysis_unit.label",
-      "period.label",
-      "study_name",
-    ],
-    facets: {
-      "analysis_unit.label": {type: "value"},
-      "period.label": {type: "value"},
-      "study_name": {type: "value"},
-    },
-  },
-  autocompleteQuery: {
-    results: {
-      resultsPerPage: 10,
-      search_fields: {
-        name: {
-          weight: 3,
-        },
-        label: {
-          weight: 1,
-        },
-      },
-      result_fields: {
-        name: {
-          snippet: {
-            size: 100,
-            fallback: true,
-          },
-        },
-        label: {
-          snippet: {
-            size: 100,
-            fallback: true,
-          },
-        },
-      },
-    },
-  },
-  apiConnector: connector,
-  alwaysSearchOnInitialLoad: true,
-};
+import {
+  variableConfig,
+  variableSorting,
+  variableFacets,
+} from "./search_variants/variable_search";
 
 /**
  *
+ * @param config
+ * @param Sorting
+ * @param Facets
  * @returns
  */
-export default function App() {
+function searchRouter(config: any, sorting: any, facets: any, resultView: any) {
   return (
     <SearchProvider config={config}>
       <WithSearch
@@ -132,15 +67,13 @@ export default function App() {
                   }
                   sideContent={
                     <div>
-                      {wasSearched && (
-                        sorting()
-                      )}
+                      {wasSearched && sorting()}
                       {facets()}
                     </div>
                   }
                   bodyContent={
                     <Results
-                      resultView={QuestionResultView}
+                      resultView={resultView}
                       titleField="name"
                       shouldTrackClickThrough={false}
                     />
@@ -159,5 +92,48 @@ export default function App() {
         }}
       </WithSearch>
     </SearchProvider>
+  );
+}
+
+/**
+ *
+ */
+function Questions() {
+  return searchRouter(
+    questionConfig,
+    questionSorting,
+    questionFacets,
+    QuestionResultView
+  );
+}
+
+/**
+ *
+ */
+function Variables() {
+  return searchRouter(
+    variableConfig,
+    variableSorting,
+    variableFacets,
+    VariableResultView
+  );
+}
+
+/**
+ *
+ * @returns
+ */
+export default function App() {
+  return (
+    <>
+      <BrowserRouter basename="/search">
+        <Routes>
+          <Route path="/" element={<Questions />} />
+          <Route path="/all" element={<Questions />} />
+          <Route path="/variables" element={<Variables />} />
+          <Route path="/questions" element={<Questions />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
