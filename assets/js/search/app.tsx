@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Route, NavLink, HashRouter, BrowserRouter, Routes} from "react-router-dom";
+import {Route, NavLink, BrowserRouter, Routes} from "react-router-dom";
 
 import {
   ErrorBoundary,
@@ -127,6 +127,22 @@ export default function App() {
   return (
     <>
       <BrowserRouter basename="/search">
+        <NavLink
+          to="/variables"
+          className={({isActive, isPending}) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          Variables
+        </NavLink>
+        <NavLink
+          to="/questions"
+          className={({isActive, isPending}) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          Questions
+        </NavLink>
         <Routes>
           <Route path="/" element={<Questions />} />
           <Route path="/all" element={<Questions />} />
