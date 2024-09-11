@@ -51,7 +51,6 @@ function resultHeader(result: SearchResult, onClickLink: () => void, resultType:
  * @returns
  */
 function questionBody(result: SearchResult) {
-  console.log(JSON.stringify(result));
   return (
     <p>
           Study: {result.study.raw.label} | Instrument: {result.instrument.raw.label}
