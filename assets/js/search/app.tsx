@@ -1,6 +1,6 @@
-import React from "react";
+import React, {useState} from "react";
 
-import {Route, NavLink, BrowserRouter, Routes} from "react-router-dom";
+import {Route, NavLink, BrowserRouter, Routes, useLocation, useNavigate} from "react-router-dom";
 
 import {
   ErrorBoundary,
@@ -29,6 +29,26 @@ import {
   variableSorting,
   variableFacets,
 } from "./search_variants/variable_search";
+
+
+export const LinkWithQuery = ({children, to, ...props}: any) => {
+  const navigate = useNavigate();
+
+  const handleNavigate = (path:string) => {
+    const queryParams = new URLSearchParams(window.location.search).toString();
+    navigate(`${path}?${queryParams.toString()}`);
+  };
+
+
+  return (
+    <button to="" {...props} onClick={() => {
+      handleNavigate(to);
+    } }>
+      {children}
+    </button>
+  );
+};
+
 
 /**
  *
@@ -69,6 +89,7 @@ function searchRouter(config: any, sorting: any, facets: any, resultView: any) {
                     <div>
                       {wasSearched && sorting()}
                       {facets()}
+                      <p>Some content</p>
                     </div>
                   }
                   bodyContent={
@@ -127,22 +148,22 @@ export default function App() {
   return (
     <>
       <BrowserRouter basename="/search">
-        <NavLink
+        <LinkWithQuery
           to="/variables"
-          className={({isActive, isPending}) =>
+          className={({isActive, isPending}: any) =>
             isPending ? "pending" : isActive ? "active" : ""
           }
         >
           Variables
-        </NavLink>
-        <NavLink
+        </LinkWithQuery>
+        <LinkWithQuery
           to="/questions"
-          className={({isActive, isPending}) =>
+          className={({isActive, isPending}: any) =>
             isPending ? "pending" : isActive ? "active" : ""
           }
         >
           Questions
-        </NavLink>
+        </LinkWithQuery>
         <Routes>
           <Route path="/" element={<Questions />} />
           <Route path="/all" element={<Questions />} />
