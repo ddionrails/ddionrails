@@ -1,6 +1,6 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet_view";
+import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
 
 /**
  *

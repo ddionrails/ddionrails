@@ -1,7 +1,7 @@
 import {SearchResult} from "@elastic/search-ui";
 
-import {variableResult} from "./variable_result_view";
-import {questionResult} from "./question_result_view";
+import {variableResult} from "./variable_result";
+import {questionResult} from "./question_result";
 
 
 /**
