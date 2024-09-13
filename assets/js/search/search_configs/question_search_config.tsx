@@ -1,6 +1,6 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../view_customisations/sorted_facet_view";
+import SortedMultiCheckboxFacet from "../search_components/sorted_facet_view";
 
 /**
  *
@@ -63,19 +63,13 @@ function facets() {
         label={"period"}
         view={SortedMultiCheckboxFacet}
       />
-      <Facet
-        key={"4"}
-        field={"conceptual_dataset.label"}
-        label={"Conceptual Dataset"}
-        view={SortedMultiCheckboxFacet}
-      />
     </>
   );
 }
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
-  index: "variables",
+  index: "questions",
 });
 
 const config = {
@@ -102,7 +96,7 @@ const config = {
           fallback: true,
         },
       },
-      dataset: {
+      instrument: {
         snippet: {},
       },
       period: {
@@ -147,6 +141,6 @@ const config = {
   alwaysSearchOnInitialLoad: true,
 };
 
-export {config as variableConfig};
-export {facets as variableFacets};
-export {sorting as variableSorting};
+export {config as questionConfig};
+export {facets as questionFacets};
+export {sorting as questionSorting};

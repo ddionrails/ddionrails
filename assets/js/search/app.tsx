@@ -1,54 +1,59 @@
-import React, {useState} from "react";
-
-import {Route, NavLink, BrowserRouter, Routes, useLocation, useNavigate} from "react-router-dom";
+import React from "react";
+import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 
 import {
   ErrorBoundary,
+  Paging,
+  PagingInfo,
+  Results,
+  ResultsPerPage,
   SearchBox,
   SearchProvider,
-  Results,
-  PagingInfo,
-  ResultsPerPage,
-  Paging,
   WithSearch,
 } from "@elastic/react-search-ui";
 import {Layout} from "@elastic/react-search-ui-views";
+import {SearchDriverOptions} from "@elastic/search-ui";
 
-// import {VariableResultView} from "./view_customisations/variable_result_view";
-import {QuestionResultView} from "./view_customisations/question_result_view";
-import {VariableResultView} from "./view_customisations/variable_result_view";
-import Autocomplete from "./view_customisations/autocomplete_view";
+import {
+  AllResult,
+} from "./result_customisations/all_result_view";
+import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
+
+import Autocomplete from "./search_components/autocomplete_view";
 import {
   questionConfig,
-  questionSorting,
   questionFacets,
-} from "./search_variants/question_search";
-
+  questionSorting,
+} from "./search_configs/question_search_config";
 import {
   variableConfig,
-  variableSorting,
   variableFacets,
-} from "./search_variants/variable_search";
-
+  variableSorting,
+} from "./search_configs/variable_search_config";
+// import {variableResult} from "./view_customisations/variable_result_view";
+import {questionResult} from "./result_customisations/question_result_view";
+import {variableResult} from "./result_customisations/variable_result_view";
 
 export const LinkWithQuery = ({children, to, ...props}: any) => {
   const navigate = useNavigate();
 
-  const handleNavigate = (path:string) => {
+  const handleNavigate = (path: string) => {
     const queryParams = new URLSearchParams(window.location.search).toString();
     navigate(`${path}?${queryParams.toString()}`);
   };
 
-
   return (
-    <button to="" {...props} onClick={() => {
-      handleNavigate(to);
-    } }>
+    <button
+      to=""
+      {...props}
+      onClick={() => {
+        handleNavigate(to);
+      }}
+    >
       {children}
     </button>
   );
 };
-
 
 /**
  *
@@ -57,7 +62,12 @@ export const LinkWithQuery = ({children, to, ...props}: any) => {
  * @param Facets
  * @returns
  */
-function searchRouter(config: any, sorting: any, facets: any, resultView: any) {
+function searchRouter(
+  config: SearchDriverOptions,
+  sorting: any,
+  facets: any,
+  resultView: any
+) {
   return (
     <SearchProvider config={config}>
       <WithSearch
@@ -89,7 +99,6 @@ function searchRouter(config: any, sorting: any, facets: any, resultView: any) {
                     <div>
                       {wasSearched && sorting()}
                       {facets()}
-                      <p>Some content</p>
                     </div>
                   }
                   bodyContent={
@@ -116,6 +125,11 @@ function searchRouter(config: any, sorting: any, facets: any, resultView: any) {
   );
 }
 
+/** */
+function All() {
+  return searchRouter(allConfig, allSorting, allFacets, AllResult);
+}
+
 /**
  *
  */
@@ -124,7 +138,7 @@ function Questions() {
     questionConfig,
     questionSorting,
     questionFacets,
-    QuestionResultView
+    questionResult
   );
 }
 
@@ -136,7 +150,7 @@ function Variables() {
     variableConfig,
     variableSorting,
     variableFacets,
-    VariableResultView
+    variableResult
   );
 }
 
@@ -144,10 +158,18 @@ function Variables() {
  *
  * @returns
  */
-export default function App() {
+function App() {
   return (
     <>
       <BrowserRouter basename="/search">
+        <LinkWithQuery
+          to="/all"
+          className={({isActive, isPending}: any) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          All
+        </LinkWithQuery>
         <LinkWithQuery
           to="/variables"
           className={({isActive, isPending}: any) =>
@@ -165,8 +187,8 @@ export default function App() {
           Questions
         </LinkWithQuery>
         <Routes>
-          <Route path="/" element={<Questions />} />
-          <Route path="/all" element={<Questions />} />
+          <Route path="/" element={<All />} />
+          <Route path="/all" element={<All />} />
           <Route path="/variables" element={<Variables />} />
           <Route path="/questions" element={<Questions />} />
         </Routes>
@@ -174,3 +196,5 @@ export default function App() {
     </>
   );
 }
+
+export default App;

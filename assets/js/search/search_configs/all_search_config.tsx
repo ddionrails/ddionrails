@@ -1,6 +1,7 @@
-import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
+
 import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../view_customisations/sorted_facet_view";
+import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
+import SortedMultiCheckboxFacet from "../search_components/sorted_facet_view";
 
 /**
  *
@@ -15,24 +16,6 @@ function sorting() {
           name: "Relevance",
           value: [],
         },
-        {
-          name: "Period (ascending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "asc"},
-            },
-          ],
-        },
-        {
-          name: "Period (descending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "desc"},
-            },
-          ],
-        },
       ]}
     />
   );
@@ -44,32 +27,18 @@ function sorting() {
  */
 function facets() {
   return (
-    <>
-      <Facet
-        key={"3"}
-        field={"study_name"}
-        label={"Study"}
-        view={SortedMultiCheckboxFacet}
-      />
-      <Facet
-        key={"1"}
-        field={"analysis_unit.label"}
-        label={"analysis unit"}
-        view={SortedMultiCheckboxFacet}
-      />
-      <Facet
-        key={"2"}
-        field={"period.label"}
-        label={"period"}
-        view={SortedMultiCheckboxFacet}
-      />
-    </>
+    <Facet
+      key={"1"}
+      field={"study_name"}
+      label={"Study"}
+      view={SortedMultiCheckboxFacet}
+    />
   );
 }
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
-  index: "questions",
+  index: "*",
 });
 
 const config = {
@@ -99,14 +68,15 @@ const config = {
       instrument: {
         snippet: {},
       },
+      dataset: {
+        snippet: {},
+      },
       period: {
         snippet: {},
       },
     },
-    disjunctiveFacets: ["analysis_unit.label", "period.label", "study_name"],
+    disjunctiveFacets: ["study_name"],
     facets: {
-      "analysis_unit.label": {type: "value"},
-      "period.label": {type: "value"},
       "study_name": {type: "value"},
     },
   },
@@ -141,6 +111,6 @@ const config = {
   alwaysSearchOnInitialLoad: true,
 };
 
-export {config as questionConfig};
-export {facets as questionFacets};
-export {sorting as questionSorting};
+export {config as allConfig};
+export {facets as allFacets};
+export {sorting as allSorting};
