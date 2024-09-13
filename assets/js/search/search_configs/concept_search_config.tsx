@@ -30,7 +30,7 @@ function facets() {
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
-  index: "*",
+  index: "concepts",
 });
 
 const config = {
@@ -56,15 +56,6 @@ const config = {
         snippet: {
           fallback: true,
         },
-      },
-      instrument: {
-        snippet: {},
-      },
-      dataset: {
-        snippet: {},
-      },
-      period: {
-        snippet: {},
       },
     },
     disjunctiveFacets: ["study_name"],
@@ -103,6 +94,6 @@ const config = {
   alwaysSearchOnInitialLoad: true,
 };
 
-export {config as allConfig};
-export {facets as allFacets};
-export {sorting as allSorting};
+export {config as conceptConfig};
+export {facets as conceptFacets};
+export {sorting as conceptSorting};

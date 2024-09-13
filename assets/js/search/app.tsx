@@ -14,12 +14,18 @@ import {
 import {Layout} from "@elastic/react-search-ui-views";
 import {SearchDriverOptions} from "@elastic/search-ui";
 
+import {conceptResult} from "./result_customisations/concept_result";
+
 import {
-  AllResult,
-} from "./result_customisations/all_result";
+  conceptConfig,
+  conceptFacets,
+  conceptSorting,
+} from "./search_configs/concept_search_config";
+
+import {AllResult} from "./result_customisations/all_result";
 import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
 
-import Autocomplete from "./search_components/autocomplete_view";
+import Autocomplete from "./search_components/autocomplete";
 import {
   questionConfig,
   questionFacets,
@@ -133,25 +139,22 @@ function All() {
 /**
  *
  */
+function Concepts() {
+  return searchRouter(conceptConfig, conceptSorting, conceptFacets, conceptResult);
+}
+
+/**
+ *
+ */
 function Questions() {
-  return searchRouter(
-    questionConfig,
-    questionSorting,
-    questionFacets,
-    questionResult
-  );
+  return searchRouter(questionConfig, questionSorting, questionFacets, questionResult);
 }
 
 /**
  *
  */
 function Variables() {
-  return searchRouter(
-    variableConfig,
-    variableSorting,
-    variableFacets,
-    variableResult
-  );
+  return searchRouter(variableConfig, variableSorting, variableFacets, variableResult);
 }
 
 /**
@@ -186,11 +189,20 @@ function App() {
         >
           Questions
         </LinkWithQuery>
+        <LinkWithQuery
+          to="/concepts"
+          className={({isActive, isPending}: any) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          Concepts
+        </LinkWithQuery>
         <Routes>
           <Route path="/" element={<All />} />
           <Route path="/all" element={<All />} />
           <Route path="/variables" element={<Variables />} />
           <Route path="/questions" element={<Questions />} />
+          <Route path="/concepts" element={<Concepts />} />
         </Routes>
       </BrowserRouter>
     </>
