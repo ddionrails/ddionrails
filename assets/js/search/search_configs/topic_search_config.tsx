@@ -23,7 +23,7 @@ function facets(): JSX.Element {
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
-  index: "concepts",
+  index: "topics",
 });
 
 const config = {
@@ -87,6 +87,6 @@ const config = {
   alwaysSearchOnInitialLoad: true,
 };
 
-export {config as conceptConfig};
-export {facets as conceptFacets};
-export {sorting as conceptSorting};
+export {config as topicConfig};
+export {facets as topicFacets};
+export {sorting as topicSorting};
