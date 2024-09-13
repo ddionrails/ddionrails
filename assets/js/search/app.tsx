@@ -22,6 +22,14 @@ import {
   conceptSorting,
 } from "./search_configs/concept_search_config";
 
+import {topicResult} from "./result_customisations/topic_result";
+
+import {
+  topicConfig,
+  topicFacets,
+  topicSorting,
+} from "./search_configs/topic_search_config";
+
 import {AllResult} from "./result_customisations/all_result";
 import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
 
@@ -146,6 +154,13 @@ function Concepts() {
 /**
  *
  */
+function Topics() {
+  return searchRouter(topicConfig, topicSorting, topicFacets, topicResult);
+}
+
+/**
+ *
+ */
 function Questions() {
   return searchRouter(questionConfig, questionSorting, questionFacets, questionResult);
 }
@@ -197,12 +212,21 @@ function App() {
         >
           Concepts
         </LinkWithQuery>
+        <LinkWithQuery
+          to="/topics"
+          className={({isActive, isPending}: any) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          Topics
+        </LinkWithQuery>
         <Routes>
           <Route path="/" element={<All />} />
           <Route path="/all" element={<All />} />
           <Route path="/variables" element={<Variables />} />
           <Route path="/questions" element={<Questions />} />
           <Route path="/concepts" element={<Concepts />} />
+          <Route path="/topics" element={<Topics />} />
         </Routes>
       </BrowserRouter>
     </>

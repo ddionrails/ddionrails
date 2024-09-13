@@ -1,12 +1,9 @@
+/* eslint-disable require-jsdoc */
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {Facet, Sorting} from "@elastic/react-search-ui";
 import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
 
-/**
- *
- * @return {Element}
- */
-function sorting() {
+function sorting(): JSX.Element {
   return (
     <Sorting
       label={"Sort by"}
@@ -38,11 +35,7 @@ function sorting() {
   );
 }
 
-/**
- *
- * @return { Element }
- */
-function facets() {
+function facets(): JSX.Element {
   return (
     <>
       <Facet
