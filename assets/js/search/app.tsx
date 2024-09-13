@@ -16,7 +16,7 @@ import {SearchDriverOptions} from "@elastic/search-ui";
 
 import {
   AllResult,
-} from "./result_customisations/all_result_view";
+} from "./result_customisations/all_result";
 import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
 
 import Autocomplete from "./search_components/autocomplete_view";
@@ -31,8 +31,8 @@ import {
   variableSorting,
 } from "./search_configs/variable_search_config";
 // import {variableResult} from "./view_customisations/variable_result_view";
-import {questionResult} from "./result_customisations/question_result_view";
-import {variableResult} from "./result_customisations/variable_result_view";
+import {questionResult} from "./result_customisations/question_result";
+import {variableResult} from "./result_customisations/variable_result";
 
 export const LinkWithQuery = ({children, to, ...props}: any) => {
   const navigate = useNavigate();
