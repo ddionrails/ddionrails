@@ -34,6 +34,14 @@ import {AllResult} from "./result_customisations/all_result";
 import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
 
 import Autocomplete from "./search_components/autocomplete";
+
+import {publicationResult} from "./result_customisations/publications_result";
+import {
+  publicationConfig,
+  publicationFacets,
+  publicationSorting,
+} from "./search_configs/publication_search_config";
+
 import {
   questionConfig,
   questionFacets,
@@ -161,6 +169,18 @@ function Topics() {
 /**
  *
  */
+function Publications() {
+  return searchRouter(
+    publicationConfig,
+    publicationSorting,
+    publicationFacets,
+    publicationResult
+  );
+}
+
+/**
+ *
+ */
 function Questions() {
   return searchRouter(questionConfig, questionSorting, questionFacets, questionResult);
 }
@@ -220,6 +240,14 @@ function App() {
         >
           Topics
         </LinkWithQuery>
+        <LinkWithQuery
+          to="/publications"
+          className={({isActive, isPending}: any) =>
+            isPending ? "pending" : isActive ? "active" : ""
+          }
+        >
+          Publications
+        </LinkWithQuery>
         <Routes>
           <Route path="/" element={<All />} />
           <Route path="/all" element={<All />} />
@@ -227,6 +255,7 @@ function App() {
           <Route path="/questions" element={<Questions />} />
           <Route path="/concepts" element={<Concepts />} />
           <Route path="/topics" element={<Topics />} />
+          <Route path="/publications" element={<Publications />} />
         </Routes>
       </BrowserRouter>
     </>
