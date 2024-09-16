@@ -56,6 +56,8 @@ import {
 import {questionResult} from "./result_customisations/question_result";
 import {variableResult} from "./result_customisations/variable_result";
 
+import {resultIconMap} from "./search_components/result_header";
+
 export const LinkWithQuery = ({children, to, ...props}: any) => {
   const navigate = useNavigate();
 
@@ -64,15 +66,30 @@ export const LinkWithQuery = ({children, to, ...props}: any) => {
     navigate(`${path}?${queryParams.toString()}`);
   };
 
+  let icon:any = (): any => null;
+  const iconType = to.split("/").pop().slice(0, -1);
+  if (resultIconMap.has(iconType)) {
+    icon = resultIconMap.get(iconType);
+  }
+
+  if (document.location.toString().includes(to)) {
+    return (
+      <button
+        {...props}
+        className="active-search"
+      >
+        {icon()} {children}
+      </button>
+    );
+  }
   return (
     <button
-      to=""
       {...props}
       onClick={() => {
         handleNavigate(to);
       }}
     >
-      {children}
+      {icon()} {children}
     </button>
   );
 };
@@ -147,6 +164,7 @@ function searchRouter(
   );
 }
 
+
 /** */
 function All() {
   return searchRouter(allConfig, allSorting, allFacets, AllResult);
@@ -200,54 +218,56 @@ function App() {
   return (
     <>
       <BrowserRouter basename="/search">
-        <LinkWithQuery
-          to="/all"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+        <div className="search-menu">
+          <LinkWithQuery
+            to="/all"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           All
-        </LinkWithQuery>
-        <LinkWithQuery
-          to="/variables"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+          </LinkWithQuery>
+          <LinkWithQuery
+            to="/variables"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           Variables
-        </LinkWithQuery>
-        <LinkWithQuery
-          to="/questions"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+          </LinkWithQuery>
+          <LinkWithQuery
+            to="/questions"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           Questions
-        </LinkWithQuery>
-        <LinkWithQuery
-          to="/concepts"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+          </LinkWithQuery>
+          <LinkWithQuery
+            to="/concepts"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           Concepts
-        </LinkWithQuery>
-        <LinkWithQuery
-          to="/topics"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+          </LinkWithQuery>
+          <LinkWithQuery
+            to="/topics"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           Topics
-        </LinkWithQuery>
-        <LinkWithQuery
-          to="/publications"
-          className={({isActive, isPending}: any) =>
-            isPending ? "pending" : isActive ? "active" : ""
-          }
-        >
+          </LinkWithQuery>
+          <LinkWithQuery
+            to="/publications"
+            className={({isActive, isPending}: any) =>
+              isPending ? "pending" : isActive ? "active" : ""
+            }
+          >
           Publications
-        </LinkWithQuery>
+          </LinkWithQuery>
+        </div>
         <Routes>
           <Route path="/" element={<All />} />
           <Route path="/all" element={<All />} />

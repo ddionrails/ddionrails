@@ -34,3 +34,38 @@ ul.css-bbs1vb {
   margin-left: 0 !important;
   justify-content: space-between;
 }
+
+// Search Menu section
+
+.search-menu button {
+  border: none;
+  border-top: solid 1px;
+  border-right: none;
+  border-left: solid 1px;
+  border-bottom: solid 1px;
+
+  padding: 0.2em 0.5em 0.2em 0.5em;
+
+  background-color: #f8f9fa;
+}
+.search-menu button:hover {
+  background-color: #e9ecef;
+}
+
+button.active-search {
+  background-color: #e9ecef !important;
+}
+
+.search-menu > :first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  border-left: solid 1px;
+}
+
+.search-menu > :last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  border-right: solid 1px;
+}
