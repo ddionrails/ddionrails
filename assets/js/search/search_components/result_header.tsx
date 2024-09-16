@@ -24,7 +24,7 @@ resultIconMap.set("publication", () => {
  * @param result
  * @returns
  */
-export function header(
+function header(
   result: SearchResult,
   onClickLink: () => void,
   resultType: result
@@ -42,3 +42,5 @@ export function header(
     </h3>
   );
 }
+
+export {header, resultIconMap};

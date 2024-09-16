@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.urls import include, path, re_path, register_converter
-from django.views.generic.base import TemplateView
+from django.views.generic.base import RedirectView, TemplateView
 
 import ddionrails.instruments.views as instruments_views
 import ddionrails.publications.views as publications_views
@@ -65,6 +65,15 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("concept/", include("ddionrails.concepts.urls", namespace="concepts")),
     path("workspace/", include("ddionrails.workspace.urls", namespace="workspace")),
+    re_path(
+        (
+            r"^search/"
+            r"((?!all|variables|concepts|questions|publications|topics|statistics)"
+            r"\?{0,1}.*)$"
+        ),
+        RedirectView.as_view(url="all/"),
+        name="search-redirect",
+    ),
     re_path(
         (
             r"^search/"
