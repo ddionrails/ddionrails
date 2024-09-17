@@ -30,7 +30,6 @@ export function header(
  * @returns
  */
 function publicationBody(result: SearchResult) {
-  console.log(JSON.stringify(result));
   return (
     <p>
         Publication by {result.author.raw} ({result.year.raw})
