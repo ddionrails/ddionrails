@@ -1,6 +1,6 @@
 import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
-
+import {sep} from "./result_field_separator";
 
 /**
  * Render variable result body
@@ -10,12 +10,12 @@ import {header} from "../search_components/result_header";
 function variableBody(result: SearchResult) {
   return (
     <p>
-          Study: {result.study.raw.name} | Dataset: {result.dataset.raw.name}
-          | Period: {result.period.raw.label}
+      Study: {result.study.raw.name}
+      {sep()}Dataset: {result.dataset.raw.name}
+      {sep()}Period: {result.period.raw.label}
     </p>
   );
 }
-
 
 /**
  *
@@ -31,9 +31,7 @@ function variableResult({
 }) {
   return (
     <li className="sui-result">
-      <div className="sui-result__header">
-        {header(result, onClickLink, "variable")}
-      </div>
+      <div className="sui-result__header">{header(result, onClickLink, "variable")}</div>
       <div className="sui-result__body">
         {variableBody(result)}
         <div className="sui-result__image">

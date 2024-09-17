@@ -14,7 +14,7 @@ import {
 import {Layout} from "@elastic/react-search-ui-views";
 import {SearchDriverOptions} from "@elastic/search-ui";
 
-import {conceptResult} from "./result_customisations/concept_result";
+import {conceptResult} from "./result_customizations/concept_result";
 
 import {
   conceptConfig,
@@ -22,7 +22,7 @@ import {
   conceptSorting,
 } from "./search_configs/concept_search_config";
 
-import {topicResult} from "./result_customisations/topic_result";
+import {topicResult} from "./result_customizations/topic_result";
 
 import {
   topicConfig,
@@ -30,12 +30,12 @@ import {
   topicSorting,
 } from "./search_configs/topic_search_config";
 
-import {AllResult} from "./result_customisations/all_result";
+import {AllResult} from "./result_customizations/all_result";
 import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
 
 import Autocomplete from "./search_components/autocomplete";
 
-import {publicationResult} from "./result_customisations/publications_result";
+import {publicationResult} from "./result_customizations/publications_result";
 import {
   publicationConfig,
   publicationFacets,
@@ -52,9 +52,8 @@ import {
   variableFacets,
   variableSorting,
 } from "./search_configs/variable_search_config";
-// import {variableResult} from "./view_customisations/variable_result_view";
-import {questionResult} from "./result_customisations/question_result";
-import {variableResult} from "./result_customisations/variable_result";
+import {questionResult} from "./result_customizations/question_result";
+import {variableResult} from "./result_customizations/variable_result";
 
 import {resultIconMap} from "./search_components/result_header";
 
