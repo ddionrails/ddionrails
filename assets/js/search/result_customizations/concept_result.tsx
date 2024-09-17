@@ -30,7 +30,7 @@ function conceptResult({
   return (
     <li className="sui-result">
       <div className="sui-result__header">
-        {header(result, onClickLink, "question")}
+        {header(result, onClickLink, "concept")}
       </div>
       <div className="sui-result__body">
         {conceptBody(result)}

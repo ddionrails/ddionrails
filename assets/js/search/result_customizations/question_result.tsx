@@ -1,7 +1,6 @@
-
 import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
-
+import {sep} from "./result_field_separator";
 
 /**
  * Render variable result body
@@ -11,8 +10,9 @@ import {header} from "../search_components/result_header";
 function questionBody(result: SearchResult) {
   return (
     <p>
-          Study: {result.study.raw.label} | Instrument: {result.instrument.raw.label}
-          | Period: {result.period.raw.label}
+      Study: {result.study.raw.label}
+      {sep()}Instrument: {result.instrument.raw.label}
+      {sep()}Period: {result.period.raw.label}
     </p>
   );
 }
@@ -31,9 +31,7 @@ function questionResult({
 }) {
   return (
     <li className="sui-result">
-      <div className="sui-result__header">
-        {header(result, onClickLink, "question")}
-      </div>
+      <div className="sui-result__header">{header(result, onClickLink, "question")}</div>
       <div className="sui-result__body">
         {questionBody(result)}
         <div className="sui-result__image">
@@ -47,6 +45,5 @@ function questionResult({
     </li>
   );
 }
-
 
 export {questionResult};

@@ -30,7 +30,7 @@ function topicResult({
   return (
     <li className="sui-result">
       <div className="sui-result__header">
-        {header(result, onClickLink, "question")}
+        {header(result, onClickLink, "topic")}
       </div>
       <div className="sui-result__body">
         {topicBody(result)}
