@@ -2,12 +2,24 @@ import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
 import {sep} from "./result_field_separator";
 
+import {getLanguageState} from "../language_state";
+
 /**
  * Render variable result body
  * @param result
  * @returns
  */
 function variableBody(result: SearchResult) {
+  const language = getLanguageState();
+  if (language === "de") {
+    return (
+      <p>
+        Studie: {result.study.raw.name}
+        {sep()}Datensatz: {result.dataset.raw.name}
+        {sep()}Zeitraum: {result.period.raw.label_de}
+      </p>
+    );
+  }
   return (
     <p>
       Study: {result.study.raw.name}

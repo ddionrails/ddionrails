@@ -77,3 +77,15 @@ button.active-search {
 
   border-right: solid 1px;
 }
+
+.header-subdivider {
+  display: flex;
+  flex-direction: column;
+}
+
+.other-search-hit-container {
+  border: solid black 1px;
+  padding-left: 1em;
+  background-color: #aaefaa;
+  margin: .3em;
+}

@@ -45,6 +45,12 @@ const config = {
           fallback: true,
         },
       },
+      label_de: {
+        snippet: {
+          size: 200,
+          fallback: true,
+        },
+      },
       study: {
         snippet: {
           fallback: true,
