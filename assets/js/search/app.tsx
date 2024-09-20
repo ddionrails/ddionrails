@@ -205,7 +205,7 @@ function Questions() {
  *
  */
 function Variables() {
-  return searchRouter(variableConfig, variableSorting, variableFacets, variableResult);
+  return searchRouter(variableConfig(), variableSorting, variableFacets, variableResult);
 }
 
 /**
