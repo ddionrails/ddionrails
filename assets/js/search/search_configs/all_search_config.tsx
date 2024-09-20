@@ -1,7 +1,7 @@
 
-import {Facet} from "@elastic/react-search-ui";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
+import {getLanguageState} from "../language_state";
+import {facetConfig, studyFacet} from "../search_components/facets";
 
 /**
  *
@@ -17,15 +17,9 @@ function sorting() {
  *
  * @return { Element }
  */
-function facets() {
-  return (
-    <Facet
-      key={"1"}
-      field={"study_name"}
-      label={"Study"}
-      view={SortedMultiCheckboxFacet}
-    />
-  );
+function facets(): JSX.Element {
+  const language = getLanguageState();
+  return (studyFacet(language));
 }
 
 const connector = new ElasticsearchAPIConnector({
@@ -33,80 +27,84 @@ const connector = new ElasticsearchAPIConnector({
   index: "*",
 });
 
-const config = {
-  searchQuery: {
-    search_fields: {
-      name: {
-        weight: 3,
-      },
-      label: {},
-      label_de: {},
-    },
-    result_fields: {
-      name: {
-        snippet: {},
-      },
-      label: {
-        snippet: {
-          size: 200,
-          fallback: true,
+const config = () => {
+  const language = getLanguageState();
+  const [disjunctiveFacets, facets] = facetConfig(language);
+  return (
+    {
+      searchQuery: {
+        search_fields: {
+          name: {
+            weight: 3,
+          },
+          label: {},
+          label_de: {},
         },
-      },
-      label_de: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      study: {
-        snippet: {
-          fallback: true,
-        },
-      },
-      instrument: {
-        snippet: {},
-      },
-      dataset: {
-        snippet: {},
-      },
-      period: {
-        snippet: {},
-      },
-    },
-    disjunctiveFacets: ["study_name"],
-    facets: {
-      "study_name": {type: "value"},
-    },
-  },
-  autocompleteQuery: {
-    results: {
-      resultsPerPage: 10,
-      search_fields: {
-        name: {
-          weight: 3,
-        },
-        label: {
-          weight: 1,
-        },
-      },
-      result_fields: {
-        name: {
-          snippet: {
-            size: 100,
-            fallback: true,
+        result_fields: {
+          name: {
+            snippet: {},
+          },
+          label: {
+            snippet: {
+              size: 200,
+              fallback: true,
+            },
+          },
+          label_de: {
+            snippet: {
+              size: 200,
+              fallback: true,
+            },
+          },
+          study: {
+            snippet: {
+              fallback: true,
+            },
+          },
+          instrument: {
+            snippet: {},
+          },
+          dataset: {
+            snippet: {},
+          },
+          period: {
+            snippet: {},
           },
         },
-        label: {
-          snippet: {
-            size: 100,
-            fallback: true,
+        disjunctiveFacets,
+        facets,
+      },
+      autocompleteQuery: {
+        results: {
+          resultsPerPage: 10,
+          search_fields: {
+            name: {
+              weight: 3,
+            },
+            label: {
+              weight: 1,
+            },
+          },
+          result_fields: {
+            name: {
+              snippet: {
+                size: 100,
+                fallback: true,
+              },
+            },
+            label: {
+              snippet: {
+                size: 100,
+                fallback: true,
+              },
+            },
           },
         },
       },
-    },
-  },
-  apiConnector: connector,
-  alwaysSearchOnInitialLoad: true,
+      apiConnector: connector,
+      alwaysSearchOnInitialLoad: true,
+    }
+  );
 };
 
 export {config as allConfig};

@@ -165,14 +165,14 @@ function searchRouter(
 
 /** */
 function All() {
-  return searchRouter(allConfig, allSorting, allFacets, AllResult);
+  return searchRouter(allConfig(), allSorting, allFacets, AllResult);
 }
 
 /**
  *
  */
 function Concepts() {
-  return searchRouter(conceptConfig, conceptSorting, conceptFacets, conceptResult);
+  return searchRouter(conceptConfig(), conceptSorting, conceptFacets, conceptResult);
 }
 
 /**
@@ -221,11 +221,21 @@ function App() {
           <LinkWithQuery to="/all">
             {language === "de" ? "Alles durchsuchen" : "Search all"}
           </LinkWithQuery>
-          <LinkWithQuery to="/variables">Variables</LinkWithQuery>
-          <LinkWithQuery to="/questions">Questions</LinkWithQuery>
-          <LinkWithQuery to="/concepts">Concepts</LinkWithQuery>
-          <LinkWithQuery to="/topics">Topics</LinkWithQuery>
-          <LinkWithQuery to="/publications">Publications</LinkWithQuery>
+          <LinkWithQuery to="/variables">
+            {language === "de" ? "Variablen" : "Variables"}
+          </LinkWithQuery>
+          <LinkWithQuery to="/questions">
+            {language === "de" ? "Fragen" : "Questions"}
+          </LinkWithQuery>
+          <LinkWithQuery to="/concepts">
+            {language === "de" ? "Konzepte" : "Concepts"}
+          </LinkWithQuery>
+          <LinkWithQuery to="/topics">
+            {language === "de" ? "Themen" : "Topics"}
+          </LinkWithQuery>
+          <LinkWithQuery to="/publications">
+            {language === "de" ? "Publikationen" : "Publications"}
+          </LinkWithQuery>
         </div>
         <Routes>
           <Route path="/" element={<All />} />

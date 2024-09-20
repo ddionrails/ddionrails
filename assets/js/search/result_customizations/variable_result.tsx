@@ -14,7 +14,7 @@ function variableBody(result: SearchResult) {
   if (language === "de") {
     return (
       <p>
-        Studie: {result.study.raw.name}
+        Studie: {result.study.raw.label_de}
         {sep()}Datensatz: {result.dataset.raw.name}
         {sep()}Zeitraum: {result.period.raw.label_de}
       </p>
@@ -22,7 +22,7 @@ function variableBody(result: SearchResult) {
   }
   return (
     <p>
-      Study: {result.study.raw.name}
+      Study: {result.study.raw.label}
       {sep()}Dataset: {result.dataset.raw.name}
       {sep()}Period: {result.period.raw.label}
     </p>
