@@ -44,18 +44,72 @@ class ConceptDocument(Document):
     # facets
     study_name = fields.ListField(fields.KeywordField())
 
-    @staticmethod
-    def prepare_study_name(model_object: Concept) -> List[str]:
-        """Return a list of related studies"""
+    study = fields.ObjectField(
+        properties={
+            "name": fields.TextField(),
+            "label": fields.TextField(),
+            "label_de": fields.TextField(),
+        }
+    )
+    study_name = fields.KeywordField()
+    study_name_de = fields.KeywordField()
+
+    def prepare_study_name(self, model_object: Any) -> str:
+        """Collect study title for facets."""
         studies = Study.objects.filter(topics__concepts__id=model_object.id).distinct()
-        return [study.title() for study in studies]
+        names = ", ".join([study.title() for study in studies])
+        if names:
+            return names
+
+        return "No study"
+
+    def prepare_study_name_de(self, model_object: Any) -> str:
+        """Collect study title for facets."""
+        studies = Study.objects.filter(topics__concepts__id=model_object.id).distinct()
+        name_list = []
+        for study in studies:
+            if not study.label_de:
+                name_list.append(study.title())
+                continue
+            name_list.append(study.label_de)
+        names = ", ".join(name_list)
+        if names:
+            return names
+
+        return "Keine Studie"
+
+    def prepare_study(self, model_object: Any) -> dict[str, str]:
+        """Collect study fields for indexing."""
+        studies = Study.objects.filter(topics__concepts__id=model_object.id).distinct()
+        names = []
+        labels = []
+        labels_de = []
+        for study in studies:
+            name = study.name
+            if not name:
+                continue
+            names.append(name)
+            if study.label:
+                labels.append(study.label)
+            else:
+                labels.append(name)
+            if study.label_de:
+                labels_de.append(study.label_de)
+            else:
+                labels_de.append(name)
+
+        return {
+            "name": ", ".join(names),
+            "label": ", ".join(labels),
+            "label_de": ", ".join(labels_de),
+        }
 
     class Index:  # pylint: disable=missing-docstring,too-few-public-methods
         name = f"{settings.ELASTICSEARCH_DSL_INDEX_PREFIX}concepts"
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Concept
-        queryset_pagination = 5000 
+        queryset_pagination = 5000
 
     def get_queryset(self) -> Any:
         """

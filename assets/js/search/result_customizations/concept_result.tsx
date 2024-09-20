@@ -1,5 +1,6 @@
 import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
+import {getLanguageState} from "../language_state";
 
 
 /**
@@ -8,9 +9,28 @@ import {header} from "../search_components/result_header";
  * @returns
  */
 function conceptBody(result: SearchResult) {
+  const language = getLanguageState();
+  let outputText = "";
+  if (language === "de") {
+    if (result.study.raw.label_de === "") {
+      outputText = "Konzept ist keiner Studie zugeordnet";
+    } else {
+      outputText = `Konzept in Studie ${result.study.raw.label_de}`;
+    }
+    return (
+      <p>
+        {outputText}
+      </p>
+    );
+  }
+  if (result.study.raw.label === "") {
+    outputText = "Concept not associated with any study";
+  } else {
+    outputText = `Concept in study ${result.study.raw.label}`;
+  }
   return (
     <p>
-          Concept in study {result.study_name}
+      {outputText}
     </p>
   );
 }

@@ -35,11 +35,20 @@ class GenericDocument(Document):
         }
     )
     study_name = fields.KeywordField()
+    study_name_de = fields.KeywordField()
 
     def prepare_study_name(self, model_object: Any) -> str:
         """Collect study title for facets."""
         study = self._get_study(model_object)
-        return study.title()
+        return study.label
+
+    def prepare_study_name_de(self, model_object: Any) -> str:
+        """Collect study title for facets."""
+        study = self._get_study(model_object)
+        label_de = study.label
+        if study.label_de:
+            label_de = study.label_de
+        return label_de
 
     def prepare_study(self, model_object: Any) -> Dict[str, str]:
         """Collect study fields for indexing."""
