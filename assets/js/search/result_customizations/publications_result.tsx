@@ -1,62 +1,46 @@
 import {SearchResult} from "@elastic/search-ui";
-
-
-/**
- * Render header for variable result
- * @param result
- * @returns
- */
-export function header(
-  result: SearchResult,
-  onClickLink: () => void
-) {
-  let label = result.title.snippet;
-  if (!label) {
-    label = result.title.raw;
-  }
-  return (
-    <h3>
-      {<i className="fa fa-newspaper"></i>}
-      <a onClick={onClickLink} href={"/publication/" + result._meta.id}>
-        <span dangerouslySetInnerHTML={{__html: label}}></span>
-      </a>
-    </h3>
-  );
-}
+import {header} from "../search_components/result_header";
+import {LanguageCode} from "../language_state";
+import { resultFactoryMapper } from "../factory_mappers";
 
 /**
  * Render publication result body
  * @param result
  * @returns
  */
-function publicationBody(result: SearchResult) {
+function publicationBody(result: SearchResult, language: LanguageCode) {
+  let text = "Publication by";
+  if (language === "de") {
+    text = "Publikation von";
+  }
   return (
     <p>
-        Publication by {result.author.raw} ({result.year.raw})
+      {text} {result.author.raw} ({result.year.raw})
     </p>
   );
 }
-
 
 /**
  *
  * @param param0
  * @returns
  */
-function publicationResult({
+function publicationResultFactory({
   result,
   onClickLink,
+  language,
 }: {
   result: SearchResult;
   onClickLink: () => void;
+  language: LanguageCode;
 }) {
   return (
     <li className="sui-result">
       <div className="sui-result__header">
-        {header(result, onClickLink)}
+        {header(result, onClickLink, "publication", language)}
       </div>
       <div className="sui-result__body">
-        {publicationBody(result)}
+        {publicationBody(result, language)}
         <div className="sui-result__image">
           <img src={""} alt="" />
         </div>
@@ -68,5 +52,7 @@ function publicationResult({
     </li>
   );
 }
+
+const publicationResult = resultFactoryMapper(publicationResultFactory);
 
 export {publicationResult};

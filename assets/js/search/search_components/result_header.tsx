@@ -25,8 +25,7 @@ resultIconMap.set("publication", () => {
  * @param result
  * @returns
  */
-function header(result: SearchResult, onClickLink: () => void, resultType: result) {
-  const language = getLanguageState();
+function header(result: SearchResult, onClickLink: () => void, resultType: result, language: string = "en") {
   let labelName = "label";
   let otherLabelName = "label_de";
   let otherLanguageText = "Hit in german label: ";

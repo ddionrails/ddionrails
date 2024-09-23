@@ -128,10 +128,28 @@ class ConceptDocument(Document):
 class TopicDocument(GenericDocument):
     """Search document for concepts.Topic"""
 
+    study = fields.ObjectField(
+        properties={
+            "name": fields.TextField(),
+            "label": fields.TextField(),
+            "label_de": fields.TextField(),
+        }
+    )
+
     @staticmethod
     def prepare_study_name(model_object: Topic) -> str:
         """Return the related study"""
         return model_object.study.title()
+
+    def prepare_study(self, model_object: Any) -> dict[str, str]:
+        """Collect study fields for indexing."""
+        study = Study.objects.get(topics__id=model_object.id)
+        return {
+            "name": study.name,
+            "label": study.label,
+            "label_de": study.label_de,
+        }
+
 
     @staticmethod
     def _get_study(model_object: Topic) -> Study:

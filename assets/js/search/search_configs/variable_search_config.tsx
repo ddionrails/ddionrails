@@ -1,8 +1,8 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
-import {getLanguageState} from "../language_state";
+import {Sorting} from "@elastic/react-search-ui";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
+import { facetFactoryMapper } from "../factory_mappers";
+import { LanguageCode } from "../language_state";
 
 /**
  *
@@ -44,8 +44,7 @@ function sorting() {
  *
  * @return { Element }
  */
-function facets() {
-  const language = getLanguageState();
+function facetFactory(language: LanguageCode) {
   return (
     <>
       {studyFacet(language)}
@@ -60,14 +59,15 @@ function facets() {
     </>
   );
 }
+const facets = facetFactoryMapper(facetFactory);
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
   index: "variables",
 });
 
-const config = () => {
-  const language = getLanguageState();
+// eslint-disable-next-line require-jsdoc
+function config(language: LanguageCode) {
   const [disjunctiveFacets, facets] = facetConfig(language, [
     "study",
     "analysis_unit",
@@ -144,7 +144,7 @@ const config = () => {
     apiConnector: connector,
     alwaysSearchOnInitialLoad: true,
   };
-};
+}
 
 export {config as variableConfig};
 export {facets as variableFacets};

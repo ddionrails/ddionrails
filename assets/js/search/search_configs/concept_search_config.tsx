@@ -3,14 +3,13 @@
 import {Facet} from "@elastic/react-search-ui";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
-import {getLanguageState} from "../language_state";
+import {LanguageCode} from "../language_state";
 
 function sorting(): JSX.Element {
   return <></>;
 }
 
-function facets(): JSX.Element {
-  const language = getLanguageState();
+function facetFactory(language: LanguageCode): JSX.Element {
   if (language === "de") {
     return (
       <Facet
@@ -30,14 +29,20 @@ function facets(): JSX.Element {
     />
   );
 }
+const facets = new Map();
+facets.set("en", () => {
+  return facetFactory("en");
+});
+facets.set("de", () => {
+  return facetFactory("de");
+});
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
   index: "concepts",
 });
 
-const config = () => {
-  const language = getLanguageState();
+function config(language: LanguageCode) {
   let disjunctiveFacets = ["study_name"];
   let facets: any = {
     study_name: {type: "value"},
@@ -113,7 +118,7 @@ const config = () => {
     apiConnector: connector,
     alwaysSearchOnInitialLoad: true,
   };
-};
+}
 
 export {config as conceptConfig};
 export {facets as conceptFacets};

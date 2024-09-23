@@ -4,6 +4,8 @@ import {conceptResult} from "./concept_result";
 import {questionResult} from "./question_result";
 import {topicResult} from "./topic_result";
 import {variableResult} from "./variable_result";
+import { resultFactoryMapper } from "../factory_mappers";
+import { LanguageCode } from "../language_state";
 
 
 /**
@@ -11,26 +13,30 @@ import {variableResult} from "./variable_result";
  * @param param0
  * @returns
  */
-function AllResult({
+function AllResultFactory({
   result,
   onClickLink,
+  language,
 }: {
   result: SearchResult;
   onClickLink: () => void;
+  language: LanguageCode
 }) {
   if (result._meta.rawHit._index === "concepts") {
-    return conceptResult({result, onClickLink});
+    return conceptResult.get(language)({result, onClickLink});
   }
   if (result._meta.rawHit._index === "topics") {
-    return topicResult({result, onClickLink});
+    return topicResult.get(language)({result, onClickLink});
   }
   if (result._meta.rawHit._index === "questions") {
-    return questionResult({result, onClickLink});
+    return questionResult.get(language)({result, onClickLink});
   }
   if (result._meta.rawHit._index === "variables") {
-    return variableResult({result, onClickLink});
+    return variableResult.get(language)({result, onClickLink});
   }
   return null;
 }
+
+const AllResult = resultFactoryMapper(AllResultFactory);
 
 export {AllResult};
