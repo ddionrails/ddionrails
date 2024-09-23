@@ -1,15 +1,13 @@
 import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
-import {getLanguageState} from "../language_state";
-
+import { resultFactoryMapper } from "../factory_mappers";
 
 /**
  * Render variable result body
  * @param result
  * @returns
  */
-function conceptBody(result: SearchResult) {
-  const language = getLanguageState();
+function conceptBody(result: SearchResult, language: "en" | "de" = "en") {
   let outputText = "";
   if (language === "de") {
     if (result.study.raw.label_de === "") {
@@ -17,22 +15,14 @@ function conceptBody(result: SearchResult) {
     } else {
       outputText = `Konzept in Studie ${result.study.raw.label_de}`;
     }
-    return (
-      <p>
-        {outputText}
-      </p>
-    );
+    return <p>{outputText}</p>;
   }
   if (result.study.raw.label === "") {
     outputText = "Concept not associated with any study";
   } else {
     outputText = `Concept in study ${result.study.raw.label}`;
   }
-  return (
-    <p>
-      {outputText}
-    </p>
-  );
+  return <p>{outputText}</p>;
 }
 
 /**
@@ -40,20 +30,22 @@ function conceptBody(result: SearchResult) {
  * @param param0
  * @returns
  */
-function conceptResult({
+function conceptResultFactory({
   result,
   onClickLink,
+  language = "en",
 }: {
   result: SearchResult;
   onClickLink: () => void;
+  language: "en" | "de";
 }) {
   return (
     <li className="sui-result">
       <div className="sui-result__header">
-        {header(result, onClickLink, "concept")}
+        {header(result, onClickLink, "concept", language)}
       </div>
       <div className="sui-result__body">
-        {conceptBody(result)}
+        {conceptBody(result, language)}
         <div className="sui-result__image">
           <img src={""} alt="" />
         </div>
@@ -65,5 +57,8 @@ function conceptResult({
     </li>
   );
 }
+
+const conceptResult = resultFactoryMapper(conceptResultFactory);
+
 
 export {conceptResult};

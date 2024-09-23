@@ -1,97 +1,96 @@
 /* eslint-disable require-jsdoc */
 
-import {Facet} from "@elastic/react-search-ui";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
+import { facetConfig, studyFacet } from "../search_components/facets";
+import { LanguageCode } from "../language_state";
+import { facetFactoryMapper } from "../factory_mappers";
 
 function sorting(): JSX.Element {
+  return <></>;
+}
+
+function facetFactory(language: LanguageCode): JSX.Element {
   return (
-    <></>
+    <>{studyFacet(language)}</>
   );
 }
 
-function facets(): JSX.Element {
-  return (
-    <Facet
-      key={"1"}
-      field={"study_name"}
-      label={"Study"}
-      view={SortedMultiCheckboxFacet}
-    />
-  );
-}
+const facets = facetFactoryMapper(facetFactory);
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
   index: "topics",
 });
 
-const config = {
-  searchQuery: {
-    search_fields: {
-      name: {
-        weight: 3,
-      },
-      label: {},
-      label_de: {},
-    },
-    result_fields: {
-      name: {
-        snippet: {},
-      },
-      label: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      label_de: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      study: {
-        snippet: {
-          fallback: true,
-        },
-      },
-    },
-    disjunctiveFacets: ["study_name"],
-    facets: {
-      "study_name": {type: "value"},
-    },
-  },
-  autocompleteQuery: {
-    results: {
-      resultsPerPage: 10,
+function config(language: LanguageCode) {
+  const [disjunctiveFacets, facets] = facetConfig(language, [
+    "study",
+  ]);
+  return {
+    searchQuery: {
       search_fields: {
         name: {
           weight: 3,
         },
-        label: {
-          weight: 1,
-        },
+        label: {},
+        label_de: {},
       },
       result_fields: {
         name: {
-          snippet: {
-            size: 100,
-            fallback: true,
-          },
+          snippet: {},
         },
         label: {
           snippet: {
-            size: 100,
+            size: 200,
             fallback: true,
+          },
+        },
+        label_de: {
+          snippet: {
+            size: 200,
+            fallback: true,
+          },
+        },
+        study: {
+          snippet: {
+            fallback: true,
+          },
+        },
+      },
+      disjunctiveFacets,
+      facets,
+    },
+    autocompleteQuery: {
+      results: {
+        resultsPerPage: 10,
+        search_fields: {
+          name: {
+            weight: 3,
+          },
+          label: {
+            weight: 1,
+          },
+        },
+        result_fields: {
+          name: {
+            snippet: {
+              size: 100,
+              fallback: true,
+            },
+          },
+          label: {
+            snippet: {
+              size: 100,
+              fallback: true,
+            },
           },
         },
       },
     },
-  },
-  apiConnector: connector,
-  alwaysSearchOnInitialLoad: true,
-};
+    apiConnector: connector,
+    alwaysSearchOnInitialLoad: true,
+  };
+}
 
 export {config as topicConfig};
 export {facets as topicFacets};

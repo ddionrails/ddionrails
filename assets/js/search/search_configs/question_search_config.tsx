@@ -2,6 +2,9 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {Facet, Sorting} from "@elastic/react-search-ui";
 import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
+import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
+import { LanguageCode } from "../language_state";
+import { facetFactoryMapper } from "../factory_mappers";
 
 function sorting(): JSX.Element {
   return (
@@ -35,110 +38,100 @@ function sorting(): JSX.Element {
   );
 }
 
-function facets(): JSX.Element {
+function facetFactory(language: LanguageCode): JSX.Element {
   return (
     <>
-      <Facet
-        key={"3"}
-        field={"study_name"}
-        label={"Study"}
-        view={SortedMultiCheckboxFacet}
-      />
-      <Facet
-        key={"1"}
-        field={"analysis_unit.label"}
-        label={"analysis unit"}
-        view={SortedMultiCheckboxFacet}
-      />
-      <Facet
-        key={"2"}
-        field={"period.label"}
-        label={"period"}
-        view={SortedMultiCheckboxFacet}
-      />
+      {studyFacet(language)}
+      {genericFacet(language, "analysis_unit", ["Analysis Unit", "Analyseeinheit"], "2")}
+      {genericFacet(language, "period", ["Period", "Zeitraum"], "3")}
     </>
   );
 }
+
+const facets = facetFactoryMapper(facetFactory);
 
 const connector = new ElasticsearchAPIConnector({
   host: "/elastic/",
   index: "questions",
 });
 
-const config = {
-  searchQuery: {
-    search_fields: {
-      name: {
-        weight: 3,
-      },
-      label: {},
-      label_de: {},
-    },
-    result_fields: {
-      name: {
-        snippet: {},
-      },
-      label: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      label_de: {
-        snippet: {
-          size: 200,
-          fallback: true,
-        },
-      },
-      study: {
-        snippet: {
-          fallback: true,
-        },
-      },
-      instrument: {
-        snippet: {},
-      },
-      period: {
-        snippet: {},
-      },
-    },
-    disjunctiveFacets: ["analysis_unit.label", "period.label", "study_name"],
-    facets: {
-      "analysis_unit.label": {type: "value"},
-      "period.label": {type: "value"},
-      "study_name": {type: "value"},
-    },
-  },
-  autocompleteQuery: {
-    results: {
-      resultsPerPage: 10,
+function config(language: languageCode) {
+  const [disjunctiveFacets, facets] = facetConfig(language, [
+    "study",
+    "analysis_unit",
+    "period",
+  ]);
+  return {
+    searchQuery: {
       search_fields: {
         name: {
           weight: 3,
         },
-        label: {
-          weight: 1,
-        },
+        label: {},
+        label_de: {},
       },
       result_fields: {
         name: {
-          snippet: {
-            size: 100,
-            fallback: true,
-          },
+          snippet: {},
         },
         label: {
           snippet: {
-            size: 100,
+            size: 200,
             fallback: true,
+          },
+        },
+        label_de: {
+          snippet: {
+            size: 200,
+            fallback: true,
+          },
+        },
+        study: {
+          snippet: {
+            fallback: true,
+          },
+        },
+        instrument: {
+          snippet: {},
+        },
+        period: {
+          snippet: {},
+        },
+      },
+      disjunctiveFacets,
+      facets,
+    },
+    autocompleteQuery: {
+      results: {
+        resultsPerPage: 10,
+        search_fields: {
+          name: {
+            weight: 3,
+          },
+          label: {
+            weight: 1,
+          },
+        },
+        result_fields: {
+          name: {
+            snippet: {
+              size: 100,
+              fallback: true,
+            },
+          },
+          label: {
+            snippet: {
+              size: 100,
+              fallback: true,
+            },
           },
         },
       },
     },
-  },
-  apiConnector: connector,
-  alwaysSearchOnInitialLoad: true,
-};
+    apiConnector: connector,
+    alwaysSearchOnInitialLoad: true,
+  };
+}
 
 export {config as questionConfig};
 export {facets as questionFacets};

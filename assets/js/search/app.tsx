@@ -1,7 +1,7 @@
 import React from "react";
 import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
 
-import {getLanguageState} from "./language_state";
+import {getLanguageState, LanguageCode} from "./language_state";
 
 import {
   ErrorBoundary,
@@ -33,7 +33,11 @@ import {
 } from "./search_configs/topic_search_config";
 
 import {AllResult} from "./result_customizations/all_result";
-import {allConfig, allFacets, allSorting} from "./search_configs/all_search_config";
+import {
+  allConfig,
+  allFacets,
+  allSorting,
+} from "./search_configs/all_search_config";
 
 import Autocomplete from "./search_components/autocomplete";
 
@@ -104,8 +108,13 @@ function searchRouter(
   config: SearchDriverOptions,
   sorting: any,
   facets: any,
-  resultView: any
+  resultView: any,
+  language: LanguageCode = "en"
 ) {
+  let placeholder = "Search";
+  if (language === "de") {
+    placeholder = "Suche";
+  }
   return (
     <SearchProvider config={config}>
       <WithSearch
@@ -121,6 +130,7 @@ function searchRouter(
                   header={
                     <SearchBox
                       autocompleteMinimumCharacters={3}
+                      inputProps={{placeholder}}
                       autocompleteResults={{
                         linkTarget: "_blank",
                         sectionTitle: "Results",
@@ -164,54 +174,82 @@ function searchRouter(
 }
 
 /** */
-function All() {
-  return searchRouter(allConfig(), allSorting, allFacets, AllResult);
-}
-
-/**
- *
- */
-function Concepts() {
-  return searchRouter(conceptConfig(), conceptSorting, conceptFacets, conceptResult);
-}
-
-/**
- *
- */
-function Topics() {
-  return searchRouter(topicConfig, topicSorting, topicFacets, topicResult);
-}
-
-/**
- *
- */
-function Publications() {
+function All({language}: {language: LanguageCode}) {
   return searchRouter(
-    publicationConfig,
-    publicationSorting,
-    publicationFacets,
-    publicationResult
+    allConfig(language),
+    allSorting,
+    allFacets.get(language),
+    AllResult.get(language),
+    language
   );
 }
 
 /**
  *
  */
-function Questions() {
-  return searchRouter(questionConfig, questionSorting, questionFacets, questionResult);
+function Concepts({language}: {language: LanguageCode}) {
+  return searchRouter(
+    conceptConfig(language),
+    conceptSorting,
+    conceptFacets.get(language),
+    conceptResult.get(language),
+    language
+  );
 }
 
 /**
  *
  */
-function Variables() {
-  return searchRouter(variableConfig(), variableSorting, variableFacets, variableResult);
+function Topics({language}: {language: LanguageCode}) {
+  return searchRouter(
+    topicConfig(language),
+    topicSorting,
+    topicFacets.get(language),
+    topicResult.get(language),
+    language
+  );
 }
 
 /**
  *
- * @returns
  */
+function Publications({language}: {language: LanguageCode}) {
+  return searchRouter(
+    publicationConfig(language),
+    publicationSorting,
+    publicationFacets.get(language),
+    publicationResult.get(language),
+    language
+  );
+}
+
+/**
+ *
+ */
+function Questions({language}: {language: LanguageCode}) {
+  return searchRouter(
+    questionConfig(language),
+    questionSorting,
+    questionFacets.get(language),
+    questionResult.get(language),
+    language
+  );
+}
+
+/**
+ *
+ */
+function Variables({language}: {language: LanguageCode}) {
+  return searchRouter(
+    variableConfig(language),
+    variableSorting.get(language),
+    variableFacets.get(language),
+    variableResult.get(language),
+    language
+  );
+}
+
+// eslint-disable-next-line complexity, require-jsdoc
 function App() {
   const language = getLanguageState();
   return (
@@ -238,13 +276,22 @@ function App() {
           </LinkWithQuery>
         </div>
         <Routes>
-          <Route path="/" element={<All />} />
-          <Route path="/all" element={<All />} />
-          <Route path="/variables" element={<Variables />} />
-          <Route path="/questions" element={<Questions />} />
-          <Route path="/concepts" element={<Concepts />} />
-          <Route path="/topics" element={<Topics />} />
-          <Route path="/publications" element={<Publications />} />
+          <Route path="/" element={<All language={language} />} />
+          <Route path="/all" element={<All language={language} />} />
+          <Route
+            path="/variables"
+            element={<Variables language={language} />}
+          />
+          <Route
+            path="/questions"
+            element={<Questions language={language} />}
+          />
+          <Route path="/concepts" element={<Concepts language={language} />} />
+          <Route path="/topics" element={<Topics language={language} />} />
+          <Route
+            path="/publications"
+            element={<Publications language={language} />}
+          />
         </Routes>
       </BrowserRouter>
     </>

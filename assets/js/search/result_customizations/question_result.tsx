@@ -2,15 +2,15 @@ import {SearchResult} from "@elastic/search-ui";
 import {header} from "../search_components/result_header";
 import {sep} from "./result_field_separator";
 
-import {getLanguageState} from "../language_state";
+import {LanguageCode} from "../language_state";
+import {resultFactoryMapper} from "../factory_mappers";
 
 /**
  * Render variable result body
  * @param result
  * @returns
  */
-function questionBody(result: SearchResult) {
-  const language = getLanguageState();
+function questionBody(result: SearchResult, language: LanguageCode) {
   if (language === "de") {
     return (
       <p>
@@ -33,18 +33,22 @@ function questionBody(result: SearchResult) {
  * @param param0
  * @returns
  */
-function questionResult({
+function questionResultFactory({
   result,
   onClickLink,
+  language,
 }: {
   result: SearchResult;
   onClickLink: () => void;
+  language: LanguageCode;
 }) {
   return (
     <li className="sui-result">
-      <div className="sui-result__header">{header(result, onClickLink, "question")}</div>
+      <div className="sui-result__header">
+        {header(result, onClickLink, "question", language)}
+      </div>
       <div className="sui-result__body">
-        {questionBody(result)}
+        {questionBody(result, language)}
         <div className="sui-result__image">
           <img src={""} alt="" />
         </div>
@@ -56,5 +60,7 @@ function questionResult({
     </li>
   );
 }
+
+const questionResult = resultFactoryMapper(questionResultFactory);
 
 export {questionResult};

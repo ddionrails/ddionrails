@@ -3,6 +3,7 @@ import {header} from "../search_components/result_header";
 import {sep} from "./result_field_separator";
 
 import {getLanguageState} from "../language_state";
+import { resultFactoryMapper } from "../factory_mappers";
 
 /**
  * Render variable result body
@@ -34,7 +35,7 @@ function variableBody(result: SearchResult) {
  * @param param0
  * @returns
  */
-function variableResult({
+function variableResultFactory({
   result,
   onClickLink,
 }: {
@@ -57,5 +58,7 @@ function variableResult({
     </li>
   );
 }
+
+const variableResult = resultFactoryMapper(variableResultFactory);
 
 export {variableResult};
