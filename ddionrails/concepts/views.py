@@ -13,13 +13,13 @@ from .models import Concept, Topic
 
 
 def concept_list(request: WSGIRequest):  # pylint: disable=unused-argument
-    """ Redirect to concept search """
+    """Redirect to concept search"""
     url = "/search/concepts"
     return redirect(url)
 
 
 class ConceptDetailView(DetailView):
-    """ DetailView for concepts.Concept model """
+    """DetailView for concepts.Concept model"""
 
     model = Concept
     template_name = "concepts/concept_detail.html"
@@ -45,4 +45,4 @@ class ConceptDetailView(DetailView):
 class TopicRedirectView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         topic = get_object_or_404(Topic.objects.select_related("study"), id=kwargs["id"])
-        return f"/{topic.study.name}/topics/en?open=topic_{topic.name}"
+        return f"/{topic.study.name}/topics?open=topic_{topic.name}"
