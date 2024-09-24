@@ -1,42 +1,11 @@
 /* eslint-disable require-jsdoc */
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
-import { LanguageCode } from "../language_state";
-import { facetFactoryMapper } from "../factory_mappers";
+import {LanguageCode} from "../language_state";
+import {facetFactoryMapper} from "../factory_mappers";
+import {sortBy} from "./sort_by";
 
-function sorting(): JSX.Element {
-  return (
-    <Sorting
-      label={"Sort by"}
-      sortOptions={[
-        {
-          name: "Relevance",
-          value: [],
-        },
-        {
-          name: "Period (ascending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "asc"},
-            },
-          ],
-        },
-        {
-          name: "Period (descending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "desc"},
-            },
-          ],
-        },
-      ]}
-    />
-  );
-}
+const sorting = sortBy;
 
 function facetFactory(language: LanguageCode): JSX.Element {
   return (

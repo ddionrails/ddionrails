@@ -1,6 +1,5 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import {Facet, Sorting} from "@elastic/react-search-ui";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
+import {Sorting} from "@elastic/react-search-ui";
 import {LanguageCode} from "../language_state";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
 import { facetFactoryMapper } from "../factory_mappers";
@@ -22,7 +21,7 @@ function sorting() {
           name: "Period (ascending)",
           value: [
             {
-              field: "period.label",
+              field: "year",
               direction: {order: "asc"},
             },
           ],
@@ -31,7 +30,7 @@ function sorting() {
           name: "Period (descending)",
           value: [
             {
-              field: "period.label",
+              field: "year",
               direction: {order: "desc"},
             },
           ],
@@ -50,7 +49,7 @@ function facetFactory(language: LanguageCode) {
     <>
       {studyFacet(language)}
       {genericFacet(language, "year", ["Year", "Jahr"], "2")}
-      {genericFacet(language, "type", ["Typ", "Typ"], "3")}
+      {genericFacet(language, "sub_type", ["Typ", "Typ"], "3")}
     </>
   );
 }

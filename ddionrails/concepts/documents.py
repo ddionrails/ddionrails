@@ -150,7 +150,6 @@ class TopicDocument(GenericDocument):
             "label_de": study.label_de,
         }
 
-
     @staticmethod
     def _get_study(model_object: Topic) -> Study:
         return model_object.study
