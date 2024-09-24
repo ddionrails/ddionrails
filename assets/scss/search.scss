@@ -89,3 +89,8 @@ button.active-search {
   background-color: #aaefaa;
   margin: .3em;
 }
+
+// Hide sort by placeholder because it cannot be changed/translated
+div#react-select-2-placeholder {
+    display: none
+}

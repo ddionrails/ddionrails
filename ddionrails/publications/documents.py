@@ -31,7 +31,7 @@ class PublicationDocument(GenericDocument):
 
     # facets
     sub_type = fields.KeywordField()
-    year = fields.IntegerField()
+    year = fields.KeywordField()
 
     @staticmethod
     def prepare_description(publication: Publication) -> str:

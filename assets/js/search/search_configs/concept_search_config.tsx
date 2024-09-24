@@ -1,33 +1,15 @@
 /* eslint-disable require-jsdoc */
 
-import {Facet} from "@elastic/react-search-ui";
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import SortedMultiCheckboxFacet from "../search_components/sorted_facet";
 import {LanguageCode} from "../language_state";
+import {studyFacet} from "../search_components/facets";
 
 function sorting(): JSX.Element {
   return <></>;
 }
 
 function facetFactory(language: LanguageCode): JSX.Element {
-  if (language === "de") {
-    return (
-      <Facet
-        key={"1"}
-        field={"study_name_de"}
-        label={"Studie"}
-        view={SortedMultiCheckboxFacet}
-      />
-    );
-  }
-  return (
-    <Facet
-      key={"1"}
-      field={"study_name"}
-      label={"Study"}
-      view={SortedMultiCheckboxFacet}
-    />
-  );
+  return <>{studyFacet(language)}</>;
 }
 const facets = new Map();
 facets.set("en", () => {

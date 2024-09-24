@@ -1,44 +1,11 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import {Sorting} from "@elastic/react-search-ui";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
 import { facetFactoryMapper } from "../factory_mappers";
 import { LanguageCode } from "../language_state";
+import { sortBy } from "./sort_by";
 
-/**
- *
- * @return {Element}
- */
-function sorting() {
-  return (
-    <Sorting
-      label={"Sort by"}
-      sortOptions={[
-        {
-          name: "Relevance",
-          value: [],
-        },
-        {
-          name: "Period (ascending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "asc"},
-            },
-          ],
-        },
-        {
-          name: "Period (descending)",
-          value: [
-            {
-              field: "period.label",
-              direction: {order: "desc"},
-            },
-          ],
-        },
-      ]}
-    />
-  );
-}
+
+const sorting = sortBy;
 
 /**
  *

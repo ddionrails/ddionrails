@@ -229,7 +229,7 @@ function Publications({language}: {language: LanguageCode}) {
 function Questions({language}: {language: LanguageCode}) {
   return searchRouter(
     questionConfig(language),
-    questionSorting,
+    questionSorting.get(language),
     questionFacets.get(language),
     questionResult.get(language),
     language
