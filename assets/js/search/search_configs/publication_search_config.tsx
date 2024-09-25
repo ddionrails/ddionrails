@@ -2,7 +2,7 @@ import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connecto
 import {Sorting} from "@elastic/react-search-ui";
 import {LanguageCode} from "../language_state";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
-import { facetFactoryMapper } from "../factory_mappers";
+import {facetFactoryMapper} from "../factory_mappers";
 
 /**
  *
@@ -67,11 +67,8 @@ function config(language: LanguageCode) {
   return {
     searchQuery: {
       search_fields: {
-        name: {
-          weight: 3,
-        },
-        label: {},
-        label_de: {},
+        title: {weight: 3},
+        abstract: {weight: 0.7},
       },
       result_fields: {
         name: {
@@ -109,6 +106,12 @@ function config(language: LanguageCode) {
         year: {
           snippet: {
             size: 100,
+            fallback: true,
+          },
+        },
+        abstract: {
+          snippet: {
+            size: 50,
             fallback: true,
           },
         },
