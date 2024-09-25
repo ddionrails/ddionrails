@@ -37,10 +37,8 @@ ul.css-bbs1vb {
 
 // Search Result section
 
-
-
-.sui-result+.sui-result {
-    margin-top: 10px !important;
+.sui-result + .sui-result {
+  margin-top: 10px !important;
 }
 
 // Search Menu section
@@ -87,10 +85,50 @@ button.active-search {
   border: solid black 1px;
   padding-left: 1em;
   background-color: #aaefaa;
-  margin: .3em;
+  margin: 0.3em;
 }
 
 // Hide sort by placeholder because it cannot be changed/translated
 div#react-select-2-placeholder {
-    display: none
+  display: none;
+}
+
+/* Tooltip container */
+.raw-tooltip {
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  //  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* raw-tooltip text */
+.raw-tooltip .raw-tooltiptext {
+  position: fixed !important;
+  top: var(--y);
+  left: var(--x);
+  padding: 1em;
+  max-width: 50em;
+  min-width: 20vw;
+  height: auto;
+  max-height: 100vh;
+  z-index: 10000;
+
+  visibility: hidden;
+  background-color: #ffffff;
+  color: #000000;
+  text-align: center;
+  border-radius: 6px;
+  border: solid, black;
+
+  /* Fade in raw-tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-size: 0.5em;
+}
+
+/* Show the raw-tooltip text when you mouse over the raw-tooltip container */
+.raw-tooltip:hover .raw-tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

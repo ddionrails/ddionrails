@@ -1,7 +1,59 @@
 import {SearchResult} from "@elastic/search-ui";
-import {header} from "../search_components/result_header";
 import {LanguageCode} from "../language_state";
-import { resultFactoryMapper } from "../factory_mappers";
+import {resultFactoryMapper} from "../factory_mappers";
+
+/**
+ * Render header for variable result
+ * @param result
+ * @returns
+ */
+function header(result: SearchResult, onClickLink: () => void) {
+  let title = result.title.snippet;
+  if (typeof title === "undefined") {
+    title = result.title.raw;
+  }
+
+  // eslint-disable-next-line require-jsdoc
+  function setCursorCords(event: any) {
+    console.log("x");
+    console.log(event.pageX);
+    console.log("y");
+    console.log(event.pageY);
+    document.body.style.setProperty("--x", String(event.pageX)+"px");
+    document.body.style.setProperty("--y", String(event.pageY - window.scrollY)+"px");
+  }
+
+  let tooltipClass = "no-tooltip";
+  const abstract = result.abstract.snippet;
+  let abstractContainer = <></>;
+  if (typeof abstract !== "undefined") {
+    tooltipClass = "raw-tooltip";
+    abstract.push("");
+    abstractContainer = (
+      <span
+        className="raw-tooltiptext"
+        dangerouslySetInnerHTML={{__html: abstract.join(" &hellip; ")}}
+      ></span>
+    );
+  }
+  return (
+    <div className="header-subdivider">
+      <h3>
+        <i className="fa fa-newspaper"></i>
+        <a
+          onMouseOver={setCursorCords}
+          onClick={onClickLink}
+          href={"/publication/" + result._meta.id}
+        >
+          <span className={tooltipClass}>
+            <span dangerouslySetInnerHTML={{__html: title}}></span>
+            {abstractContainer}
+          </span>
+        </a>
+      </h3>
+    </div>
+  );
+}
 
 /**
  * Render publication result body
@@ -36,9 +88,7 @@ function publicationResultFactory({
 }) {
   return (
     <li className="sui-result">
-      <div className="sui-result__header">
-        {header(result, onClickLink, "publication", language)}
-      </div>
+      <div className="sui-result__header">{header(result, onClickLink)}</div>
       <div className="sui-result__body">
         {publicationBody(result, language)}
         <div className="sui-result__image">
