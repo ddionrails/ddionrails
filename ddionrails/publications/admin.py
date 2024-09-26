@@ -10,7 +10,7 @@ from .models import Attachment, Publication
 
 @admin.register(Attachment)
 class AttachmentAdmin(admin.ModelAdmin):
-    """ ModelAdmin for publications.Attachment """
+    """ModelAdmin for publications.Attachment"""
 
     list_display = (
         "context_study",
@@ -47,10 +47,10 @@ class AttachmentAdmin(admin.ModelAdmin):
 
 @admin.register(Publication)
 class PublicationAdmin(AdminMixin, admin.ModelAdmin):
-    """ ModelAdmin for publications.Publication """
+    """ModelAdmin for publications.Publication"""
 
-    list_display = ("name", "title", "author", "study_name", "sub_type", "year")
-    list_filter = ("study", "year", "sub_type")
+    list_display = ("name", "title", "author", "study_name", "type", "year")
+    list_filter = ("study", "year", "type")
     list_per_page = 25
     list_select_related = ("study",)
     raw_id_fields = ("study",)

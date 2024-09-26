@@ -1,7 +1,7 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {Sorting} from "@elastic/react-search-ui";
 import {LanguageCode} from "../language_state";
-import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
+import {facetConfig, unlabeledFacet, studyFacet} from "../search_components/facets";
 import {facetFactoryMapper} from "../factory_mappers";
 
 /**
@@ -48,8 +48,8 @@ function facetFactory(language: LanguageCode) {
   return (
     <>
       {studyFacet(language)}
-      {genericFacet(language, "year", ["Year", "Jahr"], "2")}
-      {genericFacet(language, "sub_type", ["Typ", "Typ"], "3")}
+      {unlabeledFacet(language, "year", ["Year", "Jahr"], "2")}
+      {unlabeledFacet(language, "type", ["Typ", "Typ"], "3")}
     </>
   );
 }
@@ -63,7 +63,6 @@ const connector = new ElasticsearchAPIConnector({
 
 // eslint-disable-next-line require-jsdoc
 function config(language: LanguageCode) {
-  const [disjunctiveFacets, facets] = facetConfig(language, ["study", "year", "type"]);
   return {
     searchQuery: {
       search_fields: {
@@ -116,8 +115,13 @@ function config(language: LanguageCode) {
           },
         },
       },
-      disjunctiveFacets,
-      facets,
+      disjunctiveFacets: ["year", "type", "study_name"],
+      facets: {
+        "year": {type: "value"},
+        "type": {type: "value"},
+        "study_name": {type: "value"},
+      },
+
     },
     autocompleteQuery: {
       results: {

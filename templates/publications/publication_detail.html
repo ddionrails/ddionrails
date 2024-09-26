@@ -7,9 +7,9 @@
                     {{ publication.author }} ({{ publication.year }})
                 </p>
                 <h1>{{ publication.title }}</h1>
-                {% if publication.sub_type %}
+                {% if publication.type %}
                     <p>[
-                        {{ publication.sub_type }}]</p>
+                        {{ publication.type }}]</p>
                 {% endif %}
             </div>
             {{ publication.html_abstract | safe }}

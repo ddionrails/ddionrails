@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,invalid-name
+# pylint: disable=missing-docstring,invalid-name,C0415
 
 """ Test cases for Root URLConf of ddionrails project """
 
@@ -13,7 +13,7 @@ import config.urls
 
 
 def django_debug_toolbar_found(urlpatterns: List) -> bool:
-    """ Returns True if an urlpattern has "djdt" as its app_name """
+    """Returns True if an urlpattern has "djdt" as its app_name"""
     for pattern in urlpatterns:
         try:
             if pattern.app_name == "djdt":
@@ -24,7 +24,7 @@ def django_debug_toolbar_found(urlpatterns: List) -> bool:
 
 
 def media_pattern_found(urlpatterns: List) -> bool:
-    """ Returns True if an urlpattern startswith "^media/" """
+    """Returns True if an urlpattern startswith "^media/" """
     for pattern in urlpatterns:
         if str(pattern.pattern).startswith("^media/"):
             return True
@@ -58,7 +58,7 @@ def test_imprint():
 
 def test_search():
     assert "/search/" == reverse("search")
-    assert "search" == resolve("/search/").view_name
+    assert "search-redirect" == resolve("/search/").view_name
 
 
 def test_search_concepts():

@@ -32,9 +32,10 @@ class Publication(ModelMixin, models.Model):
     name = models.CharField(
         max_length=255, db_index=True, help_text="Name of the publication"
     )
-    sub_type = models.CharField(
+    type = models.CharField(
         max_length=255,
         blank=True,
+        default="",
         help_text="Type of the publication (e.g., journal article or dissertation)",
     )
     title = models.TextField(blank=True, help_text="Title of the publication")
@@ -70,7 +71,7 @@ class Publication(ModelMixin, models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        """"Set id and call parents save(). """
+        """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(
             self.study_id, self.name, cache=False
         )  # pylint: disable=C0103
@@ -85,22 +86,22 @@ class Publication(ModelMixin, models.Model):
         unique_together = ("study", "name")
 
     def __str__(self) -> str:
-        """ Returns a string representation using the "study" and "name" fields """
+        """Returns a string representation using the "study" and "name" fields"""
         return self.name
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "study" and "name" fields """
+        """Returns a canonical URL for the model using the "study" and "name" fields"""
         return reverse(
             "publ:publication_detail",
             kwargs={"study_name": self.study.name, "publication_name": self.name},
         )
 
     def html_abstract(self) -> str:
-        """ Returns the "abstract" field as a string containing HTML markup """
+        """Returns the "abstract" field as a string containing HTML markup"""
         return render_markdown(self.abstract)
 
     def html_cite(self) -> str:
-        """ Returns the "cite" field as a string containing HTML markup """
+        """Returns the "cite" field as a string containing HTML markup"""
         return render_markdown(self.cite)
 
 

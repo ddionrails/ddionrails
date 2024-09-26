@@ -16,7 +16,7 @@ class PublicationForm(forms.ModelForm):
         fields = (
             "study",
             "name",
-            "sub_type",
+            "type",
             "title",
             "author",
             "year",
