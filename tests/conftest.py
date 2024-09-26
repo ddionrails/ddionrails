@@ -430,7 +430,7 @@ def publication_with_umlauts(db):  # pylint: disable=unused-argument
         author="Max Müller",
         abstract="Ein schönes Buch über Fußball und Ähnliches",
         year=2019,
-        sub_type="book",
+        type="book",
     )
 
 
@@ -585,8 +585,9 @@ class MockOpener:
 class VariableImageFile(Protocol):  # pylint: disable=too-few-public-methods
     """Type for variable Image file factory."""
 
-    def __call__(self, file_type: str, size: int = 1) -> BytesIO:
-        ...  # pylint: disable=pointless-statement
+    def __call__(
+        self, file_type: str, size: int = 1
+    ) -> BytesIO: ...  # pylint: disable=pointless-statement
 
 
 class PatchImportPathArguments(TypedDict):

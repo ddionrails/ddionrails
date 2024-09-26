@@ -30,7 +30,7 @@ class PublicationDocument(GenericDocument):
     """Search document for publications.Publication"""
 
     # facets
-    sub_type = fields.KeywordField()
+    type = fields.KeywordField()
     year = fields.KeywordField()
 
     @staticmethod
@@ -49,7 +49,7 @@ class PublicationDocument(GenericDocument):
 
     class Django:  # pylint: disable=missing-docstring,too-few-public-methods
         model = Publication  # The model associated with this Document
-        queryset_pagination = 5000  # TODO: Find out if this is the best fix
+        queryset_pagination = 5000
 
         # The fields of the model you want to be indexed in Elasticsearch
         fields = ("abstract", "author", "cite", "doi", "title", "url")

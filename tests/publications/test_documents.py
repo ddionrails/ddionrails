@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for documents in ddionrails.publications app """
 
@@ -29,7 +29,7 @@ def test_publication_search_document_fields(publication_with_umlauts):
         publication_with_umlauts, fields=PublicationDocument.Django.fields
     )
     # add facets to expected dictionary
-    expected["sub_type"] = publication_with_umlauts.sub_type
+    expected["type"] = publication_with_umlauts.type
     expected["year"] = publication_with_umlauts.year
     # add relations to expected dictionary
     expected["study_name"] = publication_with_umlauts.study.title()

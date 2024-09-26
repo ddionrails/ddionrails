@@ -24,7 +24,12 @@ function studyFacet(language: string) {
 }
 
 // eslint-disable-next-line require-jsdoc
-function genericFacet(language: string, name: string, labels: [string, string], key: string) {
+function genericFacet(
+  language: string,
+  name: string,
+  labels: [string, string],
+  key: string
+) {
   if (language === "de") {
     return (
       <Facet
@@ -39,6 +44,33 @@ function genericFacet(language: string, name: string, labels: [string, string], 
     <Facet
       key={key}
       field={`${name}.label`}
+      label={labels[0]}
+      view={SortedMultiCheckboxFacet}
+    />
+  );
+}
+
+// eslint-disable-next-line require-jsdoc
+function unlabeledFacet(
+  language: string,
+  name: string,
+  labels: [string, string],
+  key: string
+) {
+  if (language === "de") {
+    return (
+      <Facet
+        key={key}
+        field={name}
+        label={labels[1]}
+        view={SortedMultiCheckboxFacet}
+      />
+    );
+  }
+  return (
+    <Facet
+      key={key}
+      field={name}
       label={labels[0]}
       view={SortedMultiCheckboxFacet}
     />
@@ -88,4 +120,4 @@ function facetConfig(
   return [disjunctiveFacets, facets];
 }
 
-export {facetConfig, genericFacet, studyFacet};
+export {facetConfig, genericFacet, studyFacet, unlabeledFacet};
