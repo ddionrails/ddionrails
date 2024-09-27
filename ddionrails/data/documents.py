@@ -15,6 +15,7 @@ License:
 """
 
 import re
+from itertools import zip_longest
 from typing import Dict, List
 
 from django.conf import settings
@@ -66,16 +67,26 @@ class VariableDocument(GenericDataDocument):
     @staticmethod
     def prepare_categories(variable: Variable) -> Dict[str, List[str]]:
         """Return the variable's categories, only labels and labels_de"""
-        output = {}
-        for key in ("labels", "labels_de"):
-            labels = variable.categories.get(key)
-            if labels:
-                output[key] = list(
-                    filter(
-                        lambda label: not re.match(r"\[-\d+\].*", label),
-                        labels,
-                    )
-                )
+        output = {"labels": [], "labels_de": []}
+        categories = variable.categories
+        if not categories:
+            return output
+        for value, label, label_de in zip_longest(
+            categories.get("values", []),
+            categories.get("labels", []),
+            categories.get("labels_de", []),
+        ):
+            if int(value) < 0:
+                continue
+            cleaned_label = ""
+            cleaned_label_de = ""
+            if label:
+                cleaned_label = re.sub(r"\[.+?\]\s{0,1}", "", label)
+            if label_de:
+                cleaned_label_de = re.sub(r"\[.+?\]\s{0,1}", "", label_de)
+            output["labels"].append(cleaned_label)
+            output["labels_de"].append(cleaned_label_de)
+
         return output
 
     def prepare_conceptual_dataset(self, variable: Variable) -> dict[str, str]:

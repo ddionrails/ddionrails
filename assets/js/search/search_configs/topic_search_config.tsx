@@ -1,9 +1,9 @@
 /* eslint-disable require-jsdoc */
 
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import { facetConfig, studyFacet } from "../search_components/facets";
-import { LanguageCode } from "../language_state";
-import { facetFactoryMapper } from "../factory_mappers";
+import {facetConfig, studyFacet} from "../search_components/facets";
+import {LanguageCode} from "../language_state";
+import {facetFactoryMapper} from "../factory_mappers";
 
 function sorting(): JSX.Element {
   return <></>;

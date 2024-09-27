@@ -1,8 +1,8 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
 import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
-import { facetFactoryMapper } from "../factory_mappers";
-import { LanguageCode } from "../language_state";
-import { sortBy } from "./sort_by";
+import {facetFactoryMapper} from "../factory_mappers";
+import {LanguageCode} from "../language_state";
+import {sortBy} from "./sort_by";
 
 
 const sorting = sortBy;
@@ -44,38 +44,60 @@ function config(language: LanguageCode) {
   return {
     searchQuery: {
       search_fields: {
-        name: {
+        "name": {
+          weight: 4,
+        },
+        "label": {
+
           weight: 3,
         },
-        label: {},
-        label_de: {},
+        "label_de": {
+
+          weight: 3,
+        },
+        "categories.labels": {
+          weight: 0.5,
+        },
+        "categories.labels_de": {
+          weight: 0.5,
+        },
       },
       result_fields: {
-        name: {
+        "name": {
           snippet: {},
         },
-        label: {
+        "label": {
           snippet: {
             size: 200,
             fallback: true,
           },
         },
-        label_de: {
+        "label_de": {
           snippet: {
             size: 200,
             fallback: true,
           },
         },
-        study: {
+        "study": {
           snippet: {
             fallback: true,
           },
         },
-        dataset: {
+        "dataset": {
           snippet: {},
         },
-        period: {
+        "period": {
           snippet: {},
+        },
+        "categories.labels": {
+          snippet: {
+            fallback: true,
+          },
+        },
+        "categories.labels_de": {
+          snippet: {
+            fallback: true,
+          },
         },
       },
       disjunctiveFacets,
