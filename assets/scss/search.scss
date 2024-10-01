@@ -88,6 +88,11 @@ button.active-search {
   margin: 0.3em;
 }
 
+.result-name {
+  padding-right: 9px;
+  font-weight: 550;
+}
+
 // Hide sort by placeholder because it cannot be changed/translated
 div.sui-select__placeholder {
   display: none !important;

@@ -20,12 +20,42 @@ resultIconMap.set("publication", () => {
   return <i className="fa fa-newspaper"></i>;
 });
 
+// eslint-disable-next-line valid-jsdoc
+/**
+ * Normally you would specify snippet length with an API call to elasticsearch
+ * but the elasticsearch UI does not seem to do that properly and Snippets are
+ * always the same length.
+ * This function cuts the highlights from the snippets and applies them
+ * to the raw label.
+ */
+function applySnippetToFullLabel(rawLabel: string, snippets: string[]): string {
+  if (!snippets) {
+    return rawLabel;
+  }
+  const snippet = snippets.join("");
+
+  const highlights: Set<string> = new Set();
+  const matches = [...snippet.matchAll(/<em>(.*?)<\/em>/g)];
+  for (const match of matches) {
+    highlights.add(match[1]);
+  }
+  for (const highlight of highlights) {
+    rawLabel = rawLabel.replaceAll(highlight, `<em>${highlight}</em>`);
+  }
+  return rawLabel;
+}
+
 /**
  * Render header for variable result
  * @param result
  * @returns
  */
-function header(result: SearchResult, onClickLink: () => void, resultType: result, language: string = "en") {
+function header(
+  result: SearchResult,
+  onClickLink: () => void,
+  resultType: result,
+  language: string = "en"
+) {
   let labelName = "label";
   let otherLabelName = "label_de";
   let otherLanguageText = "Hit in german label: ";
@@ -34,7 +64,7 @@ function header(result: SearchResult, onClickLink: () => void, resultType: resul
     otherLabelName = "label";
     otherLanguageText = "Treffer in englischem label: ";
   }
-  let label = result[labelName].snippet;
+  const label = applySnippetToFullLabel(result[labelName].raw, result[labelName].snippet);
   const otherLanguageSnippet = result[otherLabelName].snippet;
   let searchHitOtherLanguage = <></>;
 
@@ -48,15 +78,13 @@ function header(result: SearchResult, onClickLink: () => void, resultType: resul
       ></div>
     );
   }
-  if (!label) {
-    label = result[labelName].raw;
-  }
   return (
     <div className="header-subdivider">
       <h3>
         {resultIconMap.get(resultType)()}
         <a onClick={onClickLink} href={"/" + resultType + "/" + result._meta.id}>
-          [{result.name.raw}] <span dangerouslySetInnerHTML={{__html: label}}></span>
+          <span className="result-name">{result.name.raw}:</span>
+          <span dangerouslySetInnerHTML={{__html: label}}></span>
         </a>
       </h3>
       {searchHitOtherLanguage}

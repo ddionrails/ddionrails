@@ -44,14 +44,16 @@ function config(language: languageCode) {
           snippet: {},
         },
         label: {
+          raw: {},
           snippet: {
-            size: 200,
+            size: 500,
             fallback: true,
           },
         },
         label_de: {
+          raw: {},
           snippet: {
-            size: 200,
+            size: 500,
             fallback: true,
           },
         },

@@ -67,7 +67,7 @@ function header(result: SearchResult, onClickLink: () => void, resultType: any, 
         {resultIconMap.get(resultType)()}
         <a onMouseOver={setCursorCords}
           onClick={onClickLink} href={"/" + resultType + "/" + result._meta.id}>
-          [{result.name.raw}]
+          <span className="result-name">{result.name.raw}:</span>
           <span className={tooltipClass}>
             <span dangerouslySetInnerHTML={{__html: label}}></span>
             {categoriesContainer}
