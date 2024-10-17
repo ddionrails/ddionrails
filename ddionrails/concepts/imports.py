@@ -63,7 +63,7 @@ def concept_import(file_path: Union[Path, str], study: Optional[Study] = None):
     with open(file_path, "r", encoding="utf8") as file:
         reader = DictReader(file)
         concepts = []
-        concepts_to_create = []
+        concepts_to_create = set()
         relations = []
         fields_to_update = ["label", "label_de"]
         concept_objects = {concept.name: concept for concept in Concept.objects.all()}
@@ -82,7 +82,7 @@ def concept_import(file_path: Union[Path, str], study: Optional[Study] = None):
                 concept.name = concept_name
                 concept.label = line.get("label", "")
                 concept.label_de = line.get("label_de", "")
-                concepts_to_create.append(concept)
+                concepts_to_create.add(concept)
             if (
                 concept.label != line.get("label", "")
                 or concept.label_de != line.get("label_de", "")
