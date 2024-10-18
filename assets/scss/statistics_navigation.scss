@@ -78,11 +78,11 @@ iframe {
 }
 
 .active-button {
-  width: 4rem;
-  height: 4rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 .active-button > i {
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
 .active-button > p {
@@ -99,7 +99,8 @@ iframe {
 
 div#statistics-button-container {
   flex-wrap: wrap;
-  max-width: 80vw;
+  max-width: 100%;
+  padding: 0 3rem 0 3rem;
 }
 
 button > p {
@@ -136,10 +137,41 @@ button > p {
  
 .variables-list > li {
   max-width: 16vw;
-
 }
 
 #main-container {
   padding: 0;
   margin: 0;
+}
+
+@media only screen and (max-width: 770px) {
+
+  .statistics-button {
+    margin: 0 0 .5em 0;
+    width: 95vw;
+    height: 3em;
+    background-color: #9e1310;
+    line-height: 50%;
+}
+
+  #main-container {
+    width: 99%;
+  }
+  #statistics-button-container{
+    width: 100%;
+    padding: 0 1rem 0 1rem !important;
+  }
+  #statistics-button-container > .one-button{
+    flex-direction: column;
+  }
+  .variables-list {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  max-height: none;
+  max-width: 90vw;
+}
+.variables-list > li {
+  max-width: 100%;
+}
 }
