@@ -40,12 +40,12 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
     if (request.readyState === 4 && request.status === 200) {
       const sortedVariables: Variable[] = request.response.sort(sortVariables);
       if (sortedVariables.length > 10) {
-        await setUpSubTopics(sortedVariables, topicName, containerNode)
+        await setUpSubTopics(sortedVariables, topicName, containerNode);
 
         containerNode.parentElement
           .querySelector(".loading-spinner")
           .classList.add("hidden");
-        return
+        return;
       }
       for (const variable of sortedVariables) {
         const listElement = document.createElement("li");
@@ -85,6 +85,9 @@ function toggleNavigationButtons(
     navSwitch.classList.toggle("hidden");
     buttonContainer.classList.toggle("justify-content-left");
     buttonContainer.classList.toggle("justify-content-center");
+    button.classList.toggle("active-button");
+    button.querySelector(".fa-arrow-left").classList.toggle("hidden");
+    button.querySelector(":first-child").classList.toggle("hidden");
 
     buttons.forEach((loopButton: HTMLElement) => {
       if (loopButton != button) {
@@ -116,7 +119,7 @@ function toggleNavigationButtons(
   }
 }
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
   const buttonContainer = buttonNavContainer;
   const buttonContainers = Array.from(
     buttonContainer.getElementsByClassName("one-button")

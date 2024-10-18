@@ -77,6 +77,18 @@ iframe {
   line-height: 50%;
 }
 
+.active-button {
+  width: 4rem;
+  height: 4rem;
+}
+.active-button > i {
+  font-size: 2rem;
+}
+
+.active-button > p {
+  display: none;
+}
+
 .btn-info:hover {
   background-color: #adb5bd; //#9e1310
 }
@@ -87,7 +99,7 @@ iframe {
 
 div#statistics-button-container {
   flex-wrap: wrap;
-  width: 80vw;
+  max-width: 80vw;
 }
 
 button > p {
@@ -120,4 +132,14 @@ button > p {
 
 .variables-list > li:not(:has(h4)) {
   margin-left: 2em;
+}
+ 
+.variables-list > li {
+  max-width: 16vw;
+
+}
+
+#main-container {
+  padding: 0;
+  margin: 0;
 }
