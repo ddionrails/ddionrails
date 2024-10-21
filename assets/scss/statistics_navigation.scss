@@ -57,17 +57,6 @@ iframe {
   }
 }
 
-@media screen and (max-width: 790px) {
-  .statistics-button > i {
-    display: none;
-  }
-  .statistics-button {
-    font-size: 0.7em;
-    margin-bottom: 0.7vw;
-    margin-top: 0.3vw;
-    overflow-wrap: break-word;
-  }
-}
 
 .statistics-button {
   margin: 0 1vw 1vw 0;
@@ -83,6 +72,8 @@ iframe {
 }
 .active-button > i {
   font-size: 1rem;
+  margin-bottom: 0.7rem;
+  margin-top: 0.3rem;
 }
 
 .active-button > p {
@@ -140,29 +131,51 @@ button > p {
 }
 
 #main-container {
-  padding: 0;
+  width: 100% !important;
+  padding: 0 1rem 0 1rem !important;
   margin: 0;
 }
 
 @media only screen and (max-width: 770px) {
 
+  .statistics-button > :first-child {
+    display: none;
+  }
+
+  .statistics-button > .fa-arrow-left {
+    margin: 0 !important;
+  }
+
   .statistics-button {
     margin: 0 0 .5em 0;
+    font-size: 0.7em;
     width: 95vw;
     height: 3em;
     background-color: #9e1310;
     line-height: 50%;
+    overflow-wrap: break-word;
 }
 
   #main-container {
-    width: 99%;
+    width: 100vw !important;
   }
   #statistics-button-container{
-    width: 100%;
-    padding: 0 1rem 0 1rem !important;
+    width: 100vw;
+    padding: 0 !important;
   }
   #statistics-button-container > .one-button{
     flex-direction: column;
+  }
+  .one-button, .statistics-button{
+    width: 100%;
+  }
+  .statistics-button{
+    min-height: fit-content;
+  }
+
+  .statistics-button > p{
+    margin: auto !important;
+    font-size: 1rem;
   }
   .variables-list {
   display: flex;
