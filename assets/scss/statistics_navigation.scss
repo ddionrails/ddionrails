@@ -72,8 +72,7 @@ iframe {
 }
 .active-button > i {
   font-size: 1rem;
-  margin-bottom: 0.7rem;
-  margin-top: 0.3rem;
+  margin: auto !important;
 }
 
 .active-button > p {
@@ -139,11 +138,12 @@ button > p {
 @media only screen and (max-width: 770px) {
 
   .statistics-button > :first-child {
-    display: none;
+    margin-top: auto;
+    margin-bottom: auto;
   }
 
-  .statistics-button > .fa-arrow-left {
-    margin: 0 !important;
+  .active-button {
+    width: 4rem !important;
   }
 
   .statistics-button {
@@ -154,6 +154,7 @@ button > p {
     background-color: #9e1310;
     line-height: 50%;
     overflow-wrap: break-word;
+    display: flex;
 }
 
   #main-container {
