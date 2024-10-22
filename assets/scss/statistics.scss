@@ -35,12 +35,24 @@ iframe {
   }
 }
 
-@media only screen and (max-width: 1400px) and (orientation: landscape) {
+//For small screen that is mostly wide. To not stunt plot too much on the y axis
+@media only screen and (max-width: 1400px) and (max-height: 450px) and (orientation: landscape) {
   html{
     font-size: medium;
   }
   iframe {
     width: 130vw;
     height: 200vh;
+  }
+}
+
+//For small screen that is wide but also somewhat tall. To not squash plot too much on the y axis
+@media only screen and (max-width: 1400px) and (min-height: 451px) and (orientation: landscape) {
+  html{
+    font-size: medium;
+  }
+  iframe {
+    width: 130vw;
+    height: 130vh;
   }
 }
