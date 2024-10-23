@@ -3,11 +3,26 @@
   flex-direction: column;
 }
 
-@media only screen and (min-width: 1001px) and (orientation: landscape) {
-iframe {
-  width: 99%;
-  height: 100vh;
+#statistics-back-button {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+  padding-right: 3rem;
 }
+
+#statistics-back-button > a {
+  background-color: #9e1310;
+}
+
+#statistics-back-button > a > i {
+  margin: auto;
+}
+
+@media only screen and (min-width: 1001px) and (orientation: landscape) {
+  iframe {
+    width: 99%;
+    height: 100vh;
+  }
 }
 #main-container {
   margin-top: 0em !important;
@@ -28,6 +43,10 @@ iframe {
   width: 100% !important;
 }
 
+#description-button > i {
+  font-size: 2rem;
+}
+
 @media only screen and (max-width: 1000px) and (orientation: portrait) {
   iframe {
     width: 300vw;
@@ -37,7 +56,7 @@ iframe {
 
 //For small screen that is mostly wide. To not stunt plot too much on the y axis
 @media only screen and (max-width: 1400px) and (max-height: 450px) and (orientation: landscape) {
-  html{
+  html {
     font-size: medium;
   }
   iframe {
@@ -48,7 +67,7 @@ iframe {
 
 //For small screen that is wide but also somewhat tall. To not squash plot too much on the y axis
 @media only screen and (max-width: 1400px) and (min-height: 451px) and (orientation: landscape) {
-  html{
+  html {
     font-size: medium;
   }
   iframe {

@@ -57,7 +57,6 @@ iframe {
   }
 }
 
-
 .statistics-button {
   margin: 0 1vw 1vw 0;
   width: 13vw;
@@ -116,6 +115,7 @@ button > p {
 
 .variables-list > :has(h4) {
   list-style-type: none;
+  padding-top: 1.5rem;
   padding-left: 0;
   margin-left: 0;
   offset: 10px;
@@ -124,7 +124,7 @@ button > p {
 .variables-list > li:not(:has(h4)) {
   margin-left: 2em;
 }
- 
+
 .variables-list > li {
   max-width: 16vw;
 }
@@ -136,7 +136,6 @@ button > p {
 }
 
 @media only screen and (max-width: 790px) {
-
   .statistics-button > :first-child {
     margin-top: auto;
     margin-bottom: auto;
@@ -147,7 +146,7 @@ button > p {
   }
 
   .statistics-button {
-    margin: 0 0 .5em 0;
+    margin: 0 0 0.5em 0;
     font-size: 0.7em;
     width: 95vw;
     height: 3em;
@@ -155,37 +154,38 @@ button > p {
     line-height: 50%;
     overflow-wrap: break-word;
     display: flex;
-}
+  }
 
   #main-container {
     width: 100vw !important;
   }
-  #statistics-button-container{
+  #statistics-button-container {
     width: 100vw;
     padding: 0 !important;
   }
-  #statistics-button-container > .one-button{
+  #statistics-button-container > .one-button {
     flex-direction: column;
   }
-  .one-button, .statistics-button{
+  .one-button,
+  .statistics-button {
     width: 100%;
   }
-  .statistics-button{
+  .statistics-button {
     min-height: fit-content;
   }
 
-  .statistics-button > p{
+  .statistics-button > p {
     margin: auto !important;
     font-size: 1rem;
   }
   .variables-list {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  max-height: none;
-  max-width: 90vw;
-}
-.variables-list > li {
-  max-width: 100%;
-}
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    max-height: none;
+    max-width: 90vw;
+  }
+  .variables-list > li {
+    max-width: 100%;
+  }
 }
