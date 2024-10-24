@@ -64,6 +64,9 @@ a:visited {
   .nav-item > a.btn {
     font-size: 1em;
   }
+  #paneldata-navbar {
+    padding: 0.2rem 1rem 0.2rem 0.5rem !important;
+  }
 }
 
 @media screen and (min-width: 12001) and (max-width: 1400px) {
