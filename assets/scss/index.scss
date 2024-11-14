@@ -5,7 +5,6 @@
 */
 
 @import "~bootstrap/scss/bootstrap";
-@import "~bootstrap/scss/utilities/_spacing.scss";
 $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 @import "~@fortawesome/fontawesome-free/scss/solid.scss";
 @import "~@fortawesome/fontawesome-free/css/fontawesome.min.css";
@@ -35,7 +34,8 @@ body {
 
 #paneldata-navbar {
   @extend .fixed-top;
-  @extend .navbar-light;
+  @extend .navbar;
+  @extend .navbar-expand-lg;
   flex-direction: column;
   padding: 1em 1.5em 1em 2em !important;
   border-bottom: 1px solid black !important;
