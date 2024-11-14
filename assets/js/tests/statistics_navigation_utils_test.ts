@@ -1,6 +1,6 @@
 import {setUpSubTopics} from "../statistics_navigation_utils";
 
-const topicLeafsApiResponse = require("./testdata/topic_leafs_response.json");
+const topicLeafsApiResponse = require("./testdata/topic_leaves_response.json");
 const variableApiResponse = require("./testdata/variables_response.json");
 
 const origin = "http://localhost";
