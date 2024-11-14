@@ -8,11 +8,13 @@
 iframe {
   width: 99%;
 }
+
 #navigation-view-switch {
-  background-color: aqua;
-  color: white;
+  background-color: #0074ff;
   border-radius: 10px;
   border: none;
+  color: white;
+  padding: 0.4em 0.8em 0.4em 0.8em;
 }
 #navigation-view-switch:hover {
   background-color: grey;
