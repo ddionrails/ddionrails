@@ -55,3 +55,27 @@ languageSwitch.addEventListener("click", (button) => {
   switchLanguage(document.documentElement, language);
   document.cookie = `paneldata_language=${language}; path=/`;
 });
+
+// BOOTSTRAP 5 tmp fixes:
+const navContent = document.querySelector(".navbar-collapse");
+navContent.classList.toggle("hidden");
+
+const menueToggle = document.querySelector(".navbar-toggler");
+menueToggle.addEventListener("click", (_) => {
+  navContent.classList.toggle("hidden");
+});
+
+const resizeObserver = new ResizeObserver((entries) => {
+  if (entries[0].target.clientWidth < 1200) {
+    navContent.classList.add("hidden");
+  }
+});
+
+// start observing a DOM node
+resizeObserver.observe(document.body);
+
+if (window.innerWidth < 1200) {
+  navContent.classList.add("hidden");
+}
+
+
