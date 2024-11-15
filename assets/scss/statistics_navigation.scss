@@ -1,3 +1,7 @@
+:root {
+  --justify-button-container: center;
+}
+
 #-second-frame {
   display: none;
 }
@@ -25,7 +29,7 @@ iframe {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: var(--justify-button-container);
 }
 @media screen and (min-width: 1610px) {
   #main-frame {

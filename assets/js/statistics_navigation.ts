@@ -63,6 +63,18 @@ function matchVariablesToTopic(topicName: string, containerNode: HTMLElement) {
 }
 
 /**
+ * 
+ */
+function toggleNavigationButtonsPosition() {
+  const variables = document.documentElement;
+  if (getComputedStyle(variables).getPropertyValue("--justify-button-container") == "left") {
+    variables.style.setProperty("--justify-button-container", "center");
+  } else {
+    variables.style.setProperty("--justify-button-container", "left");
+  }
+}
+
+/**
  * Manage display of navigation buttons and associated content
  * @param {PointerEvent} event
  */
@@ -83,8 +95,7 @@ function toggleNavigationButtons(
       return;
     }
     navSwitch.classList.toggle("hidden");
-    buttonContainer.classList.toggle("justify-content-left");
-    buttonContainer.classList.toggle("justify-content-center");
+    toggleNavigationButtonsPosition();
     button.classList.toggle("active-button");
     button.querySelector(".fa-arrow-left").classList.toggle("hidden");
     button.querySelector(":first-child").classList.toggle("hidden");
@@ -119,7 +130,7 @@ function toggleNavigationButtons(
   }
 }
 
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
   const buttonContainer = buttonNavContainer;
   const buttonContainers = Array.from(
     buttonContainer.getElementsByClassName("one-button")
