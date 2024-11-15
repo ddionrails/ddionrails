@@ -120,6 +120,9 @@ const config = {
     ],
   },
   resolve: {
+    alias: { // Fix for import issue in third party dependency
+      stylis: path.resolve(__dirname, "node_modules/@emotion/cache/node_modules/stylis"),
+    },
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     modules: [path.resolve(__dirname, "node_modules")],
   },
