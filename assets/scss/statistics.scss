@@ -25,7 +25,9 @@
   }
 }
 #main-container {
-  margin-top: 0em !important;
+  width: 100% !important;
+  padding: calc(var(--navbar-height) + 1.5rem) 1rem 0 1rem;
+  margin: 0;
 }
 #second-frame {
   margin-top: 0.5em;

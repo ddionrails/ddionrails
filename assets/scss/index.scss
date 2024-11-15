@@ -12,7 +12,7 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 // General styling
 
 :root {
-  --navbar-height: 5em;
+  --navbar-height: 5rem;
 }
 
 .hidden {
@@ -51,8 +51,7 @@ body {
 
 #main-container {
   width: 90%;
-  margin: 0 auto 0 auto;
-  padding: calc(var(--navbar-height) + 1.5em) 3rem 0 3rem;
+  margin: calc(var(--navbar-height) + 1.5em) 3rem 0 3rem;
 }
 
 a {
