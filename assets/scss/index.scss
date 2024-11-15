@@ -11,6 +11,10 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 
 // General styling
 
+:root {
+  --navbar-height: 5em;
+}
+
 .hidden {
   display: none !important;
 }
@@ -18,7 +22,6 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
 // This padding seems to be big enough
 // so that the navbar does not overlap with the content
 body {
-  padding-top: 7em;
   height: 100vh;
   height: -webkit-fill-available;
   min-height: 100vh; /* Fallback for browsers that do not support Custom Properties */
@@ -34,16 +37,22 @@ body {
 
 .paneldata-navbar {
   @extend .fixed-top;
-  flex-direction: column;
-  padding: 1em 1.5em 1em 2em !important;
-  border-bottom: 1px solid black !important;
   background-color: #f8f9fa !important;
+  border-bottom: 1px solid black !important;
+  flex-direction: column;
+  height: var(--navbar-height);
+  padding: 1em 1.5em 1em 2em !important;
+  position: fixed !important;
+}
+.navbar-content {
+  background: #f8f9fa;
+  margin-left: 0.2em;
 }
 
 #main-container {
   width: 90%;
   margin: 0 auto 0 auto;
-  padding: 0 3rem 0 3rem;
+  padding: calc(var(--navbar-height) + 1.5em) 3rem 0 3rem;
 }
 
 a {
