@@ -4,7 +4,7 @@ import {sep} from "./result_field_separator";
 
 import {getLanguageState} from "../language_state";
 import {resultFactoryMapper} from "../factory_mappers";
-
+import {ReactElement} from "react";
 
 // eslint-disable-next-line require-jsdoc
 function setCursorCords(event: any) {
@@ -12,13 +12,52 @@ function setCursorCords(event: any) {
   console.log(event.pageX);
   console.log("y");
   console.log(event.pageY);
-  document.body.style.setProperty("--x", String(event.pageX)+"px");
-  document.body.style.setProperty("--y", String(event.pageY - window.scrollY)+"px");
+  document.body.style.setProperty("--x", String(event.pageX) + "px");
+  document.body.style.setProperty(
+    "--y",
+    String(event.pageY - window.scrollY) + "px"
+  );
+}
+
+function createTooltipContent(
+  result: SearchResult,
+  fieldsToInclude: Map<string, string>
+): [ReactElement, string] {
+  let snippetText = "";
+  let tooltipClass = "no-tooltip";
+  for (const [fieldName, fieldText] of fieldsToInclude.entries()) {
+    const fieldValue = result[fieldName];
+
+    if (typeof fieldValue !== "undefined" && "snippet" in fieldValue) {
+      tooltipClass = "raw-tooltip";
+      fieldValue.snippet.push("");
+      fieldValue.snippet.join(" &hellip; ");
+    }
+  }
+  let categoriesContainer = <></>;
+  if (typeof result?.["categories.labels"]?.snippet !== "undefined") {
+    tooltipClass = "raw-tooltip";
+    snippetText = result["categories.labels"].snippet.join("&hellip;")
+    categoriesContainer = (
+      <span
+        className="raw-tooltiptext"
+        dangerouslySetInnerHTML={{
+          __html: snippetText,
+        }}
+      ></span>
+    );
+  }
+  return [categoriesContainer, tooltipClass];
 }
 
 // TODO: Refactor
 // eslint-disable-next-line require-jsdoc
-function header(result: SearchResult, onClickLink: () => void, resultType: any, language: string = "en") {
+function header(
+  result: SearchResult,
+  onClickLink: () => void,
+  resultType: any,
+  language: string = "en"
+) {
   let labelName = "label";
   let otherLabelName = "label_de";
   let otherLanguageText = "Hit in german label: ";
@@ -31,24 +70,15 @@ function header(result: SearchResult, onClickLink: () => void, resultType: any, 
   const otherLanguageSnippet = result[otherLabelName].snippet;
   let searchHitOtherLanguage = <></>;
 
+  const fieldsInTooltip = new Map();
+  fieldsInTooltip.set("categories.labels", "Match in Value Labels");
 
-  const categories = result["categories.labels"];
+  const [categoriesContainer, tooltipClass] = createTooltipContent(result, fieldsInTooltip);
 
-  let categoriesContainer = <></>;
-  let tooltipClass = "no-tooltip";
-  if (typeof categories !== "undefined") {
-    tooltipClass = "raw-tooltip";
-    categories.snippet.push("");
-    categoriesContainer = (
-      <span
-        className="raw-tooltiptext"
-        dangerouslySetInnerHTML={{__html: categories.snippet.join(" &hellip; ")}}
-      ></span>
-    );
-  }
-
-
-  if (otherLanguageSnippet instanceof Array && otherLanguageSnippet[0].includes("<em>")) {
+  if (
+    otherLanguageSnippet instanceof Array &&
+    otherLanguageSnippet[0].includes("<em>")
+  ) {
     searchHitOtherLanguage = (
       <div
         className="other-search-hit-container"
@@ -65,8 +95,11 @@ function header(result: SearchResult, onClickLink: () => void, resultType: any, 
     <div className="header-subdivider">
       <h3>
         {resultIconMap.get(resultType)()}
-        <a onMouseOver={setCursorCords}
-          onClick={onClickLink} href={"/" + resultType + "/" + result._meta.id}>
+        <a
+          onMouseOver={setCursorCords}
+          onClick={onClickLink}
+          href={"/" + resultType + "/" + result._meta.id}
+        >
           <span className="result-name">{result.name.raw}:</span>
           <span className={tooltipClass}>
             <span dangerouslySetInnerHTML={{__html: label}}></span>
@@ -78,7 +111,6 @@ function header(result: SearchResult, onClickLink: () => void, resultType: any, 
     </div>
   );
 }
-
 
 /**
  * Render variable result body
@@ -120,7 +152,9 @@ function variableResultFactory({
 }) {
   return (
     <li className="sui-result">
-      <div className="sui-result__header">{header(result, onClickLink, "variable")}</div>
+      <div className="sui-result__header">
+        {header(result, onClickLink, "variable")}
+      </div>
       <div className="sui-result__body">
         {variableBody(result)}
         <div className="sui-result__image">

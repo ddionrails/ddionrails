@@ -1,5 +1,4 @@
-import {SearchResult} from "@elastic/search-ui";
-import {getLanguageState} from "../language_state";
+import { SearchResult } from "@elastic/search-ui";
 
 type result = "question" | "variable" | "concept" | "topic" | "publication";
 
@@ -28,7 +27,7 @@ resultIconMap.set("publication", () => {
  * This function cuts the highlights from the snippets and applies them
  * to the raw label.
  */
-function applySnippetToFullLabel(rawLabel: string, snippets: string[]): string {
+function applySnippetToRawLabel(rawLabel: string, snippets: string[]): string {
   if (!snippets) {
     return rawLabel;
   }
@@ -54,7 +53,7 @@ function header(
   result: SearchResult,
   onClickLink: () => void,
   resultType: result,
-  language: string = "en"
+  language: string = "en",
 ) {
   let labelName = "label";
   let otherLabelName = "label_de";
@@ -64,11 +63,17 @@ function header(
     otherLabelName = "label";
     otherLanguageText = "Treffer in englischem label: ";
   }
-  const label = applySnippetToFullLabel(result[labelName].raw, result[labelName].snippet);
+  const label = applySnippetToRawLabel(
+    result[labelName].raw,
+    result[labelName].snippet,
+  );
   const otherLanguageSnippet = result[otherLabelName].snippet;
   let searchHitOtherLanguage = <></>;
 
-  if (otherLanguageSnippet instanceof Array && otherLanguageSnippet[0].includes("<em>")) {
+  if (
+    otherLanguageSnippet instanceof Array &&
+    otherLanguageSnippet[0].includes("<em>")
+  ) {
     searchHitOtherLanguage = (
       <div
         className="other-search-hit-container"
@@ -82,9 +87,12 @@ function header(
     <div className="header-subdivider">
       <h3>
         {resultIconMap.get(resultType)()}
-        <a onClick={onClickLink} href={"/" + resultType + "/" + result._meta.id}>
+        <a
+          onClick={onClickLink}
+          href={"/" + resultType + "/" + result._meta.id}
+        >
           <span className="result-name">{result.name.raw}:</span>
-          <span dangerouslySetInnerHTML={{__html: label}}></span>
+          <span dangerouslySetInnerHTML={{ __html: label }}></span>
         </a>
       </h3>
       {searchHitOtherLanguage}
@@ -92,4 +100,4 @@ function header(
   );
 }
 
-export {header, resultIconMap};
+export { header, resultIconMap };
