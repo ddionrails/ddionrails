@@ -15,10 +15,6 @@ function header(result: SearchResult, onClickLink: () => void) {
 
   // eslint-disable-next-line require-jsdoc
   function setCursorCords(event: any) {
-    console.log("x");
-    console.log(event.pageX);
-    console.log("y");
-    console.log(event.pageY);
     document.body.style.setProperty("--x", String(event.pageX)+"px");
     document.body.style.setProperty("--y", String(event.pageY - window.scrollY)+"px");
   }
