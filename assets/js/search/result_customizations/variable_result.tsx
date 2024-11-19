@@ -8,10 +8,6 @@ import {ReactElement} from "react";
 
 // eslint-disable-next-line require-jsdoc
 function setCursorCords(event: any) {
-  console.log("x");
-  console.log(event.pageX);
-  console.log("y");
-  console.log(event.pageY);
   document.body.style.setProperty("--x", String(event.pageX) + "px");
   document.body.style.setProperty(
     "--y",
@@ -23,26 +19,25 @@ function createTooltipContent(
   result: SearchResult,
   fieldsToInclude: Map<string, string>
 ): [ReactElement, string] {
-  let snippetText = "";
+  const snippetText = [];
   let tooltipClass = "no-tooltip";
   for (const [fieldName, fieldText] of fieldsToInclude.entries()) {
     const fieldValue = result[fieldName];
 
-    if (typeof fieldValue !== "undefined" && "snippet" in fieldValue) {
+    if (fieldValue?.snippet) {
       tooltipClass = "raw-tooltip";
-      fieldValue.snippet.push("");
-      fieldValue.snippet.join(" &hellip; ");
+			snippetText.push(`${fieldText}:`);
+			snippetText.push(fieldValue.snippet.join(" &hellip; "));
     }
   }
   let categoriesContainer = <></>;
-  if (typeof result?.["categories.labels"]?.snippet !== "undefined") {
+  if (snippetText.length > 0) {
     tooltipClass = "raw-tooltip";
-    snippetText = result["categories.labels"].snippet.join("&hellip;")
     categoriesContainer = (
       <span
         className="raw-tooltiptext"
         dangerouslySetInnerHTML={{
-          __html: snippetText,
+          __html: snippetText.join(" "),
         }}
       ></span>
     );
@@ -71,7 +66,11 @@ function header(
   let searchHitOtherLanguage = <></>;
 
   const fieldsInTooltip = new Map();
-  fieldsInTooltip.set("categories.labels", "Match in Value Labels");
+  if(language === "de"){
+    fieldsInTooltip.set("categories.labels_de", "Treffer in Kategorie Wertelabeln");
+  } else {
+    fieldsInTooltip.set("categories.labels", "Match in category value labels");
+	}
 
   const [categoriesContainer, tooltipClass] = createTooltipContent(result, fieldsInTooltip);
 
@@ -118,7 +117,6 @@ function header(
  * @returns
  */
 function variableBody(result: SearchResult) {
-  console.log(JSON.stringify(result.categories.labels));
   const language = getLanguageState();
   if (language === "de") {
     return (
@@ -153,7 +151,7 @@ function variableResultFactory({
   return (
     <li className="sui-result">
       <div className="sui-result__header">
-        {header(result, onClickLink, "variable")}
+        {header(result, onClickLink, "variable", getLanguageState())}
       </div>
       <div className="sui-result__body">
         {variableBody(result)}
