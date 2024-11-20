@@ -1,7 +1,7 @@
 import React from "react";
-import {BrowserRouter, Route, Routes, useNavigate} from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 
-import {getLanguageState, LanguageCode} from "./language_state";
+import { getLanguageState, LanguageCode } from "./language_state";
 
 import {
   ErrorBoundary,
@@ -13,10 +13,10 @@ import {
   SearchProvider,
   WithSearch,
 } from "@elastic/react-search-ui";
-import {Layout} from "@elastic/react-search-ui-views";
-import {SearchDriverOptions} from "@elastic/search-ui";
+import { Layout } from "@elastic/react-search-ui-views";
+import { SearchDriverOptions } from "@elastic/search-ui";
 
-import {conceptResult} from "./result_customizations/concept_result";
+import { conceptResult } from "./result_customizations/concept_result";
 
 import {
   conceptConfig,
@@ -24,7 +24,7 @@ import {
   conceptSorting,
 } from "./search_configs/concept_search_config";
 
-import {topicResult} from "./result_customizations/topic_result";
+import { topicResult } from "./result_customizations/topic_result";
 
 import {
   topicConfig,
@@ -32,7 +32,7 @@ import {
   topicSorting,
 } from "./search_configs/topic_search_config";
 
-import {AllResult} from "./result_customizations/all_result";
+import { AllResult } from "./result_customizations/all_result";
 import {
   allConfig,
   allFacets,
@@ -41,7 +41,7 @@ import {
 
 import Autocomplete from "./search_components/autocomplete";
 
-import {publicationResult} from "./result_customizations/publications_result";
+import { publicationResult } from "./result_customizations/publications_result";
 import {
   publicationConfig,
   publicationFacets,
@@ -58,16 +58,29 @@ import {
   variableFacets,
   variableSorting,
 } from "./search_configs/variable_search_config";
-import {questionResult} from "./result_customizations/question_result";
-import {variableResult} from "./result_customizations/variable_result";
+import { questionResult } from "./result_customizations/question_result";
+import { variableResult } from "./result_customizations/variable_result";
 
-import {resultIconMap} from "./search_components/result_header";
+import { resultIconMap } from "./search_components/result_header";
 
-export const LinkWithQuery = ({children, to, ...props}: any) => {
+function filterQueryParams(queryParams: URLSearchParams): URLSearchParams {
+  const filteredParams = new URLSearchParams();
+  for (const paramGroup of queryParams.entries()) {
+    if (paramGroup[0] === "size") {
+      filteredParams.append(paramGroup[0], paramGroup[1]);
+    }
+  }
+
+  return filteredParams;
+}
+
+export const LinkWithQuery = ({ children, to, ...props }: any) => {
   const navigate = useNavigate();
 
   const handleNavigate = (path: string) => {
-    const queryParams = new URLSearchParams(window.location.search).toString();
+    const queryParams = filterQueryParams(
+      new URLSearchParams(window.location.search),
+    );
     navigate(`${path}?${queryParams.toString()}`);
   };
 
@@ -109,7 +122,7 @@ function searchRouter(
   sorting: any,
   facets: any,
   resultView: any,
-  language: LanguageCode = "en"
+  language: LanguageCode = "en",
 ) {
   let placeholder = "Search";
   if (language === "de") {
@@ -118,11 +131,11 @@ function searchRouter(
   return (
     <SearchProvider config={config}>
       <WithSearch
-        mapContextToProps={({wasSearched}: {wasSearched: boolean}) => ({
+        mapContextToProps={({ wasSearched }: { wasSearched: boolean }) => ({
           wasSearched,
         })}
       >
-        {({wasSearched}: {wasSearched: boolean}) => {
+        {({ wasSearched }: { wasSearched: boolean }) => {
           return (
             <div className="App">
               <ErrorBoundary>
@@ -130,7 +143,7 @@ function searchRouter(
                   header={
                     <SearchBox
                       autocompleteMinimumCharacters={3}
-                      inputProps={{placeholder}}
+                      inputProps={{ placeholder }}
                       autocompleteResults={{
                         linkTarget: "_blank",
                         sectionTitle: "Results",
@@ -174,78 +187,78 @@ function searchRouter(
 }
 
 /** */
-function All({language}: {language: LanguageCode}) {
+function All({ language }: { language: LanguageCode }) {
   return searchRouter(
     allConfig(language),
     allSorting,
     allFacets.get(language),
     AllResult.get(language),
-    language
+    language,
   );
 }
 
 /**
  *
  */
-function Concepts({language}: {language: LanguageCode}) {
+function Concepts({ language }: { language: LanguageCode }) {
   return searchRouter(
     conceptConfig(language),
     conceptSorting,
     conceptFacets.get(language),
     conceptResult.get(language),
-    language
+    language,
   );
 }
 
 /**
  *
  */
-function Topics({language}: {language: LanguageCode}) {
+function Topics({ language }: { language: LanguageCode }) {
   return searchRouter(
     topicConfig(language),
     topicSorting,
     topicFacets.get(language),
     topicResult.get(language),
-    language
+    language,
   );
 }
 
 /**
  *
  */
-function Publications({language}: {language: LanguageCode}) {
+function Publications({ language }: { language: LanguageCode }) {
   return searchRouter(
     publicationConfig(language),
     publicationSorting,
     publicationFacets.get(language),
     publicationResult.get(language),
-    language
+    language,
   );
 }
 
 /**
  *
  */
-function Questions({language}: {language: LanguageCode}) {
+function Questions({ language }: { language: LanguageCode }) {
   return searchRouter(
     questionConfig(language),
     questionSorting.get(language),
     questionFacets.get(language),
     questionResult.get(language),
-    language
+    language,
   );
 }
 
 /**
  *
  */
-function Variables({language}: {language: LanguageCode}) {
+function Variables({ language }: { language: LanguageCode }) {
   return searchRouter(
     variableConfig(language),
     variableSorting.get(language),
     variableFacets.get(language),
     variableResult.get(language),
-    language
+    language,
   );
 }
 
