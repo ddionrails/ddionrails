@@ -76,7 +76,7 @@ class VariableDocument(GenericDataDocument):
             categories.get("labels", []),
             categories.get("labels_de", []),
         ):
-            if int(value) < 0:
+            if value is not None and int(value) < 0:
                 continue
             cleaned_label = ""
             cleaned_label_de = ""

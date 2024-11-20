@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for documents in ddionrails.concepts app """
 
 from typing import Any
+from unittest import TestCase
 
 import pytest
 from django.forms.models import model_to_dict
@@ -14,6 +15,8 @@ pytestmark = [
     pytest.mark.search,
     pytest.mark.filterwarnings("ignore::DeprecationWarning"),
 ]
+
+TEST_CASE = TestCase()
 
 
 @pytest.mark.usefixtures("concepts_index")
@@ -41,9 +44,19 @@ def test_concept_search_document_fields(variable_with_concept, topic):
         fields=("name", "label", "label_de", "description", "description_de"),
     )
     # add relations to expected dictionary
-    expected["study_name"] = [variable.dataset.study.label]
+    expected["study_name"] = variable.dataset.study.label
+    expected["study_name_de"] = variable.dataset.study.label
+    expected["study"] = {
+        "name": variable.dataset.study.name,
+        "label": variable.dataset.study.label,
+        "label_de": variable.dataset.study.label,
+    }
     # generate result dictionary from search document
     result = document.to_dict()
+    for key, value in expected.items():
+        TEST_CASE.assertEqual(value, result[key], msg=f"Problem in {key}")
+    for key in result.keys():
+        TEST_CASE.assertIn(key, expected)
     assert expected == result
 
 
@@ -74,6 +87,7 @@ def test_topic_search_document_fields(topic):
     )
     # add relations to expected dictionary
     expected["study_name"] = topic.study.title()
+    expected["study_name_de"] = topic.study.label
     expected["id"] = str(topic.id)
     expected["study"] = {
         "name": topic.study.name,

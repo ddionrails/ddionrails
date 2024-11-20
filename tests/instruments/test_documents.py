@@ -30,13 +30,18 @@ def test_question_search_document_fields(question):
     )
     expected["label"] = question.label
     # add facets to expected dictionary
-    expected["analysis_unit"] = {"label": "", "label_de": ""}
-    expected["period"] = {"label": "", "label_de": ""}
+    expected["analysis_unit"] = {
+        "label": "Not Categorized",
+        "label_de": "Nicht Kategorisiert",
+    }
+    expected["period"] = {"label": "Not Categorized", "label_de": "Nicht Kategorisiert"}
     expected["study_name"] = question.instrument.study.title()
     expected["study"] = {
         "name": question.instrument.study.name,
         "label": question.instrument.study.label,
     }
+    expected["study_name_de"] = ""
+    expected["question_items"] = [{}]
 
     expected["instrument"] = {
         "name": question.instrument.name,

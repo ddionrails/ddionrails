@@ -14,7 +14,7 @@ License:
       `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
 """
 
-from typing import Any, List
+from typing import Any
 
 from django.conf import settings
 from django_elasticsearch_dsl import Document, fields
@@ -95,8 +95,10 @@ class ConceptDocument(Document):
                 labels.append(name)
             if study.label_de:
                 labels_de.append(study.label_de)
+            elif study.label:
+                labels_de.append(study.label)
             else:
-                labels_de.append(name)
+                labels_de.append(study.name)
 
         return {
             "name": ", ".join(names),

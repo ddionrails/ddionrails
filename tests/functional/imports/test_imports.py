@@ -353,7 +353,7 @@ class TestStudyImportManager:
         hit = response.hits[0]
         TEST_CASE.assertEqual(study.title(), hit.study_name)
         TEST_CASE.assertEqual("some-doi", hit.doi)
-        TEST_CASE.assertEqual(2018, hit.year)
+        TEST_CASE.assertEqual(2018, int(hit.year))
         PublicationDocument.search().query("match_all").delete()
 
     @pytest.mark.usefixtures("elasticsearch_indices")

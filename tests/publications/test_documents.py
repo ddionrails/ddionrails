@@ -37,6 +37,7 @@ def test_publication_search_document_fields(publication_with_umlauts):
         "name": publication_with_umlauts.study.name,
         "label": publication_with_umlauts.study.label,
     }
+    expected["study_name_de"] = ""
     expected["description"] = publication_with_umlauts.abstract
     expected["id"] = str(publication_with_umlauts.id)
     expected["name"] = publication_with_umlauts.name

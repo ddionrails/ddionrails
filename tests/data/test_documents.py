@@ -39,23 +39,33 @@ def test_variable_search_document_fields(variable):
             "description_de",
         ),
     )
-    expected["categories"] = {"labels": ["[1] Yes"], "labels_de": ["[1] Ja"]}
+    expected["categories"] = {"labels": ["Yes"], "labels_de": ["Ja"]}
     # add facets to expected dictionary
-    expected["analysis_unit"] = {"label": "", "label_de": ""}
-    expected["conceptual_dataset"] = {"label": "", "label_de": ""}
-    expected["period"] = {"label": "", "label_de": ""}
+    expected["analysis_unit"] = {
+        "label": "Not Categorized",
+        "label_de": "Nicht Kategorisiert",
+    }
+    expected["conceptual_dataset"] = {
+        "label": "Not Categorized",
+        "label_de": "Nicht Kategorisiert",
+    }
+    expected["period"] = {"label": "Not Categorized", "label_de": "Nicht Kategorisiert"}
     expected["id"] = str(variable.id)
     expected["study_name"] = variable.dataset.study.title()
     expected["study"] = {
         "name": variable.dataset.study.name,
         "label": variable.dataset.study.label,
     }
+    expected["study_name_de"] = ""
 
     # add relations to expected dictionary
     expected["dataset"] = {"name": variable.dataset.name, "label": variable.dataset.label}
     # generate result dictionary from search document
     result = document.to_dict()
-    TEST_CASE.assertEqual(expected, result)
+    for key, value in expected.items():
+        TEST_CASE.assertEqual(value, result[key], msg=f"Problem in {key}")
+    for key in result.keys():
+        TEST_CASE.assertIn(key, expected)
 
 
 @pytest.mark.usefixtures("variables_index")

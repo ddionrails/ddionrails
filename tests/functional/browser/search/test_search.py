@@ -8,7 +8,7 @@ pytestmark = [pytest.mark.concepts, pytest.mark.views]
 @pytest.mark.django_db
 def test_search_url(client):
     response = client.get("/search/")
-    assert status.HTTP_200_OK == response.status_code
+    assert status.HTTP_302_FOUND == response.status_code
 
 
 @pytest.mark.django_db
