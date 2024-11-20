@@ -14,7 +14,7 @@ function questionBody(result: SearchResult, language: LanguageCode) {
   if (language === "de") {
     return (
       <p>
-        Studie: {result.study.raw.name}
+        Studie: {result.study.raw.label}
         {sep()}Instrument: {result.instrument.raw.label_de}
         {sep()}Zeitraum: {result.period.raw.label_de}
       </p>

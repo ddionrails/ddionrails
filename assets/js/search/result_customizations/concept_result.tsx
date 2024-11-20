@@ -10,10 +10,10 @@ import { resultFactoryMapper } from "../factory_mappers";
 function conceptBody(result: SearchResult, language: "en" | "de" = "en") {
   let outputText = "";
   if (language === "de") {
-    if (result.study.raw.label_de === "") {
+    if (result.study.raw.label === "") {
       outputText = "Konzept ist keiner Studie zugeordnet";
     } else {
-      outputText = `Konzept in Studie ${result.study.raw.label_de}`;
+      outputText = `Konzept in Studie ${result.study.raw.label}`;
     }
     return <p>{outputText}</p>;
   }

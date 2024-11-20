@@ -10,7 +10,7 @@ import { resultFactoryMapper } from "../factory_mappers";
  */
 function topicBody(result: SearchResult, language: LanguageCode) {
   if (language === "de") {
-    return <p>Thema in Studie {result.study.raw.label_de}</p>;
+    return <p>Thema in Studie {result.study.raw.label}</p>;
   }
   return <p>Topic in study {result.study.raw.label}</p>;
 }
