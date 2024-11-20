@@ -51,7 +51,7 @@
         {% endif %}
         <li class="nav-item">
         <a
-            href='{{ request.scheme }}://{{ request.get_host }}/search/all?Study="{{ study.label }}"'
+            href='{{ request.scheme }}://{{ request.get_host }}/search/all?size=n_40_n&filters[0][field]=study_name&filters[0][values][0]={{ study.label }}&filters[0][type]=all'
             class="nav-link"
             data-en="Search in Study"
             data-de="Studie Durchsuchen"
