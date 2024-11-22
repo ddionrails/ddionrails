@@ -69,7 +69,7 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = (
     "crispy_forms",
-    "crispy_bootstrap4",
+    "crispy_bootstrap5",
     "django_elasticsearch_dsl",
     "django_extensions",
     "django_rq",
@@ -241,7 +241,7 @@ SHELL_PLUS_PRE_IMPORTS = (("ddionrails.imports.manager", "*"),)
 SERVER_EMAIL = "admin@paneldata.org"
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", default="paneldata.org@diw.de")
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # https://django-import-export.readthedocs.io/en/latest/api_widgets.html?highlight=date#import_export.widgets.DateTimeWidget
 DATETIME_INPUT_FORMATS = ("%Y-%m-%d %H:%M:%S %Z",)

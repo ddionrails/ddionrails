@@ -109,7 +109,7 @@ markers = [
 
 # https://mypy.readthedocs.io/en/stable/config_file.html#using-a-pyproject-toml
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 check_untyped_defs = true
 ignore_errors = false
 ignore_missing_imports = true
@@ -126,3 +126,68 @@ ignore_errors = true
 
 [tool.django-stubs]
 django_settings_module = "config.settings.base"
+
+[tool.poetry]
+name = "ddionrails"
+version = "7.3.3"
+description = ""
+authors = ["Dominique Hansen <dhansen@diw.de>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+babel = ">=2.12.1"
+django = ">=4.2.3"
+django-crispy-forms = "*"
+crispy-bootstrap5 = "*"
+django-extensions = "*"
+django-import-export = "*"
+django-model-utils = "*"
+django-rq = ">=2.10.1"
+django-webpack-loader = "*"
+gunicorn = "*"
+djangorestframework = ">=3.14.0"
+django_filer = "*"
+psycopg2-binary = "*"
+django-elasticsearch-dsl = ">=8.0"
+elasticsearch-dsl = ">=8.*"
+elasticsearch = ">=8.*"
+markdown = "*"
+python-frontmatter = "*"
+gitpython = "<3.1.44"
+paver = "*"
+requests = ">=2.32.1"
+urllib3 = ">=2.2.2"
+
+
+[tool.poetry.group.dev.dependencies]
+packaging = ">=22.0"
+autoflake = "*"
+bandit = "*"
+black = "*"
+django-stubs = "*" 
+djangorestframework-stubs = "*"
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+pylint = "*"
+pylint-django = "*"
+pylint-unittest = "*"
+types-markdown = "*"
+pytest = "*"
+pytest-cov = "*"
+pytest-django = "*"
+pytest-mock = "*"
+factory-boy = "*"
+django-coverage-plugin = "*"
+requests-mock = "*"
+sphinx = "*"
+sphinx-rtd-theme = "*"
+django-debug-toolbar = "*"
+rope = "*" 
+werkzeug = "==3.0.3"
+selenium = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -6,7 +6,7 @@
 
 @import "~jquery.fancytree/dist/skin-bootstrap/ui.fancytree.css";
 @import "~spinkit/spinkit.min.css";
-@import "~datatables.net-bs4/css/dataTables.bootstrap4.min.css";
+@import "~datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 
 .filter-options {
   visibility: hidden;
@@ -46,7 +46,7 @@ span.fancytree-expander:hover {
 }
 
 td {
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 
 th {
@@ -70,7 +70,7 @@ th {
   overflow: auto;
 }
 
-@media only screen and (max-width: 1100px) and (min-width: 1000px){
+@media only screen and (max-width: 1100px) and (min-width: 1000px) {
   #variable-table_wrapper > div:first-child {
     font-size: 1.2vw;
   }
@@ -96,12 +96,12 @@ button > * {
   pointer-events: none;
 }
 
-#topic-list-add-to-basket >* .modal-body {
+#topic-list-add-to-basket > * .modal-body {
   display: flex;
   flex-direction: column;
 }
 
-#topic-list-add-to-basket >* .modal-body > .btn{
+#topic-list-add-to-basket > * .modal-body > .btn {
   margin-right: auto;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }

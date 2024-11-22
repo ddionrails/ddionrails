@@ -16,10 +16,10 @@
 import "jquery.fancytree";
 import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
 import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
+import "datatables.net-bs5";
+import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
+import "datatables.net-responsive-bs5";
 
 import {languageConfig, languageCode} from "./language_management";
 
@@ -116,16 +116,16 @@ function renderEntityTable(entity, table, url) {
       {
         url,
         "dataSrc":
-         "",
+          "",
       },
       "columns": [
         {
           data: "label", // Human readable label.
           render(data, type, row) {
             if (languageCode() == "de") {
-              return (row["label_de"] ? row["label_de"] : row["name"] );
+              return (row["label_de"] ? row["label_de"] : row["name"]);
             } else {
-              return (row["label"] ? row["label"] : row["name"] );
+              return (row["label"] ? row["label"] : row["name"]);
             }
           },
         },
@@ -141,7 +141,8 @@ function renderEntityTable(entity, table, url) {
             return link.outerHTML;
           },
         },
-        {data: "parent",
+        {
+          data: "parent",
           render(_data, _type, row) {
             const link = document.createElement("a");
             link.href = window.location.protocol + "//" + window.location.hostname +
@@ -164,7 +165,7 @@ function renderEntityTable(entity, table, url) {
  * @param {HTMLTableElement} relatedVariableSection Target table to fill with the data
  */
 function renderVariableTable(fancytreeNode, relatedVariableSection) {
-  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
+  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length + 1);
   const api = new URL(variablesApiUrl.toString());
   api.searchParams.append("study", study);
   api.searchParams.append(fancytreeNode.type, categoryName);
@@ -188,7 +189,7 @@ function renderVariableTable(fancytreeNode, relatedVariableSection) {
  * @param {HTMLTableElement} relatedQuestionSection Target table to fill with the data
  */
 function renderQuestionTable(fancytreeNode, relatedQuestionSection) {
-  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length+1);
+  const categoryName = fancytreeNode.key.substring(fancytreeNode.type.length + 1);
   const api = new URL(questionsApiUrl.toString());
   api.searchParams.append("study", study);
   api.searchParams.append(fancytreeNode.type, categoryName);
@@ -267,7 +268,7 @@ function addToBasket(buttonNode) {
     basket: buttonNode.getAttribute("basket-id"),
     study,
   };
-  if (type=="topic") {
+  if (type == "topic") {
     postData["topic"] = name;
   } else {
     postData["concept"] = name;
@@ -312,7 +313,7 @@ function renderBasketButtons(node) {
   const categoryType = fancytreeNode.type;
   // The node key will be something like topic_name or concept_name.
   // To retrieve the name we can remove type+"_" from the key.
-  const categoryName = fancytreeNode.key.substring(categoryType.length+1);
+  const categoryName = fancytreeNode.key.substring(categoryType.length + 1);
 
   const variableNumberNode = document.getElementById("number-of-variables");
   variableNumberNode.textContent = "";
@@ -361,7 +362,7 @@ function renderBasketButtons(node) {
         for (const basket of response["results"]) {
           const basketButton = document.createElement("button");
           basketButton.classList.add("btn", "btn-primary");
-          const buttonLabel =`${labels["AddToBasket"][languageCode()]} ${basket.name}`;
+          const buttonLabel = `${labels["AddToBasket"][languageCode()]} ${basket.name}`;
           setAttributes(basketButton, {
             "type": "button",
             "title": buttonLabel,
@@ -547,7 +548,7 @@ function initTree() {
         const categoryNode = $.ui.fancytree.getTree("#tree").getNodeByKey(categoryID);
         if (relatedType === "variables") {
           renderVariableTable(categoryNode, relatedEntitiesTableSection);
-        } else if (relatedType === "questions" ) {
+        } else if (relatedType === "questions") {
           renderQuestionTable(categoryNode, relatedEntitiesTableSection);
         }
       }
@@ -555,7 +556,7 @@ function initTree() {
   });
 
   // Search the tree for search string
-  document.querySelector("#btn-search").addEventListener("click", (event)=> {
+  document.querySelector("#btn-search").addEventListener("click", (event) => {
     $.ui.fancytree.getTree("#tree")
       .filterBranches(document.getElementById("search").value, {
         autoExpand: true,
@@ -564,7 +565,7 @@ function initTree() {
 
   // Trigger search on enter
   document.querySelector("#search").addEventListener("keyup", (event) => {
-    if (event.keyCode==13) {
+    if (event.keyCode == 13) {
       document.querySelector("#btn-search").click();
     }
   });

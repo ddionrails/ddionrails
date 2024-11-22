@@ -1,11 +1,11 @@
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
-import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
-import "datatables.net-fixedcolumns";
-import "datatables.net-fixedcolumns-bs4";
-
 import * as $ from "jquery";
+import "datatables.net-bs5";
+import "datatables.net-buttons-bs5";
+import "datatables.net-buttons/js/buttons.colVis.js";
+import "datatables.net-responsive-bs5";
+import "datatables.net-fixedcolumns";
+import "datatables.net-fixedcolumns-bs5";
+
 import {getTable} from "./table_language_management";
 import {languageCode, languageConfig} from "../language_management";
 
@@ -94,7 +94,7 @@ async function initTable() {
     scrollCollapse: true,
     ordering: false,
     paging: false,
-    fixedColumns: {leftColumns: 1},
+    fixedColumns: {start: 1},
   });
 }
 

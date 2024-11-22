@@ -1,7 +1,7 @@
-import "datatables.net-bs4";
-import "datatables.net-buttons-bs4";
+import "datatables.net-bs5";
+import "datatables.net-buttons-bs5";
 import "datatables.net-buttons/js/buttons.colVis.js";
-import "datatables.net-responsive-bs4";
+import "datatables.net-responsive-bs5";
 import * as $ from "jquery";
 
 const variablesApiUrl = new URL("api/variables/", window.location.origin);
@@ -85,7 +85,7 @@ function renderEntityTable(entity: any, table: any, url: string) {
   });
 }
 
-window.addEventListener("load", function () {
+window.addEventListener("load", function() {
   const questionTable = document.querySelector("#question-table");
 
   const question = {
