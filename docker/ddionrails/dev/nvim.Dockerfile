@@ -24,16 +24,14 @@ RUN apk add --no-cache \
 	zlib-dev \
 	freetype-dev \
 	pkgconfig cairo-dev cairo \
-	&& pip install poetry \
+	&& pip install --no-cache-dir poetry \
 	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
 	&& pip install --no-cache-dir -r Requirements.txt \
 	&& pip uninstall -y poetry \
 	&& rm Requirements.txt \
 	&& npm install \
 	&& npm run build \
-	&& apk del nodejs npm \
 	&& rm -rf /var/cache/apk/* \
-	&& rm -rf node_modules \
 	&& mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
 
 RUN apk add --no-cache \
