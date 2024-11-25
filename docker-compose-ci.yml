@@ -38,8 +38,7 @@ services:
       - ./package.json:/usr/src/app/package.json
       - ./pavement.py:/usr/src/app/pavement.py
       - ./pyproject.toml:/usr/src/app/pyproject.toml
-      - ./Pipfile:/usr/src/app/Pipfile
-      - ./Pipfile.lock:/usr/src/app/Pipfile.lock
+      - ./poetry.lock:/usr/src/app/poetry.lock
       - ./webpack.config.js:/usr/src/app/webpack.config.js
     ports:
       - 9000 # used for live server test

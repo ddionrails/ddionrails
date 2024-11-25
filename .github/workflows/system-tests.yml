@@ -32,7 +32,9 @@ jobs:
           docker images
           docker ps -a
           docker exec ddionrails-web-1 bash -c \
-          'pipenv requirements --dev > Requirements.txt'
+          'pip install --no-cache-dir poetry'
+          docker exec ddionrails-web-1 bash -c \
+          'poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt'
           docker exec ddionrails-web-1 cat Requirements.txt
           docker exec ddionrails-web-1 pip install -r Requirements.txt
           docker exec ddionrails-web-1 npm install
