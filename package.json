@@ -48,6 +48,7 @@
     "spinkit": "^2.0.1"
   },
   "devDependencies": {
+    "@olrtg/emmet-language-server": "*",
     "@babel/preset-typescript": "^7.24.7",
     "@types/datatables.net-fixedcolumns": "^3.3.4",
     "@types/jest": "^29.5.14",
