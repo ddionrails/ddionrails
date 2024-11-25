@@ -11,6 +11,24 @@ Older versions are not part of this Project.
 
 ## [Unreleased]
 
+## [7.4.0] - 2024-11-25
+
+### Changed
+
+- Improved statistics UI with smaller display
+- Replaced ReactiveSearch with elasticsearch search UI
+- Replace some Bootstrap functionality with first party code
+- Upgrade to Bootstrap5
+
+### Fixed
+
+- concept import with duplicates
+
+### Removed
+
+- ReactiveSearch dependencies and implementations
+- Vue dependencies
+
 ## [7.3.0] - 2024-08-26
 
 ### Added
@@ -951,7 +969,8 @@ Older versions are not part of this Project.
 - Moved Project into Open Source and onto GitHub.:rocket:
 - Codestyle to work with flake8
 
-[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.3.0...develop
+[unreleased]: https://github.com/ddionrails/ddionrails/compare/v7.4.0...develop
+[7.4.0]: https://github.com/ddionrails/ddionrails/compare/v7.3.0...v7.4.0
 [7.3.0]: https://github.com/ddionrails/ddionrails/compare/v7.2.4...v7.3.0
 [7.2.4]: https://github.com/ddionrails/ddionrails/compare/v7.1.0...v7.2.4
 [7.1.0]: https://github.com/ddionrails/ddionrails/compare/v7.0.0...v7.1.0
