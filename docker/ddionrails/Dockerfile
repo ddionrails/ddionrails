@@ -24,11 +24,10 @@ RUN apk add --no-cache \
     zlib-dev \
     freetype-dev \
     pkgconfig cairo-dev cairo \
-    && pip install --no-cache-dir --upgrade pipfile-requirements==0.3.0 \
-    && pip install --no-cache-dir --upgrade chardet==4.0.0 \
-    && pipfile2req Pipfile.lock > Requirements.txt \
+    && pip install --no-cache-dir --upgrade poetry \
+    && poetry export --without-hashes -f requirements.txt > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
-    && pip uninstall -y pipfile-requirements \
+    && pip uninstall -y poetry \
     && rm Requirements.txt \
     && npm install \
     && npm run build \
