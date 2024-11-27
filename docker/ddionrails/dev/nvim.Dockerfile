@@ -16,14 +16,17 @@ COPY ./ ${DOCKER_APP_DIRECTORY}/
 RUN apk add --no-cache \
 	bash \
 	build-base \
+	cairo \
+	cairo-dev \
+	freetype-dev \
 	git \
 	jpeg-dev \
 	nodejs \
 	npm \
+	pkgconfig \
 	postgresql-dev \
+	ripgrep \
 	zlib-dev \
-	freetype-dev \
-	pkgconfig cairo-dev cairo \
 	&& pip install --no-cache-dir poetry \
 	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
 	&& pip install --no-cache-dir -r Requirements.txt \
