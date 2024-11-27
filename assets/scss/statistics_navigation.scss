@@ -13,6 +13,13 @@ iframe {
   width: 99%;
 }
 
+#funding-notice{
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding-top: 3rem;
+}
+
 #navigation-view-switch {
   background-color: #0074ff;
   border-radius: 10px;
