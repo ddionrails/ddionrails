@@ -73,7 +73,7 @@
 
 
 <div class="modal-header">
-	<h5 class="modal-title">Informationen zur Datenbasis</h5>
+	<h5 class="modal-title" data-en="Information about the dataset" data-de="Informationen zur Datenbasis"></h5>
 	<button class="btn" type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 		<span aria-hidden="true">&times;</span>
 	</button>
@@ -81,36 +81,41 @@
 <div class="modal-body">
 
  <ul>
-    <li>Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte.</li>
-    <li>Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen.</li>
+    <li
+     data-en="Prior to 1990, SOEP surveyed only West German respondents. Following reunification in 1990, East German respondents are included."
+     data-de="Seit 1990 auch ostdeutsche Befragte. Vor 1990 nur westdeutsche Befragte."></li>
+    <li
+     data-en="Values based on information from fewer than 30 respondents are excluded."
+     data-de="Werte, die auf Angaben von weniger als 30 Befragten basieren, werden ausgeschlossen."></li>
+    <li
+     data-en="For select years, the SOEP L-Samples and refugee samples were not included in the regular survey because different questionnaire versions were used. As a result, these populations were excluded from various SOEP-Stats analyses. This means that the results are subject to additional uncertainty. This concerns 2010-2013 for the L-Samples (oversampling of households with children) and from 2016 to the present for the refugee samples (M3 to M6; oversampling of refugees who came to Germany since 2013). For more information on the corresponding samples, see the <a href='https://companion.soep.de/Target%20Population%20and%20Samples/The%20SOEP%20Samples%20in%20Detail.html'>SOEPcompanion</a>."
+     data-de="In bestimmten Jahren wurden die SOEP L-Samples und Geflüchteten-Samples nicht in die reguläre Befragung eingeschlossen, da hier andere Fragebogenversionen vorlagen. Das hat zur Folge, dass diese Populationen in verschiedenen Analysen von SOEP-Stats ausgeschlossen wurden. Die Ergebnisse sind damit mit zusätzlicher Unsicherheit behaftet. Dies betrifft die Jahre 2010-2013 für die L-Samples (Oversampling von Haushalten mit Kindern) und die Jahre ab 2016 für die Geflüchteten-Samples (M3 bis M6; Oversampling von Geflüchteten, die ab 2013 nach Deutschland kamen). Nähere Informationen zu den entsprechenden Samples finden Sie im <a href='https://companion.soep.de/Target%20Population%20and%20Samples/The%20SOEP%20Samples%20in%20Detail.html'>SOEPcompanion</a>."></li>
   </ul>
 </div>
 
 <div class="modal-header">
-	<h5 class="modal-title">Informationen zur Studie</h5>
+	<h5 class="modal-title" data-en="Information about the Study" data-de="Informationen zur Studie"></h5>
 </div>
 <div class="modal-body">
 
 
-<p>Das Sozio-oekonomische Panel (SOEP) ist
-	die größte und am längsten laufende Wiederholungsbefragung
-	zur sozialen und wirtschaftlichen Lage in Deutschland,
-	für die jedes Jahr etwa 30.000 Menschen
-	in 15.000 Haushalten befragt werden.</p>
+<p
+ data-en="The Socio-Economic Panel (SOEP) is the largest and longest-running longitudinal survey on social and economic matters in Germany. Approximately 30,000 people in about 22,000 households are interviewed each year. "
+ data-de="Das Sozio-oekonomische Panel (SOEP) ist die größte und am längsten laufende Wiederholungsbefragung zur sozialen und wirtschaftlichen Lage in Deutschland, für die jedes Jahr etwa 30.000 Menschen in 15.000 Haushalten befragt werden."></p>
 
 </div>
 
 
 			{% if value_labels %}
 				<div class="modal-header">
-					<h5 class="modal-title">Skalenwerte</h5>
+					<h5 class="modal-title" data-en="Scale values" data-de="Skalenwerte"></h5>
 				</div>
 				<div class="modal-body">
 					<p>
 						<ul id="labels">
-						{% for label in value_labels %}
-						<li>
-							{{ label }}
+						{% for label, label_de in value_labels %}
+						<li data-en="{{ label }}" data-de="{{ label_de }}">
+							
 						</li>
 						{% endfor %}
 						</ul>
@@ -119,38 +124,39 @@
 			{% endif %}
 
 			<div class="modal-header">
-				<h5 class="modal-title">Beschreibung der Variable</h5>
+				<h5 class="modal-title" data-en="Information about this variable" data-de="Informationen zu dieser Variable"></h5>
 			</div>
 			<div class="modal-body">
-				<p>
-					{{variable.description_de | markdown_string | safe}}
+				<p
+				 data-en="{{variable.description | markdown_string | safe}}"
+				 data-de="{{variable.description_de | markdown_string | safe}}">
 				</p>
 
 				<p>
 					{% if variable %}
-					<a href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
-						Wissenschaftliche Dokumentation der Variable
+					<a
+					 data-en="Scientific documentation for this variable"
+					 data-de="Wissenschaftliche Dokumentation der Variable"
+					 href="{% url 'data:variable_detail' study=variable.dataset.study dataset_name=variable.dataset.name variable_name=variable.name %}">
 					</a>
 					{% endif %}
 				</p>
 			</div>
 
 			<div class="modal-header">
-				<h5 class="modal-title">Information zu Statistikgrundlagen</h5>
+				<h5 class="modal-title" data-en="Information about statistical concepts" data-de="Information zu statistischen Konzepten"></h5>
 			</div>
 			<div class="modal-body">
 
-<h5>Mittelwert</h5>
-<p>
-Der Mittelwert gibt den Durchschnittswert (arithmetisches Mittel) der Beobachtungen an. Beispiel Haushaltseinkommen: die Summe aller Haushaltseinkommen geteilt durch die Anzahl der Haushalte. Ein Beispiel: bei der Liste 5 10 20 50 100, ist der Mittelwert = (5+10+20+50+100) / 5=37.
+<h5 data-en="Mean" data-de="Mittelwert"></h5>
+<p 
+ data-en="The mean indicates the average (arithmetic mean) across observations. For example, mean household income is calculated by summing all household incomes and then dividing the result by the number of households. Simple example: for the list 5 10 20 50 100, the mean is (5+10+20+50+100) / 5=37."
+ data-de="Der Mittelwert gibt den Durchschnittswert (arithmetisches Mittel) der Beobachtungen an. Beispiel Haushaltseinkommen: die Summe aller Haushaltseinkommen geteilt durch die Anzahl der Haushalte. Ein Beispiel: bei der Liste 5 10 20 50 100, ist der Mittelwert = (5+10+20+50+100) / 5=37.">
 </p>
-<h5>Median</h5> 
-<p>
-Der Median gibt den Wert an, bei dem exakt 50% der Beobachtungen darüber liegen (im Sinne von größer gleich) und 50% darunter liegen (im Sinne von kleiner gleich). Beispiel Haushaltseinkommen: Der Median gibt das Haushaltseinkommen an, bei dem die Hälfte der Haushalte weniger oder gleich viel verdienen und die Hälfte der Haushalte mehr oder gleich viel verdienen. Einfaches Beispiel: bei der Liste 5 10 20 50 100, ist der Median = 20. (Achtung: Median ist nicht gleich Mittelwert!)
-</p>
-<h5>Gewichtung</h5>
-<p>
-Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung abbilden, muss bei der statistischen Analyse sichergestellt werden, dass die Ergebnisse auf die Gesamtbevölkerung in Deutschland übertragen werden können. Dies geschieht über die Gewichtung. Um die Repräsentativität der Ergebnisse zu gewährleisten, erhält jede Person und jeder Haushalt ein Gewicht, sodass bestimmte Gruppen in den Analysen nicht über- bzw. unterrepräsentiert sind. Alle hier angegebenen Werte sind bereits gewichtet und daher repräsentativ für die deutsche Bevölkerung.
+<h5 data-en="Weights" data-de="Gewichtung"></h5>
+<p
+ data-en="As the sample of SOEP respondents does not exactly reflect the composition of the German resident population, the statistical analysis must ensure that the results are generalizable to the resident population in Germany. This is done by weighting. To ensure undistorted (“representative”) results, a weight is calculated for each household and each person living in it. This ensures that certain groups are neither over- nor underrepresented in the analyses. All values given here are already weighted and, therefore, are “representative” of the German population."
+ data-de="Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung abbilden, muss bei der statistischen Analyse sichergestellt werden, dass die Ergebnisse auf die Gesamtbevölkerung in Deutschland übertragen werden können. Dies geschieht über die Gewichtung. Um die Repräsentativität der Ergebnisse zu gewährleisten, erhält jede Person und jeder Haushalt ein Gewicht, sodass bestimmte Gruppen in den Analysen nicht über- bzw. unterrepräsentiert sind. Alle hier angegebenen Werte sind bereits gewichtet und daher repräsentativ für die deutsche Bevölkerung.">
 </p>
 </div>
 
@@ -168,26 +174,15 @@ Da die Befragten des SOEP in ihrer Zusammensetzung nicht exakt die Bevölkerung 
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">Was bedeutet das Konfidenzintervall?</h5>
+				<h5 class="modal-title" data-en="What is conveyed by the confidence interval" data-de="Was bedeutet das Konfidenzintervall?"></h5>
 				<button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 			<div class="modal-body">
-				<p>
-				    Ein Konfidenzintervall gibt die Genauigkeit
-				    eines statistischen Wertes an.
-				    Ein 95%-Konfidenzintervall gibt zum Beispiel an,
-				    dass das Konfidenzintervall den wahren Wert mit einer
-				    Wahrscheinlichkeit von 95% umschließt.
-				    Man kann sich das Konfidenzintervall in etwa als einen
-				    Unsicherheitsbereich vorstellen, mit dem die
-				    statistische Untersuchung den wahren Wert trifft.
-				    Ein breites Konfidenzintervall deutet auf eine
-				    größere Unsicherheit des „wahren“ Wertes hin;
-				    es kann auf eine kleine Anzahl von Beobachtungen
-				    zurückzuführen sein oder auf eine große Streuung der
-				    Beobachtungen hinweisen. 
+				<p
+				 data-en="A confidence interval indicates the accuracy of a statistical parameter. You can think of the confidence interval as an uncertainty range that shows how certain you are that a value, estimated based on a sample, is close to the actual value in the population. The 95% confidence interval of a mean value, for example, indicates which range of values encloses the true (population) mean value with a probability of 95%. A wide confidence interval indicates greater uncertainty in the estimate. It may be due to a small number of observations or indicate a high dispersion of observations. "
+				 data-de="Ein Konfidenzintervall gibt die Genauigkeit eines statistischen Wertes an. Ein 95%-Konfidenzintervall gibt zum Beispiel an, dass das Konfidenzintervall den wahren Wert mit einer Wahrscheinlichkeit von 95% umschließt. Man kann sich das Konfidenzintervall in etwa als einen Unsicherheitsbereich vorstellen, mit dem die statistische Untersuchung den wahren Wert trifft. Ein breites Konfidenzintervall deutet auf eine größere Unsicherheit des „wahren“ Wertes hin; es kann auf eine kleine Anzahl von Beobachtungen zurückzuführen sein oder auf eine große Streuung der Beobachtungen hinweisen.">
 				</p>
 			</div>
 		</div>

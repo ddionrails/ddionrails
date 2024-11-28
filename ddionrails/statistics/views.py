@@ -50,13 +50,16 @@ def statistics_detail_view(
     )
 
     categories = context["variable"].category_list
-    context["value_labels"] = []
+    value_labels_de = []
+    value_labels = []
     context["values"] = []
     for category in categories:
         if category["value"] < 0:
             continue
         context["values"].append(category["value"])
-        context["value_labels"].append(category["label_de"])
+        value_labels.append(category["label"])
+        value_labels_de.append(category["label_de"])
+    context["value_labels"] = list(zip(value_labels, value_labels_de))
     context["variable_metadata"] = {"variable": context["variable"].id}
     if context["values"]:
         context["variable_metadata"]["y_limits"] = {
