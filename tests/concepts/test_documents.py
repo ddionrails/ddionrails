@@ -3,11 +3,14 @@
 
 """ Test cases for documents in ddionrails.concepts app """
 
+from os import getenv
 from typing import Any
 from unittest import TestCase
 
 import pytest
 from django.forms.models import model_to_dict
+
+INDEX_PREFIX = getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 
@@ -36,7 +39,7 @@ def test_concept_search_document_fields(variable_with_concept, topic):
 
     # test meta
     assert str(concept.id) == document.meta.id
-    assert "testing_concepts" == document.meta.index
+    assert f"{INDEX_PREFIX}concepts" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
@@ -79,7 +82,7 @@ def test_topic_search_document_fields(topic):
 
     # test meta
     assert str(topic.id) == document.meta.id
-    assert "testing_topics" == document.meta.index
+    assert f"{INDEX_PREFIX}topics" == document.meta.index
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(

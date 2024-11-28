@@ -3,12 +3,15 @@
 
 """ Test cases for documents in ddionrails.data app """
 
+from os import getenv
 from unittest import TestCase
 
 import pytest
 from django.forms.models import model_to_dict
 
 from ddionrails.data.documents import VariableDocument
+
+INDEX_PREFIX = getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 
 pytestmark = [pytest.mark.search]
 
@@ -26,7 +29,7 @@ def test_variable_search_document_fields(variable):
 
     # test meta
     TEST_CASE.assertEqual(str(variable.id), document.meta.id)
-    TEST_CASE.assertEqual("testing_variables", document.meta.index)
+    TEST_CASE.assertEqual(f"{INDEX_PREFIX}variables", document.meta.index)
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
