@@ -2,6 +2,7 @@
 {
   "dockerComposeFile": ["docker-compose.yml", "docker-compose-remote-dev.yml", "docker-compose.override.yml"],
   "service": "web",
+  "remoteUser": "dev",
   "workspaceFolder": "/usr/src/app",
   "extensions": [
     "abusaidm.html-snippets",
