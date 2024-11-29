@@ -115,7 +115,10 @@ class TestStudyImportManagerUnittest(unittest.TestCase):
         with TEST_CASE.assertRaises(Dataset.DoesNotExist) as error:
             self.study_import_manager.import_single_entity("attachments")
         error_dict = json.loads(error.exception.args[0])
-        TEST_CASE.assertDictContainsSubset(row, error_dict)
+        for key, item in error_dict:
+            TEST_CASE.assertEqual(
+                row[key], item, msg="Result is not fully contained in expected."
+            )
 
     def test_import_attachments(self):
         TEST_CASE.assertEqual(0, Attachment.objects.count())
