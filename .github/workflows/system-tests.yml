@@ -33,6 +33,7 @@ jobs:
           docker ps -a
           docker exec ddionrails-web-1 bash -c \
           'pip install --no-cache-dir poetry'
+          docker exec ddionrails-web-1 bash -c "apk add --no-cache npm"
           docker exec ddionrails-web-1 bash -c \
           'poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt'
           docker exec ddionrails-web-1 cat Requirements.txt

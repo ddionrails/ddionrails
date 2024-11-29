@@ -30,7 +30,6 @@ RUN apk add --no-cache \
 	&& pip install --no-cache-dir poetry \
 	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
 	&& pip install --no-cache-dir -r Requirements.txt \
-	&& pip uninstall -y poetry \
 	&& rm Requirements.txt \
 	&& npm install \
 	&& npm run build \
