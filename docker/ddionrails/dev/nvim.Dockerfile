@@ -32,6 +32,7 @@ RUN apk add --no-cache \
 	&& pip install --no-cache-dir -r Requirements.txt \
 	&& rm Requirements.txt \
 	&& npm install \
+	&& npm install -g typescript typescript-language-server \
 	&& npm run build \
 	&& rm -rf /var/cache/apk/* \
 	&& mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
