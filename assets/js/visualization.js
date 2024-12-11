@@ -6,6 +6,9 @@
 
 import * as d3 from "d3";
 
+// Also in ./tables/variable_labels.ts
+const LabelLimit = 100;
+
 // Global vars
 
 // Set margin, width, padding for charts and menu
@@ -228,6 +231,10 @@ function catUni(options) {
  */
 function render() {
   if (context.variable.data.scale !== "cat") {
+    $("#vis_menu").hide();
+    return;
+  }
+  if (context.variable.data?.uni?.labels?.length > LabelLimit){
     $("#vis_menu").hide();
     return;
   }

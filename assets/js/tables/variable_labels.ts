@@ -6,12 +6,15 @@ import "datatables.net-responsive-bs5";
 import "datatables.net-fixedcolumns";
 import "datatables.net-fixedcolumns-bs5";
 
-import {getTable} from "./table_language_management";
-import {languageCode, languageConfig} from "../language_management";
+import { getTable } from "./table_language_management";
+import { languageCode, languageConfig } from "../language_management";
 
-import {getAPIData, parseVariables} from "../variable_labels";
+import { getAPIData, parseVariables } from "../variable_labels";
 
 const TableElement = getTable().cloneNode(true) as HTMLElement;
+
+// Also in ../visualization.js
+const LabelLimit = 100;
 
 const study = document
   .querySelector("meta[name=study]")
@@ -21,9 +24,12 @@ const datasetBaseURL = new URL(`${study}/datasets`, window.location.origin);
 /**
  *
  */
-async function initTable() {
+async function initTable(): Promise<null> {
   const variableData = parseVariables(await getAPIData());
   if (variableData == null) {
+    return;
+  }
+  if(variableData.labels.get("labels").length  > LabelLimit){
     return;
   }
   const columns = [];
@@ -42,7 +48,7 @@ async function initTable() {
   for (const variableName of variableData.periods.keys()) {
     const datasetURL = new URL(
       `datasets/${variableData.datasets.get(variableName)}/`,
-      datasetBaseURL
+      datasetBaseURL,
     );
     const variableURL = new URL(variableName, datasetURL);
     const header = document.createElement("div");
@@ -94,7 +100,7 @@ async function initTable() {
     scrollCollapse: true,
     ordering: false,
     paging: false,
-    fixedColumns: {start: 1},
+    fixedColumns: { start: 1 },
   });
 }
 
