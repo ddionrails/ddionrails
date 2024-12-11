@@ -234,7 +234,7 @@ function render() {
     $("#vis_menu").hide();
     return;
   }
-  if (context.variable.data?.uni?.labels?.length > LabelLimit){
+  if (context.variable.data?.uni?.labels?.length > LabelLimit) {
     $("#vis_menu").hide();
     return;
   }
