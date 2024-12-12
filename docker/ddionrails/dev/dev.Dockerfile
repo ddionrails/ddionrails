@@ -1,4 +1,4 @@
-FROM python:3.11.3-slim-buster
+FROM python:3.12-slim-bullseye
 
 
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -23,7 +23,6 @@ RUN apt-get update \
     graphviz-dev>=2.38 \
     netcat>=1 \
     openssh-client>=1:7 \
-    python-psycopg2>=2 \
     libpq-dev>=11.5 \
     pkg-config libcairo2-dev libjpeg-dev libgif-dev \
     gcc>=4:8 \
@@ -31,13 +30,12 @@ RUN apt-get update \
     zlib1g-dev>=1:1.2 \
     libfreetype6-dev>=2.9.1-3+deb10u2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade pipenv==2023.2.18 \
-    && pip install --no-cache-dir --upgrade chardet==4.0.0 \
-    && pipenv requirements --dev > Requirements.txt \
+    && pip install --no-cache-dir --upgrade poetry\
+    && poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \
-    && curl -sL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs=20.* \
+    && apt-get install -y --no-install-recommends nodejs \
+    && apt-get install -y --no-install-recommends npm \
     && npm install \
     && npm run build \
     && npm install -g jest ts-node \
