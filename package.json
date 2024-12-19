@@ -60,7 +60,7 @@
     "sass": "^1.81.0",
     "sass-loader": "^13.2.2",
     "webpack": "^5.92.1",
-    "webpack-bundle-tracker": "^1.8.1",
+    "webpack-bundle-tracker": "^3.1.1",
     "webpack-cli": "^5.0.1",
     "style-loader": "^3.3.4"
   },
@@ -86,7 +86,7 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
     "webpack": "^5.92.1",
-    "webpack-bundle-tracker": "^1.8.1",
+    "webpack-bundle-tracker": "^3.1.1",
     "webpack-cli": "^5.0.1"
   },
   "scripts": {
