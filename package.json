@@ -61,7 +61,7 @@
     "sass-loader": "^13.2.2",
     "webpack": "^5.92.1",
     "webpack-bundle-tracker": "^1.8.1",
-    "webpack-cli": "^5.0.1",
+    "webpack-cli": "^6.0.0",
     "style-loader": "^3.3.4"
   },
   "devDependencies": {
@@ -87,7 +87,7 @@
     "typescript": "^5.7.2",
     "webpack": "^5.92.1",
     "webpack-bundle-tracker": "^1.8.1",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^6.0.0"
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
