@@ -66,7 +66,7 @@ const config = {
       $: "jquery",
       jQuery: "jquery",
     }),
-    new BundleTracker({filename: "./webpack-stats.json"}),
+    new BundleTracker({filename: "webpack-stats.json"}),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
@@ -120,9 +120,9 @@ const config = {
     ],
   },
   resolve: {
-    alias: { // Fix for import issue in third party dependency
+    alias: {
+      // Fix for import issue in third party dependency
       stylis: require.resolve("stylis"),
-      // stylis: path.resolve(__dirname, "node_modules/@emotion/cache/node_modules/stylis"),
     },
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     modules: [path.resolve(__dirname, "node_modules")],
