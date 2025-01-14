@@ -30,7 +30,7 @@ RUN apt-get update \
     zlib1g-dev>=1:1.2 \
     libfreetype6-dev>=2.9.1-3+deb10u2 \
     vim-tiny>=2:8 \
-    && pip install --no-cache-dir --upgrade poetry\
+    && pip install --no-cache-dir --upgrade poetry poetry-plugin-export \
     && poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && rm Requirements.txt \

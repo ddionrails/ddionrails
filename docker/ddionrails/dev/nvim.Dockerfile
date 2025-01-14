@@ -27,7 +27,7 @@ RUN apk add --no-cache \
 	postgresql-dev \
 	ripgrep \
 	zlib-dev \
-	&& pip install --no-cache-dir poetry \
+	&& pip install --no-cache-dir poetry poetry-plugin-export \
 	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
 	&& pip install --no-cache-dir -r Requirements.txt \
 	&& rm Requirements.txt \

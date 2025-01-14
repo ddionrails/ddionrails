@@ -24,7 +24,7 @@ RUN apk add --no-cache \
     zlib-dev \
     freetype-dev \
     pkgconfig cairo-dev cairo \
-    && pip install --no-cache-dir --upgrade poetry \
+    && pip install --no-cache-dir --upgrade poetry poetry-plugin-export \
     && poetry export --without-hashes -f requirements.txt > Requirements.txt \
     && pip install --no-cache-dir -r Requirements.txt \
     && pip uninstall -y poetry \
