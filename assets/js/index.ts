@@ -5,6 +5,7 @@
  */
 
 require("../favicon.ico");
+require("./study_dropdown");
 
 import "bootstrap";
 import {switchLanguage} from "./language_management";
@@ -77,5 +78,7 @@ resizeObserver.observe(document.body);
 if (window.innerWidth < 1200) {
   navContent.classList.add("hidden");
 }
+
+
 
 

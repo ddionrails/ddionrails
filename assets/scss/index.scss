@@ -324,32 +324,38 @@ div.dataTables_paginate li.last a:after {
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
-.dropdown > button > i.fa-solid.fa-caret-down {
+// Manage the arrow next to the dropdown text
+.dropdown:not(.clicked) > button > i.fa-solid.fa-caret-down {
   display: none;
 }
-
 .dropdown:hover > button > i.fa-solid.fa-caret-down {
   display: inline-block;
 }
+.clicked > i.fa-solid.fa-caret-down {
+  display: inline-block !important;
+}
 .dropdown:hover > button > i.fa-solid.fa-caret-right {
   display: none;
+}
+.clicked > button > i.fa-solid.fa-caret-right {
+  display: none !important;
 }
 
 /* Links inside the dropdown */
 .dropdown-content a {
   color: black;
-  padding: 12px 16px;
+  padding: 0.3rem 0.5rem 0.4rem 1rem;
   text-decoration: none;
   display: block;
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {
+.clicked > .dropdown-content >  a {
   background-color: #f1f1f1;
 }
 
 /* Show the dropdown menu on hover */
-.dropdown:hover .dropdown-content {
+.clicked > .dropdown-content{
   display: block;
 }
 
