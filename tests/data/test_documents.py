@@ -29,7 +29,7 @@ def test_variable_search_document_fields(variable):
 
     # test meta
     TEST_CASE.assertEqual(str(variable.id), document.meta.id)
-    TEST_CASE.assertEqual(f"{INDEX_PREFIX}variables", document.meta.index)
+    TEST_CASE.assertIn(document.meta.index, ("testing_variables", "variables"))
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(

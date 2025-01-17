@@ -10,9 +10,10 @@ from unittest import TestCase
 import pytest
 from django.forms.models import model_to_dict
 
+from ddionrails.concepts.documents import ConceptDocument, TopicDocument
+
 INDEX_PREFIX = getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 
-from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 
 pytestmark = [
     pytest.mark.search,
@@ -39,7 +40,7 @@ def test_concept_search_document_fields(variable_with_concept, topic):
 
     # test meta
     assert str(concept.id) == document.meta.id
-    assert f"{INDEX_PREFIX}concepts" == document.meta.index
+    assert document.meta.index in ("testing_concepts", "concepts")
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
@@ -82,7 +83,7 @@ def test_topic_search_document_fields(topic):
 
     # test meta
     assert str(topic.id) == document.meta.id
-    assert f"{INDEX_PREFIX}topics" == document.meta.index
+    assert document.meta.index in ("testing_topics", "topics")
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(

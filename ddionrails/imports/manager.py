@@ -7,7 +7,7 @@ import logging
 import shutil
 import sys
 from collections import OrderedDict
-from inspect import isfunction, isgenerator
+from inspect import isfunction
 from pathlib import Path
 from types import FunctionType
 from typing import Any, List, Tuple
@@ -274,23 +274,23 @@ class StudyImportManager:
         self.__log_import_start(entity)
         importer_class, _default_files_path = self.import_order.get(entity)
         default_importer_files: Any
-        if isgenerator(_default_files_path):
-            default_importer_files = _default_files_path
-        else:
+        if isinstance(_default_files_path, (str, Path)):
             default_importer_files = [_default_files_path]
+        else:
+            default_importer_files = list(_default_files_path)
 
         # import specific file
         if filename:
             file = self.base_dir.joinpath(filename)
             if file.is_file():
-                self.__log_import_start(file.name)
+                self.__log_import_start(getattr(file, "name", ""))
                 default_importer_files = [file]
             else:
                 self.__log_import_fail(file)
                 sys.exit(1)
 
         for file in default_importer_files:
-            self.__log_import_start(file.name)
+            self.__log_import_start(getattr(file, "name", ""))
             if not file.is_file():  # type: ignore
                 self.__log_import_fail(file)
                 continue

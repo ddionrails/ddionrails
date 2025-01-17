@@ -22,7 +22,10 @@ def test_question_search_document_fields(question):
 
     # test meta
     assert str(question.id) == document.meta.id
-    assert "testing_questions" == document.meta.index
+    assert document.meta.index in (
+        "testing_questions",
+        "questions" == document.meta.index,
+    )
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(

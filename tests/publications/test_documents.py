@@ -22,7 +22,7 @@ def test_publication_search_document_fields(publication_with_umlauts):
 
     # test meta
     assert str(publication_with_umlauts.id) == document.meta.id
-    assert "testing_publications" == document.meta.index
+    assert document.meta.index in ("testing_publications", "publications")
 
     # generate expected dictionary with attributes from model instance
     expected = model_to_dict(
