@@ -56,8 +56,8 @@ const config = {
     ],
   },
   output: {
-    path: path.resolve("./static/dist/"),
-    publicPath: "",
+    path: path.resolve(__dirname, "static/dist/"),
+    publicPath: "auto",
     // filename is defined later; value depends on mode
   },
 
@@ -66,7 +66,7 @@ const config = {
       $: "jquery",
       jQuery: "jquery",
     }),
-    new BundleTracker({filename: "webpack-stats.json"}),
+    new BundleTracker({path: path.join(__dirname), filename: "webpack-stats.json"}),
     new webpack.DefinePlugin({
       "process.env.ELASTICSEARCH_DSL_INDEX_PREFIX": JSON.stringify(
         process.env.ELASTICSEARCH_DSL_INDEX_PREFIX
