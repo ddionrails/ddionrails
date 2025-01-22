@@ -1,7 +1,5 @@
 import * as $ from "jquery";
 import "datatables.net-bs5";
-import "datatables.net-buttons-bs5";
-import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs5";
 import "datatables.net-fixedcolumns";
 import "datatables.net-fixedcolumns-bs5";

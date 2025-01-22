@@ -18,6 +18,7 @@ const config = {
     index: ["./assets/js/index.ts", "./assets/scss/index.scss"],
     instrument_table: ["./assets/js/tables/instrument_table.ts"],
     table_attachment: ["./assets/scss/table_attachment.scss"],
+    table_navigation: ["./assets/scss/table_navigation.scss"],
     basket: "./assets/scss/basket.scss",
     basket_button: "./assets/js/basket_button.ts",
     basket_view_variable_buttons: "./assets/js/basket_view_variable_buttons.ts",

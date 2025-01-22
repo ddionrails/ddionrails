@@ -17,8 +17,6 @@ import "jquery.fancytree";
 import "jquery.fancytree/dist/modules/jquery.fancytree.filter";
 import "jquery.fancytree/dist/modules/jquery.fancytree.glyph";
 import "datatables.net-bs5";
-import "datatables.net-buttons-bs5";
-import "datatables.net-buttons/js/buttons.colVis.js";
 import "datatables.net-responsive-bs5";
 
 import {languageConfig, languageCode} from "./language_management";
