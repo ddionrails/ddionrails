@@ -24,7 +24,7 @@ def test_question_search_document_fields(question):
     assert str(question.id) == document.meta.id
     assert document.meta.index in (
         "testing_questions",
-        "questions" == document.meta.index,
+        "questions",
     )
 
     # generate expected dictionary with attributes from model instance

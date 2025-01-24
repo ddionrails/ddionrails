@@ -44,9 +44,11 @@ def instrument_import(file: Path, study: Study) -> None:
     analysis_units = {
         unit.name: unit for unit in AnalysisUnit.objects.filter(study=study)
     }
+    existing_instruments = {i.name for i in Instrument.objects.filter(study=study)}
 
     with open(file, encoding="utf8") as instruments_csv:
         instruments = []
+        new_instruments = []
         for row in DictReader(instruments_csv):
             instrument = Instrument()
             instrument.study = study
@@ -67,15 +69,21 @@ def instrument_import(file: Path, study: Study) -> None:
                 setattr(instrument, field, value)
             instrument.has_questions = instrument.name in instruments_with_questions
 
-            instruments.append(instrument)
+            if row["name"] in existing_instruments:
+                instruments.append(instrument)
+            else:
+                new_instruments.append(instrument)
 
-    Instrument.objects.bulk_update(
-        instruments,
-        required_fields
-        + ["analysis_unit", "period", "has_questions"]
-        + optional_fields
-        + list(optional_nested_fields.keys()),
-    )
+    if instruments:
+        Instrument.objects.bulk_update(
+            instruments,
+            required_fields
+            + ["analysis_unit", "period", "has_questions"]
+            + optional_fields
+            + list(optional_nested_fields.keys()),
+        )
+    if new_instruments:
+        Instrument.objects.bulk_create(new_instruments)
 
 
 class InstrumentImport(imports.Import):

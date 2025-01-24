@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,invalid-name
 
 """ Test cases for "remove" management command for ddionrails project """
 

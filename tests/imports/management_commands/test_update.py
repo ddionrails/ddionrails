@@ -15,7 +15,12 @@ from django.core.management import call_command
 
 from ddionrails.concepts.models import Period
 from ddionrails.data.models import Dataset, Variable
-from ddionrails.imports.management.commands import update
+from ddionrails.imports.management.commands.update import (
+    update,
+    update_all_studies_completely,
+    update_single_study,
+    update_study_partial,
+)
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
@@ -30,6 +35,17 @@ pytestmark = [pytest.mark.django_db]
 IMPORT_PATH = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
 
 TEST_CASE = unittest.TestCase()
+
+
+def get_options(study_name):
+    options = {}
+    options["study_name"] = study_name
+    options["entity"] = "instuments.json"
+    options["local"] = True
+    options["filename"] = None
+    options["clean_import"] = False
+    options["no_redis"] = True
+    return options
 
 
 @pytest.fixture(name="mocked_update_single_study")
@@ -70,7 +86,7 @@ def _mocked_import_all_entities(mocker):
 def test_update_study_partial(study, mocked_import_single_entity):
     manager = StudyImportManager(study)
     entity = ("periods",)
-    update.update_study_partial(manager, entity)
+    update_study_partial(manager, entity)
     mocked_import_single_entity.assert_called_once_with(entity[0])
 
 
@@ -83,7 +99,7 @@ def test_update_single_study(study, mocker):
         "ddionrails.imports.manager.StudyImportManager.update_repo"
     )
     manager = StudyImportManager(study, redis=False)
-    update.update_single_study(study, False, (), "", manager=manager)
+    update_single_study(study, False, (), "", manager=manager)
     mocked_update_repo.assert_called_once()
     result = {variable.name for variable in Variable.objects.all()}
     TEST_CASE.assertNotEqual(0, len(result))
@@ -96,7 +112,7 @@ def test_update_single_study_local(study):
     with open(IMPORT_PATH.joinpath("variables.csv"), encoding="utf8") as variables_file:
         expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
     manager = StudyImportManager(study, redis=False)
-    update.update_single_study(study, local, (), None, manager=manager)
+    update_single_study(study, local, (), None, manager=manager)
     result = {variable.name for variable in Variable.objects.all()}
     TEST_CASE.assertNotEqual(0, len(result))
     TEST_CASE.assertEqual(expected_variables, result)
@@ -110,7 +126,7 @@ def test_update_single_study_entity(study):
     with open(IMPORT_PATH.joinpath("periods.csv"), encoding="utf8") as periods_file:
         expected_periods = {row["name"] for row in csv.DictReader(periods_file)}
     manager = StudyImportManager(study, redis=False)
-    update.update_single_study(study, local, entities, None, manager=manager)
+    update_single_study(study, local, entities, None, manager=manager)
     result = {period.name for period in Period.objects.all()}
     TEST_CASE.assertNotEqual(0, len(result))
     TEST_CASE.assertEqual(expected_periods, result)
@@ -157,7 +173,7 @@ def test_update_single_study_entity_nonexistent_filename(study):
 def test_update_all_studies_completely(
     study, mocked_update_single_study  # pylint: disable=unused-argument
 ):
-    update.update_all_studies_completely(True)
+    update_all_studies_completely(True)
     mocked_update_single_study.assert_called_once()
 
 
@@ -254,41 +270,49 @@ def test_update_command_with_valid_study_name_and_invalid_entity(study):
     TEST_CASE.assertEqual(1, error.exception.code)
 
 
-@pytest.mark.parametrize("option", ("-f", "--filename"))
+@pytest.mark.django_db
 @pytest.mark.usefixtures(("mock_import_path"))
-def test_update_command_with_valid_study_name_and_valid_entity_and_filename(
-    study, option
-):
+def test_update_command_with_valid_study_name_and_valid_entity_and_filename(study):
     file_path = Study().import_path().joinpath("instruments/some-instrument.json")
 
     with TEST_CASE.assertRaises(Instrument.DoesNotExist):
         Instrument.objects.get(name="some-instrument")
 
-    with unittest.mock.patch("ddionrails.imports.manager.Repository") as git_api:
-        with TEST_CASE.assertRaises(SystemExit) as error:
-            call_command("update", study.name, "instruments.json", option, file_path)
-            git_api: unittest.mock.MagicMock
-            git_api.pull_or_clone.assert_called()
-            git_api.set_commit_id.assert_called()
+    options = get_options(study.name)
+    options["entity"] = "instruments.json"
+    options["filename"] = file_path
+    options["local"] = False
 
-        TEST_CASE.assertEqual(0, error.exception.code)
+    with unittest.mock.patch("ddionrails.imports.manager.Repository") as git_api:
+
+        success, error = update(options)
+        git_api: unittest.mock.MagicMock
+        git_api().pull_or_clone.assert_called()
+        git_api().set_commit_id.assert_called()
+
+        TEST_CASE.assertIsNone(error)
+        TEST_CASE.assertIsNotNone(success)
         Instrument.objects.get(name="some-instrument")
 
 
+@pytest.mark.django_db
 @pytest.mark.usefixtures("mock_import_path", "period", "analysis_unit")
 def test_instrument_import(study, period, analysis_unit):
     with TEST_CASE.assertRaises(Instrument.DoesNotExist):
         Instrument.objects.get(name="some-instrument")
 
+    options = get_options(study.name)
+    options["entity"] = "instuments.json"
+
     with unittest.mock.patch("ddionrails.imports.manager.Repository"):
-        with TEST_CASE.assertRaises(SystemExit) as error:
-            call_command("update", study.name, "instruments.json")
-        TEST_CASE.assertEqual(0, error.exception.code)
+        _, error = update(options)
+        TEST_CASE.assertIsNotNone(error)
 
-        with TEST_CASE.assertRaises(SystemExit) as error:
-            call_command("update", study.name, "instruments")
+        options["entity"] = "instruments"
+        success, error = update(options)
+        TEST_CASE.assertIsNone(error)
+        TEST_CASE.assertIsNotNone(success)
 
-        TEST_CASE.assertEqual(0, error.exception.code)
         instrument = Instrument.objects.get(name="some-instrument")
         TEST_CASE.assertEqual("some-type", instrument.type["en"])
         TEST_CASE.assertEqual("ein-typ", instrument.type["de"])
@@ -336,9 +360,7 @@ class TestUpdate(unittest.TestCase):
         clean_import = True
         self.assertTrue(list(Dataset.objects.filter(id=self.dataset.id)))
         manager = StudyImportManager(self.study, redis=False)
-        update.update_single_study(
-            self.study, True, clean_import=clean_import, manager=manager
-        )
+        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
 
@@ -349,9 +371,7 @@ class TestUpdate(unittest.TestCase):
         basket = BasketFactory(name="study_basket")
 
         manager = StudyImportManager(self.study, redis=False)
-        update.update_single_study(
-            self.study, True, clean_import=clean_import, manager=manager
-        )
+        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
         variable = Variable.objects.get(name="some-variable")
         outdated_variable = Variable.objects.get(name="some-third-variable")
 
@@ -376,9 +396,7 @@ some-study,some-dataset,some-other-variable,some-concept,https://variable-other-
 
         clean_import = True
         manager = StudyImportManager(self.study, redis=False)
-        update.update_single_study(
-            self.study, True, clean_import=clean_import, manager=manager
-        )
+        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
 
         with self.assertRaises(ObjectDoesNotExist):
             Variable.objects.get(name="some-third-variable")

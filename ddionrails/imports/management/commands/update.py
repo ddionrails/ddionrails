@@ -57,49 +57,14 @@ class Command(BaseCommand):
         )
         return super().add_arguments(parser)
 
-    def handle(self, *args, **options):
-        study_name = options["study_name"]
-        entity = set(options["entity"])
-        local = options["local"]
-        filename = options["filename"]
-        clean_import = options["clean_import"]
-        redis = not options["no_redis"]
+    def handle(self, *_, **options):
+        success, error = update(options)
 
-        # if no study_name is given, update all studies
-        if study_name == "all":
-            self.log_success("Updating all studies")
-            update_all_studies_completely(local, clean_import, redis=redis)
-            sys.exit(0)
-
-        # if study_name is given, select study from database or exit
-        try:
-            study = Study.objects.get(name=study_name)
-        except Study.DoesNotExist:
-            self.log_error(f'Study "{study_name}" does not exist.')
+        if error:
+            self.log_error(error)
             sys.exit(1)
-
-        # if one or more entities are given, validate all are available
-        manager = StudyImportManager(study, redis=redis)
-        for single_entity in entity:
-            if single_entity not in manager.import_order:
-                self.log_error(f'Entity "{single_entity}" does not exist.')
-                sys.exit(1)
-
-        # if filename is given, validate that entity is "datasets.json" or "instruments"
-        if filename and not entity.intersection({"datasets.json", "instruments.json"}):
-            out = ", ".join(entity.intersection({"datasets.json", "instruments.json"}))
-            self.log_error(
-                f'Support for single file import not available for entity "{out}".'
-            )
-            sys.exit(1)
-
-        update_single_study(
-            study, local, tuple(entity), filename, clean_import, manager=manager
-        )
-
-        enqueue(clear_caches)
-
-        # Populate the search index from the database (indexes everything)
+        if success:
+            self.log_success(success)
         sys.exit(0)
 
     def log_success(self, message: str):
@@ -117,6 +82,49 @@ def update_study_partial(manager: StudyImportManager, entity: tuple):
         manager.import_single_entity(single_entity)
 
 
+def update(options) -> tuple[str | None, str | None]:
+    study_name = options["study_name"]
+    entity = options["entity"]
+    if isinstance(entity, str):
+        entity = {entity}
+    else:
+        entity = set(entity)
+    local = options["local"]
+    filename = options["filename"]
+    clean_import = options["clean_import"]
+    redis = not options["no_redis"]
+
+    # if no study_name is given, update all studies
+    if study_name == "all":
+        update_all_studies_completely(local, clean_import, redis=redis)
+        return ("Updating all studies", None)
+
+    # if study_name is given, select study from database or exit
+    try:
+        study = Study.objects.get(name=study_name)
+    except Study.DoesNotExist:
+        return (None, f'Study "{study_name}" does not exist.')
+
+    # if one or more entities are given, validate all are available
+    manager = StudyImportManager(study, redis=redis)
+    for single_entity in entity:
+        if single_entity not in manager.import_order:
+            return (None, f'Entity "{single_entity}" does not exist.')
+
+    # if filename is given, validate that entity is "datasets.json" or "instruments"
+    if filename and not entity.intersection({"datasets.json", "instruments.json"}):
+        out = ", ".join(entity.intersection({"datasets.json", "instruments.json"}))
+        return (None, f'Support for single file import not available for entity "{out}".')
+
+    update_single_study(
+        study, local, tuple(entity), filename, clean_import, manager=manager
+    )
+
+    if redis:
+        enqueue(clear_caches)
+    return ("Done", None)
+
+
 # Maybe replace study arg with manager arg in future refactor
 def update_single_study(  # pylint: disable=R0913
     study: Study,
@@ -132,8 +140,6 @@ def update_single_study(  # pylint: disable=R0913
         backup_file = Basket.backup()
         study.delete()
         study.save()
-    if not manager:
-        StudyImportManager(study)
     if not local:
         manager.update_repo()
     if not entity:
