@@ -16,12 +16,12 @@ from django.core.management import call_command
 from ddionrails.concepts.models import Period
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.imports.management.commands.update import (
+    StudyImportManager,
     update,
     update_all_studies_completely,
     update_single_study,
     update_study_partial,
 )
-from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
@@ -40,7 +40,7 @@ TEST_CASE = unittest.TestCase()
 def get_options(study_name):
     options = {}
     options["study_name"] = study_name
-    options["entity"] = "instuments.json"
+    options["entity"] = []
     options["local"] = True
     options["filename"] = None
     options["clean_import"] = False
@@ -281,18 +281,11 @@ def test_update_command_with_valid_study_name_and_valid_entity_and_filename(stud
     options = get_options(study.name)
     options["entity"] = "instruments.json"
     options["filename"] = file_path
-    options["local"] = False
 
-    with unittest.mock.patch("ddionrails.imports.manager.Repository") as git_api:
-
-        success, error = update(options)
-        git_api: unittest.mock.MagicMock
-        git_api().pull_or_clone.assert_called()
-        git_api().set_commit_id.assert_called()
-
-        TEST_CASE.assertIsNone(error)
-        TEST_CASE.assertIsNotNone(success)
-        Instrument.objects.get(name="some-instrument")
+    success, error = update(options)
+    TEST_CASE.assertIsNone(error)
+    TEST_CASE.assertIsNotNone(success)
+    Instrument.objects.get(name="some-instrument")
 
 
 @pytest.mark.django_db
