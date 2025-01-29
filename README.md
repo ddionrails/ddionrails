@@ -1,7 +1,7 @@
 # DDI on Rails
 
-[![Python version][python-badge]](https://www.python.org/downloads/release/python-3113/)
-[![Django version][django-badge]](https://docs.djangoproject.com/en/4.2/releases/4.2.4/)
+[![Python version][python-badge]](https://www.python.org/downloads/release/python-3131/)
+[![Django version][django-badge]](https://docs.djangoproject.com/en/5.1/releases/5.1.4/)
 [![Repo license][license-badge]](https://www.gnu.org/licenses/agpl-3.0)
 
 ![System-Tests](https://github.com/ddionrails/ddionrails/actions/workflows/system-tests.yml/badge.svg)
@@ -197,8 +197,8 @@ file for details
 
 <!-- Markdown link & img dfn's -->
 
-[python-badge]: https://img.shields.io/badge/Python-3.11.3-blue.svg
-[django-badge]: https://img.shields.io/badge/Django-4.2.4-blue.svg
+[python-badge]: https://img.shields.io/badge/Python-3.13.1-blue.svg
+[django-badge]: https://img.shields.io/badge/Django-5.1.4-blue.svg
 [license-badge]: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
 [codecov-badge]: https://img.shields.io/codecov/c/github/ddionrails/ddionrails.svg
 [travis-badge]: https://img.shields.io/travis/ddionrails/ddionrails.svg
