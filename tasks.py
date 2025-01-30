@@ -1,40 +1,54 @@
 # -*- coding: utf-8 -*-
 
-""" Pavement file for ddionrails project """
+""" Functionality to help with development. """
 
+import os
 import pathlib
 import sys
+from argparse import ArgumentParser
 
 import django
 from django.core import management
 from django.db.utils import IntegrityError
-from paver.easy import consume_args, needs, sh, task
+from pytest import main
 
 sys.path.append(".")
 
 
-@task
-def docu():
-    """Run the docu make script (no delete)."""
-    sh("cd ../docs; make html")
+def parse_args():
+    parser: ArgumentParser = ArgumentParser(
+        prog="project management shortcuts",
+        description="Offer collection of command shortcuts for this project.",
+    )
+    functions = [
+        "django_setup",
+        "create_admin",
+        "reset_migrations",
+        "database_graph",
+        "migrate",
+        "integration_test",
+    ]
+    subparsers = parser.add_subparsers()
+    test_parser = subparsers.add_parser("unit_test")
+    command_parser = subparsers.add_parser("run")
+    test_parser.add_argument("test_arguments", nargs="*")
+
+    command_parser.add_argument("command_name", choices=functions)
+    arguments = parser.parse_args(sys.argv[1:])
+    if "test_arguments" in arguments:
+        unit_test(arguments.test_arguments)
+    if "command_name" in arguments:
+        globals()[arguments.command_name]()
 
 
-@task
-def full_docu():
-    """Completely rebuild the docu."""
-    sh("cd ../docs; rm -r _build; make html")
-
-
-@task
 def django_setup():
     """Setup django for other tasks"""
     django.setup()
 
 
-@task
-@needs("django_setup")
 def create_admin():
     """Create superuser "admin" with password "test"."""
+    django_setup()
     from django.contrib.auth.models import User
 
     try:
@@ -44,45 +58,43 @@ def create_admin():
         pass
 
 
-@task
-@needs("django_setup")
 def reset_migrations():
     """Reset all migrations."""
+    django_setup()
     migration_files = pathlib.Path("ddionrails").glob("*/migrations/0*.py")
     for migration_file in migration_files:
         migration_file.unlink()
     management.call_command("makemigrations")
 
 
-@task
-@needs("django_setup")
-def erd():
+def database_graph():
     """Create an entity relationship diagram"""
+    django_setup()
     management.call_command(
         "graph_models", all_applications=True, outputfile="local/erd.png"
     )
 
 
-@task
-@needs("django_setup")
 def migrate():
     """Make migrations and run migrate."""
+    django_setup()
     management.call_command("makemigrations")
     management.call_command("migrate")
 
 
-@task
-@needs("django_setup")
-@consume_args
-def test(args):
+def unit_test(custom_arguments):
     """Test the project without functional tests"""
-    sh(
-        f"DJANGO_SETTINGS_MODULE=config.settings.testing pytest -rf -m 'not functional' {' '.join(args)}"
-    )
+    django_setup()
+    os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.testing"
+    main(["-rf", "-m", "not functional", *custom_arguments])
 
 
-@task
-@needs("django_setup")
-def functional_test():
+def integration_test():
     """Test the project with functional tests"""
-    sh("DJANGO_SETTINGS_MODULE=config.settings.testing pytest -rf -m functional")
+    django_setup()
+    os.environ["DJANGO_SETTINGS_MODULE"] = "config.settings.testing"
+    main(["-rf", "-m", "functional"])
+
+
+if __name__ == "__main__":
+    parse_args()

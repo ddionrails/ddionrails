@@ -50,7 +50,6 @@ known_third_party= [
     "import_export",
     "markdown",
     "model_utils",
-    "paver",
     "pytest",
     "tablib",
 ]
@@ -155,7 +154,6 @@ elasticsearch = ">=8.*"
 markdown = "*"
 python-frontmatter = "*"
 gitpython = "<3.1.44"
-paver = "*"
 requests = ">=2.32.1"
 urllib3 = ">=2.2.2"
 
