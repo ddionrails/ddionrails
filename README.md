@@ -1,4 +1,4 @@
-# DDI on Rails
+# Paneldata
 
 [![Python version][python-badge]](https://www.python.org/downloads/release/python-3131/)
 [![Django version][django-badge]](https://docs.djangoproject.com/en/5.1/releases/5.1.4/)
@@ -9,19 +9,11 @@
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0af735a0e3664fdb85ea6c92c99fe25f)](https://www.codacy.com/gh/ddionrails/ddionrails/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ddionrails/ddionrails&amp;utm_campaign=Badge_Grade)
 
-The data portal DDI on Rails accompanies researchers throughout the entire
-course of their research projects from conception to publication/citation.
-
-The system offers researchers the possibility to explore the data, to compile
-personalized datasets, and to publish results on the publication database.
-
-In contrast to similar products, DDI on Rails is study-independent and
-open-source, is able to document data with multiple versions/distributions and
-the specific characteristics of a longitudinal study, and is easy to use.
+Paneldata is a server solution make panel study meta data more accessible.
 
 ## Table of contents
 
-- [DDI on Rails](#ddi-on-rails)
+- [Paneldata](#paneldata)
   - [Table of contents](#table-of-contents)
   - [Contributions](#contributions)
   - [Getting Started](#getting-started)
@@ -69,22 +61,7 @@ git clone https://github.com/ddionrails/ddionrails.git
 cd ddionrails/
 ```
 
-If you want to save yourself some typing you can create a symbolic link from
-docker-compose.override.yml
-
-```bash
-ln -s  docker-compose-remote-dev.yml docker-compose.override.yml
-```
-
-Now you can start your services with
-
-```bash
-docker-compose up -d
-```
-
-docker-compose implicitly uses the `docker-compose.override.yml` in addition to
-the `docker-compose.yml` if it is present.
-Without the symbolic link you would need to specify all docker-compose files:
+To start up a default development setup use the base compose file together with the docker-compose-remote-dev.yml
 
 ```bash
 docker-compose -f "docker-compose.yml" -f "docker-compose-remote-dev.yml" up -d
