@@ -1,3 +1,10 @@
+/** Notice:
+ *  In this module the window.fetch function is manipulated.
+ *  If something breaks, this might be the cause.
+ *  This is used to manipulate the boost for Variable-search-documents that
+ *  belong to the period "multiple", i.e. are long variables.
+ *  There currently seem to be no direct way to do that in search-ui.
+ */
 import React from "react";
 import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 
@@ -310,5 +317,34 @@ function App() {
     </>
   );
 }
+
+const originalFetch = window.fetch;
+
+window.fetch = async (
+  url: string,
+  options?: RequestInit,
+): Promise<Response> => {
+  if (url !== "/elastic/variables/_search") {
+    return originalFetch(url, options);
+  }
+  if (!options?.body) {
+    return originalFetch(url, options);
+  }
+
+  if (typeof options.body === "string") {
+    const body = JSON.parse(options.body);
+    if (Array.isArray(body?.query?.bool?.should)) {
+      body.query.bool.should.push({
+        multi_match: {
+          query: "multiple",
+          fields: ["period.label^15"],
+        },
+      });
+    }
+    options.body = JSON.stringify(body);
+  }
+
+  return originalFetch(url, options);
+};
 
 export default App;

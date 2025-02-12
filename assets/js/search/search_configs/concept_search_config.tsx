@@ -20,7 +20,7 @@ facets.set("de", () => {
 });
 
 const connector = new ElasticsearchAPIConnector({
-  host: "/elastic/",
+  host: "/elastic",
   index: "concepts",
 });
 

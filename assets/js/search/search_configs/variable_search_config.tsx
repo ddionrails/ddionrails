@@ -1,9 +1,12 @@
 import ElasticsearchAPIConnector from "@elastic/search-ui-elasticsearch-connector";
-import {facetConfig, genericFacet, studyFacet} from "../search_components/facets";
-import {facetFactoryMapper} from "../factory_mappers";
-import {LanguageCode} from "../language_state";
-import {sortBy} from "./sort_by";
-
+import {
+  facetConfig,
+  genericFacet,
+  studyFacet,
+} from "../search_components/facets";
+import { facetFactoryMapper } from "../factory_mappers";
+import { LanguageCode } from "../language_state";
+import { sortBy } from "./sort_by";
 
 const sorting = sortBy;
 
@@ -15,13 +18,18 @@ function facetFactory(language: LanguageCode) {
   return (
     <>
       {studyFacet(language)}
-      {genericFacet(language, "analysis_unit", ["Analysis Unit", "Analyseeinheit"], "2")}
+      {genericFacet(
+        language,
+        "analysis_unit",
+        ["Analysis Unit", "Analyseeinheit"],
+        "2",
+      )}
       {genericFacet(language, "period", ["Period", "Zeitraum"], "3")}
       {genericFacet(
         language,
         "conceptual_dataset",
         ["Conceptual Dataset", "Konzeptioneller Datensatz"],
-        "4"
+        "4",
       )}
     </>
   );
@@ -29,7 +37,7 @@ function facetFactory(language: LanguageCode) {
 const facets = facetFactoryMapper(facetFactory);
 
 const connector = new ElasticsearchAPIConnector({
-  host: "/elastic/",
+  host: "/elastic",
   index: "variables",
 });
 
@@ -43,16 +51,35 @@ function config(language: LanguageCode) {
   ]);
   return {
     searchQuery: {
+     // bool: {
+     //   should: [
+     //     {
+     //       term: {
+     //         period: {
+     //           value: "2012",
+     //           boost: 19.0,
+     //         },
+     //       },
+     //     },
+     //     {
+     //       match_all: {},
+     //     },
+     //   ],
+     // },
+      boosting: {
+      positive: {
+        term: {
+          period: 2012
+        }
+      }},
       search_fields: {
-        "name": {
+        name: {
           weight: 4,
         },
-        "label": {
-
+        label: {
           weight: 3,
         },
-        "label_de": {
-
+        label_de: {
           weight: 3,
         },
         "categories.labels": {
@@ -63,30 +90,30 @@ function config(language: LanguageCode) {
         },
       },
       result_fields: {
-        "name": {
+        name: {
           snippet: {},
         },
-        "label": {
+        label: {
           snippet: {
             size: 200,
             fallback: true,
           },
         },
-        "label_de": {
+        label_de: {
           snippet: {
             size: 200,
             fallback: true,
           },
         },
-        "study": {
+        study: {
           snippet: {
             fallback: true,
           },
         },
-        "dataset": {
+        dataset: {
           snippet: {},
         },
-        "period": {
+        period: {
           snippet: {},
         },
         "categories.labels": {
@@ -135,6 +162,6 @@ function config(language: LanguageCode) {
   };
 }
 
-export {config as variableConfig};
-export {facets as variableFacets};
-export {sorting as variableSorting};
+export { config as variableConfig };
+export { facets as variableFacets };
+export { sorting as variableSorting };
