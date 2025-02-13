@@ -9,7 +9,7 @@
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/0af735a0e3664fdb85ea6c92c99fe25f)](https://www.codacy.com/gh/ddionrails/ddionrails/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ddionrails/ddionrails&amp;utm_campaign=Badge_Grade)
 
-Paneldata is a server solution make panel study meta data more accessible.
+Paneldata is a server solution to make panel study meta data more accessible.
 
 ## Table of contents
 
@@ -36,18 +36,15 @@ if you want to contribute to this project.
 
 ### Prerequisites
 
-Follow the installation instructions for Docker and Docker-Compose:
+Follow the installation instructions for the Docker Engine:
 
-- <https://docs.docker.com/install/>
-- <https://docs.docker.com/compose/install/>
+- <https://docs.docker.com/engine/install/>
 
 To verify the installation was successful, you can type:
 
 ```bash
 $ docker --version
-Docker version 18.09.5, ...
-$ docker-compose --version
-docker-compose version 1.24.0, ...
+Docker version 27.5.1, build 9f9e405
 ```
 
 ### Installing
@@ -64,7 +61,7 @@ cd ddionrails/
 To start up a default development setup use the base compose file together with the docker-compose-remote-dev.yml
 
 ```bash
-docker-compose -f "docker-compose.yml" -f "docker-compose-remote-dev.yml" up -d
+docker compose -f "docker-compose.yml" -f "docker-compose-remote-dev.yml" up -d
 ```
 
 Using Visual Studio Code will make the process even simpler.
@@ -85,7 +82,7 @@ way into production.
 
 #### Production Environment
 
-**Before** starting the services via docker-compose:
+**Before** starting the services via docker compose:
 
 - \[Optional\] Benchmark your docker setup with
   [docker-bench-security](https://github.com/docker/docker-bench-security).
@@ -103,10 +100,16 @@ way into production.
     - DJANGO_DEBUG should always be False for Production
     - DJANGO_SECRET_KEY should be long and random
     - ALLOWED_HOSTS should match your setup
+    - DEFAULT_FROM_EMAIL is the address password reset emails will be send from.
+    - FEEDBACK_TO_EMAILS is a list of Email adresses where feedback is supposed
+      to be send to. List entries are separated by , and each entry contains a purpose
+      and an email address separated by :. There are currently two 
+      feedback form purposes: search and statistics.
 
-- Uncomment the environment blocks in the
-  docker-compose file to load the environment files.
-- Or create a docker-compose.override.yml file that sets
+
+- Remove the comment in the environment blocks in the
+  docker compose file to load the environment files.
+  Or create a docker-compose.override.yml file that sets
   the environment files.
 - Customize the docker/nginx/nginx.example.conf and rename it to nginx.conf.
 
@@ -127,13 +130,13 @@ containing a couple of .csv and .json files (e.g. <https://github.com/ddionrails
 You need to add your study to the system by invoking the `add` command:
 
 ```bash
-docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
+docker compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
 ```
 
 You clone or pull the repository with `update`:
 
 ```bash
-docker-compose exec web python manage.py update soep-test
+docker compose exec web python manage.py update soep-test
 ```
 
 Your study's metadata gets inserted into the database by adding import jobs onto
@@ -143,8 +146,8 @@ metadata into the Elasticsearch indices.
 Summary:
 
 ```bash
-docker-compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
-docker-compose exec web python manage.py update
+docker compose exec web python manage.py add soep-test github.com/ddionrails/testsuite
+docker compose exec web python manage.py update
 ```
 
 ## Running the tests
@@ -154,8 +157,8 @@ This does not run functional tests with Selenium.
 
 ```bash
 cd ddionrails/
-docker-compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
-docker-compose exec web paver test
+docker compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
+docker compose exec web paver test
 ```
 
 ## Versioning
