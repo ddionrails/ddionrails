@@ -2,7 +2,10 @@ version: "2.4"
 
 services:
   web:
-    image: paneldata/ddionrails:latest
+    image: ddionrails:latest
+    build:
+      context: https://github.com/ddionrails/ddionrails.git#master:.
+      dockerfile: docker/ddionrails/Dockerfile
     command:
       [
         "gunicorn",
