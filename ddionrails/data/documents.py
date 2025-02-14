@@ -76,6 +76,10 @@ class VariableDocument(GenericDataDocument):
             categories.get("labels", []),
             categories.get("labels_de", []),
         ):
+            if value == ".":
+                continue
+            if isinstance(value, str) and not value.isnumeric():
+                continue
             if value is not None and int(value) < 0:
                 continue
             cleaned_label = ""
