@@ -112,7 +112,10 @@ services:
       - ./docker/environments/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 
   mail:
-    image: hansendz/mail:latest
+    image: mail:latest
+    build:
+      context: https://github.com/ddionrails/ddionrails.git#master:.
+      dockerfile: docker/postfix/Dockerfile
     networks:
       - ddi_net
     pids_limit: 30
