@@ -157,7 +157,7 @@ services:
       - no-new-privileges
 
   statistics-server:
-    image: paneldata/statistics-server:dash
+    image: statistics-server:dash
     build: https://github.com/ddionrails/statistics-server.git#main:.
     depends_on:
       - web
