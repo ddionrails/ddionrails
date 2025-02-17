@@ -158,6 +158,11 @@ docker compose -f "docker-compose.yml" -f "docker-compose-dev.yml" up -d
 docker compose exec web paver test
 ```
 
+## Troobleshooting
+
+- userns-remap can apparently cause problems while building images using buildkit.
+  Try setting `DOCKER_BUILDKIT=0` if you get permission errors while building.
+
 ## Versioning
 
 For the versions available, either look at the
