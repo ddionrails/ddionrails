@@ -7,7 +7,7 @@
 ![System-Tests](https://github.com/ddionrails/ddionrails/actions/workflows/system-tests.yml/badge.svg)
 [![Issues][issues-badge]](https://github.com/ddionrails/ddionrails/issues/)
 [![Codecov][codecov-badge]](https://codecov.io/gh/ddionrails/ddionrails)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0af735a0e3664fdb85ea6c92c99fe25f)](https://www.codacy.com/gh/ddionrails/ddionrails/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ddionrails/ddionrails&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/0af735a0e3664fdb85ea6c92c99fe25f)](https://www.codacy.com/gh/ddionrails/ddionrails/dashboard?utm_source=github.com&utm_medium=referral&utm_content=ddionrails/ddionrails&utm_campaign=Badge_Grade)
 
 Paneldata is a server solution to make panel study meta data more accessible.
 
@@ -25,7 +25,6 @@ Paneldata is a server solution to make panel study meta data more accessible.
   - [Running the tests](#running-the-tests)
   - [Versioning](#versioning)
   - [GNU AGPL-3.0](#gnu-agpl-30)
-
 
 ## Contributions
 
@@ -87,7 +86,7 @@ way into production.
 - \[Optional\] Benchmark your docker setup with
   [docker-bench-security](https://github.com/docker/docker-bench-security).
 
-  - Some of the changes needed to secure your docker setup might lead 
+  - Some of the changes needed to secure your docker setup might lead
     to loss of containers and volumes. It would be better to make the
     changes before creating any containers on the system.
 
@@ -97,15 +96,13 @@ way into production.
   - database.env should contain secure password.
   - django.env should be set up for production or staging
 
-    - DJANGO_DEBUG should always be False for Production
-    - DJANGO_SECRET_KEY should be long and random
-    - ALLOWED_HOSTS should match your setup
-    - DEFAULT_FROM_EMAIL is the address password reset emails will be send from.
-    - FEEDBACK_TO_EMAILS is a list of Email adresses where feedback is supposed
-      to be send to. List entries are separated by , and each entry contains a purpose
-      and an email address separated by :. There are currently two 
-      feedback form purposes: search and statistics.
-
+| Variable           | Description                                                                       |
+| ------------------ | ----------------------------------------------------------------------------------|
+| DJANGO_DEBUG       | Toggles debug tools. Should always be `False` for Production                      |
+| DJANGO_SECRET_KEY  | For securely signing data. Should be long and random. Must be kept secret         |
+| ALLOWED_HOSTS      | Host names through which the server can be addressed. Should match your setup.    |
+| DEFAULT_FROM_EMAIL | The address password reset emails and other aurtomated messages will be send from |
+| FEEDBACK_TO_EMAILS | is a list of Email adresses where feedback is supposed to be send to. List entries are separated by , and each entry contains a purpose and an email address separated by :. There are currently two feedback form purposes: search and statistics. |
 
 - Remove the comment in the environment blocks in the
   docker compose file to load the environment files.
