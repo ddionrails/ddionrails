@@ -146,3 +146,5 @@ webpack-stats.json
 **/docker-compose.override.[yY][aA][mM][lL]
 
 coverage
+
+studies.json
