@@ -103,6 +103,8 @@ way into production.
 | ALLOWED_HOSTS      | Host names through which the server can be addressed. Should match your setup.    |
 | DEFAULT_FROM_EMAIL | The address password reset emails and other aurtomated messages will be send from |
 | FEEDBACK_TO_EMAILS | is a list of Email adresses where feedback is supposed to be send to. List entries are separated by , and each entry contains a purpose and an email address separated by :. There are currently two feedback form purposes: search and statistics. |
+| STUDY_INIT_FILE | Is the path or URL to a json file that contains a list of study initialization data. See the example file from the env example for the structure. |
+| HOME_BACKGROUND_IMAGE | The URL for a png file that will be used as a background image for the landing page. |
 
 - Remove the comment in the environment blocks in the
   docker compose file to load the environment files.
