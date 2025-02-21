@@ -6,12 +6,13 @@ from datetime import datetime
 from typing import Optional
 
 from babel.dates import format_date
+from django.conf import settings
 from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.generic.base import TemplateView
 from markdown import markdown
 
-from ddionrails.base.models import News
+from ddionrails.base.models import News 
 
 
 # exception is a required parameter
@@ -53,6 +54,7 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["news"] = self.news
+        context["background_image"] = bool(settings.HOME_BACKGROUND_IMAGE)
         return context
 
     @cached_property

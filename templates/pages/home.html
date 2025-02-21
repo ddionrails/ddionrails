@@ -13,7 +13,10 @@
             {{ news.de | safe }}
         </div>
     {% endif %}
-    <img class="img-fluid mx-auto" src="{% static 'background.png' %}">
+
+    {% if background_image %}
+	<img class="img-fluid mx-auto" src="{% static 'background.png' %}">
+    {% endif %}
 
     <div class="list-group">
         {% for study in studies %}

@@ -3,9 +3,17 @@
 
 """ Test cases for ddionrails.imports.manager """
 
-import pytest
+from json import dump
+from pathlib import Path
+from tempfile import NamedTemporaryFile
+from unittest.mock import patch
 
+import pytest
+from django.test import TestCase
+
+from ddionrails.studies.models import Study
 from ddionrails.imports.manager import Repository
+from ddionrails.imports.manager import _initialize_studies, _import_home_background
 
 pytestmark = [pytest.mark.imports]
 
@@ -34,6 +42,27 @@ def mocked_exists(mocker):
 @pytest.fixture
 def mocked_list_all_files(mocker):
     return mocker.patch.object(Repository, "list_all_files")
+
+
+class TestSystemImport(TestCase):
+
+    def test__import_home_background(self):
+        with patch("ddionrails.imports.manager.urlretrieve") as request_mock:
+            with patch("ddionrails.imports.manager.settings") as settings_mock:
+                settings_mock.HOME_BACKGROUND_IMAGE = "http://test.com"
+                settings_mock.STATIC_ROOT = "/some/path"
+                _import_home_background()
+            request_mock.assert_called_once_with("http://test.com", Path("/some/path/background.png"))
+
+    def test__initialize_studies(self):
+        study_init_content = [{"name": "test_study", "repo": "https://test.com"}]
+        with NamedTemporaryFile() as tmp_file:
+            with patch("ddionrails.imports.manager.settings") as settings_mock:
+                with open(tmp_file.name, "w", encoding="utf-8") as file:
+                    dump(study_init_content, file)
+                settings_mock.STUDY_INIT_FILE = tmp_file.name
+                _initialize_studies()
+                Study.objects.get(name="test_study")
 
 
 class TestRepository:

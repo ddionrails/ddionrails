@@ -28,32 +28,6 @@ class Singleton(models.Model):
         )
         self.__class__.objects.exclude(id=self.id).delete()  # type:ignore
 
-
-class System(Singleton):
-    """Information about the git repository containing initialization information."""
-
-    class Meta:
-        abstract = False
-
-    name = settings.SYSTEM_NAME
-    current_commit = models.CharField(max_length=255, blank=True)
-
-    @staticmethod
-    def repo_url() -> str:
-        """Returns the system's repo url from the settings"""
-        return settings.SYSTEM_REPO_URL
-
-    @classmethod
-    def get(cls) -> System:
-        """Returns a single system instance"""
-        fallback_system: System
-        system = System.objects.first()
-        fallback_system = System()
-        if system is None:
-            fallback_system.save()
-        return system or fallback_system
-
-
 class News(Singleton):
     """A single page update text with its creation date attached."""
 

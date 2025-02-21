@@ -24,6 +24,9 @@ APPS_DIR = BASE_DIR.joinpath("ddionrails")
 BACKUP_DIR = Path("/var/lib/ddionrails/backup/")
 os.makedirs(BACKUP_DIR, exist_ok=True)
 
+HOME_BACKGROUND_IMAGE = os.getenv("HOME_BACKGROUND_IMAGE", "")
+STUDY_INIT_FILE = os.getenv("STUDY_INIT_FILE", "")
+
 
 if os.getenv("DJANGO_DEBUG") == "True":
     DEBUG = True

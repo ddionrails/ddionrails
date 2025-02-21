@@ -5,8 +5,7 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from ddionrails.base.models import System
-from ddionrails.imports.manager import Repository, system_import_manager
+from ddionrails.imports.manager import system_import
 
 
 class Command(BaseCommand):
@@ -18,12 +17,9 @@ class Command(BaseCommand):
     """
 
     def handle(self, *args, **options):
-        system = System.get()
-        repo = Repository(system)
-        repo.pull_or_clone()
-        system_import_manager(system)
+        system_import()
         self.stdout.write(
             self.style.SUCCESS(
-                f"System settings successfully imported from {settings.SYSTEM_REPO_URL}."
+                f"System settings successfully imported."
             )
         )

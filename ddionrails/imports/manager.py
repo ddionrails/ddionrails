@@ -3,21 +3,22 @@
 """ Manager classes for imports in ddionrails project """
 
 import csv
+import json
 import logging
-import shutil
 import sys
 from collections import OrderedDict
 from inspect import isfunction
+from os import remove
 from pathlib import Path
 from types import FunctionType
 from typing import Any, List, Tuple
+from urllib.request import urlopen, urlretrieve
 
 import django_rq
 import git
 from django.conf import settings
 from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
-from ddionrails.base.models import System
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     PeriodImport,
@@ -98,12 +99,6 @@ class Repository:
 
     def list_all_files(self) -> List:
         """Returns a list of all files in the `import_path`."""
-        if isinstance(self.study_or_system, System):
-            return [
-                settings.IMPORT_REPO_PATH.joinpath(
-                    "system", settings.IMPORT_SUB_DIRECTORY
-                )
-            ]
         return [
             file
             for file in sorted(self.study_or_system.import_path().glob("**/*"))
@@ -118,20 +113,56 @@ class Repository:
         return self.list_changed_files()
 
 
-def system_import_manager(system):
-    """Import the files from the system repository."""
+def _initialize_studies():
+    study_init_file: str = settings.STUDY_INIT_FILE
 
-    repo = Repository(system)
-    base_directory = settings.IMPORT_REPO_PATH.joinpath("system").joinpath(
-        settings.IMPORT_SUB_DIRECTORY
-    )
-    studies_file = base_directory.joinpath("studies.csv")
-    StudyImport.run_import(studies_file, system)
+    data = []
+
+    if study_init_file.startswith("http"):
+        webcontent = urlopen(study_init_file)
+        data = json.loads(webcontent.read())
+    else:
+        file_path = Path(study_init_file)
+        if file_path.exists() and file_path.exists():
+            with open(file_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
+    for study in data:
+        if "name" not in study or "repo" not in study:
+            continue
+        study_object, _ = Study.objects.get_or_create(name=study["name"])
+        if not study_object.label:
+            study_object.label = study.get("label", study["name"])
+
+        study_object.repo = study["repo"]
+        study_object.save()
+
+def _import_home_background():
+
+    static_path = Path("./static")
+    if getattr(settings, "STATIC_ROOT", ""):
+        static_path =  Path(settings.STATIC_ROOT)
+    elif getattr(settings, "STATICFILES_DIRS", ""):
+        static_path = settings.BASE_DIR.joinpath("static")
+
+
+    image_path = static_path.joinpath("background.png")
+    if image_path.exists():
+        remove(image_path)
 
     # Copy background image to static/
-    image_file = base_directory.joinpath("background.png")
-    shutil.copy(image_file, "static/")
-    repo.set_commit_id()
+    if settings.HOME_BACKGROUND_IMAGE:
+        urlretrieve(settings.HOME_BACKGROUND_IMAGE, image_path)
+
+
+def system_import():
+    """Import the files from the system repository."""
+
+    _initialize_studies()
+    _import_home_background()
+
+
+
+
 
 
 class StudyImportManager:

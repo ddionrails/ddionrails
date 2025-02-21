@@ -8,6 +8,7 @@ from ..mixins import SoepMixin
 from .script_config import ScriptConfig
 from .soep_config import SoepConfig
 
+
 class SoepSpss(SoepConfig, ScriptConfig, SoepMixin):
     """ Script Generator for SPSS scripts """
 
