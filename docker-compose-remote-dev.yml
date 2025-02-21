@@ -27,11 +27,14 @@ services:
       - docker/environments/django.env.example
       - docker/environments/database.env.example
       - docker/environments/elasticsearch.env.example
+    environment:
+      - DISPLAY=${DISPLAY}
     pids_limit: -1
     volumes:
       - ./:/usr/src/app/
       - media:/var/django/media
       - ~/.ssh/docker-dev/:/root/.ssh
+      - /tmp/.X11-unix:/tmp/.X11-unix
 
   elasticsearch:
     env_file:
