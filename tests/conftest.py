@@ -25,7 +25,6 @@ from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.data.documents import VariableDocument
 from ddionrails.instruments.documents import QuestionDocument
 from ddionrails.publications.documents import PublicationDocument
-from tests.base.factories import SystemFactory
 from tests.concepts.factories import (
     AnalysisUnitFactory,
     ConceptFactory,
@@ -249,12 +248,6 @@ def _study(request: FixtureRequest, db: pytest.fixture):
     if request.instance:
         request.instance.study = _factory
     return _factory
-
-
-@pytest.fixture
-def system(db):
-    """A system model in the database"""
-    return SystemFactory()
 
 
 @pytest.fixture
