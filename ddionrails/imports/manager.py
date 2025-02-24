@@ -11,13 +11,11 @@ from inspect import isfunction
 from os import remove
 from pathlib import Path
 from types import FunctionType
-from typing import Any, List, Tuple
+from typing import Any, Tuple
 from urllib.request import urlopen, urlretrieve
 
 import django_rq
-import git
 from django.conf import settings
-from git.exc import InvalidGitRepositoryError, NoSuchPathError
 
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
@@ -34,6 +32,7 @@ from ddionrails.data.imports import (
     VariableImport,
     variables_images_import,
 )
+from ddionrails.imports.git_repos import clean_repo_url
 from ddionrails.instruments.imports import (
     concept_question_import,
     instrument_import,
@@ -42,75 +41,12 @@ from ddionrails.instruments.imports import (
     question_variable_import,
 )
 from ddionrails.publications.imports import AttachmentImport, PublicationImport
-from ddionrails.studies.imports import StudyDescriptionImport, StudyImport
+from ddionrails.studies.imports import StudyDescriptionImport
 from ddionrails.studies.models import Study
 from ddionrails.workspace.imports import script_metadata_import
 
 logging.config.fileConfig("logging.conf")
 LOGGER = logging.getLogger(__name__)
-
-
-class Repository:
-    """A helper class to handle git related activities"""
-
-    def __init__(self, study_or_system) -> None:
-        self.study_or_system = study_or_system
-        self.name = study_or_system.name
-        self.link = study_or_system.repo_url()
-        self.path = settings.IMPORT_REPO_PATH.joinpath(self.name)
-        try:
-            self.repo = git.Repo(self.path)
-        except (NoSuchPathError, InvalidGitRepositoryError):
-            self.repo = None
-
-    def set_branch(self, branch: str = settings.IMPORT_BRANCH) -> None:
-        """Checkout a branch"""
-        self.repo.git.checkout(branch)
-
-    def pull_or_clone(self) -> None:
-        """Clones or update the study repository."""
-        if self.path.exists() and self.repo is not None:
-            print(f'Pulling "{self.name}" from "{self.link}"')
-            self.repo.remotes.origin.pull()
-        else:
-            print(f'Cloning "{self.name}" from "{self.link}"')
-            self.repo = git.Repo.clone_from(
-                self.link, self.path, branch=settings.IMPORT_BRANCH, depth=1
-            )
-
-    def set_commit_id(self) -> None:
-        """Save the current commit hash in the database."""
-        self.study_or_system.current_commit = str(self.repo.head.commit)
-        self.study_or_system.save()
-
-    def is_import_required(self) -> bool:
-        """Check if current commit is still the newest or of new import is required."""
-        return self.study_or_system.current_commit != str(self.repo.head.commit)
-
-    def list_changed_files(self) -> List:
-        """Returns a list of changed files since the "current_commit" in the database."""
-        diff = self.repo.git.diff(
-            self.study_or_system.current_commit,
-            "--",
-            settings.IMPORT_SUB_DIRECTORY,
-            name_only=True,
-        )
-        return diff.split()
-
-    def list_all_files(self) -> List:
-        """Returns a list of all files in the `import_path`."""
-        return [
-            file
-            for file in sorted(self.study_or_system.import_path().glob("**/*"))
-            if file.is_file()
-        ]
-
-    def import_list(self, import_all: bool = False) -> List:
-        """Returns a list of files to be imported."""
-        if import_all:
-            return self.list_all_files()
-
-        return self.list_changed_files()
 
 
 def _initialize_studies():
@@ -119,7 +55,7 @@ def _initialize_studies():
     data = []
 
     if study_init_file.startswith("http"):
-        webcontent = urlopen(study_init_file)
+        webcontent = urlopen(study_init_file)  # nosec
         data = json.loads(webcontent.read())
     else:
         file_path = Path(study_init_file)
@@ -132,26 +68,27 @@ def _initialize_studies():
         study_object, _ = Study.objects.get_or_create(name=study["name"])
         if not study_object.label:
             study_object.label = study.get("label", study["name"])
+        study_object.pin_reference = study.get("ref", study_object.pin_reference)
 
-        study_object.repo = study["repo"]
+        study_object.repo = clean_repo_url(study["repo"])
         study_object.save()
+
 
 def _import_home_background():
 
     static_path = Path("./static")
     if getattr(settings, "STATIC_ROOT", ""):
-        static_path =  Path(settings.STATIC_ROOT)
+        static_path = Path(settings.STATIC_ROOT)
     elif getattr(settings, "STATICFILES_DIRS", ""):
         static_path = settings.BASE_DIR.joinpath("static")
-
 
     image_path = static_path.joinpath("background.png")
     if image_path.exists():
         remove(image_path)
 
     # Copy background image to static/
-    if settings.HOME_BACKGROUND_IMAGE:
-        urlretrieve(settings.HOME_BACKGROUND_IMAGE, image_path)
+    if str(settings.HOME_BACKGROUND_IMAGE).startswith("http"):
+        urlretrieve(settings.HOME_BACKGROUND_IMAGE, image_path)  # nosec
 
 
 def system_import():
@@ -161,10 +98,6 @@ def system_import():
     _import_home_background()
 
 
-
-
-
-
 class StudyImportManager:
     """Manage the import of all study resources."""
 
@@ -172,7 +105,6 @@ class StudyImportManager:
 
     def __init__(self, study: Study, redis: bool = True):
         self.study = study
-        self.repo = Repository(study)
         self.base_dir = study.import_path()
         self._concepts_fixed = False
         self.redis = redis
@@ -275,11 +207,6 @@ class StudyImportManager:
                 writer.writerow(concept_fields)
         self._concepts_fixed = True
         return None
-
-    def update_repo(self):
-        "Update metadata git repository."
-        self.repo.pull_or_clone()
-        self.repo.set_commit_id()
 
     def _execute(self, import_function: FunctionType, *args):
         """Queue or call an import function."""

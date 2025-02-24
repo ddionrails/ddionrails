@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,invalid-name
 
 """ Test cases for "update" management command for ddionrails project """
 
@@ -96,7 +96,7 @@ def test_update_single_study(study, mocker):
     with open(IMPORT_PATH.joinpath("variables.csv"), encoding="utf8") as variables_file:
         expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
     mocked_update_repo = mocker.patch(
-        "ddionrails.imports.manager.StudyImportManager.update_repo"
+        "ddionrails.imports.management.commands.update.set_up_repo"
     )
     manager = StudyImportManager(study, redis=False)
     update_single_study(study, False, (), "", manager=manager)
@@ -297,22 +297,21 @@ def test_instrument_import(study, period, analysis_unit):
     options = get_options(study.name)
     options["entity"] = "instuments.json"
 
-    with unittest.mock.patch("ddionrails.imports.manager.Repository"):
-        _, error = update(options)
-        TEST_CASE.assertIsNotNone(error)
+    _, error = update(options)
+    TEST_CASE.assertIsNotNone(error)
 
-        options["entity"] = "instruments"
-        success, error = update(options)
-        TEST_CASE.assertIsNone(error)
-        TEST_CASE.assertIsNotNone(success)
+    options["entity"] = "instruments"
+    success, error = update(options)
+    TEST_CASE.assertIsNone(error)
+    TEST_CASE.assertIsNotNone(success)
 
-        instrument = Instrument.objects.get(name="some-instrument")
-        TEST_CASE.assertEqual("some-type", instrument.type["en"])
-        TEST_CASE.assertEqual("ein-typ", instrument.type["de"])
-        TEST_CASE.assertEqual("1", instrument.type["position"])
-        TEST_CASE.assertEqual("some-mode", instrument.mode)
-        TEST_CASE.assertEqual(period, instrument.period)
-        TEST_CASE.assertEqual(analysis_unit, instrument.analysis_unit)
+    instrument = Instrument.objects.get(name="some-instrument")
+    TEST_CASE.assertEqual("some-type", instrument.type["en"])
+    TEST_CASE.assertEqual("ein-typ", instrument.type["de"])
+    TEST_CASE.assertEqual("1", instrument.type["position"])
+    TEST_CASE.assertEqual("some-mode", instrument.mode)
+    TEST_CASE.assertEqual(period, instrument.period)
+    TEST_CASE.assertEqual(analysis_unit, instrument.analysis_unit)
 
 
 @pytest.mark.parametrize("option", ("-f", "--filename"))

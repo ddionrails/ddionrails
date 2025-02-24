@@ -8,6 +8,7 @@ from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django_rq import enqueue
 
+from ddionrails.imports.git_repos import set_up_repo
 from ddionrails.imports.helpers import clear_caches
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
@@ -141,7 +142,7 @@ def update_single_study(  # pylint: disable=R0913
         study.delete()
         study.save()
     if not local:
-        manager.update_repo()
+        set_up_repo(study)
     if not entity:
         manager.import_all_entities()
     elif filename:

@@ -8,8 +8,6 @@ import unittest
 import pytest
 from django.core.management import call_command
 
-from ddionrails.imports.manager import Repository
-
 pytestmark = [pytest.mark.django_db]  # pylint: disable=invalid-name
 
 TEST_CASE = unittest.TestCase()

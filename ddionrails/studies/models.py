@@ -97,6 +97,12 @@ class Study(ModelMixin, TimeStampedModel):
         help_text="DOI of the study (DOI only, not the URL to the DOI)",
     )
     version = models.CharField(blank=True)
+    pin_reference = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        help_text=("Git reference to pin the study repository to."),
+    )
     repo = models.CharField(
         max_length=255,
         blank=True,
@@ -108,10 +114,7 @@ class Study(ModelMixin, TimeStampedModel):
     current_commit = models.CharField(
         max_length=255,
         blank=True,
-        help_text=(
-            "Commit hash of the last metadata import. "
-            "This field is automatically filled by DDI on Rails"
-        ),
+        help_text=("Commit hash of the last metadata import. "),
     )
     config = JSONField(
         default=dict, blank=True, null=True, help_text="Configuration of the study (JSON)"

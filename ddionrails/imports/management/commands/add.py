@@ -7,6 +7,7 @@ import sys
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
 
+from ddionrails.imports.git_repos import clean_repo_url
 from ddionrails.studies.models import Study
 
 
@@ -23,13 +24,7 @@ class Command(BaseCommand):
         study_name: str = options["study_name"]
         repo_url: str = options["repo_url"]
 
-        # Remove leading scheme part from url if present.
-        if repo_url.startswith("http"):
-            if repo_url.startswith("https://"):
-                repo_url = repo_url[8:]
-            else:
-                repo_url = repo_url[7:]
-
+        repo_url = clean_repo_url(repo_url)
         try:
             Study.objects.get(name=study_name)
             self.log_error(f'Study name "{study_name}" is already taken.')
