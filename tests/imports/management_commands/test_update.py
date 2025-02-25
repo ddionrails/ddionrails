@@ -7,6 +7,7 @@ import csv
 import logging
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from _pytest.capture import CaptureFixture
@@ -351,8 +352,10 @@ class TestUpdate(unittest.TestCase):
         """
         clean_import = True
         self.assertTrue(list(Dataset.objects.filter(id=self.dataset.id)))
-        manager = StudyImportManager(self.study, redis=False)
-        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
+        with patch("ddionrails.workspace.models.basket.settings.BACKUP_DIR", self.patch_argument_dict["return_value"]): 
+            manager = StudyImportManager(self.study, redis=False)
+            update_single_study(self.study, True, clean_import=clean_import, manager=manager)
+
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
 
@@ -363,7 +366,8 @@ class TestUpdate(unittest.TestCase):
         basket = BasketFactory(name="study_basket")
 
         manager = StudyImportManager(self.study, redis=False)
-        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
+        with patch("ddionrails.workspace.models.basket.settings.BACKUP_DIR", self.patch_argument_dict["return_value"]): 
+            update_single_study(self.study, True, clean_import=clean_import, manager=manager)
         variable = Variable.objects.get(name="some-variable")
         outdated_variable = Variable.objects.get(name="some-third-variable")
 
@@ -388,7 +392,8 @@ some-study,some-dataset,some-other-variable,some-concept,https://variable-other-
 
         clean_import = True
         manager = StudyImportManager(self.study, redis=False)
-        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
+        with patch("ddionrails.workspace.models.basket.settings.BACKUP_DIR", self.patch_argument_dict["return_value"]): 
+            update_single_study(self.study, True, clean_import=clean_import, manager=manager)
 
         with self.assertRaises(ObjectDoesNotExist):
             Variable.objects.get(name="some-third-variable")
