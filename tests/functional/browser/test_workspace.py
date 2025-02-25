@@ -3,15 +3,20 @@
 
 """ Functional test cases for browser interaction with the ddionrails project """
 
+from time import sleep
 from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.test.testcases import LiveServerTestCase
+from django.test.utils import override_settings
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.select import Select
+from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
 
@@ -21,6 +26,7 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
+@override_settings(DEBUG=True)
 @pytest.mark.usefixtures("browser", "user", "study")
 @pytest.mark.django_db
 class TestWorkspace(LiveServerTestCase):
@@ -38,16 +44,15 @@ class TestWorkspace(LiveServerTestCase):
     ) -> WebDriver:
         if go_to_login:
             browser.get(urljoin(self.live_server_url, "workspace/login/"))
+
+
         username_input = browser.find_element(By.ID, "id_username")
         username_input.send_keys(user)
         password_input = browser.find_element(By.ID, "id_password")
         password_input.send_keys(password)
         browser.find_element(
             By.CSS_SELECTOR,
-            (
-                "#main-container > div.row > div > div > "
-                "div.card-body > form > input.btn.btn-primary"
-            ),
+            ("input[value='Login']"),
         ).click()
         return browser
 
@@ -57,9 +62,16 @@ class TestWorkspace(LiveServerTestCase):
             self.browser, user="some-user", password="some-password"
         )
 
-        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My baskets']").click()
-        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My account']").click()
-        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='Logout']").click()
+        actions = ActionChains(self.browser)
+
+        element = self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My Baskets']")
+        actions.move_to_element(element).click().perform()
+
+        element = self.browser.find_element(By.CSS_SELECTOR, "a[data-en='My Account']")
+        actions.move_to_element(element).click().perform()
+
+        element = self.browser.find_element(By.CSS_SELECTOR, "button[data-en='Log Out']")
+        actions.move_to_element(element).click().perform()
 
     def test_login_redirects_to_same_page(self):  # pylint: disable=unused-argument
         """When a user logs in from any page, after logging in, the system should take
@@ -67,11 +79,19 @@ class TestWorkspace(LiveServerTestCase):
         """
         # The user starts at the contact page
 
+        actions = ActionChains(self.browser)
+
         contact_url = urljoin(self.live_server_url, "contact/")
         self.browser.get(contact_url)
-        self.browser.find_element(
+        element = self.browser.find_element(
             By.CSS_SELECTOR, "a[data-en='Log In / Register']"
-        ).click()
+        )
+        actions.move_to_element(element).click().perform()
+        self.browser.execute_script("arguments[0].click();", element)
+        WebDriverWait(self.browser, 3).until(
+            expected_conditions.presence_of_element_located((By.ID, "id_username"))
+        )
+
         self.browser = self._login(self.browser, go_to_login=False)
         # After logging in, the user should be redirected back to the contact page
         assert contact_url == self.browser.current_url
@@ -88,7 +108,15 @@ class TestWorkspace(LiveServerTestCase):
         authenticated_browser = self._login(self.browser)
         authenticated_browser.get(self.live_server_url)
         authenticated_browser.implicitly_wait(2)
-        authenticated_browser.find_element(By.CSS_SELECTOR, "a[data-en='Logout']").click()
+        authenticated_browser.find_element(
+            By.CSS_SELECTOR, "button[data-en='Log Out']"
+        ).click()
+
+
+        WebDriverWait(authenticated_browser, 3).until(
+            expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "a[data-en='Log In / Register']"))
+        )
+
         assert "sessionid" not in str(authenticated_browser.get_cookies())
         with pytest.raises(NoSuchElementException):
             authenticated_browser.find_element(
