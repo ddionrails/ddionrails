@@ -92,7 +92,7 @@
                     <li class="nav-item">
                         <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}
-                                <button class="btn" type="submit">Log Out</button>
+                                <button data-en="Log Out" data-de="Ausloggen" class="btn" type="submit"></button>
                         </form>
                     </li>
                 {% else %}
