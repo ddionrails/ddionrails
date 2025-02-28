@@ -2,9 +2,9 @@
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 from typing import Any
+from unittest.mock import patch
 from urllib.parse import urljoin
 
-from django.http.response import HttpResponse
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -17,6 +17,7 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
+from ddionrails.concepts.models import Concept
 from ddionrails.studies.models import Study
 
 pytestmark = [  # pylint: disable=invalid-name
@@ -24,7 +25,6 @@ pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.search,
     pytest.mark.django_db,
 ]
-
 
 
 @override_settings(DEBUG=True)
@@ -66,19 +66,28 @@ class TestWorkspace(StaticLiveServerTestCase):
             )
         )
 
-        paging_infor = self.browser.find_element(By.CSS_SELECTOR, "div.sui-paging-info").text
+        paging_infor = self.browser.find_element(
+            By.CSS_SELECTOR, "div.sui-paging-info"
+        ).text
         self.assertTrue(paging_infor.strip().startswith("Showing"))
 
     @property
     def concepts_search_url(self):
         return urljoin(self.live_server_url, "search/concepts")
 
+    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
     def test_concepts_search_is_accessible(self):
         self.browser.get(self.concepts_search_url)
+        result_header = WebDriverWait(self.browser, 2).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.sui-result__header")
+            )
+        )
+        self.assertIn("some-concept", result_header.text)
+        self.assertIn("Some Concept", result_header.text)
 
-        self.assertIn("Concepts", self.browser.page_source)
-        self.assertIn(self.concept.label, self.browser.page_source)
-
+    #TODO: Refactor so that all search tests use the new method
+    #TODO: Refactor so that separate search index is used
     def test_concepts_search_by_label_de(self):
         self.concept.name = "pzuf01"
         self.concept.label = "satisfaction with health"
