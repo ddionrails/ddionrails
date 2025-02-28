@@ -2,14 +2,20 @@
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
 from typing import Any
-from unittest import TestCase
 from urllib.parse import urljoin
 
+from django.http.response import HttpResponse
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test.utils import override_settings
 from django.utils.http import urlencode
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
+
+
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
 
@@ -20,6 +26,8 @@ pytestmark = [  # pylint: disable=invalid-name
 ]
 
 
+
+@override_settings(DEBUG=True)
 @pytest.mark.usefixtures(
     "browser",
     "user",
@@ -31,10 +39,9 @@ pytestmark = [  # pylint: disable=invalid-name
     "variable",
 )
 @pytest.mark.django_db
-class TestWorkspace(TestCase):
+class TestWorkspace(StaticLiveServerTestCase):
 
-    host = "nginx"
-    port = 80
+    host = "web"
     browser: WebDriver
     study: Study
     user: User
@@ -42,16 +49,25 @@ class TestWorkspace(TestCase):
     question: Any
     topic: Any
     variable: Any
-    live_server_url = "http://nginx/"
 
+    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
     def test_base_search(self):  # pylint: disable=unused-argument
-        base_search_url = urljoin(self.live_server_url, "search/")
+        base_search_url = urljoin(self.live_server_url, "search/all")
         self.browser.get(base_search_url)
-        heading = self.browser.find_element(By.CSS_SELECTOR, "#app > section > h1").text
-        expected = "Search"
-        self.assertEqual(expected, heading)
-        expected = "Search | paneldata.org"
-        self.assertEqual(expected, self.browser.title)
+
+        WebDriverWait(self.browser, 2).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, "input[placeholder='Search']")
+            )
+        )
+        WebDriverWait(self.browser, 2).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, "div.sui-paging-info")
+            )
+        )
+
+        paging_infor = self.browser.find_element(By.CSS_SELECTOR, "div.sui-paging-info").text
+        self.assertTrue(paging_infor.strip().startswith("Showing"))
 
     @property
     def concepts_search_url(self):
