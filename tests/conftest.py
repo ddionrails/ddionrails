@@ -333,6 +333,7 @@ def uuid_identifier():
     return uuid.UUID("12345678123456781234567812345678")
 
 
+# TODO: Fix these fixtures or replace them so they write into a test index
 @pytest.fixture
 def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-argument
     """Fixture that indexes a concept and cleans up after testing
@@ -341,7 +342,8 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
 
-    call_command("search_index", "--populate", "--no-parallel", force=True)
+    from django_elasticsearch_dsl.management.commands.search_index import Command
+    Command(["--populate", "--no-parallel"])
 
     concept.save()
     expected = 1

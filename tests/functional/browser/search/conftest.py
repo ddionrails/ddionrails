@@ -2,6 +2,7 @@
 import pytest
 
 
+# TODO: Fix these fixtures or replace them so they write into a test index
 @pytest.fixture
 def search_test_case(  # pylint: disable=too-many-arguments
     concepts_index,
