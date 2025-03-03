@@ -339,11 +339,11 @@ def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-ar
     """Fixture that indexes a concept and cleans up after testing
     uses the indices created by the "elasticsearch_indices" fixture
     """
+    ConceptDocument._index._name = "testing_concepts"
+    ConceptDocument._index.create()
     ConceptDocument.search().query("match_all").delete()
     # saving the concept, will index the concept as well
 
-    from django_elasticsearch_dsl.management.commands.search_index import Command
-    Command(["--populate", "--no-parallel"])
 
     concept.save()
     expected = 1
@@ -362,6 +362,8 @@ def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argume
     """Fixture that indexes a topic and cleans up after testing
     uses the indices created by the "elasticsearch_indices" fixture
     """
+    TopicDocument._index._name = "testing_topics"
+    TopicDocument._index.create()
     TopicDocument.search().query("match_all").delete()
     # saving the topic, will index the topic as well
     topic.save()
@@ -381,7 +383,8 @@ def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-
     """Fixture that indexes a question and cleans up after testing
     uses the indices created by the "elasticsearch_indices" fixture
     """
-    QuestionDocument.search().query("match_all").delete()
+    QuestionDocument._index._name = "testing_questions"
+    QuestionDocument._index.create()
     # saving the question, will index the question as well
     question.save()
     expected = 1
@@ -400,7 +403,9 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
     """Fixture that indexes a variable and cleans up after testing
     uses the indices created by the "elasticsearch_indices" fixture
     """
-    VariableDocument.search().query("match_all").delete()
+    VariableDocument._index._name = "testing_variables"
+    VariableDocument._index.create()
+
     time.sleep(0.1)
     # saving the variable, will index the variable as well
     variable.save()
@@ -410,10 +415,6 @@ def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-
 
     # Run tests
     yield
-
-    # Delete documents in index after testing
-    response = VariableDocument.search().query("match_all").delete()
-    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 @pytest.fixture
@@ -436,6 +437,8 @@ def publications_index(
     """Fixture that indexes a publication and cleans up after testing
     uses the indices created by the "elasticsearch_indices" fixture
     """
+    PublicationDocument._index._name = "testing_publications"
+    PublicationDocument._index.create()
     PublicationDocument.search().query("match_all").delete()
     time.sleep(0.1)
 

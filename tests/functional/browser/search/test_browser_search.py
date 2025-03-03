@@ -88,6 +88,7 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     #TODO: Refactor so that all search tests use the new method
     #TODO: Refactor so that separate search index is used
+    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
     def test_concepts_search_by_label_de(self):
         self.concept.name = "pzuf01"
         self.concept.label = "satisfaction with health"
@@ -98,6 +99,11 @@ class TestWorkspace(StaticLiveServerTestCase):
         url = f"{self.concepts_search_url}?{query}"
         self.browser.get(url)
         self.assertIn("Concepts", self.browser.page_source)
+        WebDriverWait(self.browser, 1).until(
+            expected_conditions.presence_of_element_located(
+                (By.CLASS_NAME, "sui-result__header")
+            )
+        )
         self.assertIn(self.concept.label, self.browser.page_source)
 
     @property

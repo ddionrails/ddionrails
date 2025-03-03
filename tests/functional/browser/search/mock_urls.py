@@ -1,3 +1,5 @@
+from re import sub
+
 from django.http.request import HttpRequest
 from django.urls import re_path
 from django.http import JsonResponse
@@ -9,6 +11,8 @@ import requests
 @csrf_exempt
 def elastic_request(request: HttpRequest):
     path = request.path
+    path = sub(r"elastic\/(.*?)\/", "elastic/testing_\\1/", path)
+
     target = f"http://nginx{path}"
     response = requests.post(target, headers=request.headers, data=request.body)
     return JsonResponse(response.json(), status=response.status_code)
