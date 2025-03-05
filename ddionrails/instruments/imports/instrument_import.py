@@ -5,8 +5,10 @@
 import json
 from collections import OrderedDict
 from csv import DictReader
+from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Dict, Set
+from types import MappingProxyType
+from typing import Dict, Literal, Set, TypedDict
 
 from ddionrails.concepts.models import AnalysisUnit, Period
 from ddionrails.imports import imports
@@ -22,10 +24,20 @@ required_fields = [
     "description_de",
 ]
 
-optional_fields = ["mode"]
-optional_nested_fields: Dict[str, Dict[str, str]] = {
-    "type": {"position": "type_position", "en": "type", "de": "type_de"}
-}
+optional_fields: tuple[Literal["mode"]] = ("mode",)
+
+
+def get_type_default():
+    return {"position": "1000000", "en": "", "de": ""}
+
+
+optional_nested_fields = MappingProxyType(
+    {
+        "type": MappingProxyType(
+            {"position": "type_position", "en": "type", "de": "type_de"}
+        )
+    }
+)
 
 
 def _get_instruments_with_questions(base_path: Path) -> Set[str]:
@@ -63,7 +75,7 @@ def instrument_import(file: Path, study: Study) -> None:
             for field in optional_fields:
                 setattr(instrument, field, row.get(field, ""))
             for field, field_mapper in optional_nested_fields.items():
-                value = {}
+                value = get_type_default()
                 for model_field, csv_field in field_mapper.items():
                     value[model_field] = row.get(csv_field, "")
                 setattr(instrument, field, value)
@@ -79,7 +91,7 @@ def instrument_import(file: Path, study: Study) -> None:
             instruments,
             required_fields
             + ["analysis_unit", "period", "has_questions"]
-            + optional_fields
+            + list(optional_fields)
             + list(optional_nested_fields.keys()),
         )
     if new_instruments:
