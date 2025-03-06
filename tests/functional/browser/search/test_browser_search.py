@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
+from types import MappingProxyType
 from typing import Any
-from unittest.mock import patch
 from urllib.parse import urljoin
+from unittest.mock import patch
 
+from django.core.management import call_command
+from elasticsearch import RequestError
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -17,7 +20,12 @@ from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
+from ddionrails.concepts.documents import ConceptDocument, TopicDocument
+from ddionrails.data.documents import VariableDocument
+from ddionrails.instruments.documents import QuestionDocument
+from ddionrails.publications.documents import PublicationDocument
 from ddionrails.concepts.models import Concept
+from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 
 pytestmark = [  # pylint: disable=invalid-name
@@ -26,13 +34,53 @@ pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.django_db,
 ]
 
+model_type_document_mapper = MappingProxyType(
+    {
+        "concepts": ConceptDocument,
+        "publications": PublicationDocument,
+        "questions": QuestionDocument,
+        "topics": TopicDocument,
+        "variables": VariableDocument,
+    }
+)
+
+
+@override_settings(ELASTICSEARCH_DSL_AUTOSYNC=True)
+def set_up_index(test_case, model_object, model_type_plural):
+    document = model_type_document_mapper[model_type_plural]
+
+    document._index._name = f"testing_{model_type_plural}"
+    if document._index.exists():
+        document._index.delete()
+    document._index.create()
+    model_object.save()
+    try:
+        call_command("search_index", "--create", "--no-parallel", force=True)
+    except RequestError:
+        pass
+
+    # Run tests
+
+    expected = 1
+    test_case.assertEqual(expected, document.search().count())
+    
+
+    # Run test
+    return document
+
+def tear_down_index(test_case, model_type_plural):
+    document = model_type_document_mapper[model_type_plural]
+    document._index._name = f"testing_{model_type_plural}"
+    response = document.search().query("match_all").delete()
+    test_case.assertGreater(response["deleted"], 0)
+
 
 @override_settings(DEBUG=True)
+@override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
 @pytest.mark.usefixtures(
     "browser",
     "user",
     "study",
-    "search_test_case",
     "concept",
     "question",
     "topic",
@@ -50,7 +98,29 @@ class TestWorkspace(StaticLiveServerTestCase):
     topic: Any
     variable: Any
 
-    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
+    def setUp(self) -> None:
+        self.publication = Publication.objects.create(
+            name="some-publication",
+            title="Some Publication",
+            study=self.study,
+            type="book",
+            year=2019,
+        )
+        set_up_index(self, self.concept, "concepts")
+        set_up_index(self, self.publication, "publications")
+        set_up_index(self, self.question, "questions")
+        set_up_index(self, self.topic, "topics")
+        set_up_index(self, self.variable, "variables")
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        tear_down_index(self, "concepts")
+        tear_down_index(self, "publications")
+        tear_down_index(self, "questions")
+        tear_down_index(self, "topics")
+        tear_down_index(self, "variables")
+        return super().tearDown()
+
     def test_base_search(self):  # pylint: disable=unused-argument
         base_search_url = urljoin(self.live_server_url, "search/all")
         self.browser.get(base_search_url)
@@ -75,36 +145,36 @@ class TestWorkspace(StaticLiveServerTestCase):
     def concepts_search_url(self):
         return urljoin(self.live_server_url, "search/concepts")
 
-    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
     def test_concepts_search_is_accessible(self):
         self.browser.get(self.concepts_search_url)
+
+        self.browser = _wait_for_results_to_load(self.browser, self.concepts_search_url)
         result_header = WebDriverWait(self.browser, 2).until(
             expected_conditions.presence_of_element_located(
                 (By.CSS_SELECTOR, "div.sui-result__header")
             )
         )
+
         self.assertIn("some-concept", result_header.text)
         self.assertIn("Some Concept", result_header.text)
 
-    #TODO: Refactor so that all search tests use the new method
-    #TODO: Refactor so that separate search index is used
-    @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
+    #TODO: look into possible collisions
     def test_concepts_search_by_label_de(self):
-        self.concept.name = "pzuf01"
-        self.concept.label = "satisfaction with health"
-        self.concept.label_de = "zufriedenheit gesundheit"
-        self.concept.save()
+        concept = Concept.objects.create()
+        concept.name = "pzuf01_test"
+        concept.label = "satisfaction with health test"
+        concept.label_de = "zufriedenheit gesundheit test"
+        concept.save()
+        set_up_index(self, concept, "concepts")
 
-        query = urlencode({"Search": f'"{self.concept.label_de}"'})
+        query = urlencode({"q": f'"{concept.label_de}"'})
         url = f"{self.concepts_search_url}?{query}"
-        self.browser.get(url)
-        self.assertIn("Concepts", self.browser.page_source)
-        WebDriverWait(self.browser, 1).until(
-            expected_conditions.presence_of_element_located(
-                (By.CLASS_NAME, "sui-result__header")
-            )
-        )
-        self.assertIn(self.concept.label, self.browser.page_source)
+        self.browser = _wait_for_results_to_load(self.browser, url)
+
+        concept_label = self.browser.find_element(
+            By.CLASS_NAME, "sui-result__header"
+        ).text
+        self.assertIn(concept.label, concept_label)
 
     @property
     def publications_search_url(self):
@@ -114,40 +184,62 @@ class TestWorkspace(StaticLiveServerTestCase):
         self.browser.get(self.publications_search_url)
         self.assertIn("Publications", self.browser.page_source)
 
-        title = "Some publication with Umlauts"
+        title = self.publication.title
 
-        self.browser.find_element(By.ID, "Search-input").send_keys(title)
+        self.browser = _wait_for_results_to_load(
+            self.browser, self.publications_search_url
+        )
+
         self.assertIn(title, self.browser.page_source)
 
     def test_publications_search_study_facet_url_parameters(self):
         """Test that /search/publications?Studies=["Some Study"] is accessible
         and displays the publication
         """
-        query = urlencode({"Studies": '["Some Study"]'})
+        query = urlencode(
+            {
+                "filters[0][field]": "study_name",
+                "filters[0][values][0]": "Some Study",
+                "filters[0][type]": "all",
+            }
+        )
         url = f"{self.publications_search_url}?{query}"
         self.browser.get(url)
+        self.browser = _wait_for_results_to_load(self.browser, url)
 
-        title = "Some publication with Umlauts"
+        title = self.publication.title
         self.assertIn(title, self.browser.page_source)
 
     def test_publications_search_type_facet_url_parameters(self):
         """Test that http://localhost/search/publications?Types=["book"] is accessible
         and displays the publication
         """
-        query = urlencode({"Types": '["book"]'})
+        query = urlencode(
+            {
+                "filters[0][field]": "type",
+                "filters[0][values][0]": "book",
+                "filters[0][type]": "all",
+            }
+        )
         url = f"{self.publications_search_url}?{query}"
-        self.browser.get(url)
-        title = "Some publication with Umlauts"
+        self.browser = _wait_for_results_to_load(self.browser, url)
+        title = self.publication.title
         self.assertIn(title, self.browser.page_source)
 
     def test_publications_search_year_facet_url_parameters(self):
         """Test that http://localhost/search/publications?Years=["2019"] is accessible
         and displays the publication
         """
-        query = urlencode({"Years": '["2019"]'})
+        query = urlencode(
+            {
+                "filters[0][field]": "year",
+                "filters[0][values][0]": "2019",
+                "filters[0][type]": "all",
+            }
+        )
         url = f"{self.publications_search_url}?{query}"
-        self.browser.get(url)
-        title = "Some publication with Umlauts"
+        self.browser = _wait_for_results_to_load(self.browser, url)
+        title = self.publication.title
         self.assertIn(title, self.browser.page_source)
 
     @property
@@ -155,7 +247,7 @@ class TestWorkspace(StaticLiveServerTestCase):
         return urljoin(self.live_server_url, "search/questions")
 
     def test_questions_search_is_accessible(self):
-        self.browser.get(self.questions_search_url)
+        self.browser = _wait_for_results_to_load(self.browser, self.questions_search_url)
         self.assertIn("Questions", self.browser.page_source)
         self.assertIn(self.question.label, self.browser.page_source)
 
@@ -164,7 +256,8 @@ class TestWorkspace(StaticLiveServerTestCase):
         return urljoin(self.live_server_url, "search/topics")
 
     def test_topic_search_is_accessible(self):
-        self.browser.get(self.topics_search_url)
+        self.browser = _wait_for_results_to_load(self.browser, self.topics_search_url)
+
         self.assertIn("Topics", self.browser.page_source)
         self.assertIn(self.topic.label, self.browser.page_source)
 
@@ -173,7 +266,7 @@ class TestWorkspace(StaticLiveServerTestCase):
         return urljoin(self.live_server_url, "search/variables")
 
     def test_variables_search_is_accessible(self):
-        self.browser.get(self.variables_search_url)
+        self.browser = _wait_for_results_to_load(self.browser, self.variables_search_url)
         self.assertIn("Variables", self.browser.page_source)
         self.assertIn(self.variable.label, self.browser.page_source)
 
@@ -184,10 +277,12 @@ class TestWorkspace(StaticLiveServerTestCase):
         variable.label_de = "Rauchen gegenwaertig"
         variable.save()
 
+        set_up_index(self, variable, "variables")
+
         # search with "ae"
-        query = urlencode({"Search": f'"{variable.label_de}"'})
+        query = urlencode({"q": f'"{variable.label_de}"'})
         url = f"{self.variables_search_url}?{query}"
-        self.browser.get(url)
+        self.browser = _wait_for_results_to_load(self.browser, url)
         self.assertIn("Variables", self.browser.page_source)
         self.assertIn(variable.label, self.browser.page_source)
 
@@ -198,3 +293,18 @@ class TestWorkspace(StaticLiveServerTestCase):
 
         self.assertIn("Variables", self.browser.page_source)
         self.assertIn(variable.label, self.browser.page_source)
+
+
+def _wait_for_results_to_load(_browser: WebDriver, url: str):
+    for _ in range(3):
+        _browser.get(url)
+        try:
+            _ = WebDriverWait(_browser, 1).until(
+                expected_conditions.presence_of_element_located(
+                    (By.CLASS_NAME, "sui-result__header")
+                )
+            )
+        except BaseException:
+            continue
+        break
+    return _browser
