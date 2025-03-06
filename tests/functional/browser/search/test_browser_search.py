@@ -4,29 +4,28 @@
 from types import MappingProxyType
 from typing import Any
 from urllib.parse import urljoin
-from unittest.mock import patch
 
-from django.core.management import call_command
-from elasticsearch import RequestError
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core.management import call_command
 from django.test.utils import override_settings
 from django.utils.http import urlencode
+from elasticsearch import RequestError
+from requests import get
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
-
-
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
+from ddionrails.concepts.models import Concept
 from ddionrails.data.documents import VariableDocument
 from ddionrails.instruments.documents import QuestionDocument
 from ddionrails.publications.documents import PublicationDocument
-from ddionrails.concepts.models import Concept
 from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
+from tests import status
 
 pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.functional,
@@ -120,6 +119,11 @@ class TestWorkspace(StaticLiveServerTestCase):
         tear_down_index(self, "topics")
         tear_down_index(self, "variables")
         return super().tearDown()
+
+    def test_search_url(self):
+        response = get(urljoin(self.live_server_url, "search/"), allow_redirects=False)
+
+        self.assertEqual(status.HTTP_302_FOUND, response.status_code)
 
     def test_base_search(self):  # pylint: disable=unused-argument
         base_search_url = urljoin(self.live_server_url, "search/all")
