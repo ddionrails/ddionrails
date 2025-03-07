@@ -7,9 +7,12 @@ from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
-from django.test.testcases import LiveServerTestCase
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.test import override_settings
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
 
@@ -21,7 +24,8 @@ pytestmark = [
 
 @pytest.mark.usefixtures("browser", "user", "study")
 @pytest.mark.django_db
-class TestWorkspace(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class TestWorkspace(StaticLiveServerTestCase):
     host = "web"
     browser: WebDriver
     study: Study
@@ -34,20 +38,32 @@ class TestWorkspace(LiveServerTestCase):
             By.CSS_SELECTOR, "a[data-en='Contact / feedback']"
         ).click()
         headers = self.browser.find_elements(By.TAG_NAME, "h1")
-        assert expected in (header.text for header in headers)
+        assert expected in [header.text for header in headers]
 
     def test_get_imprint_page_from_home(self):
         expected = "Imprint"
         self.browser.get(self.live_server_url)
-        self.browser.find_element(By.CSS_SELECTOR, "a[data-en='Imprint']").click()
-        headers = self.browser.find_elements(By.TAG_NAME, "h1")
-        assert expected in (header.text for header in headers)
+        element = self.browser.find_element(By.CSS_SELECTOR, f"a[data-en='{expected}']")
+        _hide_toolbar(self.browser)
+        _click_with_javascript(self.browser, element)
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, f"h1[data-en='{expected}']")
+            )
+        )
 
     def test_get_login_page_from_home(self):
         self.browser.get(self.live_server_url)
-        self.browser.find_element(
-            By.CSS_SELECTOR, "a[data-en='Log In / Register']"
-        ).click()
+
+        _hide_toolbar(self.browser)
+
+        element = WebDriverWait(self.browser, 10).until(
+            expected_conditions.element_to_be_clickable(
+                (By.CSS_SELECTOR, "a[data-en='Log In / Register']")
+            )
+        )
+        _click_with_javascript(self.browser, element)
+        element.click()
         assert "User login" in self.browser.page_source
 
     def test_get_back_home_from_other_page(self):
@@ -74,8 +90,8 @@ class TestWorkspace(LiveServerTestCase):
             By.CSS_SELECTOR,
             "#main-container > div.row > div > div > div.card-body > p:nth-child(4) > a",
         ).click()
-        headers = self.browser.find_elements(By.TAG_NAME, "h1")
-        assert expected in (header.text for header in headers)
+        header = self.browser.find_element(By.CSS_SELECTOR, "a[href='/admin/']").text
+        self.assertEqual(expected, header)
         assert "Forgotten your password?" in self.browser.page_source
 
     def test_study_link_from_home_page_list(self):
@@ -83,3 +99,14 @@ class TestWorkspace(LiveServerTestCase):
         self.browser.find_element(By.CSS_SELECTOR, "#study_list:nth-child(1)>b>a").click()
         assert self.study.get_absolute_url() in self.browser.current_url
         assert self.study.name in self.browser.page_source
+
+
+def _hide_toolbar(browser):
+    WebDriverWait(browser, 10).until(
+        expected_conditions.element_to_be_clickable(
+            (By.CSS_SELECTOR, "a[title='Hide toolbar']")
+        )
+    ).click()
+
+def _click_with_javascript(browser, element):
+    browser.execute_script("arguments[0].click();", element)
