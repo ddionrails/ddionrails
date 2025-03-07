@@ -4,14 +4,12 @@
 
 {% block content %}
 
-    <h1>Imprint</h1>
-    <p>Contact: {{ DEFAULT_FROM_EMAIL }}</p>
-    <h2>Organization and Address</h2>
-    <p>In German: <a href="https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html">https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html</a></p>
-    <p>In English: <a href="https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html">https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html</a></p>
+    <h1 data-en="Imprint" data-de="Impressum">Imprint</h1>
+    <p data-en="Contact: {{ DEFAULT_FROM_EMAIL }}" data-de="Kontakt: {{ DEFAULT_FROM_EMAIL }}"></p>
+    <h2 data-en="Organization and Address" data-de="Institut und Adresse"></h2>
+    <p data-en='<a href="https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html">https://www.diw.de/en/diw_01.c.623806.en/pages/legal_details.html</a>' data-de='<a href="https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html">https://www.diw.de/de/diw_01.c.623806.de/seiten/impressum.html</a>'></p>
 
-    <h2>Privacy policy at DIW Berlin</h2>
-    <p>In German: <a href="https://www.diw.de/datenschutz">https://www.diw.de/datenschutz</a></p>
-    <p>In English: <a href="https://www.diw.de/dataprotection">https://www.diw.de/dataprotection</a></p>
+    <h2 data-en="Privacy policy at DIW Berlin" data-de="Datenschutzrichtlinie des DIW"></h2>
+    <p data-en='<a href="https://www.diw.de/en/diw_01.c.605562.en/pages/privacy_policy_at_diw_berlin.html">https://www.diw.de/en/diw_01.c.605562.en/pages/privacy_policy_at_diw_berlin.html</a>' data-de='<a href="https://www.diw.de/de/diw_01.c.605562.de/seiten/datenschutzerklaerung_des_diw_berlin.html">https://www.diw.de/de/diw_01.c.605562.de/seiten/datenschutzerklaerung_des_diw_berlin.html</a>'></p>
 
 {% endblock content %} 
