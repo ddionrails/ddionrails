@@ -49,15 +49,20 @@ TEST_CASE = unittest.TestCase()
 
 
 @pytest.fixture
-def analysis_unit(db):
+def analysis_unit(db, request):
     """An analysis unit in the database"""
-    return AnalysisUnitFactory(
+    analysis_unit = AnalysisUnitFactory(
         name="some-analysis-unit",
         label="Some analysis unit",
         label_de="Some analysis unit",
         description="This is some analysis unit",
         description_de="This is some analysis unit",
     )
+
+    if request.instance:
+        request.instance.analysis_unit = analysis_unit
+
+    yield analysis_unit
 
 
 @pytest.fixture(name="basket")
@@ -103,9 +108,9 @@ def concept_question(db):  # pylint: disable=unused-argument,invalid-name
 
 
 @pytest.fixture
-def conceptual_dataset(study):
+def conceptual_dataset(study, request):
     """A conceptual dataset in the database, relates to study fixture"""
-    return ConceptualDatasetFactory(
+    conceptual_dataset = ConceptualDatasetFactory(
         name="some-conceptual-dataset",
         label="Some conceptual dataset",
         label_de="Some conceptual dataset",
@@ -113,6 +118,10 @@ def conceptual_dataset(study):
         description_de="This is some conceptualdataset",
         study=study,
     )
+    if request.instance:
+        request.instance.conceptual_dataset = conceptual_dataset
+
+    yield conceptual_dataset 
 
 
 @pytest.fixture(name="dataset")
@@ -125,26 +134,6 @@ def _dataset(request, db):
         request.instance.dataset = _factory
     return _factory
 
-
-@pytest.fixture(scope="session")
-def elasticsearch_indices():
-    """Fixture that creates elasticsearch indices and cleans up after testing"""
-
-    # setting ELASTICSEARCH_DSL_AUTOSYNC to
-    # True enables indexing when saving model instances
-    settings.ELASTICSEARCH_DSL_AUTOSYNC = True
-
-    # Create search indices if they do not exist
-    try:
-        call_command("search_index", "--create", "--no-parallel", force=True)
-    except RequestError:
-        pass
-
-    # Run tests
-    yield
-
-    # Delete search indices after testing
-    call_command("search_index", "--delete", "--no-parallel", force=True)
 
 
 @pytest.fixture()
@@ -206,11 +195,15 @@ def instrument(
 
 
 @pytest.fixture
-def period(db):
+def period(db, request):
     """A period in the database"""
-    return PeriodFactory(
+    period = PeriodFactory(
         name="some-period", label="Some period", description="This is some period"
     )
+    if request.instance:
+        request.instance.period = period
+
+    yield period 
 
 
 @pytest.fixture
@@ -332,91 +325,6 @@ def uuid_identifier():
     """A UUID that is used for testing views and URLConfigs"""
     return uuid.UUID("12345678123456781234567812345678")
 
-
-# TODO: Fix these fixtures or replace them so they write into a test index
-@pytest.fixture
-def concepts_index(elasticsearch_indices, concept):  # pylint: disable=unused-argument
-    """Fixture that indexes a concept and cleans up after testing
-    uses the indices created by the "elasticsearch_indices" fixture
-    """
-    ConceptDocument._index._name = "testing_concepts"
-    ConceptDocument._index.create()
-    ConceptDocument.search().query("match_all").delete()
-    # saving the concept, will index the concept as well
-
-
-    concept.save()
-    expected = 1
-    TEST_CASE.assertEqual(expected, ConceptDocument.search().count())
-
-    # Run tests
-    yield
-
-    # Delete documents in index after testing
-    response = ConceptDocument.search().query("match_all").delete()
-    TEST_CASE.assertGreater(response["deleted"], 0)
-
-
-@pytest.fixture
-def topics_index(elasticsearch_indices, topic):  # pylint: disable=unused-argument
-    """Fixture that indexes a topic and cleans up after testing
-    uses the indices created by the "elasticsearch_indices" fixture
-    """
-    TopicDocument._index._name = "testing_topics"
-    TopicDocument._index.create()
-    TopicDocument.search().query("match_all").delete()
-    # saving the topic, will index the topic as well
-    topic.save()
-    expected = 1
-    TEST_CASE.assertEqual(expected, TopicDocument.search().count())
-
-    # Run tests
-    yield
-
-    # Delete documents in index after testing
-    response = TopicDocument.search().query("match_all").delete()
-    TEST_CASE.assertGreater(response["deleted"], 0)
-
-
-@pytest.fixture
-def questions_index(elasticsearch_indices, question):  # pylint: disable=unused-argument
-    """Fixture that indexes a question and cleans up after testing
-    uses the indices created by the "elasticsearch_indices" fixture
-    """
-    QuestionDocument._index._name = "testing_questions"
-    QuestionDocument._index.create()
-    # saving the question, will index the question as well
-    question.save()
-    expected = 1
-    TEST_CASE.assertEqual(expected, QuestionDocument.search().count())
-
-    # Run tests
-    yield
-
-    # Delete documents in index after testing
-    response = QuestionDocument.search().query("match_all").delete()
-    TEST_CASE.assertGreater(response["deleted"], 0)
-
-
-@pytest.fixture
-def variables_index(elasticsearch_indices, variable):  # pylint: disable=unused-argument
-    """Fixture that indexes a variable and cleans up after testing
-    uses the indices created by the "elasticsearch_indices" fixture
-    """
-    VariableDocument._index._name = "testing_variables"
-    VariableDocument._index.create()
-
-    time.sleep(0.1)
-    # saving the variable, will index the variable as well
-    variable.save()
-    expected = 1
-
-    TEST_CASE.assertEqual(expected, VariableDocument.search().count())
-
-    # Run tests
-    yield
-
-
 @pytest.fixture
 def publication_with_umlauts(db):  # pylint: disable=unused-argument
     """Provides a Publication containing Umlauts."""
@@ -429,31 +337,6 @@ def publication_with_umlauts(db):  # pylint: disable=unused-argument
         type="book",
     )
 
-
-@pytest.fixture
-def publications_index(
-    elasticsearch_indices, publication_with_umlauts  # pylint: disable=unused-argument
-):
-    """Fixture that indexes a publication and cleans up after testing
-    uses the indices created by the "elasticsearch_indices" fixture
-    """
-    PublicationDocument._index._name = "testing_publications"
-    PublicationDocument._index.create()
-    PublicationDocument.search().query("match_all").delete()
-    time.sleep(0.1)
-
-    # saving the publication, will index the publication as well
-    publication_with_umlauts.save()
-    expected = 1
-
-    TEST_CASE.assertEqual(expected, PublicationDocument.search().count())
-
-    # Run tests
-    yield
-
-    # Delete documents in index after testing
-    response = PublicationDocument.search().query("match_all").delete()
-    TEST_CASE.assertGreater(response["deleted"], 0)
 
 
 class NewsFixture(TypedDict):

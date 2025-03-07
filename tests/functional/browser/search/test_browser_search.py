@@ -1,77 +1,31 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
-from types import MappingProxyType
 from typing import Any
 from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.core.management import call_command
 from django.test.utils import override_settings
 from django.utils.http import urlencode
-from elasticsearch import RequestError
 from requests import get
 from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
-from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from ddionrails.concepts.models import Concept
-from ddionrails.data.documents import VariableDocument
-from ddionrails.instruments.documents import QuestionDocument
-from ddionrails.publications.documents import PublicationDocument
 from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 from tests import status
+from tests.functional.search_index_fixtures import set_up_index, tear_down_index
 
 pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.functional,
     pytest.mark.search,
     pytest.mark.django_db,
 ]
-
-model_type_document_mapper = MappingProxyType(
-    {
-        "concepts": ConceptDocument,
-        "publications": PublicationDocument,
-        "questions": QuestionDocument,
-        "topics": TopicDocument,
-        "variables": VariableDocument,
-    }
-)
-
-
-@override_settings(ELASTICSEARCH_DSL_AUTOSYNC=True)
-def set_up_index(test_case, model_object, model_type_plural):
-    document = model_type_document_mapper[model_type_plural]
-
-    document._index._name = f"testing_{model_type_plural}"
-    if document._index.exists():
-        document._index.delete()
-    document._index.create()
-    model_object.save()
-    try:
-        call_command("search_index", "--create", "--no-parallel", force=True)
-    except RequestError:
-        pass
-
-    # Run tests
-
-    expected = 1
-    test_case.assertEqual(expected, document.search().count())
-    
-
-    # Run test
-    return document
-
-def tear_down_index(test_case, model_type_plural):
-    document = model_type_document_mapper[model_type_plural]
-    document._index._name = f"testing_{model_type_plural}"
-    response = document.search().query("match_all").delete()
-    test_case.assertGreater(response["deleted"], 0)
 
 
 @override_settings(DEBUG=True)
