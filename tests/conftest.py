@@ -313,11 +313,14 @@ def _variable(request: FixtureRequest, db: pytest.fixture):
 
 
 @pytest.fixture
-def variable_with_concept(variable, concept):
+def variable_with_concept(variable, concept, request):
     """A variable in the database with a related concept"""
     variable.concept = concept
     variable.save()
-    return variable
+    if request.instance:
+        request.instance.variable_with_concept = variable
+
+    yield variable
 
 
 @pytest.fixture
