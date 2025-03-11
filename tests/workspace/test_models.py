@@ -3,13 +3,18 @@
 
 """ Test cases for models in ddionrails.workspace app """
 
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 from os import remove
+from unittest.mock import patch
 
 import pytest
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
+from django.test import LiveServerTestCase, override_settings
 
+from ddionrails.concepts.models import Concept
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script
@@ -22,145 +27,162 @@ pytestmark = [pytest.mark.workspace]
 TEST_CASE = unittest.TestCase()
 
 
-@pytest.fixture(name="csv_heading")
-def _csv_heading():
+def csv_heading():
     return (
         "name,label,label_de,dataset_name,dataset_label,dataset_label_de,"
         "study_name,study_label,study_label_de,concept_name,period_name"
     )
 
 
-class TestBasketModel:
-    def test_string_method(self, basket):
-        expected = f"{basket.user.username}/{basket.name}"
-        assert expected == str(basket)
+@pytest.mark.usefixtures("basket", "study", "variable", "concept")
+class TestBasketModel(LiveServerTestCase):
+    basket: Basket
+    concept: Concept
+    study: Study
+    variable: Variable
+    tmp_dir: TemporaryDirectory
 
-    def test_absolute_url_method(self, basket):
-        expected = f"/workspace/baskets/{basket.id}"
-        assert expected == basket.get_absolute_url()
+    def setUp(self) -> None:
+        self.tmp_dir = TemporaryDirectory()
+        return super().setUp()
+    def tearDown(self) -> None:
+        self.tmp_dir.cleanup()
+        return super().tearDown()
 
-    def test_html_description_method(self, mocker, basket):
-        mocked_render_markdown = mocker.patch(
+    def test_string_method(self):
+        expected = f"{self.basket.user.username}/{self.basket.name}"
+        assert expected == str(self.basket)
+
+    def test_absolute_url_method(self):
+        expected = f"/workspace/baskets/{self.basket.id}"
+        assert expected == self.basket.get_absolute_url()
+
+    def test_html_description_method(self):
+        with patch(
             "ddionrails.workspace.models.basket.render_markdown"
-        )
-        basket.html_description()
-        mocked_render_markdown.assert_called_once()
+            ) as markdown_patch:
+            self.basket.html_description()
+            markdown_patch.assert_called_once()
 
-    def test_title_method(self, basket):
-        assert basket.name == basket.title()
+    def test_title_method(self):
+        assert self.basket.name == self.basket.title()
 
-    def test_title_method_with_label(self, basket):
-        basket.label = "Some basket"
-        assert basket.label == basket.title()
+    def test_title_method_with_label(self):
+        self.basket.label = "Some basket"
+        assert self.basket.label == self.basket.title()
 
-    def test_get_script_generators_method(self, basket):
-        result = basket.get_script_generators()
+    def test_get_script_generators_method(self):
+        result = self.basket.get_script_generators()
         expected = None
         assert expected is result
 
-    def test_get_script_generators_method_with_config(self, study, basket):
+    def test_get_script_generators_method_with_config(self):
         # Set script_generators in study.config
-        study.config = {"script_generators": "some-script-generator"}
-        study.save()
-        basket.refresh_from_db()
-        result = basket.get_script_generators()
+        self.study.config = {"script_generators": "some-script-generator"}
+        self.study.save()
+        self.basket.refresh_from_db()
+        result = self.basket.get_script_generators()
         expected = "some-script-generator"
         assert expected == result
 
-    def test_to_csv_method_with_empty_basket(self, basket, csv_heading):
-        result = basket.to_csv()
-        assert csv_heading in result
+    def test_to_csv_method_with_empty_basket(self):
+        result = self.basket.to_csv()
+        assert csv_heading() in result
 
-    def test_to_csv_method_with_variable_in_basket(self, basket, variable, csv_heading):
-        basket_variable = BasketVariable(basket=basket, variable=variable)
+    def test_to_csv_method_with_variable_in_basket(self):
+        basket_variable = BasketVariable(basket=self.basket, variable=self.variable)
         basket_variable.save()
-        result = basket.to_csv()
-        assert csv_heading in result
-        assert variable.name in result
-        assert variable.label in result
-        assert variable.dataset.name in result
-        assert variable.dataset.study.name in result
+        result = self.basket.to_csv()
+        assert csv_heading() in result
+        assert self.variable.name in result
+        assert self.variable.label in result
+        assert self.variable.dataset.name in result
+        assert self.variable.dataset.study.name in result
 
-    def test_to_csv_method_with_variable_and_concept_in_basket(
-        self, basket, variable, concept, csv_heading
-    ):
-        concept.variables.add(variable)
-        basket_variable = BasketVariable(basket=basket, variable=variable)
+    def test_to_csv_method_with_variable_and_concept_in_basket(self):
+        self.concept.variables.add(self.variable)
+        basket_variable = BasketVariable(basket=self.basket, variable=self.variable)
         basket_variable.save()
-        result = basket.to_csv()
-        assert csv_heading in result
-        assert variable.name in result
-        assert variable.label in result
-        assert variable.dataset.name in result
-        assert variable.dataset.study.name in result
-        assert variable.concept.name in result
+        result = self.basket.to_csv()
+        assert csv_heading() in result
+        assert self.variable.name in result
+        assert self.variable.label in result
+        assert self.variable.dataset.name in result
+        assert self.variable.dataset.study.name in result
+        assert self.variable.concept.name in result
 
-    def test_backup(self, basket, variable):
-        """Can we do a backup of existing Baskets."""
-        basket.save()
-        basket_id = basket.id
-        basket_variable = BasketVariable(basket=basket, variable=variable)
-        other_variable = VariableFactory(name="test-variable")
-        other_basket_variable = BasketVariable(basket=basket, variable=other_variable)
-        other_basket_variable.basket = basket
-        other_basket_variable.variable = other_variable
-        basket_variable.save()
-        other_basket_variable.save()
+    def test_backup(self):
+        @override_settings(BACKUP_DIR=Path(self.tmp_dir.name))
+        def mock_backup_dir(instance):
+            """Can we do a backup of existing Baskets."""
+            instance.basket.save()
+            basket_id = instance.basket.id
+            basket_variable = BasketVariable(basket=instance.basket, variable=self.variable)
+            other_variable = VariableFactory(name="test-variable")
+            other_basket_variable = BasketVariable(basket=instance.basket, variable=other_variable)
+            other_basket_variable.basket = instance.basket
+            other_basket_variable.variable = other_variable
+            basket_variable.save()
+            other_basket_variable.save()
 
-        backup_file = Basket.backup()
+            backup_file = Basket.backup()
 
-        variable.delete()
-        basket.delete()
+            instance.variable.delete()
+            instance.basket.delete()
 
-        call_command("loaddata", backup_file)
+            call_command("loaddata", backup_file)
 
-        basket = Basket.objects.get(id=basket_id)
-        basket_variables = list(basket.variables.all())
+            instance.basket = Basket.objects.get(id=basket_id)
+            basket_variables = list(instance.basket.variables.all())
 
-        TEST_CASE.assertIn(other_basket_variable.variable, basket_variables)
-        TEST_CASE.assertNotIn(basket_variable.variable, basket_variables)
-        remove(backup_file)
+            instance.assertIn(other_basket_variable.variable, basket_variables)
+            instance.assertNotIn(basket_variable.variable, basket_variables)
+            remove(backup_file)
+        mock_backup_dir(self)
 
-    def test_study_specific_backup(self, basket, variable):
+    def test_study_specific_backup(self):
         """Can we limit the backup to a specific study?"""
-        # A whole lot of boilerplate to set up another study basket.
-        basket.save()
-        basket.variables.add(variable)
-        basket.save()
+        @override_settings(BACKUP_DIR=Path(self.tmp_dir.name))
+        def mock_backup_dir(instance):
+            # A whole lot of boilerplate to set up another study basket.
+            instance.basket.save()
+            instance.basket.variables.add(self.variable)
+            instance.basket.save()
 
-        other_study = Study(name="other-sturdy")
-        other_study.save()
+            other_study = Study(name="other-sturdy")
+            other_study.save()
 
-        other_dataset = Dataset(name="other-dataset")
-        other_dataset.study = other_study
-        other_dataset.save()
+            other_dataset = Dataset(name="other-dataset")
+            other_dataset.study = other_study
+            other_dataset.save()
 
-        other_variable = Variable(name="other-variable")
-        other_variable.dataset = other_dataset
-        other_variable.save()
+            other_variable = Variable(name="other-variable")
+            other_variable.dataset = other_dataset
+            other_variable.save()
 
-        other_basket = Basket(name="other-basket", study=other_study, user=basket.user)
-        other_basket.save()
-        other_basket.variables.add(other_variable)
-        other_basket.save()
+            other_basket = Basket(name="other-basket", study=other_study, user=instance.basket.user)
+            other_basket.save()
+            other_basket.variables.add(other_variable)
+            other_basket.save()
 
-        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=other_variable))
-        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=variable))
+            instance.assertTrue(BasketVariable.objects.get(variable=other_variable))
+            instance.assertTrue(BasketVariable.objects.get(variable=instance.variable))
 
-        # Actual testing
-        backup_file = Basket.backup(study=basket.study)
-        BasketVariable.objects.all().delete()
+            # Actual testing
+            backup_file = Basket.backup(study=instance.basket.study)
+            BasketVariable.objects.all().delete()
 
-        call_command("loaddata", backup_file)
+            call_command("loaddata", backup_file)
 
-        with TEST_CASE.assertRaises(BasketVariable.DoesNotExist):
-            BasketVariable.objects.get(variable=other_variable)
+            with instance.assertRaises(BasketVariable.DoesNotExist):
+                BasketVariable.objects.get(variable=other_variable)
 
-        TEST_CASE.assertTrue(BasketVariable.objects.get(variable=variable))
+            instance.assertTrue(BasketVariable.objects.get(variable=instance.variable))
+        mock_backup_dir(self)
 
 
 @pytest.mark.usefixtures("study", "basket", "variable")
-class TestBasketVariableModel(unittest.TestCase):
+class TestBasketVariableModel(LiveServerTestCase):
 
     study: Study
     basket: Basket

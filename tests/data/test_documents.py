@@ -6,111 +6,130 @@
 from os import getenv
 from unittest import TestCase
 
+from django.test import LiveServerTestCase
 import pytest
 from django.forms.models import model_to_dict
 
+from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.documents import VariableDocument
+from ddionrails.data.models.variable import Variable
+from tests.functional.search_index_fixtures import set_up_index, tear_down_index
 
 INDEX_PREFIX = getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 
 pytestmark = [pytest.mark.search]
 
-TEST_CASE = TestCase()
 
 
-@pytest.mark.usefixtures("variables_index")
-def test_variable_search_document_fields(variable):
-    search = VariableDocument.search().query("match_all")
+@pytest.mark.usefixtures(
+    "variable", "conceptual_dataset", "analysis_unit", "period"
+)
+class TestVariableDocuments(LiveServerTestCase):
+    variable: Variable
+    analysis_unit: AnalysisUnit
+    conceptual_dataset: ConceptualDataset
+    period: Period
 
-    expected = 1
-    TEST_CASE.assertEqual(expected, search.count())
-    response = search.execute()
-    document = response.hits[0]
+    def setUp(self) -> None:
+        set_up_index(self, self.variable, "variables")
+        return super().setUp()
 
-    # test meta
-    TEST_CASE.assertEqual(str(variable.id), document.meta.id)
-    TEST_CASE.assertIn(document.meta.index, ("testing_variables", "variables"))
+    def tearDown(self) -> None:
+        tear_down_index(self, "variables")
+        return super().tearDown()
 
-    # generate expected dictionary with attributes from model instance
-    expected = model_to_dict(
-        variable,
-        fields=(
-            "name",
-            "label",
-            "label_de",
-            "description",
-            "description_de",
-        ),
-    )
-    expected["categories"] = {"labels": ["Yes"], "labels_de": ["Ja"]}
-    # add facets to expected dictionary
-    expected["analysis_unit"] = {
-        "label": "Not Categorized",
-        "label_de": "Nicht Kategorisiert",
-    }
-    expected["conceptual_dataset"] = {
-        "label": "Not Categorized",
-        "label_de": "Nicht Kategorisiert",
-    }
-    expected["period"] = {"label": "Not Categorized", "label_de": "Nicht Kategorisiert"}
-    expected["id"] = str(variable.id)
-    expected["study_name"] = variable.dataset.study.title()
-    expected["study"] = {
-        "name": variable.dataset.study.name,
-        "label": variable.dataset.study.label,
-    }
-    expected["study_name_de"] = ""
+    def test_variable_search_document_fields(self):
+        search = VariableDocument.search().query("match_all")
 
-    # add relations to expected dictionary
-    expected["dataset"] = {"name": variable.dataset.name, "label": variable.dataset.label}
-    # generate result dictionary from search document
-    result = document.to_dict()
-    for key, value in expected.items():
-        TEST_CASE.assertEqual(value, result[key], msg=f"Problem in {key}")
-    for key in result.keys():
-        TEST_CASE.assertIn(key, expected)
+        expected = 1
+        self.assertEqual(expected, search.count())
+        response = search.execute()
+        document = response.hits[0]
 
+        # test meta
+        self.assertEqual(str(self.variable.id), document.meta.id)
+        self.assertIn(document.meta.index, ("testing_variables", "variables"))
 
-@pytest.mark.usefixtures("variables_index")
-def test_variable_search_document_fields_missing_related_objects(variable):
-    variable.dataset.analysis_unit = None
-    variable.dataset.conceptual_dataset = None
-    variable.dataset.period = None
-    variable.dataset.save()
-    variable.save()
+        # generate expected dictionary with attributes from model instance
+        expected = model_to_dict(
+            self.variable,
+            fields=(
+                "name",
+                "label",
+                "label_de",
+                "description",
+                "description_de",
+            ),
+        )
+        expected["categories"] = {"labels": ["Yes"], "labels_de": ["Ja"]}
+        # add facets to expected dictionary
+        expected["analysis_unit"] = {
+            "label": "Not Categorized",
+            "label_de": "Nicht Kategorisiert",
+        }
+        expected["conceptual_dataset"] = {
+            "label": "Not Categorized",
+            "label_de": "Nicht Kategorisiert",
+        }
+        expected["period"] = {
+            "label": "Not Categorized",
+            "label_de": "Nicht Kategorisiert",
+        }
+        expected["id"] = str(self.variable.id)
+        expected["study_name"] = self.variable.dataset.study.title()
+        expected["study"] = {
+            "name": self.variable.dataset.study.name,
+            "label": self.variable.dataset.study.label,
+        }
+        expected["study_name_de"] = ""
 
-    search = VariableDocument.search().query("match_all")
-    response = search.execute()
-    document = response.hits[0]
+        # add relations to expected dictionary
+        expected["dataset"] = {
+            "name": self.variable.dataset.name,
+            "label": self.variable.dataset.label,
+        }
+        # generate result dictionary from search document
+        result = document.to_dict()
+        for key, value in expected.items():
+            self.assertEqual(value, result[key], msg=f"Problem in {key}")
+        for key in result.keys():
+            self.assertIn(key, expected)
 
-    expected = "Not Categorized"
-    TEST_CASE.assertEqual(expected, document.analysis_unit.label)
-    TEST_CASE.assertEqual(expected, document.conceptual_dataset.label)
-    TEST_CASE.assertEqual(expected, document.period.label)
+    def test_variable_search_document_fields_missing_related_objects(self):
+        self.variable.dataset.analysis_unit = None
+        self.variable.dataset.conceptual_dataset = None
+        self.variable.dataset.period = None
+        self.variable.dataset.save()
+        self.variable.save()
 
+        search = VariableDocument.search().query("match_all")
+        response = search.execute()
+        document = response.hits[0]
 
-@pytest.mark.usefixtures("variables_index")
-def test_variable_search_document_fields_string_representing_missing(
-    variable, conceptual_dataset, analysis_unit, period
-):
-    analysis_unit.label = "Unspecified"
-    analysis_unit.save()
-    conceptual_dataset.label = "none"
-    conceptual_dataset.save()
-    period.label = "unspecified"
-    period.save()
+        expected = "Not Categorized"
+        self.assertEqual(expected, document.analysis_unit.label)
+        self.assertEqual(expected, document.conceptual_dataset.label)
+        self.assertEqual(expected, document.period.label)
 
-    variable.dataset.analysis_unit = analysis_unit
-    variable.dataset.conceptual_dataset = conceptual_dataset
-    variable.dataset.period = period
-    variable.dataset.save()
-    variable.save()
+    def test_variable_search_document_fields_string_representing_missing(self):
+        self.analysis_unit.label = "Unspecified"
+        self.analysis_unit.save()
+        self.conceptual_dataset.label = "none"
+        self.conceptual_dataset.save()
+        self.period.label = "unspecified"
+        self.period.save()
 
-    search = VariableDocument.search().query("match_all")
-    response = search.execute()
-    document = response.hits[0]
+        self.variable.dataset.analysis_unit = self.analysis_unit
+        self.variable.dataset.conceptual_dataset = self.conceptual_dataset
+        self.variable.dataset.period = self.period
+        self.variable.dataset.save()
+        self.variable.save()
 
-    excepted = "Not Categorized"
-    TEST_CASE.assertEqual(excepted, document.analysis_unit.label)
-    TEST_CASE.assertEqual(excepted, document.conceptual_dataset.label)
-    TEST_CASE.assertEqual(excepted, document.period.label)
+        search = VariableDocument.search().query("match_all")
+        response = search.execute()
+        document = response.hits[0]
+
+        excepted = "Not Categorized"
+        self.assertEqual(excepted, document.analysis_unit.label)
+        self.assertEqual(excepted, document.conceptual_dataset.label)
+        self.assertEqual(excepted, document.period.label)

@@ -10,6 +10,7 @@ from unittest.mock import PropertyMock, patch
 from uuid import UUID, uuid4
 
 import pytest
+from django.test import LiveServerTestCase, override_settings
 from django.test.client import Client
 from rest_framework.test import APIClient, APIRequestFactory
 
@@ -30,6 +31,7 @@ from tests.workspace.factories import BasketVariableFactory
 LANGUAGE = "en"
 
 TEST_CASE = unittest.TestCase()
+override_settings(DEBUG=True)
 
 
 @pytest.mark.usefixtures("client", "request")
@@ -74,8 +76,8 @@ def test_topic_tree(client, topiclist, language, expected):
 ######## Test new API units
 
 
-@pytest.mark.django_db
-class TestBasketViewSet(unittest.TestCase):
+@override_settings(DEBUG=True)
+class TestBasketViewSet(LiveServerTestCase):
     API_PATH = "/api/baskets/"
     variables: List[VariableFactory] = []
     request_factory: APIRequestFactory
@@ -201,13 +203,13 @@ class TestBasketViewSet(unittest.TestCase):
         return json.loads(request.content).get("results")
 
 
-@pytest.mark.django_db
-class TestQuestionViewSet(unittest.TestCase):
+@override_settings(DEBUG=True)
+class TestQuestionViewSet(LiveServerTestCase):
     API_PATH = "/api/questions/"
-    client: APIClient
+    api_client: APIClient
 
     def setUp(self):
-        self.client = APIClient()
+        self.api_client = APIClient()
         self.concept = ConceptFactory(name="test-concept")
         self.topic = TopicFactory(name="test-topic")
         return super().setUp()
@@ -215,14 +217,14 @@ class TestQuestionViewSet(unittest.TestCase):
     def test_query_parameter_conflict(self):
         concept_name = self.concept.name
         topic_name = self.topic.name
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?concept={concept_name}&topic={topic_name}"
         )
         self.assertEqual(406, response.status_code)
         content = json.loads(response.content)
         self.assertIn("mutually exclusive", content["detail"])
 
-        response = self.client.get(self.API_PATH + f"?topic={topic_name}")
+        response = self.api_client.get(self.API_PATH + f"?topic={topic_name}")
         self.assertEqual(406, response.status_code)
         content = json.loads(response.content)
         self.assertIn("requires study parameter", content["detail"])
@@ -230,15 +232,15 @@ class TestQuestionViewSet(unittest.TestCase):
     def test_404_errors(self):
         study = "some-nonexistent-study"
         call_string = f"{self.API_PATH}?study={study}&instrument=some-instrument"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
         concept = "some-nonexistent-concept"
         call_string = f"{self.API_PATH}?concept={concept}"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
         topic = "some-nonexistent-topic"
         call_string = f"{self.API_PATH}?topic={topic}&study=dummy"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
     def test_query_parameter_concept(self):
         concept_name = self.concept.name
@@ -254,7 +256,7 @@ class TestQuestionViewSet(unittest.TestCase):
             _question = QuestionFactory(name=str(number))
             question_list.append(_question)
 
-        response = self.client.get(self.API_PATH + f"?concept={concept_name}")
+        response = self.api_client.get(self.API_PATH + f"?concept={concept_name}")
         content = json.loads(response.content)
         self.assertEqual(10, len(content))
 
@@ -279,7 +281,7 @@ class TestQuestionViewSet(unittest.TestCase):
 
         instrument = question_list[0].instrument.name
 
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?study={study_name}&instrument={instrument}"
         )
         content = json.loads(response.content)
@@ -302,7 +304,7 @@ class TestQuestionViewSet(unittest.TestCase):
         question_object = QuestionFactory(name="test_question")
         study = question_object.instrument.study.name
         instrument = question_object.instrument.name
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?study={study}&instrument={instrument}"
         )
         results = json.loads(response.content)
@@ -319,7 +321,7 @@ class TestQuestionViewSet(unittest.TestCase):
         study = questions[0].instrument.study.name
         instrument = questions[0].instrument.name
 
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?study={study}&instrument={instrument}"
         )
         self.assertEqual(200, response.status_code)
@@ -338,7 +340,7 @@ class TestQuestionViewSet(unittest.TestCase):
         study = questions[0].instrument.study.name
         instrument = questions[0].instrument.name
 
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?study={study}&instrument={instrument}"
         )
         self.assertEqual(200, response.status_code)
@@ -410,13 +412,13 @@ class TestInstrumentViewSet(unittest.TestCase):
         self.assertEqual(getattr(instrument, "name"), content["results"][0]["name"])
 
 
-@pytest.mark.django_db
-class TestVariableViewSet(unittest.TestCase):
+@override_settings(DEBUG=True)
+class TestVariableViewSet(LiveServerTestCase):
     API_PATH = "/api/variables/"
-    client: APIClient
+    api_client: APIClient
 
     def setUp(self):
-        self.client = APIClient()
+        self.api_client = APIClient()
         self.concept = ConceptFactory(name="test-concept")
         self.topic = TopicFactory(name="test-topic")
         self.concept.topics.add(self.topic)
@@ -426,14 +428,14 @@ class TestVariableViewSet(unittest.TestCase):
     def test_query_parameter_conflict(self):
         concept_name = self.concept.name
         topic_name = self.topic.name
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?concept={concept_name}&topic={topic_name}"
         )
         self.assertEqual(406, response.status_code)
         content = json.loads(response.content)
         self.assertIn("mutually exclusive", content["detail"])
 
-        response = self.client.get(self.API_PATH + f"?topic={topic_name}")
+        response = self.api_client.get(self.API_PATH + f"?topic={topic_name}")
         self.assertEqual(406, response.status_code)
         content = json.loads(response.content)
         self.assertIn("requires study parameter", content["detail"])
@@ -441,15 +443,15 @@ class TestVariableViewSet(unittest.TestCase):
     def test_404_errors(self):
         study = "some-nonexistent-study"
         call_string = f"{self.API_PATH}?study={study}&dataset=some-dataset"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
         concept = "some-nonexistent-concept"
         call_string = f"{self.API_PATH}?concept={concept}"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
         topic = "some-nonexistent-topic"
         call_string = f"{self.API_PATH}?topic={topic}&study=dummy"
-        self.assertEqual(404, self.client.get(call_string).status_code)
+        self.assertEqual(404, self.api_client.get(call_string).status_code)
 
     def test_query_parameter_concept(self):
         concept_name = self.concept.name
@@ -465,7 +467,7 @@ class TestVariableViewSet(unittest.TestCase):
             _variable = VariableFactory(name=str(number))
             variable_list.append(_variable)
 
-        response = self.client.get(self.API_PATH + f"?concept={concept_name}")
+        response = self.api_client.get(self.API_PATH + f"?concept={concept_name}")
         content = json.loads(response.content)
         self.assertEqual(10, len(content))
 
@@ -490,7 +492,7 @@ class TestVariableViewSet(unittest.TestCase):
 
         dataset = variable_list[0].dataset.name
 
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?study={study_name}&dataset={dataset}"
         )
         content = json.loads(response.content)
@@ -513,7 +515,7 @@ class TestVariableViewSet(unittest.TestCase):
         variable_object = VariableFactory(name="test_variable")
         study = variable_object.dataset.study.name
         dataset = variable_object.dataset.name
-        response = self.client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
+        response = self.api_client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
         results = json.loads(response.content)
         variable = results[0]
         self.assertListEqual(expected_fields, list(variable.keys()))
@@ -526,7 +528,7 @@ class TestVariableViewSet(unittest.TestCase):
             variables.append(VariableFactory(name=f"{number}"))
         study = variables[0].dataset.study.name
         dataset = variables[0].dataset.name
-        response = self.client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
+        response = self.api_client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))
@@ -542,7 +544,7 @@ class TestVariableViewSet(unittest.TestCase):
             variables.append(VariableFactory(name=f"{number}"))
         study = variables[0].dataset.study.name
         dataset = variables[0].dataset.name
-        response = self.client.get(
+        response = self.api_client.get(
             self.API_PATH + f"?paginate=False&study={study}&dataset={dataset}"
         )
         self.assertEqual(200, response.status_code)

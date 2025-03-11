@@ -66,7 +66,7 @@ def analysis_unit(db, request):
 
 
 @pytest.fixture(name="basket")
-def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory):
+def _basket(request: FixtureRequest, study: StudyFactory, user: UserFactory, db):
     """A basket in the database, relates to study and user fixture"""
     _factory = BasketFactory(name="some-basket", study=study, user=user)
     if request.instance:
@@ -329,9 +329,11 @@ def uuid_identifier():
     return uuid.UUID("12345678123456781234567812345678")
 
 @pytest.fixture
-def publication_with_umlauts(db):  # pylint: disable=unused-argument
+@pytest.mark.usedb
+def publication_with_umlauts(request):  # pylint: disable=unused-argument
     """Provides a Publication containing Umlauts."""
-    return PublicationFactory(
+
+    publication = PublicationFactory(
         name="1",
         title="Some publication with Umlauts",
         author="Max Müller",
@@ -339,6 +341,11 @@ def publication_with_umlauts(db):  # pylint: disable=unused-argument
         year=2019,
         type="book",
     )
+
+    if request.instance:
+        request.instance.publication_with_umlauts = publication
+
+    yield publication
 
 
 

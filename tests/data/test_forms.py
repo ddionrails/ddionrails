@@ -3,26 +3,36 @@
 
 """ Test cases for forms in ddionrails.data app """
 
+from uuid import UUID
 import pytest
 
+from django.test import LiveServerTestCase, override_settings
+
 from ddionrails.data.forms import DatasetForm, VariableForm
+from ddionrails.studies.models import Study
 
 pytestmark = [pytest.mark.data, pytest.mark.forms]  # pylint: disable=invalid-name
 
+@pytest.mark.usefixtures("study")
+class TestDatasetForm(LiveServerTestCase):
 
-class TestDatasetForm:
+    study: Study
+    valid_dataset_data: dict[str, UUID | str]
 
-    @pytest.mark.django_db
-    def test_form_with_valid_data(self, valid_dataset_data):
-        form = DatasetForm(data=valid_dataset_data)
+    def setUp(self) -> None:
+        self.valid_dataset_data = dict(study=self.study.id, dataset_name="some-dataset")
+        return super().setUp()
+
+    def test_form_with_valid_data(self):
+        form = DatasetForm(data=self.valid_dataset_data)
         assert form.is_valid() is True
         dataset = form.save()
-        assert dataset.name == valid_dataset_data["dataset_name"]
+        assert dataset.name == self.valid_dataset_data["dataset_name"]
 
     @pytest.mark.django_db
-    def test_form_with_valid_data_uppercase(self, valid_dataset_data):
-        valid_dataset_data["dataset_name"] = "SOME-DATASET"
-        form = DatasetForm(data=valid_dataset_data)
+    def test_form_with_valid_data_uppercase(self):
+        self.valid_dataset_data["dataset_name"] = "SOME-DATASET"
+        form = DatasetForm(data=self.valid_dataset_data)
         assert form.is_valid() is True
         dataset = form.save()
         assert dataset.name == "SOME-DATASET"

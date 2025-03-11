@@ -470,6 +470,13 @@ class TestStudyImportManager(LiveServerTestCase):
 class ImportAll(LiveServerTestCase):
     study: Study
 
+    def setUp(self) -> None:
+        
+        Study.objects.all().delete()
+        Concept.objects.all().delete()
+        self.study.save()
+        return super().setUp()
+
     def tearDown(self) -> None:
         tear_down_index(self, "concepts")
         tear_down_index(self, "publications")
