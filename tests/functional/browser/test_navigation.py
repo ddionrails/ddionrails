@@ -70,8 +70,9 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     def test_get_back_home_from_other_page(self):
         self.browser.get(urljoin(self.live_server_url, "contact"))
+        sleep(2)
         self.browser.execute_script("document.getElementById('home-button').click()")
-        sleep(1)
+        sleep(2)
         expected = "Home | paneldata.org"
         assert expected == self.browser.title
 
