@@ -249,6 +249,11 @@ class TestWorkspace(StaticLiveServerTestCase):
         url = f"{self.variables_search_url}?{query}"
         self.browser.get(url)
 
+        WebDriverWait(self.browser, 3).until(
+            expected_conditions.presence_of_element_located(
+                (By.CLASS_NAME, f"sui-result")
+            )
+        )
         self.assertIn("Variables", self.browser.page_source)
         self.assertIn(variable.label, self.browser.page_source)
 
