@@ -102,11 +102,18 @@ class TestWorkspace(StaticLiveServerTestCase):
 
 
 def _hide_toolbar(browser):
-    WebDriverWait(browser, 10).until(
-        expected_conditions.element_to_be_clickable(
-            (By.CSS_SELECTOR, "a[title='Hide toolbar']")
-        )
-    ).click()
+    if browser.find_elements(By.CSS_SELECTOR, "a[title='Show toolbar']"):
+        return None
+
+    try:
+        WebDriverWait(browser, 10).until(
+            expected_conditions.element_to_be_clickable(
+                (By.CSS_SELECTOR, "a[title='Hide toolbar']")
+            )
+        ).click()
+    except TimeoutError:
+        print("No debug UI found")
+        return None
 
 def _click_with_javascript(browser, element):
     browser.execute_script("arguments[0].click();", element)
