@@ -68,7 +68,7 @@ class TestWorkspace(StaticLiveServerTestCase):
         assert "User login" in self.browser.page_source
 
     def test_get_back_home_from_other_page(self):
-        self.browser.get(urljoin(self.live_server_url, "search"))
+        self.browser.get(urljoin(self.live_server_url, "contact"))
         WebDriverWait(self.browser, 10).until(
             expected_conditions.element_to_be_clickable(
                 (By.CSS_SELECTOR, "a[href='/']")
