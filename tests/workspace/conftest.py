@@ -34,7 +34,6 @@ def _metadata_dict():
     return metadata
 
 
-@pytest.mark.django_db
 @pytest.fixture(name="script_metadata")
 def _script_metadata(script_metadata_dict):
     study = Study(name="soep-core")

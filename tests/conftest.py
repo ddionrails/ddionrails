@@ -356,7 +356,6 @@ class NewsFixture(TypedDict):
     bullet_points: List[str]
 
 
-@pytest.mark.django_db
 @pytest.fixture(name="news")
 def _news(request) -> NewsFixture:
     """Provide a News object with its content in a separate list for easier testing."""
