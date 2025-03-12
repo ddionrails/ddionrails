@@ -69,7 +69,11 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     def test_get_back_home_from_other_page(self):
         self.browser.get(urljoin(self.live_server_url, "search"))
-        self.browser.find_element(By.CSS_SELECTOR, "a[href='/']").click()
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.element_to_be_clickable(
+                (By.CSS_SELECTOR, "a[href='/']")
+            )
+        ).click()
         expected = "Home | paneldata.org"
         assert expected == self.browser.title
 
