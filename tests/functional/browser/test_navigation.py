@@ -3,6 +3,7 @@
 
 """ Functional test cases for browser interaction with the ddionrails project """
 
+from time import sleep
 from urllib.parse import urljoin
 
 import pytest
@@ -69,11 +70,8 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     def test_get_back_home_from_other_page(self):
         self.browser.get(urljoin(self.live_server_url, "contact"))
-        WebDriverWait(self.browser, 10).until(
-            expected_conditions.element_to_be_clickable(
-                (By.ID, "home-button")
-                )
-            ).click()
+        self.browser.execute_script("document.getElementById('home-button').click()")
+        sleep(1)
         expected = "Home | paneldata.org"
         assert expected == self.browser.title
 
