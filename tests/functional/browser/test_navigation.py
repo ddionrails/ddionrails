@@ -71,9 +71,9 @@ class TestWorkspace(StaticLiveServerTestCase):
         self.browser.get(urljoin(self.live_server_url, "contact"))
         WebDriverWait(self.browser, 10).until(
             expected_conditions.element_to_be_clickable(
-                (By.CSS_SELECTOR, "a[href='/']")
-            )
-        ).click()
+                (By.ID, "home-button")
+                )
+            ).click()
         expected = "Home | paneldata.org"
         assert expected == self.browser.title
 
