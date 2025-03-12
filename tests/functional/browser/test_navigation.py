@@ -70,9 +70,11 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     def test_get_back_home_from_other_page(self):
         self.browser.get(urljoin(self.live_server_url, "contact"))
-        sleep(2)
-        self.browser.execute_script("document.getElementById('home-button').click()")
-        sleep(2)
+        home_button = WebDriverWait(self.browser, 20).until(
+           expected_conditions.element_to_be_clickable((By.ID, "home-button"))
+        )
+
+        self.browser.execute_script("arguments[0].click();", home_button)
         expected = "Home | paneldata.org"
         assert expected == self.browser.title
 
@@ -118,6 +120,7 @@ def _hide_toolbar(browser):
     except TimeoutException:
         print("No debug UI found")
         return None
+
 
 def _click_with_javascript(browser, element):
     browser.execute_script("arguments[0].click();", element)
