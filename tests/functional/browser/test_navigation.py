@@ -10,6 +10,7 @@ from django.contrib.auth.models import User  # pylint: disable=imported-auth-use
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import override_settings
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -111,7 +112,7 @@ def _hide_toolbar(browser):
                 (By.CSS_SELECTOR, "a[title='Hide toolbar']")
             )
         ).click()
-    except TimeoutError:
+    except TimeoutException:
         print("No debug UI found")
         return None
 
