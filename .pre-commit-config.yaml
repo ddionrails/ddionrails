@@ -17,7 +17,7 @@ repos:
         pass_filenames: true
       - id: unittest
         name: run unittests
-        entry: bash -c "DJANGO_SETTINGS_MODULE=config.settings.testing pytest -v -m 'not functional'"
+        entry: ./.pre_commit_unittest_handler.sh run_unittest
         language: system
         files: '.*\.py'
         pass_filenames: false
@@ -41,10 +41,7 @@ repos:
         pass_filenames: false
       - id: pylint
         name: lint python code (pylint)
-        entry: >-
-          python -m pylint
-          --load-plugins=pylint_django,pylint_django.checkers.migrations
-          --rcfile=pyproject.toml
+        entry: ./.pre_commit_unittest_handler.sh run_pylint
         language: system
         files: '.*\.py'
         pass_filenames: true
