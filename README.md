@@ -71,7 +71,7 @@ VSCode will prompt you to reopen it in the
 development container.
 When confirmed, VSCode will set up all services for development through `docker-compose`.
 
-With the basic setup the development container will be available at `localhost`.
+With the basic setup the development container will be available at `localhost` on port `80`.
 
 :warning: **Warning** Do not use this in production the settings used by
 the dev compose files are not secure.
