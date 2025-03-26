@@ -6,6 +6,7 @@
 from importlib import reload
 from typing import List
 
+from django.test.utils import override_settings
 from django.urls import resolve, reverse
 from django.urls.base import clear_url_caches
 
@@ -41,8 +42,8 @@ def test_urlconf_with_debug_true(settings):
     assert media_pattern_found(urlpatterns) is True
 
 
-def test_urlconf_with_debug_false(settings):
-    settings.DEBUG = False
+@override_settings(DEBUG=False)
+def test_urlconf_with_debug_false():
     clear_url_caches()
     reload(config.urls)
     from config.urls import urlpatterns

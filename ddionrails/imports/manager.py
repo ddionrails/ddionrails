@@ -55,8 +55,8 @@ def _initialize_studies():
     data = []
 
     if study_init_file.startswith("http"):
-        webcontent = urlopen(study_init_file)  # nosec
-        data = json.loads(webcontent.read())
+        with urlopen(study_init_file) as webcontent:  # nosec
+            data = json.loads(webcontent.read())
     else:
         file_path = Path(study_init_file)
         if file_path.exists() and file_path.exists():
@@ -111,7 +111,6 @@ class StudyImportManager:
 
         self.import_order = OrderedDict(
             {
-                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
                 "topics.csv": (TopicImport, self.base_dir / "topics.csv"),
                 "topics.json": (TopicJsonImport, self.base_dir / "topics.json"),
                 "concepts": (concept_import, self.base_dir / "concepts.csv"),
@@ -173,6 +172,7 @@ class StudyImportManager:
                     script_metadata_import,
                     self.base_dir.joinpath("script_metadata.csv"),
                 ),
+                "study": (StudyDescriptionImport, self.base_dir / "study.md"),
             }
         )
 

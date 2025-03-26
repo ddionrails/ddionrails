@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for ddionrails.studies.models """
 
 import unittest
 
 import pytest
+from django.test.testcases import LiveServerTestCase
 
-from ddionrails.studies.models import TopicList
+from ddionrails.studies.models import Study, TopicList
 
 pytestmark = [pytest.mark.studies, pytest.mark.models]
 
@@ -15,14 +16,6 @@ TEST_CASE = unittest.TestCase()
 
 
 class TestStudyModel:
-    def test_string_method(self, study):
-        expected = study.name
-        TEST_CASE.assertEqual(expected, str(study))
-
-    def test_get_absolute_url_method(self, study):
-        expected = f"/{study.name}/"
-        TEST_CASE.assertEqual(expected, study.get_absolute_url())
-
     def test_repo_url_method_https(self, study, settings):
         settings.GIT_PROTOCOL = "https"
         repo_url = study.repo_url()
@@ -42,9 +35,6 @@ class TestStudyModel:
             TEST_CASE.assertEqual(
                 excinfo.value, "Specify a protocol for Git in your settings."
             )
-
-    def test_has_topics_method(self, study):
-        TEST_CASE.assertFalse(study.has_topics())
 
     def test_has_topics_method_returns_true(self, study, topic):
         topic.study = study
@@ -67,8 +57,24 @@ class TestStudyModel:
         expected = [{"title": "some-topic"}]
         TEST_CASE.assertEqual(expected, result)
 
+
+@pytest.mark.usefixtures("study")
+class TestStudyModelUnittset(LiveServerTestCase):
+    study: Study
+
+    def test_string_method(self):
+        expected = self.study.name
+        TEST_CASE.assertEqual(expected, str(self.study))
+
+    def test_get_absolute_url_method(self):
+        expected = f"/{self.study.name}/"
+        TEST_CASE.assertEqual(expected, self.study.get_absolute_url())
+
+    def test_has_topics_method(self):
+        TEST_CASE.assertFalse(self.study.has_topics())
+
     def test_get_topiclist_method_without_topic_list(
-        self, study
+        self,
     ):  # pylint: disable=unused-argument
-        result = study.get_topiclist()
-        TEST_CASE.assertIsNone(result)
+        result = self.study.get_topiclist()
+        self.assertIsNone(result)
