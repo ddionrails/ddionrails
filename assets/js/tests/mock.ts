@@ -8,7 +8,7 @@ document.body.innerHTML =
   "Concept Label</a>" +
   "<a id='variable-name' href=''>variable_name</a>" +
   "</p>" +
-  "<div id='table-container' data-type='label-table'>" +
+  "<div id='table-container' data-bs-type='label-table'>" +
   "</div>" +
   "</html>";
 

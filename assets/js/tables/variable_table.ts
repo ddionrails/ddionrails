@@ -81,7 +81,7 @@ function renderVariableTable(table: any, url: string) {
 
 document
   .getElementById("table-container")
-  .setAttribute("data-type", variableTableId);
+  .setAttribute("data-bs-type", variableTableId);
 
 window.addEventListener("load", () => {
   initSearchEventHandler(

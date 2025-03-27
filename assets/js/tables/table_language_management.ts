@@ -20,7 +20,7 @@ function switchTableLanguage(
       target.hasAttribute("data-current-language")
     ) {
       const tableContainer = document.getElementById("table-container");
-      const tableId = tableContainer.getAttribute("data-type");
+      const tableId = tableContainer.getAttribute("data-bs-type");
       tableContainer.innerHTML = "";
       tableContainer.appendChild(emptyTableElement.cloneNode(true));
       initSearchEventHandler(apiURL, tableRenderFunction, `#${tableId}`);

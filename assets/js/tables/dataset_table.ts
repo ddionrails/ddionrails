@@ -2,8 +2,8 @@ import "datatables.net-bs5";
 import "datatables.net-responsive-bs5";
 import * as $ from "jquery";
 import initSearchEventHandler from "./search_input_handling";
-import {switchTableLanguage} from "./table_language_management";
-import {languageCode, languageConfig} from "../language_management";
+import { switchTableLanguage } from "./table_language_management";
+import { languageCode, languageConfig } from "../language_management";
 
 const datasetsApiURL = new URL("api/datasets/", window.location.origin);
 const urlPart = "datasets";
@@ -126,7 +126,7 @@ function renderDatasetTable(table: string, url: string) {
           const linkContainer = document.createElement("div");
           for (const attachment of row["attachments"]) {
             const link = attachmentLinkTemplate.cloneNode(
-              true
+              true,
             ) as HTMLLinkElement;
             link.href = attachment["url"];
             link.title = attachment["url_text"];
@@ -150,15 +150,20 @@ const TableElement = document
   .cloneNode(true) as HTMLElement;
 document
   .getElementById("table-container")
-  .setAttribute("data-type", datasetTableId);
+  .setAttribute("data-bs-type", datasetTableId);
 
-window.addEventListener("load", () => {
-  initSearchEventHandler(
-    datasetsApiURL,
-    renderDatasetTable,
-    `#${datasetTableId}`
-  );
+const tableObserver = new MutationObserver((mutations, observer) => {
+  if (document.querySelector(`#${datasetTableId}`)) {
+    observer.disconnect();
+    initSearchEventHandler(
+      datasetsApiURL,
+      renderDatasetTable,
+      `#${datasetTableId}`,
+    );
+  }
 });
+
+tableObserver.observe(document.body, {childList: true, subtree: true})
 
 const languageObserver = new MutationObserver((mutations) => {
   mutations.forEach((record) => {
@@ -166,7 +171,7 @@ const languageObserver = new MutationObserver((mutations) => {
       record,
       renderDatasetTable,
       TableElement,
-      datasetsApiURL
+      datasetsApiURL,
     );
   });
 });
