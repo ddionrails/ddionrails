@@ -1,16 +1,22 @@
 """ Basic views not associated directly with any study. """
+
+from django.conf import settings
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect
 from django.template.response import TemplateResponse
 
-from config.settings import base
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
 
 def imprint(request, template_name="pages/imprint.html"):
     """Display imprint view."""
-    context = {"DEFAULT_FROM_EMAIL": base.DEFAULT_FROM_EMAIL}
+    context = {
+        "INSTITUTE_NAME": settings.INSTITUTE_NAME,
+        "CONTACT_EMAIL": settings.CONTACT_EMAIL,
+        "INSTITUTE_HOME_URL": settings.INSTITUTE_HOME_URL,
+        "PRIVACY_POLICY": settings.PRIVACY_POLICY,
+    }
     return TemplateResponse(request, template_name, context)
 
 

@@ -7,7 +7,7 @@ import tempfile
 import uuid
 from pathlib import Path
 
-from config.helpers import parse_env_variable_dict
+from config.helpers import parse_env_variable_dict, read_imprint_file
 
 # Beta stage config flag
 # ------------------------------------------------------------------------------
@@ -53,6 +53,11 @@ os.makedirs(MEDIA_ROOT, exist_ok=True)
 MEDIA_URL = "/media/"
 
 STATISTICS_SERVER_URL = os.getenv("STATISTICS_SERVER_URL", "/statistics-server/")
+
+INSTITUTE_NAME, CONTACT_EMAIL, INSTITUTE_HOME_URL, PRIVACY_POLICY = read_imprint_file(
+    os.getenv("IMPRINT_INFO_FILE", "")
+)
+
 
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 

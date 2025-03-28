@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """ Test cases for views in ddionrails.config app """
 
@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Dict, List
 
 import pytest
+from django.test import LiveServerTestCase, override_settings
 from django.urls import reverse
 
 from config.views import (
@@ -23,28 +24,29 @@ from tests import status
 pytestmark = [pytest.mark.django_db]
 
 
-class TestPageViews:
-    def test_contact_page(self, client):
+class TestPageViews(LiveServerTestCase):
+    def test_contact_page(self):
         url = reverse("contact")
-        response = client.get(url)
+        response = self.client.get(url)
         assert status.HTTP_200_OK == response.status_code
         content = str(response.content)
-        assert "Contact / feedback" in content
-        assert "SOEP Community Management" in content
-        assert "GitHub" in content
+        self.assertIn("Contact / feedback", content)
+        self.assertIn("SOEP Community Management", content)
+        self.assertIn("GitHub", content)
 
-    def test_home_page(self, client):
+    def test_home_page(self):
         url = reverse("home")
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-    def test_imprint_page(self, client):
-        url = reverse("imprint")
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
+    @override_settings(INSTITUTE_NAME="TEST")
+    def test_imprint_page(self):
+        url = f"{self.live_server_url}/imprint/"
+        response = self.client.get(url)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
         content = str(response.content)
-        assert "Imprint" in content
-        assert "Privacy policy at DIW Berlin" in content
+        self.assertIn("Imprint", content)
+        self.assertIn("Privacy policy at TEST", content)
 
 
 @pytest.mark.usefixtures("news")

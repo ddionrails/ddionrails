@@ -1,0 +1,12 @@
+{
+    "institute": "institute/organization name",
+    "contact": "contact email",
+    "institute_home": {
+	"en": "URL to english page",
+	"de": "URL zu deutschsprachiger Seite"
+    },
+    "privacy_policy": {
+	"en": "URL to english privacy policy",
+	"de": "URL zu Datenschutzrichtlinien"
+    }
+}

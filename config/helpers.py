@@ -2,7 +2,9 @@
 
 """ Helper functions and classes for ddionrails project """
 
-
+from dataclasses import dataclass
+from json import load
+from pathlib import Path
 from typing import Dict
 
 from django.utils.html import escape
@@ -59,5 +61,41 @@ def parse_env_variable_dict(env_variable: str) -> Dict[str, str]:
         if len(pair_list) != 2 or "" in pair_list:
             return {}
         output[pair_list[0].strip()] = pair_list[1].strip()
+
+    return output
+
+
+@dataclass
+class LanguageContainer:
+    """Container for multilanguage imprint data to address in template."""
+
+    en: str
+    de: str
+
+
+def read_imprint_file(
+    file_path: str,
+) -> tuple[str, str, LanguageContainer, LanguageContainer]:
+    """Read imprint json for the base settings module."""
+    output = ("", "", LanguageContainer(en="", de=""), LanguageContainer(en="", de=""))
+    if not file_path:
+        return output
+    path_to_file = Path(file_path)
+    if not path_to_file.absolute().exists():
+        return output
+    with open(path_to_file, "r", encoding="utf-8") as imprint_file:
+        imprint_content = load(imprint_file)
+        output = (
+            imprint_content.get("institute", ""),
+            imprint_content.get("contact", ""),
+            LanguageContainer(
+                en=imprint_content.get("institute_home", {"en": ""})["en"],
+                de=imprint_content.get("institute_home", {"de": ""})["de"],
+            ),
+            LanguageContainer(
+                en=imprint_content.get("privacy_policy", {"en": ""})["en"],
+                de=imprint_content.get("privacy_policy", {"de": ""})["de"],
+            ),
+        )
 
     return output
