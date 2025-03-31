@@ -1,0 +1,31 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "$id": "https://github.com/ddionrails/ddionrails/raw/schema/studies.schema.json",
+   "description":"A list of metadata for studies to initialize the system with",
+   "type":"array",
+   "items":{
+      "type":"object",
+      "required":[
+         "name",
+         "repo"
+      ],
+      "properties":{
+         "name":{
+            "type": "string",
+            "description": "Simple short name used as key in the database"
+         },
+         "label":{
+            "type": "string",
+            "description": "Full name of the study, displayed in the UI. Falls back to the name field if label not given"
+         },
+         "repo":{
+            "type": "string",
+            "description": "URL, without protocol `http(s)://`, to the git repo with the study metadata"
+         },
+         "ref":{
+            "type": "string",
+            "description": "Reference/Name of a commit, branch or tag to pin the data to that specific revision of the data"
+         }
+      }
+   }
+}

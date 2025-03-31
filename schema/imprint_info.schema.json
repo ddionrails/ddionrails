@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ddionrails/ddionrails/raw/schema/imprint_info.schema.json",
+  "title": "Imprint Info",
+  "description": "Information to be displayed on the imprint page",
+  "type": "object",
+  "required": [ "institute", "contact", "institute_home", "privacy_policy" ],
+  "properties": {
+    "institute": {
+      "description": "Organization responsible for the platform",
+      "type": "string"
+    },
+    "contact": {
+      "description": "Contact e-mail to be shown in the imprint",
+      "type": "string"
+    },
+    "institute_home": {
+      "description": "URL to the home page of the institute",
+      "type": "object",
+      "required": [ "en", "de" ],
+      "properties": {
+	"en": {
+	  "description": "URL to the english speaking page"
+	  "type": "string"
+	},
+	"de": {
+	  "description": "URL to the german speaking page"
+	  "type": "string"
+	}
+      }
+    },
+    "privacy_policy": {
+      "description": "URL to the privay policy",
+      "type": "object",
+      "required": [ "en", "de" ],
+      "properties": {
+	"en": {
+	  "description": "URL to the english speaking page"
+	  "type": "string"
+	},
+	"de": {
+	  "description": "URL to the german speaking page"
+	  "type": "string"
+	}
+      }
+    }
+  }
+}
