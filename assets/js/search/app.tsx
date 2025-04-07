@@ -5,8 +5,14 @@
  *  belong to the period "multiple", i.e. are long variables.
  *  There currently seem to be no direct way to do that in search-ui.
  */
-import React from "react";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import React, { useState, useEffect, Suspense } from "react";
+import {
+  BrowserRouter,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import { getLanguageState, LanguageCode } from "./language_state";
 
@@ -81,6 +87,7 @@ function filterQueryParams(queryParams: URLSearchParams): URLSearchParams {
   return filteredParams;
 }
 
+
 export const LinkWithQuery = ({ children, to, ...props }: any) => {
   const navigate = useNavigate();
 
@@ -109,6 +116,17 @@ export const LinkWithQuery = ({ children, to, ...props }: any) => {
       {...props}
       className=""
       onClick={() => {
+        localStorage.setItem(
+          "activeCheckboxes",
+          JSON.stringify(
+            Array.from(
+              document.querySelectorAll(
+                ".sui-multi-checkbox-facet__checkbox:checked",
+              ),
+              (i) => i.id,
+            ),
+          ),
+        );
         handleNavigate(to);
       }}
     >
@@ -272,8 +290,32 @@ function Variables({ language }: { language: LanguageCode }) {
 // eslint-disable-next-line complexity, require-jsdoc
 function App() {
   const language = getLanguageState();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadContent = () => {
+      setTimeout(() => {
+        setIsLoaded(true);
+
+        const activeCheckboxes = JSON.parse(
+          localStorage.getItem("activeCheckboxes"),
+        );
+        for (const checkbox_id of activeCheckboxes) {
+          const element = document.getElementById(
+            checkbox_id,
+          ) as HTMLInputElement;
+          console.log(element);
+          if (element) {
+            element.checked = true;
+          }
+        }
+      }, 2000);
+    };
+    loadContent();
+  }, []);
   return (
     <>
+      <Suspense>
       <BrowserRouter basename="/search">
         <div className="search-menu">
           <LinkWithQuery to="/all">
@@ -314,6 +356,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
+      </Suspense>
     </>
   );
 }
