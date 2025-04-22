@@ -69,6 +69,18 @@ function config(language: LanguageCode) {
         period: {
           snippet: {},
         },
+	title: {
+	  snippet: {},
+	},
+	author: {
+	  snippet: {},
+	},
+	abstract: {
+	  snippet: {},
+	},
+	year: {
+	  snippet: {},
+	},
       },
       disjunctiveFacets,
       facets,

@@ -6,6 +6,7 @@ import {topicResult} from "./topic_result";
 import {variableResult} from "./variable_result";
 import { resultFactoryMapper } from "../factory_mappers";
 import { LanguageCode } from "../language_state";
+import { publicationResult } from "./publication_result";
 
 
 /**
@@ -33,6 +34,9 @@ function AllResultFactory({
   }
   if (result._meta.rawHit._index === "variables") {
     return variableResult.get(language)({result, onClickLink});
+  }
+  if (result._meta.rawHit._index === "publications") {
+    return publicationResult.get(language)({result, onClickLink});
   }
   return null;
 }

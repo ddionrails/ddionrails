@@ -48,7 +48,7 @@ import {
 
 import Autocomplete from "./search_components/autocomplete";
 
-import { publicationResult } from "./result_customizations/publications_result";
+import { publicationResult } from "./result_customizations/publication_result";
 import {
   publicationConfig,
   publicationFacets,

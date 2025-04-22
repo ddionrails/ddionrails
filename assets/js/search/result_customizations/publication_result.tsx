@@ -8,9 +8,9 @@ import {resultFactoryMapper} from "../factory_mappers";
  * @returns
  */
 function header(result: SearchResult, onClickLink: () => void) {
-  let title = result.title.snippet;
+  let title = result.title?.snippet;
   if (typeof title === "undefined") {
-    title = result.title.raw;
+    title = result.title?.raw;
   }
 
   // eslint-disable-next-line require-jsdoc
@@ -20,7 +20,7 @@ function header(result: SearchResult, onClickLink: () => void) {
   }
 
   let tooltipClass = "no-tooltip";
-  const abstract = result.abstract.snippet;
+  const abstract = result.abstract?.snippet;
   let abstractContainer = <></>;
   if (typeof abstract !== "undefined") {
     tooltipClass = "raw-tooltip";
@@ -63,7 +63,7 @@ function publicationBody(result: SearchResult, language: LanguageCode) {
   }
   return (
     <p>
-      {text} {result.author.raw} ({result.year.raw})
+      {text} {result.author?.raw} ({result.year?.raw})
     </p>
   );
 }
