@@ -61,8 +61,16 @@ const connector = new ElasticsearchAPIConnector({
   index: "publications",
 });
 
-// eslint-disable-next-line require-jsdoc
+/**
+ * For this config the facets `type` and `year` are
+ * not processed by facetConfig funcion since they do not 
+ * change when the language changes.
+ * They are a static part of the config below.
+ */
 function config(language: LanguageCode) {
+  const [disjunctiveFacets, facets] = facetConfig(language, [
+    "study",
+  ]);
   return {
     searchQuery: {
       search_fields: {
@@ -115,11 +123,11 @@ function config(language: LanguageCode) {
           },
         },
       },
-      disjunctiveFacets: ["year", "type", "study_name"],
+      disjunctiveFacets: ["year", "type", ...disjunctiveFacets],
       facets: {
         "year": {type: "value"},
         "type": {type: "value"},
-        "study_name": {type: "value"},
+	...facets
       },
 
     },
