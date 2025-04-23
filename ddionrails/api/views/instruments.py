@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 """ Views for ddionrails.api app """
 
 import difflib
@@ -12,18 +11,27 @@ from django.http.response import Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from ddionrails.api.serializers import InstrumentSerializer, QuestionSerializer
+from ddionrails.api.views.parameters_definition import (
+    CONCEPT_PARAMETER,
+    INSTRUMENT_PARAMETER,
+    PAGINATE_PARAMETER,
+    STUDY_PARAMETER,
+    TOPIC_PARAMETER,
+)
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.instruments.models.question import Instrument, Question
 from ddionrails.instruments.views import get_question_item_metadata
 from ddionrails.studies.models import Study
 
 
+@extend_schema(exclude=True)
 class QuestionComparisonViewSet(viewsets.GenericViewSet):
     """Retrieve question and item metadata combined."""
 
@@ -80,10 +88,17 @@ class QuestionComparisonViewSet(viewsets.GenericViewSet):
         return HttpResponse(diff, content_type="text/html")
 
 
+@extend_schema(
+    parameters=[
+        STUDY_PARAMETER,
+        PAGINATE_PARAMETER,
+    ]
+)
 class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List metadata about all instruments."""
 
     serializer_class = InstrumentSerializer
+    http_method_names = ["get"]
 
     @method_decorator(cache_page(60 * 60 * 2, cache="instrument_api"))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
@@ -105,11 +120,21 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
         return instruments
 
 
+@extend_schema(
+    parameters=[
+        STUDY_PARAMETER,
+        PAGINATE_PARAMETER,
+        INSTRUMENT_PARAMETER,
+        TOPIC_PARAMETER,
+        CONCEPT_PARAMETER,
+    ]
+)
 class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List metadata about all questions."""
 
     serializer_class = QuestionSerializer
     pagination_class = None
+    http_method_names = ["get"]
 
     def get_queryset(self):
         topic = self.request.query_params.get("topic", None)

@@ -10,6 +10,7 @@ from django.core.mail import send_mail
 from django.db.models import Model, Q, QuerySet
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
+from drf_spectacular.utils import extend_schema
 from rest_framework import permissions, status, viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
@@ -33,6 +34,7 @@ from ddionrails.workspace.models.basket_variable import BasketVariable
 # VIEWS
 
 
+@extend_schema(exclude=True)
 class BasketViewSet(  # pylint: disable=too-many-ancestors
     viewsets.ModelViewSet, CreateModelMixin, DestroyModelMixin
 ):
@@ -115,6 +117,7 @@ class IsBasketOwner(permissions.BasePermission):
         return obj.basket.user == request.user
 
 
+@extend_schema(exclude=True)
 class BasketVariableSet(  # pylint: disable=too-many-ancestors
     viewsets.ModelViewSet, CreateModelMixin
 ):
@@ -234,6 +237,7 @@ class EmailThrottle(AnonRateThrottle):  # pylint: disable=too-many-ancestors
     scope = "sendmail"
 
 
+@extend_schema(exclude=True)
 class SendFeedback(APIView):
     """Process feedback form content to send feedback mails."""
 
@@ -287,6 +291,7 @@ class SendFeedback(APIView):
         return HttpResponseRedirect(request.META["HTTP_REFERER"])
 
 
+@extend_schema(exclude=True)
 class UserViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List user metadata for admin users."""
 

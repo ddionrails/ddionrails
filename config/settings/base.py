@@ -84,6 +84,7 @@ THIRD_PARTY_APPS = (
     "markdown",
     "webpack_loader",
     "rest_framework",
+    "drf_spectacular",
 )
 LOCAL_APPS = (
     "ddionrails.api",
@@ -222,6 +223,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 100,
     "DEFAULT_THROTTLE_RATES": {"sendmail": "10/day"},
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Paneldata metadata API",
+    "DESCRIPTION": "Serves metadata for mostly internal purposes.",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # DDI on Rails: imports

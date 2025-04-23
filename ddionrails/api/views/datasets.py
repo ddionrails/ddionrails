@@ -9,6 +9,7 @@ from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
@@ -20,18 +21,35 @@ from ddionrails.api.serializers import (
     VariableLabelsSerializer,
     VariableSerializer,
 )
+from ddionrails.api.views.parameters_definition import (
+    CONCEPT_PARAMETER,
+    DATASET_PARAMETER,
+    PAGINATE_PARAMETER,
+    STUDY_PARAMETER,
+    TOPIC_PARAMETER,
+)
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
 
+@extend_schema(
+    parameters=[
+        STUDY_PARAMETER,
+        PAGINATE_PARAMETER,
+        DATASET_PARAMETER,
+        TOPIC_PARAMETER,
+        CONCEPT_PARAMETER,
+    ]
+)
 class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List metadata about all variables."""
 
+    http_method_names = ["get"]
     serializer_class = VariableSerializer
 
-    # @method_decorator(cache_page(60 * 2))
+    @method_decorator(cache_page(60 * 2))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
@@ -99,6 +117,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         )
 
 
+@extend_schema(exclude=True)
 class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List label metadata about all variables."""
 
@@ -120,10 +139,12 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
         return Variable.objects.filter(**query).select_related("period")
 
 
+@extend_schema(parameters=[STUDY_PARAMETER, PAGINATE_PARAMETER])
 class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
-    """List metadata about all variables."""
+    """List metadata about all datasets."""
 
     serializer_class = DatasetSerializer
+    http_method_names = ["get"]
 
     @method_decorator(cache_page(60 * 60 * 2, cache="dataset_api"))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:

@@ -2,8 +2,14 @@
 
 """ URLConf for ddionrails.api app """
 
+
 from django.conf.urls import include
 from django.urls import path, re_path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from rest_framework import routers
 
 from ddionrails.api.views.datasets import (
@@ -26,7 +32,16 @@ from ddionrails.api.views.user_tools import (
 
 app_name = "api"
 
-urlpatterns = [path("feedback/", SendFeedback.as_view(), name="send-feedback")]
+urlpatterns = [
+    path("feedback/", SendFeedback.as_view(), name="send-feedback"),
+    path("schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url="/api/schema/"),
+        name="swagger-ui",
+    ),
+    path("schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+]
 
 ROUTER = routers.SimpleRouter()
 ROUTER.register(r"baskets", BasketViewSet, basename="basket")
