@@ -10,6 +10,7 @@ from django.views.generic import DetailView
 
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.instruments.models import Instrument, Question
+from ddionrails.publications.models import Publication
 
 from .models import Study
 
@@ -43,6 +44,9 @@ class StudyDetailView(DetailView):
             ).count()
             > 0
         )
+        context["num_publications"] = Publication.objects.filter(
+            study=self.object
+        ).count()
 
         return context
 
