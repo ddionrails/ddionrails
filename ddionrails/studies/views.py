@@ -2,6 +2,8 @@
 
 """ Views for ddionrails.studies app """
 
+from functools import lru_cache
+
 from django.db.models import Q
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -13,6 +15,17 @@ from ddionrails.instruments.models import Instrument, Question
 from ddionrails.publications.models import Publication
 
 from .models import Study
+
+
+@lru_cache(maxsize=20)
+def get_study_context(study: Study) -> dict[str, int]:
+    """Get a count for datasets instruments and publications of study."""
+
+    context = {}
+    context["num_datasets"] = Dataset.objects.filter(study=study).count()
+    context["num_instruments"] = Instrument.objects.filter(study=study).count()
+    context["num_publications"] = Publication.objects.filter(study=study).count()
+    return context
 
 
 class StudyDetailView(DetailView):
@@ -29,14 +42,6 @@ class StudyDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["num_datasets"] = Dataset.objects.filter(study=self.object).count()
-        context["num_variables"] = Variable.objects.filter(
-            dataset__study=self.object
-        ).count()
-        context["num_instruments"] = Instrument.objects.filter(study=self.object).count()
-        context["num_questions"] = Question.objects.filter(
-            instrument__study=self.object
-        ).count()
 
         context["has_extended_metadata"] = (
             Instrument.objects.filter(
@@ -44,9 +49,13 @@ class StudyDetailView(DetailView):
             ).count()
             > 0
         )
-        context["num_publications"] = Publication.objects.filter(
-            study=self.object
+        context["num_variables"] = Variable.objects.filter(
+            dataset__study=self.object
         ).count()
+        context["num_questions"] = Question.objects.filter(
+            instrument__study=self.object
+        ).count()
+        context = context | get_study_context(self.object)
 
         return context
 
@@ -59,4 +68,5 @@ def study_topics(request: HttpRequest, study_name: str) -> HttpResponse:
         "json_object": {"study": study.name},
     }
     context["namespace"] = "topics"
+    context = context | get_study_context(study)
     return render(request, "studies/study_topics.html", context=context)

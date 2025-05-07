@@ -12,6 +12,8 @@ from django.views.generic import DetailView, RedirectView, TemplateView
 
 from config.helpers import RowHelper
 from ddionrails.instruments.models import QuestionItem
+from ddionrails.studies.models import Study
+from ddionrails.studies.views import get_study_context
 from ddionrails.workspace.models import Basket, BasketVariable
 
 from .models import Dataset, Variable
@@ -28,6 +30,7 @@ class AllStudyDatasetsView(TemplateView):  # pylint: disable=too-many-ancestors
         context = super().get_context_data(**kwargs)
         context["namespace"] = NAMESPACE
         context["study"] = kwargs["study"]
+        context = context | get_study_context(Study.objects.get(name=kwargs["study"]))
         return context
 
 

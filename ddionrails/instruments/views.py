@@ -16,6 +16,8 @@ from config.helpers import RowHelper
 from ddionrails.data.models import Variable
 from ddionrails.instruments.models import Instrument, Question, QuestionItem
 from ddionrails.instruments.models.question_item import QuestionItemDict
+from ddionrails.studies.models import Study
+from ddionrails.studies.views import get_study_context
 
 NAMESPACE = "instruments"
 
@@ -63,6 +65,7 @@ class AllStudyInstrumentsView(TemplateView):  # pylint: disable=too-many-ancesto
         context["has_extended_metadata"] = (
             Instrument.objects.filter(Q(study=context["study"]) & ~Q(mode="")).count() > 0
         )
+        context = context | get_study_context(Study.objects.get(name=kwargs["study"]))
         return context
 
 
@@ -108,18 +111,18 @@ def question_detail(
     question_items = get_question_item_metadata(question)
 
     concept_list = question.get_concepts()
-    context = dict(
-        question=question,
-        study=question.instrument.study,
-        concept_list=concept_list,
-        variables=Variable.objects.filter(
+    context = {
+        "question": question,
+        "study": question.instrument.study,
+        "concept_list": concept_list,
+        "variables": Variable.objects.filter(
             questions_variables__question=question.id
         ).select_related("dataset", "dataset__study"),
-        base_url=f"{request.scheme}://{request.get_host()}",
-        related_questions=question.get_related_questions(),
-        row_helper=RowHelper(),
-        question_items=question_items,
-    )
+        "base_url": f"{request.scheme}://{request.get_host()}",
+        "related_questions": question.get_related_questions(),
+        "row_helper": RowHelper(),
+        "question_items": question_items,
+    }
 
     return render(request, "questions/question_detail.html", context=context)
 

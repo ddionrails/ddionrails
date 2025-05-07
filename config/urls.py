@@ -50,7 +50,11 @@ class StudyConverter:
         return value
 
 
-register_converter(StudyConverter, "study")
+try:
+    register_converter(StudyConverter, "study")
+except BaseException as error:  # pylint: disable=broad-exception-caught
+    if "already registered" not in str(error):
+        raise error
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
