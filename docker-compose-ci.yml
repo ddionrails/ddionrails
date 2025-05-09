@@ -22,7 +22,7 @@ services:
       ELASTICSEARCH_DSL_INDEX_PREFIX: testing_
     pids_limit: -1
     volumes:
-      - ./codecov:/usr/src/app/codecov
+      - ./codecov_reports:/usr/src/app/codecov_reports
       - ./dist:/usr/src/app/static/dist
       - ./assets:/usr/src/app/assets
       - ./config:/usr/src/app/config
