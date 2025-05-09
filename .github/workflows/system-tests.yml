@@ -22,7 +22,7 @@ jobs:
         run: |
           docker --version
           docker compose --version
-          mkdir codecov
+          mkdir codecov_reports
           git submodule init
           git submodule update --recursive
       - name: Install
@@ -59,11 +59,11 @@ jobs:
       - name: Move codecov report
         if: always()
         run: |
-          docker exec ddionrails-web-1 mv coverage.xml codecov/
+          docker exec ddionrails-web-1 mv coverage.xml codecov_reports/
       - name: Upload codecov report
         if: always()
         uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./codecov/coverage.xml
+          files: ./codecov_reports/coverage.xml
           fail_ci_if_error: true
