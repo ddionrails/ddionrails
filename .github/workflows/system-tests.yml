@@ -43,12 +43,12 @@ jobs:
       - name: Unittests
         if: always()
         run: |
-          docker exec ddionrails-web-1 pytest --cov-report xml \
+          docker exec ddionrails-web-1 pytest --cov-report xml:./codecov_reports/coverage.xml \
           --cov --cov-report html --cov-branch
       - name: Functional tests
         if: always()
         run: |
-          docker exec ddionrails-web-1 pytest --cov-report xml --cov --cov-report html --cov-branch \
+          docker exec ddionrails-web-1 pytest --cov-report xml:./codecov_reports/coverage.xml --cov --cov-report html --cov-branch \
           -m "functional" --cov-append
       - name: Run migrations
         run: docker exec ddionrails-web-1 python manage.py migrate
@@ -56,10 +56,6 @@ jobs:
         run: |
           docker exec ddionrails-web-1 python manage.py check \
           --deploy --settings=config.settings.production
-      - name: Move codecov report
-        if: always()
-        run: |
-          docker exec ddionrails-web-1 mv coverage.xml codecov_reports/
       - name: DEBUGGING
         if: always()
         run: |
