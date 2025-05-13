@@ -757,14 +757,14 @@ Django = ">=2.1"
 
 [[package]]
 name = "django-rq"
-version = "3.0.0"
+version = "3.0.1"
 description = "An app that provides django integration for RQ (Redis Queue)"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "django-rq-3.0.0.tar.gz", hash = "sha256:7bdadb85d9909c118cf1ee1b9bdd1a74ebf141bf8f3c2de2409fcac6080f67ac"},
-    {file = "django_rq-3.0.0-py2.py3-none-any.whl", hash = "sha256:bd2ef287a28301f64c4282293648e4f8c6076dd895a545c9c6b98bde4a82a4ce"},
+    {file = "django_rq-3.0.1-py2.py3-none-any.whl", hash = "sha256:bc0b7ef849592b699d0d388d8e6021c41271ac0f07db2a903352d0a1edcde16b"},
+    {file = "django_rq-3.0.1.tar.gz", hash = "sha256:d111f436608b95a58a6960174eaf44aa021e0a4a32f83a28a7221a9a916dd1ae"},
 ]
 
 [package.dependencies]
