@@ -21,7 +21,10 @@ from django.db.models.query import QuerySet
 from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
 
-from ddionrails.base.generic_documents import GenericDataDocument
+from ddionrails.base.generic_documents import (
+    GenericDataDocument,
+    prepare_model_name_and_labels,
+)
 from ddionrails.instruments.models.question import Question
 from ddionrails.studies.models import Study
 
@@ -60,11 +63,7 @@ class QuestionDocument(GenericDataDocument):
 
     def prepare_instrument(self, question: Question) -> dict[str, str]:
         """Return the related analysis_unit's or None"""
-        return {
-            "label": question.instrument.label,
-            "label_de": question.instrument.label_de,
-            "name": question.instrument.name,
-        }
+        return prepare_model_name_and_labels(question.instrument)
 
     def prepare_period(self, question: Question) -> dict[str, str]:
         """Return the related period's title or None"""

@@ -4,8 +4,7 @@
 from typing import Any, Dict
 
 from django_elasticsearch_dsl import Document, fields
-from elasticsearch_dsl import analyzer
-from elasticsearch_dsl.analysis import tokenizer
+from elasticsearch.dsl import analyzer, tokenizer
 
 from ddionrails.studies.models import Study
 
@@ -13,6 +12,19 @@ edge_ngram_completion = analyzer(
     "edge_ngram_completion",
     tokenizer=tokenizer("edge_ngram", "edge_ngram", min_gram=1, max_gram=10),
 )
+
+
+def prepare_model_name_and_labels(model) -> Dict[str, str]:
+    """Prepare name and label data for indexing."""
+    label_de = model.label_de
+    label = model.label
+    if not label_de:
+        label_de = label
+    if not label_de:
+        label = model.name
+        label_de = model.name
+
+    return {"name": model.name, "label": label, "label_de": label_de}
 
 
 class GenericDocument(Document):
@@ -52,13 +64,7 @@ class GenericDocument(Document):
 
     def prepare_study(self, model_object: Any) -> Dict[str, str]:
         """Collect study fields for indexing."""
-        study = self._get_study(model_object)
-        name = getattr(study, "name", "")
-        return {
-            "name": study.name,
-            "label": getattr(study, "label", name),
-            "label_de": getattr(study, "label_de", name),
-        }
+        return prepare_model_name_and_labels(self._get_study(model_object))
 
     @staticmethod
     def _get_study(model_object: Any) -> Study:

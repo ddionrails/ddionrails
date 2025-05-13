@@ -4,15 +4,16 @@
 """ Test cases for documents in ddionrails.publications app """
 
 
-from django.test import LiveServerTestCase
 import pytest
 from django.forms.models import model_to_dict
+from django.test import LiveServerTestCase
 
 from ddionrails.publications.documents import PublicationDocument
 from ddionrails.publications.models import Publication
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
 
 pytestmark = [pytest.mark.search]
+
 
 @pytest.mark.usefixtures("publication_with_umlauts")
 class TestPublicationDocument(LiveServerTestCase):
@@ -21,6 +22,7 @@ class TestPublicationDocument(LiveServerTestCase):
     def setUp(self) -> None:
         set_up_index(self, self.publication_with_umlauts, "publications")
         return super().setUp()
+
     def tearDown(self) -> None:
         tear_down_index(self, "publications")
         return super().tearDown()
@@ -47,7 +49,8 @@ class TestPublicationDocument(LiveServerTestCase):
         expected["study_name"] = self.publication_with_umlauts.study.title()
         expected["study"] = {
             "name": self.publication_with_umlauts.study.name,
-            "label": self.publication_with_umlauts.study.label,
+            "label": self.publication_with_umlauts.study.name,
+            "label_de": self.publication_with_umlauts.study.name,
         }
         expected["study_name_de"] = ""
         expected["description"] = self.publication_with_umlauts.abstract

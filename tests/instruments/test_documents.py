@@ -3,15 +3,17 @@
 
 """ Test cases for documents in ddionrails.instruments app """
 
-from django.test import LiveServerTestCase
 import pytest
 from django.forms.models import model_to_dict
+from django.test import LiveServerTestCase
 
 from ddionrails.instruments.documents import QuestionDocument
 from ddionrails.instruments.models.question import Question
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
 
 pytestmark = [pytest.mark.search]
+
+
 @pytest.mark.usefixtures("question")
 class TestQuestionDocuments(LiveServerTestCase):
     question: Question
@@ -19,9 +21,10 @@ class TestQuestionDocuments(LiveServerTestCase):
     def setUp(self) -> None:
         set_up_index(self, self.question, "questions")
         return super().setUp()
+
     def tearDown(self) -> None:
         tear_down_index(self, "questions")
-        return super().tearDown() 
+        return super().tearDown()
 
     def test_question_search_document_fields(self):
         search = QuestionDocument.search().query("match_all")
@@ -40,7 +43,8 @@ class TestQuestionDocuments(LiveServerTestCase):
 
         # generate expected dictionary with attributes from model instance
         expected = model_to_dict(
-            self.question, fields=("name", "label", "label_de", "description", "description_de")
+            self.question,
+            fields=("name", "label", "label_de", "description", "description_de"),
         )
         expected["label"] = self.question.label
         # add facets to expected dictionary
@@ -48,25 +52,28 @@ class TestQuestionDocuments(LiveServerTestCase):
             "label": "Not Categorized",
             "label_de": "Nicht Kategorisiert",
         }
-        expected["period"] = {"label": "Not Categorized", "label_de": "Nicht Kategorisiert"}
+        expected["period"] = {
+            "label": "Not Categorized",
+            "label_de": "Nicht Kategorisiert",
+        }
         expected["study_name"] = self.question.instrument.study.title()
         expected["study"] = {
             "name": self.question.instrument.study.name,
-            "label": self.question.instrument.study.label,
+            "label": self.question.instrument.study.name,
+            "label_de": self.question.instrument.study.name,
         }
         expected["study_name_de"] = ""
         expected["question_items"] = [{}]
 
         expected["instrument"] = {
             "name": self.question.instrument.name,
-            "label": self.question.instrument.label,
-            "label_de": self.question.instrument.label_de,
+            "label": self.question.instrument.name,
+            "label_de": self.question.instrument.name,
         }
         expected["id"] = str(self.question.id)
         # generate result dictionary from search document
         result = document.to_dict()
         assert expected == result
-
 
     def test_variable_search_document_fields_missing_related_objects(self):
         self.question.instrument.analysis_unit = None

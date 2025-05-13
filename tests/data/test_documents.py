@@ -4,11 +4,10 @@
 """ Test cases for documents in ddionrails.data app """
 
 from os import getenv
-from unittest import TestCase
 
-from django.test import LiveServerTestCase
 import pytest
 from django.forms.models import model_to_dict
+from django.test import LiveServerTestCase
 
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.data.documents import VariableDocument
@@ -20,9 +19,8 @@ INDEX_PREFIX = getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 pytestmark = [pytest.mark.search]
 
 
-
 @pytest.mark.usefixtures(
-    "variable", "conceptual_dataset", "analysis_unit", "period"
+    "variable", "conceptual_dataset", "analysis_unit", "period", "dataset"
 )
 class TestVariableDocuments(LiveServerTestCase):
     variable: Variable
@@ -79,14 +77,16 @@ class TestVariableDocuments(LiveServerTestCase):
         expected["study_name"] = self.variable.dataset.study.title()
         expected["study"] = {
             "name": self.variable.dataset.study.name,
-            "label": self.variable.dataset.study.label,
+            "label": self.variable.dataset.study.name,
+            "label_de": self.variable.dataset.study.name,
         }
         expected["study_name_de"] = ""
 
         # add relations to expected dictionary
         expected["dataset"] = {
             "name": self.variable.dataset.name,
-            "label": self.variable.dataset.label,
+            "label": self.variable.dataset.name,
+            "label_de": self.variable.dataset.name,
         }
         # generate result dictionary from search document
         result = document.to_dict()

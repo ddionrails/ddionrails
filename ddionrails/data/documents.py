@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-""" Search documents for indexing models from ddionrails.data app into Elasticsearch
+"""Search documents for indexing models from ddionrails.data app into Elasticsearch
 
 
 Authors:
@@ -23,7 +22,10 @@ from django.db.models import QuerySet
 from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
 
-from ddionrails.base.generic_documents import GenericDataDocument
+from ddionrails.base.generic_documents import (
+    GenericDataDocument,
+    prepare_model_name_and_labels,
+)
 from ddionrails.studies.models import Study
 
 from .models import Variable
@@ -57,8 +59,15 @@ class VariableDocument(GenericDataDocument):
 
     @staticmethod
     def _get_study(model_object: Variable) -> Study:
+        """Implementation of method from GenericDocument 'interface'"""
         study: Study = model_object.dataset.study
         return study
+
+    @staticmethod
+    def prepare_dataset(  # pylint: disable=missing-docstring
+        variable: Variable,
+    ) -> Dict[str, str]:
+        return prepare_model_name_and_labels(variable.dataset)
 
     def prepare_analysis_unit(self, variable: Variable) -> dict[str, str]:
         """Return the related analysis_unit's or None"""
@@ -108,11 +117,7 @@ class VariableDocument(GenericDataDocument):
         model = Variable
 
     def get_queryset(self) -> QuerySet:
-        """
-        Return the queryset that should be indexed by this doc type,
-        with select related
-        dataset, analysis_unit, conceptual_dataset, period and study.
-        """
+        """Return the queryset that should be indexed by this doc type"""
         return (
             super()
             .get_queryset()
