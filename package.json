@@ -61,7 +61,7 @@
     "webpack": "^5.92.1",
     "webpack-cli": "^6.0.1",
     "webpack-bundle-tracker": "^3.1.1",
-    "style-loader": "^3.3.4"
+    "style-loader": "^4.0.0"
   },
   "devDependencies": {
     "@olrtg/emmet-language-server": "*",
@@ -79,7 +79,7 @@
     "prettier": "^3.3.2",
     "sass": "^1.83.3",
     "sass-loader": "^16.0.5",
-    "style-loader": "^3.3.4",
+    "style-loader": "^4.0.0",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.2",
