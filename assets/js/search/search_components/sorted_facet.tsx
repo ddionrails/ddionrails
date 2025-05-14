@@ -2,7 +2,7 @@
 import {MultiCheckboxFacet} from "@elastic/react-search-ui-views";
 
 
-import {FacetViewProps} from "@elastic/react-search-ui-views/lib/cjs/types/";
+import {FacetViewProps} from "@elastic/react-search-ui-views/lib";
 import type {FacetValue} from "@elastic/search-ui";
 
 /**

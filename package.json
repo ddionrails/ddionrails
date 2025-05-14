@@ -19,10 +19,10 @@
     }
   ],
   "dependencies": {
-    "@elastic/react-search-ui": "^1.21.5",
-    "@elastic/react-search-ui-views": "^1.21.5",
-    "@elastic/search-ui": "^1.21.5",
-    "@elastic/search-ui-elasticsearch-connector": "^1.20.2",
+    "@elastic/react-search-ui": "^1.23.1",
+    "@elastic/react-search-ui-views": "^1.23.1",
+    "@elastic/search-ui": "^1.23.1",
+    "@elastic/search-ui-elasticsearch-connector": "^1.23.0",
     "@fortawesome/fontawesome-free": "^6.4.0",
     "acorn": ">=8.8.2",
     "acorn-import-assertions": ">=1.8.0",
