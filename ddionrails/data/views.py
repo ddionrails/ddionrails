@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.data app """
+"""Views for ddionrails.data app"""
 
 from copy import deepcopy
 from re import sub
@@ -142,6 +142,7 @@ class VariableDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         study = self.object.get_study()
+        variable: Variable = self.object
         context["study"] = study
         context["related_variables"] = self.object.get_related_variables()
         context["items"] = _get_related_items(self.object.id)
@@ -168,7 +169,7 @@ class VariableDetailView(DetailView):
             "valid",
             "invalid",
         )
-        variable_data = self._sort_variable_data(self.object.content_dict)
+        variable_data = self._sort_variable_data(variable.content_dict)
         context["variable_baskets_context"] = {
             "variable": {
                 "id": context["variable"].id,
@@ -187,10 +188,14 @@ class VariableDetailView(DetailView):
             ],
         }
         for measure in ordering:
-            if measure in self.object.statistics:
-                context["statistics"][measure] = self.object.statistics[measure]
-        context["origin_variables"] = self.object.origin_variables_dict
-        context["target_variables"] = self.object.target_variables_dict
+            if measure in variable.statistics:
+                context["statistics"][measure] = variable.statistics[measure]
+        context["origin_variables"] = variable.origin_variables_dict
+        context["target_variables"] = variable.target_variables_dict
+        context["origin_variables_exist"] = bool(variable.origin_variables.count())
+        context["target_variables_exist"] = bool(variable.target_variables.count())
+        context["related_variables_exist"] = bool(variable.get_related_variables())
+        context = context | get_study_context(study)
         return context
 
     @staticmethod
