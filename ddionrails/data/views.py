@@ -66,6 +66,7 @@ class DatasetDetailView(DetailView):
         context["study"] = self.object.study
         context["variables"] = self.object.variables.all()
         context["namespace"] = NAMESPACE
+        context = context | get_study_context(self.object.study)
         return context
 
 

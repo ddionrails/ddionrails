@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.instruments app """
+"""Views for ddionrails.instruments app"""
 
 from re import sub
 from typing import Dict, List
@@ -50,6 +50,7 @@ class InstrumentDetailView(DetailView):  # pylint: disable=too-many-ancestors
         context = super().get_context_data(**kwargs)
         context["study"] = self.object.study
         context["namespace"] = NAMESPACE
+        context = context | get_study_context(self.object.study)
         return context
 
 
