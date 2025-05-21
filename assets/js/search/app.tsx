@@ -65,6 +65,7 @@ import {
   variableFacets,
   variableSorting,
 } from "./search_configs/variable_search_config";
+import { VariableNames } from "./search_components/variable_name_search"
 import { questionResult } from "./result_customizations/question_result";
 import { variableResult } from "./result_customizations/variable_result";
 
@@ -282,6 +283,9 @@ function App() {
           <LinkWithQuery to="/variables">
             {language === "de" ? "Variablen" : "Variables"}
           </LinkWithQuery>
+          <LinkWithQuery to="/variable-names">
+            {language === "de" ? "Variablennamen" : "Variable name search"}
+          </LinkWithQuery>
           <LinkWithQuery to="/questions">
             {language === "de" ? "Fragen" : "Questions"}
           </LinkWithQuery>
@@ -301,6 +305,10 @@ function App() {
           <Route
             path="/variables"
             element={<Variables language={language} />}
+          />
+          <Route
+            path="/variable-names"
+            element={<VariableNames language={language} />}
           />
           <Route
             path="/questions"
