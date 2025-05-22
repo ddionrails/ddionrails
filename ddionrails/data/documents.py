@@ -35,7 +35,7 @@ from .models import Variable
 class VariableDocument(GenericDataDocument):
     """Search document data.Variable"""
 
-    name = fields.TextField()
+    name = fields.KeywordField()
 
     dataset = fields.ObjectField(
         properties={
