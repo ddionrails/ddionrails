@@ -65,7 +65,11 @@
                         <a href="#origin_variables"
                            aria-controls="origin_variables"
                            data-bs-toggle="tab"
+		           {% if not related_variables_exist %}
+                             class="nav-link active"
+			   {% else %}
                            class="nav-link"
+			   {% endif %}
                         >
                             <span
                                 data-en="Input variables"
@@ -81,7 +85,11 @@
                         <a href="#target_variables"
                            aria-controls="target_variables"
                            data-bs-toggle="tab"
+		           {% if not related_variables_exist and not origin_variables_exist %}
+                             class="nav-link active"
+			   {% else %}
                            class="nav-link"
+			   {% endif %}
                         >
                             <span
                                 data-en="Output variables"
@@ -97,17 +105,35 @@
 
 	        {% if related_variables_exist or origin_variables_exist or target_variables_exist %}
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="related_variables">
+                    <div role="tabpanel" 
+		           {% if related_variables_exist %}
+			     class="tab-pane active"
+			   {% else %}
+                             class="tab-pane"
+			   {% endif %}
+			id="related_variables">
                         {% include "data/related_variables.html" with variable_list=variable.get_related_variables_by_period %}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="origin_variables">
+                    <div role="tabpanel"
+			 {% if not related_variables_exist %}
+			   class="tab-pane active"
+			 {% else %}
+			   class="tab-pane"
+			 {% endif %}
+			id="origin_variables">
                         {% if origin_variables %}
                             {% include "data/related_variables.html" with variable_list=origin_variables%}
                         {% else %}
                             <div class="card bg-light card-body mb-3">No input variables</div>
                         {% endif %}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="target_variables">
+                    <div role="tabpanel"
+			 {% if not related_variables_exist and not origin_variables_exist %}
+			   class="tab-pane active"
+			 {% else %}
+			   class="tab-pane"
+			 {% endif %}
+			id="target_variables">
                         {% if target_variables %}
                             {% include "data/related_variables.html" with variable_list=target_variables%}
                         {% else %}
