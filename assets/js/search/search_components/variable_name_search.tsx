@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 
 export function VariableNames({ language }: { language: string }) {
-  const [results, setResults] = useState([<li key={1}/>]);
+  const [results, setResults] = useState([<li key={1} />]);
+  const [startResult, setStartResult] = useState(0);
   return (
     <div>
-      <SearchBox language={language} resultSetter={setResults} />
-      <ContentBox language={language} results={results} />
+      <SearchBox
+        language={language}
+        resultSetter={setResults}
+        setStartResult={setStartResult}
+      />
+      <ContentBox
+        language={language}
+        results={results}
+        startResult={startResult}
+        setResult={setResults}
+        setStartResult={setStartResult}
+      />
     </div>
   );
 }
@@ -13,9 +24,11 @@ export function VariableNames({ language }: { language: string }) {
 function SearchBox({
   language,
   resultSetter,
+  setStartResult,
 }: {
   language: string;
   resultSetter: any;
+  setStartResult: any;
 }) {
   return (
     <div className="sui-layout-header">
@@ -25,7 +38,8 @@ function SearchBox({
           id="downshift-2-input"
           placeholder={language == "en" ? "Search" : "Suche"}
           onKeyDown={(event) => {
-            searchWithEnter(event, resultSetter);
+            setStartResult(0);
+            searchWithEnter(event, resultSetter, 0);
           }}
         ></input>
         <input
@@ -34,7 +48,8 @@ function SearchBox({
           className="button sui-search-box__submit"
           value="Search"
           onClick={() => {
-            search(resultSetter);
+            setStartResult(0);
+            search(resultSetter, 0);
           }}
         />
       </div>
@@ -42,16 +57,32 @@ function SearchBox({
   );
 }
 
-function ContentBox({ language, results }: { language: string; results: any }) {
+function ContentBox({
+  language,
+  results,
+  startResult,
+  setResult,
+  setStartResult,
+}: {
+  language: string;
+  results: any;
+  startResult: number;
+  setResult: any;
+  setStartResult: any;
+}) {
   return (
     <div className="sui-layout-main">
       <ul className="sui-results-container" id="results-container">
-        { results }
+        {results}
       </ul>
       <div className="sui-layout-main-footer">
-        <ul className="rc-pagination sui-paging hidden">
+        <ul className="rc-pagination sui-paging">
           <li
-            className="rc-pagination-prev rc-pagination-disabled"
+            className={
+              startResult === 0
+                ? "rc-pagination-prev rc-pagination-disabled"
+                : "rc-pagination-prev "
+            }
             aria-disabled="true"
           >
             <button
@@ -59,6 +90,12 @@ function ContentBox({ language, results }: { language: string; results: any }) {
               aria-label="prev page"
               className="rc-pagination-item-link"
               disabled={false}
+              onClick={() => {
+                if (startResult > 0) {
+                  setStartResult(startResult - 20);
+                  search(setResult, startResult - 20);
+                }
+              }}
             ></button>
           </li>
           <li
@@ -72,6 +109,12 @@ function ContentBox({ language, results }: { language: string; results: any }) {
               type="button"
               aria-label="next page"
               className="rc-pagination-item-link"
+              onClick={() => {
+                if (startResult + 20  <= 10000) {
+                setStartResult(startResult + 20);
+                search(setResult, startResult + 20);
+		}
+              }}
             ></button>
           </li>
           <li className="rc-pagination-options"></li>
@@ -84,9 +127,10 @@ function ContentBox({ language, results }: { language: string; results: any }) {
 function searchWithEnter(
   event: React.KeyboardEvent<HTMLInputElement>,
   resultSetter: any,
+  startResult: any,
 ) {
   if (event.key === "Enter") {
-    search(resultSetter);
+    search(resultSetter, startResult);
   }
 }
 
@@ -96,31 +140,32 @@ function RenderResults(searchResults: any) {
     return [<li key={0} />];
   }
   for (const item of searchResults?.hits?.hits) {
-      const metadata = item._source;
-      output.push(
-        <li className="sui-result" key={metadata.id}>
-          <div className="sui-result__header">
-            <h3>
-              <i className="fa fa-chart-bar"></i>
-              <a href={"/variable/" + metadata.id}>
-                {metadata.name}: {metadata.label}
-              </a>
-            </h3>
-          </div>
-          <div className="sui-result__body">
-            <p>
-              Study: {metadata.study.label} | Dataset: {metadata.dataset.label} | Period:
-              {metadata.period.label}
-            </p>
-          </div>
-        </li>,
-      );
+    const metadata = item._source;
+    output.push(
+      <li className="sui-result" key={metadata.id}>
+        <div className="sui-result__header">
+          <h3>
+            <i className="fa fa-chart-bar"></i>
+            <a href={"/variable/" + metadata.id}>
+              {metadata.name}: {metadata.label}
+            </a>
+          </h3>
+        </div>
+        <div className="sui-result__body">
+          <p>
+            Study: {metadata.study.label} | Dataset: {metadata.dataset.label} |
+            Period:
+            {metadata.period.label}
+          </p>
+        </div>
+      </li>,
+    );
   }
 
   return output;
 }
 
-async function search(resultSetter: any) {
+async function search(resultSetter: any, startResult: any) {
   const inputElement = document.getElementById(
     "downshift-2-input",
   ) as HTMLInputElement;
@@ -131,7 +176,7 @@ async function search(resultSetter: any) {
   const response = await fetch("/elastic/variables/_search", {
     method: "POST",
     body: JSON.stringify({
-      from: 0,
+      from: startResult,
       size: 20,
       sort: [{ name: "asc" }],
       query: {
