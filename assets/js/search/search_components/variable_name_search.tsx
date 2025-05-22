@@ -171,6 +171,7 @@ async function search(resultSetter: any, startResult: any) {
   ) as HTMLInputElement;
   const inputText = inputElement.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (inputText.trim() === "") {
+    resultSetter(<></>)
     return;
   }
   const response = await fetch("/elastic/variables/_search", {
