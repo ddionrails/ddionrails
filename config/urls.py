@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Root URLConf for ddionrails project """
+"""Root URLConf for ddionrails project"""
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -72,7 +72,7 @@ urlpatterns = [
     re_path(
         (
             r"^search/"
-            r"((?!all|variables|concepts|questions|publications|topics|statistics)"
+            r"((?!all|variables|variable-names|concepts|questions|publications|topics|statistics)"
             r"\?{0,1}.*)$"
         ),
         RedirectView.as_view(url="all/"),
@@ -81,7 +81,7 @@ urlpatterns = [
     re_path(
         (
             r"^search/"
-            r"((?:all|variables|concepts|questions|publications|topics|statistics)"
+            r"((?:all|variables|variable-names|concepts|questions|publications|topics|statistics)"
             r"\?{0,1}.*){0,1}$"
         ),
         TemplateView.as_view(template_name="search/search.html"),
