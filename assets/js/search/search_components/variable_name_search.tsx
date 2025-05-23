@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 
+const PAGE_START = 0;
+const PAGE_SIZE = 20;
+
 export function VariableNames({ language }: { language: string }) {
   const [results, setResults] = useState([<li key={1} />]);
-  const [startResult, setStartResult] = useState(0);
+  const [startResult, setStartResult] = useState(PAGE_START);
   return (
     <div>
       <SearchBox
@@ -38,8 +41,8 @@ function SearchBox({
           id="downshift-2-input"
           placeholder={language == "en" ? "Search" : "Suche"}
           onKeyDown={(event) => {
-            setStartResult(0);
-            searchWithEnter(event, resultSetter, 0);
+            setStartResult(PAGE_START);
+            searchWithEnter(event, resultSetter, PAGE_START, language);
           }}
         ></input>
         <input
@@ -48,8 +51,8 @@ function SearchBox({
           className="button sui-search-box__submit"
           value="Search"
           onClick={() => {
-            setStartResult(0);
-            search(resultSetter, 0);
+            setStartResult(PAGE_START);
+            search(resultSetter, PAGE_START, language);
           }}
         />
       </div>
@@ -79,7 +82,7 @@ function ContentBox({
         <ul className="rc-pagination sui-paging">
           <li
             className={
-              startResult === 0
+              startResult === PAGE_START
                 ? "rc-pagination-prev rc-pagination-disabled"
                 : "rc-pagination-prev "
             }
@@ -91,9 +94,9 @@ function ContentBox({
               className="rc-pagination-item-link"
               disabled={false}
               onClick={() => {
-                if (startResult > 0) {
-                  setStartResult(startResult - 20);
-                  search(setResult, startResult - 20);
+                if (startResult > PAGE_START) {
+                  setStartResult(startResult - PAGE_SIZE);
+                  search(setResult, startResult - PAGE_SIZE, language);
                 }
               }}
             ></button>
@@ -110,10 +113,10 @@ function ContentBox({
               aria-label="next page"
               className="rc-pagination-item-link"
               onClick={() => {
-                if (startResult + 20  <= 10000) {
-                setStartResult(startResult + 20);
-                search(setResult, startResult + 20);
-		}
+                if (startResult + PAGE_SIZE <= 10000) {
+                  setStartResult(startResult + PAGE_SIZE);
+                  search(setResult, startResult + PAGE_SIZE, language);
+                }
               }}
             ></button>
           </li>
@@ -128,17 +131,19 @@ function searchWithEnter(
   event: React.KeyboardEvent<HTMLInputElement>,
   resultSetter: any,
   startResult: any,
+  language: string,
 ) {
   if (event.key === "Enter") {
-    search(resultSetter, startResult);
+    search(resultSetter, startResult, language);
   }
 }
 
-function RenderResults(searchResults: any) {
-  const output: Array<any> = [];
+function RenderResults(searchResults: any, language: string) {
   if (!searchResults?.hits) {
     return [<li key={0} />];
   }
+  const output: Array<any> = [];
+  const currentLabel = language === "en" ? "label" : "label_de";
   for (const item of searchResults?.hits?.hits) {
     const metadata = item._source;
     output.push(
@@ -147,15 +152,30 @@ function RenderResults(searchResults: any) {
           <h3>
             <i className="fa fa-chart-bar"></i>
             <a href={"/variable/" + metadata.id}>
-              {metadata.name}: {metadata.label}
+              {metadata.name}:{" "}
+              <span data-en={metadata.label} data-de={metadata.label_de}>
+                {metadata[currentLabel]}
+              </span>
             </a>
           </h3>
         </div>
         <div className="sui-result__body">
           <p>
-            Study: {metadata.study.label} | Dataset: {metadata.dataset.label} |
-            Period:
-            {metadata.period.label}
+            Study: {metadata.study.label} | Dataset:{" "}
+            <span
+              data-en={metadata.dataset.label}
+              data-de={metadata.dataset.label_de}
+            >
+              {metadata.dataset[currentLabel]}
+            </span>{" "}
+            | Period:
+            <span
+              data-en={metadata.period.label}
+              data-de={metadata.period.label_de}
+            >
+              {metadata.period[currentLabel]}
+            </span>
+            
           </p>
         </div>
       </li>,
@@ -165,20 +185,20 @@ function RenderResults(searchResults: any) {
   return output;
 }
 
-async function search(resultSetter: any, startResult: any) {
+async function search(resultSetter: any, startResult: any, language: string) {
   const inputElement = document.getElementById(
     "downshift-2-input",
   ) as HTMLInputElement;
   const inputText = inputElement.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (inputText.trim() === "") {
-    resultSetter(<></>)
+    resultSetter(<></>);
     return;
   }
   const response = await fetch("/elastic/variables/_search", {
     method: "POST",
     body: JSON.stringify({
       from: startResult,
-      size: 20,
+      size: PAGE_SIZE,
       sort: [{ name: "asc" }],
       query: {
         regexp: {
@@ -195,5 +215,7 @@ async function search(resultSetter: any, startResult: any) {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-  response.json().then((content: any) => resultSetter(RenderResults(content)));
+  response
+    .json()
+    .then((content: any) => resultSetter(RenderResults(content, language)));
 }
