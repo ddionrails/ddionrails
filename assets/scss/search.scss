@@ -137,3 +137,16 @@ div.sui-select__placeholder {
   visibility: visible;
   opacity: 1;
 }
+
+/* Variable-name search */
+
+#truncate-checkbox-container{
+  display: flex;
+  flex-direction: row;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.truncate-checkbox{
+  margin-right: 1em;
+}

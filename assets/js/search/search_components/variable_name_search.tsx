@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 const PAGE_START = 0;
 const PAGE_SIZE = 20;
 
 export function VariableNames({ language }: { language: string }) {
-  const [results, setResults] = useState([<li key={1} />]);
-  const [startResult, setStartResult] = useState(PAGE_START);
+  const [results, setResults] = useState<Array<ReactNode>>([<li key={1} />]);
+  const [startResult, setStartResult] = useState<number>(PAGE_START);
   return (
     <div>
       <SearchBox
         language={language}
-        resultSetter={setResults}
+        setResult={setResults}
         setStartResult={setStartResult}
       />
       <ContentBox
@@ -24,13 +24,49 @@ export function VariableNames({ language }: { language: string }) {
   );
 }
 
-function SearchBox({
+function TruncatedCheckbox({
   language,
-  resultSetter,
+  side,
+  setResult,
   setStartResult,
 }: {
   language: string;
-  resultSetter: any;
+  side: string;
+  setResult: Dispatch<SetStateAction<Array<ReactNode>>>;
+  setStartResult: Dispatch<SetStateAction<number>>;
+}) {
+  const germanSide = side === "left" ? "links" : "rechts";
+  const englishLabel = `Truncate search on the ${side} side`;
+  const germanLabel = `Suche ${germanSide} trunkieren`;
+  return (
+    <div className="truncate-checkbox">
+      <input
+        id={"truncate-checkbox-" + side}
+        type="checkbox"
+        className="sui-multi-checkbox-facet__checkbox"
+        onChange={() => {
+          setStartResult(PAGE_START);
+          search(setResult, PAGE_START, language);
+        }}
+      />
+      <span
+        className="sui-multi-checkbox-facet__input-text"
+        data-en={englishLabel}
+        date-de={germanLabel}
+      >
+        {language === "en" ? englishLabel : germanLabel}
+      </span>
+    </div>
+  );
+}
+
+function SearchBox({
+  language,
+  setResult,
+  setStartResult,
+}: {
+  language: string;
+  setResult: any;
   setStartResult: any;
 }) {
   return (
@@ -42,7 +78,7 @@ function SearchBox({
           placeholder={language == "en" ? "Search" : "Suche"}
           onKeyDown={(event) => {
             setStartResult(PAGE_START);
-            searchWithEnter(event, resultSetter, PAGE_START, language);
+            searchWithEnter(event, setResult, PAGE_START, language);
           }}
         ></input>
         <input
@@ -52,9 +88,13 @@ function SearchBox({
           value="Search"
           onClick={() => {
             setStartResult(PAGE_START);
-            search(resultSetter, PAGE_START, language);
+            search(setResult, PAGE_START, language);
           }}
         />
+      </div>
+      <div id="truncate-checkbox-container">
+        <TruncatedCheckbox language={language} side="left" setResult={setResult} setStartResult={setStartResult} />
+        <TruncatedCheckbox language={language} side="right" setResult={setResult} setStartResult={setStartResult} />
       </div>
     </div>
   );
@@ -129,12 +169,12 @@ function ContentBox({
 
 function searchWithEnter(
   event: React.KeyboardEvent<HTMLInputElement>,
-  resultSetter: any,
+  setResult: any,
   startResult: any,
   language: string,
 ) {
   if (event.key === "Enter") {
-    search(resultSetter, startResult, language);
+    search(setResult, startResult, language);
   }
 }
 
@@ -175,7 +215,6 @@ function RenderResults(searchResults: any, language: string) {
             >
               {metadata.period[currentLabel]}
             </span>
-            
           </p>
         </div>
       </li>,
@@ -185,15 +224,32 @@ function RenderResults(searchResults: any, language: string) {
   return output;
 }
 
-async function search(resultSetter: any, startResult: any, language: string) {
+async function search(setResult: any, startResult: any, language: string) {
   const inputElement = document.getElementById(
     "downshift-2-input",
   ) as HTMLInputElement;
+
+  const truncate_left = (
+    document.getElementById("truncate-checkbox-left") as HTMLInputElement
+  ).checked;
+  const truncate_right = (
+    document.getElementById("truncate-checkbox-right") as HTMLInputElement
+  ).checked;
+
   const inputText = inputElement.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (inputText.trim() === "") {
-    resultSetter(<></>);
+    setResult(<></>);
     return;
   }
+
+  let searchString = inputText;
+  if (truncate_left) {
+    searchString = ".*" + searchString;
+  }
+  if (truncate_right) {
+    searchString = searchString + ".*";
+  }
+
   const response = await fetch("/elastic/variables/_search", {
     method: "POST",
     body: JSON.stringify({
@@ -203,7 +259,7 @@ async function search(resultSetter: any, startResult: any, language: string) {
       query: {
         regexp: {
           name: {
-            value: ".*" + inputText,
+            value: searchString,
             flags: "ALL",
             case_insensitive: true,
             max_determinized_states: 10000,
@@ -217,5 +273,5 @@ async function search(resultSetter: any, startResult: any, language: string) {
   });
   response
     .json()
-    .then((content: any) => resultSetter(RenderResults(content, language)));
+    .then((content: any) => setResult(RenderResults(content, language)));
 }
