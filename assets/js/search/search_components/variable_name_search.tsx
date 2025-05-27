@@ -35,6 +35,7 @@ function TruncatedCheckbox({
   setResult: Dispatch<SetStateAction<Array<ReactNode>>>;
   setStartResult: Dispatch<SetStateAction<number>>;
 }) {
+  const [checked, setChecked] = useState(true)
   const germanSide = side === "left" ? "links" : "rechts";
   const englishLabel = `Truncate search on the ${side} side`;
   const germanLabel = `Suche ${germanSide} trunkieren`;
@@ -44,6 +45,8 @@ function TruncatedCheckbox({
         id={"truncate-checkbox-" + side}
         type="checkbox"
         className="sui-multi-checkbox-facet__checkbox"
+	checked={checked}
+	onClick={() => {setChecked(!checked)}}
         onChange={() => {
           setStartResult(PAGE_START);
           search(setResult, PAGE_START, language);
