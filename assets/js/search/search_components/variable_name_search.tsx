@@ -2,23 +2,28 @@ import React, { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 const PAGE_START = 0;
 const PAGE_SIZE = 20;
+const ELASTIC_MAX_SIZE = 10000;
 
 export function VariableNames({ language }: { language: string }) {
   const [results, setResults] = useState<Array<ReactNode>>([<li key={1} />]);
   const [startResult, setStartResult] = useState<number>(PAGE_START);
+  const [endResult, setEndResult] = useState<number>(ELASTIC_MAX_SIZE);
   return (
     <div>
       <SearchBox
         language={language}
         setResult={setResults}
         setStartResult={setStartResult}
+        setEndResult={setEndResult}
       />
       <ContentBox
         language={language}
         results={results}
         startResult={startResult}
+        endResult={endResult}
         setResult={setResults}
         setStartResult={setStartResult}
+        setEndResult={setEndResult}
       />
     </div>
   );
@@ -29,13 +34,15 @@ function TruncatedCheckbox({
   side,
   setResult,
   setStartResult,
+  setEndResult
 }: {
   language: string;
   side: string;
   setResult: Dispatch<SetStateAction<Array<ReactNode>>>;
   setStartResult: Dispatch<SetStateAction<number>>;
+  setEndResult: Dispatch<SetStateAction<number>>;
 }) {
-  const [checked, setChecked] = useState(true)
+  const [checked, setChecked] = useState(true);
   const germanSide = side === "left" ? "linken" : "rechten";
   const englishLabel = `Extend search on the ${side} side`;
   const germanLabel = `Erweitere Suchwort auf der ${germanSide} Seite`;
@@ -45,11 +52,13 @@ function TruncatedCheckbox({
         id={"truncate-checkbox-" + side}
         type="checkbox"
         className="sui-multi-checkbox-facet__checkbox"
-	checked={checked}
-	onClick={() => {setChecked(!checked)}}
+        checked={checked}
+        onClick={() => {
+          setChecked(!checked);
+        }}
         onChange={() => {
           setStartResult(PAGE_START);
-          search(setResult, PAGE_START, language);
+          search(setResult, setEndResult, PAGE_START, language);
         }}
       />
       <span
@@ -67,10 +76,12 @@ function SearchBox({
   language,
   setResult,
   setStartResult,
+  setEndResult,
 }: {
   language: string;
   setResult: any;
   setStartResult: any;
+  setEndResult: Dispatch<SetStateAction<number>>;
 }) {
   return (
     <div className="sui-layout-header">
@@ -81,7 +92,13 @@ function SearchBox({
           placeholder={language == "en" ? "Search" : "Suche"}
           onKeyDown={(event) => {
             setStartResult(PAGE_START);
-            searchWithEnter(event, setResult, PAGE_START, language);
+            searchWithEnter(
+              event,
+              setResult,
+              setEndResult,
+              PAGE_START,
+              language,
+            );
           }}
         ></input>
         <input
@@ -91,13 +108,25 @@ function SearchBox({
           value="Search"
           onClick={() => {
             setStartResult(PAGE_START);
-            search(setResult, PAGE_START, language);
+            search(setResult, setEndResult, PAGE_START, language);
           }}
         />
       </div>
       <div id="truncate-checkbox-container">
-        <TruncatedCheckbox language={language} side="left" setResult={setResult} setStartResult={setStartResult} />
-        <TruncatedCheckbox language={language} side="right" setResult={setResult} setStartResult={setStartResult} />
+        <TruncatedCheckbox
+          language={language}
+          side="left"
+          setResult={setResult}
+          setStartResult={setStartResult}
+	  setEndResult={setEndResult}
+        />
+        <TruncatedCheckbox
+          language={language}
+          side="right"
+          setResult={setResult}
+          setStartResult={setStartResult}
+	  setEndResult={setEndResult}
+        />
       </div>
     </div>
   );
@@ -107,14 +136,18 @@ function ContentBox({
   language,
   results,
   startResult,
+  endResult,
   setResult,
   setStartResult,
+  setEndResult,
 }: {
   language: string;
   results: any;
   startResult: number;
-  setResult: any;
-  setStartResult: any;
+  endResult: number;
+  setResult: Dispatch<SetStateAction<Array<ReactNode>>>;
+  setStartResult: Dispatch<SetStateAction<number>>;
+  setEndResult: Dispatch<SetStateAction<number>>;
 }) {
   return (
     <div className="sui-layout-main">
@@ -139,7 +172,12 @@ function ContentBox({
               onClick={() => {
                 if (startResult > PAGE_START) {
                   setStartResult(startResult - PAGE_SIZE);
-                  search(setResult, startResult - PAGE_SIZE, language);
+                  search(
+                    setResult,
+                    setEndResult,
+                    startResult - PAGE_SIZE,
+                    language,
+                  );
                 }
               }}
             ></button>
@@ -150,15 +188,25 @@ function ContentBox({
           >
             <a rel="nofollow">1</a>
           </li>
-          <li className="rc-pagination-next" aria-disabled="false">
+          <li className={
+
+                endResult - startResult > PAGE_SIZE
+                  ? "rc-pagination-next"
+                  : "rc-pagination-next rc-pagination-disabled"
+		  } aria-disabled="false">
             <button
               type="button"
               aria-label="next page"
               className="rc-pagination-item-link"
               onClick={() => {
-                if (startResult + PAGE_SIZE <= 10000) {
+                if (endResult - (startResult + PAGE_SIZE) > 0) {
                   setStartResult(startResult + PAGE_SIZE);
-                  search(setResult, startResult + PAGE_SIZE, language);
+                  search(
+                    setResult,
+                    setEndResult,
+                    startResult + PAGE_SIZE,
+                    language,
+                  );
                 }
               }}
             ></button>
@@ -172,12 +220,13 @@ function ContentBox({
 
 function searchWithEnter(
   event: React.KeyboardEvent<HTMLInputElement>,
-  setResult: any,
-  startResult: any,
+  setResult: Dispatch<SetStateAction<Array<ReactNode>>>,
+  setEndResult: Dispatch<SetStateAction<number>>,
+  startResult: number,
   language: string,
 ) {
   if (event.key === "Enter") {
-    search(setResult, startResult, language);
+    search(setResult, setEndResult, startResult, language);
   }
 }
 
@@ -227,7 +276,12 @@ function RenderResults(searchResults: any, language: string) {
   return output;
 }
 
-async function search(setResult: any, startResult: any, language: string) {
+async function search(
+  setResult: Dispatch<SetStateAction<Array<ReactNode>>>,
+  setEndResult: Dispatch<SetStateAction<number>>,
+  startResult: number,
+  language: string,
+) {
   const inputElement = document.getElementById(
     "downshift-2-input",
   ) as HTMLInputElement;
@@ -241,7 +295,7 @@ async function search(setResult: any, startResult: any, language: string) {
 
   const inputText = inputElement.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (inputText.trim() === "") {
-    setResult(<></>);
+    setResult([<></>]);
     return;
   }
 
@@ -274,7 +328,8 @@ async function search(setResult: any, startResult: any, language: string) {
       "Content-type": "application/json; charset=UTF-8",
     },
   });
-  response
-    .json()
-    .then((content: any) => setResult(RenderResults(content, language)));
+  response.json().then((content: any) => {
+    setEndResult(content["hits"]["total"]["value"]);
+    setResult(RenderResults(content, language));
+  });
 }
