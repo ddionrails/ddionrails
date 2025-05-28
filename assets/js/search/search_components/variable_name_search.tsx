@@ -36,9 +36,9 @@ function TruncatedCheckbox({
   setStartResult: Dispatch<SetStateAction<number>>;
 }) {
   const [checked, setChecked] = useState(true)
-  const germanSide = side === "left" ? "links" : "rechts";
-  const englishLabel = `Truncate search on the ${side} side`;
-  const germanLabel = `Suche ${germanSide} trunkieren`;
+  const germanSide = side === "left" ? "linken" : "rechten";
+  const englishLabel = `Extend search on the ${side} side`;
+  const germanLabel = `Erweitere Suchwort auf der ${germanSide} Seite`;
   return (
     <div className="truncate-checkbox">
       <input
