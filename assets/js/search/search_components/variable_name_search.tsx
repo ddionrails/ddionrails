@@ -34,7 +34,7 @@ function TruncatedCheckbox({
   side,
   setResult,
   setStartResult,
-  setEndResult
+  setEndResult,
 }: {
   language: string;
   side: string;
@@ -118,14 +118,14 @@ function SearchBox({
           side="left"
           setResult={setResult}
           setStartResult={setStartResult}
-	  setEndResult={setEndResult}
+          setEndResult={setEndResult}
         />
         <TruncatedCheckbox
           language={language}
           side="right"
           setResult={setResult}
           setStartResult={setStartResult}
-	  setEndResult={setEndResult}
+          setEndResult={setEndResult}
         />
       </div>
     </div>
@@ -188,12 +188,14 @@ function ContentBox({
           >
             <a rel="nofollow">1</a>
           </li>
-          <li className={
-
-                endResult - startResult > PAGE_SIZE
-                  ? "rc-pagination-next"
-                  : "rc-pagination-next rc-pagination-disabled"
-		  } aria-disabled="false">
+          <li
+            className={
+              endResult - startResult > PAGE_SIZE
+                ? "rc-pagination-next"
+                : "rc-pagination-next rc-pagination-disabled"
+            }
+            aria-disabled="false"
+          >
             <button
               type="button"
               aria-label="next page"
@@ -230,7 +232,30 @@ function searchWithEnter(
   }
 }
 
-function RenderResults(searchResults: any, language: string) {
+/**
+ * Using string replace and split because 
+ * its easier to implement than something that uses substring indices.
+ * Not just using just replace to <em>searchTerm</em> to avoid
+ * using dangerouslySetHTML with user input.
+ */
+function emphasize(name: string, searchTerm: string) {
+  const emphasizedName = name.replaceAll(searchTerm, `|${searchTerm}|`);
+  return emphasizedName
+    .split("|")
+    .map((term, index) =>
+      term === searchTerm ? (
+        <em key={index}>{term}</em>
+      ) : (
+        <span key={index}>{term}</span>
+      ),
+    );
+}
+
+function RenderResults(
+  searchResults: any,
+  language: string,
+  searchTerm: string,
+) {
   if (!searchResults?.hits) {
     return [<li key={0} />];
   }
@@ -244,7 +269,7 @@ function RenderResults(searchResults: any, language: string) {
           <h3>
             <i className="fa fa-chart-bar"></i>
             <a href={"/variable/" + metadata.id}>
-              {metadata.name}:{" "}
+              {emphasize(metadata.name, searchTerm)}:{" "}
               <span data-en={metadata.label} data-de={metadata.label_de}>
                 {metadata[currentLabel]}
               </span>
@@ -330,6 +355,6 @@ async function search(
   });
   response.json().then((content: any) => {
     setEndResult(content["hits"]["total"]["value"]);
-    setResult(RenderResults(content, language));
+    setResult(RenderResults(content, language, inputText));
   });
 }
