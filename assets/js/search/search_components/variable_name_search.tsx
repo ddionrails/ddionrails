@@ -312,7 +312,7 @@ async function search(
     body: JSON.stringify({
       from: startResult,
       size: PAGE_SIZE,
-      sort: [{ name: "asc" }],
+      sort: [{ name_keyword: "asc" }],
       query: {
         regexp: {
           name: {

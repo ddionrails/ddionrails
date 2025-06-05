@@ -35,7 +35,8 @@ from .models import Variable
 class VariableDocument(GenericDataDocument):
     """Search document data.Variable"""
 
-    name = fields.KeywordField()
+    name = fields.TextField()
+    name_keyword = fields.KeywordField()
 
     dataset = fields.ObjectField(
         properties={
@@ -56,6 +57,12 @@ class VariableDocument(GenericDataDocument):
             "label_de": fields.KeywordField(),
         }
     )
+
+    @staticmethod
+    def prepare_name_keyword(  # pylint: disable=missing-docstring
+        variable: Variable,
+    ) -> Dict[str, str]:
+        return variable.name
 
     @staticmethod
     def _get_study(model_object: Variable) -> Study:
