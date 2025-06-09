@@ -1,5 +1,6 @@
 from types import MappingProxyType
 
+import pytest
 from django.core.management import call_command
 from django.db.models import QuerySet
 from django.test import override_settings
@@ -20,7 +21,11 @@ model_type_document_mapper = MappingProxyType(
     }
 )
 
+from django.db.transaction import atomic
+
+
 @override_settings(ELASTICSEARCH_DSL_AUTOSYNC=True)
+@pytest.mark.django_db
 def set_up_index(test_case, model_object, model_type_plural):
     document = model_type_document_mapper[model_type_plural]
 
@@ -29,12 +34,13 @@ def set_up_index(test_case, model_object, model_type_plural):
         document._index.delete()
     document._index.create()
     expected = 1
-    if isinstance(model_object, QuerySet):
-        expected = model_object.count()
-        for _object in model_object:
-            _object.save()
-    else:
-        model_object.save()
+    with atomic():
+        if isinstance(model_object, QuerySet):
+            expected = model_object.count()
+            for _object in model_object:
+                _object.save()
+        else:
+            model_object.save()
     try:
         call_command("search_index", "--create", "--no-parallel", force=True)
     except RequestError:
@@ -43,10 +49,10 @@ def set_up_index(test_case, model_object, model_type_plural):
     # Run tests
 
     test_case.assertEqual(expected, document.search().count())
-    
 
     # Run test
     return document
+
 
 def tear_down_index(test_case, model_type_plural):
     document = model_type_document_mapper[model_type_plural]

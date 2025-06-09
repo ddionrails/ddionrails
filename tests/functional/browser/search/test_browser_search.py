@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 from typing import Any
 from urllib.parse import urljoin
@@ -40,7 +40,7 @@ pytestmark = [  # pylint: disable=invalid-name
     "variable",
 )
 @pytest.mark.django_db
-class TestWorkspace(StaticLiveServerTestCase):
+class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-public-methods
 
     host = "web"
     browser: WebDriver
@@ -75,7 +75,9 @@ class TestWorkspace(StaticLiveServerTestCase):
         return super().tearDown()
 
     def test_search_url(self):
-        response = get(urljoin(self.live_server_url, "search/"), allow_redirects=False)
+        response = get(
+            urljoin(self.live_server_url, "search/"), allow_redirects=False, timeout=10
+        )
 
         self.assertEqual(status.HTTP_302_FOUND, response.status_code)
 
@@ -116,7 +118,6 @@ class TestWorkspace(StaticLiveServerTestCase):
         self.assertIn("some-concept", result_header.text)
         self.assertIn("Some Concept", result_header.text)
 
-    #TODO: look into possible collisions
     def test_concepts_search_by_label_de(self):
         concept = Concept.objects.create()
         concept.name = "pzuf01_test"
@@ -250,10 +251,28 @@ class TestWorkspace(StaticLiveServerTestCase):
         self.browser.get(url)
 
         WebDriverWait(self.browser, 3).until(
-            expected_conditions.presence_of_element_located(
-                (By.CLASS_NAME, f"sui-result")
-            )
+            expected_conditions.presence_of_element_located((By.CLASS_NAME, "sui-result"))
         )
+        self.assertIn("Variables", self.browser.page_source)
+        self.assertIn(variable.label, self.browser.page_source)
+
+    @property
+    def variable_name_search_url(self):
+        return urljoin(self.live_server_url, "search/variable-names")
+
+    def test_variable_name_search_by_label_de(self):
+        variable = self.variable
+        variable.name = "ple0081"
+        variable.label = "Currently Smoke"
+        variable.label_de = "Rauchen gegenwaertig"
+        variable.save()
+
+        set_up_index(self, variable, "variables")
+
+        # search with part of the name
+        query = urlencode({"q": f'"{variable.name[0:3]}"'})
+        url = f"{self.variable_name_search_url}?{query}"
+        self.browser = _wait_for_results_to_load(self.browser, url)
         self.assertIn("Variables", self.browser.page_source)
         self.assertIn(variable.label, self.browser.page_source)
 
@@ -267,7 +286,7 @@ def _wait_for_results_to_load(_browser: WebDriver, url: str):
                     (By.CLASS_NAME, "sui-result__header")
                 )
             )
-        except BaseException:
+        except BaseException:  # pylint: disable=broad-exception-caught
             continue
         break
     return _browser
