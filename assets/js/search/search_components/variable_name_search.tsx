@@ -88,7 +88,7 @@ function SearchBox({
       <div className="sui-search-box">
         <input
           className="sui-search-box__text-input"
-          id="downshift-2-input"
+          id="search-input-field"
           placeholder={language == "en" ? "Search" : "Suche"}
           onKeyDown={(event) => {
             setStartResult(PAGE_START);
@@ -104,6 +104,7 @@ function SearchBox({
         <input
           data-transaction-name="search submit"
           type="submit"
+          id="search-submit-button"
           className="button sui-search-box__submit"
           value="Search"
           onClick={() => {
@@ -233,7 +234,7 @@ function searchWithEnter(
 }
 
 /**
- * Using string replace and split because 
+ * Using string replace and split because
  * its easier to implement than something that uses substring indices.
  * Not just using just replace to <em>searchTerm</em> to avoid
  * using dangerouslySetHTML with user input.
@@ -301,6 +302,19 @@ function RenderResults(
   return output;
 }
 
+function updateURL(searchTerm: string) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const baseURL = window.location.origin + window.location.pathname;
+  if (!searchTerm) {
+    urlParams.delete("q");
+    window.history.replaceState({}, "", baseURL + "?" + urlParams.toString());
+    return;
+  }
+  urlParams.set("q", searchTerm);
+  window.history.replaceState({}, "", baseURL + "?" + urlParams.toString());
+  return;
+}
+
 async function search(
   setResult: Dispatch<SetStateAction<Array<ReactNode>>>,
   setEndResult: Dispatch<SetStateAction<number>>,
@@ -308,7 +322,7 @@ async function search(
   language: string,
 ) {
   const inputElement = document.getElementById(
-    "downshift-2-input",
+    "search-input-field",
   ) as HTMLInputElement;
 
   const truncate_left = (
@@ -331,6 +345,8 @@ async function search(
   if (truncate_right) {
     searchString = searchString + ".*";
   }
+
+  updateURL(inputText)
 
   const response = await fetch("/elastic/variables/_search", {
     method: "POST",
@@ -358,3 +374,14 @@ async function search(
     setResult(RenderResults(content, language, inputText));
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlSearch = urlParams.get("q");
+  if (urlSearch) {
+    const inputField = document.getElementById("search-input-field");
+    inputField.setAttribute("value", urlSearch);
+    const searchButton = document.getElementById("search-submit-button");
+    searchButton.click();
+  }
+});

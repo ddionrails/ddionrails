@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for documents in ddionrails.data app """
+"""Test cases for documents in ddionrails.data app"""
 
 from os import getenv
 
@@ -60,6 +60,7 @@ class TestVariableDocuments(LiveServerTestCase):
             ),
         )
         expected["categories"] = {"labels": ["Yes"], "labels_de": ["Ja"]}
+        expected["name_keyword"] = expected["name"]
         # add facets to expected dictionary
         expected["analysis_unit"] = {
             "label": "Not Categorized",
