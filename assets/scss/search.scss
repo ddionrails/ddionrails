@@ -150,3 +150,18 @@ div.sui-select__placeholder {
 .truncate-checkbox{
   margin-right: 1em;
 }
+
+#search-explanation {
+    width: 40%;
+    text-align: center;
+    border: solid grey;
+    border-radius: 1rem 1rem 1rem 1rem;
+    padding: 1rem;
+    font-size: 1.3rem;
+}
+
+#search-explanation-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
