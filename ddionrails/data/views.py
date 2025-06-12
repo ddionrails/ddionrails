@@ -5,8 +5,8 @@
 from copy import deepcopy
 from re import sub
 from typing import List
-from uuid import UUID
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.views.generic import DetailView, RedirectView, TemplateView
 
@@ -146,7 +146,7 @@ class VariableDetailView(DetailView):
         variable: Variable = self.object
         context["study"] = study
         context["related_variables"] = self.object.get_related_variables()
-        context["items"] = _get_related_items(self.object.id)
+        context["items"] = _get_related_items(self.object)
         # All questions are intended to be displayed separately in a bootstrap modal.
         # The subset here is to be displayed directly on the page.
         context["items_subset"] = context["items"][:5]
@@ -234,14 +234,18 @@ class VariableDetailView(DetailView):
         return _data
 
 
-def _get_related_items(variable_id: UUID) -> List[QuestionItem]:
+def _get_related_items(variable: Variable) -> List[QuestionItem]:
     return list(
         (
             QuestionItem.objects.filter(
-                variables__variable__id=variable_id
+                Q(question__instrument__period=variable.period)
+                & ~Q(question__instrument__period__name=0),
+                variables__variable__id=variable.id,
             ).select_related("question", "question__period", "question__instrument")
             | QuestionItem.objects.filter(
-                variables__variable__target_variables__target_id=variable_id
+                Q(question__instrument__period=variable.period)
+                & ~Q(question__instrument__period__name=0),
+                variables__variable__target_variables__target_id=variable.id,
             ).select_related("question", "question__period", "question__instrument")
         )
         .order_by("-question__period__name")
