@@ -117,7 +117,8 @@ def question_detail(
         "study": question.instrument.study,
         "concept_list": concept_list,
         "variables": Variable.objects.filter(
-            questions_variables__question=question.id
+            Q(dataset__period=question.instrument.period) | Q(dataset__period__name=0),
+            questions_variables__question=question.id,
         ).select_related("dataset", "dataset__study"),
         "base_url": f"{request.scheme}://{request.get_host()}",
         "related_questions": question.get_related_questions(),
