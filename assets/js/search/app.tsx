@@ -284,7 +284,7 @@ function App() {
             {language === "de" ? "Variablen" : "Variables"}
           </LinkWithQuery>
           <LinkWithQuery to="/variable-names">
-            {language === "de" ? "Variablennamen" : "Variable name search"}
+ <i className="fa-solid fa-terminal"></i> {language === "de" ? "Variablennamen" : "Variable name search"}
           </LinkWithQuery>
           <LinkWithQuery to="/questions">
             {language === "de" ? "Fragen" : "Questions"}

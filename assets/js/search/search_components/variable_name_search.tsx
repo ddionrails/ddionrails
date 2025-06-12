@@ -8,6 +8,16 @@ export function VariableNames({ language }: { language: string }) {
   const [results, setResults] = useState<Array<ReactNode>>([<li key={1} />]);
   const [startResult, setStartResult] = useState<number>(PAGE_START);
   const [endResult, setEndResult] = useState<number>(ELASTIC_MAX_SIZE);
+  const explanation = new Map([
+    [
+      "en",
+      "This search only goes through the names of variables. If no checkboxes are ticked, it matches your search term exactly. Otherwise it will allow results to have an arbitrary amount of additional characters on the left or right side of your search term.",
+    ],
+    [
+      "de",
+      "Diese Suche verläuft nur über die Namen von Variablen. Wenn keines der Auswahlkästchen aktiviert ist, werdern Ihnen nur Ergebnisse angezeigt, die vollständig mit Ihrer Suchanfrage übereinstimmen. Wenn die Auswahlkästchen dagegen aktiv sind, werden Ihnen Ergebnisse angezeigt, die beliebig viele arbiträre Zeichen links oder rechts von Ihrer Suchanfrage haben.",
+    ],
+  ]);
   return (
     <div>
       <SearchBox
@@ -16,6 +26,15 @@ export function VariableNames({ language }: { language: string }) {
         setStartResult={setStartResult}
         setEndResult={setEndResult}
       />
+      <div id="search-explanation-container">
+        <p
+          id="search-explanation"
+          data-en={explanation.get("en")}
+          data-de={explanation.get("de")}
+        >
+          {explanation.get(language)}
+        </p>
+      </div>
       <ContentBox
         language={language}
         results={results}
@@ -44,8 +63,8 @@ function TruncatedCheckbox({
 }) {
   const [checked, setChecked] = useState(true);
   const germanSide = side === "left" ? "linken" : "rechten";
-  const englishLabel = `Extend search on the ${side} side`;
-  const germanLabel = `Erweitere Suchwort auf der ${germanSide} Seite`;
+  const englishLabel = `Allow results with additional characters on the <strong>${side}</strong> side`;
+  const germanLabel = `Erlaube Ergebnisse mit weiteren Zeichen auf der <strong>${germanSide}</strong> Seite`;
   return (
     <div className="truncate-checkbox">
       <input
@@ -65,9 +84,10 @@ function TruncatedCheckbox({
         className="sui-multi-checkbox-facet__input-text"
         data-en={englishLabel}
         date-de={germanLabel}
-      >
-        {language === "en" ? englishLabel : germanLabel}
-      </span>
+        dangerouslySetInnerHTML={{
+          __html: language === "en" ? englishLabel : germanLabel,
+        }}
+      ></span>
     </div>
   );
 }
@@ -236,7 +256,7 @@ function searchWithEnter(
 /**
  * Using string replace and split because
  * its easier to implement than something that uses substring indices.
- * Not just using just replace to <em>searchTerm</em> to avoid
+ * Not using .replace() to <em>searchTerm</em> to avoid
  * using dangerouslySetHTML with user input.
  */
 function emphasize(name: string, searchTerm: string) {
@@ -334,9 +354,12 @@ async function search(
 
   const inputText = inputElement.value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   if (inputText.trim() === "") {
+    document.getElementById("search-explanation-container").classList.remove("hidden");
+    updateURL("");
     setResult([<></>]);
     return;
   }
+  document.getElementById("search-explanation-container").classList.add("hidden");
 
   let searchString = inputText;
   if (truncate_left) {
@@ -346,7 +369,7 @@ async function search(
     searchString = searchString + ".*";
   }
 
-  updateURL(inputText)
+  updateURL(inputText);
 
   const response = await fetch("/elastic/variables/_search", {
     method: "POST",
