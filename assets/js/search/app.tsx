@@ -65,7 +65,7 @@ import {
   variableFacets,
   variableSorting,
 } from "./search_configs/variable_search_config";
-import { VariableNames } from "./search_components/variable_name_search"
+import { VariableNames } from "./search_components/variable_name_search";
 import { questionResult } from "./result_customizations/question_result";
 import { variableResult } from "./result_customizations/variable_result";
 
@@ -276,39 +276,41 @@ function App() {
   return (
     <>
       <BrowserRouter basename="/search">
-        <div className="search-menu">
-          <LinkWithQuery to="/all">
-            {language === "de" ? "Alles durchsuchen" : "Search all"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/variables">
-            {language === "de" ? "Variablen" : "Variables"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/variable-names">
- <i className="fa-solid fa-terminal"></i> {language === "de" ? "Variablennamen" : "Variable name search"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/questions">
-            {language === "de" ? "Fragen" : "Questions"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/concepts">
-            {language === "de" ? "Konzepte" : "Concepts"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/topics">
-            {language === "de" ? "Themen" : "Topics"}
-          </LinkWithQuery>
-          <LinkWithQuery to="/publications">
-            {language === "de" ? "Publikationen" : "Publications"}
-          </LinkWithQuery>
+        <div className="full-search-menu">
+          <div className="search-menu">
+            <LinkWithQuery to="/all">
+              {language === "de" ? "Alles durchsuchen" : "Search all"}
+            </LinkWithQuery>
+            <LinkWithQuery to="/variables">
+              {language === "de" ? "Variablen" : "Variables"}
+            </LinkWithQuery>
+            <LinkWithQuery to="/questions">
+              {language === "de" ? "Fragen" : "Questions"}
+            </LinkWithQuery>
+            <LinkWithQuery to="/concepts">
+              {language === "de" ? "Konzepte" : "Concepts"}
+            </LinkWithQuery>
+            <LinkWithQuery to="/topics">
+              {language === "de" ? "Themen" : "Topics"}
+            </LinkWithQuery>
+            <LinkWithQuery to="/publications">
+              {language === "de" ? "Publikationen" : "Publications"}
+            </LinkWithQuery>
+          </div>
+          <div className="search-menu" id="variable-names-navigation">
+            <LinkWithQuery to="/variable-names">
+              <i className="fa-solid fa-terminal"></i>{" "}
+              {language === "de" ? "Variablennamen" : "Variable name search"}
+            </LinkWithQuery>
+          </div>
         </div>
+
         <Routes>
           <Route path="/" element={<All language={language} />} />
           <Route path="/all" element={<All language={language} />} />
           <Route
             path="/variables"
             element={<Variables language={language} />}
-          />
-          <Route
-            path="/variable-names"
-            element={<VariableNames language={language} />}
           />
           <Route
             path="/questions"
@@ -319,6 +321,10 @@ function App() {
           <Route
             path="/publications"
             element={<Publications language={language} />}
+          />
+          <Route
+            path="/variable-names"
+            element={<VariableNames language={language} />}
           />
         </Routes>
       </BrowserRouter>
