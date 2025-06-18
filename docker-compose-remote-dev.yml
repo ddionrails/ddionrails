@@ -14,7 +14,8 @@ services:
         while [ 1 ];
         do 
           python /usr/src/app/manage.py runserver_plus \
-            --print-sql 0.0.0.0:8000;
+            --print-sql 0.0.0.0:8000 \
+            --keep-meta-shutdown;
           test $$? -gt 128 && break;
         done"
     depends_on:
