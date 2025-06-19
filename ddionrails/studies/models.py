@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Model definitions for ddionrails.studies app """
+"""Model definitions for ddionrails.studies app"""
 
 import uuid
 from pathlib import Path
@@ -111,6 +111,7 @@ class Study(ModelMixin, TimeStampedModel):
             "without definition of the protocol (e.g. https)"
         ),
     )
+    webhook_secret = models.CharField(max_length=64, blank=True, null=True, default="")
     current_commit = models.CharField(
         max_length=255,
         blank=True,

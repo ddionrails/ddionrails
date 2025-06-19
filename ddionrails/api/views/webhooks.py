@@ -1,0 +1,87 @@
+"""Handle WebHook requests"""
+
+import hashlib
+import hmac
+import logging
+
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from rest_framework.viewsets import ViewSet
+
+from ddionrails.imports.management.commands.update import update_single_study
+from ddionrails.imports.manager import StudyImportManager
+from ddionrails.studies.models import Study
+
+logger = logging.getLogger(__name__)
+
+
+class WebhookView(ViewSet):
+    """Handle WebHook requests"""
+
+    authentication_classes = []
+    permission_classes = []
+
+    @action(detail=False, methods=["post"])
+    def github(self, request, *args, **kwargs):  # pylint: disable=unused-variable
+        """Handle GitHub post requests"""
+        signature = request.headers.get("X-Hub-Signature-256")
+        payload: bytes = request.body
+
+        post_data = request.data
+        repo_url: str = post_data["repository"]["html_url"]
+        if repo_url.startswith("https://"):
+            repo_url = repo_url[8:]
+        study = Study.objects.get(repo=repo_url)
+
+        if not study:
+            return Response(
+                {"detail": "Invalid repository"}, status=status.HTTP_404_NOT_FOUND
+            )
+
+        if not self._verify_signature_github(payload, signature, study):
+            return Response(
+                {"detail": "Invalid signature"}, status=status.HTTP_403_FORBIDDEN
+            )
+
+        event = request.headers.get("X-GitHub-Event")
+        data = request.data
+
+        if event is None:
+            logging.info("WEBHOOK: Received ping from webhook.")
+            return Response({"detail": "Received"}, status=status.HTTP_200_OK)
+
+        if event == "push":
+            repo = data.get("repository", {}).get("full_name", "unknown")
+            logging.info("WEBHOOK: Received push to %s", repo)
+            if "main" in data.get("ref", "") or "master" in data.get("ref", ""):
+                logging.info("WEBHOOK: Updating %s", study.name)
+                manager = StudyImportManager(study, redis=True)
+                update_single_study(
+                    study, local=False, clean_import=True, manager=manager
+                )
+            return Response({"detail": "Push event processed"}, status=status.HTTP_200_OK)
+
+        return Response({"detail": "Unhandled event"}, status=status.HTTP_200_OK)
+
+    def _verify_signature_github(self, payload, header_signature, study):
+        """Verify signature for GitHub request"""
+        if header_signature is None:
+            return False
+
+        secret = study.webhook_secret.encode("utf-8")
+        if not secret:
+            return False
+
+        try:
+            sha_name, signature = header_signature.split("=")
+        except ValueError:
+            return False
+
+        if sha_name != "sha256":
+            return False
+
+        our_signature = hmac.new(
+            secret, msg=payload, digestmod=hashlib.sha256
+        ).hexdigest()
+        return hmac.compare_digest(our_signature, signature)

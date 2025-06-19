@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" URLConf for ddionrails.api app """
+"""URLConf for ddionrails.api app"""
 
 
 from django.conf.urls import include
@@ -29,6 +29,7 @@ from ddionrails.api.views.user_tools import (
     SendFeedback,
     UserViewSet,
 )
+from ddionrails.api.views.webhooks import WebhookView
 
 app_name = "api"
 
@@ -58,5 +59,6 @@ ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"topic-leafs", TopicRootAndLeafs, basename="topic-leafs")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
 ROUTER.register(r"variable_labels", VariableLabelsViewSet, basename="variable_labels")
+ROUTER.register(r"webhooks", WebhookView, basename="webhooks")
 
 urlpatterns.append(re_path("^", include(ROUTER.urls)))
