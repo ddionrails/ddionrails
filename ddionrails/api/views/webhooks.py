@@ -4,13 +4,13 @@ import hashlib
 import hmac
 import logging
 
+from django_rq.queues import enqueue
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from ddionrails.imports.management.commands.update import update_single_study
-from ddionrails.imports.manager import StudyImportManager
+from ddionrails.api.helpers import run_import_on_redis
 from ddionrails.studies.models import Study
 
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class WebhookView(ViewSet):
     authentication_classes = []
     permission_classes = []
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post", "get"])
     def github(self, request, *args, **kwargs):  # pylint: disable=unused-variable
         """Handle GitHub post requests"""
         signature = request.headers.get("X-Hub-Signature-256")
@@ -56,10 +56,8 @@ class WebhookView(ViewSet):
             logging.info("WEBHOOK: Received push to %s", repo)
             if "main" in data.get("ref", "") or "master" in data.get("ref", ""):
                 logging.info("WEBHOOK: Updating %s", study.name)
-                manager = StudyImportManager(study, redis=True)
-                update_single_study(
-                    study, local=False, clean_import=True, manager=manager
-                )
+                enqueue(run_import_on_redis, study.name)
+                logging.info("WEBHOOK: Update queued")
             return Response({"detail": "Push event processed"}, status=status.HTTP_200_OK)
 
         return Response({"detail": "Unhandled event"}, status=status.HTTP_200_OK)
