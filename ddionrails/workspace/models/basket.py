@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Model definitions for ddionrails.workspace app: Basket """
+"""Model definitions for ddionrails.workspace app: Basket"""
 
 import csv
 import datetime
@@ -72,19 +72,19 @@ class Basket(TimeStampedModel):
         unique_together = ("user", "name")
 
     def __str__(self) -> str:
-        """ Create a pathlike string to reach this basket from the frontend."""
+        """Create a pathlike string to reach this basket from the frontend."""
         return "%s/%s" % (self.user.username, self.name)
 
     def get_absolute_url(self) -> str:
-        """ Returns a canonical URL for the model using the "id" field """
+        """Returns a canonical URL for the model using the "id" field"""
         return reverse("workspace:basket_detail", kwargs={"basket_id": self.id})
 
     def html_description(self) -> str:
-        """ Returns the "description" field as a string containing HTML markup """
+        """Returns the "description" field as a string containing HTML markup"""
         return render_markdown(self.description)
 
     def title(self) -> str:
-        """ Returns a title representation.
+        """Returns a title representation.
 
         Uses the "label" field, with "name" field as fallback
         """
@@ -145,11 +145,11 @@ class Basket(TimeStampedModel):
         return output.getvalue()
 
     def to_dict(self) -> Dict[str, Union[int, str]]:
-        """ Returns a dictionary containing the fields: name, label and id """
+        """Returns a dictionary containing the fields: name, label and id"""
         return dict(name=self.name, label=self.label, id=self.id)
 
     @staticmethod
-    def backup(study: Study = None):
+    def backup(study: Study | None = None, filename: str | None = None):
         """Create a backup file for baskets and their content."""
         basket_variables = apps.get_model("workspace", "BasketVariable")
         if study:
@@ -159,7 +159,8 @@ class Basket(TimeStampedModel):
             objects = list(Basket.objects.all()) + list(basket_variables.objects.all())
         json_serializer = serializers.get_serializer("json")
         serializer = json_serializer()
-        filename = datetime.datetime.now().strftime("baskets_%Y%m%d_%H%M.json")
+        if filename is None:
+            filename = datetime.datetime.now().strftime("baskets_%Y%m%d_%H%M.json")
         file_path = settings.BACKUP_DIR.joinpath(filename).absolute()
 
         with open(file_path, "w") as out:
