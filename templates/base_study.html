@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 
 {% block study_metadata %}
-    <meta name="study" content="{{ study }}">
+    <meta name="study" content="{{ study.name }}">
+    <meta name="modified" content="{{ study.modified }}">
 {% endblock study_metadata %}
 
 {% block title %}

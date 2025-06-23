@@ -13,10 +13,14 @@ const study = document.head
 const dataset = document.head
   .querySelector('meta[name="dataset"]')
   .getAttribute("content");
+const modifiedDate = document.head
+  .querySelector('meta[name="modified"]')
+  .getAttribute("content");
 const variableTableId = "variable-table";
 
 variableApiURL.searchParams.append("dataset", dataset);
 variableApiURL.searchParams.append("study", study);
+variableApiURL.searchParams.append("modified", modifiedDate);
 
 const inputTemplate = document.createElement("input");
 inputTemplate.type = "text";

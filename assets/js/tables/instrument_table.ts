@@ -8,7 +8,11 @@ import {languageCode, languageConfig} from "../language_management";
 const instrumentApiURL = new URL("api/instruments/", window.location.origin);
 const urlPart = "inst";
 const study = document.querySelector("#study-name").getAttribute("value");
+const modifiedDate = document.head
+  .querySelector('meta[name="modified"]')
+  .getAttribute("content");
 instrumentApiURL.searchParams.append("study", study);
+instrumentApiURL.searchParams.append("modified", modifiedDate);
 
 const TableElement = getTable().cloneNode(true) as HTMLElement;
 

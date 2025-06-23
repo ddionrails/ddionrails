@@ -13,11 +13,15 @@ const study = document.head
 const instrument = document.head
   .querySelector('meta[name="instrument"]')
   .getAttribute("content");
+const modifiedDate = document.head
+  .querySelector('meta[name="modified"]')
+  .getAttribute("content");
 
 const TableElement = getTable().cloneNode(true) as HTMLElement;
 
 questionsApiURL.searchParams.append("instrument", instrument);
 questionsApiURL.searchParams.append("study", study);
+questionsApiURL.searchParams.append("modified", modifiedDate);
 
 const inputTemplate = document.createElement("input");
 inputTemplate.type = "text";

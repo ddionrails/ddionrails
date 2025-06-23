@@ -10,6 +10,9 @@ const urlPart = "datasets";
 const study = document.head
   .querySelector('meta[name="study"]')
   .getAttribute("content");
+const modifiedDate = document.head
+  .querySelector('meta[name="modified"]')
+  .getAttribute("content");
 
 const attachmentIcon = document.createElement("i");
 attachmentIcon.classList.add("fa-solid", "fa-file-lines");
@@ -17,6 +20,7 @@ const attachmentLinkTemplate = document.createElement("a");
 attachmentLinkTemplate.appendChild(attachmentIcon);
 
 datasetsApiURL.searchParams.append("study", study);
+datasetsApiURL.searchParams.append("modified", modifiedDate);
 
 /**
  * Renders a table of datasets.
