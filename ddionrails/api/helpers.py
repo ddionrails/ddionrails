@@ -4,6 +4,7 @@ run_import_on_redis was declared in ddionrails.api.views.webhooks
 
 from datetime import datetime
 
+from django.core.cache import cache
 from django.core.management import call_command
 from django_rq.queues import enqueue
 
@@ -14,6 +15,10 @@ from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket
 
 
+def _clear_all_caches():
+    cache.clear()
+
+
 def run_import_on_redis(study_name):
     """Queue Study import in redis queue that will in turn queue single import jobs"""
     study = Study.objects.get(name=study_name)
@@ -22,3 +27,5 @@ def run_import_on_redis(study_name):
     Basket.backup(study, file_name)
     update_single_study(study, local=False, clean_import=True, manager=manager)
     enqueue(call_command, "loaddata", BACKUP_DIR.joinpath(file_name).absolute())
+    enqueue(_clear_all_caches)
+    enqueue(call_command, "search_index", "--rebuild", "-f")

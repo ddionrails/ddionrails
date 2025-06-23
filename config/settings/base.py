@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Django settings for ddionrails project: Base settings for all environments """
+"""Django settings for ddionrails project: Base settings for all environments"""
 
 import os
 import tempfile
@@ -149,7 +149,11 @@ DATABASES = {
 
 # DJANGO RQ
 # ------------------------------------------------------------------------------
-RQ_QUEUES = {"default": {"HOST": "redis", "PORT": 6379, "DB": 0, "DEFAULT_TIMEOUT": 2000}}
+REDIS_HOST = "redis"
+REDIS_PORT = 6379
+RQ_QUEUES = {
+    "default": {"HOST": REDIS_HOST, "PORT": REDIS_PORT, "DB": 0, "DEFAULT_TIMEOUT": 2000}
+}
 
 THUMBNAIL_PROCESSORS = (
     "easy_thumbnails.processors.colorspace",
@@ -195,18 +199,16 @@ WEBPACK_LOADER = {
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "",
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/1",
     },
     "instrument_api": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "api",
-        "OPTIONS": {"MAX_ENTRIES": 15},
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/2",
     },
     "dataset_api": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        "LOCATION": "api",
-        "OPTIONS": {"MAX_ENTRIES": 15},
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{REDIS_HOST}:{REDIS_PORT}/3",
     },
 }
 

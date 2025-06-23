@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.studies app """
+"""Views for ddionrails.studies app"""
 
-from functools import lru_cache
 
+from django.core.cache import caches
 from django.db.models import Q
 from django.http.request import HttpRequest
 from django.http.response import HttpResponse
@@ -16,15 +16,23 @@ from ddionrails.publications.models import Publication
 
 from .models import Study
 
+cache = caches["default"]
 
-@lru_cache(maxsize=20)
+
 def get_study_context(study: Study) -> dict[str, int]:
     """Get a count for datasets instruments and publications of study."""
+
+    key = f"study_context:{study.id}"
+
+    cached_data = cache.get(key)
+    if cached_data is not None:
+        return cached_data
 
     context = {}
     context["num_datasets"] = Dataset.objects.filter(study=study).count()
     context["num_instruments"] = Instrument.objects.filter(study=study).count()
     context["num_publications"] = Publication.objects.filter(study=study).count()
+    cache.set(key, context, timeout=3000)
     return context
 
 
