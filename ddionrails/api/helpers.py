@@ -4,7 +4,7 @@ run_import_on_redis was declared in ddionrails.api.views.webhooks
 
 from datetime import datetime
 
-from django.core.cache import cache
+from django.core.cache import caches
 from django.core.management import call_command
 from django_rq.queues import enqueue
 
@@ -16,7 +16,9 @@ from ddionrails.workspace.models import Basket
 
 
 def _clear_all_caches():
-    cache.clear()
+    caches["default"].clear()
+    caches["instrument_api"].clear()
+    caches["dataset_api"].clear()
 
 
 def run_import_on_redis(study_name):
