@@ -32,9 +32,6 @@ def set_up_repo(study: Study) -> Path:
     # We skip this when repo is pinned and current since full history pull is slow.
     if study_repo_path.exists():
         repo = Repo(study_repo_path)
-        if study.pin_reference and study.current_commit == repo.head.object.hexsha:
-            print("Repository is pinned and current.")
-            return study_repo_path
         rmtree(study_repo_path)
 
     if study.pin_reference:
