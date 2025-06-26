@@ -25,7 +25,7 @@ def run_import_on_redis(study_name):
     """Queue Study import in redis queue that will in turn queue single import jobs"""
     study = Study.objects.get(name=study_name)
     manager = StudyImportManager(study, redis=True)
-    file_name = f"webhook_backup{datetime.now()}.json"
+    file_name = f"webhook_backup{datetime.now():%Y_%m_%d_%__%H_%M_%S}.json"
     Basket.backup(study, file_name)
     update_single_study(study, local=False, clean_import=True, manager=manager)
     enqueue(call_command, "loaddata", BACKUP_DIR.joinpath(file_name).absolute())
