@@ -6,6 +6,7 @@ import os
 import tempfile
 import uuid
 from pathlib import Path
+from typing import Literal
 
 from config.helpers import parse_env_variable_dict, read_imprint_file
 
@@ -16,6 +17,12 @@ SHOW_STATISTICS = os.getenv("SHOW_STATISTICS") == "True"
 
 # PROJECT CONFIGURATION
 # ------------------------------------------------------------------------------
+
+# Is this a staging or live server?
+SERVER_TYPE: Literal["live"] | Literal["staging"] = "live"
+if os.getenv("SERVER_TYPE", "live") == "staging":
+    SERVER_TYPE = "staging"
+
 BASE_DIR = Path(os.getenv("DOCKER_APP_DIRECTORY", "/usr/src/app/"))
 BASE_UUID = uuid.UUID(os.getenv("BASE_UUID", default=str(uuid.NAMESPACE_DNS)))
 

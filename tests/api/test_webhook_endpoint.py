@@ -8,6 +8,7 @@ from unittest.mock import patch
 from django.test import LiveServerTestCase, override_settings
 from rest_framework import status
 
+from config.settings import base
 from ddionrails.studies.models import Study
 
 
@@ -90,6 +91,34 @@ class WebhookEndpointTests(LiveServerTestCase):
                 headers=github_headers,
             )
             queue_mock.assert_not_called()
+
+        self.assertIn(
+            response.status_code, [status.HTTP_200_OK, status.HTTP_202_ACCEPTED]
+        )
+
+    def test_webhook_post_develop_branch(self):
+        """Test post request for non `default` branch"""
+        data = self.github_data.copy()
+        data["ref"] = "refs/head/develop"
+        digest = hmac.new(
+            self.webhook_key.encode(self.encoding),
+            msg=json.dumps(data).encode(self.encoding),
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+
+        github_headers = self.github_headers.copy()
+        github_headers["X-Hub-Signature-256"] = f"sha256={digest}"
+
+        with patch("ddionrails.api.views.webhooks.run_import_on_redis") as runner_mock:
+            with patch.object(base, "SERVER_TYPE", "staging"):
+                with patch("ddionrails.api.views.webhooks.enqueue") as queue_mock:
+                    response = self.client.post(
+                        self.url,
+                        data=data,
+                        content_type="application/json",
+                        headers=github_headers,
+                    )
+                    queue_mock.assert_called_with(runner_mock, self.study.name)
 
         self.assertIn(
             response.status_code, [status.HTTP_200_OK, status.HTTP_202_ACCEPTED]

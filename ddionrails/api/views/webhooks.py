@@ -3,6 +3,7 @@
 import hashlib
 import hmac
 import logging
+from typing import Literal
 
 from django_rq.queues import enqueue
 from rest_framework import status
@@ -10,10 +11,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
+from config.settings import base
 from ddionrails.api.helpers import run_import_on_redis
 from ddionrails.studies.models import Study
 
 logger = logging.getLogger(__name__)
+
+MAIN_BRANCH_CANDIDATES: tuple[Literal["master"], Literal["main"]] = ("master", "main")
+DEVELOP_BRANCH_CANDIDATES: tuple[
+    Literal["develop"], Literal["development"], Literal["dev"]
+] = ("develop", "development", "dev")
 
 
 class WebhookView(ViewSet):
@@ -52,12 +59,7 @@ class WebhookView(ViewSet):
             return Response({"detail": "Received"}, status=status.HTTP_200_OK)
 
         if event == "push":
-            repo = data.get("repository", {}).get("full_name", "unknown")
-            logging.info("WEBHOOK: Received push to %s", repo)
-            if "main" in data.get("ref", "") or "master" in data.get("ref", ""):
-                logging.info("WEBHOOK: Updating %s", study.name)
-                enqueue(run_import_on_redis, study.name)
-                logging.info("WEBHOOK: Update queued")
+            _handle_branch_verification(study, data)
             return Response({"detail": "Push event processed"}, status=status.HTTP_200_OK)
 
         return Response({"detail": "Unhandled event"}, status=status.HTTP_200_OK)
@@ -83,3 +85,29 @@ class WebhookView(ViewSet):
             secret, msg=payload, digestmod=hashlib.sha256
         ).hexdigest()
         return hmac.compare_digest(our_signature, signature)
+
+
+def _is_develop(push_reference: str) -> bool:
+    return (
+        any(push_reference.endswith(name) for name in DEVELOP_BRANCH_CANDIDATES)
+        and base.SERVER_TYPE == "staging"
+    )
+
+
+def _is_main(push_reference: str) -> bool:
+    return (
+        any(push_reference.endswith(name) for name in MAIN_BRANCH_CANDIDATES)
+        and base.SERVER_TYPE == "live"
+    )
+
+
+def _handle_branch_verification(study, data):
+    repo = data.get("repository", {}).get("full_name", "unknown")
+    logging.info("WEBHOOK: Received push to %s", repo)
+    push_reference: str = data.get("ref", "")
+    if _is_develop(push_reference) or _is_main(push_reference):
+        logging.info("WEBHOOK: Updating %s", study.name)
+        enqueue(run_import_on_redis, study.name)
+        logging.info("WEBHOOK: Update queued")
+        return None
+    return None
