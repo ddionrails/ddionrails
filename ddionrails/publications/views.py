@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.publications app """
-
-from urllib.parse import urlencode
+"""Views for ddionrails.publications app"""
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.shortcuts import get_object_or_404, redirect
@@ -15,7 +13,7 @@ from .models import Publication
 
 
 class PublicationRedirectView(RedirectView):
-    """ RedirectView for publications.Publication model """
+    """RedirectView for publications.Publication model"""
 
     permanent = False
 
@@ -25,7 +23,7 @@ class PublicationRedirectView(RedirectView):
 
 
 class PublicationDetailView(DetailView):
-    """ DetailView for publications.Publication model """
+    """DetailView for publications.Publication model"""
 
     model = Publication
     template_name = "publications/publication_detail.html"
@@ -45,13 +43,16 @@ class PublicationDetailView(DetailView):
         return context
 
 
-# request is a required parameter
 def study_publication_list(
     request: WSGIRequest, study_name: str  # pylint: disable=unused-argument,
 ):
+    """Construct the redirect for study specific publication search."""
     study = get_object_or_404(Study, name=study_name)
-    # e.g. Studies=["soep-is"]
-    query_string = urlencode({"Study": f'["{study.title()}"]'})
-    # e.g. http://localhost/search/publications?Study=["soep-is"]
-    url = f"/search/publications?{query_string}"
+    url = (
+        "/search/publications?"
+        "&filters[0][field]=study_name"
+        f"&filters[0][values][0]={study.title()}&"
+        "filters[0][type]=all&"
+        "filters[0][persistent]=false"
+    )
     return redirect(url)
