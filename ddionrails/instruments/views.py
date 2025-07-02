@@ -125,6 +125,7 @@ def question_detail(
         "row_helper": RowHelper(),
         "question_items": question_items,
     }
+    context = context | get_study_context(Study.objects.get(name=study))
 
     return render(request, "questions/question_detail.html", context=context)
 
