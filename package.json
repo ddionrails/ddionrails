@@ -24,7 +24,7 @@
     "@elastic/search-ui": "^1.23.1",
     "@elastic/search-ui-elasticsearch-connector": "^1.23.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
-    "acorn": ">=8.8.2",
+    "acorn": ">=8.15.0",
     "acorn-import-assertions": ">=1.8.0",
     "ansi-regex": ">=5.0.1",
     "bootstrap": "^5.3.7",
