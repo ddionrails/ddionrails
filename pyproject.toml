@@ -47,7 +47,6 @@ known_third_party= [
     "filer",
     "frontmatter",
     "git",
-    "import_export",
     "markdown",
     "model_utils",
     "pytest",
@@ -140,7 +139,6 @@ django = ">=4.2.3"
 django-crispy-forms = "*"
 crispy-bootstrap5 = "*"
 django-extensions = "*"
-django-import-export = "*"
 django-model-utils = "*"
 django-rq = ">=2.10.1"
 django-webpack-loader = "*"
