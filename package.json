@@ -65,7 +65,7 @@
   },
   "devDependencies": {
     "@olrtg/emmet-language-server": "*",
-    "@babel/preset-typescript": "^7.24.7",
+    "@babel/preset-typescript": "^7.27.1",
     "cspell": "^9.0.1",
     "css-loader": "^6.7.3",
     "eslint": "^8.48.0",
