@@ -4,9 +4,10 @@
 import sys
 from pathlib import Path
 
+from django.core.cache import caches
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django_rq import enqueue
+from django_rq.queues import enqueue
 
 from ddionrails.imports.git_repos import set_up_repo
 from ddionrails.imports.helpers import clear_caches
@@ -84,6 +85,7 @@ def update_study_partial(manager: StudyImportManager, entity: tuple):
 
 
 def update(options) -> tuple[str | None, str | None]:
+    """Update a study."""
     study_name = options["study_name"]
     entity = options["entity"]
     if isinstance(entity, str):
@@ -126,6 +128,12 @@ def update(options) -> tuple[str | None, str | None]:
     return ("Done", None)
 
 
+def _clear_all_caches():
+    caches["default"].clear()
+    caches["instrument_api"].clear()
+    caches["dataset_api"].clear()
+
+
 # Maybe replace study arg with manager arg in future refactor
 def update_single_study(  # pylint: disable=R0913
     study: Study,
@@ -151,8 +159,9 @@ def update_single_study(  # pylint: disable=R0913
         update_study_partial(manager, entity)
 
     if backup_file.is_file():
-        call_command("loaddata", backup_file)
-        BasketVariable.clean_basket_variables(study.name)
+        enqueue(call_command, "loaddata", backup_file)
+        enqueue(BasketVariable.clean_basket_variables, study.name)
+    enqueue(_clear_all_caches)
 
 
 def update_all_studies_completely(local: bool, clean_import=False, redis=True) -> None:
