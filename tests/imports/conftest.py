@@ -1,4 +1,5 @@
-""" Define import test specific fixtures. """
+"""Define import test specific fixtures."""
+
 from pathlib import Path
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
@@ -14,7 +15,7 @@ from ddionrails.studies.models import Study
 def tmp_import_path(
     request: pytest.FixtureRequest, study: Study
 ) -> Generator[None, None, None]:
-    """ Stage import test data in tmp folder. """
+    """Stage import test data in tmp folder."""
     tmp_path = Path(mkdtemp())
     csv_path = Path("tests/imports/test_data/").absolute()
     statistics_path = Path("tests/imports/test_data/statistics").absolute()
@@ -27,7 +28,7 @@ def tmp_import_path(
     }
 
     if request.instance:
-        request.instance.patch_argument_dict = patch_dict
+        request.instance.mock_import_path_arguments = patch_dict
         request.instance.import_path = import_path
         request.instance.study = study
 

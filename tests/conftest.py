@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=unused-argument,invalid-name,redefined-outer-name
 
-""" Pytest fixtures """
+"""Pytest fixtures"""
 
-import time
 import unittest
 import uuid
 from io import BytesIO
@@ -16,15 +15,8 @@ from unittest.mock import mock_open, patch
 import PIL.Image
 import pytest
 from _pytest.fixtures import FixtureRequest
-from django.conf import settings
-from django.core.management import call_command
-from elasticsearch.exceptions import RequestError
 
 from ddionrails.base.models import News
-from ddionrails.concepts.documents import ConceptDocument, TopicDocument
-from ddionrails.data.documents import VariableDocument
-from ddionrails.instruments.documents import QuestionDocument
-from ddionrails.publications.documents import PublicationDocument
 from tests.concepts.factories import (
     AnalysisUnitFactory,
     ConceptFactory,
@@ -121,7 +113,7 @@ def conceptual_dataset(study, request):
     if request.instance:
         request.instance.conceptual_dataset = conceptual_dataset
 
-    yield conceptual_dataset 
+    yield conceptual_dataset
 
 
 @pytest.fixture(name="dataset")
@@ -133,7 +125,6 @@ def _dataset(request, db):
     if request.instance:
         request.instance.dataset = _factory
     return _factory
-
 
 
 @pytest.fixture()
@@ -203,7 +194,7 @@ def period(db, request):
     if request.instance:
         request.instance.period = period
 
-    yield period 
+    yield period
 
 
 @pytest.fixture
@@ -328,6 +319,7 @@ def uuid_identifier():
     """A UUID that is used for testing views and URLConfigs"""
     return uuid.UUID("12345678123456781234567812345678")
 
+
 @pytest.fixture
 @pytest.mark.usedb
 def publication_with_umlauts(request):  # pylint: disable=unused-argument
@@ -346,7 +338,6 @@ def publication_with_umlauts(request):  # pylint: disable=unused-argument
         request.instance.publication_with_umlauts = publication
 
     yield publication
-
 
 
 class NewsFixture(TypedDict):
@@ -370,19 +361,26 @@ def _news(request) -> NewsFixture:
     return {"news": the_news, "bullet_points": bullet_points}
 
 
+class PatchDict(TypedDict):
+    """Patch information for mocking the import path"""
+
+    target: str
+    return_value: Path
+
+
 @pytest.fixture(name="mock_import_path")
 def _mock_import_path(request) -> Generator[None, None, None]:
     tmp_path = Path(mkdtemp())
     csv_path = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
     import_path = copytree(csv_path, tmp_path.joinpath("ddionrails"))
 
-    patch_dict = {
+    patch_dict: PatchDict = {
         "target": "ddionrails.studies.models.Study.import_path",
-        "return_value": import_path,
+        "return_value": Path(import_path),
     }
 
     if request.instance:
-        request.instance.patch_argument_dict = patch_dict
+        request.instance.mock_import_path_arguments = patch_dict
 
     with patch(**patch_dict):
         yield

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,invalid-name
 
-""" Test cases for "update" management command for ddionrails project """
+"""Test cases for "update" management command for ddionrails project"""
 
 import csv
 import logging
@@ -333,7 +333,7 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
 
 @pytest.mark.usefixtures(("mock_import_path"))
 class TestUpdate(unittest.TestCase):
-    patch_argument_dict: PatchImportPathArguments
+    mock_import_path_arguments: PatchImportPathArguments
 
     def setUp(self):
         self.dataset = DatasetFactory(name="test-dataset")
@@ -354,7 +354,7 @@ class TestUpdate(unittest.TestCase):
         self.assertTrue(list(Dataset.objects.filter(id=self.dataset.id)))
         with patch(
             "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-            self.patch_argument_dict["return_value"],
+            self.mock_import_path_arguments["return_value"],
         ):
             manager = StudyImportManager(self.study, redis=False)
             update_single_study(
@@ -364,7 +364,7 @@ class TestUpdate(unittest.TestCase):
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
 
-    def test_basket_protection(self):
+    def test_basket_protection(self):  # pylint: disable=too-many-locals
         """A clean update should leaf baskets intact."""
         clean_import = False
 
@@ -373,7 +373,7 @@ class TestUpdate(unittest.TestCase):
         manager = StudyImportManager(self.study, redis=False)
         with patch(
             "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-            self.patch_argument_dict["return_value"],
+            self.mock_import_path_arguments["return_value"],
         ):
             update_single_study(
                 self.study, True, clean_import=clean_import, manager=manager
@@ -392,7 +392,7 @@ class TestUpdate(unittest.TestCase):
         variable_id = variable.id
         basket_id = basket.id
 
-        import_files = Path(self.patch_argument_dict["return_value"])
+        import_files = Path(self.mock_import_path_arguments["return_value"])
         new_variables = """study_name,dataset_name,name,concept_name,image_url
 some-study,some-dataset,some-variable,some-concept,https://variable-image.de
 some-study,some-dataset,some-other-variable,some-concept,https://variable-other-image.de
@@ -412,7 +412,7 @@ some-study,some-dataset,some-other-variable,some-concept,https://variable-other-
             mocked_enqueue.side_effect = _enqueue
             with patch(
                 "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-                self.patch_argument_dict["return_value"],
+                self.mock_import_path_arguments["return_value"],
             ):
                 update_single_study(
                     self.study, True, clean_import=clean_import, manager=manager
