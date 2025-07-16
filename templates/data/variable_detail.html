@@ -158,7 +158,7 @@
                         </div>
                         <div class="card-body text-right">
                         <button  class="btn btn-secondary basket-create-button">
-                            <a href="{% url 'workspace:basket_new' %}">
+                            <a href="{% url 'workspace:basket_new' %}/?next={% firstof request.path '/' %}">
                                 <span
                                     data-en="Create a new basket"
                                     data-de="Neue Variablensammlung anlegen"></span>
@@ -168,12 +168,12 @@
                         </div>
                         {% if request.COOKIES.paneldata_language == "de" %}
                             <div class="card-body">
-                            Bitte <a href="{% url 'workspace:login' %}">melden Sie sich an</a>
+                            Bitte <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">melden Sie sich an</a>
                             oder <a href="{% url 'workspace:register' %">registrieren ein Nutzerkonto</a>
                             um Ihre Variablensammlungen zu verwalten. 
                         {% else %}
                             <div class="card-body">
-                            Please <a href="{% url 'workspace:login' %}">login</a>
+                            Please <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">login</a>
                             or <a href="{% url 'workspace:register' %">register</a>
                             to
                             use the basket functionality.

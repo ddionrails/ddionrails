@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-""" URLConf for ddionrails.workspace app """
+"""URLConf for ddionrails.workspace app"""
 
 from django.contrib.auth.views import LoginView, PasswordResetView
-from django.urls import path
+from django.urls import path, re_path
 
 from . import views
 
@@ -16,7 +16,7 @@ urlpatterns = [
     path("password_reset/", PasswordResetView.as_view(), name="password_reset"),
     path("account/", views.account_overview, name="account_overview"),
     path("baskets/", views.basket_list, name="basket_list"),
-    path("baskets/new", views.basket_new, name="basket_new"),
+    re_path("baskets/new/?", views.basket_new, name="basket_new"),
     path("baskets/<int:basket_id>/csv", views.basket_to_csv, name="basket_to_csv"),
     path("baskets/<int:basket_id>/search", views.basket_search, name="basket_search"),
     path("baskets/<int:basket_id>/delete", views.basket_delete, name="basket_delete"),

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.workspace app """
+"""Views for ddionrails.workspace app"""
 
 import uuid
 from collections import OrderedDict
@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 
 from django.contrib import messages
 from django.core.handlers.wsgi import WSGIRequest
+from django.db import IntegrityError
 from django.forms.widgets import HiddenInput
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
@@ -28,7 +29,7 @@ def basket_list(request: WSGIRequest):  # pylint: disable=unused-argument
         _basket_list = request.user.baskets.all()
     else:
         _basket_list = []
-    context = dict(basket_list=_basket_list)
+    context = {"basket_list": _basket_list}
     return render(request, "workspace/basket_list.html", context=context)
 
 
@@ -42,6 +43,7 @@ NOTE = (
     'Please specify the complete address of the "raw" subdirectory'
     ' (e.g. D:\\v35\\raw) as your "Input path".'
 )
+
 
 # request is a required parameter
 @own_basket_only
@@ -93,30 +95,30 @@ def basket_detail(
             period_name = ""
         try:
             related_variable_table[variable.concept.name]["periods"][period_name].append(
-                dict(
-                    name=variable.name,
-                    link=variable.get_direct_url(),
-                    active=variable in variable_list,
-                    id=variable.id,
-                )
+                {
+                    "name": variable.name,
+                    "link": variable.get_direct_url(),
+                    "active": variable in variable_list,
+                    "id": variable.id,
+                }
             )
             if related_variable_table[variable.concept.name]["label"] == "":
                 related_variable_table[variable.concept.name]["label"] = variable.label
-        except:
+        except (KeyError, ValueError):
             bad_variables.append(variable)
 
-    context = dict(
-        basket=basket,
-        study=basket.study,
-        variable_list=variable_list,
-        vars_with_concept=vars_with_concept,
-        vars_without_concept=vars_without_concept,
-        has_vars_without_concept=len(vars_without_concept) > 0,
-        related_variable_table=related_variable_table,
-        period_list=period_list,
-        concept_list=concept_list,
-        note=None,
-    )
+    context = {
+        "basket": basket,
+        "study": basket.study,
+        "variable_list": variable_list,
+        "vars_with_concept": vars_with_concept,
+        "vars_without_concept": vars_without_concept,
+        "has_vars_without_concept": len(vars_without_concept) > 0,
+        "related_variable_table": related_variable_table,
+        "period_list": period_list,
+        "concept_list": concept_list,
+        "note": None,
+    }
 
     # Add note about Script generator
     # see: https://github.com/ddionrails/ddionrails/issues/359
@@ -129,6 +131,10 @@ def basket_detail(
 # request is a required parameter
 def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
     """CreateView for a new Basket"""
+    query = request.GET.dict()
+    if query is None:
+        query = request.POST.dict()
+    _next = query.get("next")
     if request.method == "POST":
         form = BasketForm(request.POST)
         form.fields["user"].widget = HiddenInput()
@@ -137,11 +143,14 @@ def basket_new(request: WSGIRequest):  # pylint: disable=unused-argument
             basket.user = request.user
             basket.save()
             messages.info(request, "Basket successfully created.")
+            if _next is not None:
+                return redirect(_next)
             return redirect(reverse("workspace:basket_list"))
     else:
-        form = BasketForm(initial=dict(user=request.user.id))
+        form = BasketForm(initial={"user": request.user.id})
         form.fields["user"].widget = HiddenInput()
-    context = dict(form=form)
+    context: dict[str, str | BasketForm] = {"form": form}
+    context["next"] = query.get("next", reverse("workspace:basket_list"))
     return render(request, "workspace/basket_create.html", context=context)
 
 
@@ -190,8 +199,8 @@ def add_concept(
             BasketVariable.objects.get_or_create(
                 basket_id=basket_id, variable_id=variable.id
             )
-        except:
-            pass
+        except (IntegrityError, ValueError, TypeError):
+            continue
     return redirect(request.META.get("HTTP_REFERER"))
 
 
