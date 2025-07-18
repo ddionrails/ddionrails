@@ -13,8 +13,8 @@
                             <i class="fa fa-cog"></i>
                             <a href="{{ concept }}">
                               <span
-                                  data-en="{{ concept.label }}"
-                                  data-de="{{ concept.label_de }}"></span>
+			      data-en="{{ concept.name }} {{ concept.label }}"
+			      data-de="{{ concept.name }} {{ concept.label_de }}"></span>
                             </a>
                         </div>
                     {% endfor %}
