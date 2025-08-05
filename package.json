@@ -20,7 +20,7 @@
   ],
   "dependencies": {
     "@elastic/react-search-ui": "^1.23.1",
-    "@elastic/react-search-ui-views": "^1.23.1",
+    "@elastic/react-search-ui-views": "^1.24.2",
     "@elastic/search-ui": "^1.23.1",
     "@elastic/search-ui-elasticsearch-connector": "^1.23.0",
     "@fortawesome/fontawesome-free": "^6.7.2",
