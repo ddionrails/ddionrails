@@ -72,8 +72,13 @@ urlpatterns = [
     re_path(
         (
             r"^search/"
-            r"((?!all|variables|variable-names|concepts|questions|publications|topics|statistics)"
-            r"\?{0,1}.*)$"
+            r"("
+            r"(?!"
+            r"all|variables|variable-names|concepts|"
+            r"questions|publications|topics|statistics"
+            r")"
+            r"\?{0,1}.*"
+            r")$"
         ),
         RedirectView.as_view(url="all/"),
         name="search-redirect",
@@ -81,14 +86,19 @@ urlpatterns = [
     re_path(
         (
             r"^search/"
-            r"((?:all|variables|variable-names|concepts|questions|publications|topics|statistics)"
-            r"\?{0,1}.*){0,1}$"
+            r"("
+            r"(?:"
+            r"all|variables|variable-names|concepts|"
+            r"questions|publications|topics|statistics"
+            r")"
+            r"\?{0,1}.*"
+            r"){0,1}$"
         ),
         TemplateView.as_view(template_name="search/search.html"),
         name="search",
     ),
     path(
-        "search/feedback/",
+        "feedback/search/",
         TemplateView.as_view(template_name="search/feedback.html"),
         name="search_feedback",
     ),
