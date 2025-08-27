@@ -30,7 +30,7 @@
     "bootstrap": "^5.3.6",
     "core-js": "^3.43.0",
     "d3": "^7.8.4",
-    "datatables.net": "^2.3.2",
+    "datatables.net": "^2.3.3",
     "datatables.net-bs5": "2.3.2",
     "datatables.net-fixedcolumns": "^5.0.4",
     "datatables.net-fixedcolumns-bs5": "^5.0.4",
