@@ -12,7 +12,7 @@ document.body.innerHTML =
   "</div>" +
   "</html>";
 
-global.window.location = {
+(global.window as any).location = {
   ancestorOrigins: null,
   hash: null,
   host: "localhost",
