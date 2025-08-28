@@ -7,7 +7,12 @@
             <a id="variable-name" href="{{ variable.get_direct_url }}">{{ variable.name }}</a>
         </p>
         <p title="Concept" data-concept-name="{{ concept.name|default:'' }}"><i class="fa fa-cog"></i>
-            {% if concept %} <a href="{{ concept.get_absolute_url }}">{{ concept.title }}</a>
+            {% if concept %}
+	    <a href="{{ concept.get_absolute_url }}"
+	       data-en={{ concept.label|default:concept.name  }}
+	       data-de={{ concept.label_de|default:concept.name  }}
+		    >
+	    </a>
             {% else %}
                 No concept available.
             {% endif %}
