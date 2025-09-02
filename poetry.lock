@@ -644,14 +644,14 @@ django = ">=4.2"
 
 [[package]]
 name = "django-filer"
-version = "3.3.1"
+version = "3.3.2"
 description = "A file management application for django that makes handling of files and images a breeze."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "django_filer-3.3.1-py3-none-any.whl", hash = "sha256:aeaf7c665728a0e8c1a839612ccd993956006c6b683e002013b561b7da53b087"},
-    {file = "django_filer-3.3.1.tar.gz", hash = "sha256:397c0b0f313371cc9e0cd92b3f1b0023b8dd213d7ebd038d6e289437df027bd0"},
+    {file = "django_filer-3.3.2-py3-none-any.whl", hash = "sha256:b383646c532848f545ed5cef7ee5cec2fd1999af447612a5efaff604450378f6"},
+    {file = "django_filer-3.3.2.tar.gz", hash = "sha256:ca3b00fd52ec0abf6323e44480a91ae086e698bed7223cdffef2e29f0e4fb1de"},
 ]
 
 [package.dependencies]
