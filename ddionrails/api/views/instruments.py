@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Views for ddionrails.api app """
+"""Views for ddionrails.api app"""
 
 import difflib
 import re
@@ -24,6 +24,7 @@ from ddionrails.api.views.parameters_definition import (
     PAGINATE_PARAMETER,
     STUDY_PARAMETER,
     TOPIC_PARAMETER,
+    VARIABLES_PARAMETER,
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.instruments.models.question import Instrument, Question
@@ -127,6 +128,7 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
         INSTRUMENT_PARAMETER,
         TOPIC_PARAMETER,
         CONCEPT_PARAMETER,
+        VARIABLES_PARAMETER,
     ]
 )
 class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
@@ -141,8 +143,9 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         concept = self.request.query_params.get("concept", None)
         instrument = self.request.query_params.get("instrument", None)
         study = self.request.query_params.get("study", None)
+        variables = self.request.query_params.getlist("variables[]", None)
 
-        if instrument is None and topic is None and concept is None:
+        if instrument is None and topic is None and concept is None and variables is None:
             raise PermissionDenied()
         queryset_filter = {}
 
@@ -150,6 +153,9 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
             raise NotAcceptable(
                 detail="Concept and topic are mutually exclusive parameters."
             )
+
+        if variables:
+            queryset_filter["questions_variables__variable__name__in"] = variables
 
         if study:
             study_object = get_object_or_404(Study, name=study)

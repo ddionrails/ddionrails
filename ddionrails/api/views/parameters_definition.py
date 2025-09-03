@@ -1,4 +1,4 @@
-""" Definition of query parameters for API endpoints."""
+"""Definition of query parameters for API endpoints."""
 
 from drf_spectacular.utils import OpenApiParameter
 
@@ -40,4 +40,8 @@ CONCEPT_PARAMETER = OpenApiParameter(
         "dataset for variables or topic needs to be given. "
         "If concept is set topic cannot be set."
     ),
+)
+VARIABLES_PARAMETER = OpenApiParameter(
+    "variables[]",
+    description=("List of variables to get questions related to these variables."),
 )

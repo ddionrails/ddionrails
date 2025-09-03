@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for views in ddionrails.api app """
+"""Test cases for views in ddionrails.api app"""
 
 import json
 import unittest
@@ -15,6 +15,7 @@ from django.test.client import Client
 from rest_framework.test import APIClient, APIRequestFactory
 
 from ddionrails.instruments.models.concept_question import ConceptQuestion
+from ddionrails.instruments.models.question_variable import QuestionVariable
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
 from tests.concepts.factories import ConceptFactory, TopicFactory
@@ -212,6 +213,10 @@ class TestQuestionViewSet(LiveServerTestCase):
         self.api_client = APIClient()
         self.concept = ConceptFactory(name="test-concept")
         self.topic = TopicFactory(name="test-topic")
+        self.variables = [
+            VariableFactory(name="test-variable"),
+            VariableFactory(name="other-test-variable"),
+        ]
         return super().setUp()
 
     def test_query_parameter_conflict(self):
@@ -259,6 +264,18 @@ class TestQuestionViewSet(LiveServerTestCase):
         response = self.api_client.get(self.API_PATH + f"?concept={concept_name}")
         content = json.loads(response.content)
         self.assertEqual(10, len(content))
+
+    def test_query_parameter_variables(self):
+        question = QuestionFactory(name="variable_relation_question")
+        for variable in self.variables:
+            question_variable = QuestionVariable(question=question, variable=variable)
+            question_variable.save()
+            question.questions_variables.add(question_variable)
+        variables = [variable.name for variable in self.variables]
+        response = self.api_client.get(self.API_PATH + f"?variables={variables}")
+        content = json.loads(response.content)
+        self.assertEqual(content[0].get("name"), question.name)
+        self.assertEqual(1, len(content))
 
     def test_query_parameter_study(self):
         """Define study parameter behavior."""
@@ -515,7 +532,9 @@ class TestVariableViewSet(LiveServerTestCase):
         variable_object = VariableFactory(name="test_variable")
         study = variable_object.dataset.study.name
         dataset = variable_object.dataset.name
-        response = self.api_client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
+        response = self.api_client.get(
+            self.API_PATH + f"?study={study}&dataset={dataset}"
+        )
         results = json.loads(response.content)
         variable = results[0]
         self.assertListEqual(expected_fields, list(variable.keys()))
@@ -528,7 +547,9 @@ class TestVariableViewSet(LiveServerTestCase):
             variables.append(VariableFactory(name=f"{number}"))
         study = variables[0].dataset.study.name
         dataset = variables[0].dataset.name
-        response = self.api_client.get(self.API_PATH + f"?study={study}&dataset={dataset}")
+        response = self.api_client.get(
+            self.API_PATH + f"?study={study}&dataset={dataset}"
+        )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))
