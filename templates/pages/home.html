@@ -5,14 +5,21 @@
 {% endblock title %}
 {% block content %}
     {% if news %}
-        <div class="alert alert-success mx-auto p-4 lang en hidden">{{ news.en | safe }}</div>
-        <div class="alert alert-success mx-auto p-4 lang de hidden">{{ news.de | safe }}</div>
+        <div role="region"
+             aria-label="News about the site"
+             class="alert alert-success mx-auto p-4 lang en hidden">{{ news.en | safe }}</div>
+        <div role="region"
+             aria-label="Neuigkeiten zur webseite"
+             class="alert alert-success mx-auto p-4 lang de hidden">{{ news.de | safe }}</div>
     {% endif %}
     {% if background_image %}
         <img alt="" class="img-fluid mx-auto" src="{% static 'background.png' %}">
     {% endif %}
-    <div class="list-group">
-        <ul>
+    <div role="region"
+         aria-label="List of documented studies"
+         class="list-group">
+        <h1 role="region" aria-label="List of documented studies"></h1>
+        <ul aria-label="Study list">
             {% for study in studies %}
                 <li class="list-group-item" id="study_list">
                     <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>

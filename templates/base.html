@@ -28,8 +28,7 @@
             {% block styles %}
             {% endblock styles %}
         </head>
-        <body>
-	<h1 aria-label="Paneldata main page"></h1>
+        <body role="main">
             {% block header %}
             {% endblock header %}
             <nav role="navigation"
@@ -153,7 +152,7 @@
     </div>
     <div>
         <!-- Page Footer -->
-        <div class="container container-white" id="foot-container">
+        <div role="contentinfo" class="container container-white" id="foot-container">
             <hr>
             <p>
                 <strong><a href="{% url 'contact' %}"
