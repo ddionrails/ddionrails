@@ -2,137 +2,140 @@
 {% load static %}
 <!DOCTYPE html>
 {% if request.COOKIES.paneldata_language == "de" %}
-<html lang="de">
-{% else %}
-<html lang="en">
-{% endif %}
-
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0">
-        <meta name="language" content="de">
-        {% block study_metadata %}
-        {% endblock study_metadata %}
-        {% block view_metadata %}
-        {% endblock view_metadata %}
-        <title>
-            {% block title %}paneldata.org
-            {% endblock title %}
-        </title>
-        <link rel="shortcut icon" type="image/png" href="{% static 'dist/favicon.ico' %}"/>
-        <!-- Webpack bundle: "index" CSS -->
-        {% render_bundle 'index' 'css' %}
-        {% block styles %}
-        {% endblock styles %}
-    </head>
-
-    <body>
-    {% block header %}
-    {% endblock header %}
-    <nav id="nav-container" class="navbar navbar-light navbar-expand-xl paneldata-navbar">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="navbar-content collapse navbar-collapse container-fluid" id="navbarSupportedContent">
-            <ul class="navbar-nav container-fluid">
-                <li class="nav-item">
-                    <a type="button" id="home-button" class="btn" href="{% url 'home' %}">paneldata.org</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <button class="btn" id="study-dropdown"
-                       data-en="Studies <i class='fa-solid fa-caret-right'></i><i class='fa-solid fa-caret-down'></i>"
-                       data-de="Studien <i class='fa-solid fa-caret-right'></i><i class='fa-solid fa-caret-down'></i>"
-                       >
-                    </button>
-                    
-                    <div class="dropdown-content">
-                        {% for study in studies %}
-                            <a class="dropdown-item" href="{{ study.get_absolute_url }}">{{ study.title }}</a>
-                        {% endfor %}
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a
-                        type="button"
-                        class="btn"
-                        href="{% url 'search' %}"
-                        data-en="Search"
-                        data-de="Suche"
-                    ></a>
-                </li>
-
-            {% block study_header %}
-            {% endblock study_header %}
-            {% block studynav %}
-            {% endblock studynav %}
-            </ul>
-            <ul class="navbar-nav container-fluid justify-content-end">
-                {% if user.is_authenticated %}
-                    <li class="nav-item text-nowrap">
-                        <a
-                            type="button"
-                            class="btn"
-                            href="{% url 'workspace:basket_list' %}"
-                            data-en="My Baskets"
-                            data-de="Warenkörbe"
-                        ></a>
-                    </li>
-                    <li class="nav-item text-nowrap">
-                        <a
-                            type="button"
-                            class="btn"
-                            href="{% url 'workspace:account_overview' %}"
-                            data-en="My Account"
-                            data-de="Mein Konto"
-                        ></a>
-                    </li>
-                    <li class="nav-item">
-                        <form action="{% url 'logout' %}" method="post">
-                                {% csrf_token %}
-                                <button data-en="Log Out" data-de="Ausloggen" class="btn" type="submit"></button>
-                        </form>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a
-                            type="button"
-                            class="btn"
-                            href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}"
-                            data-en="Log In / Register"
-                            data-de="Einloggen / Registrieren"
-                        ></a>
-                    </li>
-                {% endif %}
-                <!-- -->
-            </ul>
-
-        <!-- Language switch button -->
-        {% if request.COOKIES.paneldata_language == "de" %}
-            <button id="language-switch" data-current-language="de"
-            type="button" class="btn btn-outline-dark"></button>
-        {% else %}
-            <button id="language-switch" data-current-language="en"
-            type="button" class="btn btn-outline-dark"></button>
+    <html lang="de">
+    {% else %}
+        <html lang="en">
         {% endif %}
-        <!-- Language switch button END -->
-
-        </div>
-
-    </nav>
-
-    <!-- Main Content -->
-    <div class="flex-column d-flex justify-content-center" id="main-container">
-
-        <!-- Nobody should use IE anymore -->
-        <div id="windowsWarning" class="hidden alert alert-danger" align="center">
-            <h1>Attention</h1>
-            <p>
-            You are using Internet Explorer.</br>
-            Content will likely not be displayed correctly.</br>
-            Please switch to a different Browser to use this site.
+        <head>
+            <meta charset="utf-8">
+            <meta name="viewport"
+                  content="width=device-width, initial-scale=1, minimum-scale=1.0">
+            <meta name="language" content="de">
+            {% block study_metadata %}
+            {% endblock study_metadata %}
+            {% block view_metadata %}
+            {% endblock view_metadata %}
+            <title>
+                {% block title %}
+                    paneldata.org
+                {% endblock title %}
+            </title>
+            <link rel="shortcut icon"
+                  type="image/png"
+                  href="{% static 'dist/favicon.ico' %}" />
+            <!-- Webpack bundle: "index" CSS -->
+            {% render_bundle 'index' 'css' %}
+            {% block styles %}
+            {% endblock styles %}
+        </head>
+        <body>
+	<h1 aria-label="Paneldata main page"></h1>
+            {% block header %}
+            {% endblock header %}
+            <nav role="navigation"
+                 id="nav-container"
+                 class="navbar navbar-light navbar-expand-xl paneldata-navbar">
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-content collapse navbar-collapse container-fluid"
+                     id="navbarSupportedContent">
+                    <ul class="navbar-nav container-fluid">
+                        <li class="nav-item">
+				<a type="button" id="home-button" class="btn" href="{% url 'home' %}">paneldata.org</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <button class="btn"
+                                    id="study-dropdown"
+                                    data-en="Studies <i class='fa-solid fa-caret-right'></i><i class='fa-solid fa-caret-down'></i>"
+                                    data-de="Studien <i class='fa-solid fa-caret-right'></i><i class='fa-solid fa-caret-down'></i>">
+                            </button>
+                            <div class="dropdown-content">
+                                {% for study in studies %}
+                                    <a class="dropdown-item" href="{{ study.get_absolute_url }}">{{ study.title }}</a>
+                                {% endfor %}
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a type="button"
+                               class="btn"
+                               href="{% url 'search' %}"
+                               data-en="Search"
+                               data-de="Suche"></a>
+                        </li>
+                        {% block study_header %}
+                        {% endblock study_header %}
+                        {% block studynav %}
+                        {% endblock studynav %}
+                    </ul>
+                    <ul class="navbar-nav container-fluid justify-content-end">
+                        {% if user.is_authenticated %}
+                            <li class="nav-item text-nowrap">
+                                <a type="button"
+                                   class="btn"
+                                   href="{% url 'workspace:basket_list' %}"
+                                   data-en="My Baskets"
+                                   data-de="Warenkörbe"></a>
+                            </li>
+                            <li class="nav-item text-nowrap">
+                                <a type="button"
+                                   class="btn"
+                                   href="{% url 'workspace:account_overview' %}"
+                                   data-en="My Account"
+                                   data-de="Mein Konto"></a>
+                            </li>
+                            <li class="nav-item">
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button data-en="Log Out" data-de="Ausloggen" class="btn" type="submit"></button>
+                                </form>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a type="button"
+                                   class="btn"
+                                   href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}"
+                                   data-en="Log In / Register"
+                                   data-de="Einloggen / Registrieren"></a>
+                            </li>
+                        {% endif %}
+                        <!-- -->
+                    </ul>
+                    <!-- Language switch button -->
+                    {% if request.COOKIES.paneldata_language == "de" %}
+                        <button id="language-switch"
+				role="language-switch"
+				aria-label="Switch language to Enlgish"
+                                data-current-language="de"
+                                type="button"
+                                class="btn btn-outline-dark"></button>
+                    {% else %}
+                        <button id="language-switch"
+				aria-label="Sprachwechsel zu Deutsch"
+                                data-current-language="en"
+                                type="button"
+                                class="btn btn-outline-dark"></button>
+                    {% endif %}
+                    <!-- Language switch button END -->
+                </div>
+            </nav>
+            <!-- Main Content -->
+            <div class="flex-column d-flex justify-content-center" id="main-container">
+                <!-- Nobody should use IE anymore -->
+                <div id="windowsWarning" class="hidden alert alert-danger" align="center">
+                    <h1>Attention</h1>
+                    <p>
+                        You are using Internet Explorer.
+                    </br>
+                    Content will likely not be displayed correctly.
+                </br>
+                Please switch to a different Browser to use this site.
             </p>
         </div>
         <!--[if IE]>
@@ -144,30 +147,28 @@
             Please switch to a different Browser to use this site.
             </p>
         </div>
-        <![endif]-->
-
+<![endif]-->
         {% block content %}
         {% endblock content %}
     </div>
     <div>
-    <!-- Page Footer -->
-    <div class="container container-white" id="foot-container">
-        <hr>
-        <p><strong><a href="{% url 'contact' %}" data-en="Contact / feedback" data-de="Kontakt / Feedback"></a></strong>
-        </p>
-        <p class="text-muted">
-            <a href="https://www.diw.de/en/soep/" target="_blank">
-                German Socio-economic Panel
-            </a>
-            (SOEP)
-            <a href="{% url 'imprint' %}" data-en="Imprint" data-de="Impressum"></a>
-        </p>
-    </div>
-    <!-- Webpack bundle: "index" JS -->
-    {% render_bundle 'index' 'js' %}
-
-    {% block scripts %}
-    {% endblock scripts %}
+        <!-- Page Footer -->
+        <div class="container container-white" id="foot-container">
+            <hr>
+            <p>
+                <strong><a href="{% url 'contact' %}"
+   data-en="Contact / feedback"
+   data-de="Kontakt / Feedback"></a></strong>
+            </p>
+            <p class="text-muted">
+                <a href="https://www.diw.de/en/soep/" target="_blank">German Socio-economic Panel</a>
+                (SOEP)
+                <a href="{% url 'imprint' %}" data-en="Imprint" data-de="Impressum"></a>
+            </p>
+        </div>
+        <!-- Webpack bundle: "index" JS -->
+        {% render_bundle 'index' 'js' %}
+        {% block scripts %}
+        {% endblock scripts %}
     </body>
-
 </html>
