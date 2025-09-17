@@ -47,7 +47,11 @@
                      id="navbarSupportedContent">
                     <ul class="navbar-nav container-fluid">
                         <li class="nav-item">
-				<a type="button" id="home-button" class="btn" href="{% url 'home' %}">paneldata.org</a>
+                            <a aria-label="home button"
+                               type="button"
+                               id="home-button"
+                               class="btn"
+                               href="{% url 'home' %}">paneldata.org</a>
                         </li>
                         <li class="nav-item dropdown">
                             <button class="btn"
@@ -109,14 +113,14 @@
                     <!-- Language switch button -->
                     {% if request.COOKIES.paneldata_language == "de" %}
                         <button id="language-switch"
-				role="language-switch"
-				aria-label="Switch language to Enlgish"
+                                role="language-switch"
+                                aria-label="Switch language to Enlgish"
                                 data-current-language="de"
                                 type="button"
                                 class="btn btn-outline-dark"></button>
                     {% else %}
                         <button id="language-switch"
-				aria-label="Sprachwechsel zu Deutsch"
+                                aria-label="Sprachwechsel zu Deutsch"
                                 data-current-language="en"
                                 type="button"
                                 class="btn btn-outline-dark"></button>
@@ -152,7 +156,9 @@
     </div>
     <div>
         <!-- Page Footer -->
-        <div role="contentinfo" class="container container-white" id="foot-container">
+        <div role="contentinfo"
+             class="container container-white"
+             id="foot-container">
             <hr>
             <p>
                 <strong><a href="{% url 'contact' %}"
