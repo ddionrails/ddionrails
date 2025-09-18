@@ -41,7 +41,7 @@ function renderDatasetTable(table: string, url: string) {
     order: [[0, "asc"]],
     columns: [
       {
-        data: "dataset",
+        data: "name",
         render(_data: any, _type: any, row: any) {
           const link = document.createElement("a");
           link.href =
@@ -65,7 +65,7 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
       {
-        data: "conceptual-dataset",
+        data: "conceptual_dataset_label",
         render(_data: any, _type: any, row: any) {
           if (languageCode() == "de") {
             if (row["conceptual_dataset_label_de"]) {
@@ -76,7 +76,7 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
       {
-        data: "period",
+        data: "period_label",
         render(_data: any, _type: any, row: any) {
           if (row["period_label"] !== "") {
             return row["period_label"];
@@ -85,7 +85,7 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
       {
-        data: "analysis_unit_name",
+        data: "analysis_unit_label",
         render(_data: any, _type: any, row: any) {
           if (languageCode() == "de") {
             if (row["analysis_unit_label_de"]) {
@@ -102,7 +102,7 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
       {
-        data: "primary-key",
+        data: "primary_key",
         render(_data: any, _type: any, row: any) {
           const keyParts = row["primary_key"];
           const linkContainer = document.createElement("p");
@@ -144,6 +144,56 @@ function renderDatasetTable(table: string, url: string) {
         },
       },
     ],
+    columnDefs: [
+      {
+        targets: 0,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "dataset");
+        },
+      },
+      {
+        targets: 1,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "label");
+        },
+      },
+      {
+        targets: 2,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "conceptual-dataset");
+        },
+      },
+      {
+        targets: 3,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "period");
+        },
+      },
+      {
+        targets: 4,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "analysis-unit");
+        },
+      },
+      {
+        targets: 5,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "folder");
+        },
+      },
+      {
+        targets: 6,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "primary-key");
+        },
+      },
+      {
+        targets: 7,
+        createdCell: function (td, cellData, rowData, row, col) {
+          td.setAttribute("headers", "attachments");
+        },
+      },
+    ],
   });
 }
 
@@ -167,7 +217,7 @@ const tableObserver = new MutationObserver((mutations, observer) => {
   }
 });
 
-tableObserver.observe(document.body, {childList: true, subtree: true})
+tableObserver.observe(document.body, { childList: true, subtree: true });
 
 const languageObserver = new MutationObserver((mutations) => {
   mutations.forEach((record) => {

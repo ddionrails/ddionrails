@@ -18,10 +18,9 @@
     <div role="region"
          aria-label="List of documented studies"
          class="list-group">
-        <h1 role="region" aria-label="List of documented studies"></h1>
-        <ul aria-label="Study list">
+        <ul aria-label="Study list" id="study_list">
             {% for study in studies %}
-                <li class="list-group-item" id="study_list">
+                <li class="list-group-item">
                     <b><a href="{{ study.get_absolute_url }}">{{ study.title }}</a></b>
                 </li>
             {% endfor %}

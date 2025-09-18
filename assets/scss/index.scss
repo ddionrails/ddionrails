@@ -19,6 +19,10 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   display: none !important;
 }
 
+#windowsWarning{
+  align: center;
+}
+
 // This padding seems to be big enough
 // so that the navbar does not overlap with the content
 body {
@@ -240,7 +244,7 @@ div.dataTables_paginate li.last a:after {
 }
 
 .page-item.active .page-link {
-  background-color: rgb(151, 150, 150);
+  background-color: #797676;
   border-color: rgb(184, 181, 181);
 }
 

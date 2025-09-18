@@ -27,6 +27,8 @@ function addSearchInput(table: HTMLTableElement): SearchInputs {
     } else {
       searchInput.setAttribute("placeholder", "Search");
     }
+    searchInput.setAttribute("aria-label", `search in ${columnName}`)
+    searchInput.setAttribute("role", "search")
     searchHead.appendChild(searchInput);
     searchInputs[columnName.toString()] = searchInput;
   }
