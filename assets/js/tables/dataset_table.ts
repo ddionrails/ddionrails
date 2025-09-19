@@ -22,24 +22,7 @@ attachmentLinkTemplate.appendChild(attachmentIcon);
 datasetsApiURL.searchParams.append("study", study);
 datasetsApiURL.searchParams.append("modified", modifiedDate);
 
-/**
- * Renders a table of datasets.
- *
- * @param {Element} table Empty table to be filled through dataTable instantiation.
- * @param {*} url         API URL to call for the metadata of the desired entities.
- * @return {DataTable}    A dataTable object with full API.
- */
-function renderDatasetTable(table: string, url: string) {
-  // eslint-disable-next-line new-cap
-  return $(table).DataTable({
-    language: languageConfig(),
-    ajax: {
-      url,
-      dataSrc: "",
-      cache: true,
-    },
-    order: [[0, "asc"]],
-    columns: [
+const columns = [
       {
         data: "name",
         render(_data: any, _type: any, row: any) {
@@ -143,57 +126,42 @@ function renderDatasetTable(table: string, url: string) {
           return linkContainer.outerHTML;
         },
       },
-    ],
-    columnDefs: [
+    ]
+
+function createColumnDefs(columns: Array<{data: string}>){
+  const output = [];
+  for (const [index, value] of columns.entries()){
+    output.push(
       {
-        targets: 0,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "dataset");
+        targets: index,
+        createdCell: function (td: HTMLElement, cellData: any, rowData:any, row:any, col:any) {
+          td.setAttribute("headers", value["data"]);
         },
       },
-      {
-        targets: 1,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "label");
-        },
-      },
-      {
-        targets: 2,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "conceptual-dataset");
-        },
-      },
-      {
-        targets: 3,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "period");
-        },
-      },
-      {
-        targets: 4,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "analysis-unit");
-        },
-      },
-      {
-        targets: 5,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "folder");
-        },
-      },
-      {
-        targets: 6,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "primary-key");
-        },
-      },
-      {
-        targets: 7,
-        createdCell: function (td, cellData, rowData, row, col) {
-          td.setAttribute("headers", "attachments");
-        },
-      },
-    ],
+    )
+  }
+  return output
+}
+
+/**
+ * Renders a table of datasets.
+ *
+ * @param {Element} table Empty table to be filled through dataTable instantiation.
+ * @param {*} url         API URL to call for the metadata of the desired entities.
+ * @return {DataTable}    A dataTable object with full API.
+ */
+function renderDatasetTable(table: string, url: string) {
+  // eslint-disable-next-line new-cap
+  return $(table).DataTable({
+    language: languageConfig(),
+    ajax: {
+      url,
+      dataSrc: "",
+      cache: true,
+    },
+    order: [[0, "asc"]],
+    columns: columns,
+    columnDefs: createColumnDefs(columns),
   });
 }
 
