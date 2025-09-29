@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Functional test cases for browser interaction with the ddionrails project """
+"""Functional test cases for browser interaction with the ddionrails project"""
 
-from time import sleep
 from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import override_settings
-from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
@@ -71,7 +70,7 @@ class TestWorkspace(StaticLiveServerTestCase):
     # No matter what I do this test fails in the GitHub pipeline
     # because the link cannot be found, even after waiting.
     # Im removing it for now since it is also not that vital.
-    #def test_get_back_home_from_other_page(self):
+    # def test_get_back_home_from_other_page(self):
     #    origin_url = urljoin(self.live_server_url, "contact")
     #    self.browser.get(origin_url)
     #    home_button = WebDriverWait(self.browser, 20).until(
@@ -109,7 +108,9 @@ class TestWorkspace(StaticLiveServerTestCase):
 
     def test_study_link_from_home_page_list(self):
         self.browser.get(self.live_server_url)
-        self.browser.find_element(By.CSS_SELECTOR, "#study_list:nth-child(1)>b>a").click()
+        self.browser.find_element(
+            By.CSS_SELECTOR, "#study_list:nth-child(1)>li>b>a"
+        ).click()
         assert self.study.get_absolute_url() in self.browser.current_url
         assert self.study.name in self.browser.page_source
 
@@ -127,6 +128,7 @@ def _hide_toolbar(browser):
     except TimeoutException:
         print("No debug UI found")
         return None
+    return None
 
 
 def _click_with_javascript(browser, element):
