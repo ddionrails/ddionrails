@@ -54,7 +54,7 @@ jobs:
         run: docker exec ddionrails-web-1 python manage.py migrate
       - name: Check production settings file
         run: |
-          docker exec ddionrails-web-1 python manage.py check \
+          docker exec --env DJANGO_DEBUG="False" ddionrails-web-1  python manage.py check \
           --deploy --settings=config.settings.production
       - name: Upload codecov report
         if: always()
