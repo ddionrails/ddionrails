@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=wildcard-import,unused-wildcard-import,used-before-assignment
 
-""" Django settings for ddionrails project: Settings for testing environment """
+"""Django settings for ddionrails project: Settings for testing environment"""
 
 import logging
 
@@ -21,6 +21,8 @@ MIDDLEWARE = [
 ]
 
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
+
+INSTALLED_APPS = INSTALLED_APPS + ("debug_toolbar",)
 
 logging.disable(logging.CRITICAL)
 
