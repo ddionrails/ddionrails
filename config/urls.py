@@ -7,6 +7,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.shortcuts import get_object_or_404
 from django.urls import include, path, re_path, register_converter
+from django.urls.converters import get_converters
 from django.views.generic.base import RedirectView, TemplateView
 
 import ddionrails.instruments.views as instruments_views
@@ -50,11 +51,12 @@ class StudyConverter:
         return value
 
 
-try:
-    register_converter(StudyConverter, "study")
-except BaseException as error:  # pylint: disable=broad-exception-caught
-    if "already registered" not in str(error):
-        raise error
+if not get_converters().get("study"):
+    try:
+        register_converter(StudyConverter, "study")
+    except BaseException as error:  # pylint: disable=broad-exception-caught
+        if "already registered" not in str(error):
+            raise error
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),

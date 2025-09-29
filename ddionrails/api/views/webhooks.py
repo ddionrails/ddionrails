@@ -41,6 +41,11 @@ class WebhookView(ViewSet):
             repo_url = repo_url[8:]
         study = Study.objects.get(repo=repo_url)
 
+        # About the GitHub webhook:
+        # If you are here after seeing the Invalid repository response on the
+        # GitHub side and changed the webhook secret:
+        # Telling GitHub to resend ping, will send the ping with the old secret.
+        # Delete the webhook and recreate it to get a ping with the new secret.
         if not study:
             return Response(
                 {"detail": "Invalid repository"}, status=status.HTTP_404_NOT_FOUND
