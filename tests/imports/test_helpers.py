@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 
-""" Test cases for helpers in ddionrails.imports app """
+"""Test cases for helpers in ddionrails.imports app"""
 
 import csv
 import unittest
@@ -18,11 +18,9 @@ from tests.conftest import VariableImageFile
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("unittest_mock", "variable_image_file")
+@pytest.mark.usefixtures("unittest_mock")
 class TestHelpers(unittest.TestCase):
     mocker: MockerFixture
-    # This is overwritten by a fixture function
-    variable_image_file: VariableImageFile
 
     def test_read_csv(self):
         filename = "sample.csv"

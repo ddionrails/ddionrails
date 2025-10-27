@@ -9,10 +9,9 @@ from io import BytesIO
 from pathlib import Path
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
-from typing import Any, Callable, Dict, Generator, List, Protocol, Set, TypedDict, Union
+from typing import Any, Dict, Generator, List, Protocol, Set, TypedDict, Union
 from unittest.mock import mock_open, patch
 
-import PIL.Image
 import pytest
 from _pytest.fixtures import FixtureRequest
 
@@ -131,38 +130,6 @@ def _dataset(request, db):
 def empty_data():
     """Empty dictionary is used as invalid data for form and import tests"""
     return {}
-
-
-@pytest.fixture()
-def image_file(request) -> Generator[BytesIO, None, None]:
-    """Provides an in memory image file."""
-    _file = BytesIO()
-    _image = PIL.Image.new("RGBA", size=(1, 1))
-    _image.save(_file, "png")
-    _file.name = "test.png"
-    _file.seek(0)
-    if request.instance:
-        request.instance.image_file = _file
-    yield _file
-    del _file
-
-
-@pytest.fixture(name="variable_image_file")
-def _variable_image_file(request) -> Generator[Callable, None, None]:
-    """Provides a function to create an in memory image file of chosen type."""
-
-    def _image_file(file_type: str, size: int = 1) -> BytesIO:
-        _file = BytesIO()
-        _image = PIL.Image.new("1", size=(size, size))
-        _image.save(_file, file_type)
-        _file.name = f"test.{file_type}"
-        _file.seek(0)
-        return _file
-
-    if request.instance:
-        request.instance.variable_image_file = _image_file
-    yield _image_file
-    del _image_file
 
 
 @pytest.fixture

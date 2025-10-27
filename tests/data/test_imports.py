@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,protected-access
-""" Test cases for importer classes in ddionrails.data app """
+# pylint: disable=missing-docstring,protected-access
+"""Test cases for importer classes in ddionrails.data app"""
 
 import csv
 import os
 import unittest
-from io import BytesIO, StringIO
+from io import StringIO
 from pathlib import Path
 from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
@@ -24,7 +24,6 @@ from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.conftest import VariableImageFile
 from tests.data.factories import DatasetFactory
 
 from .factories import VariableFactory
@@ -395,26 +394,18 @@ class TestVariableImport:
 class ImageDummy(TypedDict, total=False):
     """Typing help for TestVariableImageImport."""
 
-    image_file: BytesIO
     url: str
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures("variable", "variable_image_file")
+@pytest.mark.usefixtures("variable")
 class TestVariableImageImport(unittest.TestCase):
     variable: Variable
-    variable_image_file: VariableImageFile
     images: Dict[str, ImageDummy]
 
     def setUp(self):
         print(self.variable.name)
         self.images = {"image": {}, "image_de": {}}
-        self.images["image"]["image_file"] = self.variable_image_file(
-            file_type="png", size=2
-        )
-        self.images["image_de"]["image_file"] = self.variable_image_file(
-            file_type="png", size=10
-        )
         self.images["image"]["url"] = "https://image.com/image.png"
         self.images["image_de"]["url"] = "https://image.de/image.png"
         csv_file_handler = StringIO()
