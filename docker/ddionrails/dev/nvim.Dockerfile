@@ -38,14 +38,21 @@ RUN apk add --no-cache \
 	&& rm -rf /var/cache/apk/* \
 	&& mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
 
+#RUN apk add --no-cache \
+#	luarocks make git lua-dev \
+#	&& ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
+
 RUN apk add --no-cache \
-	luarocks make git lua-dev \
-	&& ln -s /usr/bin/luarocks-5.1 /usr/bin/luarocks
+    git cmake build-base libtool \
+    libstdc++ gettext curl unzip \
+    lua5.3 luajit readline-dev ncurses-dev \
+    libuv-dev tree-sitter-dev 
 
 RUN git clone https://github.com/neovim/neovim.git  \
     && cd neovim \
     && git checkout v0.11.4  \
     && apk add --no-cache cmake \
+    && make distclean \
     && make CMAKE_BUILD_TYPE=Release \
     && make install
     
