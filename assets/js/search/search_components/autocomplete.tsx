@@ -15,7 +15,7 @@ function getNewClassName(newClassName: string | string[]) {
 
 function appendClassName(
   baseClassName?: string | string[] | undefined,
-  newClassName?: string | string[] | undefined
+  newClassName?: string | string[] | undefined,
 ): string {
   if (!newClassName) {
     return (
@@ -71,11 +71,11 @@ function renderResults(result: any, index: any, autocompleteResults: any) {
     titleSnippet = getRaw(result, titleField);
   }
   titleSnippet = `${titleSnippet} | ${labelSnippet}`;
-  
-  const indexName = `${result._meta.rawHit._index}`
-  let entityName = indexName
+
+  const indexName = `${result._meta.rawHit._index}`;
+  let entityName = indexName;
   if (indexName.endsWith("s")) {
-      entityName = indexName.slice(0, -1)
+    entityName = indexName.slice(0, -1);
   }
 
   return (
@@ -106,7 +106,7 @@ function Autocomplete({
       {...getMenuProps({
         className: appendClassName(
           "sui-search-box__autocomplete-container",
-          className
+          className,
         ),
       })}
     >
