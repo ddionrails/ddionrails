@@ -71,8 +71,15 @@ function renderResults(result: any, index: any, autocompleteResults: any) {
     titleSnippet = getRaw(result, titleField);
   }
   titleSnippet = `${titleSnippet} | ${labelSnippet}`;
+  
+  const indexName = `${result._meta.rawHit._index}`
+  let entityName = indexName
+  if (indexName.endsWith("s")) {
+      entityName = indexName.slice(0, -1)
+  }
+
   return (
-    <a href={"/variable/" + result.id.raw} key={result.id.raw}>
+    <a href={`/${entityName}/` + result.id.raw} key={result.id.raw}>
       <li>
         <span
           dangerouslySetInnerHTML={{
