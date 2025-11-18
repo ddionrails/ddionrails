@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods
 
-""" DjangoModelFactories for user model """
+"""DjangoModelFactories for user model"""
 
 import factory
 from django.contrib.auth.models import User
@@ -12,5 +12,9 @@ class UserFactory(factory.django.DjangoModelFactory):
         model = User
         django_get_or_create = ("username",)
 
-    username = "knut"
+    username = "test_user"
     password = factory.PostGenerationMethodCall("set_password", "secret-password")
+
+
+# TODO: Rework this with all general factories
+def study_factory(): ...
