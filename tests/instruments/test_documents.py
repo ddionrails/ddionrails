@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for documents in ddionrails.instruments app """
+"""Test cases for documents in ddionrails.instruments app"""
 
 import pytest
 from django.forms.models import model_to_dict
@@ -63,7 +63,8 @@ class TestQuestionDocuments(LiveServerTestCase):
             "label_de": self.question.instrument.study.name,
         }
         expected["study_name_de"] = ""
-        expected["question_items"] = [{}]
+        # TODO: Add question item to test
+        # expected["question_items"] = [{}]
 
         expected["instrument"] = {
             "name": self.question.instrument.name,

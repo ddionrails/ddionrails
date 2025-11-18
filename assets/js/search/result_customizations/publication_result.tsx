@@ -87,9 +87,6 @@ function publicationResultFactory({
       <div className="sui-result__header">{header(result, onClickLink)}</div>
       <div className="sui-result__body">
         {publicationBody(result, language)}
-        <div className="sui-result__image">
-          <img src={""} alt="" />
-        </div>
         <div
           className="sui-result__details"
           dangerouslySetInnerHTML={{__html: result.description}}

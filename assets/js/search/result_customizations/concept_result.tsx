@@ -46,9 +46,6 @@ function conceptResultFactory({
       </div>
       <div className="sui-result__body">
         {conceptBody(result, language)}
-        <div className="sui-result__image">
-          <img src={""} alt="" />
-        </div>
         <div
           className="sui-result__details"
           dangerouslySetInnerHTML={{__html: result.description}}

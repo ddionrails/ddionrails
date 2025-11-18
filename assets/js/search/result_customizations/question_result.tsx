@@ -1,9 +1,9 @@
-import {SearchResult} from "@elastic/search-ui";
-import {header} from "../search_components/result_header";
-import {sep} from "./result_field_separator";
+import { SearchResult } from "@elastic/search-ui";
+import { header } from "../search_components/result_header";
+import { sep } from "./result_field_separator";
 
-import {LanguageCode} from "../language_state";
-import {resultFactoryMapper} from "../factory_mappers";
+import { LanguageCode } from "../language_state";
+import { resultFactoryMapper } from "../factory_mappers";
 
 /**
  * Render variable result body
@@ -28,6 +28,40 @@ function questionBody(result: SearchResult, language: LanguageCode) {
   );
 }
 
+function getQuestionItemResultText(
+  result: SearchResult,
+  language: LanguageCode,
+) {
+  let itemText = " Result in question item: ";
+  if (language == "de") {
+    itemText = " Treffer in Frageitem: ";
+  }
+
+  let itemSnippet = result?.["question_items.de"]?.snippet.join(" ");
+  itemSnippet = itemSnippet + result?.["question_items.en"]?.snippet.join(" ");
+  let fullItemText = "";
+  if (itemSnippet) {
+    const matches = itemSnippet.matchAll(/(<em>.*?<\/em>)/g);
+    const results = Array.from(
+      matches,
+      (match: RegExpMatchArray) => match[1] ?? match[0],
+    );
+    const uniqueResults = [...new Set(results)];
+    fullItemText = itemText + uniqueResults.join(" ... ");
+  }
+  if (fullItemText) {
+    return (
+      <div>
+        <div
+          className="other-search-hit-container"
+          dangerouslySetInnerHTML={{ __html: fullItemText }}
+        ></div>
+      </div>
+    );
+  }
+  return <div></div>;
+}
+
 /**
  *
  * @param param0
@@ -42,6 +76,8 @@ function questionResultFactory({
   onClickLink: () => void;
   language: LanguageCode;
 }) {
+  let itemSection = getQuestionItemResultText(result, language);
+
   return (
     <li className="sui-result">
       <div className="sui-result__header">
@@ -49,12 +85,10 @@ function questionResultFactory({
       </div>
       <div className="sui-result__body">
         {questionBody(result, language)}
-        <div className="sui-result__image">
-          <img src={""} alt="" />
-        </div>
+        {itemSection}
         <div
           className="sui-result__details"
-          dangerouslySetInnerHTML={{__html: result.description}}
+          dangerouslySetInnerHTML={{ __html: result.description }}
         ></div>
       </div>
     </li>
@@ -63,4 +97,4 @@ function questionResultFactory({
 
 const questionResult = resultFactoryMapper(questionResultFactory);
 
-export {questionResult};
+export { questionResult };

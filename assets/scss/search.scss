@@ -88,6 +88,10 @@ button.active-search {
   margin: 0.3em;
 }
 
+.sui-result__body {
+  flex-direction: column
+}
+
 .result-name {
   padding-right: 9px;
   font-weight: 550;

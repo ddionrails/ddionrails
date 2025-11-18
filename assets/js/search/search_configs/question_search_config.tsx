@@ -38,6 +38,9 @@ function config(language: languageCode) {
         },
         label: {},
         label_de: {},
+	"question_items.en": {},
+	"question_items.de": {}
+
       },
       result_fields: {
         name: {
@@ -68,6 +71,16 @@ function config(language: languageCode) {
         period: {
           snippet: {},
         },
+	"question_items.en": {
+	  snippet: {
+            fallback: true,
+	  },
+	},
+	"question_items.de": {
+	  snippet: {
+            fallback: true,
+	  },
+	},
       },
       disjunctiveFacets,
       facets,

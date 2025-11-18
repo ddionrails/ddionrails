@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Documents for indexing Instrument model into Elasticsearch
+"""Documents for indexing Instrument model into Elasticsearch
 
 
 Authors:
@@ -69,8 +69,7 @@ class QuestionDocument(GenericDataDocument):
         """Return the related period's title or None"""
         return self._handle_missing_dict_content(question.instrument.period)
 
-    @staticmethod
-    def prepare_items(question: Question) -> Dict:
+    def prepare_question_items(self, question: Question) -> Dict:
         """Return the question's items, containing text, text_de and answers"""
         items = {"en": [], "de": []}
         for item in question.items:

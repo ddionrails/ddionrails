@@ -155,9 +155,6 @@ function variableResultFactory({
       </div>
       <div className="sui-result__body">
         {variableBody(result)}
-        <div className="sui-result__image">
-          <img src={""} alt="" />
-        </div>
         <div
           className="sui-result__details"
           dangerouslySetInnerHTML={{__html: result.description}}
