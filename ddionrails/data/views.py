@@ -240,7 +240,9 @@ def _get_related_long_items(variable: Variable) -> List[QuestionItem]:
     return list(
         QuestionItem.objects.filter(
             variables__variable__id=variable.id,
-        ).select_related("question", "question__period", "question__instrument")
+        )
+        .select_related("question", "question__period", "question__instrument")
+        .order_by("-question__period__name")
     )
 
 
