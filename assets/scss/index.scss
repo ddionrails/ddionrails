@@ -367,3 +367,10 @@ div.dataTables_paginate li.last a:after {
 .dropdown:hover .dropbtn {
   background-color: #3e8e41;
 }
+
+
+.modal-header{
+  flex-direction: row !important;
+  justify-content: space-between !important
+
+}
