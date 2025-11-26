@@ -252,6 +252,31 @@ class VariableSerializer(serializers.HyperlinkedModelSerializer):
         ]
 
 
+class RelatedVariableSerializer(VariableSerializer):
+
+    relation = serializers.StringRelatedField()
+    study = None
+    study_label = None
+    study_name = None
+
+    period_name = serializers.SlugRelatedField(
+        source="dataset.period", read_only=True, slug_field="label"
+    )
+
+    class Meta:
+        model = Variable
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset_name",
+            "dataset",
+            "relation",
+            "period_name",
+        ]
+
+
 class StatisticsVariableSerializer(VariableSerializer):
     """Expand VariableSerializer with fields needed for statistics functions."""
 

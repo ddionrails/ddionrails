@@ -14,6 +14,7 @@ from rest_framework import routers
 
 from ddionrails.api.views.datasets import (
     DatasetViewSet,
+    RelatedVariableViewSet,
     VariableLabelsViewSet,
     VariableViewSet,
 )
@@ -58,6 +59,9 @@ ROUTER.register(r"studies", StudyViewSet, basename="study")
 ROUTER.register(r"topic-tree", TopicTreeViewSet, basename="topic-tree")
 ROUTER.register(r"topic-leafs", TopicRootAndLeafs, basename="topic-leafs")
 ROUTER.register(r"variables", VariableViewSet, basename="variable")
+ROUTER.register(
+    r"related_variables", RelatedVariableViewSet, basename="related_variables"
+)
 ROUTER.register(r"variable_labels", VariableLabelsViewSet, basename="variable_labels")
 ROUTER.register(r"webhooks", WebhookView, basename="webhooks")
 
