@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.api app """
+"""Views for ddionrails.api app"""
 
 from typing import Any, Dict
 
 from django.db.models import QuerySet
+from django.db.models.expressions import Value
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -17,6 +18,7 @@ from rest_framework.response import Response
 
 from ddionrails.api.serializers import (
     DatasetSerializer,
+    RelatedVariableSerializer,
     StatisticsVariableSerializer,
     VariableLabelsSerializer,
     VariableSerializer,
@@ -30,6 +32,7 @@ from ddionrails.api.views.parameters_definition import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
+from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
@@ -121,6 +124,8 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
 class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancestors
     """List label metadata about all variables."""
 
+    http_method_names = ["get"]
+
     queryset = Variable.objects.none()
 
     serializer_class = VariableLabelsSerializer
@@ -137,6 +142,43 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
             query["study__name"] = study
 
         return Variable.objects.filter(**query).select_related("period")
+
+
+class RelatedVariableViewSet(viewsets.ReadOnlyModelViewSet): #pylint: disable=too-many-ancestors
+    """List all variables related to a variable."""
+
+    queryset = Variable.objects.none()
+
+    serializer_class = RelatedVariableSerializer
+
+    def get_queryset(self) -> QuerySet[Variable]:
+        variable_name = self.request.query_params.get("variable", None)
+        variable_id = self.request.query_params.get("variable_id", None)
+        dataset_name = self.request.query_params.get("dataset", None)
+        variable = None
+        if variable_id:
+            variable = Variable.objects.get(id=variable_id)
+        if variable_name and dataset_name:
+            variable = Variable.objects.get(
+                name=variable_name, dataset__name=dataset_name
+            )
+        if not variable:
+            raise Http404
+
+        queryset = (
+            (
+                Variable.objects.filter(
+                    target_variables__in=Transformation.objects.filter(target=variable)
+                ).annotate(relation=Value("output_variable"))
+                | Variable.objects.filter(
+                    origin_variables__in=Transformation.objects.filter(origin=variable)
+                ).annotate(relation=Value("input_variable"))
+            )
+            .select_related("dataset", "dataset__period")
+            .order_by("dataset__period__name")
+        )
+
+        return queryset
 
 
 @extend_schema(parameters=[STUDY_PARAMETER, PAGINATE_PARAMETER])
