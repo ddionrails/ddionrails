@@ -428,6 +428,18 @@ class TestInstrumentViewSet(unittest.TestCase):
         self.assertEqual(1, content["count"])
         self.assertEqual(getattr(instrument, "name"), content["results"][0]["name"])
 
+@override_settings(DEBUG=True)
+class TestRelatedVariableViewSet(LiveServerTestCase):
+    API_PATH = "/api/related_variables/"
+    api_client: APIClient
+
+    def setUp(self) -> None:
+        return super().setUp()
+
+    # TODO:
+
+    def tearDown(self) -> None:
+        return super().tearDown()
 
 @override_settings(DEBUG=True)
 class TestVariableViewSet(LiveServerTestCase):
