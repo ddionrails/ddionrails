@@ -144,7 +144,9 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
         return Variable.objects.filter(**query).select_related("period")
 
 
-class RelatedVariableViewSet(viewsets.ReadOnlyModelViewSet): #pylint: disable=too-many-ancestors
+class RelatedVariableViewSet(
+    viewsets.ReadOnlyModelViewSet
+):  # pylint: disable=too-many-ancestors
     """List all variables related to a variable."""
 
     queryset = Variable.objects.none()
@@ -155,12 +157,15 @@ class RelatedVariableViewSet(viewsets.ReadOnlyModelViewSet): #pylint: disable=to
         variable_name = self.request.query_params.get("variable", None)
         variable_id = self.request.query_params.get("variable_id", None)
         dataset_name = self.request.query_params.get("dataset", None)
+        study_name = self.request.query_params.get("study", None)
         variable = None
         if variable_id:
             variable = Variable.objects.get(id=variable_id)
         if variable_name and dataset_name:
             variable = Variable.objects.get(
-                name=variable_name, dataset__name=dataset_name
+                name=variable_name,
+                dataset__name=dataset_name,
+                dataset__study__name=study_name,
             )
         if not variable:
             raise Http404
@@ -175,6 +180,7 @@ class RelatedVariableViewSet(viewsets.ReadOnlyModelViewSet): #pylint: disable=to
                 ).annotate(relation=Value("input_variable"))
             )
             .select_related("dataset", "dataset__period")
+            .distinct()
             .order_by("dataset__period__name")
         )
 

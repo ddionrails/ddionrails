@@ -6,6 +6,7 @@
         <p title="Variable"><i class="fa fa-chart-bar"></i>
             <a id="variable-name" href="{{ variable.get_direct_url }}">{{ variable.name }}</a>
         </p>
+	<p id="long-variable-info-container"></p>
         <p title="Concept" data-concept-name="{{ concept.name|default:'' }}"><i class="fa fa-cog"></i>
             {% if concept %}
 	    <a href="{{ concept.get_absolute_url }}"
@@ -38,7 +39,7 @@
 
                 {{ variable.dataset.name }}
 
-                <small>&#x2013; {{ variable.dataset.label }}</small>
+		{        <small>&#x2013; {{ variable.dataset.label }}</small>
 
             </a>
         </p>
