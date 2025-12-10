@@ -1,10 +1,54 @@
+type VariableRelation = {
+  id: string;
+  name: string;
+  label: string;
+  label_de: string;
+  dataset_name: string;
+  dataset: string;
+  relation: "input_variable" | "output_variable";
+  period_name: string;
+};
+
+type RelatedVariablesAPIResponse = {
+  count: number;
+  next: any;
+  previous: any;
+  results: Array<VariableRelation>;
+};
+
+const variableRerouteUrl = `${window.location.origin}/variable/`;
+
 const longVariableConainerID = "long-variable-info-container";
 
-const outputIcon = document.createElement("i")
-outputIcon.classList.add("fa-solid", "fa-arrow-right-from-bracket", "output-icon")
+function createIcon(
+  classNames: Array<string>,
+  languageLabels: Map<languageCode, string>,
+) {
+  const languageSwitch = document.getElementById("language-switch");
+  let language = languageSwitch.getAttribute(
+    "data-current-language",
+  ) as languageCode;
 
-const inputIcon = document.createElement("i")
-inputIcon.classList.add("fa-solid", "fa-arrow-right-to-bracket", "input-icon")
+  const inputIcon = document.createElement("i");
+  inputIcon.classList.add(...classNames);
+  inputIcon.title = languageLabels.get(language);
+
+  const mutationCallback = (mutationList: Array<any>, _: any) => {
+    for (const mutation of mutationList) {
+      if (mutation.type == "attributes") {
+        language = languageSwitch.getAttribute(
+          "data-current-language",
+        ) as languageCode;
+        inputIcon.title = languageLabels.get(language);
+      }
+    }
+  };
+
+  const observer = new MutationObserver(mutationCallback);
+  observer.observe(languageSwitch, { attributes: true });
+
+  return inputIcon;
+}
 
 function getApiUrl() {
   const studyMeta = document.querySelector('meta[name="study"]');
@@ -25,28 +69,101 @@ function getApiUrl() {
   return `${window.location.origin}/api/related_variables/${query}`;
 }
 
-function parseRelatedJSON(json: any) {
+function createVariableElement(variable: VariableRelation) {
+  const variableContainer = document.createElement("div");
+  variableContainer.classList.add("related-variable-container");
+  const variableLink = document.createElement("a");
+  variableLink.innerText = variable.name;
+  variableLink.href = variableRerouteUrl + variable.id;
+  variableContainer.appendChild(variableLink);
+
+  if (variable.relation == "input_variable") {
+    variableContainer.appendChild(
+      createIcon(
+        ["fa-solid", "fa-arrow-right-to-bracket", "input-icon"],
+        new Map([
+          ["en", "The current variable is generated using this variable"],
+          ["de", "Die aktuelle variable wird aus dieser generiert"],
+        ]),
+      ),
+    );
+  }
+
+  if (variable.relation == "output_variable") {
+    variableContainer.prepend(
+      createIcon(
+        ["fa-solid", "fa-arrow-right-from-bracket", "input-icon"],
+        new Map([
+          ["en", "The current variable is used to generate this variable"],
+          [
+            "de",
+            "Die aktuelle Variable wird zur Generierung dieser Variable genutzt",
+          ],
+        ]),
+      ),
+    );
+  }
+
+  return variableContainer;
+}
+
+function createInfoHeader(label: Map<languageCode, string>) {
+  const outputElement = document.createElement("span");
+  const language = document
+    .getElementById("language-switch")
+    .getAttribute("data-current-language") as languageCode;
+  outputElement.setAttribute("data-de", label.get("de"));
+  outputElement.setAttribute("data-en", label.get("en"));
+  outputElement.textContent = label.get(language);
+  outputElement.classList.add("related-infobox-header");
+  return outputElement;
+}
+
+function parseRelatedJSON(json: RelatedVariablesAPIResponse) {
   const content = json;
   if (!content?.["count"]) {
     return;
   }
-  const longVariables = [];
+  const longInputVariables = [];
+  const longOutputVariables = [];
   for (const result of content?.["results"]) {
     if (result?.["period_name"] == "0") {
-      longVariables.push(result);
+      if (result.relation == "input_variable") {
+        longInputVariables.push(result);
+      }
+      if (result.relation == "output_variable") {
+        longOutputVariables.push(result);
+      }
     }
   }
   const container = document.getElementById(longVariableConainerID);
-  if(longVariables.length == 1){
-    container.appendChild(document.createTextNode("Long Variable: "))
-  } else if (longVariables.length > 1){
-    container.appendChild(document.createTextNode("Harmonized from: "))
+  if (longOutputVariables.length) {
+    container.appendChild(
+      createInfoHeader(
+        new Map([
+          ["en", "Long variables:"],
+          ["de", "Längsschnittvariablen:"],
+        ]),
+      ),
+    );
+    for (const variable of longOutputVariables) {
+      const element = createVariableElement(variable);
+      container.appendChild(element);
+    }
   }
-  for (const variable of longVariables) {
-    let element = document.createElement("div");
-    element.appendChild(document.createTextNode(variable?.["name"]));
-    element.appendChild(inputIcon.cloneNode())
-    container.appendChild(element);
+  if (longInputVariables.length) {
+    container.appendChild(
+      createInfoHeader(
+        new Map([
+          ["de", "Harmonisiert von:"],
+          ["en", "Harmonized from:"],
+        ]),
+      ),
+    );
+    for (const variable of longInputVariables) {
+      const element = createVariableElement(variable);
+      container.appendChild(element);
+    }
   }
 }
 
@@ -58,7 +175,7 @@ function loadRelationData() {
 
   let apiRequest = new Request(apiUrl);
   fetch(apiRequest).then((response) => {
-    response.json().then((json) => {
+    response.json().then((json: RelatedVariablesAPIResponse) => {
       parseRelatedJSON(json);
     });
   });

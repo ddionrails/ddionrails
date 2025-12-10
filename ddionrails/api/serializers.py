@@ -259,9 +259,9 @@ class RelatedVariableSerializer(VariableSerializer):
     study_label = None
     study_name = None
 
-    period_name = serializers.SlugRelatedField(
-        source="dataset.period", read_only=True, slug_field="name"
-    )
+    period_name = serializers.StringRelatedField(source="period__name", read_only=True)
+    dataset_name = serializers.StringRelatedField(source="dataset__name", read_only=True)
+    dataset = serializers.StringRelatedField(source="dataset_id", read_only=True)
 
     class Meta:
         model = Variable

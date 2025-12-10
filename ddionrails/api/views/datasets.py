@@ -4,7 +4,7 @@
 
 from typing import Any, Dict
 
-from django.db.models import QuerySet
+from django.db.models import CharField, QuerySet
 from django.db.models.expressions import Value
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404
@@ -170,21 +170,41 @@ class RelatedVariableViewSet(
         if not variable:
             raise Http404
 
-        queryset = (
-            (
-                Variable.objects.filter(
-                    target_variables__in=Transformation.objects.filter(target=variable)
-                ).annotate(relation=Value("output_variable"))
-                | Variable.objects.filter(
-                    origin_variables__in=Transformation.objects.filter(origin=variable)
-                ).annotate(relation=Value("input_variable"))
+        input_variables_query = (
+            Variable.objects.filter(
+                target_variables__in=Transformation.objects.filter(target=variable)
             )
+            .annotate(relation=Value("input_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
-            .distinct()
-            .order_by("dataset__period__name")
+        ).values(
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset__name",
+            "dataset_id",
+            "relation",
+            "period__name",
         )
 
-        return queryset
+        output_variables_query = (
+            Variable.objects.filter(
+                origin_variables__in=Transformation.objects.filter(origin=variable)
+            )
+            .annotate(relation=Value("output_variable", output_field=CharField()))
+            .select_related("dataset", "dataset__period")
+        ).values(
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset__name",
+            "dataset_id",
+            "relation",
+            "period__name",
+        )
+
+        return input_variables_query.union(output_variables_query, all=True)
 
 
 @extend_schema(parameters=[STUDY_PARAMETER, PAGINATE_PARAMETER])
