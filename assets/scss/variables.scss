@@ -50,13 +50,31 @@
 
 
 .fa-arrow-right-to-bracket{
-  margin-left: .2rem
+  margin-left: .2rem;
+  color: #DC3220;
 }
 
 .fa-arrow-right-from-bracket{
-  margin-right: .2rem
+  margin-right: .2rem;
+  color: #005AB5;
 }
 
 .related-infobox-header{
   font-weight: bolder;
+}
+
+#variable-relations > .card-body{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 60vw;
+}
+
+.period-container{
+  margin: 1em;
+}
+
+.related-period-header{
+  font-weight: bolder;
+  font-size: 1.2rem
 }
