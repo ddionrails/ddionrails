@@ -1,3 +1,8 @@
+type VariableRelationType = "input_variable" | "output_variable";
+
+type LongVariablePeriodType = "0";
+const LongVariablePeriod: LongVariablePeriodType = "0";
+
 type VariableRelation = {
   id: string;
   name: string;
@@ -5,7 +10,7 @@ type VariableRelation = {
   label_de: string;
   dataset_name: string;
   dataset: string;
-  relation: "input_variable" | "output_variable";
+  relation: VariableRelationType;
   period_name: string;
 };
 
@@ -15,6 +20,10 @@ type RelatedVariablesAPIResponse = {
   previous: any;
   results: Array<VariableRelation>;
 };
+
+type InputOutputMap = Map<VariableRelationType, Array<VariableRelation>>;
+
+type PeriodInputOutputMap = Map<string, InputOutputMap>;
 
 const variableRerouteUrl = `${window.location.origin}/variable/`;
 
@@ -119,51 +128,150 @@ function createInfoHeader(label: Map<languageCode, string>) {
   return outputElement;
 }
 
+function appendLongOutputVariables(
+  container: HTMLElement,
+  longOutputVariables: Array<VariableRelation>,
+) {
+  container.appendChild(
+    createInfoHeader(
+      new Map([
+        ["en", "Long variables:"],
+        ["de", "Längsschnittvariablen:"],
+      ]),
+    ),
+  );
+  for (const variable of longOutputVariables) {
+    container.appendChild(createVariableElement(variable));
+  }
+}
+
+function appendLongInputVariables(
+  container: HTMLElement,
+  longInputVariables: Array<VariableRelation>,
+) {
+  container.appendChild(
+    createInfoHeader(
+      new Map([
+        ["de", "Harmonisiert von:"],
+        ["en", "Harmonized from:"],
+      ]),
+    ),
+  );
+  for (const variable of longInputVariables) {
+    container.appendChild(createVariableElement(variable));
+  }
+}
+
+function fillInfoContainer(
+  longVariablesMap: Map<VariableRelationType, Array<VariableRelation>>,
+) {
+  const container = document.getElementById(longVariableConainerID);
+  if (longVariablesMap.has("output_variable")) {
+    appendLongOutputVariables(
+      container,
+      longVariablesMap.get("output_variable"),
+    );
+  }
+  if (longVariablesMap.has("input_variable")) {
+    appendLongInputVariables(container, longVariablesMap.get("input_variable"));
+  }
+}
+
+/**
+ * Sort numerical strings and strings
+ * Sort:
+ * Numerical strings in front of non-numerical strings
+ * Two non-numerical strings as strings
+ * Two numerical strings as numbers
+ * */
+function comparePotentialNumeric(a: string | number, b: string | number) {
+  const aInt = typeof a == "string" ? parseInt(a) : a;
+  const bInt = typeof b == "string" ? parseInt(b) : b;
+
+  if (!isNaN(aInt) && isNaN(bInt)) {
+    return -1;
+  }
+  if (isNaN(aInt) && !isNaN(bInt)) {
+    return 1;
+  }
+
+  if (isNaN(aInt) && isNaN(bInt)) {
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  }
+  if (aInt < bInt) {
+    return -1;
+  }
+  if (aInt > bInt) {
+    return 1;
+  }
+  return 0;
+}
+
+function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
+  const variableRelationsCard = document.getElementById("variable-relations");
+  const variableRelationsCardBody =
+    variableRelationsCard.getElementsByClassName("card-body")["0"];
+
+  const periods = Array.from(periodInputOutputMap.keys()).sort(
+    comparePotentialNumeric,
+  );
+
+  for (const period of periods) {
+    const periodContainer = document.createElement("div");
+    periodContainer.classList.add("period-container")
+    const periodHeader = document.createElement("div");
+    periodHeader.classList.add("related-period-header")
+    periodHeader.textContent = period + ":";
+    periodContainer.appendChild(periodHeader);
+    if (periodInputOutputMap.get(period).has("input_variable")) {
+      for (const variable of periodInputOutputMap
+        .get(period)
+        .get("input_variable")) {
+        periodContainer.appendChild(createVariableElement(variable));
+      }
+    }
+    if (periodInputOutputMap.get(period).has("output_variable")) {
+      for (const variable of periodInputOutputMap
+        .get(period)
+        .get("output_variable")) {
+        periodContainer.appendChild(createVariableElement(variable));
+      }
+    }
+    variableRelationsCardBody.appendChild(periodContainer);
+  }
+}
+
 function parseRelatedJSON(json: RelatedVariablesAPIResponse) {
   const content = json;
   if (!content?.["count"]) {
     return;
   }
-  const longInputVariables = [];
-  const longOutputVariables = [];
+  const periodInputOutputMap: PeriodInputOutputMap = new Map();
+
   for (const result of content?.["results"]) {
-    if (result?.["period_name"] == "0") {
-      if (result.relation == "input_variable") {
-        longInputVariables.push(result);
-      }
-      if (result.relation == "output_variable") {
-        longOutputVariables.push(result);
-      }
+    if (!periodInputOutputMap.has(result.period_name)) {
+      periodInputOutputMap.set(result.period_name, new Map());
     }
+    if (!periodInputOutputMap.get(result.period_name).get(result.relation)) {
+      periodInputOutputMap.get(result.period_name).set(result.relation, []);
+    }
+    periodInputOutputMap
+      .get(result.period_name)
+      .get(result.relation)
+      .push(result);
   }
-  const container = document.getElementById(longVariableConainerID);
-  if (longOutputVariables.length) {
-    container.appendChild(
-      createInfoHeader(
-        new Map([
-          ["en", "Long variables:"],
-          ["de", "Längsschnittvariablen:"],
-        ]),
-      ),
-    );
-    for (const variable of longOutputVariables) {
-      const element = createVariableElement(variable);
-      container.appendChild(element);
-    }
+
+  if (periodInputOutputMap.has(LongVariablePeriod)) {
+    fillInfoContainer(periodInputOutputMap.get(LongVariablePeriod));
   }
-  if (longInputVariables.length) {
-    container.appendChild(
-      createInfoHeader(
-        new Map([
-          ["de", "Harmonisiert von:"],
-          ["en", "Harmonized from:"],
-        ]),
-      ),
-    );
-    for (const variable of longInputVariables) {
-      const element = createVariableElement(variable);
-      container.appendChild(element);
-    }
+  if (periodInputOutputMap.size) {
+    fillVariablesContainer(periodInputOutputMap);
   }
 }
 
