@@ -2,6 +2,7 @@
 {% load render_bundle from webpack_loader %}
 
 {% block entity_metadata %}
+    <meta name="period" content="{{ variable.dataset.period.name }}">
     <meta name="dataset" content="{{ variable.dataset.name }}">
     <meta name="variable" content="{{ variable.name }}">
 {% endblock entity_metadata %}
