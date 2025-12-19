@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-""" Model definitions for ddionrails.data app: Variable """
+"""Model definitions for ddionrails.data app: Variable"""
 
 from __future__ import annotations
 
@@ -92,6 +92,15 @@ class Variable(ModelMixin, models.Model):
         null=True,
         verbose_name="Sort ID",
         help_text="Sort order of variables within one dataset",
+    )
+    long_variable = models.BooleanField(
+        default=False, verbose_name="Is longitudinal variable"
+    )
+    harmonization = models.BooleanField(
+        default=False, verbose_name="Is harmonization variable"
+    )
+    is_harmonized = models.BooleanField(
+        default=False, verbose_name="Variable is harmonized into another variable"
     )
     image_url = models.TextField(
         blank=True, verbose_name="Image URL", help_text="URL to a related image"

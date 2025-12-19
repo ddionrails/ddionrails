@@ -1,18 +1,21 @@
 # -*- coding: utf-8 -*-
 
-""" Importer classes for ddionrails.data app """
+"""Importer classes for ddionrails.data app"""
 
 import json
 from collections import OrderedDict
 from csv import DictReader
 from functools import lru_cache
+from itertools import permutations
 from pathlib import Path
+from re import compile
 from typing import Dict, List, Tuple, Union
 
 from django.db.transaction import atomic
 from django.db.utils import DataError
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.data.models.transformation import Sibling
 from ddionrails.imports import imports
 from ddionrails.studies.models import Study
 
@@ -109,8 +112,12 @@ class DatasetImport(imports.CSVImport):
         dataset.save()
 
 
+
 class VariableImport(imports.CSVImport):
     """Import Variable data from csv file."""
+
+    harmonized_suffix = compile(r".*_h$")
+    is_harmonized_suffix = compile(r".*_v\d+$")
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
@@ -138,6 +145,7 @@ class VariableImport(imports.CSVImport):
         for row in self.content:
             self.import_element(row)
 
+
     def _import_variable(self, element):
         dataset = Dataset.objects.get(
             study=self.study, name=element.get("dataset", element.get("dataset_name"))
@@ -149,6 +157,12 @@ class VariableImport(imports.CSVImport):
         if concept_name != "":
             concept = Concept.objects.get(name=concept_name)
             variable.concept = concept
+        if dataset.period.name == "0":
+            variable.long_variable = True
+            if self.harmonized_suffix.match(variable.name):
+                variable.harmonization = True
+            if self.is_harmonized_suffix.match(variable.name):
+                variable.is_harmonized = True
         variable.description = element.get("description", "")
         variable.description_de = element.get("description_de", "")
         variable.description_long = element.get("description_long", "")
@@ -248,3 +262,39 @@ def variables_images_import(file: Path, study: Study) -> None:
                 variables = []
         if variables:
             Variable.objects.bulk_update(variables, ["images"])
+
+
+
+
+@atomic
+def siblings_generation(_: Path, study: Study):
+    Sibling.objects.filter(sibling_a__dataset__study=study).delete()
+
+    long_variables = Variable.objects.filter(
+        dataset__period__name="0", dataset__study=study, name__endswith="_h"
+    ).prefetch_related("origin_variables", "target_variables")
+    siblings: list[Sibling] = []
+
+    harmonized_suffix = compile(r".*_v/d+$")
+
+    for long_variable in long_variables.all():
+        target_transformations = long_variable.target_variables.all().distinct()
+        origin_transformations = long_variable.origin_variables.all().distinct()
+        target_variables = [variable.target for variable in target_transformations]
+        origin_variables_variables = [
+            variable.origin for variable in origin_transformations
+        ]
+        for variables in (target_variables, origin_variables_variables):
+            if not variables:
+                continue
+            for pair in permutations(variables, 2):
+                sibling_relation = Sibling()
+                sibling_relation.sibling_a, sibling_relation.sibling_b = pair
+
+                if harmonized_suffix.search(pair[0].name) or harmonized_suffix.search(
+                    pair[1].name
+                ):
+                    continue
+                siblings.append(sibling_relation)
+
+    Sibling.objects.bulk_create(siblings)
