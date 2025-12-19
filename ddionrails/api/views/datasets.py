@@ -32,7 +32,7 @@ from ddionrails.api.views.parameters_definition import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
-from ddionrails.data.models.transformation import Transformation
+from ddionrails.data.models.transformation import Sibling, Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
@@ -172,7 +172,7 @@ class RelatedVariableViewSet(
 
         input_variables_query = (
             Variable.objects.filter(
-                target_variables__in=Transformation.objects.filter(target=variable)
+                target_variables__target=variable
             )
             .annotate(relation=Value("input_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
@@ -189,7 +189,7 @@ class RelatedVariableViewSet(
 
         output_variables_query = (
             Variable.objects.filter(
-                origin_variables__in=Transformation.objects.filter(origin=variable)
+                origin_variables__origin=variable
             )
             .annotate(relation=Value("output_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
@@ -203,8 +203,26 @@ class RelatedVariableViewSet(
             "relation",
             "period__name",
         )
+        siblings_query = (
+            Variable.objects.filter(
+                siblings__sibling_a=variable
+            )
+            .annotate(relation=Value("sibling_variable", output_field=CharField()))
+            .select_related("dataset", "dataset__period")
+        ).values(
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "dataset__name",
+            "dataset_id",
+            "relation",
+            "period__name",
+        )
 
-        return input_variables_query.union(output_variables_query, all=True)
+        return input_variables_query.union(output_variables_query, all=True).union(
+            siblings_query, all=True
+        )
 
 
 @extend_schema(parameters=[STUDY_PARAMETER, PAGINATE_PARAMETER])

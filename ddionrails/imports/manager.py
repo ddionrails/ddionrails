@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Manager classes for imports in ddionrails project """
+"""Manager classes for imports in ddionrails project"""
 
 import csv
 import json
@@ -28,6 +28,7 @@ from ddionrails.concepts.imports import (
 from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
+    siblings_generation,
     TransformationImport,
     VariableImport,
     variables_images_import,
@@ -173,6 +174,7 @@ class StudyImportManager:
                     self.base_dir.joinpath("script_metadata.csv"),
                 ),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
+                "siblings": (siblings_generation, self.base_dir / "study.md"),
             }
         )
 
