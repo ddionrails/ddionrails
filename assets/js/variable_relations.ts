@@ -1,4 +1,4 @@
-type VariableRelationType = "input_variable" | "output_variable";
+type VariableRelationType = "input_variable" | "output_variable" | "sibling_variable";
 
 type LongVariablePeriodType = "0";
 const LongVariablePeriod: LongVariablePeriodType = "0";
@@ -86,6 +86,19 @@ function createVariableElement(variable: VariableRelation) {
   variableLink.href = variableRerouteUrl + variable.id;
   variableContainer.appendChild(variableLink);
 
+
+  if (variable.relation == "sibling_variable") {
+    variableContainer.appendChild(
+      createIcon(
+        ["fa-solid", "fa-handshake", "sibling-icon"],
+        new Map([
+          ["en", "Is related to the same long variable"],
+          ["de", "Fließt in die selbe Langzeitvariable"],
+        ]),
+      ),
+    );
+  }
+
   if (variable.relation == "input_variable") {
     variableContainer.appendChild(
       createIcon(
@@ -101,7 +114,7 @@ function createVariableElement(variable: VariableRelation) {
   if (variable.relation == "output_variable") {
     variableContainer.prepend(
       createIcon(
-        ["fa-solid", "fa-arrow-right-from-bracket", "input-icon"],
+        ["fa-solid", "fa-arrow-right-from-bracket", "output-icon"],
         new Map([
           ["en", "The current variable is used to generate this variable"],
           [
@@ -229,6 +242,13 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
     periodHeader.classList.add("related-period-header")
     periodHeader.textContent = period + ":";
     periodContainer.appendChild(periodHeader);
+    if (periodInputOutputMap.get(period).has("sibling_variable")) {
+      for (const variable of periodInputOutputMap
+        .get(period)
+        .get("sibling_variable")) {
+        periodContainer.appendChild(createVariableElement(variable));
+      }
+    }
     if (periodInputOutputMap.get(period).has("input_variable")) {
       for (const variable of periodInputOutputMap
         .get(period)
