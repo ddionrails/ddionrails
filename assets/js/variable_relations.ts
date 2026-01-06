@@ -148,8 +148,8 @@ function appendLongOutputVariables(
   container.appendChild(
     createInfoHeader(
       new Map([
-        ["en", "Long variables:"],
-        ["de", "Längsschnittvariablen:"],
+        ["en", "Harmonized long variables:"],
+        ["de", "Hamonisierte Längsschnittvariablen:"],
       ]),
     ),
   );
