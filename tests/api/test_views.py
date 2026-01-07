@@ -428,6 +428,7 @@ class TestInstrumentViewSet(unittest.TestCase):
         self.assertEqual(1, content["count"])
         self.assertEqual(getattr(instrument, "name"), content["results"][0]["name"])
 
+
 @override_settings(DEBUG=True)
 class TestRelatedVariableViewSet(LiveServerTestCase):
     API_PATH = "/api/related_variables/"
@@ -440,6 +441,7 @@ class TestRelatedVariableViewSet(LiveServerTestCase):
 
     def tearDown(self) -> None:
         return super().tearDown()
+
 
 @override_settings(DEBUG=True)
 class TestVariableViewSet(LiveServerTestCase):
@@ -537,6 +539,7 @@ class TestVariableViewSet(LiveServerTestCase):
             "dataset_name",
             "study_name",
             "study_label",
+            "period_name",
             "dataset",
             "study",
             "position",

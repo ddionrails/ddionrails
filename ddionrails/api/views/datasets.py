@@ -114,7 +114,7 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
 
         return (
             Variable.objects.filter(**queryset_filter)
-            .select_related("dataset", "dataset__study")
+            .select_related("dataset", "dataset__study", "dataset__period")
             .distinct()
         )
 

@@ -1,3 +1,5 @@
+import { createIcon, addConceptToVariables } from "./variable_relations_concepts"
+
 type VariableRelationType = "input_variable" | "output_variable" | "sibling_variable";
 
 type LongVariablePeriodType = "0";
@@ -29,36 +31,6 @@ const variableRerouteUrl = `${window.location.origin}/variable/`;
 
 const longVariableConainerID = "long-variable-info-container";
 
-function createIcon(
-  classNames: Array<string>,
-  languageLabels: Map<languageCode, string>,
-) {
-  const languageSwitch = document.getElementById("language-switch");
-  let language = languageSwitch.getAttribute(
-    "data-current-language",
-  ) as languageCode;
-
-  const inputIcon = document.createElement("i");
-  inputIcon.classList.add(...classNames);
-  inputIcon.title = languageLabels.get(language);
-
-  const mutationCallback = (mutationList: Array<any>, _: any) => {
-    for (const mutation of mutationList) {
-      if (mutation.type == "attributes") {
-        language = languageSwitch.getAttribute(
-          "data-current-language",
-        ) as languageCode;
-        inputIcon.title = languageLabels.get(language);
-      }
-    }
-  };
-
-  const observer = new MutationObserver(mutationCallback);
-  observer.observe(languageSwitch, { attributes: true });
-
-  return inputIcon;
-}
-
 function getApiUrl() {
   const studyMeta = document.querySelector('meta[name="study"]');
   const variableMeta = document.querySelector('meta[name="variable"]');
@@ -85,6 +57,7 @@ function createVariableElement(variable: VariableRelation) {
   variableLink.innerText = variable.name;
   variableLink.href = variableRerouteUrl + variable.id;
   variableContainer.appendChild(variableLink);
+  variableContainer.setAttribute("data-variable-name", variable.name)
 
 
   if (variable.relation == "sibling_variable") {
@@ -238,6 +211,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
   for (const period of periods) {
     const periodContainer = document.createElement("div");
     periodContainer.classList.add("period-container")
+    periodContainer.setAttribute("data-period-name", period)
     const periodHeader = document.createElement("div");
     periodHeader.classList.add("related-period-header")
     periodHeader.textContent = period + ":";
@@ -305,6 +279,7 @@ function loadRelationData() {
   fetch(apiRequest).then((response) => {
     response.json().then((json: RelatedVariablesAPIResponse) => {
       parseRelatedJSON(json);
+      addConceptToVariables();
     });
   });
 }
