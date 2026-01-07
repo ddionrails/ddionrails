@@ -32,7 +32,6 @@ from ddionrails.api.views.parameters_definition import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
-from ddionrails.data.models.transformation import Sibling, Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
@@ -171,9 +170,7 @@ class RelatedVariableViewSet(
             raise Http404
 
         input_variables_query = (
-            Variable.objects.filter(
-                target_variables__target=variable
-            )
+            Variable.objects.filter(target_variables__target=variable)
             .annotate(relation=Value("input_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
         ).values(
@@ -188,9 +185,7 @@ class RelatedVariableViewSet(
         )
 
         output_variables_query = (
-            Variable.objects.filter(
-                origin_variables__origin=variable
-            )
+            Variable.objects.filter(origin_variables__origin=variable)
             .annotate(relation=Value("output_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
         ).values(
@@ -204,9 +199,9 @@ class RelatedVariableViewSet(
             "period__name",
         )
         siblings_query = (
-            Variable.objects.filter(
-                siblings__sibling_a=variable
-            )
+            Variable.objects.filter(siblings__sibling_a=variable)
+            .exclude(name__in=output_variables_query.values("name"))
+            .exclude(name__in=input_variables_query.values("name"))
             .annotate(relation=Value("sibling_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
         ).values(
