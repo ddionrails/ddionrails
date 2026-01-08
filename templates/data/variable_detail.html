@@ -20,7 +20,7 @@
     {% csrf_token %}
     {{ variable_baskets_context|json_script:"context_data" }}
     <h1><i class="fa fa-chart-bar" title="Variable"></i>
-        {{ variable.dataset.name}}/{{ variable.name }}: 
+        {{ variable.dataset.name}}/{{ variable.name }}:
         <span data-en="{{ variable.label }}" data-de="{{ variable.label_de }}"></span>
     </h1>
     <div class="row">
@@ -47,7 +47,23 @@
             <div id="chart"></div>
             <div id="chart_missings"></div>
 	    <div id="variable-relations" class="card">
-		    <div class="card-header">Variable Relations</div>
+		    <div class="card-header" id="variable-relations-header">
+			    Variable Relations
+					<div class="btn-group" id="relations-buttons-container" role="group" aria-label="Variable relations toggle buttons">
+					  <button type="button" id="concept-relation-toggle" class="btn btn-secondary" disabled>
+						  <i class="fa fa-cog fa-xs"></i>
+					  </button>
+					  <button type="button" id="sibling-relation-toggle" class="btn btn-secondary" disabled>
+						  <i class="fa-solid fa-handshake fa-xs"></i>
+					  </button>
+					  <button type="button" id="output-relation-toggle" class="btn btn-secondary" disabled>
+						  <i class="fa-solid fa-arrow-right-from-bracket fa-xs"></i>
+					  </button>
+					  <button type="button" id="input-relation-toggle" class="btn btn-secondary" disabled>
+						  <i class="fa-solid fa-arrow-right-to-bracket fa-xs"></i>
+					  </button>
+					</div>
+		    </div>
 		    <div class="card-body"></div>
 	    </div>
             {% endif %}
@@ -116,7 +132,7 @@
 
 	        {% if related_variables_exist or origin_variables_exist or target_variables_exist %}
                 <div class="tab-content">
-                    <div role="tabpanel" 
+                    <div role="tabpanel"
 		           {% if related_variables_exist %}
 			     class="tab-pane active"
 			   {% else %}
@@ -181,7 +197,7 @@
                             <div class="card-body">
                             Bitte <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">melden Sie sich an</a>
                             oder <a href="{% url 'workspace:register' %">registrieren ein Nutzerkonto</a>
-                            um Ihre Variablensammlungen zu verwalten. 
+                            um Ihre Variablensammlungen zu verwalten.
                         {% else %}
                             <div class="card-body">
                             Please <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">login</a>
