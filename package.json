@@ -43,7 +43,7 @@
     "prettier-eslint": "^16.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.1.1",
+    "react-router-dom": "^7.12.0",
     "spinkit": "^2.0.1",
     "typescript": "^5.9.3",
     "@types/datatables.net-fixedcolumns": "^3.3.4",
