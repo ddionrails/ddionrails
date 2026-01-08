@@ -1,6 +1,7 @@
 import { createIcon, addConceptToVariables } from "./variable_relations_concepts"
 
 type VariableRelationType = "input_variable" | "output_variable" | "sibling_variable";
+type ToggleType = "input" | "output" | "sibling";
 
 type LongVariablePeriodType = "0";
 const LongVariablePeriod: LongVariablePeriodType = "0";
@@ -48,6 +49,11 @@ function getApiUrl() {
   const query = `?dataset=${datasetName}&variable=${variableName}&study=${studyName}`;
 
   return `${window.location.origin}/api/related_variables/${query}`;
+}
+
+function enableToggle(relationType: ToggleType){
+  let buttonID = `${relationType}-relation-toggle`
+  document.getElementById(buttonID).removeAttribute("disabled")
 }
 
 function createVariableElement(variable: VariableRelation) {
@@ -222,6 +228,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("sibling_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
+      enableToggle("sibling")
     }
     if (periodInputOutputMap.get(period).has("input_variable")) {
       for (const variable of periodInputOutputMap
@@ -229,6 +236,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("input_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
+      enableToggle("input")
     }
     if (periodInputOutputMap.get(period).has("output_variable")) {
       for (const variable of periodInputOutputMap
@@ -236,6 +244,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("output_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
+      enableToggle("output")
     }
     variableRelationsCardBody.appendChild(periodContainer);
   }

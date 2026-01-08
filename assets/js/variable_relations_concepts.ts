@@ -37,6 +37,10 @@ export function createIcon(
   return inputIcon;
 }
 
+function enableConceptToggle(){
+  document.getElementById("concept-relation-toggle").removeAttribute("disabled") 
+}
+
 function getAPIURL() {
   const studyMeta = document.querySelector('meta[name="study"]');
   const studyName =
@@ -48,6 +52,7 @@ function getAPIURL() {
   if (conceptName == "") {
     return "";
   }
+  enableConceptToggle()
 
   const query = `?study=${studyName}&concept=${conceptName}`;
   return `${window.location.origin}/api/variables/${query}`;
@@ -63,6 +68,10 @@ export async function addConceptToVariables() {
           `div[data-period-name='${variable.period_name}']` +
             ` > div[data-variable-name='${variable.name}']`,
         );
+        if(!variableContainer){
+          continue
+        }
+        enableConceptToggle()
         const conceptIcon = createIcon(
           ["fa", "fa-cog", "concept-icon"],
           new Map([
