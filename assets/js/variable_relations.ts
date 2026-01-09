@@ -1,7 +1,14 @@
-import { createIcon, addConceptToVariables } from "./variable_relations_concepts"
+import {
+  addConceptToVariables,
+  createIcon,
+  enableToggle,
+} from "./variable_relations_concepts";
+import { addClickEventHandler } from "./variable_relations_toggle";
 
-type VariableRelationType = "input_variable" | "output_variable" | "sibling_variable";
-type ToggleType = "input" | "output" | "sibling";
+type VariableRelationType =
+  | "input_variable"
+  | "output_variable"
+  | "sibling_variable";
 
 type LongVariablePeriodType = "0";
 const LongVariablePeriod: LongVariablePeriodType = "0";
@@ -51,11 +58,6 @@ function getApiUrl() {
   return `${window.location.origin}/api/related_variables/${query}`;
 }
 
-function enableToggle(relationType: ToggleType){
-  let buttonID = `${relationType}-relation-toggle`
-  document.getElementById(buttonID).removeAttribute("disabled")
-}
-
 function createVariableElement(variable: VariableRelation) {
   const variableContainer = document.createElement("div");
   variableContainer.classList.add("related-variable-container");
@@ -63,8 +65,7 @@ function createVariableElement(variable: VariableRelation) {
   variableLink.innerText = variable.name;
   variableLink.href = variableRerouteUrl + variable.id;
   variableContainer.appendChild(variableLink);
-  variableContainer.setAttribute("data-variable-name", variable.name)
-
+  variableContainer.setAttribute("data-variable-name", variable.name);
 
   if (variable.relation == "sibling_variable") {
     variableContainer.appendChild(
@@ -76,6 +77,7 @@ function createVariableElement(variable: VariableRelation) {
         ]),
       ),
     );
+    variableContainer.classList.add("sibling-relation-toggle")
   }
 
   if (variable.relation == "input_variable") {
@@ -88,6 +90,7 @@ function createVariableElement(variable: VariableRelation) {
         ]),
       ),
     );
+    variableContainer.classList.add("input-relation-toggle")
   }
 
   if (variable.relation == "output_variable") {
@@ -103,6 +106,7 @@ function createVariableElement(variable: VariableRelation) {
         ]),
       ),
     );
+    variableContainer.classList.add("output-relation-toggle")
   }
 
   return variableContainer;
@@ -216,10 +220,10 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
 
   for (const period of periods) {
     const periodContainer = document.createElement("div");
-    periodContainer.classList.add("period-container")
-    periodContainer.setAttribute("data-period-name", period)
+    periodContainer.classList.add("period-container");
+    periodContainer.setAttribute("data-period-name", period);
     const periodHeader = document.createElement("div");
-    periodHeader.classList.add("related-period-header")
+    periodHeader.classList.add("related-period-header");
     periodHeader.textContent = period + ":";
     periodContainer.appendChild(periodHeader);
     if (periodInputOutputMap.get(period).has("sibling_variable")) {
@@ -228,7 +232,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("sibling_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("sibling")
+      enableToggle("sibling");
     }
     if (periodInputOutputMap.get(period).has("input_variable")) {
       for (const variable of periodInputOutputMap
@@ -236,7 +240,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("input_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("input")
+      enableToggle("input");
     }
     if (periodInputOutputMap.get(period).has("output_variable")) {
       for (const variable of periodInputOutputMap
@@ -244,7 +248,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("output_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("output")
+      enableToggle("output");
     }
     variableRelationsCardBody.appendChild(periodContainer);
   }
@@ -289,6 +293,7 @@ function loadRelationData() {
     response.json().then((json: RelatedVariablesAPIResponse) => {
       parseRelatedJSON(json);
       addConceptToVariables();
+      addClickEventHandler()
     });
   });
 }

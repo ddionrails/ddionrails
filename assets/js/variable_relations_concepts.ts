@@ -1,4 +1,4 @@
-import { createElement } from "react";
+import { ToggleType } from "./variable_relations_toggle";
 
 type Variable = {
   id: string;
@@ -37,8 +37,9 @@ export function createIcon(
   return inputIcon;
 }
 
-function enableConceptToggle(){
-  document.getElementById("concept-relation-toggle").removeAttribute("disabled") 
+export function enableToggle(relationType: ToggleType) {
+  let buttonID = `${relationType}-relation-toggle`;
+  document.getElementById(buttonID).removeAttribute("disabled");
 }
 
 function getAPIURL() {
@@ -52,7 +53,7 @@ function getAPIURL() {
   if (conceptName == "") {
     return "";
   }
-  enableConceptToggle()
+  enableToggle("concept");
 
   const query = `?study=${studyName}&concept=${conceptName}`;
   return `${window.location.origin}/api/variables/${query}`;
@@ -68,10 +69,11 @@ export async function addConceptToVariables() {
           `div[data-period-name='${variable.period_name}']` +
             ` > div[data-variable-name='${variable.name}']`,
         );
-        if(!variableContainer){
-          continue
+        if (!variableContainer) {
+          continue;
         }
-        enableConceptToggle()
+        variableContainer.classList.add("concept-relation-toggle");
+        enableToggle("concept");
         const conceptIcon = createIcon(
           ["fa", "fa-cog", "concept-icon"],
           new Map([
@@ -79,9 +81,8 @@ export async function addConceptToVariables() {
             ["de", "Gehört zum selben Konzept"],
           ]),
         );
-        variableContainer.appendChild(conceptIcon)
+        variableContainer.appendChild(conceptIcon);
       }
     });
   });
 }
-
