@@ -22,16 +22,16 @@ function hideToggleClass() {
   for (const relatedVariable of document.querySelectorAll(
     ".related-variable-container",
   )) {
-    relatedVariable.classList.add("hidden");
+    relatedVariable.classList.add("invisible");
   }
   for (const relatedVariableIcon of document.querySelectorAll(
     ".related-variable-container > i",
   )) {
-    relatedVariableIcon.classList.add("hidden");
+    relatedVariableIcon.classList.add("invisible");
   }
 
   for (const active of document.querySelectorAll(activeSelector)) {
-    active.classList.remove("hidden");
+    active.classList.remove("invisible");
   }
 }
 
