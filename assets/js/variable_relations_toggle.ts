@@ -18,12 +18,18 @@ function hideToggleClass() {
     "#relations-buttons-container > .active.btn:not([disabled])",
   );
   const activeIDs = [...activeButtons].map((button) => `.${button.id}`);
-  const activeSelector =
-    `.related-variable-container` +
-    `:is(${activeIDs.join(", ")})`
-  for (const relataedVariable of document.querySelectorAll(".related-variable-container")) {
-    relataedVariable.classList.add("hidden");
+  const activeSelector = `:is(${activeIDs.join(", ")})`;
+  for (const relatedVariable of document.querySelectorAll(
+    ".related-variable-container",
+  )) {
+    relatedVariable.classList.add("hidden");
   }
+  for (const relatedVariableIcon of document.querySelectorAll(
+    ".related-variable-container > i",
+  )) {
+    relatedVariableIcon.classList.add("hidden");
+  }
+
   for (const active of document.querySelectorAll(activeSelector)) {
     active.classList.remove("hidden");
   }

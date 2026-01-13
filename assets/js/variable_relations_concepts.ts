@@ -75,7 +75,7 @@ export async function addConceptToVariables() {
         variableContainer.classList.add("concept-relation-toggle");
         enableToggle("concept");
         const conceptIcon = createIcon(
-          ["fa", "fa-cog", "concept-icon"],
+          ["fa", "fa-cog", "concept-icon", "concept-relation-toggle"],
           new Map([
             ["en", "Is part of the same concept"],
             ["de", "Gehört zum selben Konzept"],
