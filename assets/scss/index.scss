@@ -19,6 +19,11 @@ $fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
   display: none !important;
 }
 
+.invisible{
+  visibility: hidden;
+  max-height: 0;
+}
+
 #windowsWarning{
   align: center;
 }
