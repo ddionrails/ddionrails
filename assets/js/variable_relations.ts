@@ -83,7 +83,7 @@ function createVariableElement(variable: VariableRelation) {
   if (variable.relation == "input_variable") {
     variableContainer.appendChild(
       createIcon(
-        ["fa-solid", "fa-arrow-right-to-bracket", "input-icon", "input-relation-toggle"],
+        ["fa-solid", "fa-circle-right", "input-icon", "input-relation-toggle"],
         new Map([
           ["en", "The current variable is generated using this variable"],
           ["de", "Die aktuelle variable wird aus dieser generiert"],
@@ -94,9 +94,9 @@ function createVariableElement(variable: VariableRelation) {
   }
 
   if (variable.relation == "output_variable") {
-    variableContainer.prepend(
+    variableContainer.appendChild(
       createIcon(
-        ["fa-solid", "fa-arrow-right-from-bracket", "output-icon", "output-relation-toggle"],
+        ["fa-solid", "fa-circle-left", "output-icon", "output-relation-toggle"],
         new Map([
           ["en", "The current variable is used to generate this variable"],
           [
