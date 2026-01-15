@@ -132,14 +132,14 @@ function createPeriodContainers(variables: VariableList) {
 
 
   //Handle first element separately since we cannot insert it after anything
-  if (!(allPeriodsSorted[0] in existingPeriods)) {
+  if (!(existingPeriods.has(allPeriodsSorted[0]))) {
     relationsContainer.prepend(initPeriodContainer(allPeriodsSorted[0]));
     existingPeriods.add(allPeriodsSorted[0]);
   }
   for (let index = 1; index < allPeriodsSorted.length; index++) {
     const period = allPeriodsSorted[index];
     const lastPeriod = allPeriodsSorted[index - 1];
-    if (!(period in existingPeriods)) {
+    if (!(existingPeriods.has(period))) {
       document
         .querySelector(`div[data-period-name='${lastPeriod}']`)
         .after(initPeriodContainer(period));
