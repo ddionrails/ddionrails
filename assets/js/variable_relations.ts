@@ -1,7 +1,10 @@
 import {
   addConceptToVariables,
+  comparePotentialNumeric,
   createIcon,
+  createVariableContainer,
   enableToggle,
+  initPeriodContainer,
 } from "./variable_relations_concepts";
 import { addClickEventHandler } from "./variable_relations_toggle";
 
@@ -59,13 +62,8 @@ function getApiUrl() {
 }
 
 function createVariableElement(variable: VariableRelation) {
-  const variableContainer = document.createElement("div");
-  variableContainer.classList.add("related-variable-container");
-  const variableLink = document.createElement("a");
-  variableLink.innerText = variable.name;
-  variableLink.href = variableRerouteUrl + variable.id;
-  variableContainer.appendChild(variableLink);
-  variableContainer.setAttribute("data-variable-name", variable.name);
+
+  const variableContainer = createVariableContainer(variable)
 
   if (variable.relation == "sibling_variable") {
     variableContainer.appendChild(
@@ -173,41 +171,6 @@ function fillInfoContainer(
   }
 }
 
-/**
- * Sort numerical strings and strings
- * Sort:
- * Numerical strings in front of non-numerical strings
- * Two non-numerical strings as strings
- * Two numerical strings as numbers
- * */
-function comparePotentialNumeric(a: string | number, b: string | number) {
-  const aInt = typeof a == "string" ? parseInt(a) : a;
-  const bInt = typeof b == "string" ? parseInt(b) : b;
-
-  if (!isNaN(aInt) && isNaN(bInt)) {
-    return -1;
-  }
-  if (isNaN(aInt) && !isNaN(bInt)) {
-    return 1;
-  }
-
-  if (isNaN(aInt) && isNaN(bInt)) {
-    if (a < b) {
-      return -1;
-    }
-    if (a > b) {
-      return 1;
-    }
-    return 0;
-  }
-  if (aInt < bInt) {
-    return -1;
-  }
-  if (aInt > bInt) {
-    return 1;
-  }
-  return 0;
-}
 
 function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
   const variableRelationsCard = document.getElementById("variable-relations");
@@ -219,13 +182,8 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
   );
 
   for (const period of periods) {
-    const periodContainer = document.createElement("div");
-    periodContainer.classList.add("period-container");
-    periodContainer.setAttribute("data-period-name", period);
-    const periodHeader = document.createElement("div");
-    periodHeader.classList.add("related-period-header");
-    periodHeader.textContent = period + ":";
-    periodContainer.appendChild(periodHeader);
+    const periodContainer = initPeriodContainer(period)
+
     if (periodInputOutputMap.get(period).has("sibling_variable")) {
       for (const variable of periodInputOutputMap
         .get(period)
