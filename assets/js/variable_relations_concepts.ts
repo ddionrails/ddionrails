@@ -1,3 +1,4 @@
+import { jsx } from "react/jsx-runtime";
 import { ToggleType } from "./variable_relations_toggle";
 
 type Variable = {
@@ -7,6 +8,8 @@ type Variable = {
 };
 
 type VariableList = Array<Variable>;
+
+const variableRerouteUrl = `${window.location.origin}/variable/`;
 
 export function createIcon(
   classNames: Array<string>,
@@ -58,19 +61,122 @@ function getAPIURL() {
   const query = `?study=${studyName}&concept=${conceptName}`;
   return `${window.location.origin}/api/variables/${query}`;
 }
+/**
+ * Sort numerical strings and strings
+ * Sort:
+ * Numerical strings in front of non-numerical strings
+ * Two non-numerical strings as strings
+ * Two numerical strings as numbers
+ * */
+export function comparePotentialNumeric(
+  a: string | number,
+  b: string | number,
+) {
+  const aInt = typeof a == "string" ? parseInt(a) : a;
+  const bInt = typeof b == "string" ? parseInt(b) : b;
+
+  if (!isNaN(aInt) && isNaN(bInt)) {
+    return -1;
+  }
+  if (isNaN(aInt) && !isNaN(bInt)) {
+    return 1;
+  }
+
+  if (isNaN(aInt) && isNaN(bInt)) {
+    if (a < b) {
+      return -1;
+    }
+    if (a > b) {
+      return 1;
+    }
+    return 0;
+  }
+  if (aInt < bInt) {
+    return -1;
+  }
+  if (aInt > bInt) {
+    return 1;
+  }
+  return 0;
+}
+
+export function initPeriodContainer(period: string) {
+  const periodContainer = document.createElement("div");
+  periodContainer.classList.add("period-container");
+  periodContainer.setAttribute("data-period-name", period);
+  const periodHeader = document.createElement("div");
+  periodHeader.classList.add("related-period-header");
+  periodHeader.textContent = period + ":";
+  periodContainer.appendChild(periodHeader);
+  return periodContainer;
+}
+
+function createPeriodContainers(variables: VariableList) {
+
+  const conceptPeriods = new Set(variables.map((entry)=>{return entry.period_name}));
+
+  const existingPeriodContainers =
+  [...document.querySelectorAll(".period-container")];
+  const existingPeriods = new Set(
+    existingPeriodContainers.map((entry)=>{return entry.getAttribute("data-period-name")})
+  );
+
+  // Remove duplicates with set
+  const allPeriods = [...new Set([...existingPeriods, ...conceptPeriods])];
+
+  const allPeriodsSorted = allPeriods.sort(comparePotentialNumeric);
+
+  const relationsContainer = document.querySelector(
+    "#variable-relations > .card-body",
+  ) as HTMLElement;
+
+
+  //Handle first element separately since we cannot insert it after anything
+  if (!(allPeriodsSorted[0] in existingPeriods)) {
+    relationsContainer.prepend(initPeriodContainer(allPeriodsSorted[0]));
+    existingPeriods.add(allPeriodsSorted[0]);
+  }
+  for (let index = 1; index < allPeriodsSorted.length; index++) {
+    const period = allPeriodsSorted[index];
+    const lastPeriod = allPeriodsSorted[index - 1];
+    if (!(period in existingPeriods)) {
+      document
+        .querySelector(`div[data-period-name='${lastPeriod}']`)
+        .after(initPeriodContainer(period));
+    }
+  }
+}
+
+export function createVariableContainer(
+  variable: Variable
+) {
+  const variableContainer = document.createElement("div");
+  variableContainer.classList.add("related-variable-container");
+  const variableLink = document.createElement("a");
+  variableLink.innerText = variable.name;
+  variableLink.href = variableRerouteUrl + variable.id;
+  variableContainer.appendChild(variableLink);
+  variableContainer.setAttribute("data-variable-name", variable.name);
+  return variableContainer
+}
 
 export async function addConceptToVariables() {
   const apiURL = getAPIURL();
 
   fetch(apiURL).then((response) => {
     response.json().then((json: VariableList) => {
+      createPeriodContainers(json);
       for (const variable of json) {
-        const variableContainer = document.querySelector(
+        let periodContainer = document.querySelector(
+          `div[data-period-name='${variable.period_name}']`,
+        ) as HTMLElement;
+        let variableContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']` +
             ` > div[data-variable-name='${variable.name}']`,
         );
         if (!variableContainer) {
-          continue;
+          variableContainer = createVariableContainer(variable);
+          periodContainer.appendChild(variableContainer);
         }
         variableContainer.classList.add("concept-relation-toggle");
         enableToggle("concept");
