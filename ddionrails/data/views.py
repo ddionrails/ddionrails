@@ -144,7 +144,6 @@ class VariableDetailView(DetailView):
         study = self.object.get_study()
         variable: Variable = self.object
         context["study"] = study
-        context["related_variables"] = self.object.get_related_variables()
         if variable.period.name == "0":
             context["items"] = _get_related_long_items(self.object)
         else:
@@ -193,11 +192,6 @@ class VariableDetailView(DetailView):
         for measure in ordering:
             if measure in variable.statistics:
                 context["statistics"][measure] = variable.statistics[measure]
-        context["origin_variables"] = variable.origin_variables_dict
-        context["target_variables"] = variable.target_variables_dict
-        context["origin_variables_exist"] = bool(variable.origin_variables.count())
-        context["target_variables_exist"] = bool(variable.target_variables.count())
-        context["related_variables_exist"] = bool(variable.get_related_variables())
         context = context | get_study_context(study)
         return context
 
