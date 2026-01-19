@@ -1,20 +1,20 @@
 import {
-  addConceptToVariables,
-  comparePotentialNumeric,
+  addConceptVariables,
+  sortPotentialNumeric,
   createIcon,
   createVariableContainer,
-  enableToggle,
+  enableRelationToggleButton,
   initPeriodContainer,
 } from "./variable_relations_concepts";
 import { addClickEventHandler } from "./variable_relations_toggle";
+
+type LongVariablePeriodType = "0";
+const LongVariablePeriod: LongVariablePeriodType = "0";
 
 type VariableRelationType =
   | "input_variable"
   | "output_variable"
   | "sibling_variable";
-
-type LongVariablePeriodType = "0";
-const LongVariablePeriod: LongVariablePeriodType = "0";
 
 type VariableRelation = {
   id: string;
@@ -34,15 +34,45 @@ type RelatedVariablesAPIResponse = {
   results: Array<VariableRelation>;
 };
 
-type InputOutputMap = Map<VariableRelationType, Array<VariableRelation>>;
+type RelationMap = Map<VariableRelationType, Array<VariableRelation>>;
 
-type PeriodInputOutputMap = Map<string, InputOutputMap>;
+type RelationByPeriodMap = Map<string, RelationMap>;
 
-const variableRerouteUrl = `${window.location.origin}/variable/`;
+const InfoHeaderText: Map<languageCode, string> = new Map([
+  ["en", "Harmonized long variables:"],
+  ["de", "Hamonisierte Längsschnittvariablen:"],
+]);
+
+const SiblingIcon = createIcon(
+  ["fa-solid", "fa-handshake", "sibling-icon", "sibling-relation-toggle"],
+  new Map([
+    ["en", "Is related to the same long variable"],
+    ["de", "Fließt in die selbe Langzeitvariable"],
+  ]),
+);
+
+const InputIcon = createIcon(
+  ["fa-solid", "fa-circle-right", "input-icon", "input-relation-toggle"],
+  new Map([
+    ["en", "The current variable is generated using this variable"],
+    ["de", "Die aktuelle variable wird aus dieser generiert"],
+  ]),
+);
+
+const OutputIcon = createIcon(
+  ["fa-solid", "fa-circle-left", "output-icon", "output-relation-toggle"],
+  new Map([
+    ["en", "The current variable is used to generate this variable"],
+    [
+      "de",
+      "Die aktuelle Variable wird zur Generierung dieser Variable genutzt",
+    ],
+  ]),
+);
 
 const longVariableConainerID = "long-variable-info-container";
 
-function getApiUrl() {
+function getRelationsApiUrl() {
   const studyMeta = document.querySelector('meta[name="study"]');
   const variableMeta = document.querySelector('meta[name="variable"]');
   const variableName =
@@ -62,49 +92,19 @@ function getApiUrl() {
 }
 
 function createVariableElement(variable: VariableRelation) {
-
-  const variableContainer = createVariableContainer(variable)
+  const variableContainer = createVariableContainer(variable);
 
   if (variable.relation == "sibling_variable") {
-    variableContainer.appendChild(
-      createIcon(
-        ["fa-solid", "fa-handshake", "sibling-icon", "sibling-relation-toggle"],
-        new Map([
-          ["en", "Is related to the same long variable"],
-          ["de", "Fließt in die selbe Langzeitvariable"],
-        ]),
-      ),
-    );
-    variableContainer.classList.add("sibling-relation-toggle")
+    variableContainer.appendChild(SiblingIcon.cloneNode());
+    variableContainer.classList.add("sibling-relation-toggle");
   }
-
   if (variable.relation == "input_variable") {
-    variableContainer.appendChild(
-      createIcon(
-        ["fa-solid", "fa-circle-right", "input-icon", "input-relation-toggle"],
-        new Map([
-          ["en", "The current variable is generated using this variable"],
-          ["de", "Die aktuelle variable wird aus dieser generiert"],
-        ]),
-      ),
-    );
-    variableContainer.classList.add("input-relation-toggle")
+    variableContainer.appendChild(InputIcon.cloneNode());
+    variableContainer.classList.add("input-relation-toggle");
   }
-
   if (variable.relation == "output_variable") {
-    variableContainer.appendChild(
-      createIcon(
-        ["fa-solid", "fa-circle-left", "output-icon", "output-relation-toggle"],
-        new Map([
-          ["en", "The current variable is used to generate this variable"],
-          [
-            "de",
-            "Die aktuelle Variable wird zur Generierung dieser Variable genutzt",
-          ],
-        ]),
-      ),
-    );
-    variableContainer.classList.add("output-relation-toggle")
+    variableContainer.appendChild(OutputIcon.cloneNode());
+    variableContainer.classList.add("output-relation-toggle");
   }
 
   return variableContainer;
@@ -126,14 +126,7 @@ function appendLongOutputVariables(
   container: HTMLElement,
   longOutputVariables: Array<VariableRelation>,
 ) {
-  container.appendChild(
-    createInfoHeader(
-      new Map([
-        ["en", "Harmonized long variables:"],
-        ["de", "Hamonisierte Längsschnittvariablen:"],
-      ]),
-    ),
-  );
+  container.appendChild(createInfoHeader(InfoHeaderText));
   for (const variable of longOutputVariables) {
     container.appendChild(createVariableElement(variable));
   }
@@ -171,18 +164,17 @@ function fillInfoContainer(
   }
 }
 
-
-function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
+function fillVariablesContainer(periodInputOutputMap: RelationByPeriodMap) {
   const variableRelationsCard = document.getElementById("variable-relations");
   const variableRelationsCardBody =
     variableRelationsCard.getElementsByClassName("card-body")["0"];
 
   const periods = Array.from(periodInputOutputMap.keys()).sort(
-    comparePotentialNumeric,
+    sortPotentialNumeric,
   );
 
   for (const period of periods) {
-    const periodContainer = initPeriodContainer(period)
+    const periodContainer = initPeriodContainer(period);
 
     if (periodInputOutputMap.get(period).has("sibling_variable")) {
       for (const variable of periodInputOutputMap
@@ -190,7 +182,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("sibling_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("sibling");
+      enableRelationToggleButton("sibling");
     }
     if (periodInputOutputMap.get(period).has("input_variable")) {
       for (const variable of periodInputOutputMap
@@ -198,7 +190,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("input_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("input");
+      enableRelationToggleButton("input");
     }
     if (periodInputOutputMap.get(period).has("output_variable")) {
       for (const variable of periodInputOutputMap
@@ -206,7 +198,7 @@ function fillVariablesContainer(periodInputOutputMap: PeriodInputOutputMap) {
         .get("output_variable")) {
         periodContainer.appendChild(createVariableElement(variable));
       }
-      enableToggle("output");
+      enableRelationToggleButton("output");
     }
     variableRelationsCardBody.appendChild(periodContainer);
   }
@@ -217,7 +209,7 @@ function parseRelatedJSON(json: RelatedVariablesAPIResponse) {
   if (!content?.["count"]) {
     return;
   }
-  const periodInputOutputMap: PeriodInputOutputMap = new Map();
+  const periodInputOutputMap: RelationByPeriodMap = new Map();
 
   for (const result of content?.["results"]) {
     if (!periodInputOutputMap.has(result.period_name)) {
@@ -241,7 +233,7 @@ function parseRelatedJSON(json: RelatedVariablesAPIResponse) {
 }
 
 function loadRelationData() {
-  const apiUrl = getApiUrl();
+  const apiUrl = getRelationsApiUrl();
   if (apiUrl == "") {
     return;
   }
@@ -250,8 +242,8 @@ function loadRelationData() {
   fetch(apiRequest).then((response) => {
     response.json().then((json: RelatedVariablesAPIResponse) => {
       parseRelatedJSON(json);
-      addConceptToVariables();
-      addClickEventHandler()
+      addConceptVariables();
+      addClickEventHandler();
     });
   });
 }
