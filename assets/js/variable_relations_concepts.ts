@@ -1,4 +1,3 @@
-import { jsx } from "react/jsx-runtime";
 import { ToggleType } from "./variable_relations_toggle";
 
 type Variable = {
@@ -7,9 +6,21 @@ type Variable = {
   period_name: string;
 };
 
-type VariableList = Array<Variable>;
+type ConceptVariables = Array<Variable>;
 
 const variableRerouteUrl = `${window.location.origin}/variable/`;
+
+const ConceptIconClasses = [
+  "fa",
+  "fa-cog",
+  "concept-icon",
+  "concept-relation-toggle",
+];
+
+const ConceptIconTooltipText: Map<languageCode, string> = new Map([
+  ["en", "Is part of the same concept"],
+  ["de", "Gehört zum selben Konzept"],
+]);
 
 export function createIcon(
   classNames: Array<string>,
@@ -40,12 +51,14 @@ export function createIcon(
   return inputIcon;
 }
 
-export function enableToggle(relationType: ToggleType) {
+
+
+export function enableRelationToggleButton(relationType: ToggleType) {
   let buttonID = `${relationType}-relation-toggle`;
   document.getElementById(buttonID).removeAttribute("disabled");
 }
 
-function getAPIURL() {
+function getConceptAPIURL() {
   const studyMeta = document.querySelector('meta[name="study"]');
   const studyName =
     studyMeta instanceof HTMLMetaElement ? studyMeta.content : "";
@@ -56,11 +69,12 @@ function getAPIURL() {
   if (conceptName == "") {
     return "";
   }
-  enableToggle("concept");
+  enableRelationToggleButton("concept");
 
   const query = `?study=${studyName}&concept=${conceptName}`;
   return `${window.location.origin}/api/variables/${query}`;
 }
+
 /**
  * Sort numerical strings and strings
  * Sort:
@@ -68,10 +82,7 @@ function getAPIURL() {
  * Two non-numerical strings as strings
  * Two numerical strings as numbers
  * */
-export function comparePotentialNumeric(
-  a: string | number,
-  b: string | number,
-) {
+export function sortPotentialNumeric(a: string | number, b: string | number) {
   const aInt = typeof a == "string" ? parseInt(a) : a;
   const bInt = typeof b == "string" ? parseInt(b) : b;
 
@@ -111,35 +122,44 @@ export function initPeriodContainer(period: string) {
   return periodContainer;
 }
 
-function createPeriodContainers(variables: VariableList) {
-
-  const conceptPeriods = new Set(variables.map((entry)=>{return entry.period_name}));
-
-  const existingPeriodContainers =
-  [...document.querySelectorAll(".period-container")];
-  const existingPeriods = new Set(
-    existingPeriodContainers.map((entry)=>{return entry.getAttribute("data-period-name")})
+/**
+ * Add period containers coming in from the concept variables
+ */
+function insertMissingPeriodContainersToDOM(variables: ConceptVariables) {
+  const conceptPeriods = new Set(
+    variables.map((entry) => {
+      return entry.period_name;
+    }),
   );
 
-  // Remove duplicates with set
-  const allPeriods = [...new Set([...existingPeriods, ...conceptPeriods])];
+  const existingPeriodContainers = [
+    ...document.querySelectorAll(".period-container"),
+  ];
+  const existingPeriods = new Set(
+    existingPeriodContainers.map((entry) => {
+      return entry.getAttribute("data-period-name");
+    }),
+  );
 
-  const allPeriodsSorted = allPeriods.sort(comparePotentialNumeric);
+  // Uses Set to remove potential duplicates
+  const allPeriods = [...new Set([...existingPeriods, ...conceptPeriods])];
+  const allPeriodsSorted = allPeriods.sort(sortPotentialNumeric);
 
   const relationsContainer = document.querySelector(
     "#variable-relations > .card-body",
   ) as HTMLElement;
 
-
-  //Handle first element separately since we cannot insert it after anything
-  if (!(existingPeriods.has(allPeriodsSorted[0]))) {
+  // Check if period container exists and
+  // if it doesn't exists insert it after existing container
+  // Handle first element separately since we cannot insert it after anything
+  if (!existingPeriods.has(allPeriodsSorted[0])) {
     relationsContainer.prepend(initPeriodContainer(allPeriodsSorted[0]));
     existingPeriods.add(allPeriodsSorted[0]);
   }
   for (let index = 1; index < allPeriodsSorted.length; index++) {
     const period = allPeriodsSorted[index];
     const lastPeriod = allPeriodsSorted[index - 1];
-    if (!(existingPeriods.has(period))) {
+    if (!existingPeriods.has(period)) {
       document
         .querySelector(`div[data-period-name='${lastPeriod}']`)
         .after(initPeriodContainer(period));
@@ -147,47 +167,47 @@ function createPeriodContainers(variables: VariableList) {
   }
 }
 
-export function createVariableContainer(
-  variable: Variable
-) {
+export function createVariableContainer(variable: Variable) {
   const variableContainer = document.createElement("div");
   variableContainer.classList.add("related-variable-container");
+
   const variableLink = document.createElement("a");
   variableLink.innerText = variable.name;
   variableLink.href = variableRerouteUrl + variable.id;
+
   variableContainer.appendChild(variableLink);
   variableContainer.setAttribute("data-variable-name", variable.name);
-  return variableContainer
+  return variableContainer;
 }
 
-export async function addConceptToVariables() {
-  const apiURL = getAPIURL();
+const ConceptIcon = createIcon(ConceptIconClasses, ConceptIconTooltipText);
+/**
+ * Add concept icon to existing variables and add concept-only variables
+ */
+export async function addConceptVariables() {
+  const apiURL = getConceptAPIURL();
 
   fetch(apiURL).then((response) => {
-    response.json().then((json: VariableList) => {
-      createPeriodContainers(json);
+    response.json().then((json: ConceptVariables) => {
+      insertMissingPeriodContainersToDOM(json);
+
       for (const variable of json) {
-        let periodContainer = document.querySelector(
+        const periodContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']`,
         ) as HTMLElement;
         let variableContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']` +
             ` > div[data-variable-name='${variable.name}']`,
         );
+
         if (!variableContainer) {
           variableContainer = createVariableContainer(variable);
           periodContainer.appendChild(variableContainer);
         }
+
         variableContainer.classList.add("concept-relation-toggle");
-        enableToggle("concept");
-        const conceptIcon = createIcon(
-          ["fa", "fa-cog", "concept-icon", "concept-relation-toggle"],
-          new Map([
-            ["en", "Is part of the same concept"],
-            ["de", "Gehört zum selben Konzept"],
-          ]),
-        );
-        variableContainer.appendChild(conceptIcon);
+        enableRelationToggleButton("concept");
+        variableContainer.appendChild(ConceptIcon.cloneNode());
       }
     });
   });
