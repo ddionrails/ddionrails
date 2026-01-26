@@ -51,8 +51,6 @@ export function createIcon(
   return inputIcon;
 }
 
-
-
 export function enableRelationToggleButton(relationType: ToggleType) {
   let buttonID = `${relationType}-relation-toggle`;
   document.getElementById(buttonID).removeAttribute("disabled");
