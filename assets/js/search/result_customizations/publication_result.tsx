@@ -1,6 +1,6 @@
-import {SearchResult} from "@elastic/search-ui";
-import {LanguageCode} from "../language_state";
-import {resultFactoryMapper} from "../factory_mappers";
+import { SearchResult } from "@elastic/search-ui";
+import { LanguageCode } from "../language_state";
+import { resultFactoryMapper } from "../factory_mappers";
 
 /**
  * Render header for variable result
@@ -15,8 +15,11 @@ function header(result: SearchResult, onClickLink: () => void) {
 
   // eslint-disable-next-line require-jsdoc
   function setCursorCords(event: any) {
-    document.body.style.setProperty("--x", String(event.pageX)+"px");
-    document.body.style.setProperty("--y", String(event.pageY - window.scrollY)+"px");
+    document.body.style.setProperty("--x", String(event.pageX) + "px");
+    document.body.style.setProperty(
+      "--y",
+      String(event.pageY - window.scrollY) + "px",
+    );
   }
 
   let tooltipClass = "no-tooltip";
@@ -28,7 +31,7 @@ function header(result: SearchResult, onClickLink: () => void) {
     abstractContainer = (
       <span
         className="raw-tooltiptext"
-        dangerouslySetInnerHTML={{__html: abstract.join(" &hellip; ")}}
+        dangerouslySetInnerHTML={{ __html: abstract.join(" &hellip; ") }}
       ></span>
     );
   }
@@ -42,7 +45,7 @@ function header(result: SearchResult, onClickLink: () => void) {
           href={"/publication/" + result._meta.id}
         >
           <span className={tooltipClass}>
-            <span dangerouslySetInnerHTML={{__html: title}}></span>
+            <span dangerouslySetInnerHTML={{ __html: title }}></span>
             {abstractContainer}
           </span>
         </a>
@@ -67,12 +70,13 @@ function publicationBody(result: SearchResult, language: LanguageCode) {
     author = result.author?.raw;
   }
 
-
   return (
     <p>
       {text}
-      <span dangerouslySetInnerHTML={{__html: author}}></span>
-      ({result.year?.raw})
+      <span
+          className="inner-html-in-text"
+       dangerouslySetInnerHTML={{ __html: author }}></span>(
+      {result.year?.raw})
     </p>
   );
 }
@@ -98,7 +102,7 @@ function publicationResultFactory({
         {publicationBody(result, language)}
         <div
           className="sui-result__details"
-          dangerouslySetInnerHTML={{__html: result.description}}
+          dangerouslySetInnerHTML={{ __html: result.description }}
         ></div>
       </div>
     </li>
@@ -107,4 +111,4 @@ function publicationResultFactory({
 
 const publicationResult = resultFactoryMapper(publicationResultFactory);
 
-export {publicationResult};
+export { publicationResult };
