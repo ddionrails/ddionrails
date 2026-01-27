@@ -61,9 +61,18 @@ function publicationBody(result: SearchResult, language: LanguageCode) {
   if (language === "de") {
     text = "Publikation von";
   }
+
+  let author = result.author?.snippet;
+  if (typeof author === "undefined") {
+    author = result.author?.raw;
+  }
+
+
   return (
     <p>
-      {text} {result.author?.raw} ({result.year?.raw})
+      {text}
+      <span dangerouslySetInnerHTML={{__html: author}}></span>
+      ({result.year?.raw})
     </p>
   );
 }

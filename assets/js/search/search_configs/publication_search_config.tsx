@@ -75,6 +75,7 @@ function config(language: LanguageCode) {
     searchQuery: {
       search_fields: {
         title: {weight: 3},
+	author: {weight: 5},
         abstract: {weight: 0.7},
       },
       result_fields: {
@@ -136,6 +137,9 @@ function config(language: LanguageCode) {
         resultsPerPage: 10,
         search_fields: {
           name: {
+            weight: 3,
+          },
+          author: {
             weight: 3,
           },
           label: {
