@@ -57,9 +57,9 @@ function header(result: SearchResult, onClickLink: () => void) {
  * @returns
  */
 function publicationBody(result: SearchResult, language: LanguageCode) {
-  let text = "Publication by";
+  let text = "Publication by ";
   if (language === "de") {
-    text = "Publikation von";
+    text = "Publikation von ";
   }
 
   let author = result.author?.snippet;
