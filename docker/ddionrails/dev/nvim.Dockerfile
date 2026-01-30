@@ -1,4 +1,4 @@
-FROM python:3.13-alpine3.20
+FROM python:3.13-alpine3.23
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -46,7 +46,8 @@ RUN apk add --no-cache \
     git cmake build-base libtool \
     libstdc++ gettext curl unzip \
     lua5.3 luajit readline-dev ncurses-dev \
-    libuv-dev tree-sitter-dev 
+    libuv-dev \
+    tree-sitter tree-sitter-dev pkgconfig
 
 RUN git clone https://github.com/neovim/neovim.git  \
     && cd neovim \
@@ -59,6 +60,13 @@ RUN git clone https://github.com/neovim/neovim.git  \
 
 RUN adduser -D -u 1000 -s /bin/bash dev
 
+RUN git clone https://github.com/tree-sitter/tree-sitter-python.git \
+    && cd tree-sitter-python \
+    && cc -fPIC -O2 -shared src/parser.c src/scanner.c -o python.so \
+    && mkdir -p /home/dev/.local/share/nvim/site/parser \
+    && mv python.so /home/dev/.local/share/nvim/site/parser/ \
+    && cd .. && rm -rf tree-sitter-python \
+    && chown -R dev:dev /home/dev/.local
 
 # Set up entrypoint
 COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
