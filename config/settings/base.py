@@ -73,6 +73,7 @@ INSTITUTE_NAME, CONTACT_EMAIL, INSTITUTE_HOME_URL, PRIVACY_POLICY = read_imprint
 # ------------------------------------------------------------------------------
 
 DJANGO_APPS = (
+    "django.contrib.postgres",
     "django.contrib.admin",
     "django.contrib.admindocs",
     "django.contrib.auth",
