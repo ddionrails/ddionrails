@@ -75,6 +75,19 @@ export function removeCodesFromLabelsSet(
 }
 
 /**
+ * Sometimes labels are "empty".
+ * Cleaning them up with the labelRegex will cause their value to be "".
+ * DataTables reports errors when a cell is "" but is OK with it being " ".
+ * That's why this function safeguards against ""
+ */
+function labelSaveguard(label: string) {
+  if (label === "") {
+    return " ";
+  }
+  return label;
+}
+
+/**
  * Remove label codes in [] from labels and store in Array.
  * @param {labelsMappingType} labels
  * @return {labelsArrayType}
@@ -85,8 +98,12 @@ export function removeCodesFromLabelsArray(
   const out: Array<string> = [];
   const outDE: Array<string> = [];
   labels["labels"].forEach((label, index) => {
-    out.push(label.replace(labelRegex, ""));
-    outDE.push(labels["labels_de"][Number(index)].replace(labelRegex, ""));
+    out.push(labelSaveguard(label.replace(labelRegex, "")));
+    outDE.push(
+      labelSaveguard(
+        labels["labels_de"][Number(index)].replace(labelRegex, ""),
+      ),
+    );
   });
   return { labels: out, labelsDE: outDE };
 }
