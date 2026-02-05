@@ -68,6 +68,8 @@ RUN git clone https://github.com/tree-sitter/tree-sitter-python.git \
     && cd .. && rm -rf tree-sitter-python \
     && chown -R dev:dev /home/dev/.local
 
+RUN chown -R dev:dev /usr/local/share/nvim/runtime/
+
 # Set up entrypoint
 COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
