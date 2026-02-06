@@ -11,6 +11,7 @@ from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.test import TestCase
 
 from ddionrails.concepts.imports import concept_import
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
@@ -24,7 +25,7 @@ from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.data.factories import DatasetFactory
+from tests.factories import DatasetFactory, StudyFactory
 
 from .factories import VariableFactory
 
@@ -33,7 +34,7 @@ TEST_CASE = unittest.TestCase()
 
 @pytest.fixture(name="dataset_csv_importer")
 def _dataset_csv_importer(study):
-    return DatasetImport("DUMMY.csv", study)
+    return
 
 
 @pytest.fixture(name="dataset_json_importer")
@@ -51,68 +52,78 @@ def _transformation_importer():
     return TransformationImport("DUMMY.csv")
 
 
-class TestDatasetImport:
+class TestDatasetImport(TestCase):
     """Tests for csv based dataset imports"""
+
+    @classmethod
+    def setUpClass(cls):
+        from django.core.management import call_command
+
+        call_command("flush", verbosity=0, interactive=False)
+        cls.study = StudyFactory()
+        cls.dataset = DatasetFactory(study=cls.study)
+
+    def setUp(self) -> None:
+        self.dataset_csv_importer = DatasetImport("DUMMY.csv", self.study)
+        return super().setUp()
 
     @pytest.mark.django_db
     @patch(
         "ddionrails.data.imports.DatasetImport._import_dataset_links",
         new_callable=MagicMock,
     )
-    def test__import_dataset_links_method_gets_called(
-        self, mocked_import_dataset_links, dataset_csv_importer
-    ):
+    def test__import_dataset_links_method_gets_called(self, mocked_import_dataset_links):
         valid_dataset_data = dict(dataset_name="some-dataset")
-        dataset_csv_importer.import_element(valid_dataset_data)
+        self.dataset_csv_importer.import_element(valid_dataset_data)
         mocked_import_dataset_links.assert_called_once()
 
-    def test__import_dataset_links_method_with_minimal_fields(
-        self, dataset, dataset_csv_importer
-    ):
+    def test__import_dataset_links_method_with_minimal_fields(self):
         """This import needs already existing dataset and study in the database."""
-        valid_dataset_data = dict(name="some-dataset")
-        assert 1 == Dataset.objects.count()
-        dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
+        valid_dataset_data = dict(name=self.dataset.name)
+        self.assertEqual(1, Dataset.objects.count())
+        self.dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
             valid_dataset_data
         )
-        assert 1 == Dataset.objects.count()
-        dataset = Dataset.objects.get(name=valid_dataset_data["name"])
+        self.assertEqual(1, Dataset.objects.count())
+        _dataset = Dataset.objects.get(name=valid_dataset_data["name"])
 
         analysis_unit = AnalysisUnit.objects.get(name="none")
         conceptual_dataset = ConceptualDataset.objects.get(name="none")
         period = Period.objects.get(name="none")
 
         # check relations are set correctly
-        assert dataset.analysis_unit == analysis_unit
-        assert dataset.conceptual_dataset == conceptual_dataset
-        assert dataset.period == period
+        self.assertEqual(_dataset.analysis_unit, analysis_unit)
+        self.assertEqual(_dataset.conceptual_dataset, conceptual_dataset)
+        self.assertEqual(_dataset.period, period)
 
-    def test__import_dataset_links_method_with_more_fields(
-        self, dataset, dataset_csv_importer
-    ):
+    def test__import_dataset_links_method_with_more_fields(self):
         """This import needs already existing dataset and study in the database."""
+        analysis_unit_name = "some-analysis-unit"
+        conceptual_dataset_name = "some-conceptual-dataset-name"
+        period_name = "some-period-name"
 
         valid_dataset_data = dict(
-            name="some-dataset",
-            label="Some dataset",
-            description="This is some dataset",
-            analysis_unit="some-analysis-unit",
-            conceptual_dataset="some-conceptual-dataset-name",
-            period_name="some-period-name",
+            name=self.dataset.name,
+            label=self.dataset.label,
+            description=self.dataset.description,
+            analysis_unit=analysis_unit_name,
+            conceptual_dataset=conceptual_dataset_name,
+            period_name=period_name,
         )
 
-        assert Dataset.objects.count() == 1
-        dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
+        self.assertEqual(1, Dataset.objects.count())
+        self.dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
             valid_dataset_data
         )
-        assert Dataset.objects.count() == 1
+        self.assertEqual(1, Dataset.objects.count())
         dataset = Dataset.objects.get(name=valid_dataset_data["name"])
 
-        assert dataset.analysis_unit.name == "some-analysis-unit"
-        assert dataset.conceptual_dataset.name == "some-conceptual-dataset-name"
-        assert dataset.period.name == "some-period-name"
+        self.assertEqual(dataset.analysis_unit.name, "some-analysis-unit")
+        self.assertEqual(dataset.conceptual_dataset.name, "some-conceptual-dataset-name")
+        self.assertEqual(dataset.period.name, "some-period-name")
 
 
+# TODO: Continue replacing factories here
 class TestDatasetJsonImport:
     def test_execute_import_method(self, mocker, dataset_json_importer):
         mocked__import_dataset = mocker.patch.object(DatasetJsonImport, "_import_dataset")

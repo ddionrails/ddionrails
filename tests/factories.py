@@ -12,7 +12,7 @@ from django.contrib.auth import get_user_model
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from ddionrails.concepts.models import Period
+from ddionrails.concepts.models import AnalysisUnit, Period
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
@@ -78,6 +78,17 @@ class DatasetFactory(DjangoModelFactory):
 
     class Meta:
         model = Dataset
+
+    study = factory.SubFactory(StudyFactory)
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+
+
+class AnalysisUnitFactory(factory.django.DjangoModelFactory):
+
+    class Meta:
+        model = AnalysisUnit
 
     study = factory.SubFactory(StudyFactory)
     name = factory.LazyAttribute(lambda _: FAKE.word())
