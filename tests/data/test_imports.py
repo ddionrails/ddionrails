@@ -11,6 +11,7 @@ from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
+from django.core.management import call_command
 from django.test import TestCase
 
 from ddionrails.concepts.imports import concept_import
@@ -25,16 +26,11 @@ from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.factories import DatasetFactory, StudyFactory
+from tests.model_factories import DatasetFactory, StudyFactory
 
 from .factories import VariableFactory
 
 TEST_CASE = unittest.TestCase()
-
-
-@pytest.fixture(name="dataset_csv_importer")
-def _dataset_csv_importer(study):
-    return
 
 
 @pytest.fixture(name="dataset_json_importer")
@@ -57,8 +53,6 @@ class TestDatasetImport(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        from django.core.management import call_command
-
         call_command("flush", verbosity=0, interactive=False)
         cls.study = StudyFactory()
         cls.dataset = DatasetFactory(study=cls.study)

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods
 
-""" DjangoModelFactories for models in ddionrails.workspace app """
+"""DjangoModelFactories for models in ddionrails.workspace app"""
 
 import factory
 
 from ddionrails.workspace.models import Basket, BasketVariable, Script
 from tests.data.factories import VariableFactory
-from tests.factories import UserFactory
+from tests.model_factories import UserFactory
 from tests.studies.factories import StudyFactory
 
 

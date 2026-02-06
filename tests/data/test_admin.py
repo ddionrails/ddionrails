@@ -7,7 +7,7 @@ from django.test.utils import override_settings
 from django.urls import reverse
 
 from tests import status
-from tests.factories import AdminUserFactory, TransformationFactory, VariableFactory
+from tests.model_factories import AdminUserFactory, TransformationFactory, VariableFactory
 
 
 class TestAdmin(TestCase):
