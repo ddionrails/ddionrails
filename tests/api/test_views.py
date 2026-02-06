@@ -20,12 +20,12 @@ from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
 from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.data.factories import DatasetFactory, VariableFactory
-from tests.factories import UserFactory
 from tests.instruments.factories import (
     InstrumentFactory,
     QuestionFactory,
     QuestionItemFactory,
 )
+from tests.model_factories import UserFactory
 from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketVariableFactory
 
