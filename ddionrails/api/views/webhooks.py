@@ -93,17 +93,11 @@ class WebhookView(ViewSet):
 
 
 def _is_develop(push_reference: str) -> bool:
-    return (
-        any(push_reference.endswith(name) for name in DEVELOP_BRANCH_CANDIDATES)
-        and base.SERVER_TYPE == "staging"
-    )
+    return any(push_reference.endswith(name) for name in DEVELOP_BRANCH_CANDIDATES)
 
 
 def _is_main(push_reference: str) -> bool:
-    return (
-        any(push_reference.endswith(name) for name in MAIN_BRANCH_CANDIDATES)
-        and base.SERVER_TYPE == "live"
-    )
+    return any(push_reference.endswith(name) for name in MAIN_BRANCH_CANDIDATES)
 
 
 def _handle_branch_verification(study, data):
