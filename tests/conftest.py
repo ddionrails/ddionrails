@@ -24,7 +24,6 @@ from tests.concepts.factories import (
     TopicFactory,
 )
 from tests.data.factories import DatasetFactory, TransformationFactory, VariableFactory
-from tests.factories import UserFactory
 from tests.instruments.factories import (
     ConceptQuestionFactory,
     InstrumentFactory,
@@ -32,6 +31,7 @@ from tests.instruments.factories import (
     QuestionItemFactory,
     QuestionVariableFactory,
 )
+from tests.model_factories import UserFactory
 from tests.publications.factories import PublicationFactory
 from tests.studies.factories import StudyFactory, TopicListFactory
 from tests.workspace.factories import BasketFactory
