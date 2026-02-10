@@ -26,6 +26,7 @@ from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
+from tests.file_factories import TMPJSON
 from tests.model_factories import DatasetFactory, StudyFactory
 
 from .factories import VariableFactory
@@ -117,47 +118,32 @@ class TestDatasetImport(TestCase):
         self.assertEqual(dataset.period.name, "some-period-name")
 
 
+class TestDatasetJsonImport__(TestCase):
+
+    def test_execute_import_method(self):
+        content = [{"study": "soep-test", "dataset": "bp", "name": "pid"}]
+        tmp_file = TMPJSON(content)
+        dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
+
+    def test_import_dataset_method_with_dictionary(self):
+
+        content = [{"study": "soep-test", "dataset": "bp", "name": "pid"}]
+        tmp_file = TMPJSON(content)
+        with patch.object(
+            DatasetJsonImport, "_import_variable"
+        ) as mocked_import_variable:
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
+            with patch(**tmp_file.import_patch_arguments):
+                dataset_json_importer.read_file()
+                dataset_json_importer.execute_import()
+                self.assertTrue(mocked_import_variable.called)
+
+
 # TODO: Continue replacing factories here
 class TestDatasetJsonImport:
-    def test_execute_import_method(self, mocker, dataset_json_importer):
-        mocked__import_dataset = mocker.patch.object(DatasetJsonImport, "_import_dataset")
-        content = """[
-                        {
-                            "study": "soep-test",
-                            "dataset": "bp",
-                            "name": "pid"
-                        }
-                    ]
-        """
-        dataset_json_importer.content = content
-        dataset_json_importer.execute_import()
-        mocked__import_dataset.assert_called_once()
-
-    def test_import_dataset_method(self, mocker, dataset_json_importer):
-        mocked_import_variable = mocker.patch.object(
-            DatasetJsonImport, "_import_variable"
-        )
-        name = "some-dataset"
-        content = [dict(study="some-study", dataset="some-dataset", name="some-variable")]
-        dataset_json_importer._import_dataset(  # pylint: disable=protected-access
-            name, content
-        )
-        mocked_import_variable.assert_called_once()
-
-    def test_import_dataset_method_with_dictionary(self, mocker, dataset_json_importer):
-        mocked_import_variable = mocker.patch.object(
-            DatasetJsonImport, "_import_variable"
-        )
-        name = "some-dataset"
-        content = dict(
-            some_dataset=dict(
-                study="some-study", dataset="some-dataset", name="some-variable"
-            )
-        )
-        dataset_json_importer._import_dataset(  # pylint: disable=protected-access
-            name, content
-        )
-        mocked_import_variable.assert_called_once()
 
     def test_import_variable_method(self, dataset_json_importer, dataset):
         assert 0 == Variable.objects.count()

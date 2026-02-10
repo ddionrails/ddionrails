@@ -1,6 +1,7 @@
 import json
 from abc import ABC
 from csv import DictWriter
+from dataclasses import dataclass
 from os import remove
 from pathlib import Path
 from shutil import rmtree
@@ -12,40 +13,33 @@ from faker import Faker
 FAKE = Faker()
 
 
-def tmp_import_path() -> tuple[Path, dict[str, str]]:
+@dataclass
+class PatchKwargs:
+    target: str
+    return_value: Path
+
+    def keys(self):
+        return ["target", "return_value"]
+
+    def __getitem__(self, item):
+        return getattr(self, item)
+
+
+def tmp_import_path() -> tuple[Path, PatchKwargs]:
     tmp_path = Path(mkdtemp())
 
-    patch_dict = {
-        "target": "ddionrails.studies.models.Study.import_path",
-        "return_value": tmp_path,
-    }
+    patch_dict = PatchKwargs(
+        target="ddionrails.studies.models.Study.import_path",
+        return_value=tmp_path,
+    )
     return tmp_path, patch_dict
-
-
-class _TMPFILE(ABC):
-
-    file: _TemporaryFileWrapper
-
-    def __del__(self):
-        self.file.close()
-        remove(self.file.name)
-        del self.file
-
-    def __exit__(self):
-        self.file.close()
-        remove(self.file.name)
-        del self.file
-
-    @property
-    def name(self):
-        self.file.name
 
 
 class _TMPImportFILE(ABC):
 
     file_name: Path
     tmp_path: Path
-    import_path_patch_arguments: dict[str, str]
+    import_path_patch_arguments: PatchKwargs
 
     def __init__(self) -> None:
         self.tmp_path, self.import_path_patch_arguments = tmp_import_path()
@@ -62,11 +56,18 @@ class _TMPImportFILE(ABC):
         del self.tmp_path
 
     @property
-    def name(self):
+    def name(self) -> Path:
+        """Path to the temp file created"""
         return self.file_name
 
     @property
+    def parent_name(self) -> Path:
+        """Path to the folder containing the created file"""
+        return self.tmp_path
+
+    @property
     def import_patch_arguments(self):
+        """Can be put into a patch function to override the projects import path with parent_name"""
         return self.import_path_patch_arguments
 
 
