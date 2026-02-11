@@ -11,12 +11,14 @@ from pathlib import Path
 from re import compile
 from typing import Dict, List, Tuple, Union
 
+from django.db.models import Q
 from django.db.transaction import atomic
 from django.db.utils import DataError
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.data.models.transformation import Sibling
 from ddionrails.imports import imports
+from ddionrails.imports.helpers import hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .forms import DatasetForm, VariableForm
@@ -27,24 +29,47 @@ class DatasetJsonImport(imports.Import):
     """Import Variable data from JSON files."""
 
     def execute_import(self):
-        self.content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(
-            self.content
-        )
-        self._import_dataset(self.name, self.content)
-
-    def _import_dataset(self, name, content: Union[Dict, List]):
-        dataset, _ = Dataset.objects.get_or_create(study=self.study, name=name)
-        sort_id = 0
+        content = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(self.content)
         if isinstance(content, dict):
             content = list(content.values())
+        sort_id = 0
+        datasets = dict()
+        variable_names = set()
         for var in content:
-            self._import_variable(var, dataset, sort_id)
+            if var["dataset"] not in datasets:
+                dataset, _ = Dataset.objects.get_or_create(
+                    study=self.study, name=var["dataset"]
+                )
+                datasets[var["dataset"]] = dataset
+            variable_names.add(var["variable"])
+        existing_variables = set(
+            [
+                variable.name
+                for variable in Variable.objects.filter(
+                    dataset__name__in=[dataset for dataset in datasets.keys()],
+                )
+            ]
+        )
+        variables_to_create = []
+        variables_to_update = []
+        for var in content:
+            variable = self._import_variable(var, sort_id, datasets[var["dataset"]])
+            if var["variable"] in existing_variables:
+                variables_to_update.append(variable)
+            else:
+                variables_to_create.append(variable)
             sort_id += 1
+        Variable.objects.bulk_update(
+            variables_to_update,
+            fields=("sort_id", "label", "label_de", "statistics", "categories", "scale"),
+        )
+        Variable.objects.bulk_create(variables_to_create)
 
     @staticmethod
-    def _import_variable(var, dataset, sort_id):
+    def _import_variable(var, sort_id, dataset):
+        dataset_id = dataset.id
         name = var.get("name", var.get("variable"))
-        variable, _ = Variable.objects.get_or_create(name=name, dataset=dataset)
+        variable = Variable(name=name, dataset=dataset)
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
         variable.label_de = var.get("label_de", name)
@@ -61,12 +86,12 @@ class DatasetJsonImport(imports.Import):
             if values and len(values) > 0:
                 variable.categories = var["categories"]
         variable.scale = var.get("scale", "")
-        try:
-            variable.save()
-        except DataError as error:
-            raise DataError(
-                f"Variable: {json.dumps(variable.__dict__, indent=2)}"
-            ) from error
+
+        variable.id = hash_with_namespace_uuid(  # pylint: disable=C0103
+            dataset_id, var["variable"], cache=False
+        )
+
+        return variable
 
 
 class DatasetImport(imports.CSVImport):
@@ -112,7 +137,6 @@ class DatasetImport(imports.CSVImport):
         dataset.save()
 
 
-
 class VariableImport(imports.CSVImport):
     """Import Variable data from csv file."""
 
@@ -144,7 +168,6 @@ class VariableImport(imports.CSVImport):
     def execute_import(self):
         for row in self.content:
             self.import_element(row)
-
 
     def _import_variable(self, element):
         dataset = Dataset.objects.get(
@@ -262,8 +285,6 @@ def variables_images_import(file: Path, study: Study) -> None:
                 variables = []
         if variables:
             Variable.objects.bulk_update(variables, ["images"])
-
-
 
 
 @atomic
