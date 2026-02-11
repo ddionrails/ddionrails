@@ -27,9 +27,7 @@ from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.file_factories import TMPJSON
-from tests.model_factories import DatasetFactory, StudyFactory
-
-from .factories import VariableFactory
+from tests.model_factories import DatasetFactory, StudyFactory, VariableFactory
 
 TEST_CASE = unittest.TestCase()
 
@@ -120,8 +118,12 @@ class TestDatasetImport(TestCase):
 
 class TestDatasetJsonImport__(TestCase):
 
+    @classmethod
+    def setUpClass(cls):
+        call_command("flush", verbosity=0, interactive=False)
+
     def test_execute_import_method(self):
-        content = [{"study": "soep-test", "dataset": "bp", "name": "pid"}]
+        content = [{"study": "soep-test", "dataset": "bp", "variable": "pid"}]
         tmp_file = TMPJSON(content)
         dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
         with patch(**tmp_file.import_patch_arguments):
@@ -130,52 +132,66 @@ class TestDatasetJsonImport__(TestCase):
 
     def test_import_dataset_method_with_dictionary(self):
 
-        content = [{"study": "soep-test", "dataset": "bp", "name": "pid"}]
+        variable = VariableFactory()
+        content = [
+            {
+                "study": variable.dataset.study.name,
+                "dataset": variable.dataset.name,
+                "variable": variable.name,
+            }
+        ]
         tmp_file = TMPJSON(content)
         with patch.object(
             DatasetJsonImport, "_import_variable"
         ) as mocked_import_variable:
+            mocked_import_variable.return_value = variable
             dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
             with patch(**tmp_file.import_patch_arguments):
                 dataset_json_importer.read_file()
                 dataset_json_importer.execute_import()
                 self.assertTrue(mocked_import_variable.called)
 
-
-# TODO: Continue replacing factories here
-class TestDatasetJsonImport:
-
-    def test_import_variable_method(self, dataset_json_importer, dataset):
+    def test_import_variable_method(self):
         assert 0 == Variable.objects.count()
-        var = dict(
-            study="some-study",
-            dataset="some-dataset",
-            variable="some-variable",
-            statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
-            scale="cat",
-            categories=dict(
-                frequencies=[1, 0],
-                labels=[
-                    "[-6] Version of questionnaire with modified filtering",
-                    "[1] Yes",
-                ],
-                labels_de=[
-                    "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
-                    "[1] Ja",
-                ],
-                values=["-6", "1"],
-                missings=[True, False],
-            ),
-        )
+        assert 0 == Dataset.objects.count()
+        dataset = DatasetFactory()
+        assert 1 == Dataset.objects.count()
+        content = [
+            dict(
+                study=dataset.study.name,
+                dataset=dataset.name,
+                variable="some-variable",
+                statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
+                scale="cat",
+                categories=dict(
+                    frequencies=[1, 0],
+                    labels=[
+                        "[-6] Version of questionnaire with modified filtering",
+                        "[1] Yes",
+                    ],
+                    labels_de=[
+                        "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+                        "[1] Ja",
+                    ],
+                    values=["-6", "1"],
+                    missings=[True, False],
+                ),
+            )
+        ]
+        tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, dataset.study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
+
+        assert 1 == Dataset.objects.count()
+
         sort_id = 0
-        dataset_json_importer._import_variable(  # pylint: disable=protected-access
-            var, dataset, sort_id
-        )
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
-        assert dataset == variable.dataset
+        assert dataset.name == variable.dataset.name
         assert "cat" == variable.scale
-        assert var["variable"] == variable.name
+        assert content[0]["variable"] == variable.name
         assert sort_id == variable.sort_id
         assert "1" == variable.statistics["valid"]
         assert "0" == variable.statistics["invalid"]
@@ -192,10 +208,20 @@ class TestDatasetJsonImport:
         assert True is variable.categories["missings"][0]
         # Test new statistics format
         expected_min = 100
-        var["statistics"] = {"Min.": expected_min, "Median": 200}
-        dataset_json_importer._import_variable(var, dataset, sort_id)
+
+        content[0]["statistics"] = {"Min.": expected_min, "Median": 200}
+        del tmp_file
+        tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, dataset.study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
         variable = Variable.objects.get(id=variable.id)
         assert expected_min == variable.statistics["Min."]
+
+
+# TODO: Continue replacing factories here
+class TestDatasetJsonImport:
 
     def test_import_variable_method_without_statistics(
         self, dataset_json_importer, dataset
