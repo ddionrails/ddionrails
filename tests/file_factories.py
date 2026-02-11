@@ -1,3 +1,5 @@
+"""Factory to create temporary test files"""
+
 import json
 from abc import ABC
 from csv import DictWriter
@@ -5,7 +7,7 @@ from dataclasses import dataclass
 from os import remove
 from pathlib import Path
 from shutil import rmtree
-from tempfile import NamedTemporaryFile, _TemporaryFileWrapper, mkdtemp
+from tempfile import mkdtemp
 from typing import Any
 
 from faker import Faker
@@ -14,21 +16,21 @@ FAKE = Faker()
 
 
 @dataclass
-class PatchKwargs:
+class _PatchKwargs:
     target: str
     return_value: Path
 
-    def keys(self):
+    def keys(self):  # pylint: disable=missing-function-docstring
         return ["target", "return_value"]
 
     def __getitem__(self, item):
         return getattr(self, item)
 
 
-def tmp_import_path() -> tuple[Path, PatchKwargs]:
+def _tmp_import_path() -> tuple[Path, _PatchKwargs]:
     tmp_path = Path(mkdtemp())
 
-    patch_dict = PatchKwargs(
+    patch_dict = _PatchKwargs(
         target="ddionrails.studies.models.Study.import_path",
         return_value=tmp_path,
     )
@@ -39,10 +41,10 @@ class _TMPImportFILE(ABC):
 
     file_name: Path
     tmp_path: Path
-    import_path_patch_arguments: PatchKwargs
+    import_path_patch_arguments: _PatchKwargs
 
     def __init__(self) -> None:
-        self.tmp_path, self.import_path_patch_arguments = tmp_import_path()
+        self.tmp_path, self.import_path_patch_arguments = _tmp_import_path()
         super().__init__()
 
     def __del__(self):
@@ -50,7 +52,7 @@ class _TMPImportFILE(ABC):
         rmtree(self.tmp_path)
         del self.tmp_path
 
-    def __exit__(self):
+    def __exit__(self, exc_type, exc_value, traceback):
         remove(self.file_name)
         rmtree(self.tmp_path)
         del self.tmp_path
@@ -67,22 +69,27 @@ class _TMPImportFILE(ABC):
 
     @property
     def import_patch_arguments(self):
-        """Can be put into a patch function to override the projects import path with parent_name"""
+        """Arguments to be used in patch function for system data import path"""
         return self.import_path_patch_arguments
 
 
 class TMPJSON(_TMPImportFILE):
+    """Creates and fills temporary JSON file"""
 
-    def __init__(self, content: dict[Any, Any] | list[Any]):
+    def __init__(self, content: dict[Any, Any] | list[Any], file_name: str = ""):
         super().__init__()
-        self.file_name = self.tmp_path.joinpath(FAKE.file_name(extension="json"))
+        if file_name == "":
+            file_name = FAKE.file_name(extension="json")
+        self.file_name = self.tmp_path.joinpath(file_name)
         with open(self.file_name, "w", encoding="utf-8") as file:
             json.dump(content, file)
 
 
 class TMPCSV(_TMPImportFILE):
+    """Creates and fills temporary CSV file"""
 
     def __init__(self, content: list[dict[str, Any]]):
+        super().__init__()
         self.file_name = self.tmp_path.joinpath(FAKE.file_name(extension="csv"))
         with open(self.file_name, "w", encoding="utf-8") as file:
             writer = DictWriter(file, fieldnames=content[0].keys())
