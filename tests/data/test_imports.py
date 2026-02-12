@@ -423,7 +423,7 @@ class TestVariableImport:
 
     def test_import_element_method(self, mocker, variable_importer, dataset):
         mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
-        element = dict(dataset_name=dataset.name, variable_name="some-variable")
+        element = {"dataset_name": dataset.name, "variable_name": "some-variable"}
         variable_importer.import_element(element)
         mocked_import_variable.assert_called_once()
 
@@ -432,24 +432,24 @@ class TestVariableImport:
     ):  # pylint: disable=unused-argument
         mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
         mocked_import_variable.side_effect = KeyError
-        element = dict(dataset_name="asdas", variable_name="")
+        element = {"dataset_name": "asdas", "variable_name": ""}
         with TEST_CASE.assertRaises(KeyError):
             variable_importer.import_element(element)
         mocked_import_variable.assert_called_once()
 
     def test_import_variable_method(self, variable_importer, variable):
-        element = dict(dataset_name=variable.dataset.name, name=variable.name)
+        element = {"dataset_name": variable.dataset.name, "name": variable.name}
         variable_importer._import_variable(element)  # pylint: disable=protected-access
 
     def test_import_variable_method_with_concept_name(self, variable_importer, variable):
         concept = ConceptFactory(name="some-concept")
         concept.save()
-        element = dict(
-            dataset_name=variable.dataset.name,
-            name=variable.name,
-            concept_name=concept.name,
-            description="some-description",
-        )
+        element = {
+            "dataset_name": variable.dataset.name,
+            "name": variable.name,
+            "concept_name": concept.name,
+            "description": "some-description",
+        }
         variable_importer._import_variable(element)  # pylint: disable=protected-access
         variable = Variable.objects.get(id=variable.id)
         assert variable.description == element["description"]
