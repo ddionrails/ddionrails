@@ -11,17 +11,11 @@ from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
-from django.core.management import call_command
 from django.test import TestCase
 
 from ddionrails.concepts.imports import concept_import
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
-from ddionrails.data.imports import (
-    DatasetImport,
-    DatasetJsonImport,
-    TransformationImport,
-    VariableImport,
-)
+from ddionrails.data.imports import DatasetImport, DatasetJsonImport, VariableImport
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
@@ -29,38 +23,18 @@ from tests.concepts.factories import ConceptFactory, TopicFactory
 from tests.file_factories import TMPJSON
 from tests.model_factories import DatasetFactory, StudyFactory, VariableFactory
 
-TEST_CASE = unittest.TestCase()
-
-
-@pytest.fixture(name="dataset_json_importer")
-def _dataset_json_importer(study):
-    return DatasetJsonImport("DUMMY.csv", study)
-
-
-@pytest.fixture(name="variable_importer")
-def _variable_importer(study):
-    return VariableImport("DUMMY.csv", study)
-
-
-@pytest.fixture(name="transformation_importer")
-def _transformation_importer():
-    return TransformationImport("DUMMY.csv")
+TEST_CASE = TestCase()
 
 
 class TestDatasetImport(TestCase):
     """Tests for csv based dataset imports"""
 
-    @classmethod
-    def setUpClass(cls):
-        call_command("flush", verbosity=0, interactive=False)
-        cls.study = StudyFactory()
-        cls.dataset = DatasetFactory(study=cls.study)
-
     def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.dataset = DatasetFactory(study=self.study)
         self.dataset_csv_importer = DatasetImport("DUMMY.csv", self.study)
         return super().setUp()
 
-    @pytest.mark.django_db
     @patch(
         "ddionrails.data.imports.DatasetImport._import_dataset_links",
         new_callable=MagicMock,
@@ -116,13 +90,11 @@ class TestDatasetImport(TestCase):
         self.assertEqual(dataset.period.name, "some-period-name")
 
 
-class TestDatasetJsonImport__(TestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        call_command("flush", verbosity=0, interactive=False)
+class TestDatasetJsonImport(TestCase):
 
     def test_execute_import_method(self):
+        self.assertEqual(0, Variable.objects.count())
+        self.assertEqual(0, Dataset.objects.count())
         content = [{"study": "soep-test", "dataset": "bp", "variable": "pid"}]
         tmp_file = TMPJSON(content)
         dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
@@ -131,6 +103,8 @@ class TestDatasetJsonImport__(TestCase):
             dataset_json_importer.execute_import()
 
     def test_import_dataset_method_with_dictionary(self):
+        self.assertEqual(0, Variable.objects.count())
+        self.assertEqual(0, Dataset.objects.count())
 
         variable = VariableFactory()
         content = [
@@ -152,10 +126,10 @@ class TestDatasetJsonImport__(TestCase):
                 self.assertTrue(mocked_import_variable.called)
 
     def test_import_variable_method(self):
-        assert 0 == Variable.objects.count()
-        assert 0 == Dataset.objects.count()
+        self.assertEqual(0, Variable.objects.count())
+        self.assertEqual(0, Dataset.objects.count())
         dataset = DatasetFactory()
-        assert 1 == Dataset.objects.count()
+        self.assertEqual(1, Dataset.objects.count())
         content = [
             dict(
                 study=dataset.study.name,
@@ -184,28 +158,28 @@ class TestDatasetJsonImport__(TestCase):
             dataset_json_importer.read_file()
             dataset_json_importer.execute_import()
 
-        assert 1 == Dataset.objects.count()
+        self.assertEqual(1, Dataset.objects.count())
 
         sort_id = 0
-        assert 1 == Variable.objects.count()
+        self.assertEqual(1, Variable.objects.count())
         variable = Variable.objects.first()
-        assert dataset.name == variable.dataset.name
-        assert "cat" == variable.scale
-        assert content[0]["variable"] == variable.name
-        assert sort_id == variable.sort_id
-        assert "1" == variable.statistics["valid"]
-        assert "0" == variable.statistics["invalid"]
-        assert 1 == variable.categories["frequencies"][0]
-        assert (
-            "[-6] Version of questionnaire with modified filtering"
-            == variable.categories["labels"][0]
+        self.assertEqual(dataset.name, variable.dataset.name)
+        self.assertEqual("cat", variable.scale)
+        self.assertEqual(content[0]["variable"], variable.name)
+        self.assertEqual(sort_id, variable.sort_id)
+        self.assertEqual("1", variable.statistics["valid"])
+        self.assertEqual("0", variable.statistics["invalid"])
+        self.assertEqual(1, variable.categories["frequencies"][0])
+        self.assertEqual(
+            "[-6] Version of questionnaire with modified filtering",
+            variable.categories["labels"][0],
         )
-        assert (
-            "[-6] Fragebogenversion mit geaenderter Filterfuehrung"
-            == variable.categories["labels_de"][0]
+        self.assertEqual(
+            "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
+            variable.categories["labels_de"][0],
         )
-        assert "-6" == variable.categories["values"][0]
-        assert True is variable.categories["missings"][0]
+        self.assertEqual("-6", variable.categories["values"][0])
+        self.assertTrue(variable.categories["missings"][0])
         # Test new statistics format
         expected_min = 100
 
@@ -217,62 +191,92 @@ class TestDatasetJsonImport__(TestCase):
             dataset_json_importer.read_file()
             dataset_json_importer.execute_import()
         variable = Variable.objects.get(id=variable.id)
-        assert expected_min == variable.statistics["Min."]
+        self.assertEqual(expected_min, variable.statistics["Min."])
 
+    def test_import_of_dataset_itself(self):
+        study = StudyFactory()
 
-# TODO: Continue replacing factories here
-class TestDatasetJsonImport:
+        variable_name = "some-variable"
+        dataset_name = "some-dataset"
 
-    def test_import_variable_method_without_statistics(
-        self, dataset_json_importer, dataset
-    ):
-        assert 0 == Variable.objects.count()
-        var = dict(
-            study="some-study",
-            dataset="some-dataset",
-            variable="some-variable",
-            statistics=dict(names=[], values=[]),
-        )
-        sort_id = 0
-        dataset_json_importer._import_variable(  # pylint: disable=protected-access
-            var, dataset, sort_id
-        )
+        content = [
+            dict(
+                study=study.name,
+                dataset=dataset_name,
+                variable=variable_name,
+                statistics=dict(names=[], values=[]),
+            )
+        ]
+        tmp_file = TMPJSON(content)
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
+
+        Variable.objects.get(name=variable_name, dataset__name=dataset_name)
+
+    def test_import_variable_method_without_statistics(self):
+        study = StudyFactory()
+
+        content = [
+            dict(
+                study=study.name,
+                dataset="some-dataset",
+                variable="some-variable",
+                statistics=dict(names=[], values=[]),
+            )
+        ]
+        tmp_file = TMPJSON(content)
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
+
         assert 1 == Variable.objects.count()
         variable = Variable.objects.first()
         assert {} == variable.statistics
 
-    def test_import_variable_method_without_categories(
-        self, dataset_json_importer, dataset
-    ):
-        assert 0 == Variable.objects.count()
-        var = dict(
-            study="some-study",
-            dataset="some-dataset",
-            variable="some-variable",
-            statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
-            categories=dict(
-                frequencies=[], labels=[], missings=[], values=[], labels_de=[]
-            ),
-        )
-        sort_id = 0
-        dataset_json_importer._import_variable(  # pylint: disable=protected-access
-            var, dataset, sort_id
-        )
-        assert 1 == Variable.objects.count()
-        variable = Variable.objects.first()
-        assert {} == variable.categories
+    def test_import_variable_method_without_categories(self):
 
-    def test_import_variable_method_with_uni_key(self, dataset_json_importer, dataset):
-        var = dict(
-            study="some-study",
-            dataset="some-dataset",
-            variable="some-variable",
-            uni=dict(valid=1),
-        )
-        sort_id = 0
-        dataset_json_importer._import_variable(  # pylint: disable=protected-access
-            var, dataset, sort_id
-        )
+        dataset = DatasetFactory()
+        self.assertEqual(0, Variable.objects.count())
+        content = [
+            dict(
+                study=dataset.study.name,
+                dataset=dataset.name,
+                variable="some-variable",
+                statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
+                categories=dict(
+                    frequencies=[], labels=[], missings=[], values=[], labels_de=[]
+                ),
+            )
+        ]
+
+        tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, dataset.study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
+
+        self.assertEqual(1, Variable.objects.count())
+        variable = Variable.objects.first()
+        self.assertEqual({}, variable.categories)
+
+    def test_import_variable_method_with_uni_key(self):
+        dataset = DatasetFactory()
+        content = [
+            dict(
+                study=dataset.study.name,
+                dataset=dataset.name,
+                variable="some-variable",
+                uni=dict(valid=1),
+            )
+        ]
+        tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
+        with patch(**tmp_file.import_patch_arguments):
+            dataset_json_importer = DatasetJsonImport(tmp_file.name, dataset.study)
+            dataset_json_importer.read_file()
+            dataset_json_importer.execute_import()
 
 
 class TestTransformationImport:
