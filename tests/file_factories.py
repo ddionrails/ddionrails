@@ -88,10 +88,13 @@ class TMPJSON(_TMPImportFILE):
 class TMPCSV(_TMPImportFILE):
     """Creates and fills temporary CSV file"""
 
-    def __init__(self, content: list[dict[str, Any]]):
+    def __init__(self, content: list[dict[str, Any]], file_name: str = ""):
         super().__init__()
-        self.file_name = self.tmp_path.joinpath(FAKE.file_name(extension="csv"))
+        if file_name == "":
+            file_name = FAKE.file_name(extension="csv")
+        self.file_name = self.tmp_path.joinpath(file_name)
         with open(self.file_name, "w", encoding="utf-8") as file:
             writer = DictWriter(file, fieldnames=content[0].keys())
+            writer.writeheader()
             for row in content:
                 writer.writerow(row)
