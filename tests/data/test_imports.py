@@ -15,12 +15,17 @@ from django.test import TestCase
 
 from ddionrails.concepts.imports import concept_import
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
-from ddionrails.data.imports import DatasetImport, DatasetJsonImport, VariableImport
+from ddionrails.data.imports import (
+    DatasetImport,
+    DatasetJsonImport,
+    TransformationImport,
+    VariableImport,
+)
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
 from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.file_factories import TMPJSON
+from tests.file_factories import TMPCSV, TMPJSON
 from tests.model_factories import DatasetFactory, StudyFactory, VariableFactory
 
 TEST_CASE = TestCase()
@@ -40,13 +45,13 @@ class TestDatasetImport(TestCase):
         new_callable=MagicMock,
     )
     def test__import_dataset_links_method_gets_called(self, mocked_import_dataset_links):
-        valid_dataset_data = dict(dataset_name="some-dataset")
+        valid_dataset_data = {"dataset_name": "some-dataset"}
         self.dataset_csv_importer.import_element(valid_dataset_data)
         mocked_import_dataset_links.assert_called_once()
 
     def test__import_dataset_links_method_with_minimal_fields(self):
         """This import needs already existing dataset and study in the database."""
-        valid_dataset_data = dict(name=self.dataset.name)
+        valid_dataset_data = {"name": self.dataset.name}
         self.assertEqual(1, Dataset.objects.count())
         self.dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
             valid_dataset_data
@@ -69,14 +74,14 @@ class TestDatasetImport(TestCase):
         conceptual_dataset_name = "some-conceptual-dataset-name"
         period_name = "some-period-name"
 
-        valid_dataset_data = dict(
-            name=self.dataset.name,
-            label=self.dataset.label,
-            description=self.dataset.description,
-            analysis_unit=analysis_unit_name,
-            conceptual_dataset=conceptual_dataset_name,
-            period_name=period_name,
-        )
+        valid_dataset_data = {
+            "name": self.dataset.name,
+            "label": self.dataset.label,
+            "description": self.dataset.description,
+            "analysis_unit": analysis_unit_name,
+            "conceptual_dataset": conceptual_dataset_name,
+            "period_name": period_name,
+        }
 
         self.assertEqual(1, Dataset.objects.count())
         self.dataset_csv_importer._import_dataset_links(  # pylint: disable=protected-access
@@ -131,26 +136,26 @@ class TestDatasetJsonImport(TestCase):
         dataset = DatasetFactory()
         self.assertEqual(1, Dataset.objects.count())
         content = [
-            dict(
-                study=dataset.study.name,
-                dataset=dataset.name,
-                variable="some-variable",
-                statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
-                scale="cat",
-                categories=dict(
-                    frequencies=[1, 0],
-                    labels=[
+            {
+                "study": dataset.study.name,
+                "dataset": dataset.name,
+                "variable": "some-variable",
+                "statistics": {"names": ["valid", "invalid"], "values": ["1", "0"]},
+                "scale": "cat",
+                "categories": {
+                    "frequencies": [1, 0],
+                    "labels": [
                         "[-6] Version of questionnaire with modified filtering",
                         "[1] Yes",
                     ],
-                    labels_de=[
+                    "labels_de": [
                         "[-6] Fragebogenversion mit geaenderter Filterfuehrung",
                         "[1] Ja",
                     ],
-                    values=["-6", "1"],
-                    missings=[True, False],
-                ),
-            )
+                    "values": ["-6", "1"],
+                    "missings": [True, False],
+                },
+            }
         ]
         tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
         with patch(**tmp_file.import_patch_arguments):
@@ -200,12 +205,12 @@ class TestDatasetJsonImport(TestCase):
         dataset_name = "some-dataset"
 
         content = [
-            dict(
-                study=study.name,
-                dataset=dataset_name,
-                variable=variable_name,
-                statistics=dict(names=[], values=[]),
-            )
+            {
+                "study": study.name,
+                "dataset": dataset_name,
+                "variable": variable_name,
+                "statistics": {"names": [], "values": []},
+            }
         ]
         tmp_file = TMPJSON(content)
         with patch(**tmp_file.import_patch_arguments):
@@ -219,12 +224,12 @@ class TestDatasetJsonImport(TestCase):
         study = StudyFactory()
 
         content = [
-            dict(
-                study=study.name,
-                dataset="some-dataset",
-                variable="some-variable",
-                statistics=dict(names=[], values=[]),
-            )
+            {
+                "study": study.name,
+                "dataset": "some-dataset",
+                "variable": "some-variable",
+                "statistics": {"names": [], "values": []},
+            }
         ]
         tmp_file = TMPJSON(content)
         with patch(**tmp_file.import_patch_arguments):
@@ -241,15 +246,19 @@ class TestDatasetJsonImport(TestCase):
         dataset = DatasetFactory()
         self.assertEqual(0, Variable.objects.count())
         content = [
-            dict(
-                study=dataset.study.name,
-                dataset=dataset.name,
-                variable="some-variable",
-                statistics=dict(names=["valid", "invalid"], values=["1", "0"]),
-                categories=dict(
-                    frequencies=[], labels=[], missings=[], values=[], labels_de=[]
-                ),
-            )
+            {
+                "study": dataset.study.name,
+                "dataset": dataset.name,
+                "variable": "some-variable",
+                "statistics": {"names": ["valid", "invalid"], "values": ["1", "0"]},
+                "categories": {
+                    "frequencies": [],
+                    "labels": [],
+                    "missings": [],
+                    "values": [],
+                    "labels_de": [],
+                },
+            }
         ]
 
         tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
@@ -265,12 +274,12 @@ class TestDatasetJsonImport(TestCase):
     def test_import_variable_method_with_uni_key(self):
         dataset = DatasetFactory()
         content = [
-            dict(
-                study=dataset.study.name,
-                dataset=dataset.name,
-                variable="some-variable",
-                uni=dict(valid=1),
-            )
+            {
+                "study": dataset.study.name,
+                "dataset": dataset.name,
+                "variable": "some-variable",
+                "uni": {"valid": 1},
+            }
         ]
         tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
         with patch(**tmp_file.import_patch_arguments):
@@ -279,50 +288,85 @@ class TestDatasetJsonImport(TestCase):
             dataset_json_importer.execute_import()
 
 
-class TestTransformationImport:
-    def test_import_element_method(self, transformation_importer, study, dataset):
-        origin_variable = VariableFactory(name="origin")
-        target_variable = VariableFactory(name="target")
-        assert Transformation.objects.count() == 0
-        element = dict(
-            origin_study_name=study.name,
-            origin_dataset_name=dataset.name,
-            origin_variable_name=origin_variable.name,
-            target_study_name=study.name,
-            target_dataset_name=dataset.name,
-            target_variable_name=target_variable.name,
-        )
-        transformation_importer.import_element(element)
+class TestTransformationImport(TestCase):
 
-        assert 1 == Transformation.objects.count()
+    def setUp(self) -> None:
+        self.origin_variable = VariableFactory(name="origin")
+        study = self.origin_variable.dataset.study
+
+        self.target_variable = VariableFactory(
+            name="target", dataset=DatasetFactory(study=study)
+        )
+        self.assertEqual(0, Transformation.objects.count())
+        self.element = {
+            "origin_study_name": study.name,
+            "origin_dataset_name": self.origin_variable.dataset.name,
+            "origin_variable_name": self.origin_variable.name,
+            "target_study_name": study.name,
+            "target_dataset_name": self.target_variable.dataset.name,
+            "target_variable_name": self.target_variable.name,
+        }
+        return super().setUp()
+
+    def test_import_from_file(self):
+
+        tmp_file = TMPCSV(content=[self.element])
+        with patch(**tmp_file.import_patch_arguments):
+            transformation_importer = TransformationImport(
+                tmp_file.name, self.origin_variable.dataset.study
+            )
+            transformation_importer.read_file()
+            transformation_importer.execute_import()
+
+        self.assertEqual(1, Transformation.objects.count())
         transformation = Transformation.objects.first()
-        assert transformation.origin == origin_variable
-        assert transformation.target == target_variable
+        self.assertEqual(self.origin_variable, transformation.origin)
+        self.assertEqual(self.target_variable, transformation.target)
 
-    @pytest.mark.django_db
-    def test_import_element_method_fails(self, transformation_importer, study, dataset):
-        origin_variable = VariableFactory(name="origin")
-        target_variable = VariableFactory(name="target")
-        element = dict(
-            origin_study_name="",
-            origin_dataset_name="",
-            origin_variable_name="",
-            target_study_name=study.name,
-            target_dataset_name=dataset.name,
-            target_variable_name=target_variable.name,
+    def test_import_element_method_fails(self):
+        study = self.origin_variable.dataset.study
+        dataset = self.origin_variable.dataset
+        content = [
+            {
+                "origin_study_name": "",
+                "origin_dataset_name": "",
+                "origin_variable_name": "",
+                "target_study_name": study.name,
+                "target_dataset_name": dataset.name,
+                "target_variable_name": self.target_variable.name,
+            }
+        ]
+        transformation_importer = TransformationImport(
+            "", self.origin_variable.dataset.study
         )
+
+        tmp_file = TMPCSV(content=content)
         with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Origin.*"):
-            transformation_importer.import_element(element)
-        element = dict(
-            origin_study_name=study.name,
-            origin_dataset_name=dataset.name,
-            origin_variable_name=origin_variable.name,
-            target_study_name="",
-            target_dataset_name="",
-            target_variable_name="",
-        )
+            with patch(**tmp_file.import_patch_arguments):
+                transformation_importer = TransformationImport(
+                    tmp_file.name, self.origin_variable.dataset.study
+                )
+                transformation_importer.read_file()
+                transformation_importer.execute_import()
+        content = [
+            {
+                "origin_study_name": study.name,
+                "origin_dataset_name": dataset.name,
+                "origin_variable_name": self.origin_variable.name,
+                "target_study_name": "",
+                "target_dataset_name": "",
+                "target_variable_name": "",
+            }
+        ]
+        tmp_file = TMPCSV(content=content)
         with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Target.*"):
-            transformation_importer.import_element(element)
+            with patch(**tmp_file.import_patch_arguments):
+                transformation_importer = TransformationImport(
+                    tmp_file.name, self.origin_variable.dataset.study
+                )
+                transformation_importer.read_file()
+                transformation_importer.execute_import()
+        del tmp_file
 
 
 @pytest.mark.django_db
