@@ -6,7 +6,6 @@ import csv
 import os
 import unittest
 from io import StringIO
-from pathlib import Path
 from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
@@ -26,9 +25,14 @@ from ddionrails.data.imports import (
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
 from ddionrails.studies.models import Study
-from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.file_factories import TMPCSV, TMPJSON
-from tests.model_factories import DatasetFactory, StudyFactory, VariableFactory
+from tests.concepts.factories import TopicFactory
+from tests.file_factories import FAKE, TMPCSV, TMPJSON
+from tests.model_factories import (
+    ConceptFactory,
+    DatasetFactory,
+    StudyFactory,
+    VariableFactory,
+)
 
 TEST_CASE = TestCase()
 
@@ -393,24 +397,38 @@ class TestTransformationImportTransaction(TransactionTestCase):
                     transformation_importer.execute_import()
 
 
-@pytest.mark.django_db
-@pytest.mark.usefixtures(("mock_import_path"))
-class TestVariableImport:
+class TestVariableImport(TestCase):
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.dataset = DatasetFactory(study=self.study)
+        self.variables = FAKE.words(nb=4)
+        variable_data = []
+        self.concepts = []
+        for variable in self.variables:
+            concept = ConceptFactory(topics__study=self.study, topics__topics_size=1)
+            self.concepts.append(concept)
+            variable_data.append(
+                {
+                    "study_name": self.study.name,
+                    "dataset_name": self.dataset.name,
+                    "name": variable,
+                    "concept_name": concept.name,
+                    "image_url": FAKE.image_url(),
+                }
+            )
+        self.tmp_file = TMPCSV(variable_data)
+
+        return super().setUp()
+
     def test_variable_import(self):
-        some_dataset = DatasetFactory(name="some-dataset")
-        some_dataset.save()
-        ConceptFactory(name="some-concept").save()
-        ConceptFactory(name="orphaned-concept").save()
-        variable_path = Path(
-            "tests/functional/test_data/some-study/ddionrails/variables.csv"
-        )
-        variable_path = variable_path.absolute()
-        VariableImport.run_import(variable_path, study=some_dataset.study)
-        with open(variable_path, "r", encoding="utf8") as csv_file:
-            variable_names = {row["name"] for row in csv.DictReader(csv_file)}
-        result = Variable.objects.filter(name__in=list(variable_names))
+
+        with patch(**self.tmp_file.import_patch_arguments):
+            VariableImport.run_import(self.tmp_file.name, study=self.study)
+
+        result = Variable.objects.filter(name__in=self.variables)
         TEST_CASE.assertNotEqual(0, len(result))
-        TEST_CASE.assertEqual(len(variable_names), len(result))
+        TEST_CASE.assertEqual(len(self.variables), len(result))
 
     def test_variable_import_with_orphaned_concept(self):
         csv_path = Study().import_path()
