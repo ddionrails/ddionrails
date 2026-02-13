@@ -11,7 +11,9 @@ from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
 import pytest
-from django.test import TestCase
+from django.db import transaction
+from django.db.utils import IntegrityError
+from django.test import TestCase, TransactionTestCase
 
 from ddionrails.concepts.imports import concept_import
 from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
@@ -189,7 +191,7 @@ class TestDatasetJsonImport(TestCase):
         expected_min = 100
 
         content[0]["statistics"] = {"Min.": expected_min, "Median": 200}
-        del tmp_file
+
         tmp_file = TMPJSON(content, file_name=f"{dataset.name}.json")
         with patch(**tmp_file.import_patch_arguments):
             dataset_json_importer = DatasetJsonImport(tmp_file.name, dataset.study)
@@ -323,6 +325,27 @@ class TestTransformationImport(TestCase):
         self.assertEqual(self.origin_variable, transformation.origin)
         self.assertEqual(self.target_variable, transformation.target)
 
+
+class TestTransformationImportTransaction(TransactionTestCase):
+
+    def setUp(self) -> None:
+        self.origin_variable = VariableFactory(name="origin")
+        study = self.origin_variable.dataset.study
+
+        self.target_variable = VariableFactory(
+            name="target", dataset=DatasetFactory(study=study)
+        )
+        self.assertEqual(0, Transformation.objects.count())
+        self.element = {
+            "origin_study_name": study.name,
+            "origin_dataset_name": self.origin_variable.dataset.name,
+            "origin_variable_name": self.origin_variable.name,
+            "target_study_name": study.name,
+            "target_dataset_name": self.target_variable.dataset.name,
+            "target_variable_name": self.target_variable.name,
+        }
+        return super().setUp()
+
     def test_import_element_method_fails(self):
         study = self.origin_variable.dataset.study
         dataset = self.origin_variable.dataset
@@ -341,13 +364,14 @@ class TestTransformationImport(TestCase):
         )
 
         tmp_file = TMPCSV(content=content)
-        with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Origin.*"):
-            with patch(**tmp_file.import_patch_arguments):
-                transformation_importer = TransformationImport(
-                    tmp_file.name, self.origin_variable.dataset.study
-                )
-                transformation_importer.read_file()
-                transformation_importer.execute_import()
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                with patch(**tmp_file.import_patch_arguments):
+                    transformation_importer = TransformationImport(
+                        tmp_file.name, self.origin_variable.dataset.study
+                    )
+                    transformation_importer.read_file()
+                    transformation_importer.execute_import()
         content = [
             {
                 "origin_study_name": study.name,
@@ -359,14 +383,14 @@ class TestTransformationImport(TestCase):
             }
         ]
         tmp_file = TMPCSV(content=content)
-        with TEST_CASE.assertRaisesRegex(Variable.DoesNotExist, "Target.*"):
-            with patch(**tmp_file.import_patch_arguments):
-                transformation_importer = TransformationImport(
-                    tmp_file.name, self.origin_variable.dataset.study
-                )
-                transformation_importer.read_file()
-                transformation_importer.execute_import()
-        del tmp_file
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():
+                with patch(**tmp_file.import_patch_arguments):
+                    transformation_importer = TransformationImport(
+                        tmp_file.name, self.origin_variable.dataset.study
+                    )
+                    transformation_importer.read_file()
+                    transformation_importer.execute_import()
 
 
 @pytest.mark.django_db

@@ -3,22 +3,20 @@
 """Importer classes for ddionrails.data app"""
 
 import json
+import re
 from collections import OrderedDict
 from csv import DictReader
 from functools import lru_cache
 from itertools import permutations
 from pathlib import Path
-from re import compile
-from typing import Dict, List, Tuple, Union
 
 from django.db.models import Q
 from django.db.transaction import atomic
-from django.db.utils import DataError
 
 from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
 from ddionrails.data.models.transformation import Sibling
 from ddionrails.imports import imports
-from ddionrails.imports.helpers import hash_with_namespace_uuid
+from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
 from .forms import DatasetForm, VariableForm
@@ -33,7 +31,7 @@ class DatasetJsonImport(imports.Import):
         if isinstance(content, dict):
             content = list(content.values())
         sort_id = 0
-        datasets = dict()
+        datasets = {}
         variable_names = set()
         for var in content:
             if var["dataset"] not in datasets:
@@ -42,14 +40,12 @@ class DatasetJsonImport(imports.Import):
                 )
                 datasets[var["dataset"]] = dataset
             variable_names.add(var["variable"])
-        existing_variables = set(
-            [
-                variable.name
-                for variable in Variable.objects.filter(
-                    dataset__name__in=[dataset for dataset in datasets.keys()],
-                )
-            ]
-        )
+        existing_variables = {
+            variable.name
+            for variable in Variable.objects.filter(
+                dataset__name__in=list(datasets.keys()),
+            )
+        }
         variables_to_create = []
         variables_to_update = []
         for var in content:
@@ -140,8 +136,8 @@ class DatasetImport(imports.CSVImport):
 class VariableImport(imports.CSVImport):
     """Import Variable data from csv file."""
 
-    harmonized_suffix = compile(r".*_h$")
-    is_harmonized_suffix = compile(r".*_v\d+$")
+    harmonized_suffix = re.compile(r".*_h$")
+    is_harmonized_suffix = re.compile(r".*_v\d+$")
 
     class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
         form = VariableForm
@@ -199,64 +195,56 @@ class VariableImport(imports.CSVImport):
         variable.save()
 
 
+@lru_cache(30000)
+def _get_element_id(study_name, dataset_name, variable_name):
+    return hash_with_namespace_uuid(
+        hash_with_namespace_uuid(
+            _get_study_id(study_name),
+            dataset_name,
+            cache=True,
+        ),
+        variable_name,
+        cache=True,
+    )
+
+
+@lru_cache(100)
+def _get_study_id(study__name: str):
+    return hash_with_base_uuid(study__name)
+
+
 class TransformationImport(imports.CSVImport):
     """Import Object relations from the transformations.csv file."""
 
-    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
-        form = VariableForm
-
     @atomic
     def execute_import(self):
-        return super().execute_import()
-
-    def import_element(self, element):
-        origin, target = self._get_origin_and_target(element)
-        Transformation.objects.get_or_create(origin=origin, target=target)
-
-    @classmethod
-    def _get_origin_and_target(
-        cls, metadata: Dict[str, str]
-    ) -> Tuple[Variable, Variable]:
-        origin, target = ({}, {})
-        origin["study"] = metadata.get("origin_study", metadata.get("origin_study_name"))
-
-        origin["dataset"] = metadata.get(
-            "origin_dataset", metadata.get("origin_dataset_name")
-        )
-        origin["variable"] = metadata.get(
-            "origin_variable", metadata.get("origin_variable_name")
-        )
-
-        target["study"] = metadata.get("target_study", metadata.get("target_study_name"))
-        target["dataset"] = metadata.get(
-            "target_dataset", metadata.get("target_dataset_name")
-        )
-        target["variable"] = metadata.get(
-            "target_variable", metadata.get("target_variable_name")
-        )
-
-        origin_variable = cls._get_variable(
-            origin["study"], origin["dataset"], origin["variable"], "Origin"
-        )
-        target_variable = cls._get_variable(
-            target["study"], target["dataset"], target["variable"], "Target"
-        )
-        return (origin_variable, target_variable)
-
-    @staticmethod
-    @lru_cache(maxsize=100)
-    def _get_variable(study, dataset, name, _type):
-        try:
-            _variable = (
-                Variable.objects.filter(dataset__study__name=study)
-                .filter(dataset__name=dataset)
-                .get(name=name)
+        existing_transformations = {
+            (transformation.origin.id, transformation.target.id)
+            for transformation in Transformation.objects.filter(
+                Q(origin__dataset__study=self.study)
+                | Q(target__dataset__study=self.study)
             )
-        except BaseException as error:
-            raise type(error)(
-                (f"{_type} variable " f"{study}/{dataset}/{name} does not exist.")
+        }
+        transformations = []
+
+        for element in self.content:
+            origin_id = _get_element_id(
+                element["origin_study_name"],
+                element["origin_dataset_name"],
+                element["origin_variable_name"],
             )
-        return _variable
+            target_id = _get_element_id(
+                element["target_study_name"],
+                element["target_dataset_name"],
+                element["target_variable_name"],
+            )
+            if (origin_id, target_id) in existing_transformations:
+                continue
+            transformations.append(
+                Transformation(origin_id=origin_id, target_id=target_id)
+            )
+        if transformations:
+            Transformation.objects.bulk_create(transformations, batch_size=5000)
 
 
 def variables_images_import(file: Path, study: Study) -> None:
@@ -265,7 +253,7 @@ def variables_images_import(file: Path, study: Study) -> None:
         return
     with open(file, "r", encoding="utf8") as csv:
         reader = DictReader(csv)
-        variables: List[Variable] = []
+        variables: list[Variable] = []
         for index, row in enumerate(reader):
             try:
                 variable = Variable.objects.get(
@@ -289,6 +277,11 @@ def variables_images_import(file: Path, study: Study) -> None:
 
 @atomic
 def siblings_generation(_: Path, study: Study):
+    """Create relations between variables related to the same harmonized variable
+
+    This is unique to variables created at SOEP
+
+    """
     Sibling.objects.filter(sibling_a__dataset__study=study).delete()
 
     long_variables = Variable.objects.filter(
@@ -296,7 +289,7 @@ def siblings_generation(_: Path, study: Study):
     ).prefetch_related("origin_variables", "target_variables")
     siblings: list[Sibling] = []
 
-    harmonized_suffix = compile(r".*_v/d+$")
+    harmonized_suffix = re.compile(r".*_v/d+$")
 
     for long_variable in long_variables.all():
         target_transformations = long_variable.target_variables.all().distinct()
