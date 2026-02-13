@@ -42,7 +42,7 @@
     "datatables.net-bs5": "2.3.2",
     "datatables.net-fixedcolumns": "^5.0.4",
     "datatables.net-fixedcolumns-bs5": "^5.0.4",
-    "datatables.net-responsive-bs5": "3.0.5",
+    "datatables.net-responsive-bs5": "3.0.7",
     "har-validator": "^5.1.5",
     "jquery": "^3.6.4",
     "jquery.fancytree": "^2.38.3",
