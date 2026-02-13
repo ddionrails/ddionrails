@@ -4,15 +4,17 @@
 """DjangoModelFactories for user model"""
 
 
+from collections.abc import Iterable
 from typing import TYPE_CHECKING
 from uuid import UUID
 
 import factory
 from django.contrib.auth import get_user_model
+from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from ddionrails.concepts.models import AnalysisUnit, Period
+from ddionrails.concepts.models import AnalysisUnit, Concept, Period, Topic
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
@@ -71,6 +73,58 @@ class PeriodFactory(DjangoModelFactory):
     class Meta:
         model = Period
 
+    study = factory.SubFactory(StudyFactory)
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+
+
+class TopicFactory(DjangoModelFactory):
+    class Meta:
+        model = Topic
+
+    study = factory.SubFactory(StudyFactory)
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+
+
+class ConceptFactory(DjangoModelFactory):
+    if TYPE_CHECKING:
+        id: UUID
+
+    class Meta:
+        model = Concept
+
+    topics__study = factory.SelfAttribute("study")
+    topics__topics_size = factory.SelfAttribute("topics_size")
+
+    @factory.post_generation
+    def topics(self, create, extracted, **kwargs):
+        if isinstance(extracted, Iterable):
+            for extract in extracted:
+                self.topics.add(extract)
+            self.save()
+            return
+        study = kwargs.get("study")
+        if create and study is None:
+            study = StudyFactory()
+        for _ in range(kwargs.get("topics_size", 0)):
+            self.topics.add(TopicFactory(study=study))
+
+        if create:
+            self.save()
+
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+
 
 class DatasetFactory(DjangoModelFactory):
     if TYPE_CHECKING:
@@ -83,6 +137,7 @@ class DatasetFactory(DjangoModelFactory):
     name = factory.LazyAttribute(lambda _: FAKE.word())
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    period = SubFactory(PeriodFactory)
 
 
 class AnalysisUnitFactory(factory.django.DjangoModelFactory):
