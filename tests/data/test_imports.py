@@ -431,24 +431,53 @@ class TestVariableImport(TestCase):
         TEST_CASE.assertEqual(len(self.variables), len(result))
 
     def test_variable_import_with_orphaned_concept(self):
-        csv_path = Study().import_path()
-        concept_path = csv_path.joinpath("concepts.csv")
+        concept_names = FAKE.words(nb=len(self.variables), unique=True)
+        variable_data_orphaned_concepts = []
+        for variable, concept in zip(self.variables, concept_names):
+            variable_data_orphaned_concepts.append(
+                {
+                    "study_name": self.study.name,
+                    "dataset_name": self.dataset.name,
+                    "name": variable,
+                    "concept_name": concept,
+                    "image_url": FAKE.image_url(),
+                }
+            )
+        concept = ConceptFactory(topics__study=self.study, topics__topics_size=1)
+        concept_data = [
+            {
+                "study": self.study.name,
+                "name": concept.name,
+                "label": concept.label,
+                "label_de": concept.label_de,
+                "description": concept.description,
+                "description_de": concept.description_de,
+                "topic": concept.topics.first().name,
+            }
+        ]
+        var_tmp = TMPCSV(content=variable_data_orphaned_concepts, file_name="variables.csv")
+        concept_csv = TMPCSV(
+            content=concept_data, file_name="concepts.csv", folder=var_tmp.parent_name
+        )
 
-        some_dataset = DatasetFactory(name="some-dataset")
-        some_dataset.save()
-        StudyImportManager(study=some_dataset.study).fix_concepts_csv()
-        TopicFactory(name="some-topic")
-        ConceptFactory(name="some-concept").save()
-        variable_path = csv_path.joinpath("variables.csv")
-        variable_path = variable_path.absolute()
-        concept_import(concept_path, some_dataset.study)
-        VariableImport.run_import(variable_path, study=some_dataset.study)
+        with patch(**var_tmp.import_patch_arguments):
+            study_manager = StudyImportManager(study=self.study, redis=False)
+            study_manager.fix_concepts_csv()
+            variable_path = var_tmp.file_name
+            variable_path = variable_path.absolute()
+            concept_import(concept_csv.file_name, self.study)
+            VariableImport.run_import(variable_path, study=self.study)
 
         with open(variable_path, "r", encoding="utf8") as csv_file:
             variable_names = {row["name"] for row in csv.DictReader(csv_file)}
         result = Variable.objects.filter(name__in=list(variable_names))
-        TEST_CASE.assertNotEqual(0, len(result))
-        TEST_CASE.assertEqual(len(variable_names), len(result))
+        self.assertNotEqual(0, len(result))
+        self.assertEqual(len(variable_names), len(result))
+        for variable in result:
+            try:
+                self.assertIn(variable.concept.name, concept_names)
+            except:
+                breakpoint()
 
     def test_variable_import_without_concept_csv(self):
         csv_path = Study().import_path()

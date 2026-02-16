@@ -27,8 +27,11 @@ class _PatchKwargs:
         return getattr(self, item)
 
 
-def _tmp_import_path() -> tuple[Path, _PatchKwargs]:
-    tmp_path = Path(mkdtemp())
+def _tmp_import_path(folder: Path|None = None) -> tuple[Path, _PatchKwargs]:
+    if folder is None:
+        tmp_path = Path(mkdtemp())
+    else:
+        tmp_path = folder
 
     patch_dict = _PatchKwargs(
         target="ddionrails.studies.models.Study.import_path",
@@ -42,19 +45,24 @@ class _TMPImportFILE(ABC):
     file_name: Path
     tmp_path: Path
     import_path_patch_arguments: _PatchKwargs
+    folder_external: bool = False
 
-    def __init__(self) -> None:
-        self.tmp_path, self.import_path_patch_arguments = _tmp_import_path()
+    def __init__(self, folder: Path|None = None) -> None:
+        if folder is not None:
+            self.folder_external
+        self.tmp_path, self.import_path_patch_arguments = _tmp_import_path(folder)
         super().__init__()
 
     def __del__(self):
         remove(self.file_name)
-        rmtree(self.tmp_path)
+        if not self.folder_external:
+            rmtree(self.tmp_path)
         del self.tmp_path
 
     def __exit__(self, exc_type, exc_value, traceback):
         remove(self.file_name)
-        rmtree(self.tmp_path)
+        if not self.folder_external:
+            rmtree(self.tmp_path)
         del self.tmp_path
 
     @property
@@ -88,8 +96,8 @@ class TMPJSON(_TMPImportFILE):
 class TMPCSV(_TMPImportFILE):
     """Creates and fills temporary CSV file"""
 
-    def __init__(self, content: list[dict[str, Any]], file_name: str = ""):
-        super().__init__()
+    def __init__(self, content: list[dict[str, Any]], file_name: str = "", folder: Path|None = None):
+        super().__init__(folder=folder)
         if file_name == "":
             file_name = FAKE.file_name(extension="csv")
         self.file_name = self.tmp_path.joinpath(file_name)
