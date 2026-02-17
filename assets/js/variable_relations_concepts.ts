@@ -18,7 +18,7 @@ const ConceptIconClasses = [
 ];
 
 const ConceptIconTooltipText: Map<languageCode, string> = new Map([
-  ["en", "Is part of the same concept"],
+  ["en", "Shares the same concept"],
   ["de", "Gehört zum selben Konzept"],
 ]);
 
@@ -32,21 +32,13 @@ export function createIcon(
   ) as languageCode;
 
   const inputIcon = document.createElement("i");
+
+  languageLabels.forEach((value: string, key: string )=>{
+    inputIcon.setAttribute(`data-title-${key}`, value)
+  })
+
   inputIcon.classList.add(...classNames);
   inputIcon.title = languageLabels.get(language);
-
-  const mutationCallback = (mutationList: Array<any>, _: any) => {
-    for (const mutation of mutationList) {
-      if (mutation.type == "attributes") {
-        language = languageSwitch.getAttribute(
-          "data-current-language",
-        ) as languageCode;
-        inputIcon.title = languageLabels.get(language);
-      }
-    }
-  };
-  const observer = new MutationObserver(mutationCallback);
-  observer.observe(languageSwitch, { attributes: true });
 
   return inputIcon;
 }

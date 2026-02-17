@@ -46,26 +46,26 @@ const InfoHeaderText: Map<languageCode, string> = new Map([
 const SiblingIcon = createIcon(
   ["fa-solid", "fa-handshake", "sibling-icon", "sibling-relation-toggle"],
   new Map([
-    ["en", "Is related to the same long variable"],
-    ["de", "Fließt in die selbe Langzeitvariable"],
+    ["en", "The current variable is indirectly or directly related to the same harmonized variable"],
+    ["de", "Die aktuelle Variable ist indirekt oder direkt mit der gleichen harmonisierten variable verwandt"],
   ]),
 );
 
 const InputIcon = createIcon(
   ["fa-solid", "fa-circle-right", "input-icon", "input-relation-toggle"],
   new Map([
-    ["en", "The current variable is generated using this variable"],
-    ["de", "Die aktuelle variable wird aus dieser generiert"],
+    ["en", "This variable is an input to the current variable"],
+    ["de", "Diese Variable ist der input der aktuellen Variable"],
   ]),
 );
 
 const OutputIcon = createIcon(
   ["fa-solid", "fa-circle-left", "output-icon", "output-relation-toggle"],
   new Map([
-    ["en", "The current variable is used to generate this variable"],
+    ["en", "This variable is an output of the current variable"],
     [
       "de",
-      "Die aktuelle Variable wird zur Generierung dieser Variable genutzt",
+      "Diese Variable ist der output der aktuellen Variable",
     ],
   ]),
 );

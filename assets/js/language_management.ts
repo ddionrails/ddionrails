@@ -50,6 +50,10 @@ function switchLanguage(content: HTMLElement, language = "en") {
   nodes.forEach((node) => {
     node.innerHTML = node.getAttribute(`data-${language}`);
   });
+  const titleNodes = content.querySelectorAll(`[data-title-${language}]`);
+  titleNodes.forEach((node) => {
+    node.setAttribute("title", node.getAttribute(`data-title-${language}`));
+  });
   content.querySelectorAll(".lang").forEach((node) => {
     node.classList.add("hidden");
   });

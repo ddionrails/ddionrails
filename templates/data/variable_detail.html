@@ -48,18 +48,46 @@
             <div id="chart_missings"></div>
 	    <div id="variable-relations" class="card">
 		    <div class="card-header" id="variable-relations-header">
-			    <span>Relations to current variable: <b>{{ variable.dataset.name}}/{{ variable.name }}</b></span>
+			    <span data-de="Relationen zu der aktuellen Variable: <b>{{ variable.dataset.name}}/{{ variable.name }}</b>" data-en="Relations to current variable: <b>{{ variable.dataset.name}}/{{ variable.name }}</b>"></span>
 					<div class="btn-group" id="relations-buttons-container" role="group" aria-label="Variable relations toggle buttons">
-					  <button type="button" id="concept-relation-toggle" class="btn btn-secondary active" disabled>
+					  <button 
+						  type="button" 
+						  id="concept-relation-toggle" 
+						  class="btn btn-secondary active" 
+						  disabled
+						  data-title-de="Wechsle Sichtbarkeit von Relationen Variablen mit demselben Konzept"
+						  data-title-en="Toggle relations between variable sharing the same concept"
+						  >
 						  <i class="fa fa-cog fa-sm"></i>
 					  </button>
-					  <button type="button" id="sibling-relation-toggle" class="btn btn-secondary  active" disabled>
+					  <button
+						  type="button"
+						  id="sibling-relation-toggle"
+						  class="btn btn-secondary  active"
+						  disabled
+						  data-title-de="Wechsle Sichtbarkeit von Relationen zwischen Variablen mit derselben harmonisierten Variable"
+						  data-title-en="Toggle relations between the same harmonized variable"
+						  >
 						  <i class="fa-solid fa-handshake fa-sm"></i>
 					  </button>
-					  <button type="button" id="output-relation-toggle" class="btn btn-secondary active" disabled>
+					  <button
+						  type="button"
+						  id="output-relation-toggle" 
+						  class="btn btn-secondary active"
+						  disabled
+						  data-title-de="Wechsle Sichtbarkeit von Relationen zu output Variablen"
+						  data-title-en="Toggle relations to output variables"
+						  >
 						  <i class="fa-solid fa-circle-left fa-sm"></i>
 					  </button>
-					  <button type="button" id="input-relation-toggle" class="btn btn-secondary active" disabled>
+					  <button
+						  type="button"
+						  id="input-relation-toggle"
+						  class="btn btn-secondary active"
+						  disabled
+						  data-title-de="Wechsle Sichtbarkeit von Relationen von input Variablen"
+						  data-title-en="Toggle relations from input variables"
+						  >
 						  <i class="fa-solid fa-circle-right fa-sm"></i>
 					  </button>
 					</div>
