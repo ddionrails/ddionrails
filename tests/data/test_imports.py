@@ -3,7 +3,6 @@
 """Test cases for importer classes in ddionrails.data app"""
 
 import csv
-import unittest
 from unittest.mock import MagicMock, patch
 
 from django.db import transaction
@@ -17,6 +16,7 @@ from ddionrails.data.imports import (
     DatasetJsonImport,
     TransformationImport,
     VariableImport,
+    variables_images_import,
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
@@ -470,14 +470,9 @@ class TestVariableImport(TestCase):
         self.assertNotEqual(0, len(result))
         self.assertEqual(len(variable_names), len(result))
         for variable in result:
-            try:
-                self.assertIn(variable.concept.name, concept_names)
-            except:
-                breakpoint()
+            self.assertIn(variable.concept.name, concept_names)
 
     def test_variable_import_without_concept_csv(self):
-        csv_path = Study().import_path()
-        concept_path = csv_path.joinpath("concepts.csv")
 
         with patch(**self.tmp_file.import_patch_arguments):
             some_dataset = self.dataset
@@ -492,32 +487,35 @@ class TestVariableImport(TestCase):
             VariableImport(filename=self.tmp_file.name).import_element(element)
 
 
-class ImageDummy(TypedDict, total=False):
-    """Typing help for TestVariableImageImport."""
-
-    url: str
-
-
-@pytest.mark.django_db
-@pytest.mark.usefixtures("variable")
-class TestVariableImageImport(unittest.TestCase):
-    variable: Variable
-    images: Dict[str, ImageDummy]
+class TestVariableImageImport(TestCase):
 
     def setUp(self):
-        print(self.variable.name)
-        self.images = {"image": {}, "image_de": {}}
-        self.images["image"]["url"] = "https://image.com/image.png"
-        self.images["image_de"]["url"] = "https://image.de/image.png"
-        csv_file_handler = StringIO()
-        csv_file_content = {
-            "study": self.variable.dataset.study.name,
-            "dataset": self.variable.dataset.name,
-            "variable": self.variable.name,
-            "url": self.images["image"]["url"],
-            "url_de": self.images["image_de"]["url"],
-        }
-        csv_writer = csv.DictWriter(csv_file_handler, csv_file_content.keys())
-        csv_writer.writeheader()
-        csv_writer.writerow(csv_file_content)
-        self.csv_file = csv_file_handler.getvalue()
+        self.study = StudyFactory()
+        self.variables = []
+        for _ in range(5):
+            self.variables.append(VariableFactory(dataset__study=self.study))
+
+        content = []
+        variable_image_map = {}
+        for variable in self.variables:
+            url = FAKE.image_url()
+            url_de = FAKE.image_url()
+            variable_image_map[variable.name] = {"en": url, "de": url_de}
+            content.append(
+                {
+                    "study": self.study,
+                    "dataset": variable.dataset.name,
+                    "variable": variable.name,
+                    "url": url,
+                    "url_de": url_de,
+                }
+            )
+
+        self.tmp_file = TMPCSV(content=content, file_name="variables_images.csv")
+        self.variable_image_map = variable_image_map
+
+    def test_variables_images_import(self):
+        variables_images_import(study=self.study, file=self.tmp_file.name)
+        for variable in self.variables:
+            variable.refresh_from_db()
+            self.assertDictEqual(self.variable_image_map[variable.name], variable.images)
