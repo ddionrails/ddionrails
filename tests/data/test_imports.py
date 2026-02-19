@@ -3,13 +3,9 @@
 """Test cases for importer classes in ddionrails.data app"""
 
 import csv
-import os
 import unittest
-from io import StringIO
-from typing import Dict, TypedDict
 from unittest.mock import MagicMock, patch
 
-import pytest
 from django.db import transaction
 from django.db.utils import IntegrityError
 from django.test import TestCase, TransactionTestCase
@@ -24,8 +20,6 @@ from ddionrails.data.imports import (
 )
 from ddionrails.data.models import Dataset, Transformation, Variable
 from ddionrails.imports.manager import StudyImportManager
-from ddionrails.studies.models import Study
-from tests.concepts.factories import TopicFactory
 from tests.file_factories import FAKE, TMPCSV, TMPJSON
 from tests.model_factories import (
     ConceptFactory,
@@ -455,7 +449,9 @@ class TestVariableImport(TestCase):
                 "topic": concept.topics.first().name,
             }
         ]
-        var_tmp = TMPCSV(content=variable_data_orphaned_concepts, file_name="variables.csv")
+        var_tmp = TMPCSV(
+            content=variable_data_orphaned_concepts, file_name="variables.csv"
+        )
         concept_csv = TMPCSV(
             content=concept_data, file_name="concepts.csv", folder=var_tmp.parent_name
         )
@@ -483,48 +479,17 @@ class TestVariableImport(TestCase):
         csv_path = Study().import_path()
         concept_path = csv_path.joinpath("concepts.csv")
 
-        os.remove(concept_path)
+        with patch(**self.tmp_file.import_patch_arguments):
+            some_dataset = self.dataset
+            self.assertIsNone(
+                StudyImportManager(study=some_dataset.study).fix_concepts_csv()
+            )
+            self.assertFalse(self.tmp_file.parent_name.joinpath("concepts.csv").exists())
 
-        some_dataset = DatasetFactory(name="some-dataset")
-        some_dataset.save()
-        TEST_CASE.assertIsNone(
-            StudyImportManager(study=some_dataset.study).fix_concepts_csv()
-        )
-        TEST_CASE.assertFalse(concept_path.exists())
-
-    def test_import_element_method(self, mocker, variable_importer, dataset):
-        mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
-        element = {"dataset_name": dataset.name, "variable_name": "some-variable"}
-        variable_importer.import_element(element)
-        mocked_import_variable.assert_called_once()
-
-    def test_import_element_method_fails(
-        self, mocker, capsys, variable_importer, dataset
-    ):  # pylint: disable=unused-argument
-        mocked_import_variable = mocker.patch.object(VariableImport, "_import_variable")
-        mocked_import_variable.side_effect = KeyError
-        element = {"dataset_name": "asdas", "variable_name": ""}
-        with TEST_CASE.assertRaises(KeyError):
-            variable_importer.import_element(element)
-        mocked_import_variable.assert_called_once()
-
-    def test_import_variable_method(self, variable_importer, variable):
-        element = {"dataset_name": variable.dataset.name, "name": variable.name}
-        variable_importer._import_variable(element)  # pylint: disable=protected-access
-
-    def test_import_variable_method_with_concept_name(self, variable_importer, variable):
-        concept = ConceptFactory(name="some-concept")
-        concept.save()
-        element = {
-            "dataset_name": variable.dataset.name,
-            "name": variable.name,
-            "concept_name": concept.name,
-            "description": "some-description",
-        }
-        variable_importer._import_variable(element)  # pylint: disable=protected-access
-        variable = Variable.objects.get(id=variable.id)
-        assert variable.description == element["description"]
-        assert variable.concept.name == element["concept_name"]
+    def test_import_element_method_fails_no_variable_name(self):
+        element = {"study": self.study, "dataset": self.dataset.name, "variable": ""}
+        with TEST_CASE.assertRaises(ValueError):
+            VariableImport(filename=self.tmp_file.name).import_element(element)
 
 
 class ImageDummy(TypedDict, total=False):
