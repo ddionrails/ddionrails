@@ -145,21 +145,11 @@ class VariableImport(imports.CSVImport):
     def import_element(self, element):
         variable_metadata = element
         if "name" not in variable_metadata.keys():
-            variable_metadata["name"] = variable_metadata.get("variable_name")
+            variable_metadata["name"] = variable_metadata.get("variable_name", "")
+        if variable_metadata["name"] == "":
+            raise ValueError(f"Variable has no name {element}")
 
-        # This basically dropped variables in "silence" when there was a problem.
-        # Incomplete imports are highly undesirable.
-        # The exceptions handling should remain here for a while till it is clear
-        # what exceptions were actually meant to be handled here.
         self._import_variable(variable_metadata)
-        try:
-            ...
-        except BaseException as error:
-            variable = variable_metadata.get("name")
-            dataset = variable_metadata.get("dataset", element.get("dataset_name"))
-            raise type(error)(
-                f'Failed to import variable "{variable}" from dataset "{dataset}"'
-            ) from error
 
     def execute_import(self):
         for row in self.content:
@@ -254,7 +244,7 @@ def variables_images_import(file: Path, study: Study) -> None:
     with open(file, "r", encoding="utf8") as csv:
         reader = DictReader(csv)
         variables: list[Variable] = []
-        for index, row in enumerate(reader):
+        for row in reader:
             try:
                 variable = Variable.objects.get(
                     dataset__study=study,
@@ -268,11 +258,8 @@ def variables_images_import(file: Path, study: Study) -> None:
                 "en": row["url"],
             }
             variables.append(variable)
-            if index % 1000:
-                Variable.objects.bulk_update(variables, ["images"])
-                variables = []
         if variables:
-            Variable.objects.bulk_update(variables, ["images"])
+            Variable.objects.bulk_update(variables, ["images"], batch_size=1000)
 
 
 @atomic
