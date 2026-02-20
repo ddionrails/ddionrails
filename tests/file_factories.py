@@ -27,7 +27,7 @@ class _PatchKwargs:
         return getattr(self, item)
 
 
-def _tmp_import_path(folder: Path|None = None) -> tuple[Path, _PatchKwargs]:
+def _tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
     if folder is None:
         tmp_path = Path(mkdtemp())
     else:
@@ -47,7 +47,7 @@ class _TMPImportFILE(ABC):
     import_path_patch_arguments: _PatchKwargs
     folder_external: bool = False
 
-    def __init__(self, folder: Path|None = None) -> None:
+    def __init__(self, folder: Path | None = None) -> None:
         if folder is not None:
             self.folder_external
         self.tmp_path, self.import_path_patch_arguments = _tmp_import_path(folder)
@@ -96,7 +96,12 @@ class TMPJSON(_TMPImportFILE):
 class TMPCSV(_TMPImportFILE):
     """Creates and fills temporary CSV file"""
 
-    def __init__(self, content: list[dict[str, Any]], file_name: str = "", folder: Path|None = None):
+    def __init__(
+        self,
+        content: list[dict[str, Any]],
+        file_name: str = "",
+        folder: Path | None = None,
+    ):
         super().__init__(folder=folder)
         if file_name == "":
             file_name = FAKE.file_name(extension="csv")

@@ -6,6 +6,7 @@ from tests.model_factories import (
     QuestionFactory,
     StudyFactory,
     TransformationFactory,
+    UserFactory,
     VariableFactory,
 )
 
@@ -13,7 +14,7 @@ from tests.model_factories import (
 class FactoryTest(TestCase):
 
     def test_admin_user(self):
-        factory = AdminUserFactory(password="aa")
+        factory = UserFactory(password="aa")
 
     def test_study(self):
         factory = StudyFactory()

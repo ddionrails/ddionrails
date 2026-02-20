@@ -80,7 +80,7 @@ class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
         self._set_up_webhook_content()
         self.study.save()
 
-        self._update_test_study()
+        self._update_study()
 
         self.basket = BasketFactory(name="test_basket")
         self.basket.study = self.study
@@ -194,7 +194,7 @@ class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
 
         queue_mock_helpers.side_effect = self._enqueue
         queue_mock_webhook.side_effect = self._enqueue
-        update_function_mock.side_effect = lambda *_, **__: self._update_test_study()
+        update_function_mock.side_effect = lambda *_, **__: self._update_study()
         # All the patching end
 
         with override_settings(BACKUP_DIR=Path(tmp_backup.name)):
@@ -228,7 +228,7 @@ class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
     def _enqueue(self, function, *args):
         function(*args)
 
-    def _update_test_study(self):
+    def _update_study(self):
         with patch(
             "ddionrails.imports.management.commands.update.enqueue"
         ) as mock_enqueue:
