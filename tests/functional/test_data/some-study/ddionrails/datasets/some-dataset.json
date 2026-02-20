@@ -1,6 +1,7 @@
 {
   "some-variable": {
     "name": "some-variable",
+    "dataset": "some-dataset",
     "variable": "some-variable",
     "study": "some-study",
     "categories": {
@@ -24,6 +25,7 @@
   },
   "some-other-variable": {
     "name": "some-other-variable",
+    "dataset": "some-dataset",
     "variable": "some-other-variable",
     "study": "some-study"
   }

@@ -3,7 +3,6 @@
 # type: ignore[override]
 """DjangoModelFactories for user model"""
 
-
 from collections.abc import Iterable
 from typing import TYPE_CHECKING
 from uuid import UUID
@@ -33,8 +32,18 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = "test_user"
-    password = factory.PostGenerationMethodCall("set_password", "secret-password")
+    username = factory.LazyAttribute(lambda _: FAKE.user_name())
+    email = factory.LazyAttribute(lambda _: FAKE.email())
+    is_staff = False
+    is_superuser = False
+    is_active = False
+
+    @factory.post_generation
+    def password(self, create, extracted, **kwargs):
+        password = extracted or FAKE.password(length=9)
+        self.set_password(password)
+        if create:
+            self.save()
 
 
 class AdminUserFactory(DjangoModelFactory):

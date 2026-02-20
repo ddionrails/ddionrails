@@ -35,9 +35,15 @@ class TestWorkspace(StaticLiveServerTestCase):
     def test_get_contact_page_from_home(self):
         expected = "Contact / feedback"
         self.browser.get(self.live_server_url)
-        self.browser.find_element(
+        contact_link = self.browser.find_element(
             By.CSS_SELECTOR, "a[data-en='Contact / feedback']"
-        ).click()
+        )
+        _click_with_javascript(self.browser, contact_link)
+        WebDriverWait(self.browser, 10).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, f"h1[data-en='{expected}']")
+            )
+        )
         headers = self.browser.find_elements(By.TAG_NAME, "h1")
         assert expected in [header.text for header in headers]
 

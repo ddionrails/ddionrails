@@ -239,7 +239,7 @@ def transformation(db):
 def user(db):
     """A user in the database"""
     # ignore B106: hardcoded_password_funcarg
-    return UserFactory(username="some-user", password="some-password")  # nosec
+    return UserFactory()  # nosec
 
 
 @pytest.fixture(name="variable")

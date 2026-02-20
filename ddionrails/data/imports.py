@@ -34,7 +34,8 @@ class DatasetJsonImport(imports.Import):
         datasets = {}
         variable_names = set()
         for var in content:
-            if var["dataset"] not in datasets:
+            dataset_name = var.get("dataset", var.get("dataset_name"))
+            if dataset_name not in datasets:
                 dataset, _ = Dataset.objects.get_or_create(
                     study=self.study, name=var["dataset"]
                 )
