@@ -57,7 +57,7 @@ def _clean_search_index():
 
 
 @pytest.fixture(name="unittest_settings")
-def _unittest_settings(request, settings):
+def _settings(request, settings):
     if request.instance:
         request.instance.settings = settings
 
@@ -471,7 +471,7 @@ class ImportAll(LiveServerTestCase):
     study: Study
 
     def setUp(self) -> None:
-        
+
         Study.objects.all().delete()
         Concept.objects.all().delete()
         self.study.save()

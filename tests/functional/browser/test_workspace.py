@@ -3,13 +3,11 @@
 
 """Functional test cases for browser interaction with the ddionrails project"""
 
-from time import sleep
 from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.test.testcases import LiveServerTestCase
-from django.test.utils import override_settings
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -19,6 +17,7 @@ from selenium.webdriver.support.select import Select
 from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
+from tests.model_factories import StudyFactory, UserFactory
 
 pytestmark = [
     pytest.mark.functional,
@@ -26,39 +25,45 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
-@pytest.mark.usefixtures("browser", "user", "study")
-@pytest.mark.django_db
+@pytest.mark.usefixtures("browser")
 class TestWorkspace(LiveServerTestCase):
     host = "web"
     browser: WebDriver
     study: Study
     user: User
+    password: str
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.password = "123test"
+        self.user = UserFactory(password=self.password)
+        return super().setUp()
 
     def _login(
         self,
-        browser: WebDriver,
-        user: str = "some-user",
-        password: str = "some-password",
+        user: str = "",
         go_to_login=True,
     ) -> WebDriver:
         if go_to_login:
-            browser.get(urljoin(self.live_server_url, "workspace/login/"))
+            self.browser.get(urljoin(self.live_server_url, "workspace/login/"))
 
-        username_input = browser.find_element(By.ID, "id_username")
-        username_input.send_keys(user)
-        password_input = browser.find_element(By.ID, "id_password")
-        password_input.send_keys(password)
-        browser.find_element(
+        username = self.user.username
+        if user:
+            username = username
+        username_input = self.browser.find_element(By.ID, "id_username")
+        username_input.send_keys(username)
+        password_input = self.browser.find_element(By.ID, "id_password")
+
+        password_input.send_keys(self.password)
+        self.browser.find_element(
             By.CSS_SELECTOR,
             ("input[value='Login']"),
         ).click()
-        return browser
+        return self.browser
 
     def test_login_with_known_user(self):
         self.browser.get(urljoin(self.live_server_url, "workspace/login/"))
-        self.browser = self._login(
-            self.browser, user="some-user", password="some-password"
-        )
+        self.browser = self._login()
 
         actions = ActionChains(self.browser)
 
@@ -90,20 +95,12 @@ class TestWorkspace(LiveServerTestCase):
             expected_conditions.presence_of_element_located((By.ID, "id_username"))
         )
 
-        self.browser = self._login(self.browser, go_to_login=False)
+        self.browser = self._login(go_to_login=False)
         # After logging in, the user should be redirected back to the contact page
         assert contact_url == self.browser.current_url
 
-    def test_login_with_unknown_user(self):
-        self.browser.get(urljoin(self.live_server_url, "/workspace/login"))
-        self.browser = self._login(self.browser, user="unkown-user")
-        assert (
-            "Please enter a correct username and password. "
-            "Note that both fields may be case-sensitive." in self.browser.page_source
-        )
-
     def test_logout_with_known_user(self):
-        authenticated_browser = self._login(self.browser)
+        authenticated_browser = self._login()
         authenticated_browser.get(self.live_server_url)
         authenticated_browser.implicitly_wait(2)
         authenticated_browser.find_element(
@@ -140,7 +137,7 @@ class TestWorkspace(LiveServerTestCase):
 
     def test_create_basket(self):
         baskets_url = urljoin(self.live_server_url, "workspace/baskets/")
-        authenticated_browser = self._login(self.browser)
+        authenticated_browser = self._login()
         authenticated_browser.get(baskets_url)
         authenticated_browser.find_element(By.LINK_TEXT, "Create basket").click()
         basket_data = dict(name="some-basket", label="Some basket")

@@ -11,9 +11,10 @@ from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 
 from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket, BasketVariable
+from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.models.script_metadata import ScriptMetadata
 from tests import status
+from tests.model_factories import BasketFactory
 
 from .factories import UserFactory
 
@@ -56,20 +57,22 @@ class TestOwnBasketOnlyDecorator:
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
-@pytest.mark.usefixtures("db")
-class TestScriptDetailView:
-    def test_script_detail_view_with_script_created_before_update(
-        self, client, basket, script
-    ):
+class TestScriptDetailView(TestCase):
+    def test_script_detail_view_with_script_created_before_update(self):
         """This tests a regression that was
         introduced after updating the settings for scripts
         with a 'gender' option
         """
+        basket = BasketFactory()
+        client = Client()
         study = Study(name="soep-core")
         study.save()
         metadata = ScriptMetadata(study=study, metadata={})
         metadata.save()
 
+        script = Script()
+        script.name = "name"
+        script.label = "label"
         script.basket = basket
         # Set the settings to the default values from before the update
         script.settings = (
@@ -82,7 +85,7 @@ class TestScriptDetailView:
             "workspace:script_detail",
             kwargs={"basket_id": basket.id, "script_id": script.id},
         )
-        client.login(username=basket.user, password="secret-password")  # nosec
+        client.force_login(user=basket.user)  # nosec
         response = client.get(url)
         assert status.HTTP_200_OK == response.status_code
 
