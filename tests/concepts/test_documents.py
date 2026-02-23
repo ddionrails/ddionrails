@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for documents in ddionrails.concepts app """
+"""Test cases for documents in ddionrails.concepts app"""
 
 from os import getenv
 from typing import Any
@@ -27,12 +27,9 @@ pytestmark = [
 TEST_CASE = TestCase()
 
 
-
-
-@override_settings(DEBUG=True)
 @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
 @pytest.mark.usefixtures("variable_with_concept", "topic", "concept")
-class TestDocuments( LiveServerTestCase):
+class TestDocuments(LiveServerTestCase):
     variable_with_concept: Any
     topic: Any
     concept: Any
@@ -97,12 +94,10 @@ class TestDocuments( LiveServerTestCase):
             TEST_CASE.assertIn(key, expected)
         assert expected == result
 
-
     def test_search_concept_by_label_de(self):
         result = ConceptDocument.search().query("match", label_de="Konzept").count()
         expected = 1
         assert expected == result
-
 
     def test_topic_search_document_fields(self):
         search = TopicDocument.search().query("match_all")
@@ -118,7 +113,8 @@ class TestDocuments( LiveServerTestCase):
 
         # generate expected dictionary with attributes from model instance
         expected = model_to_dict(
-            self.topic, fields=("name", "label", "label_de", "description", "description_de")
+            self.topic,
+            fields=("name", "label", "label_de", "description", "description_de"),
         )
         # add relations to expected dictionary
         expected["study_name"] = self.topic.study.title()

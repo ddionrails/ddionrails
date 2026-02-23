@@ -25,7 +25,6 @@ pytestmark = [
 
 @pytest.mark.usefixtures("browser", "user", "study")
 @pytest.mark.django_db
-@override_settings(DEBUG=True)
 class TestWorkspace(StaticLiveServerTestCase):
     host = "web"
     browser: WebDriver

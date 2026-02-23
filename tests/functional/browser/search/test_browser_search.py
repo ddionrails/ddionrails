@@ -28,7 +28,6 @@ pytestmark = [  # pylint: disable=invalid-name
 ]
 
 
-@override_settings(DEBUG=True)
 @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
 @pytest.mark.usefixtures(
     "browser",

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name,imported-auth-user
 
-""" Test cases for views in ddionrails.workspace app """
+"""Test cases for views in ddionrails.workspace app"""
 
 import csv
 
 import pytest
 from django.contrib.auth.models import User
-from django.test import Client
+from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 
 from ddionrails.studies.models import Study
@@ -258,6 +258,7 @@ class TestBasketDetail:
 
 
 class TestBasketSearch:
+
     def test_with_valid_id(self, client, basket):
         client.force_login(user=basket.user)
         url = reverse("workspace:basket_to_csv", kwargs={"basket_id": basket.id})
@@ -271,11 +272,15 @@ class TestBasketSearch:
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
-class TestUserDelete:
-    def test_with_valid_user(self, client, user):
-        assert 1 == User.objects.count()
-        client.force_login(user=user)
+class TestUserDelete(TransactionTestCase):
+
+    def test_with_valid_user(self):
+        client = Client()
+        password = "123test"
+        user = UserFactory(password=password)
+        self.assertEqual(1, User.objects.count())
+        self.assertTrue(client.login(username=user.username, password=password))
         url = reverse("workspace:user_delete")
         response = client.get(url)
-        assert status.HTTP_302_FOUND == response.status_code
-        assert 0 == User.objects.count()
+        self.assertEqual(status.HTTP_302_FOUND, response.status_code)
+        self.assertEqual(0, User.objects.count())

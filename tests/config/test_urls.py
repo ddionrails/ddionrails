@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,invalid-name,C0415
 
-""" Test cases for Root URLConf of ddionrails project """
+"""Test cases for Root URLConf of ddionrails project"""
 
 from importlib import reload
 from typing import List
@@ -42,7 +42,6 @@ def test_urlconf_with_debug_true(settings):
     assert media_pattern_found(urlpatterns) is True
 
 
-@override_settings(DEBUG=False)
 def test_urlconf_with_debug_false():
     clear_url_caches()
     reload(config.urls)

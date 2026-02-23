@@ -39,6 +39,11 @@ from tests.workspace.factories import BasketFactory
 TEST_CASE = unittest.TestCase()
 
 
+@pytest.fixture(autouse=True)
+def _disable_toolbar(settings):
+    settings.DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: False}
+
+
 @pytest.fixture
 def analysis_unit(db, request):
     """An analysis unit in the database"""
