@@ -32,7 +32,6 @@ from tests.workspace.factories import BasketVariableFactory
 LANGUAGE = "en"
 
 TEST_CASE = unittest.TestCase()
-override_settings(DEBUG=True)
 
 
 @pytest.mark.usefixtures("client", "request")
@@ -77,7 +76,6 @@ def test_topic_tree(client, topiclist, language, expected):
 ######## Test new API units
 
 
-@override_settings(DEBUG=True)
 class TestBasketViewSet(LiveServerTestCase):
     API_PATH = "/api/baskets/"
     variables: List[VariableFactory] = []
@@ -204,7 +202,6 @@ class TestBasketViewSet(LiveServerTestCase):
         return json.loads(request.content).get("results")
 
 
-@override_settings(DEBUG=True)
 class TestQuestionViewSet(LiveServerTestCase):
     API_PATH = "/api/questions/"
     api_client: APIClient
@@ -429,7 +426,6 @@ class TestInstrumentViewSet(unittest.TestCase):
         self.assertEqual(getattr(instrument, "name"), content["results"][0]["name"])
 
 
-@override_settings(DEBUG=True)
 class TestRelatedVariableViewSet(LiveServerTestCase):
     API_PATH = "/api/related_variables/"
     api_client: APIClient
@@ -443,7 +439,6 @@ class TestRelatedVariableViewSet(LiveServerTestCase):
         return super().tearDown()
 
 
-@override_settings(DEBUG=True)
 class TestVariableViewSet(LiveServerTestCase):
     API_PATH = "/api/variables/"
     api_client: APIClient

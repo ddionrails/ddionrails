@@ -36,7 +36,7 @@ class UserFactory(DjangoModelFactory):
     email = factory.LazyAttribute(lambda _: FAKE.email())
     is_staff = False
     is_superuser = False
-    is_active = False
+    is_active = True
 
     @factory.post_generation
     def password(self, create, extracted, **kwargs):

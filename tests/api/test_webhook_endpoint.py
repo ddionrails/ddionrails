@@ -25,7 +25,6 @@ from tests.imports.management_commands.test_update import IMPORT_PATH
 from ..workspace.factories import BasketFactory
 
 
-@override_settings(DEBUG=True)
 @pytest.mark.usefixtures("mock_import_path")
 class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
     LiveServerTestCase

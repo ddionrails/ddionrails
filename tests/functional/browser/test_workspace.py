@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
 
-""" Functional test cases for browser interaction with the ddionrails project """
+"""Functional test cases for browser interaction with the ddionrails project"""
 
 from time import sleep
 from urllib.parse import urljoin
@@ -26,7 +26,6 @@ pytestmark = [
 ]  # pylint: disable=invalid-name
 
 
-@override_settings(DEBUG=True)
 @pytest.mark.usefixtures("browser", "user", "study")
 @pytest.mark.django_db
 class TestWorkspace(LiveServerTestCase):
@@ -44,7 +43,6 @@ class TestWorkspace(LiveServerTestCase):
     ) -> WebDriver:
         if go_to_login:
             browser.get(urljoin(self.live_server_url, "workspace/login/"))
-
 
         username_input = browser.find_element(By.ID, "id_username")
         username_input.send_keys(user)
@@ -112,9 +110,10 @@ class TestWorkspace(LiveServerTestCase):
             By.CSS_SELECTOR, "button[data-en='Log Out']"
         ).click()
 
-
         WebDriverWait(authenticated_browser, 3).until(
-            expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "a[data-en='Log In / Register']"))
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, "a[data-en='Log In / Register']")
+            )
         )
 
         assert "sessionid" not in str(authenticated_browser.get_cookies())
