@@ -43,7 +43,7 @@ class TestHelpers(unittest.TestCase):
 
 
 @pytest.fixture(name="unittest_mock")
-def _unittest_mock(request, mocker):
+def _mock(request, mocker):
     request.instance.mocker = mocker
 
 

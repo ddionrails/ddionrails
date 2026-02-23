@@ -21,6 +21,7 @@ from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.models.question_variable import QuestionVariable
 from ddionrails.studies.models import Study
+from ddionrails.workspace.models.basket import Basket
 
 FAKE = Faker()
 FAKE_DE = Faker(locale="de_DE")
@@ -245,3 +246,30 @@ class QuestionVariableFactory(factory.django.DjangoModelFactory):
 
     question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
     variable = factory.SubFactory(VariableFactory, name="some-variable")
+
+
+class BasketFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Basket
+
+    study = factory.SubFactory(StudyFactory)
+    user = factory.SubFactory(UserFactory)
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+
+    @factory.post_generation
+    def variables(self, create, extracted, **kwargs):
+        if isinstance(extracted, Iterable):
+            for extract in extracted:
+                self.topics.add(extract)
+            self.save()
+            return
+        study = kwargs.get("study")
+        if create and study is None:
+            study = StudyFactory()
+        for _ in range(kwargs.get("basket_size", 0)):
+            self.variables.add(Variable(study=study))
+
+        if create:
+            self.save()
