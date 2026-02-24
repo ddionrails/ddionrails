@@ -3,7 +3,6 @@
 import hashlib
 import hmac
 import logging
-from typing import Literal
 
 from django_rq.queues import enqueue
 from rest_framework import status
@@ -11,16 +10,10 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.viewsets import ViewSet
 
-from config.settings import base
 from ddionrails.api.helpers import run_import_on_redis
 from ddionrails.studies.models import Study
 
 logger = logging.getLogger(__name__)
-
-MAIN_BRANCH_CANDIDATES: tuple[Literal["master"], Literal["main"]] = ("master", "main")
-DEVELOP_BRANCH_CANDIDATES: tuple[
-    Literal["develop"], Literal["development"], Literal["dev"]
-] = ("develop", "development", "dev")
 
 
 class WebhookView(ViewSet):
@@ -92,19 +85,11 @@ class WebhookView(ViewSet):
         return hmac.compare_digest(our_signature, signature)
 
 
-def _is_develop(push_reference: str) -> bool:
-    return any(push_reference.endswith(name) for name in DEVELOP_BRANCH_CANDIDATES)
-
-
-def _is_main(push_reference: str) -> bool:
-    return any(push_reference.endswith(name) for name in MAIN_BRANCH_CANDIDATES)
-
-
-def _handle_branch_verification(study, data):
+def _handle_branch_verification(study: Study, data):
     repo = data.get("repository", {}).get("full_name", "unknown")
     logging.info("WEBHOOK: Received push to %s", repo)
     push_reference: str = data.get("ref", "")
-    if _is_develop(push_reference) or _is_main(push_reference):
+    if push_reference.endswith(study.pin_reference):
         logging.info("WEBHOOK: Updating %s", study.name)
         enqueue(run_import_on_redis, study.name)
         logging.info("WEBHOOK: Update queued")

@@ -76,6 +76,7 @@ class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
 
             study_name = next(DictReader(variables_file))["study_name"]
         self.study, _ = Study.objects.get_or_create(name=study_name)
+        self.study.pin_reference = "main"
         self.study.save()
         self._set_up_webhook_content()
         self.study.save()
@@ -137,6 +138,8 @@ class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
 
     def test_webhook_post_develop_branch(self):
         """Test post request for non `default` branch"""
+        self.study.pin_reference = "develop"
+        self.study.save()
         data = self.github_data.copy()
         data["ref"] = "refs/head/develop"
         digest = hmac.new(
