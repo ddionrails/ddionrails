@@ -110,11 +110,12 @@ class ConceptFactory(DjangoModelFactory):
     class Meta:
         model = Concept
 
-    topics__study = factory.SelfAttribute("study")
-    topics__topics_size = factory.SelfAttribute("topics_size")
+    class Params:
+        study = factory.SubFactory(StudyFactory)
+        topics__topics_size = 1
 
     @factory.post_generation
-    def topics(self, create, extracted, **kwargs):
+    def _topics(self, create, extracted, **kwargs):
         if isinstance(extracted, Iterable):
             for extract in extracted:
                 self.topics.add(extract)
@@ -164,9 +165,23 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
 class VariableFactory(DjangoModelFactory):
     if TYPE_CHECKING:
         id: UUID
+        concept: Concept
 
     class Meta:
         model = Variable
+
+    @factory.post_generation
+    def _concept(self, create, extracted, **kwargs):
+        if extracted:
+            self.concept = extracted
+            self.save()
+            return
+        self.concept = ConceptFactory(
+            topics__study=self.dataset.study, topics__topics_size=1
+        )
+
+        if create:
+            self.save()
 
     dataset = factory.SubFactory(DatasetFactory)
     name = factory.LazyAttribute(lambda _: FAKE.word())
@@ -180,6 +195,7 @@ class VariableFactory(DjangoModelFactory):
             "invalid": str(FAKE.random_number()),
         },
     )
+
     categories = factory.LazyAttribute(
         lambda _: {
             "frequencies": [FAKE.random_number(), FAKE.random_number()],
@@ -262,14 +278,11 @@ class BasketFactory(factory.django.DjangoModelFactory):
     def variables(self, create, extracted, **kwargs):
         if isinstance(extracted, Iterable):
             for extract in extracted:
-                self.topics.add(extract)
+                self.variables.add(extract)
             self.save()
             return
-        study = kwargs.get("study")
-        if create and study is None:
-            study = StudyFactory()
         for _ in range(kwargs.get("basket_size", 0)):
-            self.variables.add(Variable(study=study))
+            self.variables.add(Variable(study=self.study))
 
         if create:
             self.save()
