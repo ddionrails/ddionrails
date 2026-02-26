@@ -56,32 +56,37 @@
     "spinkit": "^2.0.1",
     "style-loader": "^4.0.0",
     "ts-loader": "^9.5.4",
-    "typescript": "^5.9.3",
     "webpack": "^5.99.9",
     "webpack-bundle-tracker": "^3.1.1",
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
     "@babel/preset-typescript": "^7.27.1",
+    "@eslint/js": "^10.0.1",
     "@olrtg/emmet-language-server": "*",
-    "prettier-eslint": ">=8.8.2",
+    "@stylistic/eslint-plugin": "^5.9.0",
     "cspell": "^9.0.1",
     "css-loader": "^7.1.2",
-    "eslint": ">=10.0.0",
+    "eslint": "^10.0.2",
     "eslint-config-google": ">=0.9.1",
-    "eslint-plugin-jquery": ">=1.4.0",
+    "eslint-plugin-no-unsanitized": "^4.1.5",
+    "eslint-plugin-regexp": "^3.0.0",
     "eslint-plugin-security": ">=1.7.1",
+    "eslint-plugin-security-node": "^1.1.4",
+    "globals": "^17.3.0",
     "jest": ">=19.0.2",
     "jest-environment-jsdom": ">=29.5.0",
     "jsdom": "^26.1.0",
     "mini-css-extract-plugin": "^2.7.5",
     "prettier": "^3.6.2",
+    "prettier-eslint": ">=8.8.2",
     "sass": "^1.91.0",
     "sass-loader": "^16.0.5",
     "ts-jest": ">=19.0.14",
     "ts-loader": "^9.5.4",
     "ts-node": "^1.7.1",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
     "webpack": "^5.99.9",
     "webpack-bundle-tracker": "^3.1.1",
     "webpack-cli": "^6.0.1"
@@ -93,109 +98,5 @@
     "lint": "eslint",
     "format": "eslint --fix",
     "cspell": "cspell"
-  },
-  "eslintConfig": {
-    "env": {
-      "browser": true,
-      "es6": true
-    },
-    "extends": [
-      "google",
-      "plugin:security/recommended",
-      "plugin:jquery/deprecated"
-    ],
-    "globals": {
-      "Atomics": "readonly",
-      "SharedArrayBuffer": "readonly"
-    },
-    "parserOptions": {
-      "ecmaVersion": 2020,
-      "sourceType": "module"
-    },
-    "plugins": [
-      "security",
-      "jquery"
-    ],
-    "rules": {
-      "quotes": [
-        "error",
-        "double",
-        {
-          "avoidEscape": true,
-          "allowTemplateLiterals": true
-        }
-      ],
-      "comma-dangle": [
-        "error",
-        {
-          "arrays": "always-multiline",
-          "objects": "always-multiline",
-          "imports": "always-multiline",
-          "exports": "always-multiline"
-        }
-      ],
-      "complexity": [
-        "error",
-        {
-          "max": 6
-        }
-      ],
-      "indent": [
-        "error",
-        2,
-        {
-          "MemberExpression": 1
-        }
-      ],
-      "max-len": [
-        "error",
-        {
-          "code": 90,
-          "tabWidth": 4
-        }
-      ],
-      "no-use-before-define": [
-        "error",
-        {
-          "functions": true,
-          "classes": true
-        }
-      ],
-      "object-curly-spacing": [
-        "error",
-        "never"
-      ],
-      "object-shorthand": [
-        "error",
-        "always"
-      ],
-      "wrap-iife": [
-        "error",
-        "outside"
-      ]
-    },
-    "overrides": [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx"
-        ],
-        "parser": "@typescript-eslint/parser",
-        "plugins": [
-          "@typescript-eslint"
-        ],
-        "rules": {
-          "no-unused-vars": "off",
-          "@typescript-eslint/no-unused-vars": [
-            "error",
-            {
-              "argsIgnorePattern": "^_",
-              "varsIgnorePattern": "^_",
-              "caughtErrorsIgnorePattern": "^_"
-            }
-          ]
-        }
-      }
-    ]
   }
 }

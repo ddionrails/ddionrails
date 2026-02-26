@@ -488,8 +488,8 @@ function initTree() {
       setAttributes(basketButton,
         {
           "title": labels["AddAllRelatedToBasket"][languageCode()],
-          "data-toggle": "modal",
-          "data-target": "#topic-list-add-to-basket",
+          "data-bs-toggle": "modal",
+          "data-bs-target": "#topic-list-add-to-basket",
         }
       );
       basketButton.innerHTML =

@@ -7,7 +7,7 @@ const imageButton = document.createElement("button")
 imageButton.type = "button"
 imageButton.classList.add("btn")
 imageButton.classList.add("btn-link")
-imageButton.setAttribute("data-toggle", "modal")
+imageButton.setAttribute("data-bs-toggle", "modal")
 
 for (const language of ["de", "en"]) {
 	if (Object.keys(images).length === 0) {
@@ -18,7 +18,7 @@ for (const language of ["de", "en"]) {
 		continue
 	}
 	const button: HTMLElement = imageButton.cloneNode(true) as HTMLElement
-	button.setAttribute("data-target", `#image-${language}-modal`)
+	button.setAttribute("data-bs-target", `#image-${language}-modal`)
 	button.textContent = `${label}: ${language}`
 	questionImagesContainer.appendChild(button)
 

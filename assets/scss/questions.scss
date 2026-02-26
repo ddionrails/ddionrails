@@ -87,7 +87,11 @@ input[type="radio"] {
   color: #6c757d !important;
 }
 
-.image-de-modal-content {
+.modal-body {
   display: flex;
   justify-content: center;
+}
+
+.modal-body > img {
+  max-width: 100%;
 }
