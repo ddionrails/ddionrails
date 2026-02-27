@@ -112,10 +112,10 @@ class ConceptFactory(DjangoModelFactory):
 
     class Params:
         study = factory.SubFactory(StudyFactory)
-        topics__topics_size = 1
+        topics_size = 1
 
     @factory.post_generation
-    def _topics(self, create, extracted, **kwargs):
+    def topics(self, create, extracted, **kwargs):
         if isinstance(extracted, Iterable):
             for extract in extracted:
                 self.topics.add(extract)
