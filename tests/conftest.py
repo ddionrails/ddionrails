@@ -33,7 +33,7 @@ from tests.instruments.factories import (
 )
 from tests.model_factories import UserFactory
 from tests.publications.factories import PublicationFactory
-from tests.studies.factories import StudyFactory, TopicListFactory
+from tests.studies.factories import StudyFactory
 from tests.workspace.factories import BasketFactory
 
 TEST_CASE = unittest.TestCase()
@@ -222,16 +222,6 @@ def topic(request):
         request.instance.topic = topic
 
     yield topic
-
-
-@pytest.fixture
-def topiclist(db):
-    """A topiclist in the database"""
-    body = [
-        {"language": "en", "topics": [{"title": "some-topic"}]},
-        {"language": "de", "topics": [{"title": "some-german-topic"}]},
-    ]
-    return TopicListFactory(topiclist=body)
 
 
 @pytest.fixture

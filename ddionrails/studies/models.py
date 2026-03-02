@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """Model definitions for ddionrails.studies app"""
 
+from __future__ import annotations
+
 import uuid
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Literal, NotRequired, Optional, TypedDict
 
 from django.apps import apps
 from django.conf import settings
@@ -15,6 +17,25 @@ from model_utils.models import TimeStampedModel
 
 from ddionrails.base.mixins import ModelMixin
 from ddionrails.imports.helpers import hash_with_base_uuid
+
+
+class TopicJSONContent(TypedDict):
+    """Structure of topic tree information"""
+
+    key: str
+    type: str
+    title: str
+    children: NotRequired[list[TopicJSONContent]]
+
+
+class TopicContentContainer(TypedDict):
+    """Container for topic tree information to store multi language information"""
+
+    language: Literal["en"] | Literal["de"]
+    topics: list[TopicJSONContent]
+
+
+TopicListJSONContent = list[TopicJSONContent]
 
 
 class TopicList(models.Model):
@@ -169,10 +190,10 @@ class Study(ModelMixin, TimeStampedModel):
 
         raise ValueError("Specify a protocol for Git in your settings.")
 
-    def set_topiclist(self, body: List) -> None:
+    def set_topiclist(self, topiclist: TopicListJSONContent) -> None:
         """Changes the topiclists content"""
         _topiclist, _ = TopicList.objects.get_or_create(study=self)
-        _topiclist.topiclist = body
+        _topiclist.topiclist = topiclist
         _topiclist.save()
 
     def has_topics(self) -> bool:

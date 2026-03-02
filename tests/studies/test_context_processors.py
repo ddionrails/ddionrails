@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods
 
-""" Test cases for ddionrails.studies.context_processors """
+"""Test cases for ddionrails.studies.context_processors"""
 
 import pytest
 from django.test.client import RequestFactory
@@ -9,17 +9,18 @@ from django.test.testcases import LiveServerTestCase
 
 from ddionrails.studies.context_processors import studies_processor
 from ddionrails.studies.models import Study
+from tests.model_factories import StudyFactory
 
 pytestmark = [pytest.mark.studies]  # pylint: disable=invalid-name
 
 
-@pytest.mark.usefixtures("study")
 class TestContextProcessors(LiveServerTestCase):
     study: Study
     request_factory: RequestFactory
 
     def setUp(self) -> None:
         self.request_factory = RequestFactory()
+        self.study = StudyFactory()
         return super().setUp()
 
     def test_studies_processor_with_study(self):
