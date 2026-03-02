@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for models in ddionrails.workspace app """
+"""Test cases for models in ddionrails.workspace app"""
 
-from pathlib import Path
-from tempfile import TemporaryDirectory
 import unittest
 from os import remove
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 import pytest
@@ -19,8 +19,13 @@ from ddionrails.data.models import Dataset, Variable
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.scripts import SoepStata
-from tests.data.factories import DatasetFactory, VariableFactory
-from tests.studies.factories import StudyFactory
+from tests.model_factories import (
+    BasketFactory,
+    ConceptFactory,
+    DatasetFactory,
+    StudyFactory,
+    VariableFactory,
+)
 
 pytestmark = [pytest.mark.workspace]
 
@@ -34,7 +39,6 @@ def csv_heading():
     )
 
 
-@pytest.mark.usefixtures("basket", "study", "variable", "concept")
 class TestBasketModel(LiveServerTestCase):
     basket: Basket
     concept: Concept
@@ -44,7 +48,12 @@ class TestBasketModel(LiveServerTestCase):
 
     def setUp(self) -> None:
         self.tmp_dir = TemporaryDirectory()
+        self.study = StudyFactory()
+        self.basket = BasketFactory(study=self.study)
+        self.variable = VariableFactory(dataset__study=self.study)
+        self.concept = ConceptFactory(topics__study=self.study)
         return super().setUp()
+
     def tearDown(self) -> None:
         self.tmp_dir.cleanup()
         return super().tearDown()
@@ -60,16 +69,16 @@ class TestBasketModel(LiveServerTestCase):
     def test_html_description_method(self):
         with patch(
             "ddionrails.workspace.models.basket.render_markdown"
-            ) as markdown_patch:
+        ) as markdown_patch:
             self.basket.html_description()
             markdown_patch.assert_called_once()
 
     def test_title_method(self):
-        assert self.basket.name == self.basket.title()
-
-    def test_title_method_with_label(self):
-        self.basket.label = "Some basket"
         assert self.basket.label == self.basket.title()
+
+    def test_title_method_without_label(self):
+        self.basket.label = ""
+        assert self.basket.name == self.basket.title()
 
     def test_get_script_generators_method(self):
         result = self.basket.get_script_generators()
@@ -117,9 +126,13 @@ class TestBasketModel(LiveServerTestCase):
             """Can we do a backup of existing Baskets."""
             instance.basket.save()
             basket_id = instance.basket.id
-            basket_variable = BasketVariable(basket=instance.basket, variable=self.variable)
+            basket_variable = BasketVariable(
+                basket=instance.basket, variable=self.variable
+            )
             other_variable = VariableFactory(name="test-variable")
-            other_basket_variable = BasketVariable(basket=instance.basket, variable=other_variable)
+            other_basket_variable = BasketVariable(
+                basket=instance.basket, variable=other_variable
+            )
             other_basket_variable.basket = instance.basket
             other_basket_variable.variable = other_variable
             basket_variable.save()
@@ -138,10 +151,12 @@ class TestBasketModel(LiveServerTestCase):
             instance.assertIn(other_basket_variable.variable, basket_variables)
             instance.assertNotIn(basket_variable.variable, basket_variables)
             remove(backup_file)
+
         mock_backup_dir(self)
 
     def test_study_specific_backup(self):
         """Can we limit the backup to a specific study?"""
+
         @override_settings(BACKUP_DIR=Path(self.tmp_dir.name))
         def mock_backup_dir(instance):
             # A whole lot of boilerplate to set up another study basket.
@@ -160,7 +175,9 @@ class TestBasketModel(LiveServerTestCase):
             other_variable.dataset = other_dataset
             other_variable.save()
 
-            other_basket = Basket(name="other-basket", study=other_study, user=instance.basket.user)
+            other_basket = Basket(
+                name="other-basket", study=other_study, user=instance.basket.user
+            )
             other_basket.save()
             other_basket.variables.add(other_variable)
             other_basket.save()
@@ -178,15 +195,21 @@ class TestBasketModel(LiveServerTestCase):
                 BasketVariable.objects.get(variable=other_variable)
 
             instance.assertTrue(BasketVariable.objects.get(variable=instance.variable))
+
         mock_backup_dir(self)
 
 
-@pytest.mark.usefixtures("study", "basket", "variable")
 class TestBasketVariableModel(LiveServerTestCase):
 
     study: Study
     basket: Basket
     variable: Variable
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.basket = BasketFactory(study=self.study)
+        self.variable = VariableFactory(dataset__study=self.study)
+        return super().setUp()
 
     def test_clean_method(self):
         basket_variable = BasketVariable(
@@ -257,6 +280,7 @@ class TestBasketVariableModel(LiveServerTestCase):
             BasketVariable.objects.get(variable__id=variable_id)
 
 
+# TODO: Refactor
 class TestScriptModel:
     @pytest.mark.usefixtures("db", "script_metadata")
     def test_get_config_method(self, script):
@@ -268,7 +292,7 @@ class TestScriptModel:
         assert script.local_config == script.get_config()
 
     def test_get_settings_method(self, script):
-        script.settings_dict = dict(key="value")
+        script.settings_dict = {"key": "value"}
         result = script.get_settings()
         expected = "value"
         assert expected == result["key"]

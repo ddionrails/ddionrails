@@ -2,13 +2,14 @@
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 # pylint: disable=protected-access
 
-""" Test cases for mixins in ddionrails.workspace app """
+"""Test cases for mixins in ddionrails.workspace app"""
 
 import pytest
 
 from ddionrails.workspace.mixins import SoepMixin
 
 
+# TODO: Refactor
 @pytest.fixture(name="soepmixin")
 def _soepmixin():
     return SoepMixin()
@@ -17,22 +18,22 @@ def _soepmixin():
 @pytest.fixture(name="script_dict")
 def _script_dict():
     return {
-        "bah": dict(
-            name="bah",
-            analysis_unit="h",
-            period=2010,
-            prefix="ba",
-            variables=set(),
-            matches=["p", "h"],
-        ),
-        "rp": dict(
-            name="rp",
-            analysis_unit="p",
-            period=2001,
-            prefix="r",
-            variables=set(),
-            matches=["p"],
-        ),
+        "bah": {
+            "name": "bah",
+            "analysis_unit": "h",
+            "period": 2010,
+            "prefix": "ba",
+            "variables": set(),
+            "matches": ["p", "h"],
+        },
+        "rp": {
+            "name": "rp",
+            "analysis_unit": "p",
+            "period": 2001,
+            "prefix": "r",
+            "variables": set(),
+            "matches": ["p"],
+        },
     }
 
 

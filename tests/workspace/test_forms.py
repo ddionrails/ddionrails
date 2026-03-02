@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods
+# pylint: disable=missing-docstring,too-few-public-methods
 
-""" Test cases for forms in ddionrails.workspace app """
+"""Test cases for forms in ddionrails.workspace app"""
 
 import pytest
 
@@ -10,31 +10,34 @@ from ddionrails.workspace.forms import BasketForm, UserCreationForm
 pytestmark = [pytest.mark.workspace, pytest.mark.forms]  # pylint: disable=invalid-name
 
 
+# TODO: Refactor ; forms are not really used maybe they should be removed
 @pytest.fixture
 def valid_basket_data(study, user):
-    """ A valid input for basket forms and imports, relates to study and user fixture """
-    return dict(name="some-basket", study=study.pk, user=user.pk)
+    """A valid input for basket forms and imports, relates to study and user fixture"""
+    return {"name": "some-basket", "study": study.pk, "user": user.pk}
 
 
 @pytest.fixture
 def invalid_basket_csv_data():
-    """ An invalid input for basket forms and imports """
-    return dict(name="some-basket")
+    """An invalid input for basket forms and imports"""
+    return {"name": "some-basket"}
 
 
 @pytest.fixture
 def valid_user_data():
-    """ A valid input for user forms and imports """
+    """A valid input for user forms and imports"""
     # ignore B106: hardcoded_password_funcarg
-    return dict(username="some-user", password="some-password")  # nosec
+    return {"username": "some-user", "password": "some-password"}  # nosec
 
 
 @pytest.fixture
 def valid_user_creation_data():
-    """ A valid input for user creation forms and imports """
-    return dict(
-        username="some-user", password1="some-password", password2="some-password"
-    )
+    """A valid input for user creation forms and imports"""
+    return {
+        "username": "some-user",
+        "password1": "some-password",
+        "password2": "some-password",
+    }
 
 
 class TestBasketForm:
