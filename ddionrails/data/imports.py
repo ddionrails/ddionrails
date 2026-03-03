@@ -40,7 +40,8 @@ class DatasetJsonImport(imports.Import):
                     study=self.study, name=var["dataset"]
                 )
                 datasets[var["dataset"]] = dataset
-            variable_names.add(var["variable"])
+            name = var.get("variable", var.get("name"))
+            variable_names.add(name)
         existing_variables = {
             variable.name
             for variable in Variable.objects.filter(
