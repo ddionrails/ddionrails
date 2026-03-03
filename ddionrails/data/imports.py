@@ -41,6 +41,8 @@ class DatasetJsonImport(imports.Import):
                 )
                 datasets[var["dataset"]] = dataset
             name = var.get("variable", var.get("name"))
+            if name is None:
+                raise KeyError(f"No name for variable set {var}")
             variable_names.add(name)
         existing_variables = {
             variable.name
@@ -52,7 +54,10 @@ class DatasetJsonImport(imports.Import):
         variables_to_update = []
         for var in content:
             variable = self._import_variable(var, sort_id, datasets[var["dataset"]])
-            if var["variable"] in existing_variables:
+            name = var.get("variable", var.get("name"))
+            if name is None:
+                raise KeyError(f"No name for variable set {var}")
+            if name in existing_variables:
                 variables_to_update.append(variable)
             else:
                 variables_to_create.append(variable)
@@ -67,6 +72,8 @@ class DatasetJsonImport(imports.Import):
     def _import_variable(var, sort_id, dataset):
         dataset_id = dataset.id
         name = var.get("name", var.get("variable"))
+        if name is None:
+            raise KeyError(f"No name for variable set {var}")
         variable = Variable(name=name, dataset=dataset)
         variable.sort_id = sort_id
         variable.label = var.get("label", name)
@@ -86,7 +93,7 @@ class DatasetJsonImport(imports.Import):
         variable.scale = var.get("scale", "")
 
         variable.id = hash_with_namespace_uuid(  # pylint: disable=C0103
-            dataset_id, var["variable"], cache=False
+            dataset_id, name, cache=False
         )
 
         return variable
