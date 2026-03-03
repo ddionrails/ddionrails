@@ -20,12 +20,12 @@ function hideToggleClass() {
   const activeIDs = [...activeButtons].map((button) => `.${button.id}`);
   const activeSelector = `:is(${activeIDs.join(", ")})`;
   for (const relatedVariable of document.querySelectorAll(
-    ".related-variable-container",
+    ".period-container > .related-variable-container",
   )) {
     relatedVariable.classList.add("invisible");
   }
   for (const relatedVariableIcon of document.querySelectorAll(
-    ".related-variable-container > i",
+    ".period-container > .related-variable-container > i",
   )) {
     relatedVariableIcon.classList.add("invisible");
   }
