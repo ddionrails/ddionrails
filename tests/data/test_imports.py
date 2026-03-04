@@ -139,7 +139,7 @@ class TestDatasetJsonImport(TestCase):
             {
                 "study": dataset.study.name,
                 "dataset": dataset.name,
-                "variable": "some-variable",
+                "name": "some-variable",
                 "statistics": {"names": ["valid", "invalid"], "values": ["1", "0"]},
                 "scale": "cat",
                 "categories": {
@@ -170,11 +170,14 @@ class TestDatasetJsonImport(TestCase):
         variable = Variable.objects.first()
         self.assertEqual(dataset.name, variable.dataset.name)
         self.assertEqual("cat", variable.scale)
-        self.assertEqual(content[0]["variable"], variable.name)
+        self.assertEqual(content[0]["name"], variable.name)
         self.assertEqual(sort_id, variable.sort_id)
         self.assertEqual("1", variable.statistics["valid"])
         self.assertEqual("0", variable.statistics["invalid"])
         self.assertEqual(1, variable.categories["frequencies"][0])
+        self.assertEqual(
+            content[0]["categories"]["labels"], variable.categories["labels"]
+        )
         self.assertEqual(
             "[-6] Version of questionnaire with modified filtering",
             variable.categories["labels"][0],

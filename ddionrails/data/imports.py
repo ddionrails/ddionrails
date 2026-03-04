@@ -2,6 +2,7 @@
 
 """Importer classes for ddionrails.data app"""
 
+import copy
 import json
 import re
 from collections import OrderedDict
@@ -40,9 +41,7 @@ class DatasetJsonImport(imports.Import):
                     study=self.study, name=var["dataset"]
                 )
                 datasets[var["dataset"]] = dataset
-            name = var.get("variable", var.get("name"))
-            if name is None:
-                raise KeyError(f"No name for variable set {var}")
+            name = var["name"]
             variable_names.add(name)
         existing_variables = {
             variable.name
@@ -54,9 +53,7 @@ class DatasetJsonImport(imports.Import):
         variables_to_update = []
         for var in content:
             variable = self._import_variable(var, sort_id, datasets[var["dataset"]])
-            name = var.get("variable", var.get("name"))
-            if name is None:
-                raise KeyError(f"No name for variable set {var}")
+            name = var["name"]
             if name in existing_variables:
                 variables_to_update.append(variable)
             else:
@@ -71,29 +68,32 @@ class DatasetJsonImport(imports.Import):
     @staticmethod
     def _import_variable(var, sort_id, dataset):
         dataset_id = dataset.id
-        name = var.get("name", var.get("variable"))
-        if name is None:
-            raise KeyError(f"No name for variable set {var}")
-        variable = Variable(name=name, dataset=dataset)
-        variable.sort_id = sort_id
-        variable.label = var.get("label", name)
-        variable.label_de = var.get("label_de", name)
-        if "statistics" in var:
-            if "names" in var["statistics"]:
-                statistics = dict(
-                    zip(var["statistics"]["names"], var["statistics"]["values"])
-                )
-            else:
-                statistics = var["statistics"]
-            variable.statistics = statistics
-        if "categories" in var:
-            values = var["categories"].get("values")
-            if values and len(values) > 0:
-                variable.categories = var["categories"]
-        variable.scale = var.get("scale", "")
+        name = var["name"]
+        label = var.get("label", name)
+        label_de = var.get("label_de", name)
+        statistics = var.get("statistics", {})
+        if "names" in statistics:
+            statistics = dict(zip(statistics["names"], statistics["values"]))
+        categories = var.get("categories", {})
+        if categories:
+            values = categories.get("values", [])
+            if len(values) == 0:
+                categories = {}
+        scale = var.get("scale", "")
 
-        variable.id = hash_with_namespace_uuid(  # pylint: disable=C0103
+        _id = hash_with_namespace_uuid(  # pylint: disable=C0103
             dataset_id, name, cache=False
+        )
+        variable = Variable(
+            id=_id,
+            name=name,
+            dataset=dataset,
+            sort_id=sort_id,
+            label=label,
+            label_de=label_de,
+            statistics=statistics,
+            categories=copy.deepcopy(categories),
+            scale=scale,
         )
 
         return variable
