@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for documents in ddionrails.publications app """
+"""Test cases for documents in ddionrails.publications app"""
 
+from random import randint
 
 import pytest
 from django.forms.models import model_to_dict
@@ -11,15 +12,20 @@ from django.test import LiveServerTestCase
 from ddionrails.publications.documents import PublicationDocument
 from ddionrails.publications.models import Publication
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
+from tests.model_factories import FAKE_DE, PublicationFactory
 
 pytestmark = [pytest.mark.search]
 
 
-@pytest.mark.usefixtures("publication_with_umlauts")
 class TestPublicationDocument(LiveServerTestCase):
     publication_with_umlauts: Publication
 
     def setUp(self) -> None:
+        authors = [FAKE_DE.name() for _ in range(randint(1, 10))]
+        authors.append("Möller Müller")
+        self.publication_with_umlauts = PublicationFactory(
+            title=FAKE_DE.sentence() + "Käfer Küste Straße", author=", ".join(authors)
+        )
         set_up_index(self, self.publication_with_umlauts, "publications")
         return super().setUp()
 
@@ -49,10 +55,10 @@ class TestPublicationDocument(LiveServerTestCase):
         expected["study_name"] = self.publication_with_umlauts.study.title()
         expected["study"] = {
             "name": self.publication_with_umlauts.study.name,
-            "label": self.publication_with_umlauts.study.name,
-            "label_de": self.publication_with_umlauts.study.name,
+            "label": self.publication_with_umlauts.study.label,
+            "label_de": self.publication_with_umlauts.study.label_de,
         }
-        expected["study_name_de"] = ""
+        expected["study_name_de"] = self.publication_with_umlauts.study.label_de
         expected["description"] = self.publication_with_umlauts.abstract
         expected["id"] = str(self.publication_with_umlauts.id)
         expected["name"] = self.publication_with_umlauts.name

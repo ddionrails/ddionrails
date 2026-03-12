@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,invalid-name
 
-""" Test cases for models in ddionrails.publications app """
+"""Test cases for models in ddionrails.publications app"""
 
-import pytest
+from django.test import TestCase
 
-pytestmark = [pytest.mark.publications, pytest.mark.models]
+from tests.model_factories import PublicationFactory
 
 
-class TestPublicationModel:
-    def test_get_absolute_url_method(self, publication):
+class TestPublicationModel(TestCase):
+    def test_get_absolute_url_method(self):
+        publication = PublicationFactory()
         expected = f"/{publication.study.name}/publ/{publication.name}"
-        assert publication.get_absolute_url() == expected
+        self.assertEqual(publication.get_absolute_url(), expected)

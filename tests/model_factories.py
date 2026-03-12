@@ -4,6 +4,7 @@
 """DjangoModelFactories for user model"""
 
 from collections.abc import Iterable
+from random import randint
 from typing import TYPE_CHECKING
 from uuid import UUID
 
@@ -20,6 +21,7 @@ from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.models.question_variable import QuestionVariable
+from ddionrails.publications.models import Attachment, Publication
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket import Basket
 
@@ -213,6 +215,25 @@ class VariableFactory(DjangoModelFactory):
     )
 
 
+class PublicationFactory(DjangoModelFactory):
+
+    class Meta:
+        model = Publication
+
+    name = factory.LazyAttribute(lambda _: f"{FAKE.random_number()}")
+    type = factory.LazyAttribute(lambda _: FAKE.word())
+    title = factory.LazyAttribute(lambda _: FAKE.sentence())
+    author = factory.LazyAttribute(
+        lambda _: ", ".join([FAKE.name() for _ in range(randint(1, 10))])
+    )
+    year = factory.LazyAttribute(lambda _: FAKE.year())
+    abstract = factory.LazyAttribute(lambda _: FAKE.paragraph())
+    cite = factory.LazyAttribute(lambda _: FAKE.sentence())
+    url = factory.LazyAttribute(lambda _: FAKE.url())
+    doi = factory.LazyAttribute(lambda _: FAKE.doi())
+    study = factory.SubFactory(StudyFactory)
+
+
 class TransformationFactory(DjangoModelFactory):
     if TYPE_CHECKING:
         origin: Variable
@@ -286,3 +307,18 @@ class BasketFactory(factory.django.DjangoModelFactory):
 
         if create:
             self.save()
+
+
+class AttachmentFactory(DjangoModelFactory):
+
+    url = factory.LazyAttribute(lambda _: FAKE.url)
+    url_text = factory.LazyAttribute(lambda _: FAKE.sentence())
+    context_study = factory.SubFactory(StudyFactory)
+    study = factory.SubFactory(StudyFactory)
+    dataset = factory.SubFactory(DatasetFactory)
+    variable = factory.SubFactory(VariableFactory)
+    instrument = factory.SubFactory(InstrumentFactory)
+    question = factory.SubFactory(QuestionFactory)
+
+    class Meta:
+        model = Attachment
