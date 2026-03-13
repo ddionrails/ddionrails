@@ -4,7 +4,7 @@
 """DjangoModelFactories for user model"""
 
 from collections.abc import Iterable
-from random import randint
+from random import choice, randint
 from typing import TYPE_CHECKING
 from uuid import UUID
 
@@ -20,6 +20,7 @@ from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
+from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.instruments.models.question_variable import QuestionVariable
 from ddionrails.publications.models import Attachment, Publication
 from ddionrails.studies.models import Study
@@ -260,12 +261,41 @@ class InstrumentFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
 
 
+class QuestionItemFactory(DjangoModelFactory):
+
+    class Meta:
+        model = QuestionItem
+
+    question = factory.LazyAttribute(lambda _: QuestionFactory())
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
+    position = 1
+
+
 class QuestionFactory(DjangoModelFactory):
     if TYPE_CHECKING:
         id: UUID
 
     class Meta:
         model = Question
+
+    class Params:
+        size = 0
+
+    @factory.post_generation
+    def question_items(self, create, extracted, **kwargs):
+        if isinstance(extracted, Iterable):
+            for extract in extracted:
+                self.question_items.add(extract)
+            self.save()
+            return
+        for position in range(kwargs.get("size", 0)):
+            self.question_items.add(QuestionItemFactory(question=self, position=position))
+
+        if create:
+            self.save()
 
     instrument = factory.SubFactory(InstrumentFactory)
     name = factory.LazyAttribute(lambda _: FAKE.word())

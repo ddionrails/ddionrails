@@ -1,75 +1,92 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for views in ddionrails.instruments app """
+"""Test cases for views in ddionrails.instruments app"""
 
+from uuid import uuid1
 
 import pytest
+from django.test import Client, TestCase
 from django.urls import reverse
 
 from ddionrails.studies.models import Study
 from tests import status
+from tests.model_factories import InstrumentFactory, QuestionFactory
 
 pytestmark = [pytest.mark.django_db]
 
 
-class TestInstrumentDetailView:
-    def test_detail_view_with_existing_names(self, client, instrument):
+class TestInstrumentDetailView(TestCase):
+
+    def setUp(self) -> None:
+        self.client = Client()
+        self.instrument = InstrumentFactory()
+        return super().setUp()
+
+    def test_detail_view_with_existing_names(self):
         url = reverse(
             "instruments:instrument_detail",
             kwargs={
-                "study": instrument.study,
-                "instrument_name": instrument.name,
+                "study": self.instrument.study,
+                "instrument_name": self.instrument.name,
             },
         )
-        response = client.get(url)
+        response = self.client.get(url)
         assert status.HTTP_200_OK == response.status_code
         template = "instruments/instrument_detail.html"
         assert template in (t.name for t in response.templates)
-        assert response.context["instrument"] == instrument
-        assert response.context["study"] == instrument.study
+        assert response.context["instrument"] == self.instrument
+        assert response.context["study"] == self.instrument.study
 
-    def test_detail_view_with_invalid_study_name(self, client, instrument):
-        url = reverse(
-            "instruments:instrument_detail",
-            kwargs={"study": Study.objects.none(), "instrument_name": instrument.name},
-        )
-        response = client.get(url)
-        assert status.HTTP_404_NOT_FOUND == response.status_code
-
-    def test_detail_view_with_invalid_instrument_name(self, client, instrument):
+    def test_detail_view_with_invalid_study_name(self):
         url = reverse(
             "instruments:instrument_detail",
             kwargs={
-                "study": instrument.study,
+                "study": Study.objects.none(),
+                "instrument_name": self.instrument.name,
+            },
+        )
+        response = self.client.get(url)
+        assert status.HTTP_404_NOT_FOUND == response.status_code
+
+    def test_detail_view_with_invalid_instrument_name(self):
+        url = reverse(
+            "instruments:instrument_detail",
+            kwargs={
+                "study": self.instrument.study,
                 "instrument_name": "instrument-not-in-db",
             },
         )
-        response = client.get(url)
+        response = self.client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
-class TestInstrumentRedirectView:
-    def test_redirect_view_with_valid_id(self, client, instrument):
-        valid_id = instrument.id
+class TestRedirectView(TestCase):
+
+    def setUp(self) -> None:
+        self.client = Client()
+        self.instrument = InstrumentFactory()
+        self.question = QuestionFactory(instrument=self.instrument)
+        return super().setUp()
+
+    def test_instrument_redirect_view_with_valid_id(self):
+        valid_id = self.instrument.id
         url = reverse("instrument_redirect", kwargs={"id": valid_id})
-        response = client.get(url)
+        response = self.client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_id(self, client, uuid_identifier):
-        url = reverse("instrument_redirect", kwargs={"id": uuid_identifier})
-        response = client.get(url)
+    def test_instrument_redirect_view_with_invalid_id(self):
+        url = reverse("instrument_redirect", kwargs={"id": uuid1()})
+        response = self.client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
-
-class TestQuestionRedirectView:
-    def test_redirect_view_with_valid_id(self, client, question):
-        valid_id = question.id
+    def test_question_redirect_view_with_valid_id(self):
+        valid_id = self.question.id
         url = reverse("question_redirect", kwargs={"id": valid_id})
-        response = client.get(url)
+        response = self.client.get(url)
         assert status.HTTP_302_FOUND == response.status_code
 
-    def test_redirect_view_with_invalid_id(self, client, uuid_identifier):
-        url = reverse("question_redirect", kwargs={"id": uuid_identifier})
-        response = client.get(url)
+    def test_question_redirect_view_with_invalid_id(self):
+        url = reverse("question_redirect", kwargs={"id": uuid1()})
+        response = self.client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code

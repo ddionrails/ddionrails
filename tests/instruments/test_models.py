@@ -1,87 +1,107 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,invalid-name
 
-""" Test cases for ddionrails.instruments.models """
+"""Test cases for ddionrails.instruments.models"""
 
-
-import pytest
+from django.test import TestCase
 
 from ddionrails.instruments.models import ConceptQuestion
-from tests.instruments.factories import QuestionFactory
-
-pytestmark = [pytest.mark.instruments, pytest.mark.models]
-
-
-@pytest.mark.django_db
-def test_get_absolute_url_method(instrument, study):
-    assert (
-        instrument.get_absolute_url()
-        == "/" + study.name + "/instruments/" + instrument.name
-    )
+from tests.model_factories import (
+    ConceptFactory,
+    InstrumentFactory,
+    QuestionFactory,
+    StudyFactory,
+)
 
 
-class TestQuestionModel:
-    def test_get_absolute_url_method(self, question):
-        expected = (
-            f"/{question.instrument.study.name}"
-            f"/instruments/{question.instrument.name}"
-            f"/{question.name}"
+class TestInstrumentAbsoluteURL(TestCase):
+
+    def test_get_absolute_url_method(self):
+        study = StudyFactory()
+        instrument = InstrumentFactory(study=study)
+        assert (
+            instrument.get_absolute_url()
+            == "/" + study.name + "/instruments/" + instrument.name
         )
-        assert expected == question.get_absolute_url()
 
-    def test_get_direct_url_method(self, question):
-        expected = f"/question/{question.id}"
-        assert expected == question.get_direct_url()
 
-    def test_layout_class_method(self, question):
+class TestQuestionModel(TestCase):
+
+    def setUp(self) -> None:
+        self.question = QuestionFactory(sort_id=1)
+        return super().setUp()
+
+    def test_get_absolute_url_method(self):
+        expected = (
+            f"/{self.question.instrument.study.name}"
+            f"/instruments/{self.question.instrument.name}"
+            f"/{self.question.name}"
+        )
+        assert expected == self.question.get_absolute_url()
+
+    def test_get_direct_url_method(self):
+        expected = f"/question/{self.question.id}"
+        assert expected == self.question.get_direct_url()
+
+    def test_layout_class_method(self):
         expected = "question"
-        assert expected == question.layout_class()
+        assert expected == self.question.layout_class()
 
-    def test_previous_question_method(self, question):
-        previous_question = QuestionFactory(name="other-question", sort_id=1)
-        question.sort_id = 2
-        question.save()
-        assert previous_question.name == question.previous_question()
+    def test_previous_question_method(self):
+        previous_question = QuestionFactory(
+            instrument=self.question.instrument, sort_id=1
+        )
+        self.question.sort_id = 2
+        self.question.save()
+        assert previous_question.name == self.question.previous_question()
 
-    def test_previous_question_method_without_previous_question(self, question):
+    def test_previous_question_method_without_previous_question(self):
         expected = None
-        assert expected == question.previous_question()
+        assert expected == self.question.previous_question()
 
-    def test_next_question_method(self, question):
-        next_question = QuestionFactory(name="other-question", sort_id=2)
-        assert next_question.name == question.next_question()
+    def test_next_question_method(self):
+        next_question = QuestionFactory(instrument=self.question.instrument, sort_id=2)
+        assert next_question.name == self.question.next_question()
 
-    def test_next_question_method_without_next_question(self, question):
+    def test_next_question_method_without_next_question(self):
         expected = None
-        assert expected == question.next_question()
+        assert expected == self.question.next_question()
 
-    def test_get_concepts_method_no_concept(self, question):
+    def test_get_concepts_method_no_concept(self):
         """Test Question.get_concepts() without concept-question-relation"""
-        result = question.get_concepts()
+        result = self.question.get_concepts()
         expected = 0
         assert expected == result.count()
 
-    def test_get_concepts_method_single_concept(self, question, concept):
+    def test_get_concepts_method_single_concept(self):
         """Test Question.get_concepts() with concept-question-relation"""
 
+        concept = ConceptFactory(topics__study=self.question.instrument.study)
+
         # create a relation between question and concept
-        ConceptQuestion.objects.create(concept=concept, question=question)
-        result = question.get_concepts()
+        ConceptQuestion.objects.create(concept=concept, question=self.question)
+        result = self.question.get_concepts()
         expected = 1
         assert expected == result.count()
         assert concept == result.first()
 
-    def test_translation_languages_method(self, question):
-        question.items = [{"text_de": "German text"}]
-        result = question.translation_languages()
+    def test_translation_languages_method(self):
+        self.question.items = [{"text_de": "German text"}]
+        result = self.question.translation_languages()
         expected = ["de"]
         assert expected == result
 
     def test_translate_item_method(self):
         pass
 
-    def test_comparison_string_method(self, question):
-        question.items = [{"item": "Item", "scale": "Scale", "text": "Text"}]
-        result = question.comparison_string()
-        expected = ["Question: Some Question", "", "Item: Item (scale: Scale)", "Text"]
+    def test_comparison_string_method(self):
+        self.question.items = [{"item": "Item", "scale": "Scale", "text": "Text"}]
+        self.question.save()
+        result = self.question.comparison_string()
+        expected = [
+            f"Question: {self.question.label}",
+            "",
+            "Item: Item (scale: Scale)",
+            "Text",
+        ]
         assert expected == result

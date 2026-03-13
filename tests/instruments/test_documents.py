@@ -3,22 +3,18 @@
 
 """Test cases for documents in ddionrails.instruments app"""
 
-import pytest
 from django.forms.models import model_to_dict
 from django.test import LiveServerTestCase
 
 from ddionrails.instruments.documents import QuestionDocument
-from ddionrails.instruments.models.question import Question
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
+from tests.model_factories import QuestionFactory
 
-pytestmark = [pytest.mark.search]
 
-
-@pytest.mark.usefixtures("question")
 class TestQuestionDocuments(LiveServerTestCase):
-    question: Question
 
     def setUp(self) -> None:
+        self.question = QuestionFactory(question_items__size=1)
         set_up_index(self, self.question, "questions")
         return super().setUp()
 
@@ -56,20 +52,20 @@ class TestQuestionDocuments(LiveServerTestCase):
             "label": "Not Categorized",
             "label_de": "Nicht Kategorisiert",
         }
-        expected["study_name"] = self.question.instrument.study.title()
+        expected["study_name"] = self.question.instrument.study.label
         expected["study"] = {
             "name": self.question.instrument.study.name,
-            "label": self.question.instrument.study.name,
-            "label_de": self.question.instrument.study.name,
+            "label": self.question.instrument.study.label,
+            "label_de": self.question.instrument.study.label_de,
         }
-        expected["study_name_de"] = ""
+        expected["study_name_de"] = self.question.instrument.study.label_de
         # TODO: Add question item to test
-        # expected["question_items"] = [{}]
+        # expected["question_items"] = {"en": [], "de": []}
 
         expected["instrument"] = {
             "name": self.question.instrument.name,
-            "label": self.question.instrument.name,
-            "label_de": self.question.instrument.name,
+            "label": self.question.instrument.label,
+            "label_de": self.question.instrument.label_de,
         }
         expected["id"] = str(self.question.id)
         # generate result dictionary from search document
