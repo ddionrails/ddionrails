@@ -60,6 +60,8 @@ class TestQuestionDocuments(LiveServerTestCase):
         }
         expected["study_name_de"] = self.question.instrument.study.label_de
         # TODO: Add question item to test
+        # TODO: Test documents should have something like the following
+        # TODO: with actual content but it doesn't
         # expected["question_items"] = {"en": [], "de": []}
 
         expected["instrument"] = {
