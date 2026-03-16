@@ -27,7 +27,8 @@ class _PatchKwargs:
         return getattr(self, item)
 
 
-def _tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
+def tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
+    """Take or create a tmp folder, return arguments to patch the global import path"""
     if folder is None:
         tmp_path = Path(mkdtemp())
     else:
@@ -50,7 +51,7 @@ class _TMPImportFILE(ABC):
     def __init__(self, folder: Path | None = None) -> None:
         if folder is not None:
             self.folder_external
-        self.tmp_path, self.import_path_patch_arguments = _tmp_import_path(folder)
+        self.tmp_path, self.import_path_patch_arguments = tmp_import_path(folder)
         super().__init__()
 
     def __del__(self):

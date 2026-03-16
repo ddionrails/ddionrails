@@ -1,11 +1,9 @@
 """Test imports from the instruments app."""
-import unittest
-from pathlib import Path
-from shutil import copytree
-from tempfile import TemporaryDirectory
-from typing import Generator
 
-import pytest
+from pathlib import Path
+from shutil import copytree, rmtree
+
+from django.test import TestCase
 
 from ddionrails.instruments.imports.question_import import (
     answer_import,
@@ -13,21 +11,13 @@ from ddionrails.instruments.imports.question_import import (
     question_import,
 )
 from ddionrails.instruments.models import Answer, Instrument, Question
+from tests.file_factories import tmp_import_path
+from tests.model_factories import InstrumentFactory
 
 TEST_FILES = Path("./tests/imports/test_data/").absolute()
 
 
-@pytest.fixture(scope="class", name="tmp_dir")
-def _tmp_dir(request: pytest.FixtureRequest) -> Generator[None, None, None]:
-    with TemporaryDirectory() as directory:
-        setattr(request.cls, "data_dir", Path(directory).absolute())
-        copytree(TEST_FILES, directory, dirs_exist_ok=True)
-        yield
-
-
-@pytest.mark.django_db
-@pytest.mark.usefixtures("tmp_dir", "instrument")
-class QuestionImport(unittest.TestCase):
+class QuestionImport(TestCase):
     """Test all imports associated with the questions.csv.
 
     This includes import of Question and QuestionItem objects.
@@ -36,8 +26,21 @@ class QuestionImport(unittest.TestCase):
     data_dir: Path
     instrument: Instrument
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.data_dir, cls.patch_arguments = tmp_import_path()
+        copytree(TEST_FILES, cls.data_dir, dirs_exist_ok=True)
+        return super().setUpClass()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        rmtree(cls.data_dir)
+        return super().tearDownClass()
+
     def setUp(self) -> None:
-        self.instrument: Instrument = Instrument.objects.get(name="some-instrument")
+        self.instrument: Instrument = InstrumentFactory(
+            name="some-instrument", study__name="test-study"
+        )
         question_exists = len(
             list(Question.objects.filter(name="1", instrument=self.instrument))
         )
@@ -114,7 +117,7 @@ class QuestionImport(unittest.TestCase):
             self.assertEqual(value, getattr(question_items[7], field))
 
     def test_answer_import(self) -> None:
-        """ Test the import and linking of answers to question items. """
+        """Test the import and linking of answers to question items."""
         question_import(
             file=self.data_dir.joinpath("questions.csv"), study=self.instrument.study
         )

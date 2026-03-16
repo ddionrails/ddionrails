@@ -1,35 +1,17 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,invalid-name
 
-""" Test cases for ddionrails.imports.manager """
+"""Test cases for ddionrails.imports.manager"""
 
 from json import dump
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from unittest.mock import patch
 
-import pytest
 from django.test import TestCase
 
 from ddionrails.imports.manager import _import_home_background, _initialize_studies
 from ddionrails.studies.models import Study
-
-pytestmark = [pytest.mark.imports]
-
-
-@pytest.fixture
-def mocked_pull(mocker):
-    return mocker.patch("git.remote.Remote.pull")
-
-
-@pytest.fixture
-def mocked_clone_from(mocker):
-    return mocker.patch("git.repo.base.Repo.clone_from")
-
-
-@pytest.fixture
-def mocked_exists(mocker):
-    return mocker.patch("pathlib.Path.exists")
 
 
 class TestSystemImport(TestCase):

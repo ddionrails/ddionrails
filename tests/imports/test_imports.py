@@ -1,74 +1,70 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,invalid-name
 
-""" Test cases for importer classes in ddionrails.imports app """
+"""Test cases for importer classes in ddionrails.imports app"""
 
 
-import pytest
+from unittest.mock import patch
 
-from ddionrails.imports.imports import CSVImport, Import, JekyllImport
+from django.test import TestCase
 
-pytestmark = [pytest.mark.imports]
-
-
-@pytest.fixture
-def filename():
-    return "DUMMY.csv"
+from ddionrails.imports.imports import CSVImport, Import
+from tests.model_factories import StudyFactory
 
 
-@pytest.fixture
-def csv_importer(study, filename):
-    """A csv importer"""
-    return CSVImport(filename, study=study)
+class TestImport(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.study = StudyFactory()
+        return super().setUpClass()
 
-@pytest.fixture
-def jekyll_importer(study, filename):
-    """A jekyll importer"""
-    return JekyllImport(filename, study=study)
-
-
-class TestImport:
-    @pytest.mark.django_db
-    def test_run_import_method(self, mocker):
+    def test_run_import_method(self):
         """Need a child of Import, because execute_import is not implemented"""
 
         class SampleImport(Import):
             def execute_import(self):
                 return True
 
-        mocked_execute_import = mocker.patch.object(SampleImport, "execute_import")
-        mocked_read_file = mocker.patch.object(SampleImport, "read_file")
-        SampleImport.run_import(filename="DUMMY.csv")
-        mocked_execute_import.assert_called_once()
-        mocked_read_file.assert_called_once()
+        with patch.object(SampleImport, "execute_import") as mocked_execute_import:
+            with patch.object(SampleImport, "read_file") as mocked_read_file:
+                SampleImport.run_import(filename="DUMMY.csv")
+                mocked_execute_import.assert_called_once()
+                mocked_read_file.assert_called_once()
 
-    def test_read_file_method(self, study, mocker):
+    def test_read_file_method(self):
         filename = "DUMMY.csv"
-        importer = Import(filename, study=study)
-        mocked_file_path = mocker.patch.object(Import, "file_path")
-        mocked_file_path.return_value = filename
-        mocked_open = mocker.patch("builtins.open")
-        importer.read_file()
-        mocked_file_path.assert_called_once()
-        mocked_open.assert_called_once_with(filename, "r", encoding="utf8")
+        importer = Import(filename, study=self.study)
+        with patch.object(Import, "file_path") as mocked_file_path:
+            mocked_file_path.return_value = filename
+            with patch("builtins.open") as mocked_open:
+                importer.read_file()
+                mocked_file_path.assert_called_once()
+                mocked_open.assert_called_once_with(filename, "r", encoding="utf8")
 
 
-class TestCSVImport:
-    def test_read_file_method(self, mocker, csv_importer):
-        mocked_read_csv = mocker.patch("ddionrails.imports.imports.read_csv")
-        mocked_file_path = mocker.patch.object(CSVImport, "file_path")
-        csv_importer.read_file()
-        mocked_read_csv.assert_called_once()
-        mocked_file_path.assert_called_once()
+class TestCSVImport(TestCase):
 
-    def test_execute_import_method(self, mocker, csv_importer):
-        mocked_import_element = mocker.patch.object(CSVImport, "import_element")
-        csv_importer.content = ["element"]
-        csv_importer.execute_import()
-        mocked_import_element.assert_called_once_with("element")
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.study = StudyFactory()
+        cls.csv_importer = CSVImport("DUMMY.csv", cls.study)
+        return super().setUpClass()
 
-    def test_process_element_method(self, csv_importer):
+    def test_read_file_method(self):
+        with patch("ddionrails.imports.imports.read_csv") as mocked_read_csv:
+            with patch.object(self.csv_importer, "file_path") as mocked_file_path:
+                self.csv_importer.read_file()
+                mocked_read_csv.assert_called_once()
+                mocked_file_path.assert_called_once()
+
+    def test_execute_import_method(self):
+        with patch.object(self.csv_importer, "import_element") as mocked_import_element:
+            self.csv_importer.content = ["element"]
+            self.csv_importer.execute_import()
+            mocked_import_element.assert_called_once_with("element")
+
+    def test_process_element_method(self):
         element = "element"
-        response = csv_importer.process_element(element)
+        response = self.csv_importer.process_element(element)
         assert response == element
