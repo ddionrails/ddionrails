@@ -174,7 +174,7 @@ class VariableFactory(DjangoModelFactory):
         model = Variable
 
     @factory.post_generation
-    def _concept(self, create, extracted, **kwargs):
+    def concept(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
         if extracted:
             self.concept = extracted
             self.save()
