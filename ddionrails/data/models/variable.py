@@ -292,22 +292,6 @@ class Variable(ModelMixin, models.Model):
                 self.related_cache = None
         return getattr(self.related_cache, "content", [])
 
-    def get_related_variables_by_period(self) -> OrderedDict:
-        """Returns the related variables by concept, ordered by period"""
-        results = {}
-        periods = Period.objects.filter(study_id=self.dataset.study.id).all()
-        period_names = self._period_model_to_name_dict(periods)
-        results = {period_name: [] for period_name in period_names.values()}
-        results["none"] = []
-        for variable in self.get_related_variables():
-            try:
-                results[period_names[variable.period_id]].append(variable)
-            except KeyError:
-                results["none"].append(variable)
-        if not results["none"]:
-            del results["none"]
-        return OrderedDict(sorted(results.items()))
-
     @staticmethod
     def _period_model_to_name_dict(instances: List[Period]) -> Dict[Dict[str, Any]]:
         return {instance.id: instance.name for instance in instances}
