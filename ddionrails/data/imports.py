@@ -44,26 +44,54 @@ class DatasetJsonImport(imports.Import):
             name = var["name"]
             variable_names.add(name)
         existing_variables = {
-            variable.name
+            (variable.dataset.name, variable.name): variable
             for variable in Variable.objects.filter(
+                dataset__study=self.study,
                 dataset__name__in=list(datasets.keys()),
-            )
+            ).prefetch_related("dataset")
         }
         variables_to_create = []
         variables_to_update = []
         for var in content:
-            variable = self._import_variable(var, sort_id, datasets[var["dataset"]])
-            name = var["name"]
+            name = (var["dataset"], var["name"])
             if name in existing_variables:
+                variable = self._update_variable(var, sort_id, existing_variables[name])
+
                 variables_to_update.append(variable)
             else:
+                variable = self._import_variable(var, sort_id, datasets[var["dataset"]])
                 variables_to_create.append(variable)
             sort_id += 1
         Variable.objects.bulk_update(
             variables_to_update,
             fields=("sort_id", "label", "label_de", "statistics", "categories", "scale"),
+            batch_size=5000,
         )
-        Variable.objects.bulk_create(variables_to_create)
+        Variable.objects.bulk_create(variables_to_create, batch_size=5000)
+
+    @staticmethod
+    def _update_variable(var, sort_id, variable_object):
+        name = var["name"]
+        label = var.get("label", name)
+        label_de = var.get("label_de", name)
+        statistics = var.get("statistics", {})
+        if "names" in statistics:
+            statistics = dict(zip(statistics["names"], statistics["values"]))
+        categories = var.get("categories", {})
+        if categories:
+            values = categories.get("values", [])
+            if len(values) == 0:
+                categories = {}
+        scale = var.get("scale", "")
+
+        variable_object.sort_id = sort_id
+        variable_object.label = label
+        variable_object.label_de = label_de
+        variable_object.statistics = copy.deepcopy(statistics)
+        variable_object.categories = copy.deepcopy(categories)
+        variable_object.scale = scale
+
+        return variable_object
 
     @staticmethod
     def _import_variable(var, sort_id, dataset):
@@ -91,7 +119,7 @@ class DatasetJsonImport(imports.Import):
             sort_id=sort_id,
             label=label,
             label_de=label_de,
-            statistics=statistics,
+            statistics=copy.deepcopy(statistics),
             categories=copy.deepcopy(categories),
             scale=scale,
         )
