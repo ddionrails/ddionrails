@@ -3,6 +3,7 @@ import { ToggleType } from "./variable_relations_toggle";
 type Variable = {
   id: string;
   name: string;
+  dataset_name: string;
   period_name: string;
 };
 
@@ -167,6 +168,8 @@ export function createVariableContainer(variable: Variable) {
 
   variableContainer.appendChild(variableLink);
   variableContainer.setAttribute("data-variable-name", variable.name);
+  variableContainer.setAttribute("data-variable-dataset-name", variable.dataset_name);
+  variableContainer.setAttribute("title", `${variable.dataset_name}/${variable.name}`);
   return variableContainer;
 }
 
@@ -187,7 +190,8 @@ export async function addConceptVariables() {
         ) as HTMLElement;
         let variableContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']` +
-            ` > div[data-variable-name='${variable.name}']`,
+            ` > div[data-variable-name='${variable.name}'] ` +
+            `div[data-variable-dataset-name='${variable.dataset_name}'] `,
         );
 
         if (!variableContainer) {
