@@ -5,7 +5,6 @@
 
 from typing import OrderedDict
 
-import pytest
 from django.test import TestCase
 
 from ddionrails.data.models import Variable
@@ -16,17 +15,6 @@ from tests.model_factories import (
     TransformationFactory,
     VariableFactory,
 )
-
-
-@pytest.fixture(name="related_variables_by_concept")
-def _related_variables_by_concept(variable, concept):
-    """Two variables that are related by concept"""
-    variable.concept = concept
-    variable.save()
-    other_variable = VariableFactory(name="other-variable")
-    other_variable.concept = concept
-    other_variable.save()
-    return variable, other_variable
 
 
 class TestVariable(TestCase):

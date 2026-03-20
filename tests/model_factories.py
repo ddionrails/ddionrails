@@ -14,7 +14,13 @@ from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
-from ddionrails.concepts.models import AnalysisUnit, Concept, Period, Topic
+from ddionrails.concepts.models import (
+    AnalysisUnit,
+    Concept,
+    ConceptualDataset,
+    Period,
+    Topic,
+)
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
@@ -140,18 +146,17 @@ class ConceptFactory(DjangoModelFactory):
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
 
-class DatasetFactory(DjangoModelFactory):
-    if TYPE_CHECKING:
-        id: UUID
+class ConceptualDatasetFactory(DjangoModelFactory):
 
     class Meta:
-        model = Dataset
+        model = ConceptualDataset
 
     study = factory.SubFactory(StudyFactory)
     name = factory.LazyAttribute(lambda _: FAKE.word())
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
-    period = SubFactory(PeriodFactory)
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
 
 class AnalysisUnitFactory(factory.django.DjangoModelFactory):
@@ -163,6 +168,23 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     name = factory.LazyAttribute(lambda _: FAKE.word())
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+
+
+class DatasetFactory(DjangoModelFactory):
+    if TYPE_CHECKING:
+        id: UUID
+
+    class Meta:
+        model = Dataset
+
+    study = factory.SubFactory(StudyFactory)
+    name = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+
+    analysis_unit = SubFactory(AnalysisUnitFactory)
+    period = SubFactory(PeriodFactory)
+    conceptual_dataset = SubFactory(ConceptualDatasetFactory)
 
 
 class VariableFactory(DjangoModelFactory):
