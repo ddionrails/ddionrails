@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
-""" Test cases for views in ddionrails.config app """
+"""Test cases for views in ddionrails.config app"""
 
 import unittest
 from datetime import datetime
 from typing import Dict, List
 
-import pytest
-from django.test import LiveServerTestCase, override_settings
+from django.test import LiveServerTestCase, TestCase, override_settings
+from django.test.client import RequestFactory
 from django.urls import reverse
+from markdown import markdown
 
 from config.views import (
     HomePageView,
@@ -20,8 +21,7 @@ from config.views import (
 )
 from ddionrails.base.models import News
 from tests import status
-
-pytestmark = [pytest.mark.django_db]
+from tests.model_factories import NewsFactory
 
 
 class TestPageViews(LiveServerTestCase):
@@ -49,47 +49,51 @@ class TestPageViews(LiveServerTestCase):
         self.assertIn("Privacy policy at TEST", content)
 
 
-@pytest.mark.usefixtures("news")
 class TestViewFunctions(unittest.TestCase):
     news: News = News()
     news_bullets: List[str] = []
 
     def test_news(self):
-        news_date: datetime = self.news.date
+        news = NewsFactory()
+        news_date: datetime = news.date
         news_data: Dict[str, str] = {}
         news_data["news_month"] = news_date.strftime("%B")
         news_data["news_year"] = news_date.strftime("%Y")
-        news_html = str(HomePageView().news)
-        for date_content in news_data.values():
-            self.assertIn(date_content, news_html)
+        news_html = HomePageView().news
+        content = markdown(news.content, extension=["nl2br"])
+        content_de = markdown(news.content_de, extension=["nl2br"])
+        self.assertIn(content, news_html["en"])
+        self.assertIn(content_de, news_html["de"])
 
-        for point in self.news_bullets:
-            self.assertIn(point, news_html)
 
+class TestErrorTemplates(TestCase):
 
-class TestErrorTemplates:
-    url = reverse("home")
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.rf = RequestFactory()
+        cls.url = reverse("home")
+        return super().setUpClass()
 
-    def test_400_template(self, rf):
-        request = rf.get(self.url)
+    def test_400_template(self):
+        request = self.rf.get(self.url)
         response = bad_request(request, exception="")
         assert status.HTTP_400_BAD_REQUEST == response.status_code
         assert "Bad Request (400)" in str(response.content)
 
-    def test_403_template(self, rf):
-        request = rf.get(self.url)
+    def test_403_template(self):
+        request = self.rf.get(self.url)
         response = permission_denied(request, exception="")
         assert status.HTTP_403_FORBIDDEN == response.status_code
         assert "Forbidden (403)" in str(response.content)
 
-    def test_404_template(self, rf):
-        request = rf.get(self.url)
+    def test_404_template(self):
+        request = self.rf.get(self.url)
         response = page_not_found(request, exception="")
         assert status.HTTP_404_NOT_FOUND == response.status_code
         assert "Page not found (404)" in str(response.content)
 
-    def test_500_template(self, rf):
-        request = rf.get(self.url)
+    def test_500_template(self):
+        request = self.rf.get(self.url)
         response = server_error(request)
         assert status.HTTP_500_INTERNAL_SERVER_ERROR == response.status_code
         assert "Internal Server Error (500)" in str(response.content)

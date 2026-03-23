@@ -14,6 +14,7 @@ from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
+from ddionrails.base.models import News
 from ddionrails.concepts.models import (
     AnalysisUnit,
     Concept,
@@ -374,3 +375,16 @@ class AttachmentFactory(DjangoModelFactory):
 
     class Meta:
         model = Attachment
+
+
+class NewsFactory(DjangoModelFactory):
+
+    class Meta:
+        model = News
+
+    content = factory.LazyAttribute(
+        lambda _: "\n".join([f"- {FAKE.sentence()}" for _ in range(3)])
+    )
+    content_de = factory.LazyAttribute(
+        lambda _: "\n".join([f"- {FAKE_DE.sentence()}\n" for _ in range(3)])
+    )
