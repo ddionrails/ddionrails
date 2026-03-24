@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,no-self-use,too-few-public-methods
 
-""" Test cases for helpers in ddionrails.config app """
+"""Test cases for helpers in ddionrails.config app"""
 
-import unittest
 from typing import Dict
+from unittest import TestCase
 
 from config.helpers import (
     RowHelper,
@@ -28,7 +28,7 @@ text text
 """
 
 
-class TestHelpers:
+class TestHelpers(TestCase):
     def test_render_markdown(self):
         html = render_markdown(MD_TEXT)
         assert "<h1>" in html
@@ -42,7 +42,7 @@ class TestHelpers:
         assert dictionary["othername"] == "NAME"
 
 
-class TestRowHelper:
+class TestRowHelper(TestCase):
     def test_row_method(self):
         row_helper = RowHelper()
         expected = False
@@ -65,7 +65,7 @@ class TestRowHelper:
         assert expected == row_helper.row_index
 
 
-class TestParseEnvVariableDict(unittest.TestCase):
+class TestParseEnvVariableDict(TestCase):
     def test_correct_input(self) -> None:
         expected = {"first_key": "1", "second_key": "value"}
         inputs = [
