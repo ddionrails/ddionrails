@@ -105,6 +105,21 @@ class TopicFactory(DjangoModelFactory):
     class Meta:
         model = Topic
 
+    class Params:
+        depth = 0
+
+    @factory.post_generation
+    def parent(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
+
+        if isinstance(extracted, TopicFactory):
+            self.parent = extracted
+        depth = kwargs.get("depth", 0)
+        if depth:
+            self.parent = TopicFactory(study=self.study, parent__depth=depth - 1)
+
+        if create:
+            self.save()
+
     study = factory.SubFactory(StudyFactory)
     name = factory.LazyAttribute(lambda _: FAKE.word())
     label = factory.LazyAttribute(lambda _: FAKE.word())
@@ -125,7 +140,7 @@ class ConceptFactory(DjangoModelFactory):
         topics_size = 1
 
     @factory.post_generation
-    def topics(self, create, extracted, **kwargs):
+    def topics(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
         if isinstance(extracted, Iterable):
             for extract in extracted:
                 self.topics.add(extract)
