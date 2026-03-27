@@ -10,7 +10,7 @@ from unittest.mock import PropertyMock, patch
 from uuid import UUID, uuid4
 
 import pytest
-from django.test import LiveServerTestCase, override_settings
+from django.test import LiveServerTestCase
 from django.test.client import Client
 from rest_framework.test import APIClient, APIRequestFactory
 
@@ -25,8 +25,7 @@ from tests.instruments.factories import (
     QuestionFactory,
     QuestionItemFactory,
 )
-from tests.model_factories import UserFactory
-from tests.studies.factories import StudyFactory
+from tests.model_factories import StudyFactory, UserFactory
 from tests.workspace.factories import BasketVariableFactory
 
 LANGUAGE = "en"
@@ -59,18 +58,23 @@ def response_is_json(response) -> bool:
     return expected_content_type == response["content-type"]
 
 
-@pytest.mark.django_db
-@pytest.mark.parametrize(
-    "language,expected",
-    [("en", [{"title": "some-topic"}]), ("de", [{"title": "some-german-topic"}])],
-)
-def test_topic_tree(client, topiclist, language, expected):
-    response = client.get(
-        f"/api/topic-tree/?study={topiclist.study.name}&language={language}"
-    )
-    TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-    TEST_CASE.assertEqual(expected, response.json())
-    response_is_json(response)
+class TestTopicAPIView(LiveServerTestCase):
+
+    def test_topic_tree(self):
+        client = Client()
+        study = StudyFactory()
+        topiclist = [
+            {"language": "en", "topics": ["data"]},
+            {"language": "de", "topics": ["daten"]},
+        ]
+        study.set_topiclist(topiclist)
+        study.save()
+        for index, language in enumerate(["en", "de"]):
+            url = f"/api/topic-tree/?study={study.name}&language={language}"
+            response = client.get(url)
+            TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
+            TEST_CASE.assertEqual(topiclist[index]["topics"], response.json())
+            response_is_json(response)
 
 
 ######## Test new API units
