@@ -111,7 +111,7 @@ class TopicFactory(DjangoModelFactory):
     @factory.post_generation
     def parent(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
 
-        if isinstance(extracted, TopicFactory):
+        if isinstance(extracted, Topic):
             self.parent = extracted
         depth = kwargs.get("depth", 0)
         if depth:
