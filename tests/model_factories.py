@@ -43,7 +43,7 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.LazyAttribute(lambda _: FAKE.user_name())
+    username = factory.Sequence(lambda n: f"{FAKE.user_name()}_{n}")
     email = factory.LazyAttribute(lambda _: FAKE.email())
     is_staff = False
     is_superuser = False
@@ -61,7 +61,7 @@ class AdminUserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
-    username = factory.LazyAttribute(lambda _: FAKE.user_name())
+    username = factory.Sequence(lambda n: f"{FAKE.user_name()}_{n}")
     email = factory.LazyAttribute(lambda _: FAKE.email())
     is_staff = True
     is_superuser = True
@@ -82,7 +82,7 @@ class StudyFactory(DjangoModelFactory):
     class Meta:
         model = Study
 
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -94,7 +94,7 @@ class PeriodFactory(DjangoModelFactory):
         model = Period
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -121,7 +121,7 @@ class TopicFactory(DjangoModelFactory):
             self.save()
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -155,7 +155,7 @@ class ConceptFactory(DjangoModelFactory):
         if create:
             self.save()
 
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -168,7 +168,7 @@ class ConceptualDatasetFactory(DjangoModelFactory):
         model = ConceptualDataset
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -181,7 +181,8 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
         model = AnalysisUnit
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
 
@@ -194,7 +195,7 @@ class DatasetFactory(DjangoModelFactory):
         model = Dataset
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
 
@@ -225,7 +226,7 @@ class VariableFactory(DjangoModelFactory):
             self.save()
 
     dataset = factory.SubFactory(DatasetFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
@@ -259,7 +260,7 @@ class PublicationFactory(DjangoModelFactory):
     class Meta:
         model = Publication
 
-    name = factory.LazyAttribute(lambda _: f"{FAKE.random_number()}")
+    name = factory.Sequence(lambda n: f"{n}")
     type = factory.LazyAttribute(lambda _: FAKE.word())
     title = factory.LazyAttribute(lambda _: FAKE.sentence())
     author = factory.LazyAttribute(
@@ -294,7 +295,7 @@ class InstrumentFactory(DjangoModelFactory):
         model = Instrument
 
     study = factory.SubFactory(StudyFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
 
@@ -305,7 +306,7 @@ class QuestionItemFactory(DjangoModelFactory):
         model = QuestionItem
 
     question = factory.LazyAttribute(lambda _: QuestionFactory())
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
@@ -336,7 +337,7 @@ class QuestionFactory(DjangoModelFactory):
             self.save()
 
     instrument = factory.SubFactory(InstrumentFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     sort_id = factory.Sequence(lambda n: n + 1)
@@ -359,7 +360,7 @@ class BasketFactory(factory.django.DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     user = factory.SubFactory(UserFactory)
-    name = factory.LazyAttribute(lambda _: FAKE.word())
+    name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
 
