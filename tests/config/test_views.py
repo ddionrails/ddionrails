@@ -3,7 +3,6 @@
 
 """Test cases for views in ddionrails.config app"""
 
-import unittest
 from datetime import datetime
 from typing import Dict, List
 
@@ -49,7 +48,7 @@ class TestPageViews(LiveServerTestCase):
         self.assertIn("Privacy policy at TEST", content)
 
 
-class TestViewFunctions(unittest.TestCase):
+class TestViewFunctions(TestCase):
     news: News = News()
     news_bullets: List[str] = []
 
