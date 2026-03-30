@@ -10,7 +10,7 @@ ENV WEB_LIBRARY_SERV_DIR /usr/src/app/static/dist
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
-COPY ./ ${DOCKER_APP_DIRECTORY}/
+COPY --chown=root:root ./ ${DOCKER_APP_DIRECTORY}/
 
 # hadolint ignore=DL3003,DL3018
 RUN apk add --no-cache \
