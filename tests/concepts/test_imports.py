@@ -1,114 +1,116 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use
+# pylint: disable=missing-docstring
 
-""" Test cases for importer classes in ddionrails.concepts app """
+"""Test cases for importer classes in ddionrails.concepts app"""
 
 from pathlib import Path
 
-import pytest
+from django.test import TestCase
 
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
     PeriodImport,
     TopicJsonImport,
-    concept_import,
     conceptual_dataset_import,
 )
-from ddionrails.concepts.models import AnalysisUnit, Concept, ConceptualDataset, Period
+from ddionrails.concepts.models import AnalysisUnit, ConceptualDataset, Period
 from ddionrails.studies.models import TopicList
-
-pytestmark = [pytest.mark.concepts, pytest.mark.imports]  # pylint: disable=invalid-name
-
-
-@pytest.fixture
-def filename():
-    return "DUMMY.csv"
+from tests.file_factories import TMPCSV
+from tests.model_factories import StudyFactory
 
 
-@pytest.fixture
-def analysis_unit_importer(db, filename, study):  # pylint: disable=unused-argument
-    """An analysis unit importer"""
-    return AnalysisUnitImport(filename, study)
+class TestAnalysisUnitImport(TestCase):
 
+    def test_import_with_valid_data(self):
 
-@pytest.fixture
-def conceptual_dataset_importer(db, filename, study):  # pylint: disable=unused-argument
-    """A conceptual dataset importer"""
-    return ConceptualDatasetImport(filename, study)
-
-
-@pytest.fixture
-def period_importer(db, filename, study):  # pylint: disable=unused-argument
-    """A period importer"""
-    return PeriodImport(filename, study)
-
-
-@pytest.fixture
-def topic_json_importer(db, filename, study):  # pylint: disable=unused-argument
-    """A topic json importer"""
-    return TopicJsonImport(filename, study)
-
-
-class TestAnalysisUnitImport:
-    def test_import_with_valid_data(
-        self, analysis_unit_importer, valid_analysis_unit_data
-    ):
-        response = analysis_unit_importer.import_element(valid_analysis_unit_data)
-        assert isinstance(response, AnalysisUnit)
-        assert response.name == valid_analysis_unit_data["analysis_unit_name"]
-
-    def test_import_with_invalid_data(self, analysis_unit_importer, empty_data):
-        response = analysis_unit_importer.import_element(empty_data)
-        expected = None
-        assert expected is response
-
-
-class TestConceptualDatasetImport:
-    def test_import_with_valid_data(self, valid_conceptual_dataset_data, study):
-        csv_path = Path(
-            "tests/functional/test_data/some-study/ddionrails/conceptual_datasets.csv"
-        ).absolute()
-
-        response = conceptual_dataset_import(file_path=csv_path, study=study)
-        cd = ConceptualDataset.objects.get(name="some-conceptual-dataset")
-        assert cd.label == "some-conceptual-dataset"
-
-
-class TestPeriodImport:
-    def test_import_with_valid_data(self, period_importer, valid_period_data):
-        response = period_importer.import_element(valid_period_data)
-        assert isinstance(response, Period)
-        assert response.name == valid_period_data["period_name"]
-
-    def test_import_with_invalid_data(self, period_importer, empty_data):
-        response = period_importer.import_element(empty_data)
-        expected = None
-        assert expected is response
-
-
-class TestTopicJsonImport:
-    def test_execute_import_method(self, topic_json_importer, mocker):
-        """Test that JSON string gets converted to dictionary and "_import_topic_list" gets called"""
-        mocked_import_topic_list = mocker.patch.object(
-            TopicJsonImport, "_import_topic_list"
+        study = StudyFactory()
+        valid_analysis_unit = {
+            "study": study.id,
+            "name": "some-analysis-unit",
+            "label": "Some Analysis unit",
+            "description": "This is some analysis unit",
+        }
+        valid_analysis_unit_data = [valid_analysis_unit]
+        tmp_csv = TMPCSV(content=valid_analysis_unit_data)
+        importer = AnalysisUnitImport(tmp_csv.name, study)
+        importer.read_file()
+        importer.execute_import()
+        del tmp_csv
+        analysis_unit = AnalysisUnit.objects.get(
+            study=study, name=valid_analysis_unit["name"]
         )
-        topic_json_importer.content = '[{"language": "en"}]'
-        topic_json_importer.execute_import()
-        assert topic_json_importer.content == [{"language": "en"}]
-        mocked_import_topic_list.assert_called_once()
+        self.assertEqual(valid_analysis_unit["label"], analysis_unit.label)
 
-    def test_import_topic_list_method(self, topic_json_importer):
-        """Test that _import_topic_list adds "topic_languages" to Study object and creates a TopicList object"""
-        study = topic_json_importer.study
-        assert [] == study.topic_languages
-        assert 0 == len(study.topic_languages)
+    def test_import_with_invalid_data(self):
+        study = StudyFactory()
+        importer = AnalysisUnitImport("", study)
+        response = importer.import_element({})
+        expected = None
+        assert expected is response
+
+
+class TestConceptualDatasetImport(TestCase):
+    def test_import_with_valid_data(self):
+        study = StudyFactory()
+        valid_conceptual_dataset = {
+            "study": study.id,
+            "name": "some-conceptual-dataset",
+            "label": "Some conceptual dataset",
+            "description": "This is some conceptual dataset",
+        }
+        valid_conceptual_dataset_data = [valid_conceptual_dataset]
+        tmp_csv = TMPCSV(content=valid_conceptual_dataset_data)
+        csv_path = Path(tmp_csv.name).absolute()
+
+        conceptual_dataset_import(file_path=csv_path, study=study)
+        result = ConceptualDataset.objects.get(name="some-conceptual-dataset")
+        del tmp_csv
+        self.assertEqual(result.label, valid_conceptual_dataset["label"])
+
+
+class TestPeriodImport(TestCase):
+    def test_import_with_valid_data(self):
+
+        study = StudyFactory()
+        valid_period = {
+            "study": study.id,
+            "name": "some-period",
+            "label": "Some Period",
+            "description": "This is some period",
+        }
+        valid_period_data = [valid_period]
+        tmp_csv = TMPCSV(content=valid_period_data)
+        importer = PeriodImport(tmp_csv.name, study)
+        importer.read_file()
+        importer.execute_import()
+        period = Period.objects.get(name=valid_period["name"])
+        self.assertEqual(valid_period["label"], period.label)
+
+    def test_import_with_invalid_data(self):
+        study = StudyFactory()
+        importer = PeriodImport("", study)
+        response = importer.import_element({})
+        expected = None
+        assert expected is response
+
+
+class TestTopicJsonImport(TestCase):
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.topic_json_importer = TopicJsonImport("", self.study)
+        return super().setUp()
+
+    def test_import_topic_list_method(self):
+        assert [] == self.study.topic_languages
+        assert 0 == len(self.study.topic_languages)
         assert 0 == TopicList.objects.count()
-        topic_json_importer.content = [
+        self.topic_json_importer.content = [
             {"language": "en", "topics": []},
             {"language": "de", "topics": []},
         ]
-        topic_json_importer._import_topic_list()  # pylint: disable=protected-access
-        study.refresh_from_db()
-        assert ["de", "en"] == study.topic_languages
+        self.topic_json_importer._import_topic_list()  # pylint: disable=protected-access
+        self.study.refresh_from_db()
+        assert ["de", "en"] == self.study.topic_languages
         assert 1 == TopicList.objects.count()
-        assert topic_json_importer.content == study.topiclist.topiclist
+        assert self.topic_json_importer.content == self.study.topiclist.topiclist
