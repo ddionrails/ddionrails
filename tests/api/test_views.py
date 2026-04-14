@@ -4,52 +4,35 @@
 """Test cases for views in ddionrails.api app"""
 
 import json
-import unittest
 from typing import Dict, List
 from unittest.mock import PropertyMock, patch
 from uuid import UUID, uuid4
 
-import pytest
-from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase, TestCase
 from django.test.client import Client
-from rest_framework.test import APIClient, APIRequestFactory
+from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
+from ddionrails.api.views.user_tools import BasketVariableSet as basket_variables_api
 from ddionrails.instruments.models.concept_question import ConceptQuestion
 from ddionrails.instruments.models.question_variable import QuestionVariable
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests import status
-from tests.concepts.factories import ConceptFactory, TopicFactory
-from tests.data.factories import DatasetFactory, VariableFactory
 from tests.instruments.factories import (
     InstrumentFactory,
     QuestionFactory,
     QuestionItemFactory,
 )
-from tests.model_factories import StudyFactory, UserFactory
-from tests.workspace.factories import BasketVariableFactory
-
-LANGUAGE = "en"
-
-TEST_CASE = unittest.TestCase()
-
-
-@pytest.mark.usefixtures("client", "request")
-@pytest.fixture(name="unittest_web_client")
-def _client(request, client):
-    if request.instance:
-        request.instance.web_client = client
-        yield
-    return client
-
-
-@pytest.fixture(name="variable_with_concept_and_topic")
-def _variable_with_concept_and_topic(variable, concept, topic):
-    """A variable with a related concept and topic"""
-    concept.topics.add(topic)
-    concept.save()
-    variable.concept = concept
-    variable.save()
-    return variable, concept, topic
+from tests.model_factories import (
+    FAKE,
+    FAKE_DE,
+    BasketFactory,
+    ConceptFactory,
+    DatasetFactory,
+    StudyFactory,
+    TopicFactory,
+    UserFactory,
+    VariableFactory,
+)
 
 
 def response_is_json(response) -> bool:
@@ -64,16 +47,16 @@ class TestTopicAPIView(LiveServerTestCase):
         client = Client()
         study = StudyFactory()
         topiclist = [
-            {"language": "en", "topics": ["data"]},
-            {"language": "de", "topics": ["daten"]},
+            {"language": "en", "topics": [FAKE.word()]},
+            {"language": "de", "topics": [FAKE_DE.word()]},
         ]
         study.set_topiclist(topiclist)
         study.save()
         for index, language in enumerate(["en", "de"]):
             url = f"/api/topic-tree/?study={study.name}&language={language}"
             response = client.get(url)
-            TEST_CASE.assertEqual(status.HTTP_200_OK, response.status_code)
-            TEST_CASE.assertEqual(topiclist[index]["topics"], response.json())
+            self.assertEqual(status.HTTP_200_OK, response.status_code)
+            self.assertEqual(topiclist[index]["topics"], response.json())
             response_is_json(response)
 
 
@@ -145,7 +128,7 @@ class TestBasketViewSet(LiveServerTestCase):
     def test_create_basket(self):
         """Can we create a basket through the API?"""
         client = APIClient()
-        client.force_authenticate(user=self.user)
+        client.force_login(user=self.user)
         client.post(self.API_PATH, self.basket_data, format="json")
 
         baskets = self._get_api_GET_content()
@@ -161,7 +144,7 @@ class TestBasketViewSet(LiveServerTestCase):
     def test_create_existing_basket(self):
         """Creating an existing basket should be answered with HTTP 409."""
         client = APIClient()
-        client.force_authenticate(user=self.user)
+        client.force_login(user=self.user)
         client.post(self.API_PATH, self.basket_data, format="json")
         result = client.post(self.API_PATH, self.basket_data, format="json")
         self.assertEqual(409, result.status_code)
@@ -180,7 +163,7 @@ class TestBasketViewSet(LiveServerTestCase):
         request = client.post(self.API_PATH, self.basket_data, format="json")
 
         dummy_user = UserFactory(username="dummy")
-        client.force_authenticate(user=dummy_user)
+        client.force_login(user=dummy_user)
         request = client.post(self.API_PATH, self.basket_data, format="json")
         self.assertEqual(403, request.status_code)
         dummy_user.delete()
@@ -194,14 +177,14 @@ class TestBasketViewSet(LiveServerTestCase):
         dummy_user.is_superuser = True
         dummy_user.save()
 
-        client.force_authenticate(user=dummy_user)
+        client.force_login(user=dummy_user)
         request = client.get(self.API_PATH)
         self.assertEqual(200, request.status_code)
         dummy_user.delete()
 
     def _get_api_GET_content(self) -> Dict[str, str]:
         client = APIClient()
-        client.force_authenticate(user=self.user)
+        client.force_login(user=self.user)
         request = client.get(self.API_PATH, format="json")
         return json.loads(request.content).get("results")
 
@@ -366,13 +349,10 @@ class TestQuestionViewSet(LiveServerTestCase):
         self.assertEqual(question_amount, len(content))
 
 
-@pytest.mark.django_db
-class TestDatasetViewSet(unittest.TestCase):
+class TestDatasetViewSet(TestCase):
     API_PATH = "/api/datasets/"
-    client: APIClient
 
     def setUp(self) -> None:
-        self.client = APIClient()
         return super().setUp()
 
     def test_no_parameter(self) -> None:
@@ -397,14 +377,8 @@ class TestDatasetViewSet(unittest.TestCase):
         self.assertEqual(getattr(dataset, "name"), content["results"][0]["name"])
 
 
-@pytest.mark.django_db
-class TestInstrumentViewSet(unittest.TestCase):
+class TestInstrumentViewSet(TestCase):
     API_PATH = "/api/instruments/"
-    client: APIClient
-
-    def setUp(self) -> None:
-        self.client = APIClient()
-        return super().setUp()
 
     def test_no_parameter(self) -> None:
         other_study = StudyFactory(name="some-other-study")
@@ -557,12 +531,12 @@ class TestVariableViewSet(LiveServerTestCase):
         """Is the get response as expected?"""
         variable_amount = 10
         variables = []
-        for number in range(1, variable_amount + 1):
-            variables.append(VariableFactory(name=f"{number}"))
-        study = variables[0].dataset.study.name
-        dataset = variables[0].dataset.name
+        study = StudyFactory()
+        dataset = DatasetFactory(study=study)
+        for _ in range(1, variable_amount + 1):
+            variables.append(VariableFactory(dataset=dataset))
         response = self.api_client.get(
-            self.API_PATH + f"?study={study}&dataset={dataset}"
+            self.API_PATH + f"?study={study.name}&dataset={dataset.name}"
         )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
@@ -575,44 +549,41 @@ class TestVariableViewSet(LiveServerTestCase):
         """There should be no scroll limit"""
         variable_amount = 101
         variables = []
-        for number in range(1, variable_amount + 1):
-            variables.append(VariableFactory(name=f"{number}"))
-        study = variables[0].dataset.study.name
-        dataset = variables[0].dataset.name
+        study = StudyFactory()
+        dataset = DatasetFactory(study=study)
+        for _ in range(1, variable_amount + 1):
+            variables.append(VariableFactory(dataset=dataset))
         response = self.api_client.get(
-            self.API_PATH + f"?paginate=False&study={study}&dataset={dataset}"
+            self.API_PATH + f"?paginate=False&study={study.name}&dataset={dataset.name}"
         )
         self.assertEqual(200, response.status_code)
         content = json.loads(response.content)
         self.assertEqual(variable_amount, len(content))
 
 
-@pytest.mark.django_db
-class TestBasketVariableSet(unittest.TestCase):
+class TestBasketVariableSet(TestCase):
     API_PATH = "/api/basket-variables/"
-    client: APIClient
 
     def setUp(self):
-        self.client = APIClient()
-        self.basket_variable = BasketVariableFactory()
-        self.basket_variable.save()
-        self.variable = self.basket_variable.variable
-        self.basket = self.basket_variable.basket
+        self.study = StudyFactory()
+        self.dataset = DatasetFactory(study=self.study)
+        self.variable = VariableFactory(dataset=self.dataset)
+        self.basket = BasketFactory(variables=[self.variable], study=self.study)
         self.user = self.basket.user
         return super().setUp()
 
     def test_get_basket_variable_GET_data(self):
         """Can we get basket variable data."""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_login(user=self.user)
         response = self.client.get(self.API_PATH)
         results = json.loads(response.content)["results"]
         basket = results[0]
-        self.assertEqual(self.basket_variable.basket_id, basket["basket_id"])
-        self.assertEqual(str(self.basket_variable.variable_id), basket["variable_id"])
+        self.assertEqual(self.basket.id, basket["basket_id"])
+        self.assertEqual(str(self.variable.id), basket["variable_id"])
 
     def test_get_basket_variable_GET_with_url_param(self):
         """Can we get a basket variable with url params"""
-        self.client.force_authenticate(user=self.user)
+        self.client.force_login(user=self.user)
         new_basket_variable = BasketVariable()
         new_basket_variable.basket = self.basket
         new_basket_variable.variable = VariableFactory(name="new_variable")
@@ -632,12 +603,12 @@ class TestBasketVariableSet(unittest.TestCase):
         superuser = UserFactory(username="super_tester")
         superuser.is_superuser = True
         superuser.save()
-        self.client.force_authenticate(user=superuser)
+        self.client.force_login(user=superuser)
         response = self.client.get(self.API_PATH)
         results = json.loads(response.content)["results"]
         basket = results[0]
-        self.assertEqual(self.basket_variable.basket_id, basket["basket_id"])
-        self.assertEqual(str(self.basket_variable.variable_id), basket["variable_id"])
+        self.assertEqual(self.basket.id, basket["basket_id"])
+        self.assertEqual(str(self.variable.id), basket["variable_id"])
         superuser.delete()
 
     def test_get_basket_variable_GET_data_unauthorized(self):
@@ -647,21 +618,24 @@ class TestBasketVariableSet(unittest.TestCase):
 
     def test_POST_basket_variables(self):
         """Can we fill a basket with variables?"""
-        new_variable = VariableFactory(name="new-test-variable")
+        new_variable = VariableFactory(dataset=self.dataset)
         new_variable.dataset = self.variable.dataset
-        new_variable.save()
         post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
 
-        self.client.force_authenticate(user=self.user)
-        post_response = self.client.post(self.API_PATH, post_data, format="json")
-        self.assertEqual(201, post_response.status_code)
+        request_factory = APIRequestFactory()
+        request = request_factory.post(self.API_PATH, data=post_data, format="json")
+        force_authenticate(request, user=self.user)
+        view = basket_variables_api.as_view({"post": "create"})
+        response = view(request)
+        self.assertEqual(201, response.status_code)
 
-        result = self.client.get(f"{self.API_PATH}")
-        results = json.loads(result.content)["results"]
+        result_view = basket_variables_api.as_view({"get": "list"})
+        result_request = request_factory.get(self.API_PATH)
+        force_authenticate(result_request, self.user)
+        result = result_view(result_request)
+        results = result.data["results"]
 
-        self.assertIn(
-            True, [result["variable_id"] == str(new_variable.id) for result in results]
-        )
+        self.assertIn(new_variable.id, [result["variable_id"] for result in results])
 
     def test_POST_basket_variables_no_permission(self):
         """Are permissions respected."""
@@ -671,7 +645,7 @@ class TestBasketVariableSet(unittest.TestCase):
         new_variable.save()
         post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
 
-        self.client.force_authenticate(user=some_user)
+        self.client.force_login(user=some_user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(403, post_response.status_code)
 
@@ -682,28 +656,40 @@ class TestBasketVariableSet(unittest.TestCase):
         new_variable.save()
         post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
 
-        self.client.force_authenticate(user=self.user)
-        post_response = self.client.post(self.API_PATH, post_data, format="json")
-        self.assertEqual(201, post_response.status_code)
+        request_factory = APIRequestFactory()
+        request = request_factory.post(self.API_PATH, data=post_data, format="json")
+        force_authenticate(request, user=self.user)
+        view = basket_variables_api.as_view({"post": "create"})
+        response = view(request)
+        self.assertEqual(201, response.status_code)
 
-        result = self.client.get(f"{self.API_PATH}")
-        results = json.loads(result.content)["results"]
+        result_view = basket_variables_api.as_view({"get": "list"})
+        result_request = request_factory.get(self.API_PATH)
+        force_authenticate(result_request, self.user)
+        result = result_view(result_request)
+        results = result.data["results"]
 
-        self.assertIn(
-            True, [result["variable_id"] == str(self.variable.id) for result in results]
-        )
+        self.assertIn(new_variable.id, [result["variable_id"] for result in results])
 
         basket_variable_id = BasketVariable.objects.get(
             basket_id=self.basket.id, variable_id=new_variable.id
         ).id
 
-        self.client.delete(self.API_PATH + f"{basket_variable_id}/")
-        result = self.client.get(f"{self.API_PATH}")
-        results = json.loads(result.content)["results"]
+        delete_view = basket_variables_api.as_view({"delete": "destroy"})
+        delete_request = request_factory.delete(self.API_PATH + f"{basket_variable_id}/")
+        force_authenticate(delete_request, user=self.user)
+        delete_response = delete_view(delete_request, pk=basket_variable_id)
+        self.assertEqual(204, delete_response.status_code)
 
-        self.assertNotIn(
-            True, [result["variable_id"] == str(new_variable) for result in results]
-        )
+        result = self.client.get(f"{self.API_PATH}")
+
+        result_view = basket_variables_api.as_view({"get": "list"})
+        result_request = request_factory.get(self.API_PATH)
+        force_authenticate(result_request, self.user)
+        result = result_view(result_request)
+        results = result.data["results"]
+
+        self.assertNotIn(new_variable.id, [result["variable_id"] for result in results])
 
     def test_DELETE_basket_variables_no_permission(self):
         """Can we fill a basket with variables?"""
@@ -714,7 +700,7 @@ class TestBasketVariableSet(unittest.TestCase):
         new_variable.save()
         post_data = {"basket": str(self.basket.id), "variables": [str(new_variable.id)]}
 
-        self.client.force_authenticate(user=user)
+        self.client.force_login(user=user)
         self.client.post(self.API_PATH, post_data, format="json")
 
         basket_variable = BasketVariable.objects.get(
@@ -727,24 +713,32 @@ class TestBasketVariableSet(unittest.TestCase):
 
     def test_POST_basket_variables_by_topic_by_name(self):
         """Define how basket variable creation by topic should work."""
-        topic = TopicFactory(name="parent-topic")
-        child_topic = TopicFactory(name="parent-topic", parent=topic)
-        concept = ConceptFactory(name="some-concept")
-        concept.topics.set([child_topic])
-        concept.save()
-        variables = [VariableFactory(name="1"), VariableFactory(name="2")]
-        variables[1].concept = concept
-        variables[1].save()
+        child_topic = TopicFactory(parent__depth=3, study=self.basket.study)
+        topic = child_topic.parent
+        concept = ConceptFactory(topics=[child_topic])
+        variables = [
+            VariableFactory(dataset__study=self.study),
+            VariableFactory(concept=concept, dataset__study=self.study),
+        ]
 
         post_data = {"basket": str(self.basket.id), "topic": topic.name}
-        self.client.force_authenticate(user=self.user)
-        post_response = self.client.post(self.API_PATH, post_data, format="json")
-        self.assertEqual(201, post_response.status_code)
-        get_response = self.client.get(self.API_PATH)
-        content = json.loads(get_response.content)
-        result_ids = [result["variable_id"] for result in content["results"]]
-        self.assertIn(str(variables[1].id), result_ids)
-        self.assertNotIn(str(variables[0].id), result_ids)
+
+        request_factory = APIRequestFactory()
+        post_view = basket_variables_api.as_view({"post": "create"})
+        post_request = request_factory.post(self.API_PATH, data=post_data, format="json")
+        force_authenticate(post_request, self.user)
+        result = post_view(post_request)
+        self.assertEqual(201, result.status_code)
+
+        result_view = basket_variables_api.as_view({"get": "list"})
+        result_request = request_factory.get(self.API_PATH)
+        force_authenticate(result_request, self.user)
+        result = result_view(result_request)
+        results = result.data["results"]
+
+        result_ids = [result["variable_id"] for result in results]
+        self.assertIn(variables[1].id, result_ids)
+        self.assertNotIn(variables[0].id, result_ids)
 
     def test_POST_basket_variables_by_concept_name(self):
         """Define how basket variable creation by concept should work."""
@@ -758,7 +752,7 @@ class TestBasketVariableSet(unittest.TestCase):
         variables[1].save()
 
         post_data = {"basket": str(self.basket.id), "concept": concept.name}
-        self.client.force_authenticate(user=self.user)
+        self.client.force_login(user=self.user)
         post_response = self.client.post(self.API_PATH, post_data, format="json")
         self.assertEqual(201, post_response.status_code)
         get_response = self.client.get(self.API_PATH)
@@ -782,21 +776,27 @@ class TestBasketVariableSet(unittest.TestCase):
                 "basket": str(self.basket.id),
                 "variables": too_many_variable_ids,
             }
-            self.client.force_authenticate(user=self.user)
-            post_response = self.client.post(self.API_PATH, post_data, format="json")
-            self.assertEqual(406, post_response.status_code)
+
+            request_factory = APIRequestFactory()
+            request = request_factory.post(self.API_PATH, data=post_data, format="json")
+            force_authenticate(request, user=self.user)
+            view = basket_variables_api.as_view({"post": "create"})
+            response = view(request)
+            self.assertEqual(406, response.status_code)
 
     def test_basket_variable_limit_topic_and_concept_POST(self):
         """Define how the basket limit should work."""
         too_many_variables = []
-        topic = TopicFactory(name="test-topic")
-        concept = ConceptFactory(name="test-concept")
-        concept.topics.set([topic])
-        concept.save()
-        for number in range(1, 12):
-            variable = VariableFactory(name=str(number))
-            variable.concept = concept
-            variable.save()
+        child_topic = TopicFactory(parent__depth=3, study=self.basket.study)
+        topic = child_topic.parent
+        concept = ConceptFactory(topics=[child_topic])
+        variables = [
+            VariableFactory(dataset__study=self.study),
+            VariableFactory(concept=concept, dataset__study=self.study),
+        ]
+
+        for _ in range(1, 12):
+            variable = VariableFactory(concept=concept, dataset__study=self.study)
             too_many_variables.append(variable)
 
         with patch(
@@ -805,30 +805,31 @@ class TestBasketVariableSet(unittest.TestCase):
         ) as basket_limit:
             basket_limit.return_value = 10
             post_data = {"basket": str(self.basket.id), "topic": topic.name}
-            self.client.force_authenticate(user=self.user)
-            post_response = self.client.post(self.API_PATH, post_data, format="json")
-            self.assertEqual(406, post_response.status_code)
-            self.assertIn(b"basket size limit", post_response.content)
+            request_factory = APIRequestFactory()
+            request = request_factory.post(self.API_PATH, data=post_data, format="json")
+            force_authenticate(request, user=self.user)
+            view = basket_variables_api.as_view({"post": "create"})
+            response = view(request)
+            self.assertEqual(406, response.status_code)
+            self.assertIn("basket size limit", str(response.render().content))
 
             BasketVariable.objects.all().delete()
 
             post_data = {"basket": str(self.basket.id), "concept": concept.name}
-            self.client.force_authenticate(user=self.user)
-            post_response = self.client.post(self.API_PATH, post_data, format="json")
-            self.assertEqual(406, post_response.status_code)
-            self.assertIn(b"basket size limit", post_response.content)
+            request_factory = APIRequestFactory()
+            request = request_factory.post(self.API_PATH, data=post_data, format="json")
+            force_authenticate(request, user=self.user)
+            view = basket_variables_api.as_view({"post": "create"})
+            response = view(request)
+            self.assertEqual(406, response.status_code)
+            self.assertIn("basket size limit", str(response.render().content))
 
 
-@pytest.mark.django_db
-@pytest.mark.usefixtures("unittest_web_client")
-class TestQuestionComparison(unittest.TestCase):
+class TestQuestionComparison(TestCase):
     API_PATH = "/api/question-comparison/"
-    client: APIClient
     web_client: Client
 
     def setUp(self):
-        self.client = APIClient()
-
         self.from_question = QuestionFactory(name="some-question", sort_id=1)
         self.to_question = QuestionFactory(name="some-other-question", sort_id=2)
         QuestionItemFactory(question=self.from_question, name=self.from_question.name)
@@ -861,17 +862,9 @@ class TestQuestionComparison(unittest.TestCase):
         self.assertEqual(status.HTTP_404_NOT_FOUND, response.status_code)
 
 
-@pytest.mark.django_db
-@pytest.mark.usefixtures("unittest_web_client")
-class TestSendFeedback(unittest.TestCase):
+class TestSendFeedback(TestCase):
     API_PATH = "/api/feedback/"
-    client: APIClient
     web_client: Client
-
-    def setUp(self):
-        self.client = APIClient()
-
-        return super().setUp()
 
     @patch(
         "ddionrails.api.views.user_tools.FEEDBACK_TO_EMAILS", new={"invalid": "test@mail"}

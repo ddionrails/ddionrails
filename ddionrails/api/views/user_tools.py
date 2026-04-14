@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Views for ddionrails.api app """
+"""Views for ddionrails.api app"""
 
 import uuid
 from typing import List
@@ -136,7 +136,7 @@ class BasketVariableSet(  # pylint: disable=too-many-ancestors
 
     def _basket_limit_error_message(self, basket_size: int, variables: int) -> str:
         return (
-            f"The basket contains {basket_size} variables, adding {variables}"
+            f"The basket contains {basket_size} variables, adding {variables} "
             f"variables would exceed the basket size limit of {self.basket_limit}."
         )
 
