@@ -296,56 +296,6 @@ class Variable(ModelMixin, models.Model):
     def _period_model_to_name_dict(instances: List[Period]) -> Dict[Dict[str, Any]]:
         return {instance.id: instance.name for instance in instances}
 
-    def _sort_related_variable_by_period(
-        self, variables: QuerySet[Variable]
-    ) -> Dict[str, List[Variable]]:
-        """Get variables related through transformations."""
-
-        # TODO: Change when OrderedDict typing becomes available. pylint: disable=W0511
-        result: Dict[str, List[Variable]] = OrderedDict()
-        study = self.dataset.study
-        periods = Period.objects.filter(study=study).order_by("name").all()
-        result = OrderedDict((str(period.name), []) for period in periods)
-        for variable in variables:
-            period_name = getattr(variable.dataset.period, "name")
-            result[str(period_name)].append(variable)
-        return result
-
-    @property
-    def target_variables_dict(self):
-        """
-        Get objects that are based on an relationship through transformations
-        in the direction to target (e.g., all wide variables, which a long
-        variable is based on).
-
-        Target variables are those,
-        that that have this variable instance as their "origin"
-        :return: Nested dicts, study --> period --> list of variables/questions
-        """
-        # target_variables = Variable.objects.filter(origin_variables=self.id)
-        target_variables = Variable.objects.filter(
-            origin_variables__in=self.target_variables.all()
-        ).prefetch_related("dataset", "dataset__period")
-        return self._sort_related_variable_by_period(target_variables)
-
-    @property
-    def origin_variables_dict(self):
-        """
-        Get objects that are based on an relationship through transformations
-        in the direction to origin (e.g., all wide variables, which a long
-        variable is based on).
-
-        Origin variables are those that have this variable instance as their "target"
-
-        :return: Nested dicts, study --> period --> list of variables/questions
-        """
-        origin_variables = Variable.objects.filter(
-            target_variables__in=self.origin_variables.all()
-        ).prefetch_related("dataset", "dataset__period")
-
-        # origin_variables = [x.origin for x in self.origin_variables.all()]
-        return self._sort_related_variable_by_period(origin_variables)
-
     def has_translations(self) -> bool:
         """Returns True if Variable has translation_languages"""
         return len(self.translation_languages()) > 0

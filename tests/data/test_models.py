@@ -26,22 +26,6 @@ class TestVariable(TestCase):
         cls.target_variable = cls.transformation.target
         return super().setUpClass()
 
-    def test_target_variables_dict(self):
-        """Define target_variables_dict property structure."""
-        origin_variable = self.variable
-        target_variable = self.target_variable
-        result = origin_variable.target_variables_dict
-        expected = OrderedDict([(target_variable.period.name, [target_variable])])
-        self.assertDictEqual(expected, result)
-
-    def test_origin_variables_dict(self):
-        """Define origin_variables_dict property structure."""
-        origin_variable = self.variable
-        target_variable = self.target_variable
-        result = target_variable.origin_variables_dict
-        expected = {origin_variable.period.name: [origin_variable]}
-        self.assertEqual(expected, result)
-
     def test_sorting(self):
         """Variables should be sortable by their name."""
         first_variable = Variable()
