@@ -6,7 +6,7 @@
 from typing import Any
 
 from django.forms.models import model_to_dict
-from django.test import LiveServerTestCase, override_settings
+from django.test import LiveServerTestCase, TransactionTestCase, override_settings
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
@@ -19,7 +19,7 @@ from tests.model_factories import (
 
 
 @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
-class TestDocuments(LiveServerTestCase):
+class TestDocuments(TransactionTestCase):
     variable_with_concept: Any
     topic: Any
     concept: Any
@@ -36,6 +36,8 @@ class TestDocuments(LiveServerTestCase):
         self.topic.save()
         self.concept.save()
         self.variable_with_concept.save()
+        ConceptDocument().update(self.concept)
+        TopicDocument().update(self.topic)
         ConceptDocument._index.refresh()  # pylint: disable=protected-access
         TopicDocument._index.refresh()  # pylint: disable=protected-access
         return super().setUp()
