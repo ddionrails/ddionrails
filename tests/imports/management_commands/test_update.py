@@ -7,6 +7,7 @@ import csv
 import logging
 import unittest
 from pathlib import Path
+from tempfile import mkdtemp
 from unittest.mock import patch
 
 import pytest
@@ -27,15 +28,12 @@ from ddionrails.imports.management.commands.update import (
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
-from tests.conftest import PatchImportPathArguments
-from tests.data.factories import DatasetFactory
-from tests.model_factories import StudyFactory
-from tests.workspace.factories import BasketFactory
+from tests.file_factories import destroy_tmp_path, tmp_import_path_with_test_data
+from tests.model_factories import BasketFactory, DatasetFactory, StudyFactory
 
 pytestmark = [pytest.mark.django_db]
 
-
-IMPORT_PATH = Path("tests/functional/test_data/some-study/ddionrails/").absolute()
+HARD_CODED_STUDY_NAME = "some-study"
 
 TEST_CASE = unittest.TestCase()
 
@@ -164,73 +162,106 @@ class TestUpdate_(TestCase):
         )
 
 
-@pytest.mark.django_db
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_single_study(study, mocker):
-    with open(IMPORT_PATH.joinpath("variables.csv"), encoding="utf8") as variables_file:
-        expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
-    mocked_update_repo = mocker.patch(
-        "ddionrails.imports.management.commands.update.set_up_repo"
-    )
-    manager = StudyImportManager(study, redis=False)
-    update_single_study(study, False, (), "", manager=manager)
-    mocked_update_repo.assert_called_once()
-    result = {variable.name for variable in Variable.objects.all()}
-    TEST_CASE.assertNotEqual(0, len(result))
-    TEST_CASE.assertEqual(expected_variables, result)
+class TestUpdateWithCSV(TestCase):
 
+    def setUp(self) -> None:
+        self.tmp_path, patch_dict = tmp_import_path_with_test_data()
+        self.import_path_patch = patch(**patch_dict)
+        self.import_path_patch.start()
+        self.study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        return super().setUp()
 
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_single_study_local(study):
-    local = True
-    with open(IMPORT_PATH.joinpath("variables.csv"), encoding="utf8") as variables_file:
-        expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
-    manager = StudyImportManager(study, redis=False)
-    update_single_study(study, local, (), None, manager=manager)
-    result = {variable.name for variable in Variable.objects.all()}
-    TEST_CASE.assertNotEqual(0, len(result))
-    TEST_CASE.assertEqual(expected_variables, result)
+    def tearDown(self) -> None:
+        self.import_path_patch.stop()
+        destroy_tmp_path(self.tmp_path)
+        return super().tearDown()
 
+    def test_update_single_study_local(self):
+        local = True
+        with open(
+            self.tmp_path.joinpath("variables.csv"), encoding="utf8"
+        ) as variables_file:
+            expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
+        manager = StudyImportManager(self.study, redis=False)
+        update_single_study(self.study, local, (), None, manager=manager)
+        result = {variable.name for variable in Variable.objects.all()}
+        TEST_CASE.assertNotEqual(0, len(result))
+        TEST_CASE.assertEqual(expected_variables, result)
 
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_single_study_entity(study):
-    entities = ("periods",)
+    def test_update_single_study_entity(self):
+        entities = ("periods",)
 
-    local = True
-    with open(IMPORT_PATH.joinpath("periods.csv"), encoding="utf8") as periods_file:
-        expected_periods = {row["name"] for row in csv.DictReader(periods_file)}
-    manager = StudyImportManager(study, redis=False)
-    update_single_study(study, local, entities, None, manager=manager)
-    result = {period.name for period in Period.objects.all()}
-    TEST_CASE.assertNotEqual(0, len(result))
-    TEST_CASE.assertEqual(expected_periods, result)
+        local = True
+        with open(self.tmp_path.joinpath("periods.csv"), encoding="utf8") as periods_file:
+            expected_periods = {row["name"] for row in csv.DictReader(periods_file)}
+        manager = StudyImportManager(self.study, redis=False)
+        update_single_study(self.study, local, entities, None, manager=manager)
+        result = {period.name for period in Period.objects.all()}
+        self.assertNotEqual(0, len(result))
+        self.assertEqual(expected_periods, result)
 
+    def test_update_single_study(self):
+        with open(
+            self.tmp_path.joinpath("variables.csv"), encoding="utf8"
+        ) as variables_file:
+            expected_variables = {row["name"] for row in csv.DictReader(variables_file)}
+        update_patch = patch("ddionrails.imports.management.commands.update.set_up_repo")
+        mocked_update_repo = update_patch.start()
+        manager = StudyImportManager(self.study, redis=False)
+        update_single_study(self.study, False, (), "", manager=manager)
+        mocked_update_repo.assert_called_once()
+        result = {variable.name for variable in Variable.objects.all()}
+        update_patch.stop()
+        TEST_CASE.assertNotEqual(0, len(result))
+        TEST_CASE.assertEqual(expected_variables, result)
 
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_single_study_entity_filename_without_redis(study):
-    filename = Study().import_path().joinpath("instruments/some-instrument.json")
-    with unittest.mock.patch("django_rq.enqueue") as redis_enqueue:
-        with TEST_CASE.assertRaises(SystemExit) as error:
-            call_command(
-                "update", study.name, "instruments.json", "-f", filename, "-l", "-r"
+    def test_update_single_study_entity_filename_without_redis(self):
+        filename = Study().import_path().joinpath("instruments/some-instrument.json")
+        with patch("django_rq.enqueue") as redis_enqueue:
+            with self.assertRaises(SystemExit) as error:
+                call_command(
+                    "update",
+                    self.study.name,
+                    "instruments.json",
+                    "-f",
+                    filename,
+                    "-l",
+                    "-r",
+                )
+            self.assertEqual(0, error.exception.code)
+            self.assertFalse(redis_enqueue.called)
+
+    def test_update_single_study_entity_nonexistent_filename(self):
+        filename = Study().import_path().joinpath("nonexistent-file.json")
+
+        logger = logging.getLogger("ddionrails.imports.manager")
+        with unittest.mock.patch.object(logger, "error") as log:
+            with self.assertRaises(SystemExit) as error:
+                call_command(
+                    "update", self.study.name, "instruments.json", "-f", filename, "-l"
+                )
+            logging.getLogger("ddionrails.imports.manager")
+            self.assertEqual(1, error.exception.code)
+            log.assert_called_once_with(
+                'Study "%s" has no file: "%s"',
+                HARD_CODED_STUDY_NAME,
+                "nonexistent-file.json",
             )
-        TEST_CASE.assertEqual(0, error.exception.code)
-        TEST_CASE.assertFalse(redis_enqueue.called)
 
+    def test_update_command_with_valid_study_name_and_valid_entity_and_filename(self):
+        file_path = Study().import_path().joinpath("instruments/some-instrument.json")
 
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_single_study_entity_nonexistent_filename(study):
-    filename = Study().import_path().joinpath("nonexistent-file.json")
+        with self.assertRaises(Instrument.DoesNotExist):
+            Instrument.objects.get(name="some-instrument")
 
-    logger = logging.getLogger("ddionrails.imports.manager")
-    with unittest.mock.patch.object(logger, "error") as log:
-        with TEST_CASE.assertRaises(SystemExit) as error:
-            call_command("update", study.name, "instruments.json", "-f", filename, "-l")
-        logging.getLogger("ddionrails.imports.manager")
-        TEST_CASE.assertEqual(1, error.exception.code)
-        log.assert_called_once_with(
-            'Study "%s" has no file: "%s"', "some-study", "nonexistent-file.json"
-        )
+        options = get_options(self.study.name)
+        options["entity"] = "instruments.json"
+        options["filename"] = file_path
+
+        success, error = update(options)
+        self.assertIsNone(error)
+        self.assertIsNotNone(success)
+        Instrument.objects.get(name="some-instrument")
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
@@ -285,24 +316,6 @@ def test_update_command_with_valid_study_name_and_invalid_entity(study):
 
 
 @pytest.mark.django_db
-@pytest.mark.usefixtures(("mock_import_path"))
-def test_update_command_with_valid_study_name_and_valid_entity_and_filename(study):
-    file_path = Study().import_path().joinpath("instruments/some-instrument.json")
-
-    with TEST_CASE.assertRaises(Instrument.DoesNotExist):
-        Instrument.objects.get(name="some-instrument")
-
-    options = get_options(study.name)
-    options["entity"] = "instruments.json"
-    options["filename"] = file_path
-
-    success, error = update(options)
-    TEST_CASE.assertIsNone(error)
-    TEST_CASE.assertIsNotNone(success)
-    Instrument.objects.get(name="some-instrument")
-
-
-@pytest.mark.django_db
 @pytest.mark.usefixtures("mock_import_path", "period", "analysis_unit")
 def test_instrument_import(study, period, analysis_unit):
     with TEST_CASE.assertRaises(Instrument.DoesNotExist):
@@ -344,14 +357,27 @@ def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
     )
 
 
-@pytest.mark.usefixtures(("mock_import_path"))
 class TestUpdate(unittest.TestCase):
-    mock_import_path_arguments: PatchImportPathArguments
 
     def setUp(self):
-        self.dataset = DatasetFactory(name="test-dataset")
-        self.study = self.dataset.study
+        self.study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        self.dataset = DatasetFactory(name="test-dataset", study=self.study)
+        self.tmp_path, patch_dict = tmp_import_path_with_test_data()
+        self.import_path_patch = patch(**patch_dict)
+        self.import_path_patch.start()
+        self.tmp_backup_path = Path(mkdtemp())
+        self.tmp_backup_patch = patch(
+            "ddionrails.workspace.models.basket.settings.BACKUP_DIR", self.tmp_backup_path
+        )
+        self.tmp_backup_patch.start()
         return super().setUp()
+
+    def tearDown(self) -> None:
+        self.import_path_patch.stop()
+        self.tmp_backup_patch.stop()
+        destroy_tmp_path(self.tmp_path)
+        destroy_tmp_path(self.tmp_backup_path)
+        return super().tearDown()
 
     def test_clean_update(self):
         """Does a clean update remove study data before the update?
@@ -365,14 +391,8 @@ class TestUpdate(unittest.TestCase):
         """
         clean_import = True
         self.assertTrue(list(Dataset.objects.filter(id=self.dataset.id)))
-        with patch(
-            "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-            self.mock_import_path_arguments["return_value"],
-        ):
-            manager = StudyImportManager(self.study, redis=False)
-            update_single_study(
-                self.study, True, clean_import=clean_import, manager=manager
-            )
+        manager = StudyImportManager(self.study, redis=False)
+        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
 
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
@@ -381,16 +401,10 @@ class TestUpdate(unittest.TestCase):
         """A clean update should leaf baskets intact."""
         clean_import = False
 
-        basket = BasketFactory(name="study_basket")
+        basket = BasketFactory(name="study_basket", study=self.study)
 
         manager = StudyImportManager(self.study, redis=False)
-        with patch(
-            "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-            self.mock_import_path_arguments["return_value"],
-        ):
-            update_single_study(
-                self.study, True, clean_import=clean_import, manager=manager
-            )
+        update_single_study(self.study, True, clean_import=clean_import, manager=manager)
         variable = Variable.objects.get(name="some-variable")
         outdated_variable = Variable.objects.get(name="some-third-variable")
 
@@ -405,11 +419,14 @@ class TestUpdate(unittest.TestCase):
         variable_id = variable.id
         basket_id = basket.id
 
-        import_files = Path(self.mock_import_path_arguments["return_value"])
-        new_variables = """study_name,dataset_name,name,concept_name,image_url
-some-study,some-dataset,some-variable,some-concept,https://variable-image.de
-some-study,some-dataset,some-other-variable,some-concept,https://variable-other-image.de
-"""
+        import_files = self.tmp_path
+        new_variables = (
+            "study_name,dataset_name,name,concept_name,image_url\n"
+            f"{HARD_CODED_STUDY_NAME},some-dataset"
+            ",some-variable,some-concept,https://variable-image.de\n"
+            f"{HARD_CODED_STUDY_NAME},some-dataset"
+            ",some-other-variable,some-concept,https://variable-other-image.de\n"
+        )
         with open(import_files.joinpath("variables.csv"), "w", encoding="utf8") as file:
             file.write(new_variables)
 
@@ -423,13 +440,9 @@ some-study,some-dataset,some-other-variable,some-concept,https://variable-other-
             "ddionrails.imports.management.commands.update.enqueue"
         ) as mocked_enqueue:
             mocked_enqueue.side_effect = _enqueue
-            with patch(
-                "ddionrails.workspace.models.basket.settings.BACKUP_DIR",
-                self.mock_import_path_arguments["return_value"],
-            ):
-                update_single_study(
-                    self.study, True, clean_import=clean_import, manager=manager
-                )
+            update_single_study(
+                self.study, True, clean_import=clean_import, manager=manager
+            )
 
         with self.assertRaises(ObjectDoesNotExist):
             Variable.objects.get(name="some-third-variable")

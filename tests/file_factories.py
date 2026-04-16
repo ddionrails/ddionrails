@@ -6,7 +6,7 @@ from csv import DictWriter
 from dataclasses import dataclass
 from os import remove
 from pathlib import Path
-from shutil import rmtree
+from shutil import copytree, rmtree
 from tempfile import mkdtemp
 from typing import Any
 
@@ -41,6 +41,19 @@ def tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
     return tmp_path, patch_dict
 
 
+def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:
+    """Move test data into patched import path"""
+    csv_path = Path("./tests/functional/test_data/some-study/ddionrails/").absolute()
+    tmp_path, patch_dict = tmp_import_path()
+    copytree(csv_path, tmp_path, dirs_exist_ok=True)
+    return tmp_path, patch_dict
+
+
+def destroy_tmp_path(tmp_path):
+    """Use rmtree to remove directory."""
+    rmtree(tmp_path, ignore_errors=True)
+
+
 class _TMPImportFILE(ABC):
 
     file_name: Path
@@ -50,7 +63,7 @@ class _TMPImportFILE(ABC):
 
     def __init__(self, folder: Path | None = None) -> None:
         if folder is not None:
-            self.folder_external
+            self.folder_external = True
         self.tmp_path, self.import_path_patch_arguments = tmp_import_path(folder)
         super().__init__()
 
