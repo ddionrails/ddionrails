@@ -33,6 +33,11 @@ class TestDocuments(LiveServerTestCase):
         )
         set_up_index(self, self.concept, "concepts")
         set_up_index(self, self.topic, "topics")
+        self.topic.save()
+        self.concept.save()
+        self.variable_with_concept.save()
+        ConceptDocument._index.refresh()  # pylint: disable=protected-access
+        TopicDocument._index.refresh()  # pylint: disable=protected-access
         return super().setUp()
 
     def tearDown(self) -> None:

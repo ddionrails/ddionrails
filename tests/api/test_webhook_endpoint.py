@@ -1,5 +1,7 @@
 """Test Webhooks"""
 
+# pylint: disable=too-many-instance-attributes
+
 import hashlib
 import hmac
 import json
@@ -26,9 +28,7 @@ from ..workspace.factories import BasketFactory
 
 
 @pytest.mark.usefixtures("mock_import_path")
-class WebhookEndpointTests(  # pylint:disable=too-many-instance-attributes
-    LiveServerTestCase
-):
+class WebhookEndpointTests(LiveServerTestCase):
     """Test Webhook for updating studies"""
 
     mock_import_path_arguments: PatchDict

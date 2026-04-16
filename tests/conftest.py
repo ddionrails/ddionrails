@@ -330,6 +330,9 @@ class PatchDict(TypedDict):
     return_value: Path
 
 
+# TODO: This is used a lot and can't be deleted right now.
+# Maybe there is a better option than
+# copying static files into a tmp directory
 @pytest.fixture(name="mock_import_path")
 def _mock_import_path(request) -> Generator[None, None, None]:
     tmp_path = Path(mkdtemp())

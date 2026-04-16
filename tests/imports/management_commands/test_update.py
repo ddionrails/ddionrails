@@ -13,6 +13,7 @@ import pytest
 from _pytest.capture import CaptureFixture
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
+from django.test import TestCase
 
 from ddionrails.concepts.models import Period
 from ddionrails.data.models import Dataset, Variable
@@ -28,6 +29,7 @@ from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests.conftest import PatchImportPathArguments
 from tests.data.factories import DatasetFactory
+from tests.model_factories import StudyFactory
 from tests.workspace.factories import BasketFactory
 
 pytestmark = [pytest.mark.django_db]
@@ -70,13 +72,6 @@ def _mocked_update_all_studies_completely(mocker):
     )
 
 
-@pytest.fixture(name="mocked_import_single_entity")
-def _mocked_import_single_entity(mocker):
-    return mocker.patch(
-        "ddionrails.imports.manager.StudyImportManager.import_single_entity"
-    )
-
-
 @pytest.fixture(name="mocked_import_all_entities")
 def _mocked_import_all_entities(mocker):
     return mocker.patch(
@@ -84,11 +79,89 @@ def _mocked_import_all_entities(mocker):
     )
 
 
-def test_update_study_partial(study, mocked_import_single_entity):
-    manager = StudyImportManager(study)
-    entity = ("periods",)
-    update_study_partial(manager, entity)
-    mocked_import_single_entity.assert_called_once_with(entity[0])
+class TestUpdate_(TestCase):
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.mock_update_single = patch.object(StudyImportManager, "import_single_entity")
+
+        self.mock_single_study = patch(
+            "ddionrails.imports.management.commands.update.update_single_study"
+        )
+        self.single_entity_mocker = self.mock_update_single.start()
+        self.single_study_mocker = self.mock_single_study.start()
+
+    def test_update_study_partial(self):
+        manager = StudyImportManager(self.study)
+        entity = ("periods",)
+        update_study_partial(manager, entity)
+        self.single_entity_mocker.assert_called_once_with(entity[0])
+
+    def test_update_all_studies_completely(self):
+        update_all_studies_completely(True)
+        self.single_study_mocker.assert_called_once()
+
+    @patch(
+        (
+            "ddionrails.imports.management.commands."
+            "update.StudyImportManager.import_single_entity"
+        )
+    )
+    def test_update_single_study_entity_filename(self, mocked_import_single_entity):
+        self.mock_single_study.stop()
+        filename = "tests/imports/test_data/sample.csv"
+        with self.assertRaises(SystemExit) as error:
+            call_command(
+                "update", self.study.name, "instruments.json", "-f", filename, "-l"
+            )
+            TEST_CASE.assertEqual(0, error.exception.code)
+        TEST_CASE.assertEqual(
+            "instruments.json", mocked_import_single_entity.call_args.args[0]
+        )
+        TEST_CASE.assertEqual(
+            Path(filename), mocked_import_single_entity.call_args.args[1]
+        )
+
+    def tearDown(self) -> None:
+        self.mock_update_single.stop()
+        self.mock_single_study.stop()
+        return super().tearDown()
+
+    def test_update_command_with_valid_study_name(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name)
+
+        self.assertEqual(0, error.exception.code)
+        self.single_study_mocker.assert_called_once()
+
+    def test_update_command_with_valid_study_name_local(self):
+        for option in ["-l", "--local"]:
+            with TEST_CASE.assertRaises(SystemExit) as error:
+                call_command("update", self.study.name, option)
+
+            TEST_CASE.assertEqual(0, error.exception.code)
+
+            call_args = self.single_study_mocker.call_args.args
+            call_kwargs = self.single_study_mocker.call_args.kwargs
+            self.assertEqual((self.study, True, tuple(), None, False), call_args)
+            self.assertEqual(
+                (self.study, True),
+                (call_kwargs["manager"].study, call_kwargs["manager"].redis),
+            )
+
+    def test_update_command_with_valid_study_name_and_entity(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name, ("periods"))
+
+        manager = StudyImportManager(self.study)
+        self.assertEqual(0, error.exception.code)
+        call_args = self.single_study_mocker.call_args.args
+        call_kwargs = self.single_study_mocker.call_args.kwargs
+        self.assertEqual((self.study, False, tuple(("periods",)), None, False), call_args)
+        self.assertEqual(
+            (manager.study, manager.redis),
+            (call_kwargs["manager"].study, call_kwargs["manager"].redis),
+        )
 
 
 @pytest.mark.django_db
@@ -133,17 +206,6 @@ def test_update_single_study_entity(study):
     TEST_CASE.assertEqual(expected_periods, result)
 
 
-def test_update_single_study_entity_filename(study, mocked_import_single_entity):
-    filename = "tests/imports/test_data/sample.csv"
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name, "instruments.json", "-f", filename, "-l")
-        TEST_CASE.assertEqual(0, error.exception.code)
-    TEST_CASE.assertEqual(
-        "instruments.json", mocked_import_single_entity.call_args.args[0]
-    )
-    TEST_CASE.assertEqual(Path(filename), mocked_import_single_entity.call_args.args[1])
-
-
 @pytest.mark.usefixtures(("mock_import_path"))
 def test_update_single_study_entity_filename_without_redis(study):
     filename = Study().import_path().joinpath("instruments/some-instrument.json")
@@ -169,13 +231,6 @@ def test_update_single_study_entity_nonexistent_filename(study):
         log.assert_called_once_with(
             'Study "%s" has no file: "%s"', "some-study", "nonexistent-file.json"
         )
-
-
-def test_update_all_studies_completely(
-    study, mocked_update_single_study  # pylint: disable=unused-argument
-):
-    update_all_studies_completely(True)
-    mocked_update_single_study.assert_called_once()
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
@@ -220,48 +275,6 @@ def test_update_command_with_invalid_study_name(capsys: CaptureFixture):
 
     TEST_CASE.assertEqual(1, error.exception.code)
     TEST_CASE.assertIn("does not exist", capsys.readouterr().err)
-
-
-def test_update_command_with_valid_study_name(study, mocked_update_single_study):
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name)
-
-    TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_single_study.assert_called_once()
-
-
-@pytest.mark.parametrize("option", ("-l", "--local"))
-def test_update_command_with_valid_study_name_local(
-    study, option, mocked_update_single_study
-):
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name, option)
-
-    TEST_CASE.assertEqual(0, error.exception.code)
-
-    call_args = mocked_update_single_study.call_args.args
-    call_kwargs = mocked_update_single_study.call_args.kwargs
-    TEST_CASE.assertEqual((study, True, tuple(), None, False), call_args)
-    TEST_CASE.assertEqual(
-        (study, True), (call_kwargs["manager"].study, call_kwargs["manager"].redis)
-    )
-
-
-def test_update_command_with_valid_study_name_and_entity(
-    study, mocked_update_single_study
-):
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name, ("periods"))
-
-    manager = StudyImportManager(study)
-    TEST_CASE.assertEqual(0, error.exception.code)
-    call_args = mocked_update_single_study.call_args.args
-    call_kwargs = mocked_update_single_study.call_args.kwargs
-    TEST_CASE.assertEqual((study, False, tuple(("periods",)), None, False), call_args)
-    TEST_CASE.assertEqual(
-        (manager.study, manager.redis),
-        (call_kwargs["manager"].study, call_kwargs["manager"].redis),
-    )
 
 
 def test_update_command_with_valid_study_name_and_invalid_entity(study):

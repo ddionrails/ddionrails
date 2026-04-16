@@ -100,7 +100,7 @@ class TestDatasetJsonImport(TestCase):
     def test_execute_import_method(self):
         self.assertEqual(0, Variable.objects.count())
         self.assertEqual(0, Dataset.objects.count())
-        content = [{"study": "soep-test", "dataset": "bp", "variable": "pid"}]
+        content = [{"study": "soep-test", "dataset": "bp", "name": "pid"}]
         tmp_file = TMPJSON(content)
         dataset_json_importer = DatasetJsonImport(tmp_file.name, StudyFactory())
         with patch(**tmp_file.import_patch_arguments):
@@ -112,11 +112,15 @@ class TestDatasetJsonImport(TestCase):
         self.assertEqual(0, Dataset.objects.count())
 
         variable = VariableFactory()
+        name = variable.name
+        dataset = variable.dataset
+        variable.delete()
+
         content = [
             {
-                "study": variable.dataset.study.name,
-                "dataset": variable.dataset.name,
-                "variable": variable.name,
+                "study": dataset.study.name,
+                "dataset": dataset.name,
+                "name": name,
             }
         ]
         tmp_file = TMPJSON(content)
@@ -211,7 +215,7 @@ class TestDatasetJsonImport(TestCase):
             {
                 "study": study.name,
                 "dataset": dataset_name,
-                "variable": variable_name,
+                "name": variable_name,
                 "statistics": {"names": [], "values": []},
             }
         ]
@@ -230,7 +234,7 @@ class TestDatasetJsonImport(TestCase):
             {
                 "study": study.name,
                 "dataset": "some-dataset",
-                "variable": "some-variable",
+                "name": "some-variable",
                 "statistics": {"names": [], "values": []},
             }
         ]
@@ -252,7 +256,7 @@ class TestDatasetJsonImport(TestCase):
             {
                 "study": dataset.study.name,
                 "dataset": dataset.name,
-                "variable": "some-variable",
+                "name": "some-variable",
                 "statistics": {"names": ["valid", "invalid"], "values": ["1", "0"]},
                 "categories": {
                     "frequencies": [],
@@ -280,7 +284,7 @@ class TestDatasetJsonImport(TestCase):
             {
                 "study": dataset.study.name,
                 "dataset": dataset.name,
-                "variable": "some-variable",
+                "name": "some-variable",
                 "uni": {"valid": 1},
             }
         ]

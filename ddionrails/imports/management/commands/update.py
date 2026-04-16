@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-""" "Update" management command for ddionrails project """
+""" "Update" management command for ddionrails project"""
+
 import sys
 from pathlib import Path
 
@@ -113,7 +114,6 @@ def update(options) -> tuple[str | None, str | None]:
     for single_entity in entity:
         if single_entity not in manager.import_order:
             return (None, f'Entity "{single_entity}" does not exist.')
-
     # if filename is given, validate that entity is "datasets.json" or "instruments"
     if filename and not entity.intersection({"datasets.json", "instruments.json"}):
         out = ", ".join(entity.intersection({"datasets.json", "instruments.json"}))
@@ -135,7 +135,7 @@ def _clear_all_caches():
 
 
 # Maybe replace study arg with manager arg in future refactor
-def update_single_study(  # pylint: disable=R0913
+def update_single_study(  # pylint: disable=R0913,R0917
     study: Study,
     local: bool,
     entity: tuple = None,
