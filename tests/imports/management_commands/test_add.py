@@ -1,71 +1,63 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,invalid-name
+# pylint: disable=missing-docstring,invalid-name
 
-""" Test cases for "add" management command for ddionrails project """
+"""Test cases for "add" management command for ddionrails project"""
 
-from unittest import TestCase
+from contextlib import redirect_stdout
+from io import StringIO
 
-import pytest
 from django.core.management import call_command
 from django.core.management.base import CommandError
+from django.test import TestCase
 
 from ddionrails.studies.models import Study
-
-TEST_CASE = TestCase()
-
-
-@pytest.fixture
-def mocked_delete_method(mocker):
-    """ Mocked Study.delete method for test cases """
-    return mocker.patch.object(Study, "delete")
+from tests.model_factories import StudyFactory
 
 
-def test_add_command_without_study_name():
-    """ Test add management command displays "missing argument" message """
-    with TEST_CASE.assertRaisesRegex(
-        CommandError, ".*arguments are required: study_name.*"
-    ):
-        call_command("add")
+class TestAdd(TestCase):
 
+    def test_add_command_creates_study_object(self):
+        """Test add management command creates a study"""
+        self.assertEqual(0, Study.objects.count())
+        study_name = "some-study"
+        repo_url = "some-repo-url"
+        call_command("add", study_name, repo_url)
+        self.assertEqual(1, Study.objects.count())
+        study = Study.objects.first()
+        self.assertEqual(study_name, study.name)
+        self.assertEqual(repo_url, study.repo)
 
-def test_add_command_without_repo_url():
-    """ Test add management command displays "missing argument" message """
-    with TEST_CASE.assertRaisesRegex(
-        CommandError, ".*arguments are required: repo_url.*"
-    ):
-        call_command("add", "some-study")
+    def test_add_command_displays_help(self):
+        """Test add management command displays help with "-h" and "--help" """
+        for option in ["-h", "--help"]:
+            buffer = StringIO()
+            with redirect_stdout(buffer):
+                with self.assertRaises(SystemExit):
+                    call_command("add", option)
+                self.assertRegex(buffer.getvalue(), ".*usage:.*-h.*")
 
+    def test_add_command_without_study_name(self):
+        """Test add management command displays "missing argument" message"""
+        with self.assertRaisesRegex(
+            CommandError, ".*arguments are required: study_name.*"
+        ):
+            call_command("add")
 
-@pytest.mark.parametrize("option", ("-h", "--help"))
-def test_add_command_displays_help(option, capsys):
-    """ Test add management command displays help with "-h" and "--help" """
-    with TEST_CASE.assertRaises(SystemExit):
-        call_command("add", option)
-    TEST_CASE.assertRegex(capsys.readouterr().out, ".*usage:.*-h.*")
+    def test_add_command_without_repo_url(self):
+        """Test add management command displays "missing argument" message"""
+        with self.assertRaisesRegex(CommandError, ".*arguments are required: repo_url.*"):
+            call_command("add", "some-study")
 
-
-@pytest.mark.django_db
-def test_add_command_creates_study_object():
-    """ Test add management command creates a study """
-    TEST_CASE.assertEqual(0, Study.objects.count())
-    study_name = "some-study"
-    repo_url = "some-repo-url"
-    call_command("add", study_name, repo_url)
-    TEST_CASE.assertEqual(1, Study.objects.count())
-    study = Study.objects.first()
-    TEST_CASE.assertEqual(study_name, study.name)
-    TEST_CASE.assertEqual(repo_url, study.repo)
-
-
-def test_add_command_with_existing_study_name(study):
-    """ Test add management command with existing study name """
-    TEST_CASE.assertEqual(1, Study.objects.count())
-    study_name = study.name
-    repo_url = study.repo
-    with TEST_CASE.assertRaises(SystemExit):
-        try:
-            call_command("add", study_name, repo_url)
-        except SystemExit as exit_error:
-            TEST_CASE.assertEqual(1, exit_error.code)
-            raise SystemExit()
-    TEST_CASE.assertEqual(1, Study.objects.count())
+    def test_add_command_with_existing_study_name(self):
+        """Test add management command with existing study name"""
+        study = StudyFactory()
+        self.assertEqual(1, Study.objects.count())
+        study_name = study.name
+        repo_url = study.repo
+        with self.assertRaises(SystemExit):
+            try:
+                call_command("add", study_name, repo_url)
+            except SystemExit as exit_error:
+                self.assertEqual(1, exit_error.code)
+                raise SystemExit()
+        self.assertEqual(1, Study.objects.count())

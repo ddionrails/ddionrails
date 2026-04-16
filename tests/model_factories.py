@@ -87,6 +87,7 @@ class StudyFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+    repo = factory.LazyAttribute(lambda _: FAKE.url())
 
 
 class PeriodFactory(DjangoModelFactory):
