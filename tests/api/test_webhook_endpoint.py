@@ -10,7 +10,6 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
-import pytest
 from django.test import LiveServerTestCase, override_settings
 from rest_framework import status
 
@@ -21,17 +20,45 @@ from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket_variable import BasketVariable
-from tests.conftest import PatchDict
-from tests.imports.management_commands.test_update import IMPORT_PATH
+from tests.file_factories import destroy_tmp_path, tmp_import_path_with_test_data
 
 from ..workspace.factories import BasketFactory
 
 
-@pytest.mark.usefixtures("mock_import_path")
 class WebhookEndpointTests(LiveServerTestCase):
     """Test Webhook for updating studies"""
 
-    mock_import_path_arguments: PatchDict
+    def setUp(self):
+        self.tmp_path, patch_arguments = tmp_import_path_with_test_data()
+        self.path_path = patch(**patch_arguments)
+        self.path_path.start()
+        with open(
+            self.tmp_path.joinpath("variables.csv"), encoding="utf8"
+        ) as variables_file:
+
+            study_name = next(DictReader(variables_file))["study_name"]
+        self.study, _ = Study.objects.get_or_create(name=study_name)
+        self.study.pin_reference = "main"
+        self.study.save()
+        self._set_up_webhook_content()
+        self.study.save()
+
+        self._update_study()
+
+        self.basket = BasketFactory(name="test_basket")
+        self.basket.study = self.study
+        self.basket_variable = BasketVariable()
+        self.basket_variable.basket = self.basket
+        self.basket_variable.variable = Variable.objects.filter(
+            dataset__study=self.study
+        ).first()
+        self.basket_variable_variable_name = self.basket_variable.variable.name
+        self.basket_variable.save()
+
+    def tearDown(self) -> None:
+        self.path_path.stop()
+        destroy_tmp_path(self.tmp_path)
+        return super().tearDown()
 
     def _set_up_webhook_content(self):
         repo_url_part = f"github.com/paneldata/test{self.study.name}"
@@ -67,30 +94,6 @@ class WebhookEndpointTests(LiveServerTestCase):
             "CONTENT_TYPE": "application/json",
             "X-Hub-Signature-256": f"sha256={self.digest}",
         }
-
-    def setUp(self):
-        with open(
-            IMPORT_PATH.joinpath("variables.csv"), encoding="utf8"
-        ) as variables_file:
-
-            study_name = next(DictReader(variables_file))["study_name"]
-        self.study, _ = Study.objects.get_or_create(name=study_name)
-        self.study.pin_reference = "main"
-        self.study.save()
-        self._set_up_webhook_content()
-        self.study.save()
-
-        self._update_study()
-
-        self.basket = BasketFactory(name="test_basket")
-        self.basket.study = self.study
-        self.basket_variable = BasketVariable()
-        self.basket_variable.basket = self.basket
-        self.basket_variable.variable = Variable.objects.filter(
-            dataset__study=self.study
-        ).first()
-        self.basket_variable_variable_name = self.basket_variable.variable.name
-        self.basket_variable.save()
 
     def test_webhook_post_successful(self):
         """Test correct post request."""
@@ -171,7 +174,7 @@ class WebhookEndpointTests(LiveServerTestCase):
         instrument_name = instrument.name
         instrument.delete()
         self.study.import_path = lambda *args: Path(
-            self.mock_import_path_arguments["return_value"]
+            self.tmp_path
         )
         self.study.save()
 
@@ -235,7 +238,6 @@ class WebhookEndpointTests(LiveServerTestCase):
             "ddionrails.imports.management.commands.update.enqueue"
         ) as mock_enqueue:
             mock_enqueue.side_effect = self._enqueue
-            with patch(**self.mock_import_path_arguments):
-                with patch("ddionrails.imports.management.commands.update.set_up_repo"):
-                    manager = StudyImportManager(self.study, redis=False)
-                    update_single_study(self.study, False, (), "", manager=manager)
+            with patch("ddionrails.imports.management.commands.update.set_up_repo"):
+                manager = StudyImportManager(self.study, redis=False)
+                update_single_study(self.study, False, (), "", manager=manager)
