@@ -326,6 +326,8 @@ class TestBasketSearch(TestCase):
 
 
 class TestUserDelete(TransactionTestCase):
+    reset_sequences = True
+    serialized_rollback = False
 
     def test_with_valid_user(self):
         client = Client()

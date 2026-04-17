@@ -332,6 +332,8 @@ class TestTransformationImport(TestCase):
 
 
 class TestTransformationImportTransaction(TransactionTestCase):
+    reset_sequences = True
+    serialized_rollback = False
 
     def setUp(self) -> None:
         self.origin_variable = VariableFactory(name="origin")

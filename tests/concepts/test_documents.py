@@ -6,7 +6,7 @@
 from typing import Any
 
 from django.forms.models import model_to_dict
-from django.test import LiveServerTestCase, TransactionTestCase, override_settings
+from django.test import TransactionTestCase, override_settings
 
 from ddionrails.concepts.documents import ConceptDocument, TopicDocument
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
@@ -23,6 +23,8 @@ class TestDocuments(TransactionTestCase):
     variable_with_concept: Any
     topic: Any
     concept: Any
+    reset_sequences = True
+    serialized_rollback = False
 
     def setUp(self) -> None:
         self.study = StudyFactory()
