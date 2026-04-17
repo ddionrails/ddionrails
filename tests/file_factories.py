@@ -49,9 +49,11 @@ def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:
     return tmp_path, patch_dict
 
 
-def destroy_tmp_path(tmp_path):
+def destroy_tmp_path(tmp_path: Path):
     """Use rmtree to remove directory."""
-    rmtree(tmp_path, ignore_errors=True)
+    tmp_path = Path(tmp_path)
+    if tmp_path.exists()
+        rmtree(tmp_path, ignore_errors=True)
 
 
 class _TMPImportFILE(ABC):
@@ -68,13 +70,15 @@ class _TMPImportFILE(ABC):
         super().__init__()
 
     def __del__(self):
-        remove(self.file_name)
+        if self.file_name.exists():
+            remove(self.file_name)
         if not self.folder_external:
             rmtree(self.tmp_path)
         del self.tmp_path
 
     def __exit__(self, exc_type, exc_value, traceback):
-        remove(self.file_name)
+        if self.file_name.exists():
+            remove(self.file_name)
         if not self.folder_external:
             rmtree(self.tmp_path)
         del self.tmp_path

@@ -76,6 +76,7 @@ class TestUpdate_(TestCase):
         self.single_entity_mocker.assert_called_once_with(entity[0])
 
     def test_update_all_studies_completely(self):
+        self.single_study_mocker.reset_mock()
         update_all_studies_completely(True)
         self.single_study_mocker.assert_called_once()
 
