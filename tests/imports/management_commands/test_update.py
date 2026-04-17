@@ -316,6 +316,7 @@ class TestUpdateAllStudiesCompletely(TestCase):
 
     def test_update_command_without_study_name(self):
         """Test "update" runs "update_all_studies_completely" when given no study name"""
+        self.patched_function.reset_mock()
         with self.assertRaises(SystemExit) as error:
             call_command("update")
 
@@ -324,6 +325,7 @@ class TestUpdateAllStudiesCompletely(TestCase):
 
     def test_update_command_without_study_name_local(self):
         """Test "update" runs "update_all_studies_completely" correctly with --local"""
+        self.patched_function.reset_mock()
         for option in ("-l", "--local"):
             with self.assertRaises(SystemExit) as error:
                 call_command("update", option)

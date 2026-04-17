@@ -18,6 +18,7 @@ class TestAdd(TestCase):
 
     def test_add_command_creates_study_object(self):
         """Test add management command creates a study"""
+        Study.objects.all().delete()
         self.assertEqual(0, Study.objects.count())
         study_name = "some-study"
         repo_url = "some-repo-url"
@@ -50,6 +51,7 @@ class TestAdd(TestCase):
 
     def test_add_command_with_existing_study_name(self):
         """Test add management command with existing study name"""
+        Study.objects.all().delete()
         study = StudyFactory()
         self.assertEqual(1, Study.objects.count())
         study_name = study.name
