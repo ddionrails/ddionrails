@@ -23,8 +23,6 @@ class TestDocuments(TransactionTestCase):
     variable_with_concept: Any
     topic: Any
     concept: Any
-    reset_sequences = True
-    serialized_rollback = False
 
     def setUp(self) -> None:
         self.study = StudyFactory()
@@ -47,6 +45,8 @@ class TestDocuments(TransactionTestCase):
     def tearDown(self) -> None:
         tear_down_index(self, "concepts")
         tear_down_index(self, "topics")
+        self.study.delete()
+        self.concept.delete()
         return super().tearDown()
 
     def test_concept_search_document_fields(self):

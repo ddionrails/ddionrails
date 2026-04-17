@@ -53,6 +53,11 @@ def get_options(study_name):
 
 class TestUpdate_(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        Study.objects.all().delete()
+        return super().setUpClass()
+
     def setUp(self) -> None:
         self.study = StudyFactory()
         self.mock_update_single = patch.object(StudyImportManager, "import_single_entity")
