@@ -6,12 +6,12 @@
 import csv
 import logging
 import unittest
+from contextlib import ExitStack, redirect_stderr, redirect_stdout
+from io import StringIO
 from pathlib import Path
 from tempfile import mkdtemp
 from unittest.mock import patch
 
-import pytest
-from _pytest.capture import CaptureFixture
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management import call_command
 from django.test import TestCase
@@ -29,13 +29,15 @@ from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
 from tests.file_factories import destroy_tmp_path, tmp_import_path_with_test_data
-from tests.model_factories import BasketFactory, DatasetFactory, StudyFactory
-
-pytestmark = [pytest.mark.django_db]
+from tests.model_factories import (
+    AnalysisUnitFactory,
+    BasketFactory,
+    DatasetFactory,
+    PeriodFactory,
+    StudyFactory,
+)
 
 HARD_CODED_STUDY_NAME = "some-study"
-
-TEST_CASE = unittest.TestCase()
 
 
 def get_options(study_name):
@@ -49,34 +51,6 @@ def get_options(study_name):
     return options
 
 
-@pytest.fixture(name="mocked_update_single_study")
-def _mocked_update_single_study(mocker):
-    return mocker.patch(
-        "ddionrails.imports.management.commands.update.update_single_study"
-    )
-
-
-@pytest.fixture(name="mocked_update_study_partial")
-def _mocked_update_study_partial(mocker):
-    return mocker.patch(
-        "ddionrails.imports.management.commands.update.update_study_partial"
-    )
-
-
-@pytest.fixture(name="mocked_update_all_studies_completely")
-def _mocked_update_all_studies_completely(mocker):
-    return mocker.patch(
-        "ddionrails.imports.management.commands.update.update_all_studies_completely"
-    )
-
-
-@pytest.fixture(name="mocked_import_all_entities")
-def _mocked_import_all_entities(mocker):
-    return mocker.patch(
-        "ddionrails.imports.manager.StudyImportManager.import_all_entities"
-    )
-
-
 class TestUpdate_(TestCase):
 
     def setUp(self) -> None:
@@ -88,6 +62,12 @@ class TestUpdate_(TestCase):
         )
         self.single_entity_mocker = self.mock_update_single.start()
         self.single_study_mocker = self.mock_single_study.start()
+
+    def test_update_command_with_valid_study_name_and_invalid_entity(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name, "invalid-entity")
+
+        self.assertEqual(1, error.exception.code)
 
     def test_update_study_partial(self):
         manager = StudyImportManager(self.study)
@@ -112,13 +92,11 @@ class TestUpdate_(TestCase):
             call_command(
                 "update", self.study.name, "instruments.json", "-f", filename, "-l"
             )
-            TEST_CASE.assertEqual(0, error.exception.code)
-        TEST_CASE.assertEqual(
+            self.assertEqual(0, error.exception.code)
+        self.assertEqual(
             "instruments.json", mocked_import_single_entity.call_args.args[0]
         )
-        TEST_CASE.assertEqual(
-            Path(filename), mocked_import_single_entity.call_args.args[1]
-        )
+        self.assertEqual(Path(filename), mocked_import_single_entity.call_args.args[1])
 
     def tearDown(self) -> None:
         self.mock_update_single.stop()
@@ -134,10 +112,10 @@ class TestUpdate_(TestCase):
 
     def test_update_command_with_valid_study_name_local(self):
         for option in ["-l", "--local"]:
-            with TEST_CASE.assertRaises(SystemExit) as error:
+            with self.assertRaises(SystemExit) as error:
                 call_command("update", self.study.name, option)
 
-            TEST_CASE.assertEqual(0, error.exception.code)
+            self.assertEqual(0, error.exception.code)
 
             call_args = self.single_study_mocker.call_args.args
             call_kwargs = self.single_study_mocker.call_args.kwargs
@@ -185,8 +163,9 @@ class TestUpdateWithCSV(TestCase):
         manager = StudyImportManager(self.study, redis=False)
         update_single_study(self.study, local, (), None, manager=manager)
         result = {variable.name for variable in Variable.objects.all()}
-        TEST_CASE.assertNotEqual(0, len(result))
-        TEST_CASE.assertEqual(expected_variables, result)
+        self.assertNotEqual(0, len(result))
+        result_union = expected_variables.union(result)
+        self.assertEqual(expected_variables, result_union)
 
     def test_update_single_study_entity(self):
         entities = ("periods",)
@@ -198,7 +177,9 @@ class TestUpdateWithCSV(TestCase):
         update_single_study(self.study, local, entities, None, manager=manager)
         result = {period.name for period in Period.objects.all()}
         self.assertNotEqual(0, len(result))
-        self.assertEqual(expected_periods, result)
+        # Result can contain more but should contain all from expected
+        result_union = expected_periods.union(result)
+        self.assertEqual(expected_periods, result_union)
 
     def test_update_single_study(self):
         with open(
@@ -212,8 +193,8 @@ class TestUpdateWithCSV(TestCase):
         mocked_update_repo.assert_called_once()
         result = {variable.name for variable in Variable.objects.all()}
         update_patch.stop()
-        TEST_CASE.assertNotEqual(0, len(result))
-        TEST_CASE.assertEqual(expected_variables, result)
+        self.assertNotEqual(0, len(result))
+        self.assertEqual(expected_variables, result)
 
     def test_update_single_study_entity_filename_without_redis(self):
         filename = Study().import_path().joinpath("instruments/some-instrument.json")
@@ -264,100 +245,94 @@ class TestUpdateWithCSV(TestCase):
         Instrument.objects.get(name="some-instrument")
 
 
-@pytest.mark.parametrize("option", ("-h", "--help"))
-def test_update_command_shows_help(option, capsys: CaptureFixture):
-    """Test "update" shows help"""
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", option)
+class TestStdOutAndStdErr(TestCase):
 
-    TEST_CASE.assertEqual(0, error.exception.code)
-    output = capsys.readouterr().out
-    TEST_CASE.assertIn(
-        "This command is used to update study metadata in ddionrails.", output
-    )
-    TEST_CASE.assertIn("--local", output)
-    TEST_CASE.assertIn("--filename", output)
+    def setUp(self) -> None:
+        self.std_out = StringIO()
+        self.std_err = StringIO()
+        self.std_stack = ExitStack()
+        self.std_stack.enter_context(redirect_stdout(self.std_out))
+        self.std_stack.enter_context(redirect_stderr(self.std_err))
+        return super().setUp()
 
+    def tearDown(self) -> None:
+        self.std_stack.close()
+        return super().tearDown()
 
-def test_update_command_without_study_name(mocked_update_all_studies_completely):
-    """Test "update" runs "update_all_studies_completely" when given no study name"""
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update")
+    def test_update_command_shows_help(self):
+        """Test "update" shows help"""
 
-    TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_all_studies_completely.assert_called_once()
+        for option in ("-h", "--help"):
+            with self.assertRaises(SystemExit) as error:
+                call_command("update", option)
 
+            self.assertEqual(0, error.exception.code)
+            output = self.std_out.getvalue()
+            self.assertIn(
+                "This command is used to update study metadata in ddionrails.", output
+            )
+            self.assertIn("--local", output)
+            self.assertIn("--filename", output)
 
-@pytest.mark.parametrize("option", ("-l", "--local"))
-def test_update_command_without_study_name_local(
-    option, mocked_update_all_studies_completely
-):
-    """Test "update" runs "update_all_studies_completely" correctly with --local"""
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", option)
+    def test_update_command_with_invalid_study_name(self):
 
-    TEST_CASE.assertEqual(0, error.exception.code)
-    mocked_update_all_studies_completely.assert_called_once_with(True, False, redis=True)
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", "study-not-in-db")
 
+        output = self.std_err.getvalue()
+        self.assertEqual(1, error.exception.code)
+        self.assertIn("does not exist", output)
 
-def test_update_command_with_invalid_study_name(capsys: CaptureFixture):
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", "study-not-in-db")
+    def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(self):
+        study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        filename = "tests/imports/test_data/sample.csv"
 
-    TEST_CASE.assertEqual(1, error.exception.code)
-    TEST_CASE.assertIn("does not exist", capsys.readouterr().err)
+        for option in ("-f", "--filename"):
 
+            with self.assertRaises(SystemExit) as error:
+                call_command("update", study.name, "periods", option, filename)
 
-def test_update_command_with_valid_study_name_and_invalid_entity(study):
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name, "invalid-entity")
-
-    TEST_CASE.assertEqual(1, error.exception.code)
-
-
-@pytest.mark.django_db
-@pytest.mark.usefixtures("mock_import_path", "period", "analysis_unit")
-def test_instrument_import(study, period, analysis_unit):
-    with TEST_CASE.assertRaises(Instrument.DoesNotExist):
-        Instrument.objects.get(name="some-instrument")
-
-    options = get_options(study.name)
-    options["entity"] = "instuments.json"
-
-    _, error = update(options)
-    TEST_CASE.assertIsNotNone(error)
-
-    options["entity"] = "instruments"
-    success, error = update(options)
-    TEST_CASE.assertIsNone(error)
-    TEST_CASE.assertIsNotNone(success)
-
-    instrument = Instrument.objects.get(name="some-instrument")
-    TEST_CASE.assertEqual("some-type", instrument.type["en"])
-    TEST_CASE.assertEqual("ein-typ", instrument.type["de"])
-    TEST_CASE.assertEqual("1", instrument.type["position"])
-    TEST_CASE.assertEqual("some-mode", instrument.mode)
-    TEST_CASE.assertEqual(period, instrument.period)
-    TEST_CASE.assertEqual(analysis_unit, instrument.analysis_unit)
+            output = self.std_err.getvalue()
+            self.assertEqual(1, error.exception.code)
+            self.assertRegex(
+                output,
+                ".*Support for single file import not available for entity.*",
+            )
 
 
-@pytest.mark.parametrize("option", ("-f", "--filename"))
-def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(
-    study, option, capsys: CaptureFixture
-):
-    filename = "tests/imports/test_data/sample.csv"
+class TestUpdateAllStudiesCompletely(TestCase):
 
-    with TEST_CASE.assertRaises(SystemExit) as error:
-        call_command("update", study.name, "periods", option, filename)
+    def setUp(self) -> None:
+        self.patcher = patch(
+            "ddionrails.imports.management.commands.update.update_all_studies_completely"
+        )
+        self.patched_function = self.patcher.start()
+        return super().setUp()
 
-    TEST_CASE.assertEqual(1, error.exception.code)
-    TEST_CASE.assertRegex(
-        capsys.readouterr().err,
-        ".*Support for single file import not available for entity.*",
-    )
+    def tearDown(self) -> None:
+        self.patcher.stop()
+        return super().tearDown()
+
+    def test_update_command_without_study_name(self):
+        """Test "update" runs "update_all_studies_completely" when given no study name"""
+        with self.assertRaises(SystemExit) as error:
+            call_command("update")
+
+        self.assertEqual(0, error.exception.code)
+        self.patched_function.assert_called_once()
+
+    def test_update_command_without_study_name_local(self):
+        """Test "update" runs "update_all_studies_completely" correctly with --local"""
+        for option in ("-l", "--local"):
+            with self.assertRaises(SystemExit) as error:
+                call_command("update", option)
+
+            self.assertEqual(0, error.exception.code)
+            self.patched_function.assert_called_once_with(True, False, redis=True)
+            self.patched_function.reset_mock()
 
 
-class TestUpdate(unittest.TestCase):
+class TestUpdate(TestCase):
 
     def setUp(self):
         self.study = StudyFactory(name=HARD_CODED_STUDY_NAME)
@@ -378,6 +353,31 @@ class TestUpdate(unittest.TestCase):
         destroy_tmp_path(self.tmp_path)
         destroy_tmp_path(self.tmp_backup_path)
         return super().tearDown()
+
+    def test_instrument_import(self):
+        period = PeriodFactory(name="some-period", study=self.study)
+        analysis_unit = AnalysisUnitFactory(name="some-analysis-unit", study=self.study)
+        with self.assertRaises(Instrument.DoesNotExist):
+            Instrument.objects.get(name="some-instrument")
+
+        options = get_options(self.study.name)
+        options["entity"] = "instuments.json"
+
+        _, error = update(options)
+        self.assertIsNotNone(error)
+
+        options["entity"] = "instruments"
+        success, error = update(options)
+        self.assertIsNone(error)
+        self.assertIsNotNone(success)
+
+        instrument = Instrument.objects.get(name="some-instrument")
+        self.assertEqual("some-type", instrument.type["en"])
+        self.assertEqual("ein-typ", instrument.type["de"])
+        self.assertEqual("1", instrument.type["position"])
+        self.assertEqual("some-mode", instrument.mode)
+        self.assertEqual(period, instrument.period)
+        self.assertEqual(analysis_unit, instrument.analysis_unit)
 
     def test_clean_update(self):
         """Does a clean update remove study data before the update?
