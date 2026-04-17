@@ -52,7 +52,7 @@ def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:
 def destroy_tmp_path(tmp_path: Path):
     """Use rmtree to remove directory."""
     tmp_path = Path(tmp_path)
-    if tmp_path.exists()
+    if tmp_path.exists():
         rmtree(tmp_path, ignore_errors=True)
 
 
