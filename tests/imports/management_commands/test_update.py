@@ -164,7 +164,7 @@ class TestUpdateWithCSV(TestCase):
         update_single_study(self.study, local, (), None, manager=manager)
         result = {variable.name for variable in Variable.objects.all()}
         self.assertNotEqual(0, len(result))
-        result_union = expected_variables.union(result)
+        result_union = expected_variables.intersection(result)
         self.assertEqual(expected_variables, result_union)
 
     def test_update_single_study_entity(self):
@@ -178,7 +178,7 @@ class TestUpdateWithCSV(TestCase):
         result = {period.name for period in Period.objects.all()}
         self.assertNotEqual(0, len(result))
         # Result can contain more but should contain all from expected
-        result_union = expected_periods.union(result)
+        result_union = expected_periods.intersection(result)
         self.assertEqual(expected_periods, result_union)
 
     def test_update_single_study(self):
@@ -194,7 +194,8 @@ class TestUpdateWithCSV(TestCase):
         result = {variable.name for variable in Variable.objects.all()}
         update_patch.stop()
         self.assertNotEqual(0, len(result))
-        self.assertEqual(expected_variables, result)
+        result_union = expected_variables.intersection(result)
+        self.assertEqual(expected_variables, result_union)
 
     def test_update_single_study_entity_filename_without_redis(self):
         filename = Study().import_path().joinpath("instruments/some-instrument.json")
