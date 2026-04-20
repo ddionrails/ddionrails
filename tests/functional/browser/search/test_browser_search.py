@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name,R0902
 
+from contextlib import ExitStack
 from typing import Any
 from urllib.parse import urljoin
 
@@ -16,29 +17,27 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.concepts.models import Concept
-from ddionrails.publications.models import Publication
 from ddionrails.studies.models import Study
 from tests import status
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
+from tests.model_factories import (
+    ConceptFactory,
+    PublicationFactory,
+    QuestionFactory,
+    StudyFactory,
+    TopicFactory,
+    UserFactory,
+    VariableFactory,
+)
+from tests.object_factories import selenium_browser
 
 pytestmark = [  # pylint: disable=invalid-name
     pytest.mark.functional,
     pytest.mark.search,
-    pytest.mark.django_db,
 ]
 
 
 @override_settings(ROOT_URLCONF="tests.functional.browser.search.mock_urls")
-@pytest.mark.usefixtures(
-    "browser",
-    "user",
-    "study",
-    "concept",
-    "question",
-    "topic",
-    "variable",
-)
-@pytest.mark.django_db
 class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-public-methods
 
     host = "web"
@@ -51,7 +50,15 @@ class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-publi
     variable: Any
 
     def setUp(self) -> None:
-        self.publication = Publication.objects.create(
+        self.exit_stack = ExitStack()
+        self.browser = self.exit_stack.enter_context(selenium_browser())
+        self.study = StudyFactory()
+        self.user = UserFactory()
+        self.topic = TopicFactory()
+        self.concept = ConceptFactory(topics=[self.topic])
+        self.variable = VariableFactory(dataset__study=self.study, concept=self.concept)
+        self.question = QuestionFactory(instrument__study=self.study)
+        self.publication = PublicationFactory(
             name="some-publication",
             title="Some Publication",
             study=self.study,
@@ -66,6 +73,7 @@ class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-publi
         return super().setUp()
 
     def tearDown(self) -> None:
+        self.exit_stack.close()
         tear_down_index(self, "concepts")
         tear_down_index(self, "publications")
         tear_down_index(self, "questions")
@@ -114,8 +122,8 @@ class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-publi
             )
         )
 
-        self.assertIn("some-concept", result_header.text)
-        self.assertIn("Some Concept", result_header.text)
+        self.assertIn(self.concept.name, result_header.text)
+        self.assertIn(self.concept.label, result_header.text)
 
     def test_concepts_search_by_label_de(self):
         concept = Concept.objects.create()
@@ -157,7 +165,7 @@ class TestWorkspace(StaticLiveServerTestCase):  # pylint: disable=too-many-publi
         query = urlencode(
             {
                 "filters[0][field]": "study_name",
-                "filters[0][values][0]": "Some Study",
+                "filters[0][values][0]": f"{self.study.label}",
                 "filters[0][type]": "all",
             }
         )

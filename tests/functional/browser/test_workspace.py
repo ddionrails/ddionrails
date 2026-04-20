@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,no-self-use,too-few-public-methods,invalid-name
+# pylint: disable=missing-docstring,too-few-public-methods,invalid-name
 
 """Functional test cases for browser interaction with the ddionrails project"""
 
+from contextlib import ExitStack
 from urllib.parse import urljoin
 
 import pytest
@@ -18,14 +19,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
 from tests.model_factories import StudyFactory, UserFactory
+from tests.object_factories import selenium_browser
 
 pytestmark = [
     pytest.mark.functional,
-    pytest.mark.django_db,
 ]  # pylint: disable=invalid-name
 
 
-@pytest.mark.usefixtures("browser")
 class TestWorkspace(LiveServerTestCase):
     host = "web"
     browser: WebDriver
@@ -34,10 +34,16 @@ class TestWorkspace(LiveServerTestCase):
     password: str
 
     def setUp(self) -> None:
+        self.exit_stack = ExitStack()
+        self.browser = self.exit_stack.enter_context(selenium_browser())
         self.study = StudyFactory()
         self.password = "123test"
         self.user = UserFactory(password=self.password)
         return super().setUp()
+
+    def tearDown(self) -> None:
+        self.exit_stack.close()
+        return super().tearDown()
 
     def _login(
         self,
@@ -49,7 +55,7 @@ class TestWorkspace(LiveServerTestCase):
 
         username = self.user.username
         if user:
-            username = username
+            username = user
         username_input = self.browser.find_element(By.ID, "id_username")
         username_input.send_keys(username)
         password_input = self.browser.find_element(By.ID, "id_password")
@@ -140,7 +146,7 @@ class TestWorkspace(LiveServerTestCase):
         authenticated_browser = self._login()
         authenticated_browser.get(baskets_url)
         authenticated_browser.find_element(By.LINK_TEXT, "Create basket").click()
-        basket_data = dict(name="some-basket", label="Some basket")
+        basket_data = {"name": "some-basket", "label": "Some basket"}
         authenticated_browser.find_element(By.ID, "id_name").send_keys(
             basket_data["name"]
         )

@@ -3,33 +3,41 @@
 
 """Functional test cases for browser interaction with the ddionrails project"""
 
+from contextlib import ExitStack
 from urllib.parse import urljoin
 
 import pytest
 from django.contrib.auth.models import User  # pylint: disable=imported-auth-user
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test import override_settings
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.firefox.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
 from ddionrails.studies.models import Study
+from tests.model_factories import StudyFactory, UserFactory
+from tests.object_factories import selenium_browser
 
 pytestmark = [
     pytest.mark.functional,
-    pytest.mark.django_db,
-]  # pylint: disable=invalid-name
+]
 
 
-@pytest.mark.usefixtures("browser", "user", "study")
-@pytest.mark.django_db
 class TestWorkspace(StaticLiveServerTestCase):
     host = "web"
-    browser: WebDriver
     study: Study
     user: User
+
+    def setUp(self) -> None:
+        self.exit_stack = ExitStack()
+        self.browser = self.exit_stack.enter_context(selenium_browser())
+        self.user = UserFactory()
+        self.study = StudyFactory()
+        return super().setUp()
+
+    def tearDown(self) -> None:
+        self.exit_stack.close()
+        return super().tearDown()
 
     def test_get_contact_page_from_home(self):
         expected = "Contact / feedback"

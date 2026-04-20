@@ -1,8 +1,9 @@
+# pylint: disable=W0212,C0116,C0114
 from types import MappingProxyType
 
-import pytest
 from django.core.management import call_command
 from django.db.models import QuerySet
+from django.db.transaction import atomic
 from django.test import override_settings
 from elasticsearch import RequestError
 
@@ -21,11 +22,8 @@ model_type_document_mapper = MappingProxyType(
     }
 )
 
-from django.db.transaction import atomic
-
 
 @override_settings(ELASTICSEARCH_DSL_AUTOSYNC=True)
-@pytest.mark.django_db
 def set_up_index(test_case, model_object, model_type_plural):
     document = model_type_document_mapper[model_type_plural]
 
