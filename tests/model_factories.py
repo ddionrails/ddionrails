@@ -101,6 +101,17 @@ class PeriodFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
+    def to_csv(self) -> dict[str, str]:
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "description": self.description,
+            "definition": self.description,
+            "description_de": self.description_de,
+        }
+
 
 class TopicFactory(DjangoModelFactory):
     class Meta:
@@ -127,6 +138,30 @@ class TopicFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+
+    def to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
+        topic = self
+        while topic.parent:
+            yield {
+                "study": topic.study.name,
+                "name": topic.name,
+                "label": topic.label,
+                "label_de": topic.label_de,
+                "description": topic.description,
+                "definition": topic.description,
+                "description_de": topic.description_de,
+            }
+            topic = topic.parent
+
+        return {
+            "study": topic.study.name,
+            "name": topic.name,
+            "label": topic.label,
+            "label_de": topic.label_de,
+            "description": topic.description,
+            "definition": topic.description,
+            "description_de": topic.description_de,
+        }
 
 
 class ConceptFactory(DjangoModelFactory):
@@ -162,6 +197,29 @@ class ConceptFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
+    class _EmptyTopic:
+        class _Empty_Study:
+            name = ""
+
+        name = ""
+        study = _Empty_Study()
+
+    def to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
+        topics = [_EmptyTopic()]
+        if self.topics.count() > 0:
+            topics = self.topics.all()
+        for topic in topics:
+            return {
+                "study": topic.study.name,
+                "name": self.name,
+                "label": self.label,
+                "label_de": self.label_de,
+                "description": self.description,
+                "definition": self.description,
+                "description_de": self.description_de,
+                "topic": topic.name,
+            }
+
 
 class ConceptualDatasetFactory(DjangoModelFactory):
 
@@ -175,6 +233,17 @@ class ConceptualDatasetFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
+    def to_csv(self) -> dict[str, str]:
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "description": self.description,
+            "definition": self.description,
+            "description_de": self.description_de,
+        }
+
 
 class AnalysisUnitFactory(factory.django.DjangoModelFactory):
 
@@ -186,6 +255,19 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+
+    def to_csv(self) -> dict[str, str]:
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "description": self.description,
+            "definition": self.description,
+            "description_de": self.description_de,
+        }
 
 
 class DatasetFactory(DjangoModelFactory):
@@ -199,10 +281,31 @@ class DatasetFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    folder = factory.LazyAttribute(lambda _: FAKE.word())
+    primary_key = factory.LazyAttribute(lambda _: "")
 
     analysis_unit = SubFactory(AnalysisUnitFactory)
     period = SubFactory(PeriodFactory)
     conceptual_dataset = SubFactory(ConceptualDatasetFactory)
+
+    def to_csv(self) -> dict[str, str]:
+        if self.primary_key == "":
+            variable = Variable.objects.filter(dataset=self).first()
+            if variable:
+                self.primary_key = variable.name
+
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "description": self.description,
+            "definition": self.description,
+            "description_de": self.description_de,
+            "folder": self.folder,
+            "primary_key": self.primary_key,
+            # TODO
+        }
 
 
 class VariableFactory(DjangoModelFactory):
