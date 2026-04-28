@@ -46,6 +46,9 @@
             <div id="menu"></div>
             <div id="chart"></div>
             <div id="chart_missings"></div>
+
+            {% endif %}
+
 	    <div id="variable-relations" class="card">
 		    <div class="card-header" id="variable-relations-header">
 			    <span data-de="Relationen zu der aktuellen Variable: <b>{{ variable.dataset.name}}/{{ variable.name }}</b>" data-en="Relations to current variable: <b>{{ variable.dataset.name}}/{{ variable.name }}</b>"></span>
@@ -94,7 +97,7 @@
 		    </div>
 		    <div class="card-body"></div>
 	    </div>
-            {% endif %}
+
 
             {% if variable.has_translations and variable.translation_table %}
                 {% include "data/translation_table.html" %}
