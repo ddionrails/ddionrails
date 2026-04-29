@@ -212,7 +212,6 @@ class VariableImport(imports.CSVImport):
         variable.description = element.get("description", "")
         variable.description_de = element.get("description_de", "")
         variable.description_long = element.get("description_long", "")
-        variable.image_url = element.get("image_url", "")
         variable.statistics_type = element.get("type", "")
         variable.statistics_flag = element.get("statistics", "False") == "True"
         if not variable.label:

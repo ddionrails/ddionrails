@@ -65,7 +65,6 @@ class VariableData:
     description_de: str = ""
     description_long: str = ""
     sort_id: int = 0
-    image_url: str = ""
     pid: str = ""
     statistics: dict = {}
     scale: str = ""

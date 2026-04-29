@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring
 
-""" ModelForms for ddionrails.data app """
+"""ModelForms for ddionrails.data app"""
 
 from django import forms
 
@@ -37,7 +37,6 @@ class VariableForm(forms.ModelForm):
             "concept",
             "dataset",
             "sort_id",
-            "image_url",
         )
 
     def __init__(self, *args, **kwargs):

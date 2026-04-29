@@ -430,11 +430,11 @@ class TestUpdate(TestCase):
 
         import_files = self.tmp_path
         new_variables = (
-            "study_name,dataset_name,name,concept_name,image_url\n"
+            "study_name,dataset_name,name,concept_name\n"
             f"{HARD_CODED_STUDY_NAME},some-dataset"
-            ",some-variable,some-concept,https://variable-image.de\n"
+            ",some-variable,some-concept\n"
             f"{HARD_CODED_STUDY_NAME},some-dataset"
-            ",some-other-variable,some-concept,https://variable-other-image.de\n"
+            ",some-other-variable,some-concept\n"
         )
         with open(import_files.joinpath("variables.csv"), "w", encoding="utf8") as file:
             file.write(new_variables)

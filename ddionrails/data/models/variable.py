@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import inspect
 import uuid
-from collections import OrderedDict
 from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
 
@@ -102,9 +101,6 @@ class Variable(ModelMixin, models.Model):
     is_harmonized = models.BooleanField(
         default=False, verbose_name="Variable is harmonized into another variable"
     )
-    image_url = models.TextField(
-        blank=True, verbose_name="Image URL", help_text="URL to a related image"
-    )
     pid = models.TextField(default="", verbose_name="Persistent identifier")
     statistics = JSONBField(
         default=dict, null=True, blank=True, help_text="Statistics of the variable(JSON)"
@@ -160,7 +156,9 @@ class Variable(ModelMixin, models.Model):
     languages: List[str] = []
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+        self,
+        *args,
+        **kwargs,
     ):
         """ "Set id and call parents save()."""
         self.id = hash_with_namespace_uuid(  # pylint: disable=C0103
@@ -170,10 +168,8 @@ class Variable(ModelMixin, models.Model):
         # Django magic defines _id fields.
         self.period_id = self.dataset.period_id  # pylint: disable=W0201
         super().save(
-            force_insert=force_insert,
-            force_update=force_update,
-            using=using,
-            update_fields=update_fields,
+            *args,
+            **kwargs,
         )
 
     class Meta:  # pylint: disable=missing-docstring,too-few-public-methods

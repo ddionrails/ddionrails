@@ -417,7 +417,6 @@ class TestVariableImport(TestCase):
                     "dataset_name": self.dataset.name,
                     "name": variable,
                     "concept_name": concept.name,
-                    "image_url": FAKE.image_url(),
                 }
             )
         self.tmp_file = TMPCSV(variable_data)
@@ -443,7 +442,6 @@ class TestVariableImport(TestCase):
                     "dataset_name": self.dataset.name,
                     "name": variable,
                     "concept_name": concept,
-                    "image_url": FAKE.image_url(),
                 }
             )
         concept = ConceptFactory(topics__study=self.study, topics__topics_size=1)

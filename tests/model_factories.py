@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=missing-docstring,too-few-public-methods
+# pylint: disable=missing-docstring,too-few-public-methods,protected-access
 # type: ignore[override]
 """DjangoModelFactories for user model"""
 
 from collections.abc import Iterable
 from random import choice, randint
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Generator, Union
 from uuid import UUID
 
 import factory
@@ -101,7 +101,7 @@ class PeriodFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def to_csv(self) -> dict[str, str]:
+    def _to_csv(self) -> dict[str, str]:
         return {
             "study": self.study.name,
             "name": self.name,
@@ -139,7 +139,7 @@ class TopicFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
+    def _to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
         topic = self
         while topic.parent:
             yield {
@@ -198,14 +198,14 @@ class ConceptFactory(DjangoModelFactory):
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
     class _EmptyTopic:
-        class _Empty_Study:
+        class _EmptyStudy:
             name = ""
 
         name = ""
-        study = _Empty_Study()
+        study = _EmptyStudy()
 
-    def to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
-        topics = [_EmptyTopic()]
+    def _to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
+        topics = [self._EmptyTopic()]
         if self.topics.count() > 0:
             topics = self.topics.all()
         for topic in topics:
@@ -233,7 +233,7 @@ class ConceptualDatasetFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def to_csv(self) -> dict[str, str]:
+    def _to_csv(self) -> dict[str, str]:
         return {
             "study": self.study.name,
             "name": self.name,
@@ -258,7 +258,7 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def to_csv(self) -> dict[str, str]:
+    def _to_csv(self) -> dict[str, str]:
         return {
             "study": self.study.name,
             "name": self.name,
@@ -288,7 +288,13 @@ class DatasetFactory(DjangoModelFactory):
     period = SubFactory(PeriodFactory)
     conceptual_dataset = SubFactory(ConceptualDatasetFactory)
 
-    def to_csv(self) -> dict[str, str]:
+    def _to_json(self) -> Generator[dict[str, any], None, None]:
+        variables = Variable.objects.filter(dataset=self)
+
+        for variable in variables:
+            yield VariableFactory._variable_to_json(variable)
+
+    def _to_csv(self) -> dict[str, str]:
         if self.primary_key == "":
             variable = Variable.objects.filter(dataset=self).first()
             if variable:
@@ -302,9 +308,10 @@ class DatasetFactory(DjangoModelFactory):
             "description": self.description,
             "definition": self.description,
             "description_de": self.description_de,
+            "analysis_unit": self.analysis_unit.name,
+            "conceptual_dataset": self.conceptual_dataset.name,
             "folder": self.folder,
             "primary_key": self.primary_key,
-            # TODO
         }
 
 
@@ -335,6 +342,7 @@ class VariableFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+    scale = factory.LazyAttribute(lambda _: FAKE.word())
     statistics = factory.LazyAttribute(
         lambda _: {
             "valid": str(FAKE.random_number()),
@@ -357,6 +365,22 @@ class VariableFactory(DjangoModelFactory):
             "missings": [True, False],
         }
     )
+
+    def _to_json(self):
+        return self._variable_to_json(self)
+
+    @staticmethod
+    def _variable_to_json(variable: Union[Variable, "VariableFactory"]):
+        return {
+            "study": variable.dataset.study.name,
+            "dataset": variable.dataset.name,
+            "name": variable.name,
+            "label": variable.label,
+            "label_de": variable.label_de,
+            "categories": variable.categories,
+            "scale": variable.scale,
+            "statistics": variable.statistics,
+        }
 
 
 class PublicationFactory(DjangoModelFactory):

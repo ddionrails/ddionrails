@@ -364,7 +364,6 @@ class TestStudyImportManager(LiveServerTestCase):
         imported_variable = Variable.objects.get(
             name=self.variable.name, dataset=self.variable.dataset
         )
-        self.assertEqual("https://variable-image.de", imported_variable.image_url)
         self.assertEqual("some-concept", imported_variable.concept.name)
 
     def test_import_variables_empty_concept(self):
