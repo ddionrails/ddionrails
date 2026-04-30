@@ -344,11 +344,12 @@ class Variable(ModelMixin, models.Model):
 
     def __lt__(self, variable: Variable) -> bool:
         """Determine relation of variables according to their name."""
-        if not isinstance(variable, Variable):
-            raise TypeError(
-                (
-                    "'<' not supported between instances of "
-                    f"{type(self)} and {type(variable)}"
+        if not hasattr(variable, "name"):
+            if not isinstance(variable.name, str):
+                raise TypeError(
+                    (
+                        "'<' not supported between instances of "
+                        f"{type(self)} and {type(variable)}"
+                    )
                 )
-            )
         return self.name < variable.name
