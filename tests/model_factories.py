@@ -382,6 +382,14 @@ class VariableFactory(DjangoModelFactory):
             "statistics": variable.statistics,
         }
 
+    def _to_csv(self):
+        additional_fields = {
+            "description": self.description,
+            "description_de": self.description_de,
+            "concept": self.concept.name,
+        }
+        return {**self._variable_to_json(self), **additional_fields}
+
 
 class PublicationFactory(DjangoModelFactory):
 
@@ -400,6 +408,24 @@ class PublicationFactory(DjangoModelFactory):
     url = factory.LazyAttribute(lambda _: FAKE.url())
     doi = factory.LazyAttribute(lambda _: FAKE.doi())
     study = factory.SubFactory(StudyFactory)
+    studies = factory.LazyAttribute(
+        lambda _: ", ".join([FAKE.word for _ in range(randint(1, 10))])
+    )
+
+    def _to_csv(self):
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "title": self.title,
+            "author": self.author,
+            "year": self.year,
+            "abstract": self.abstract,
+            "cite": self.cite,
+            "type": self.type,
+            "studies": self.studies,
+            "url": self.url,
+            "doi": self.doi,
+        }
 
 
 class TransformationFactory(DjangoModelFactory):
@@ -413,6 +439,16 @@ class TransformationFactory(DjangoModelFactory):
     id: UUID
     origin = factory.SubFactory(VariableFactory)
     target = factory.SubFactory(VariableFactory)
+
+    def _to_csv(self):
+        return {
+            "origin_study_name": self.origin.dataset.study.name,
+            "origin_dataset_name": self.origin.dataset.name,
+            "origin_variable_name": self.origin.dataset.name,
+            "target_study_name": self.target.dataset.study.name,
+            "target_dataset_name": self.target.dataset.name,
+            "target_variable_name": self.target.dataset.name,
+        }
 
 
 class InstrumentFactory(DjangoModelFactory):
