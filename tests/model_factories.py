@@ -462,6 +462,27 @@ class InstrumentFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+    mode = factory.LazyAttribute(lambda _: FAKE.word())
+    type = factory.LazyAttribute(lambda _: FAKE.sentence())
+    analysis_unit = factory.SubFactory(AnalysisUnitFactory)
+    period = factory.SubFactory(PeriodFactory)
+
+    def _to_csv(self):
+        return {
+            "study": self.study.name,
+            "name": self.name,
+            "label": self.label,
+            "label_de": self.label_de,
+            "description": self.description,
+            "definition": self.description,
+            "description_de": self.description_de,
+            "analysis_unit": self.analysis_unit.name,
+            "period": self.period.name,
+            "mode": self.mode,
+            "type": self.type,
+        }
 
 
 class QuestionItemFactory(DjangoModelFactory):
