@@ -25,6 +25,7 @@ from ddionrails.concepts.models import (
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
+from ddionrails.instruments.models.answer import Answer
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.models.question_item import QuestionItem
@@ -409,7 +410,7 @@ class PublicationFactory(DjangoModelFactory):
     doi = factory.LazyAttribute(lambda _: FAKE.doi())
     study = factory.SubFactory(StudyFactory)
     studies = factory.LazyAttribute(
-        lambda _: ", ".join([FAKE.word for _ in range(randint(1, 10))])
+        lambda _: ", ".join([FAKE.word() for _ in range(randint(1, 10))])
     )
 
     def _to_csv(self):
@@ -465,7 +466,13 @@ class InstrumentFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
     mode = factory.LazyAttribute(lambda _: FAKE.word())
-    type = factory.LazyAttribute(lambda _: FAKE.sentence())
+    type = factory.LazyAttribute(
+        lambda _: {
+            "en": FAKE.sentence(),
+            "de": FAKE_DE.sentence(),
+            "position": FAKE.random_number(),
+        }
+    )
     analysis_unit = factory.SubFactory(AnalysisUnitFactory)
     period = factory.SubFactory(PeriodFactory)
 
@@ -476,13 +483,43 @@ class InstrumentFactory(DjangoModelFactory):
             "label": self.label,
             "label_de": self.label_de,
             "description": self.description,
-            "definition": self.description,
             "description_de": self.description_de,
             "analysis_unit": self.analysis_unit.name,
             "period": self.period.name,
             "mode": self.mode,
-            "type": self.type,
+            "type": self.type["end"],
+            "type_de": self.type["de"],
+            "type_position": self.type["position"],
         }
+
+    def _to_json(self):
+        instrument_data = _to_csv()
+        for field in ["analysis_unit", "description", "description_de"]:
+            del instrument_data[field]
+        questions = {}
+        for question in Question.objects.filter(dataset=self):
+            items = []
+            for item in question.items.all():
+                items.appen(QuestionItemFactory._to_json(item))
+
+            questions[question.name] = {
+                "question": question.name,
+                "name": question.name,
+                "label": question.label,
+                "label_de": question.label_de,
+                "items": items,
+            }
+        instrument_data["questions"] = questions
+
+
+class AnswerFactory(DjangoModelFactory):
+
+    class Meta:
+        model = Answer
+
+    value = factory.Sequence(lambda n: n)
+    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
 
 
 class QuestionItemFactory(DjangoModelFactory):
@@ -496,6 +533,36 @@ class QuestionItemFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
     position = 1
+
+    # TODO: Add anwers generation for cat items
+    @factory.post_generation
+    def answers(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
+        if self.scale == "cat":
+            numbers = list(range(randint(-9, -1), -1)) + list(range(1, randint(1, 10)))
+            for number in numbers:
+                self.answers.append(AnswerFactory(value=number))
+
+    @staticmethod
+    def _to_json(item: QuestionItem):
+        output = {
+            "item": item.name,
+            "text": item.label,
+            "text_de": item.label_de,
+            "scale": item.scale,
+            "sn": item.position,
+        }
+        answers = []
+        for answer in item.answers.all():
+            answers.append(
+                {
+                    "value": answer.value,
+                    "label": answer.label,
+                    "label_de": answer.label_de,
+                }
+            )
+        if answers:
+            output["answers"] = answers
+        return output
 
 
 class QuestionFactory(DjangoModelFactory):
