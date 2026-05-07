@@ -72,17 +72,17 @@ class QuestionDocument(GenericDataDocument):
     def prepare_question_items(self, question: Question) -> Dict:
         """Return the question's items, containing text, text_de and answers"""
         items = {"en": [], "de": []}
-        for item in question.items:
-            text = item.get("text")
-            text_de = item.get("text_de")
+        for item in question.question_items.all():
+            text = item.label
+            text_de = item.label_de
             if text:
                 items["en"].append(text)
             if text_de:
                 items["de"].append(text_de)
-            answers = item.get("answers", [])
+            answers = item.answers.all()
             for answer in answers:
-                label = answer.get("label")
-                label_de = answer.get("label_de")
+                label = answer.label
+                label_de = answer.label_de
                 if label:
                     items["en"].append(label)
                 if label_de:
