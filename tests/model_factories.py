@@ -5,7 +5,7 @@
 
 from collections.abc import Iterable
 from random import choice, randint
-from typing import TYPE_CHECKING, Generator, Union
+from typing import TYPE_CHECKING, Any, Generator, Union, cast
 from uuid import UUID
 
 import factory
@@ -455,6 +455,7 @@ class TransformationFactory(DjangoModelFactory):
 class InstrumentFactory(DjangoModelFactory):
     if TYPE_CHECKING:
         id: UUID
+        type: dict[str, Any]
 
     class Meta:
         model = Instrument
@@ -474,9 +475,10 @@ class InstrumentFactory(DjangoModelFactory):
         }
     )
     analysis_unit = factory.SubFactory(AnalysisUnitFactory)
-    period = factory.SubFactory(PeriodFactory)
+    period = factory.SubFactory(PeriodFactory, study=factory.SelfAttribute("..study"))
 
     def _to_csv(self):
+        _type: dict[str, Any] = cast(dict[str, Any], self.type)
         return {
             "study": self.study.name,
             "name": self.name,
@@ -487,20 +489,20 @@ class InstrumentFactory(DjangoModelFactory):
             "analysis_unit": self.analysis_unit.name,
             "period": self.period.name,
             "mode": self.mode,
-            "type": self.type["end"],
-            "type_de": self.type["de"],
-            "type_position": self.type["position"],
+            "type": _type["end"],  # pylint: disable=unsubscriptable-object
+            "type_de": _type["de"],  # pylint: disable=unsubscriptable-object
+            "type_position": _type["position"],  # pylint: disable=unsubscriptable-object
         }
 
     def _to_json(self):
-        instrument_data = _to_csv()
+        instrument_data = self._to_csv()
         for field in ["analysis_unit", "description", "description_de"]:
             del instrument_data[field]
         questions = {}
         for question in Question.objects.filter(dataset=self):
             items = []
             for item in question.items.all():
-                items.appen(QuestionItemFactory._to_json(item))
+                items.append(QuestionItemFactory._to_json(item))
 
             questions[question.name] = {
                 "question": question.name,
@@ -534,13 +536,19 @@ class QuestionItemFactory(DjangoModelFactory):
     scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
     position = 1
 
-    # TODO: Add anwers generation for cat items
     @factory.post_generation
     def answers(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
+        if isinstance(extracted, Iterable):
+            for extract in extracted:
+                self.answers.add(extract)
+            self.save()
+            return
         if self.scale == "cat":
             numbers = list(range(randint(-9, -1), -1)) + list(range(1, randint(1, 10)))
             for number in numbers:
-                self.answers.append(AnswerFactory(value=number))
+                self.answers.add(AnswerFactory(value=number))
+        if create:
+            self.save()
 
     @staticmethod
     def _to_json(item: QuestionItem):

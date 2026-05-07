@@ -12,7 +12,7 @@ from ddionrails.instruments.imports.question_import import (
 )
 from ddionrails.instruments.models import Answer, Instrument, Question
 from tests.file_factories import tmp_import_path
-from tests.model_factories import InstrumentFactory
+from tests.model_factories import InstrumentFactory, PeriodFactory, StudyFactory
 
 TEST_FILES = Path("./tests/imports/test_data/").absolute()
 
@@ -38,8 +38,10 @@ class QuestionImport(TestCase):
         return super().tearDownClass()
 
     def setUp(self) -> None:
+        self.study = StudyFactory(name="test_study")
+        period = PeriodFactory(name="test", study=self.study)
         self.instrument: Instrument = InstrumentFactory(
-            name="some-instrument", study__name="test-study"
+            name="some-instrument", study=self.study, period=period
         )
         question_exists = len(
             list(Question.objects.filter(name="1", instrument=self.instrument))
