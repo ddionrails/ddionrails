@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=missing-docstring,too-few-public-methods,protected-access
 # type: ignore[override]
+# nosec
 """DjangoModelFactories for user model"""
 
 from collections.abc import Iterable
@@ -135,8 +136,8 @@ class TopicFactory(DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.sentence())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
@@ -193,8 +194,8 @@ class ConceptFactory(DjangoModelFactory):
             self.save()
 
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.sentence())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
@@ -339,8 +340,8 @@ class VariableFactory(DjangoModelFactory):
 
     dataset = factory.SubFactory(DatasetFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.sentence())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
     scale = factory.LazyAttribute(lambda _: FAKE.word())
@@ -598,8 +599,8 @@ class QuestionFactory(DjangoModelFactory):
 
     instrument = factory.SubFactory(InstrumentFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: FAKE.sentence())
+    label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     sort_id = factory.Sequence(lambda n: n + 1)
 
 

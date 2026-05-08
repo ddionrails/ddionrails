@@ -106,7 +106,8 @@ class TestDocuments(TransactionTestCase):
             .count()
         )
         expected = 1
-        assert expected == result
+
+        self.assertEqual(expected, result, f"{self.concept.label_de} not found in index")
 
     def test_topic_search_document_fields(self):
         search = TopicDocument.search().query("match_all")

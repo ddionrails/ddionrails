@@ -1,5 +1,6 @@
 # https://bandit.readthedocs.io/en/latest/config.html
 [tool.bandit]
+exclude_dirs = ["tests"]
 skips = ["B101"]
 
 
