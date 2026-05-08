@@ -603,6 +603,18 @@ class QuestionFactory(DjangoModelFactory):
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     sort_id = factory.Sequence(lambda n: n + 1)
 
+    def _to_csv(self):
+        pass
+        # TODO: Find out how to handle the item column:
+        # Each question has a row for each question_item
+        # We have to read through all answers and separate negative from positive values
+        return
+        return {
+            "study": self.instrument.study.name,
+            "instrument": self.instrument.name,
+            "name": self.name,
+        }
+
 
 class QuestionVariableFactory(factory.django.DjangoModelFactory):
     if TYPE_CHECKING:
