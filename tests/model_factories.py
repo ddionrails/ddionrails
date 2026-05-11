@@ -11,6 +11,7 @@ from uuid import UUID
 
 import factory
 from django.contrib.auth import get_user_model
+from django.utils.functional import keep_lazy
 from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
@@ -535,7 +536,14 @@ class QuestionItemFactory(DjangoModelFactory):
     label = factory.LazyAttribute(lambda _: FAKE.word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
-    position = 1
+    position = factory.Sequence(lambda n: n)
+
+    instruction = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
+    instruction_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
+    description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
+    description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
+    filter = factory.LazyAttribute(lambda _: FAKE_DE.password(length=5))
+    goto = factory.LazyAttribute(lambda _: FAKE_DE.password(length=5))
 
     @factory.post_generation
     def answers(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
@@ -601,19 +609,49 @@ class QuestionFactory(DjangoModelFactory):
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.sentence())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
+    concept = factory.SubFactory(ConceptFactory)
+
     sort_id = factory.Sequence(lambda n: n + 1)
 
-    def _to_csv(self):
-        pass
-        # TODO: Find out how to handle the item column:
-        # Each question has a row for each question_item
-        # We have to read through all answers and separate negative from positive values
-        return
-        return {
-            "study": self.instrument.study.name,
-            "instrument": self.instrument.name,
-            "name": self.name,
-        }
+    def _to_csv(self) -> tuple[dict[str, str], dict[str, str]]:
+        instrument_name = self.instrument.name
+        study_name = self.instrument.study.name
+        questions_csv = []
+        answers_csv = []
+
+        for item in self.question_items.all().order_by("position"):
+            questions_csv.append(
+                {
+                    "study": study_name,
+                    "instrument": instrument_name,
+                    "name": self.name,
+                    "item": item.name,
+                    "text": item.label,
+                    "text_de": item.label_de,
+                    "instruction": item.instruction,
+                    "instruction_de": item.instruction_de,
+                    "description": item.description,
+                    "description_de": item.description_de,
+                    "filter": item.filter,
+                    "goto": item.goto,
+                    "concept": self.concept,
+                    "scale": item.scale,
+                }
+            )
+            if item.scale == "cat":
+                answer_list = item.id
+                for answer in item.answers.all():
+                    answers_csv.append(
+                        {
+                            "study": self.study,
+                            "instrument": self.instrument.name,
+                            "answer_list": answer_list,
+                            "value": answer.value,
+                            "label": answer.label,
+                            "label_de": answer.label_de,
+                        }
+                    )
+        return (questions_csv, answers_csv)
 
 
 class QuestionVariableFactory(factory.django.DjangoModelFactory):
