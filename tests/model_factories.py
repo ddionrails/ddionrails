@@ -11,7 +11,6 @@ from uuid import UUID
 
 import factory
 from django.contrib.auth import get_user_model
-from django.utils.functional import keep_lazy
 from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
@@ -28,6 +27,7 @@ from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.answer import Answer
+from ddionrails.instruments.models.concept_question import ConceptQuestion
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
 from ddionrails.instruments.models.question_item import QuestionItem
@@ -542,7 +542,7 @@ class QuestionItemFactory(DjangoModelFactory):
     instruction_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
-    filter = factory.LazyAttribute(lambda _: FAKE_DE.password(length=5))
+    input_filter = factory.LazyAttribute(lambda _: FAKE_DE.password(length=5))
     goto = factory.LazyAttribute(lambda _: FAKE_DE.password(length=5))
 
     @factory.post_generation
@@ -605,11 +605,26 @@ class QuestionFactory(DjangoModelFactory):
         if create:
             self.save()
 
+    @factory.post_generation
+    def concepts_questions(self, create, extracted, **kwargs):
+        if not create:
+            return
+        if isinstance(extracted, Iterable):
+            for concept_question in extracted:
+                self.concepts_question.add(concept_question)
+            return
+
+        for _ in range(kwargs.get("size", 0)):
+            concept = ConceptFactory(topics__study=self.instrument.study)
+            self.concepts_questions.add(
+                ConceptQuestionFactory(question=self, concept=concept)
+            )
+        self.save()
+
     instrument = factory.SubFactory(InstrumentFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: FAKE.sentence())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.sentence())
-    concept = factory.SubFactory(ConceptFactory)
 
     sort_id = factory.Sequence(lambda n: n + 1)
 
@@ -632,7 +647,7 @@ class QuestionFactory(DjangoModelFactory):
                     "instruction_de": item.instruction_de,
                     "description": item.description,
                     "description_de": item.description_de,
-                    "filter": item.filter,
+                    "filter": item.input_filter,
                     "goto": item.goto,
                     "concept": self.concept,
                     "scale": item.scale,
@@ -654,6 +669,18 @@ class QuestionFactory(DjangoModelFactory):
         return (questions_csv, answers_csv)
 
 
+class ConceptQuestionFactory(DjangoModelFactory):
+
+    if TYPE_CHECKING:
+        id: UUID
+
+    class Meta:
+        model = ConceptQuestion
+
+    question = factory.SubFactory(QuestionFactory)
+    concept = factory.SubFactory(ConceptFactory)
+
+
 class QuestionVariableFactory(factory.django.DjangoModelFactory):
     if TYPE_CHECKING:
         id: UUID
@@ -663,6 +690,15 @@ class QuestionVariableFactory(factory.django.DjangoModelFactory):
 
     question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
     variable = factory.SubFactory(VariableFactory, name="some-variable")
+
+    def _to_csv(self) -> dict[str, str]:
+        return {
+            "study": self.variable.dataset.study.name,
+            "dataset": self.variable.dataset.name,
+            "variable": self.variable.name,
+            "instrument": self.question.instrument.name,
+            "question": self.question.name,
+        }
 
 
 class BasketFactory(factory.django.DjangoModelFactory):
@@ -694,14 +730,50 @@ class AttachmentFactory(DjangoModelFactory):
     url = factory.LazyAttribute(lambda _: FAKE.url)
     url_text = factory.LazyAttribute(lambda _: FAKE.sentence())
     context_study = factory.SubFactory(StudyFactory)
-    study = factory.SubFactory(StudyFactory)
-    dataset = factory.SubFactory(DatasetFactory)
-    variable = factory.SubFactory(VariableFactory)
-    instrument = factory.SubFactory(InstrumentFactory)
-    question = factory.SubFactory(QuestionFactory)
+    study = context_study
+    dataset = None
+    variable = None
+    instrument = None
+    question = None
+
+    @factory.post_generation
+    def attached_object(self, **kwargs):
+        self.study = self.context_study
+        fields = {
+            "dataset": DatasetFactory(),
+            "variable": VariableFactory(),
+            "instrument": InstrumentFactory(),
+            "question": QuestionFactory(),
+        }
+        for field in fields:
+            if getattr(self, field) is not None:
+                return
+        object_to_attach_to = choice(fields.keys())
+        setattr(self, object_to_attach_to, fields[object_to_attach_to])
 
     class Meta:
         model = Attachment
+
+    def _to_csv(self) -> dict[str, str]:
+
+        # The order of items here is important
+        fields = ("variable", "question", "dataset", "instrument", "study")
+        _type = ""
+        for field in fields:
+            if getattr(self, field) is not None:
+                _type = field
+                break
+        study: StudyFactory = cast(StudyFactory, self.study)
+        return {
+            "type": _type,
+            "study": study.name,
+            "dataset": getattr(self.dataset, "name", ""),
+            "variable": getattr(self.variable, "name", ""),
+            "instrument": getattr(self.instrument, "name", ""),
+            "question": getattr(self.question, "name", ""),
+            "url": self.url,
+            "url_text": self.url_text,
+        }
 
 
 class NewsFactory(DjangoModelFactory):
