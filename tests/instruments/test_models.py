@@ -97,11 +97,11 @@ class TestQuestionModel(TestCase):
     def test_comparison_string_method(self):
         self.question.items = [{"item": "Item", "scale": "Scale", "text": "Text"}]
         self.question.save()
-        result = self.question.comparison_string()
+        result = self.question.comparison_string(wrap=0)
         expected = [
             f"Question: {self.question.label}",
             "",
             "Item: Item (scale: Scale)",
             "Text",
         ]
-        assert expected == result
+        self.assertListEqual(expected, result, f"Expected {expected}, got {result}")
