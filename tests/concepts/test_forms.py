@@ -17,6 +17,7 @@ from tests.model_factories import StudyFactory
 
 
 class TestConceptForm(TestCase):
+
     def test_form_with_invalid_data(self):
         form = ConceptForm(data={})
         assert form.is_valid() is False
@@ -25,7 +26,7 @@ class TestConceptForm(TestCase):
 
     def test_form_with_valid_data(self):
         valid_concept_data = {
-            "name": FAKE.word(),
+            "name": FAKE.unique.word(),
             "label": FAKE.sentence(),
             "description": FAKE.paragraph(),
         }
@@ -35,11 +36,16 @@ class TestConceptForm(TestCase):
         assert concept.name == valid_concept_data["name"]
 
     def test_form_with_minimal_valid_data(self):
-        minimal_valid_concept_data = {"name": FAKE.word()}
+        minimal_valid_concept_data = {"name": FAKE.unique.word()}
         form = ConceptForm(data=minimal_valid_concept_data)
-        assert form.is_valid() is True
+        self.assertTrue(form.is_valid(), f"{minimal_valid_concept_data} did not validate")
         concept = form.save()
-        assert concept.name == minimal_valid_concept_data["name"]
+        self.assertEqual(concept.name, minimal_valid_concept_data["name"])
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        FAKE.unique.clear()
+        return super().tearDownClass()
 
 
 class TestPeriodForm(TestCase):
@@ -57,12 +63,17 @@ class TestPeriodForm(TestCase):
 
         valid_period_data = {
             "study": study.id,
-            "period_name": FAKE.word(),
+            "period_name": FAKE.unique.word(),
             "label": FAKE.sentence(),
             "description": FAKE.paragraph(),
         }
         form = PeriodForm(data=valid_period_data)
         assert form.is_valid() is True
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        FAKE.unique.clear()
+        return super().tearDownClass()
 
 
 class TestAnalysisUnitForm(TestCase):
@@ -81,7 +92,7 @@ class TestAnalysisUnitForm(TestCase):
 
         valid_analysis_unit_data = {
             "study": study.id,
-            "analysis_unit_name": FAKE.word(),
+            "analysis_unit_name": FAKE.unique.word(),
             "label": FAKE.sentence(),
             "description": FAKE.paragraph(),
         }
@@ -90,6 +101,11 @@ class TestAnalysisUnitForm(TestCase):
         assert form.is_valid() is True
         analysis_unit = form.save()
         assert analysis_unit.name == valid_analysis_unit_data["analysis_unit_name"]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        FAKE.unique.clear()
+        return super().tearDownClass()
 
 
 class TestConceptualDatasetForm(TestCase):
@@ -108,7 +124,7 @@ class TestConceptualDatasetForm(TestCase):
 
         valid_conceptual_dataset_data = {
             "study": study.id,
-            "conceptual_dataset_name": FAKE.word(),
+            "conceptual_dataset_name": FAKE.unique.word(),
             "label": FAKE.sentence(),
             "description": FAKE.paragraph(),
         }
@@ -119,6 +135,11 @@ class TestConceptualDatasetForm(TestCase):
             conceptual_dataset.name
             == valid_conceptual_dataset_data["conceptual_dataset_name"]
         )
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        FAKE.unique.clear()
+        return super().tearDownClass()
 
 
 class TestTopicForm(TestCase):
@@ -133,8 +154,13 @@ class TestTopicForm(TestCase):
 
     def test_form_with_valid_data(self):
         study = StudyFactory()
-        valid_topic_data = {"name": FAKE.word(), "study": study.id}
+        valid_topic_data = {"name": FAKE.unique.word(), "study": study.id}
         form = TopicForm(data=valid_topic_data)
         assert form.is_valid() is True
         topic = form.save()
         assert topic.name == valid_topic_data["name"]
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        FAKE.unique.clear()
+        return super().tearDownClass()
