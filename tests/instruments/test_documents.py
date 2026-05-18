@@ -13,6 +13,10 @@ from tests.model_factories import QuestionFactory
 
 class TestQuestionDocuments(LiveServerTestCase):
 
+    def setUp(self) -> None:
+        tear_down_index(self, "questions")
+        return super().setUp()
+
     def tearDown(self) -> None:
         tear_down_index(self, "questions")
         return super().tearDown()
