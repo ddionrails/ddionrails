@@ -42,6 +42,13 @@ FAKE_DE = Faker(locale="de_DE")
 User = get_user_model()
 
 
+def safe_word():
+    word = FAKE.word(part_of_speech="noun")
+    while word == "none":
+        word = FAKE.word(part_of_speech="noun")
+    return word
+
+
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
@@ -99,7 +106,7 @@ class PeriodFactory(DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
@@ -256,7 +263,7 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     study = factory.SubFactory(StudyFactory)
 
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
     label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
