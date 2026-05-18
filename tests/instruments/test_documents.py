@@ -5,6 +5,7 @@
 
 from django.forms.models import model_to_dict
 from django.test import LiveServerTestCase
+from elasticsearch import NotFoundError
 
 from ddionrails.instruments.documents import QuestionDocument
 from tests.functional.search_index_fixtures import set_up_index, tear_down_index
@@ -14,7 +15,10 @@ from tests.model_factories import QuestionFactory
 class TestQuestionDocuments(LiveServerTestCase):
 
     def setUp(self) -> None:
-        tear_down_index(self, "questions")
+        try:
+            tear_down_index(self, "questions")
+        except NotFoundError:
+            pass
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -76,7 +80,8 @@ class TestQuestionDocuments(LiveServerTestCase):
         expected["id"] = str(question.id)
         # generate result dictionary from search document
         result = document.to_dict()
-        assert expected == result
+        for key, value in expected.items():
+            self.assertEqual(value, result[key])
 
     def test_variable_search_document_fields_missing_related_objects(self):
         question = QuestionFactory(
