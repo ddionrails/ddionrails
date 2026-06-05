@@ -12,6 +12,13 @@ from typing import Any
 
 from faker import Faker
 
+from tests.model_factories import (
+    ConceptFactory,
+    DatasetFactory,
+    StudyFactory,
+    VariableFactory,
+)
+
 FAKE = Faker()
 
 
@@ -39,6 +46,13 @@ def tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
         return_value=tmp_path,
     )
     return tmp_path, patch_dict
+
+
+def test_data():
+    study = StudyFactory()
+    dataset = DatasetFactory()
+    concept = ConceptFactory(topics__size=3, topics__study=study)
+    variable = VariableFactory(dataset=dataset, concept=concept)
 
 
 def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:

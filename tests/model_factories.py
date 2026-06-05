@@ -183,7 +183,7 @@ class ConceptFactory(DjangoModelFactory):
 
     class Params:
         study = factory.SubFactory(StudyFactory)
-        topics_size = 1
+        size = 1
 
     @factory.post_generation
     def topics(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
@@ -195,7 +195,7 @@ class ConceptFactory(DjangoModelFactory):
         study = kwargs.get("study")
         if create and study is None:
             study = StudyFactory()
-        for _ in range(kwargs.get("topics_size", 0)):
+        for _ in range(kwargs.get("size", 0)):
             self.topics.add(TopicFactory(study=study))
 
         if create:
@@ -339,9 +339,7 @@ class VariableFactory(DjangoModelFactory):
             self.concept = extracted
             self.save()
             return
-        self.concept = ConceptFactory(
-            topics__study=self.dataset.study, topics__topics_size=1
-        )
+        self.concept = ConceptFactory(topics__study=self.dataset.study, topics__size=1)
 
         if create:
             self.save()
@@ -598,6 +596,7 @@ class QuestionFactory(DjangoModelFactory):
 
     class Params:
         size = 0
+        cat_min = 0
 
     @factory.post_generation
     def question_items(self, create, extracted, **kwargs):
@@ -606,7 +605,15 @@ class QuestionFactory(DjangoModelFactory):
                 self.question_items.add(extract)
             self.save()
             return
-        for position in range(kwargs.get("size", 0)):
+        cat_min = kwargs.get("cat_min", 0)
+        full_size = kwargs.get("size", 0) + cat_min
+        for position in range(full_size):
+            if cat_min > 0:
+                self.question_items.add(
+                    QuestionItemFactory(question=self, position=position, scale="cat")
+                )
+                cat_min = cat_min - 1
+                continue
             self.question_items.add(QuestionItemFactory(question=self, position=position))
 
         if create:

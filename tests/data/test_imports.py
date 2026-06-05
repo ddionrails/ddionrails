@@ -409,7 +409,7 @@ class TestVariableImport(TestCase):
         variable_data = []
         self.concepts = []
         for variable in self.variables:
-            concept = ConceptFactory(topics__study=self.study, topics__topics_size=1)
+            concept = ConceptFactory(topics__study=self.study, topics__size=1)
             self.concepts.append(concept)
             variable_data.append(
                 {
@@ -444,7 +444,7 @@ class TestVariableImport(TestCase):
                     "concept_name": concept,
                 }
             )
-        concept = ConceptFactory(topics__study=self.study, topics__topics_size=1)
+        concept = ConceptFactory(topics__study=self.study, topics__size=1)
         concept_data = [
             {
                 "study": self.study.name,
