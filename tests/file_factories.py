@@ -4,7 +4,7 @@ import json
 from abc import ABC
 from csv import DictWriter
 from dataclasses import dataclass
-from os import remove
+from os import mkdir, remove
 from pathlib import Path
 from shutil import copytree, rmtree
 from tempfile import mkdtemp
@@ -13,9 +13,19 @@ from typing import Any
 from faker import Faker
 
 from tests.model_factories import (
+    AnalysisUnitFactory,
+    AttachmentFactory,
     ConceptFactory,
+    ConceptualDatasetFactory,
     DatasetFactory,
+    InstrumentFactory,
+    PeriodFactory,
+    PublicationFactory,
+    QuestionFactory,
+    QuestionVariableFactory,
     StudyFactory,
+    TopicFactory,
+    TransformationFactory,
     VariableFactory,
 )
 
@@ -46,13 +56,6 @@ def tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
         return_value=tmp_path,
     )
     return tmp_path, patch_dict
-
-
-def test_data():
-    study = StudyFactory()
-    dataset = DatasetFactory()
-    concept = ConceptFactory(topics__size=3, topics__study=study)
-    variable = VariableFactory(dataset=dataset, concept=concept)
 
 
 def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:
@@ -116,8 +119,13 @@ class _TMPImportFILE(ABC):
 class TMPJSON(_TMPImportFILE):
     """Creates and fills temporary JSON file"""
 
-    def __init__(self, content: dict[Any, Any] | list[Any], file_name: str = ""):
-        super().__init__()
+    def __init__(
+        self,
+        content: dict[Any, Any] | list[Any],
+        file_name: str = "",
+        folder: Path | None = None,
+    ):
+        super().__init__(folder=folder)
         if file_name == "":
             file_name = FAKE.file_name(extension="json")
         self.file_name = self.tmp_path.joinpath(file_name)
@@ -143,3 +151,87 @@ class TMPCSV(_TMPImportFILE):
             writer.writeheader()
             for row in content:
                 writer.writerow(row)
+
+
+# pylint: disable=too-many-locals,protected-access
+def import_data_factory():
+    """Set up all files needed for a full import."""
+
+    study = StudyFactory()
+    dataset = DatasetFactory(study=study)
+    concept = ConceptFactory(topics__size=3, topics__study=study)
+    variables = [VariableFactory(dataset=dataset, concept=concept)]
+    variables += [VariableFactory(dataset=dataset) for _ in range(3)]
+    instrument = InstrumentFactory(study=study)
+    questions = [
+        QuestionFactory(
+            instrument=instrument,
+            question_items__cat_min=2,
+            question_items__size=5,
+            concepts_questions__size=2,
+        )
+    ]
+    questions += [QuestionFactory(instrument=instrument) for _ in range(3)]
+    publication = PublicationFactory(study=study)
+    transformation = TransformationFactory(origin=variables[0], target=variables[1])
+    question_variable = QuestionVariableFactory(
+        question=questions[0], variable=variables[0]
+    )
+    attachment = AttachmentFactory(variable=variables[0])
+
+    question_csv, answers_csv = ([], [])
+    for question in questions:
+        question_items, answers = QuestionFactory._to_csv(question)
+        question_csv += question_items
+        answers_csv += answers
+
+    file_content = {
+        "datasets.csv": [DatasetFactory._to_csv(dataset)],
+        "concepts.csv": ConceptFactory._to_csv(concept),
+        "topics.csv": TopicFactory._to_csv(concept.topics.first()),
+        "analysis_units.csv": [
+            AnalysisUnitFactory._to_csv(entity.analysis_unit)
+            for entity in [dataset, instrument]
+        ],
+        "periods.csv": [
+            PeriodFactory._to_csv(entity.analysis_unit)
+            for entity in [dataset, instrument]
+        ],
+        "variables.csv": [VariableFactory._to_csv(variable) for variable in variables],
+        "instruments.csv": [InstrumentFactory._to_csv(instrument)],
+        "questions.csv": question_csv,
+        "answers.csv": answers_csv,
+        "publications.csv": [PublicationFactory._to_csv(publication)],
+        "transformations.csv": [TransformationFactory._to_csv(transformation)],
+        "questions_variables.csv": [QuestionVariableFactory._to_csv(question_variable)],
+        "conceptual_datasets.csv": [
+            ConceptualDatasetFactory._to_csv(dataset.conceptual_dataset)
+        ],
+        "attachments.csv": [AttachmentFactory._to_csv(attachment)],
+    }
+
+    tmp_path, patch_dict = tmp_import_path()
+
+    files = {}
+    for file_name, content in file_content.items():
+        files[file_name] = TMPCSV(content=content, file_name=file_name, folder=tmp_path)
+
+    mkdir(tmp_path.joinpath("datasets"))
+    mkdir(tmp_path.joinpath("instruments"))
+    instrument_file = f"{instrument.name}.json"
+    dataset_file = f"{dataset.name}.json"
+
+    file_content[instrument_file] = InstrumentFactory._to_json(instrument)
+    files[instrument_file] = TMPJSON(
+        content=file_content[instrument_file],
+        file_name=instrument_file,
+        folder=tmp_path.joinpath("instruments"),
+    )
+    file_content[dataset_file] = DatasetFactory._to_json(dataset)
+    files[dataset_file] = TMPJSON(
+        content=file_content[dataset_file],
+        file_name=dataset_file,
+        folder=tmp_path.joinpath("datasets"),
+    )
+
+    return (tmp_path, patch_dict, files, file_content)

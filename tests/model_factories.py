@@ -6,7 +6,7 @@
 
 from collections.abc import Iterable
 from random import choice, randint
-from typing import TYPE_CHECKING, Any, Generator, Union, cast
+from typing import TYPE_CHECKING, Any, Union, cast
 from uuid import UUID
 
 import factory
@@ -111,15 +111,16 @@ class PeriodFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def _to_csv(self) -> dict[str, str]:
+    @staticmethod
+    def _to_csv(period) -> dict[str, str]:
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "label": self.label,
-            "label_de": self.label_de,
-            "description": self.description,
-            "definition": self.description,
-            "description_de": self.description_de,
+            "study": period.study.name,
+            "name": period.name,
+            "label": period.label,
+            "label_de": period.label_de,
+            "description": period.description,
+            "definition": period.description,
+            "description_de": period.description_de,
         }
 
 
@@ -149,10 +150,10 @@ class TopicFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def _to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
-        topic = self
-        while topic.parent:
-            yield {
+    @staticmethod
+    def _to_csv(topic) -> list[dict[str, str]]:
+        topics = [
+            {
                 "study": topic.study.name,
                 "name": topic.name,
                 "label": topic.label,
@@ -161,17 +162,22 @@ class TopicFactory(DjangoModelFactory):
                 "definition": topic.description,
                 "description_de": topic.description_de,
             }
+        ]
+        while topic.parent:
+            topics.append(
+                {
+                    "study": topic.study.name,
+                    "name": topic.name,
+                    "label": topic.label,
+                    "label_de": topic.label_de,
+                    "description": topic.description,
+                    "definition": topic.description,
+                    "description_de": topic.description_de,
+                }
+            )
             topic = topic.parent
 
-        return {
-            "study": topic.study.name,
-            "name": topic.name,
-            "label": topic.label,
-            "label_de": topic.label_de,
-            "description": topic.description,
-            "definition": topic.description,
-            "description_de": topic.description_de,
-        }
+        return topics
 
 
 class ConceptFactory(DjangoModelFactory):
@@ -214,21 +220,26 @@ class ConceptFactory(DjangoModelFactory):
         name = ""
         study = _EmptyStudy()
 
-    def _to_csv(self) -> Generator[dict[str, str], None, dict[str, str]]:
-        topics = [self._EmptyTopic()]
-        if self.topics.count() > 0:
-            topics = self.topics.all()
+    @classmethod
+    def _to_csv(cls, concept) -> list[dict[str, str]]:
+        topics = [cls._EmptyTopic()]
+        lines = []
+        if concept.topics.count() > 0:
+            topics = concept.topics.all()
         for topic in topics:
-            return {
-                "study": topic.study.name,
-                "name": self.name,
-                "label": self.label,
-                "label_de": self.label_de,
-                "description": self.description,
-                "definition": self.description,
-                "description_de": self.description_de,
-                "topic": topic.name,
-            }
+            lines.append(
+                {
+                    "study": topic.study.name,
+                    "name": concept.name,
+                    "label": concept.label,
+                    "label_de": concept.label_de,
+                    "description": concept.description,
+                    "definition": concept.description,
+                    "description_de": concept.description_de,
+                    "topic": topic.name,
+                }
+            )
+        return lines
 
 
 class ConceptualDatasetFactory(DjangoModelFactory):
@@ -243,15 +254,16 @@ class ConceptualDatasetFactory(DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def _to_csv(self) -> dict[str, str]:
+    @staticmethod
+    def _to_csv(conceptual_dataset) -> dict[str, str]:
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "label": self.label,
-            "label_de": self.label_de,
-            "description": self.description,
-            "definition": self.description,
-            "description_de": self.description_de,
+            "study": conceptual_dataset.study.name,
+            "name": conceptual_dataset.name,
+            "label": conceptual_dataset.label,
+            "label_de": conceptual_dataset.label_de,
+            "description": conceptual_dataset.description,
+            "definition": conceptual_dataset.description,
+            "description_de": conceptual_dataset.description_de,
         }
 
 
@@ -268,15 +280,16 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
-    def _to_csv(self) -> dict[str, str]:
+    @staticmethod
+    def _to_csv(analysis_unit) -> dict[str, str]:
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "label": self.label,
-            "label_de": self.label_de,
-            "description": self.description,
-            "definition": self.description,
-            "description_de": self.description_de,
+            "study": analysis_unit.study.name,
+            "name": analysis_unit.name,
+            "label": analysis_unit.label,
+            "label_de": analysis_unit.label_de,
+            "description": analysis_unit.description,
+            "definition": analysis_unit.description,
+            "description_de": analysis_unit.description_de,
         }
 
 
@@ -298,30 +311,34 @@ class DatasetFactory(DjangoModelFactory):
     period = SubFactory(PeriodFactory)
     conceptual_dataset = SubFactory(ConceptualDatasetFactory)
 
-    def _to_json(self) -> Generator[dict[str, any], None, None]:
-        variables = Variable.objects.filter(dataset=self)
+    @staticmethod
+    def _to_json(dataset) -> list[dict[str, any]]:
+        variables = Variable.objects.filter(dataset=dataset)
+        lines = []
 
         for variable in variables:
-            yield VariableFactory._variable_to_json(variable)
+            lines.append(VariableFactory._variable_to_json(variable))
+        return lines
 
-    def _to_csv(self) -> dict[str, str]:
-        if self.primary_key == "":
-            variable = Variable.objects.filter(dataset=self).first()
+    @staticmethod
+    def _to_csv(dataset) -> dict[str, str]:
+        if dataset.primary_key == "":
+            variable = Variable.objects.filter(dataset=dataset).first()
             if variable:
-                self.primary_key = variable.name
+                dataset.primary_key = variable.name
 
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "label": self.label,
-            "label_de": self.label_de,
-            "description": self.description,
-            "definition": self.description,
-            "description_de": self.description_de,
-            "analysis_unit": self.analysis_unit.name,
-            "conceptual_dataset": self.conceptual_dataset.name,
-            "folder": self.folder,
-            "primary_key": self.primary_key,
+            "study": dataset.study.name,
+            "name": dataset.name,
+            "label": dataset.label,
+            "label_de": dataset.label_de,
+            "description": dataset.description,
+            "definition": dataset.description,
+            "description_de": dataset.description_de,
+            "analysis_unit": dataset.analysis_unit.name,
+            "conceptual_dataset": dataset.conceptual_dataset.name,
+            "folder": dataset.folder,
+            "primary_key": dataset.primary_key,
         }
 
 
@@ -374,8 +391,9 @@ class VariableFactory(DjangoModelFactory):
         }
     )
 
-    def _to_json(self):
-        return self._variable_to_json(self)
+    @classmethod
+    def _to_json(cls, variable):
+        return cls._variable_to_json(variable)
 
     @staticmethod
     def _variable_to_json(variable: Union[Variable, "VariableFactory"]):
@@ -390,13 +408,14 @@ class VariableFactory(DjangoModelFactory):
             "statistics": variable.statistics,
         }
 
-    def _to_csv(self):
+    @classmethod
+    def _to_csv(cls, variable):
         additional_fields = {
-            "description": self.description,
-            "description_de": self.description_de,
-            "concept": self.concept.name,
+            "description": variable.description,
+            "description_de": variable.description_de,
+            "concept": variable.concept.name,
         }
-        return {**self._variable_to_json(self), **additional_fields}
+        return {**cls._variable_to_json(variable), **additional_fields}
 
 
 class PublicationFactory(DjangoModelFactory):
@@ -420,19 +439,20 @@ class PublicationFactory(DjangoModelFactory):
         lambda _: ", ".join([FAKE.word() for _ in range(randint(1, 10))])
     )
 
-    def _to_csv(self):
+    @staticmethod
+    def _to_csv(publication):
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "title": self.title,
-            "author": self.author,
-            "year": self.year,
-            "abstract": self.abstract,
-            "cite": self.cite,
-            "type": self.type,
-            "studies": self.studies,
-            "url": self.url,
-            "doi": self.doi,
+            "study": publication.study.name,
+            "name": publication.name,
+            "title": publication.title,
+            "author": publication.author,
+            "year": publication.year,
+            "abstract": publication.abstract,
+            "cite": publication.cite,
+            "type": publication.type,
+            "studies": publication.studies,
+            "url": publication.url,
+            "doi": publication.doi,
         }
 
 
@@ -448,14 +468,15 @@ class TransformationFactory(DjangoModelFactory):
     origin = factory.SubFactory(VariableFactory)
     target = factory.SubFactory(VariableFactory)
 
-    def _to_csv(self):
+    @staticmethod
+    def _to_csv(transformation):
         return {
-            "origin_study_name": self.origin.dataset.study.name,
-            "origin_dataset_name": self.origin.dataset.name,
-            "origin_variable_name": self.origin.dataset.name,
-            "target_study_name": self.target.dataset.study.name,
-            "target_dataset_name": self.target.dataset.name,
-            "target_variable_name": self.target.dataset.name,
+            "origin_study_name": transformation.origin.dataset.study.name,
+            "origin_dataset_name": transformation.origin.dataset.name,
+            "origin_variable_name": transformation.origin.dataset.name,
+            "target_study_name": transformation.target.dataset.study.name,
+            "target_dataset_name": transformation.target.dataset.name,
+            "target_variable_name": transformation.target.dataset.name,
         }
 
 
@@ -484,31 +505,33 @@ class InstrumentFactory(DjangoModelFactory):
     analysis_unit = factory.SubFactory(AnalysisUnitFactory)
     period = factory.SubFactory(PeriodFactory, study=factory.SelfAttribute("..study"))
 
-    def _to_csv(self):
-        _type: dict[str, Any] = cast(dict[str, Any], self.type)
+    @staticmethod
+    def _to_csv(instrument):
+        _type: dict[str, Any] = cast(dict[str, Any], instrument.type)
         return {
-            "study": self.study.name,
-            "name": self.name,
-            "label": self.label,
-            "label_de": self.label_de,
-            "description": self.description,
-            "description_de": self.description_de,
-            "analysis_unit": self.analysis_unit.name,
-            "period": self.period.name,
-            "mode": self.mode,
-            "type": _type["end"],  # pylint: disable=unsubscriptable-object
+            "study": instrument.study.name,
+            "name": instrument.name,
+            "label": instrument.label,
+            "label_de": instrument.label_de,
+            "description": instrument.description,
+            "description_de": instrument.description_de,
+            "analysis_unit": instrument.analysis_unit.name,
+            "period": instrument.period.name,
+            "mode": instrument.mode,
+            "type": _type["en"],  # pylint: disable=unsubscriptable-object
             "type_de": _type["de"],  # pylint: disable=unsubscriptable-object
             "type_position": _type["position"],  # pylint: disable=unsubscriptable-object
         }
 
-    def _to_json(self):
-        instrument_data = self._to_csv()
+    @classmethod
+    def _to_json(cls, instrument):
+        instrument_data = cls._to_csv(instrument)
         for field in ["analysis_unit", "description", "description_de"]:
             del instrument_data[field]
         questions = {}
-        for question in Question.objects.filter(dataset=self):
+        for question in Question.objects.filter(instrument=instrument):
             items = []
-            for item in question.items.all():
+            for item in question.question_items.all():
                 items.append(QuestionItemFactory._to_json(item))
 
             questions[question.name] = {
@@ -519,6 +542,7 @@ class InstrumentFactory(DjangoModelFactory):
                 "items": items,
             }
         instrument_data["questions"] = questions
+        return instrument_data
 
 
 class AnswerFactory(DjangoModelFactory):
@@ -642,18 +666,19 @@ class QuestionFactory(DjangoModelFactory):
 
     sort_id = factory.Sequence(lambda n: n + 1)
 
-    def _to_csv(self) -> tuple[dict[str, str], dict[str, str]]:
-        instrument_name = self.instrument.name
-        study_name = self.instrument.study.name
+    @staticmethod
+    def _to_csv(question) -> tuple[dict[str, str], dict[str, str]]:
+        instrument_name = question.instrument.name
+        study_name = question.instrument.study.name
         questions_csv = []
         answers_csv = []
 
-        for item in self.question_items.all().order_by("position"):
+        for item in question.question_items.all().order_by("position"):
             questions_csv.append(
                 {
                     "study": study_name,
                     "instrument": instrument_name,
-                    "name": self.name,
+                    "name": question.name,
                     "item": item.name,
                     "text": item.label,
                     "text_de": item.label_de,
@@ -663,7 +688,6 @@ class QuestionFactory(DjangoModelFactory):
                     "description_de": item.description_de,
                     "filter": item.input_filter,
                     "goto": item.goto,
-                    "concept": self.concept,
                     "scale": item.scale,
                 }
             )
@@ -672,8 +696,8 @@ class QuestionFactory(DjangoModelFactory):
                 for answer in item.answers.all():
                     answers_csv.append(
                         {
-                            "study": self.study,
-                            "instrument": self.instrument.name,
+                            "study": study_name,
+                            "instrument": question.instrument.name,
                             "answer_list": answer_list,
                             "value": answer.value,
                             "label": answer.label,
@@ -705,13 +729,14 @@ class QuestionVariableFactory(factory.django.DjangoModelFactory):
     question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
     variable = factory.SubFactory(VariableFactory, name="some-variable")
 
-    def _to_csv(self) -> dict[str, str]:
+    @staticmethod
+    def _to_csv(question_variable) -> dict[str, str]:
         return {
-            "study": self.variable.dataset.study.name,
-            "dataset": self.variable.dataset.name,
-            "variable": self.variable.name,
-            "instrument": self.question.instrument.name,
-            "question": self.question.name,
+            "study": question_variable.variable.dataset.study.name,
+            "dataset": question_variable.variable.dataset.name,
+            "variable": question_variable.variable.name,
+            "instrument": question_variable.question.instrument.name,
+            "question": question_variable.question.name,
         }
 
 
@@ -741,7 +766,7 @@ class BasketFactory(factory.django.DjangoModelFactory):
 
 class AttachmentFactory(DjangoModelFactory):
 
-    url = factory.LazyAttribute(lambda _: FAKE.url)
+    url = factory.LazyAttribute(lambda _: FAKE.url())
     url_text = factory.LazyAttribute(lambda _: FAKE.sentence())
     context_study = factory.SubFactory(StudyFactory)
     study = context_study
@@ -751,7 +776,9 @@ class AttachmentFactory(DjangoModelFactory):
     question = None
 
     @factory.post_generation
-    def attached_object(self, **kwargs):
+    def attached_object(self, create, extracted, **_):
+        if not create:
+            return
         self.study = self.context_study
         fields = {
             "dataset": DatasetFactory(),
@@ -759,6 +786,13 @@ class AttachmentFactory(DjangoModelFactory):
             "instrument": InstrumentFactory(),
             "question": QuestionFactory(),
         }
+        if not isinstance(extracted, dict):
+            extracted = {}
+
+        if all(field in fields for field in extracted):
+            for key, value in extracted.items():
+                fields[key] = value
+
         for field in fields:
             if getattr(self, field) is not None:
                 return
@@ -768,25 +802,26 @@ class AttachmentFactory(DjangoModelFactory):
     class Meta:
         model = Attachment
 
-    def _to_csv(self) -> dict[str, str]:
+    @staticmethod
+    def _to_csv(attachment) -> dict[str, str]:
 
         # The order of items here is important
         fields = ("variable", "question", "dataset", "instrument", "study")
         _type = ""
         for field in fields:
-            if getattr(self, field) is not None:
+            if getattr(attachment, field) is not None:
                 _type = field
                 break
-        study: StudyFactory = cast(StudyFactory, self.study)
+        study: StudyFactory = cast(StudyFactory, attachment.study)
         return {
             "type": _type,
             "study": study.name,
-            "dataset": getattr(self.dataset, "name", ""),
-            "variable": getattr(self.variable, "name", ""),
-            "instrument": getattr(self.instrument, "name", ""),
-            "question": getattr(self.question, "name", ""),
-            "url": self.url,
-            "url_text": self.url_text,
+            "dataset": getattr(attachment.dataset, "name", ""),
+            "variable": getattr(attachment.variable, "name", ""),
+            "instrument": getattr(attachment.instrument, "name", ""),
+            "question": getattr(attachment.question, "name", ""),
+            "url": attachment.url,
+            "url_text": attachment.url_text,
         }
 
 
