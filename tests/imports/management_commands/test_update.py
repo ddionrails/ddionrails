@@ -28,7 +28,7 @@ from ddionrails.imports.management.commands.update import (
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
-from tests.file_factories import destroy_tmp_path, tmp_import_path_with_test_data
+from tests.file_factories import destroy_tmp_path, import_data_factory, tmp_import_path_with_test_data
 from tests.model_factories import (
     AnalysisUnitFactory,
     BasketFactory,
@@ -344,9 +344,10 @@ class TestUpdateAllStudiesCompletely(TestCase):
 class TestUpdate(TestCase):
 
     def setUp(self):
-        self.study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        self.tmp_path, patch_dict, self.files, self.file_content, study_name = import_data_factory()
+        self.study = StudyFactory(name=study_name)
         self.dataset = DatasetFactory(name="test-dataset", study=self.study)
-        self.tmp_path, patch_dict = tmp_import_path_with_test_data()
+        
         self.import_path_patch = patch(**patch_dict)
         self.import_path_patch.start()
         self.tmp_backup_path = Path(mkdtemp())
@@ -364,10 +365,21 @@ class TestUpdate(TestCase):
         return super().tearDown()
 
     def test_instrument_import(self):
-        period = PeriodFactory(name="some-period", study=self.study)
-        analysis_unit = AnalysisUnitFactory(name="some-analysis-unit", study=self.study)
+        instrument_data = self.file_content["instruments.csv"][0]
+        instrument_name = instrument_data["name"]
         with self.assertRaises(Instrument.DoesNotExist):
-            Instrument.objects.get(name="some-instrument")
+            Instrument.objects.get(name=instrument_name)
+
+        period_names = [line["name"] for line in self.file_content["periods.csv"]]
+        analysis_unit_names = [line["name"] for line in self.file_content["analysis_units.csv"]]
+
+        options = get_options(self.study.name)
+        options["entity"] = "periods"
+        _, error = update(options)
+
+        options["entity"] = "analysis_units"
+        _, error = update(options)
+
 
         options = get_options(self.study.name)
         options["entity"] = "instuments.json"
@@ -380,13 +392,13 @@ class TestUpdate(TestCase):
         self.assertIsNone(error)
         self.assertIsNotNone(success)
 
-        instrument = Instrument.objects.get(name="some-instrument")
-        self.assertEqual("some-type", instrument.type["en"])
-        self.assertEqual("ein-typ", instrument.type["de"])
-        self.assertEqual("1", instrument.type["position"])
-        self.assertEqual("some-mode", instrument.mode)
-        self.assertEqual(period, instrument.period)
-        self.assertEqual(analysis_unit, instrument.analysis_unit)
+        instrument = Instrument.objects.get(name=instrument_name)
+        self.assertEqual(instrument_data["type"], instrument.type["en"])
+        self.assertEqual(instrument_data["type_de"], instrument.type["de"])
+        self.assertEqual(str(instrument_data["type_position"]), instrument.type["position"])
+        self.assertEqual(instrument_data["mode"], instrument.mode)
+        self.assertIn(instrument.period.name, period_names)
+        self.assertIn(instrument.analysis_unit.name, analysis_unit_names)
 
     def test_clean_update(self):
         """Does a clean update remove study data before the update?

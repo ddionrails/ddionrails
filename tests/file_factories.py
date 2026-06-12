@@ -10,8 +10,13 @@ from shutil import copytree, rmtree
 from tempfile import mkdtemp
 from typing import Any
 
+from django.apps import apps
+from django.core import management
+from elasticsearch.dsl.document_base import E
 from faker import Faker
 
+from ddionrails.concepts.models import Concept
+from ddionrails.studies.models import Study
 from tests.model_factories import (
     AnalysisUnitFactory,
     AttachmentFactory,
@@ -155,15 +160,15 @@ class TMPCSV(_TMPImportFILE):
 
 # pylint: disable=too-many-locals,protected-access
 def import_data_factory() -> (
-    tuple[Path, _PatchKwargs, dict[str, _TMPImportFILE], dict[str, list[dict[str, str]]]]
+    tuple[Path, _PatchKwargs, dict[str, _TMPImportFILE], dict[str, list[dict[str, str]]], str]
 ):
     """Set up all files needed for a full import."""
 
-    study = StudyFactory()
+    study = StudyFactory.create()
+    study_name = study.name
     dataset = DatasetFactory(study=study)
     concept = ConceptFactory(topics__size=3, topics__study=study, topics__depth=2)
-    variables = [VariableFactory(dataset=dataset, concept=concept)]
-    variables += [VariableFactory(dataset=dataset) for _ in range(3)]
+    variables = [VariableFactory(dataset=dataset, concept=concept) for _ in range(3)]
     instrument = InstrumentFactory(study=study)
     questions = [
         QuestionFactory(
@@ -187,16 +192,23 @@ def import_data_factory() -> (
         question_csv += question_items
         answers_csv += answers
 
+    topics = []
+    concepts = []
+    for _concept in Concept.objects.filter(topics__study=study):
+        concepts += ConceptFactory._to_csv(concept)
+        for _topic in _concept.topics.all():
+            topics += TopicFactory._to_csv(_topic)
+
     file_content = {
         "datasets.csv": [DatasetFactory._to_csv(dataset)],
-        "concepts.csv": ConceptFactory._to_csv(concept),
-        "topics.csv": TopicFactory._to_csv(concept.topics.first()),
+        "concepts.csv": concepts,
+        "topics.csv": topics,
         "analysis_units.csv": [
             AnalysisUnitFactory._to_csv(entity.analysis_unit)
             for entity in [dataset, instrument]
         ],
         "periods.csv": [
-            PeriodFactory._to_csv(entity.analysis_unit)
+            PeriodFactory._to_csv(entity.period)
             for entity in [dataset, instrument]
         ],
         "variables.csv": [VariableFactory._to_csv(variable) for variable in variables],
@@ -244,4 +256,12 @@ def import_data_factory() -> (
         folder=tmp_path,
     )
 
-    return (tmp_path, patch_dict, files, file_content)
+    
+    EXCLUDED_APPS = {"django_rq", "admin", "auth", "contenttypes", "sessions"}
+
+    for model in apps.get_models():
+        if model._meta.app_label not in EXCLUDED_APPS:
+            model.objects.all().delete()
+
+
+    return (tmp_path, patch_dict, files, file_content, study_name)

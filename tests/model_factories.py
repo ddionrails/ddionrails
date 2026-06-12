@@ -177,7 +177,8 @@ class TopicFactory(DjangoModelFactory):
             )
             topic = topic.parent
 
-        return topics
+
+        return topics[::-1]
 
     @staticmethod
     def _to_json(concept) -> list[dict[str, any]]:
@@ -710,8 +711,7 @@ class QuestionFactory(DjangoModelFactory):
         answers_csv = []
 
         for item in question.question_items.all().order_by("position"):
-            questions_csv.append(
-                {
+            _question = {
                     "study": study_name,
                     "instrument": instrument_name,
                     "name": question.name,
@@ -725,9 +725,10 @@ class QuestionFactory(DjangoModelFactory):
                     "filter": item.input_filter,
                     "goto": item.goto,
                     "scale": item.scale,
+                    "answer_list": "",
                 }
-            )
             if item.scale == "cat":
+                _question["answer_list"] = item.id 
                 answer_list = item.id
                 for answer in item.answers.all():
                     answers_csv.append(
@@ -740,6 +741,9 @@ class QuestionFactory(DjangoModelFactory):
                             "label_de": answer.label_de,
                         }
                     )
+            questions_csv.append(
+                    _question
+            )
         return (questions_csv, answers_csv)
 
 
