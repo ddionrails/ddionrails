@@ -130,7 +130,7 @@ class TMPJSON(_TMPImportFILE):
             file_name = FAKE.file_name(extension="json")
         self.file_name = self.tmp_path.joinpath(file_name)
         with open(self.file_name, "w", encoding="utf-8") as file:
-            json.dump(content, file)
+            json.dump(content, file, ensure_ascii=False)
 
 
 class TMPCSV(_TMPImportFILE):
@@ -154,12 +154,14 @@ class TMPCSV(_TMPImportFILE):
 
 
 # pylint: disable=too-many-locals,protected-access
-def import_data_factory():
+def import_data_factory() -> (
+    tuple[Path, _PatchKwargs, dict[str, _TMPImportFILE], dict[str, list[dict[str, str]]]]
+):
     """Set up all files needed for a full import."""
 
     study = StudyFactory()
     dataset = DatasetFactory(study=study)
-    concept = ConceptFactory(topics__size=3, topics__study=study)
+    concept = ConceptFactory(topics__size=3, topics__study=study, topics__depth=2)
     variables = [VariableFactory(dataset=dataset, concept=concept)]
     variables += [VariableFactory(dataset=dataset) for _ in range(3)]
     instrument = InstrumentFactory(study=study)
@@ -232,6 +234,14 @@ def import_data_factory():
         content=file_content[dataset_file],
         file_name=dataset_file,
         folder=tmp_path.joinpath("datasets"),
+    )
+
+    file_content["topics.json"] = TopicFactory._to_json(concept=concept)
+
+    files["topics.json"] = TMPJSON(
+        content=file_content["topics.json"],
+        file_name="topics.json",
+        folder=tmp_path,
     )
 
     return (tmp_path, patch_dict, files, file_content)

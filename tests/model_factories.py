@@ -179,6 +179,39 @@ class TopicFactory(DjangoModelFactory):
 
         return topics
 
+    @staticmethod
+    def _to_json(concept) -> list[dict[str, any]]:
+        output = []
+        for field in ["label", "label_de"]:
+            topic = concept.topics.first()
+            branch = concept
+            branch = {
+                "title": getattr(topic, field),
+                "key": f"topic_{topic.name}",
+                "type": "topic",
+                "children": [
+                    {
+                        "title": getattr(concept, field),
+                        "key": f"concept_{concept.name}",
+                        "type": "concept",
+                    }
+                ],
+            }
+            while topic.parent:
+                topic = topic.parent
+                branch = {
+                    "title": getattr(topic, field),
+                    "key": f"topic_{topic.name}",
+                    "type": "topic",
+                    "children": [branch],
+                }
+            if field == "label":
+                branch = {"language": "en", "topics": [branch]}
+            else:
+                branch = {"language": "de", "topics": [branch]}
+            output.append(branch)
+        return output
+
 
 class ConceptFactory(DjangoModelFactory):
     if TYPE_CHECKING:
@@ -190,6 +223,7 @@ class ConceptFactory(DjangoModelFactory):
     class Params:
         study = factory.SubFactory(StudyFactory)
         size = 1
+        depth = 0
 
     @factory.post_generation
     def topics(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
@@ -202,7 +236,9 @@ class ConceptFactory(DjangoModelFactory):
         if create and study is None:
             study = StudyFactory()
         for _ in range(kwargs.get("size", 0)):
-            self.topics.add(TopicFactory(study=study))
+            self.topics.add(
+                TopicFactory(study=study, parent__depth=kwargs.get("depth", 0))
+            )
 
         if create:
             self.save()
