@@ -21,6 +21,7 @@ from tests.model_factories import (
     AnalysisUnitFactory,
     AttachmentFactory,
     ConceptFactory,
+    ConceptQuestionFactory,
     ConceptualDatasetFactory,
     DatasetFactory,
     InstrumentFactory,
@@ -121,6 +122,23 @@ class _TMPImportFILE(ABC):
         return self.import_path_patch_arguments
 
 
+class TMPGeneric(_TMPImportFILE):
+    """Writes a generic text file form str content"""
+
+    def __init__(
+        self,
+        content: str,
+        file_name: str = "",
+        folder: Path | None = None,
+    ):
+        super().__init__(folder=folder)
+        if file_name == "":
+            file_name = FAKE.file_name(extension="json")
+        self.file_name = self.tmp_path.joinpath(file_name)
+        with open(self.file_name, "w", encoding="utf-8") as file:
+            file.write(content)
+
+
 class TMPJSON(_TMPImportFILE):
     """Creates and fills temporary JSON file"""
 
@@ -159,9 +177,13 @@ class TMPCSV(_TMPImportFILE):
 
 
 # pylint: disable=too-many-locals,protected-access
-def import_data_factory() -> (
-    tuple[Path, _PatchKwargs, dict[str, _TMPImportFILE], dict[str, list[dict[str, str]]], str]
-):
+def import_data_factory() -> tuple[
+    Path,
+    _PatchKwargs,
+    dict[str, _TMPImportFILE],
+    dict[str, list[dict[str, str]]],
+    str,
+]:
     """Set up all files needed for a full import."""
 
     study = StudyFactory.create()
@@ -175,7 +197,7 @@ def import_data_factory() -> (
             instrument=instrument,
             question_items__cat_min=2,
             question_items__size=5,
-            concepts_questions__size=2,
+            concepts_questions=concept,
         )
     ]
     questions += [QuestionFactory(instrument=instrument) for _ in range(3)]
@@ -184,7 +206,7 @@ def import_data_factory() -> (
     question_variable = QuestionVariableFactory(
         question=questions[0], variable=variables[0]
     )
-    attachment = AttachmentFactory(variable=variables[0])
+    attachment = AttachmentFactory(dataset=variables[0].dataset, variable=variables[0])
 
     question_csv, answers_csv = ([], [])
     for question in questions:
@@ -208,8 +230,7 @@ def import_data_factory() -> (
             for entity in [dataset, instrument]
         ],
         "periods.csv": [
-            PeriodFactory._to_csv(entity.period)
-            for entity in [dataset, instrument]
+            PeriodFactory._to_csv(entity.period) for entity in [dataset, instrument]
         ],
         "variables.csv": [VariableFactory._to_csv(variable) for variable in variables],
         "instruments.csv": [InstrumentFactory._to_csv(instrument)],
@@ -256,12 +277,20 @@ def import_data_factory() -> (
         folder=tmp_path,
     )
 
-    
+    file_content["study.md"] = (
+        "---\n" f"name: {study_name}\n" f"label: {study.label}\n" "---\n" "\n"
+    ) + FAKE.paragraph()
+
+    files["study.md"] = TMPGeneric(
+        content=file_content["study.md"],
+        file_name="study.md",
+        folder=tmp_path,
+    )
+
     EXCLUDED_APPS = {"django_rq", "admin", "auth", "contenttypes", "sessions"}
 
     for model in apps.get_models():
         if model._meta.app_label not in EXCLUDED_APPS:
             model.objects.all().delete()
-
 
     return (tmp_path, patch_dict, files, file_content, study_name)

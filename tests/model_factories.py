@@ -177,7 +177,6 @@ class TopicFactory(DjangoModelFactory):
             )
             topic = topic.parent
 
-
         return topics[::-1]
 
     @staticmethod
@@ -510,10 +509,10 @@ class TransformationFactory(DjangoModelFactory):
         return {
             "origin_study_name": transformation.origin.dataset.study.name,
             "origin_dataset_name": transformation.origin.dataset.name,
-            "origin_variable_name": transformation.origin.dataset.name,
+            "origin_variable_name": transformation.origin.name,
             "target_study_name": transformation.target.dataset.study.name,
             "target_dataset_name": transformation.target.dataset.name,
-            "target_variable_name": transformation.target.dataset.name,
+            "target_variable_name": transformation.target.name,
         }
 
 
@@ -688,6 +687,11 @@ class QuestionFactory(DjangoModelFactory):
             for concept_question in extracted:
                 self.concepts_question.add(concept_question)
             return
+        if isinstance(extracted, Concept):
+            self.concepts_questions.add(
+                ConceptQuestionFactory(question=self, concept=extracted)
+            )
+            return
 
         for _ in range(kwargs.get("size", 0)):
             concept = ConceptFactory(topics__study=self.instrument.study)
@@ -712,23 +716,24 @@ class QuestionFactory(DjangoModelFactory):
 
         for item in question.question_items.all().order_by("position"):
             _question = {
-                    "study": study_name,
-                    "instrument": instrument_name,
-                    "name": question.name,
-                    "item": item.name,
-                    "text": item.label,
-                    "text_de": item.label_de,
-                    "instruction": item.instruction,
-                    "instruction_de": item.instruction_de,
-                    "description": item.description,
-                    "description_de": item.description_de,
-                    "filter": item.input_filter,
-                    "goto": item.goto,
-                    "scale": item.scale,
-                    "answer_list": "",
-                }
+                "study": study_name,
+                "instrument": instrument_name,
+                "name": question.name,
+                "item": item.name,
+                "text": item.label,
+                "text_de": item.label_de,
+                "instruction": item.instruction,
+                "instruction_de": item.instruction_de,
+                "description": item.description,
+                "description_de": item.description_de,
+                "filter": item.input_filter,
+                "goto": item.goto,
+                "scale": item.scale,
+                "answer_list": "",
+                "concept": question.concepts_questions.first().concept.name,
+            }
             if item.scale == "cat":
-                _question["answer_list"] = item.id 
+                _question["answer_list"] = item.id
                 answer_list = item.id
                 for answer in item.answers.all():
                     answers_csv.append(
@@ -741,9 +746,7 @@ class QuestionFactory(DjangoModelFactory):
                             "label_de": answer.label_de,
                         }
                     )
-            questions_csv.append(
-                    _question
-            )
+            questions_csv.append(_question)
         return (questions_csv, answers_csv)
 
 
