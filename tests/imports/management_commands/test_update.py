@@ -28,16 +28,19 @@ from ddionrails.imports.management.commands.update import (
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
-from tests.file_factories import destroy_tmp_path, import_data_factory, tmp_import_path_with_test_data
+from tests.file_factories import (
+    destroy_tmp_path,
+    import_data_factory,
+    tmp_import_path_with_test_data,
+)
 from tests.model_factories import (
-    AnalysisUnitFactory,
     BasketFactory,
     DatasetFactory,
-    PeriodFactory,
     StudyFactory,
+    VariableFactory,
 )
 
-HARD_CODED_STUDY_NAME = "some-study"
+STUDY_NAME = "some-study"
 
 
 def get_options(study_name):
@@ -152,7 +155,7 @@ class TestUpdateWithCSV(TestCase):
         self.tmp_path, patch_dict = tmp_import_path_with_test_data()
         self.import_path_patch = patch(**patch_dict)
         self.import_path_patch.start()
-        self.study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        self.study = StudyFactory(name=STUDY_NAME)
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -232,7 +235,7 @@ class TestUpdateWithCSV(TestCase):
             self.assertEqual(1, error.exception.code)
             log.assert_called_once_with(
                 'Study "%s" has no file: "%s"',
-                HARD_CODED_STUDY_NAME,
+                STUDY_NAME,
                 "nonexistent-file.json",
             )
 
@@ -291,7 +294,7 @@ class TestStdOutAndStdErr(TestCase):
         self.assertIn("does not exist", output)
 
     def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(self):
-        study = StudyFactory(name=HARD_CODED_STUDY_NAME)
+        study = StudyFactory(name=STUDY_NAME)
         filename = "tests/imports/test_data/sample.csv"
 
         for option in ("-f", "--filename"):
@@ -343,12 +346,18 @@ class TestUpdateAllStudiesCompletely(TestCase):
 
 class TestUpdate(TestCase):
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.tmp_path, cls.patch_dict, cls.files, cls.file_content, cls.study_name = (
+            import_data_factory()
+        )
+        return super().setUpClass()
+
     def setUp(self):
-        self.tmp_path, patch_dict, self.files, self.file_content, study_name = import_data_factory()
-        self.study = StudyFactory(name=study_name)
+        self.study = StudyFactory(name=self.study_name)
         self.dataset = DatasetFactory(name="test-dataset", study=self.study)
-        
-        self.import_path_patch = patch(**patch_dict)
+
+        self.import_path_patch = patch(**self.patch_dict)
         self.import_path_patch.start()
         self.tmp_backup_path = Path(mkdtemp())
         self.tmp_backup_patch = patch(
@@ -360,9 +369,13 @@ class TestUpdate(TestCase):
     def tearDown(self) -> None:
         self.import_path_patch.stop()
         self.tmp_backup_patch.stop()
-        destroy_tmp_path(self.tmp_path)
         destroy_tmp_path(self.tmp_backup_path)
         return super().tearDown()
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        destroy_tmp_path(cls.tmp_path)
+        return super().tearDownClass()
 
     def test_instrument_import(self):
         instrument_data = self.file_content["instruments.csv"][0]
@@ -371,7 +384,9 @@ class TestUpdate(TestCase):
             Instrument.objects.get(name=instrument_name)
 
         period_names = [line["name"] for line in self.file_content["periods.csv"]]
-        analysis_unit_names = [line["name"] for line in self.file_content["analysis_units.csv"]]
+        analysis_unit_names = [
+            line["name"] for line in self.file_content["analysis_units.csv"]
+        ]
 
         options = get_options(self.study.name)
         options["entity"] = "periods"
@@ -379,7 +394,6 @@ class TestUpdate(TestCase):
 
         options["entity"] = "analysis_units"
         _, error = update(options)
-
 
         options = get_options(self.study.name)
         options["entity"] = "instuments.json"
@@ -395,7 +409,9 @@ class TestUpdate(TestCase):
         instrument = Instrument.objects.get(name=instrument_name)
         self.assertEqual(instrument_data["type"], instrument.type["en"])
         self.assertEqual(instrument_data["type_de"], instrument.type["de"])
-        self.assertEqual(str(instrument_data["type_position"]), instrument.type["position"])
+        self.assertEqual(
+            str(instrument_data["type_position"]), instrument.type["position"]
+        )
         self.assertEqual(instrument_data["mode"], instrument.mode)
         self.assertIn(instrument.period.name, period_names)
         self.assertIn(instrument.analysis_unit.name, analysis_unit_names)
@@ -405,7 +421,7 @@ class TestUpdate(TestCase):
 
         The clean import should remove all entities related to a study before
         the import of the study.
-        There is no data provided to import for this test.
+        There is no dat. provided to import for this test.
         After the clean import without data only the study object itself should
         remain in the database.
         The test dataset should be gone.
@@ -417,6 +433,8 @@ class TestUpdate(TestCase):
 
         datasets_ids = [dataset.id for dataset in Dataset.objects.all()]
         self.assertNotIn(self.dataset.id, datasets_ids)
+        for variable in self.file_content["variables.csv"]:
+            Variable.objects.get(dataset__name=variable["dataset"], name=variable["name"])
 
     def test_basket_protection(self):  # pylint: disable=too-many-locals
         """A clean update should leaf baskets intact."""
@@ -426,8 +444,10 @@ class TestUpdate(TestCase):
 
         manager = StudyImportManager(self.study, redis=False)
         update_single_study(self.study, True, clean_import=clean_import, manager=manager)
-        variable = Variable.objects.get(name="some-variable")
-        outdated_variable = Variable.objects.get(name="some-third-variable")
+        variable_name = self.file_content["variables.csv"][0]["name"]
+        variable = Variable.objects.get(name=variable_name)
+        outdated_variable = VariableFactory(dataset__study=self.study)
+        outdated_variable_name = outdated_variable.name
 
         basket_variable = BasketVariable(basket=basket, variable=variable)
         outdated_basket_variable = BasketVariable(
@@ -439,17 +459,6 @@ class TestUpdate(TestCase):
         outdated_id = outdated_variable.id
         variable_id = variable.id
         basket_id = basket.id
-
-        import_files = self.tmp_path
-        new_variables = (
-            "study_name,dataset_name,name,concept_name\n"
-            f"{HARD_CODED_STUDY_NAME},some-dataset"
-            ",some-variable,some-concept\n"
-            f"{HARD_CODED_STUDY_NAME},some-dataset"
-            ",some-other-variable,some-concept\n"
-        )
-        with open(import_files.joinpath("variables.csv"), "w", encoding="utf8") as file:
-            file.write(new_variables)
 
         clean_import = True
         manager = StudyImportManager(self.study, redis=False)
@@ -466,9 +475,9 @@ class TestUpdate(TestCase):
             )
 
         with self.assertRaises(ObjectDoesNotExist):
-            Variable.objects.get(name="some-third-variable")
+            Variable.objects.get(name=outdated_variable_name)
 
-        variable = Variable.objects.get(name="some-variable")
+        variable = Variable.objects.get(name=variable_name)
 
         self.assertEqual(1, BasketVariable.objects.all().count())
 
@@ -479,3 +488,5 @@ class TestUpdate(TestCase):
             0, BasketVariable.objects.filter(variable_id=outdated_id).count()
         )
         self.assertEqual(1, Basket.objects.filter(id=basket_id).count())
+        for variable in self.file_content["variables.csv"]:
+            Variable.objects.get(dataset__name=variable["dataset"], name=variable["name"])
