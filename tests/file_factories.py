@@ -11,12 +11,9 @@ from tempfile import mkdtemp
 from typing import Any
 
 from django.apps import apps
-from django.core import management
-from elasticsearch.dsl.document_base import E
 from faker import Faker
 
 from ddionrails.concepts.models import Concept
-from ddionrails.studies.models import Study
 from tests.model_factories import (
     AnalysisUnitFactory,
     AttachmentFactory,
@@ -177,7 +174,7 @@ class TMPCSV(_TMPImportFILE):
 
 
 # pylint: disable=too-many-locals,protected-access
-def import_data_factory() -> tuple[
+def import_data_factory(clean_database=True) -> tuple[
     Path,
     _PatchKwargs,
     dict[str, _TMPImportFILE],
@@ -190,17 +187,18 @@ def import_data_factory() -> tuple[
     study_name = study.name
     dataset = DatasetFactory(study=study)
     concept = ConceptFactory(topics__size=3, topics__study=study, topics__depth=2)
-    variables = [VariableFactory(dataset=dataset, concept=concept) for _ in range(3)]
+    variables = [VariableFactory(dataset=dataset, concept=concept) for _ in range(2)]
+    variables.append(VariableFactory(dataset=dataset, concept=""))
     instrument = InstrumentFactory(study=study)
-    questions = [
+    questions = [QuestionFactory(instrument=instrument) for _ in range(3)]
+    questions.append(
         QuestionFactory(
             instrument=instrument,
             question_items__cat_min=2,
             question_items__size=5,
             concepts_questions=concept,
         )
-    ]
-    questions += [QuestionFactory(instrument=instrument) for _ in range(3)]
+    )
     publication = PublicationFactory(study=study)
     transformation = TransformationFactory(origin=variables[0], target=variables[1])
     question_variable = QuestionVariableFactory(
@@ -208,17 +206,25 @@ def import_data_factory() -> tuple[
     )
     attachment = AttachmentFactory(dataset=variables[0].dataset, variable=variables[0])
 
-    question_csv, answers_csv = ([], [])
+    question_csv = []
+    answers_csv = []
+    concepts_questions = []
     for question in questions:
         question_items, answers = QuestionFactory._to_csv(question)
-        question_csv += question_items
-        answers_csv += answers
+        question_csv = question_csv + question_items
+        answers_csv = answers_csv + answers
+        concepts_questions = concepts_questions + ConceptQuestionFactory._to_csv(question)
 
     topics = []
+    topic_names = set()
     concepts = []
-    for _concept in Concept.objects.filter(topics__study=study):
+    Concept.objects.exclude(name=concept.name).delete()
+    for _concept in Concept.objects.filter(topics__study=study).distinct():
         concepts += ConceptFactory._to_csv(concept)
         for _topic in _concept.topics.all():
+            if _topic.name in topic_names:
+                continue
+            topic_names.add(_topic.name)
             topics += TopicFactory._to_csv(_topic)
 
     file_content = {
@@ -242,6 +248,7 @@ def import_data_factory() -> tuple[
         "conceptual_datasets.csv": [
             ConceptualDatasetFactory._to_csv(dataset.conceptual_dataset)
         ],
+        "concepts_questions.csv": concepts_questions,
         "attachments.csv": [AttachmentFactory._to_csv(attachment)],
     }
 
@@ -278,7 +285,14 @@ def import_data_factory() -> tuple[
     )
 
     file_content["study.md"] = (
-        "---\n" f"name: {study_name}\n" f"label: {study.label}\n" "---\n" "\n"
+        "---\n"
+        f"name: {study_name}\n"
+        f"label: {study.label}\n"
+        "config:\n"
+        "    variables:\n"
+        "        label-table: True\n"
+        "---\n"
+        "\n"
     ) + FAKE.paragraph()
 
     files["study.md"] = TMPGeneric(
@@ -287,10 +301,11 @@ def import_data_factory() -> tuple[
         folder=tmp_path,
     )
 
-    EXCLUDED_APPS = {"django_rq", "admin", "auth", "contenttypes", "sessions"}
+    if clean_database:
+        excluded_apps = {"django_rq", "admin", "auth", "contenttypes", "sessions"}
 
-    for model in apps.get_models():
-        if model._meta.app_label not in EXCLUDED_APPS:
-            model.objects.all().delete()
+        for model in apps.get_models():
+            if model._meta.app_label not in excluded_apps:
+                model.objects.all().delete()
 
     return (tmp_path, patch_dict, files, file_content, study_name)
