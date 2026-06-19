@@ -161,9 +161,11 @@ class TopicFactory(DjangoModelFactory):
                 "description": topic.description,
                 "definition": topic.description,
                 "description_de": topic.description_de,
+                "parent": getattr(topic.parent, "name", ""),
             }
         ]
         while topic.parent:
+            topic = topic.parent
             topics.append(
                 {
                     "study": topic.study.name,
@@ -173,11 +175,11 @@ class TopicFactory(DjangoModelFactory):
                     "description": topic.description,
                     "definition": topic.description,
                     "description_de": topic.description_de,
+                    "parent": getattr(topic.parent, "name", ""),
                 }
             )
-            topic = topic.parent
 
-        return topics[::-1]
+        return topics
 
     @staticmethod
     def _to_json(concept) -> list[dict[str, any]]:
@@ -372,6 +374,7 @@ class DatasetFactory(DjangoModelFactory):
             "definition": dataset.description,
             "description_de": dataset.description_de,
             "analysis_unit": dataset.analysis_unit.name,
+            "period": dataset.period.name,
             "conceptual_dataset": dataset.conceptual_dataset.name,
             "folder": dataset.folder,
             "primary_key": dataset.primary_key,
@@ -388,14 +391,18 @@ class VariableFactory(DjangoModelFactory):
 
     @factory.post_generation
     def concept(self, create, extracted, **kwargs):  # pylint: disable=method-hidden
+        if not create:
+            return
+        if extracted == "":
+            self.concept = None
+            self.save()
+            return
         if extracted:
             self.concept = extracted
             self.save()
             return
         self.concept = ConceptFactory(topics__study=self.dataset.study, topics__size=1)
-
-        if create:
-            self.save()
+        self.save()
 
     dataset = factory.SubFactory(DatasetFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
@@ -449,7 +456,7 @@ class VariableFactory(DjangoModelFactory):
         additional_fields = {
             "description": variable.description,
             "description_de": variable.description_de,
-            "concept": variable.concept.name,
+            "concept": getattr(variable.concept, "name", ""),
         }
         return {**cls._variable_to_json(variable), **additional_fields}
 
@@ -656,7 +663,7 @@ class QuestionFactory(DjangoModelFactory):
 
     class Params:
         size = 0
-        cat_min = 0
+        cat_min = 1
 
     @factory.post_generation
     def question_items(self, create, extracted, **kwargs):
@@ -665,7 +672,7 @@ class QuestionFactory(DjangoModelFactory):
                 self.question_items.add(extract)
             self.save()
             return
-        cat_min = kwargs.get("cat_min", 0)
+        cat_min = kwargs.get("cat_min", 1)
         full_size = kwargs.get("size", 0) + cat_min
         for position in range(full_size):
             if cat_min > 0:
@@ -708,7 +715,7 @@ class QuestionFactory(DjangoModelFactory):
     sort_id = factory.Sequence(lambda n: n + 1)
 
     @staticmethod
-    def _to_csv(question) -> tuple[dict[str, str], dict[str, str]]:
+    def _to_csv(question) -> tuple[list[dict[str, str]], list[dict[str, str]]]:
         instrument_name = question.instrument.name
         study_name = question.instrument.study.name
         questions_csv = []
@@ -730,7 +737,11 @@ class QuestionFactory(DjangoModelFactory):
                 "goto": item.goto,
                 "scale": item.scale,
                 "answer_list": "",
-                "concept": question.concepts_questions.first().concept.name,
+                "concept": getattr(
+                    getattr(question.concepts_questions.first(), "concept", None),
+                    "name",
+                    "",
+                ),
             }
             if item.scale == "cat":
                 _question["answer_list"] = item.id
@@ -760,6 +771,20 @@ class ConceptQuestionFactory(DjangoModelFactory):
 
     question = factory.SubFactory(QuestionFactory)
     concept = factory.SubFactory(ConceptFactory)
+
+    @staticmethod
+    def _to_csv(question) -> list[dict[str, str]]:
+        output = []
+        for question_item in question.concepts_questions.all():
+            output.append(
+                {
+                    "study": question_item.question.instrument.study.name,
+                    "instrument": question_item.question.instrument.name,
+                    "question": question_item.question.name,
+                    "concept": question_item.concept.name,
+                }
+            )
+        return output
 
 
 class QuestionVariableFactory(factory.django.DjangoModelFactory):

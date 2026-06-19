@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Importer classes for ddionrails.concepts app """
+"""Importer classes for ddionrails.concepts app"""
 
 import json
 from csv import DictReader
@@ -14,7 +14,7 @@ from ddionrails.imports import imports
 from ddionrails.imports.helpers import hash_with_base_uuid
 from ddionrails.studies.models import Study
 
-from .forms import AnalysisUnitForm, ConceptForm, PeriodForm, TopicForm
+from .forms import AnalysisUnitForm, PeriodForm, TopicForm
 from .models import Topic
 
 
@@ -92,10 +92,6 @@ def concept_import(file_path: Union[Path, str], study: Optional[Study] = None):
                 concepts.append(concept)
 
             topic_name = line.get("topic", line.get("topic_name"))
-            if concept_name == "_pgen_pgfamstd":
-                print(line)
-            if str(concept.id) == "a688696e-5b11-512d-bb4c-d82e84cb0865":
-                print(line)
             if topic_name:
                 topic = topic_objects[topic_name]
                 relations.append(

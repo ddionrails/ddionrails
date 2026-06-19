@@ -370,6 +370,7 @@ class TestUpdate(TestCase):
         self.import_path_patch.stop()
         self.tmp_backup_patch.stop()
         destroy_tmp_path(self.tmp_backup_path)
+        destroy_tmp_path(self.tmp_path)
         return super().tearDown()
 
     @classmethod
