@@ -370,7 +370,6 @@ class TestUpdate(TestCase):
         self.import_path_patch.stop()
         self.tmp_backup_patch.stop()
         destroy_tmp_path(self.tmp_backup_path)
-        destroy_tmp_path(self.tmp_path)
         return super().tearDown()
 
     @classmethod
@@ -438,7 +437,7 @@ class TestUpdate(TestCase):
             Variable.objects.get(dataset__name=variable["dataset"], name=variable["name"])
 
     def test_basket_protection(self):  # pylint: disable=too-many-locals
-        """A clean update should leaf baskets intact."""
+        """A clean update should leave baskets intact."""
         clean_import = False
 
         basket = BasketFactory(name="study_basket", study=self.study)
