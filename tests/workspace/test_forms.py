@@ -3,46 +3,16 @@
 
 """Test cases for forms in ddionrails.workspace app"""
 
-import pytest
+from django.test import TestCase
 
 from ddionrails.workspace.forms import BasketForm, UserCreationForm
-
-pytestmark = [pytest.mark.workspace, pytest.mark.forms]  # pylint: disable=invalid-name
-
-
-# TODO: Refactor ; forms are not really used maybe they should be removed
-@pytest.fixture
-def valid_basket_data(study, user):
-    """A valid input for basket forms and imports, relates to study and user fixture"""
-    return {"name": "some-basket", "study": study.pk, "user": user.pk}
+from tests.file_factories import FAKE
+from tests.model_factories import StudyFactory, UserFactory
 
 
-@pytest.fixture
-def invalid_basket_csv_data():
-    """An invalid input for basket forms and imports"""
-    return {"name": "some-basket"}
-
-
-@pytest.fixture
-def valid_user_data():
-    """A valid input for user forms and imports"""
-    # ignore B106: hardcoded_password_funcarg
-    return {"username": "some-user", "password": "some-password"}  # nosec
-
-
-@pytest.fixture
-def valid_user_creation_data():
-    """A valid input for user creation forms and imports"""
-    return {
-        "username": "some-user",
-        "password1": "some-password",
-        "password2": "some-password",
-    }
-
-
-class TestBasketForm:
-    def test_form_with_invalid_data(self, empty_data):
-        form = BasketForm(data=empty_data)
+class TestBasketForm(TestCase):
+    def test_form_with_invalid_data(self):
+        form = BasketForm(data={})
         assert form.is_valid() is False
         expected_errors = {
             "name": ["This field is required."],
@@ -51,26 +21,48 @@ class TestBasketForm:
         }
         assert form.errors == expected_errors
 
-    @pytest.mark.django_db
-    def test_form_with_valid_data(self, valid_basket_data):
-        form = BasketForm(data=valid_basket_data)
+    def test_form_with_valid_data(self):
+        study = StudyFactory()
+        user = UserFactory()
+        form = BasketForm(data={"name": FAKE.word(), "study": study.pk, "user": user.pk})
         expected = True
         assert expected is form.is_valid()
 
 
-class TestUserCreationForm:
-    def test_form_with_invalid_data(self, empty_data):
-        form = UserCreationForm(data=empty_data)
+class TestUserCreationForm(TestCase):
+    def test_form_with_invalid_data(self):
+        form = UserCreationForm(data={})
         assert form.is_valid() is False
         expected_errors = {
             "username": ["This field is required."],
             "password1": ["This field is required."],
             "password2": ["This field is required."],
         }
-        assert expected_errors == form.errors
+        self.assertEqual(expected_errors, form.errors)
 
-    @pytest.mark.django_db
-    def test_form_with_valid_data(self, valid_user_creation_data):
-        form = UserCreationForm(data=valid_user_creation_data)
-        expected = True
-        assert expected is form.is_valid()
+    def test_form_with_valid_data(self):
+        password = FAKE.password()
+        form = UserCreationForm(
+            data={
+                "username": FAKE.user_name(),
+                "password1": password,
+                "password2": password,
+            }
+        )
+        self.assertTrue(form.is_valid())
+
+    def test_form_with_invalid_password(self):
+        password = FAKE.password()
+        other_password = FAKE.password()
+        while password == other_password:
+            other_password = FAKE.password()
+        form = UserCreationForm(
+            data={
+                "username": FAKE.user_name(),
+                "password1": password,
+                "password2": other_password,
+            }
+        )
+        self.assertEqual(
+            {"password2": ["The two password fields didn’t match."]}, form.errors
+        )

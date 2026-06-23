@@ -54,101 +54,6 @@ def get_options(study_name):
     return options
 
 
-class TestUpdate_(TestCase):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        Study.objects.all().delete()
-        return super().setUpClass()
-
-    def setUp(self) -> None:
-        self.study = StudyFactory()
-        self.mock_update_single = patch.object(StudyImportManager, "import_single_entity")
-
-        self.mock_single_study = patch(
-            "ddionrails.imports.management.commands.update.update_single_study"
-        )
-        self.single_entity_mocker = self.mock_update_single.start()
-        self.single_study_mocker = self.mock_single_study.start()
-
-    def test_update_command_with_valid_study_name_and_invalid_entity(self):
-        with self.assertRaises(SystemExit) as error:
-            call_command("update", self.study.name, "invalid-entity")
-
-        self.assertEqual(1, error.exception.code)
-
-    def test_update_study_partial(self):
-        manager = StudyImportManager(self.study)
-        entity = ("periods",)
-        update_study_partial(manager, entity)
-        self.single_entity_mocker.assert_called_once_with(entity[0])
-
-    def test_update_all_studies_completely(self):
-        self.single_study_mocker.reset_mock()
-        update_all_studies_completely(True)
-        self.single_study_mocker.assert_called_once()
-
-    @patch(
-        (
-            "ddionrails.imports.management.commands."
-            "update.StudyImportManager.import_single_entity"
-        )
-    )
-    def test_update_single_study_entity_filename(self, mocked_import_single_entity):
-        self.mock_single_study.stop()
-        filename = "tests/imports/test_data/sample.csv"
-        with self.assertRaises(SystemExit) as error:
-            call_command(
-                "update", self.study.name, "instruments.json", "-f", filename, "-l"
-            )
-            self.assertEqual(0, error.exception.code)
-        self.assertEqual(
-            "instruments.json", mocked_import_single_entity.call_args.args[0]
-        )
-        self.assertEqual(Path(filename), mocked_import_single_entity.call_args.args[1])
-
-    def tearDown(self) -> None:
-        self.mock_update_single.stop()
-        self.mock_single_study.stop()
-        return super().tearDown()
-
-    def test_update_command_with_valid_study_name(self):
-        with self.assertRaises(SystemExit) as error:
-            call_command("update", self.study.name)
-
-        self.assertEqual(0, error.exception.code)
-        self.single_study_mocker.assert_called_once()
-
-    def test_update_command_with_valid_study_name_local(self):
-        for option in ["-l", "--local"]:
-            with self.assertRaises(SystemExit) as error:
-                call_command("update", self.study.name, option)
-
-            self.assertEqual(0, error.exception.code)
-
-            call_args = self.single_study_mocker.call_args.args
-            call_kwargs = self.single_study_mocker.call_args.kwargs
-            self.assertEqual((self.study, True, tuple(), None, False), call_args)
-            self.assertEqual(
-                (self.study, True),
-                (call_kwargs["manager"].study, call_kwargs["manager"].redis),
-            )
-
-    def test_update_command_with_valid_study_name_and_entity(self):
-        with self.assertRaises(SystemExit) as error:
-            call_command("update", self.study.name, ("periods"))
-
-        manager = StudyImportManager(self.study)
-        self.assertEqual(0, error.exception.code)
-        call_args = self.single_study_mocker.call_args.args
-        call_kwargs = self.single_study_mocker.call_args.kwargs
-        self.assertEqual((self.study, False, tuple(("periods",)), None, False), call_args)
-        self.assertEqual(
-            (manager.study, manager.redis),
-            (call_kwargs["manager"].study, call_kwargs["manager"].redis),
-        )
-
-
 class TestUpdateWithCSV(TestCase):
 
     def setUp(self) -> None:
@@ -490,3 +395,98 @@ class TestUpdate(TestCase):
         self.assertEqual(1, Basket.objects.filter(id=basket_id).count())
         for variable in self.file_content["variables.csv"]:
             Variable.objects.get(dataset__name=variable["dataset"], name=variable["name"])
+
+
+class TestUpdateNoData(TestCase):
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        Study.objects.all().delete()
+        return super().setUpClass()
+
+    def setUp(self) -> None:
+        self.study = StudyFactory()
+        self.mock_update_single = patch.object(StudyImportManager, "import_single_entity")
+
+        self.mock_single_study = patch(
+            "ddionrails.imports.management.commands.update.update_single_study"
+        )
+        self.single_entity_mocker = self.mock_update_single.start()
+        self.single_study_mocker = self.mock_single_study.start()
+
+    def test_update_command_with_valid_study_name_and_invalid_entity(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name, "invalid-entity")
+
+        self.assertEqual(1, error.exception.code)
+
+    def test_update_study_partial(self):
+        manager = StudyImportManager(self.study)
+        entity = ("periods",)
+        update_study_partial(manager, entity)
+        self.single_entity_mocker.assert_called_once_with(entity[0])
+
+    def test_update_all_studies_completely(self):
+        self.single_study_mocker.reset_mock()
+        update_all_studies_completely(True)
+        self.single_study_mocker.assert_called_once()
+
+    @patch(
+        (
+            "ddionrails.imports.management.commands."
+            "update.StudyImportManager.import_single_entity"
+        )
+    )
+    def test_update_single_study_entity_filename(self, mocked_import_single_entity):
+        self.mock_single_study.stop()
+        filename = "tests/imports/test_data/sample.csv"
+        with self.assertRaises(SystemExit) as error:
+            call_command(
+                "update", self.study.name, "instruments.json", "-f", filename, "-l"
+            )
+            self.assertEqual(0, error.exception.code)
+        self.assertEqual(
+            "instruments.json", mocked_import_single_entity.call_args.args[0]
+        )
+        self.assertEqual(Path(filename), mocked_import_single_entity.call_args.args[1])
+
+    def tearDown(self) -> None:
+        self.mock_update_single.stop()
+        self.mock_single_study.stop()
+        return super().tearDown()
+
+    def test_update_command_with_valid_study_name(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name)
+
+        self.assertEqual(0, error.exception.code)
+        self.single_study_mocker.assert_called_once()
+
+    def test_update_command_with_valid_study_name_local(self):
+        for option in ["-l", "--local"]:
+            with self.assertRaises(SystemExit) as error:
+                call_command("update", self.study.name, option)
+
+            self.assertEqual(0, error.exception.code)
+
+            call_args = self.single_study_mocker.call_args.args
+            call_kwargs = self.single_study_mocker.call_args.kwargs
+            self.assertEqual((self.study, True, tuple(), None, False), call_args)
+            self.assertEqual(
+                (self.study, True),
+                (call_kwargs["manager"].study, call_kwargs["manager"].redis),
+            )
+
+    def test_update_command_with_valid_study_name_and_entity(self):
+        with self.assertRaises(SystemExit) as error:
+            call_command("update", self.study.name, ("periods"))
+
+        manager = StudyImportManager(self.study)
+        self.assertEqual(0, error.exception.code)
+        call_args = self.single_study_mocker.call_args.args
+        call_kwargs = self.single_study_mocker.call_args.kwargs
+        self.assertEqual((self.study, False, tuple(("periods",)), None, False), call_args)
+        self.assertEqual(
+            (manager.study, manager.redis),
+            (call_kwargs["manager"].study, call_kwargs["manager"].redis),
+        )
