@@ -77,7 +77,7 @@
     "jest": ">=19.0.2",
     "jest-environment-jsdom": ">=29.5.0",
     "jsdom": "^26.1.0",
-    "mini-css-extract-plugin": "^2.7.5",
+    "mini-css-extract-plugin": "^2.9.4",
     "prettier": "^3.6.2",
     "prettier-eslint": ">=8.8.2",
     "sass": "^1.91.0",
