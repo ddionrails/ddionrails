@@ -11,7 +11,6 @@ from uuid import UUID
 
 import factory
 from django.contrib.auth import get_user_model
-from factory.declarations import SubFactory
 from factory.django import DjangoModelFactory
 from faker import Faker
 
@@ -345,9 +344,9 @@ class DatasetFactory(DjangoModelFactory):
     folder = factory.LazyAttribute(lambda _: FAKE.word())
     primary_key = factory.LazyAttribute(lambda _: "")
 
-    analysis_unit = SubFactory(AnalysisUnitFactory)
-    period = SubFactory(PeriodFactory)
-    conceptual_dataset = SubFactory(ConceptualDatasetFactory)
+    analysis_unit = factory.SubFactory(AnalysisUnitFactory)
+    period = factory.SubFactory(PeriodFactory)
+    conceptual_dataset = factory.SubFactory(ConceptualDatasetFactory)
 
     @staticmethod
     def _to_json(dataset) -> list[dict[str, any]]:

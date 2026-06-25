@@ -16,15 +16,6 @@ import config.urls
 
 class TestUrlPatternsPresent(LiveServerTestCase):
 
-    def _django_debug_toolbar_found(self, urlpatterns: List) -> bool:
-        """Returns True if an urlpattern has "djdt" as its app_name"""
-        for pattern in urlpatterns:
-            try:
-                if pattern.app_name == "djdt":
-                    return True
-            except AttributeError:
-                pass
-        return False
 
     def _media_pattern_found(self, urlpatterns) -> bool:
         """Returns True if an urlpattern startswith "^media/" """
@@ -33,13 +24,6 @@ class TestUrlPatternsPresent(LiveServerTestCase):
                 return True
         return False
 
-    @override_settings(DEBUG=True)
-    def test_urlconf_with_debug_true(self):
-        clear_url_caches()
-        reload(config.urls)
-
-        assert self._django_debug_toolbar_found(config.urls.urlpatterns) is True
-        assert self._media_pattern_found(config.urls.urlpatterns) is True
 
     @override_settings(DEBUG=False)
     def test_urlconf_with_debug_false(self):

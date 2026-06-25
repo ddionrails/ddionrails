@@ -4,41 +4,90 @@
 
 """Test cases for mixins in ddionrails.workspace app"""
 
-import pytest
+from django.test import TestCase
 
 from ddionrails.workspace.mixins import SoepMixin
+from ddionrails.workspace.models.script_metadata import ScriptMetadata
+from tests.model_factories import BasketFactory, StudyFactory
 
-
-# TODO: Refactor
-@pytest.fixture(name="soepmixin")
-def _soepmixin():
-    return SoepMixin()
-
-
-@pytest.fixture(name="script_dict")
-def _script_dict():
-    return {
-        "bah": {
-            "name": "bah",
-            "analysis_unit": "h",
-            "period": 2010,
-            "prefix": "ba",
-            "variables": set(),
-            "matches": ["p", "h"],
-        },
-        "rp": {
-            "name": "rp",
+SCRIPT_METADATA = {
+    "bah": [
+        {
+            "dataset_name": "bah",
+            "syear": "",
+            "prefix": "",
             "analysis_unit": "p",
-            "period": 2001,
-            "prefix": "r",
-            "variables": set(),
-            "matches": ["p"],
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
         },
-    }
+        {
+            "dataset_name": "bah",
+            "syear": "",
+            "prefix": "",
+            "analysis_unit": "h",
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
+        },
+    ],
+    "rp": [
+        {
+            "dataset_name": "rp",
+            "syear": "",
+            "prefix": "",
+            "analysis_unit": "p",
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
+        }
+    ],
+}
 
 
-class TestSoepMixin:
-    def test_enrich_dataset_dict_method(self, soepmixin):
+class TestSoepMixin(TestCase):
+
+    def setUp(self) -> None:
+        study = StudyFactory(name="soep-core")
+        basket = BasketFactory(study=study)
+
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
+        metadata_object.save()
+
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
+        metadata_object.save()
+        self.script_metadata = metadata_object
+
+        self.soepmixin = SoepMixin()
+        self.script_dict = {
+            "bah": {
+                "name": "bah",
+                "analysis_unit": "h",
+                "period": 2010,
+                "prefix": "ba",
+                "variables": set(),
+                "matches": ["p", "h"],
+            },
+            "bah": {
+                "name": "bah",
+                "analysis_unit": "h",
+                "period": 2010,
+                "prefix": "ba",
+                "variables": set(),
+                "matches": ["p", "h"],
+            },
+            "rp": {
+                "name": "rp",
+                "analysis_unit": "p",
+                "period": 2001,
+                "prefix": "r",
+                "variables": set(),
+                "matches": ["p"],
+            },
+        }
+        return super().setUp()
+
+    def test_enrich_dataset_dict_method(self):
         dataset_dict_p = {
             "analysis_unit": "p",
             "variables": set(),
@@ -46,7 +95,7 @@ class TestSoepMixin:
             "prefix": "ba",
             "curr_hid": "bahhnr",
         }
-        soepmixin._enrich_dataset_dict(dataset_dict_p)
+        self.soepmixin._enrich_dataset_dict(dataset_dict_p)
         assert dataset_dict_p == {
             "analysis_unit": "p",
             "variables": {"pid", "bahhnr"},
@@ -62,7 +111,7 @@ class TestSoepMixin:
             "prefix": "ba",
             "curr_hid": "bahhnr",
         }
-        soepmixin._enrich_dataset_dict(dataset_dict_h)
+        self.soepmixin._enrich_dataset_dict(dataset_dict_h)
         assert dataset_dict_h == {
             "analysis_unit": "h",
             "variables": {"bahhnr"},
@@ -78,7 +127,7 @@ class TestSoepMixin:
             "prefix": "ba",
             "curr_hid": "bahhnr",
         }
-        soepmixin._enrich_dataset_dict(dataset_dict_other)
+        self.soepmixin._enrich_dataset_dict(dataset_dict_other)
         assert dataset_dict_other == {
             "analysis_unit": "",
             "variables": set(),
@@ -87,12 +136,11 @@ class TestSoepMixin:
             "curr_hid": "bahhnr",
         }
 
-    @pytest.mark.usefixtures("db", "script_metadata")
-    def test_validate_datasets_method(self, script_dict, soepmixin):
+    def test_validate_datasets_method(self):
         analysis_unit_p = "p"
-        valid_p = soepmixin._validate_datasets(script_dict, analysis_unit_p)
+        valid_p = self.soepmixin._validate_datasets(self.script_dict, analysis_unit_p)
         analysis_unit_h = "h"
-        valid_h = soepmixin._validate_datasets(script_dict, analysis_unit_h)
+        valid_h = self.soepmixin._validate_datasets(self.script_dict, analysis_unit_h)
 
         assert valid_p == ["bah", "rp"]
         assert valid_h == ["bah"]
