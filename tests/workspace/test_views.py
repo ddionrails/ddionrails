@@ -8,14 +8,14 @@ from uuid import uuid1
 
 import pytest
 from django.contrib.auth.models import User
-from django.test import Client, TestCase, TransactionTestCase
+from django.test import Client, LiveServerTestCase, TestCase, TransactionTestCase, override_settings
 from django.urls import reverse
 
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script
 from ddionrails.workspace.models.script_metadata import ScriptMetadata
 from tests import status
-from tests.model_factories import BasketFactory, VariableFactory
+from tests.model_factories import BasketFactory, StudyFactory, VariableFactory
 
 from .factories import UserFactory
 
@@ -50,16 +50,18 @@ class TestOwnBasketOnlyDecorator(TestCase):
         assert status.HTTP_404_NOT_FOUND == response.status_code
 
 
-class TestScriptDetailView(TestCase):
+
+@override_settings(DEBUG=False)
+class TestScriptDetailView(LiveServerTestCase):
+
     def test_script_detail_view_with_script_created_before_update(self):
         """This tests a regression that was
         introduced after updating the settings for scripts
         with a 'gender' option
         """
-        basket = BasketFactory()
         client = Client()
-        study = Study(name="soep-core")
-        study.save()
+        study = StudyFactory(name="soep-core")
+        basket = BasketFactory(study=study)
         metadata = ScriptMetadata(study=study, metadata={})
         metadata.save()
 

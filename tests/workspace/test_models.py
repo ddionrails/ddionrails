@@ -12,12 +12,13 @@ from unittest.mock import patch
 import pytest
 from django.core.exceptions import ValidationError
 from django.core.management import call_command
-from django.test import LiveServerTestCase, override_settings
+from django.test import LiveServerTestCase, TestCase, override_settings
 
 from ddionrails.concepts.models import Concept
 from ddionrails.data.models import Dataset, Variable
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable, Script
+from ddionrails.workspace.models.script_metadata import ScriptMetadata
 from ddionrails.workspace.scripts import SoepStata
 from tests.model_factories import (
     BasketFactory,
@@ -26,10 +27,45 @@ from tests.model_factories import (
     StudyFactory,
     VariableFactory,
 )
+from tests.workspace.test_scripts import ScriptFactory
 
 pytestmark = [pytest.mark.workspace]
 
 TEST_CASE = unittest.TestCase()
+
+SCRIPT_METADATA = {
+    "bah": [
+        {
+            "dataset_name": "bah",
+            "syear": "",
+            "prefix": "",
+            "analysis_unit": "p",
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
+        },
+        {
+            "dataset_name": "bah",
+            "syear": "",
+            "prefix": "",
+            "analysis_unit": "h",
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
+        },
+    ],
+    "rp": [
+        {
+            "dataset_name": "rp",
+            "syear": "",
+            "prefix": "",
+            "analysis_unit": "p",
+            "is_matchable": "",
+            "curr_hid": "",
+            "is_special": "",
+        }
+    ],
+}
 
 
 def csv_heading():
@@ -280,44 +316,90 @@ class TestBasketVariableModel(LiveServerTestCase):
             BasketVariable.objects.get(variable__id=variable_id)
 
 
-# TODO: Refactor
-class TestScriptModel:
-    @pytest.mark.usefixtures("db", "script_metadata")
-    def test_get_config_method(self, script):
-        result = script.get_config()
+class TestScriptModel(TestCase):
+
+    def setUp(self) -> None:
+        study = StudyFactory(name="soep-core")
+        basket = BasketFactory(study=study)
+
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
+        metadata_object.save()
+
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
+        metadata_object.save()
+        self.script_metadata = metadata_object
+
+        self.script = Script(
+            name="some-script",
+            label="Some Script",
+            settings='{"analysis_unit": "some-analysis-unit"}',
+            basket=basket,
+        )
+        self.script.save()
+
+        self.script_dict = {
+            "bah": {
+                "name": "bah",
+                "analysis_unit": "h",
+                "period": 2010,
+                "prefix": "ba",
+                "variables": set(),
+                "matches": ["p", "h"],
+            },
+            "bah": {
+                "name": "bah",
+                "analysis_unit": "h",
+                "period": 2010,
+                "prefix": "ba",
+                "variables": set(),
+                "matches": ["p", "h"],
+            },
+            "rp": {
+                "name": "rp",
+                "analysis_unit": "p",
+                "period": 2001,
+                "prefix": "r",
+                "variables": set(),
+                "matches": ["p"],
+            },
+        }
+        return super().setUp()
+
+    def test_get_config_method(self):
+        result = self.script.get_config()
         assert isinstance(result, SoepStata)
 
-    def test_get_config_method_with_local_config(self, script):
-        script.local_config = "local-config"
-        assert script.local_config == script.get_config()
+    def test_get_config_method_with_local_config(self):
+        self.script.local_config = "local-config"
+        assert self.script.local_config == self.script.get_config()
 
-    def test_get_settings_method(self, script):
-        script.settings_dict = {"key": "value"}
-        result = script.get_settings()
+    def test_get_settings_method(self):
+        self.script.settings_dict = {"key": "value"}
+        result = self.script.get_settings()
         expected = "value"
         assert expected == result["key"]
 
-    def test_get_settings_method_without_settings_dict(self, script):
-        script.settings = '{"key": "value"}'
-        result = script.get_settings()
+    def test_get_settings_method_without_settings_dict(self):
+        self.script.settings = '{"key": "value"}'
+        result = self.script.get_settings()
         assert result["key"] == "value"
 
-    def test_get_script_input_method(self, mocker, script):
-        mocked_get_config = mocker.patch.object(Script, "get_config")
-        script.get_script_input()
-        mocked_get_config.assert_called_once()
+    def test_get_script_input_method(self):
+        with patch.object(Script, "get_config") as mocked_get_config:
+            self.script.get_script_input()
+            mocked_get_config.assert_called_once()
 
-    def test_title_method(self, script):
-        script.label = ""
-        assert script.name == script.title()
+    def test_title_method(self):
+        self.script.label = ""
+        assert self.script.name == self.script.title()
 
-    def test_title_method_with_label(self, script):
-        assert script.label == script.title()
+    def test_title_method_with_label(self):
+        assert self.script.label == self.script.title()
 
-    def test_string_method(self, script):
-        expected = f"/workspace/baskets/{script.basket.id}/scripts/{script.id}"
-        assert expected == str(script)
+    def test_string_method(self):
+        expected = f"/workspace/baskets/{self.script.basket.id}/scripts/{self.script.id}"
+        assert expected == str(self.script)
 
-    def test_absolute_url_method(self, script):
-        expected = f"/workspace/baskets/{script.basket.id}/scripts/{script.id}"
-        assert expected == script.get_absolute_url()
+    def test_absolute_url_method(self):
+        expected = f"/workspace/baskets/{self.script.basket.id}/scripts/{self.script.id}"
+        assert expected == self.script.get_absolute_url()
