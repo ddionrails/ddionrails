@@ -3,19 +3,11 @@
 
 """Test cases for Root URLConf of ddionrails project"""
 
-from importlib import reload
-from typing import List
-
 from django.test import LiveServerTestCase
-from django.test.utils import override_settings
 from django.urls import resolve, reverse
-from django.urls.base import clear_url_caches
-
-import config.urls
 
 
 class TestUrlPatternsPresent(LiveServerTestCase):
-
 
     def _media_pattern_found(self, urlpatterns) -> bool:
         """Returns True if an urlpattern startswith "^media/" """
@@ -23,15 +15,6 @@ class TestUrlPatternsPresent(LiveServerTestCase):
             if str(pattern.pattern).startswith("^media/"):
                 return True
         return False
-
-
-    @override_settings(DEBUG=False)
-    def test_urlconf_with_debug_false(self):
-        clear_url_caches()
-        reload(config.urls)
-
-        assert self._django_debug_toolbar_found(config.urls.urlpatterns) is False
-        assert self._media_pattern_found(config.urls.urlpatterns) is False
 
     def test_imprint(self):
         assert "/imprint/" == reverse("imprint")

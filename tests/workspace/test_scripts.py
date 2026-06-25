@@ -6,17 +6,15 @@
 import json
 from unittest.mock import patch
 
-from django.test import TestCase
 import factory
+from django.test import TestCase
 from factory.django import DjangoModelFactory
-import pytest
 
 from ddionrails.workspace.models import BasketVariable
 from ddionrails.workspace.models.script import Script
 from ddionrails.workspace.models.script_metadata import ScriptMetadata
 from ddionrails.workspace.scripts import ScriptConfig, SoepR, SoepSpss, SoepStata
 from tests.model_factories import BasketFactory, StudyFactory, VariableFactory
-
 
 STATA_HEADING_GENDER = "* * * GENDER ( male = 1 / female = 2) * * *"
 SPSS_R_HEADING_GENDER = "### GENDER ( male = 1 / female = 2) ###"
@@ -84,12 +82,10 @@ SCRIPT_METADATA = {
 class TestSoepStata(TestCase):
 
     def setUp(self) -> None:
-        study=StudyFactory(name="soep-core")
+        study = StudyFactory(name="soep-core")
         basket = BasketFactory(study=study)
 
-        metadata_object = ScriptMetadata(
-            study=basket.study, metadata=SCRIPT_METADATA
-        )
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
         metadata_object.save()
 
         metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
@@ -171,12 +167,10 @@ class TestSoepStata(TestCase):
 class TestSoepSpssClass(TestCase):
 
     def setUp(self) -> None:
-        study=StudyFactory(name="soep-core")
+        study = StudyFactory(name="soep-core")
         basket = BasketFactory(study=study)
 
-        metadata_object = ScriptMetadata(
-            study=basket.study, metadata=SCRIPT_METADATA
-        )
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
         metadata_object.save()
 
         metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
@@ -234,12 +228,10 @@ class TestSoepSpssClass(TestCase):
 class TestSoepR(TestCase):
 
     def setUp(self) -> None:
-        study=StudyFactory(name="soep-core")
+        study = StudyFactory(name="soep-core")
         basket = BasketFactory(study=study)
 
-        metadata_object = ScriptMetadata(
-            study=basket.study, metadata=SCRIPT_METADATA
-        )
+        metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)
         metadata_object.save()
 
         metadata_object = ScriptMetadata(study=basket.study, metadata=SCRIPT_METADATA)

@@ -81,7 +81,7 @@ output-format = "colorized"
 
 # https://docs.pytest.org/en/stable/customize.html
 [tool.pytest.ini_options]
-addopts = '-p no:cacheprovider -rf'
+addopts = '-p no:cacheprovider -rf --ds=config.settings.testing --create-db'
 DJANGO_SETTINGS_MODULE = "config.settings.testing"
 python_files = "test_*.py"
 testpaths = ["tests"]
