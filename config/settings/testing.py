@@ -22,7 +22,8 @@ MIDDLEWARE = [
 
 SYSTEM_REPO_URL = "https://github.com/ddionrails/test-system.git"
 
-INSTALLED_APPS = INSTALLED_APPS  + ("debug_toolbar",)
+DEBUG = False
+
 
 logging.disable(logging.CRITICAL)
 

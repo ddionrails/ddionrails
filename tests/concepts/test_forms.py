@@ -31,7 +31,9 @@ class TestConceptForm(TestCase):
             "description": FAKE.paragraph(),
         }
         form = ConceptForm(data=valid_concept_data)
-        assert form.is_valid() is True
+        self.assertTrue(
+            form.is_valid(), msg=f"{valid_concept_data} is not valid ConceptForm data."
+        )
         concept = form.save()
         assert concept.name == valid_concept_data["name"]
 

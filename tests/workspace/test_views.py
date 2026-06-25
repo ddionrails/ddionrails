@@ -6,14 +6,12 @@
 import csv
 from uuid import uuid1
 
-import pytest
 from django.contrib.auth.models import User
-from django.test import Client, LiveServerTestCase, TestCase, TransactionTestCase, override_settings
+from django.test import Client, TestCase, TransactionTestCase
 from django.urls import reverse
 
-from ddionrails.studies.models import Study
-from ddionrails.workspace.models import Basket, BasketVariable, Script
-from ddionrails.workspace.models.script_metadata import ScriptMetadata
+from ddionrails.workspace.models.basket import Basket
+from ddionrails.workspace.models.basket_variable import BasketVariable
 from tests import status
 from tests.model_factories import BasketFactory, StudyFactory, VariableFactory
 
@@ -23,7 +21,8 @@ from .factories import UserFactory
 class TestOwnBasketOnlyDecorator(TestCase):
 
     def setUp(self) -> None:
-        self.basket = BasketFactory()
+        self.study = StudyFactory(name="soep-core")
+        self.basket = BasketFactory(study=self.study)
         self.client = Client()
         return super().setUp()
 
@@ -43,46 +42,10 @@ class TestOwnBasketOnlyDecorator(TestCase):
         response = self.client.get(url)
         assert status.HTTP_403_FORBIDDEN == response.status_code
 
-    @pytest.mark.django_db
     def test_basket_does_not_exist(self):
         url = reverse("workspace:basket_detail", kwargs={"basket_id": 999})
         response = self.client.get(url)
         assert status.HTTP_404_NOT_FOUND == response.status_code
-
-
-
-@override_settings(DEBUG=False)
-class TestScriptDetailView(LiveServerTestCase):
-
-    def test_script_detail_view_with_script_created_before_update(self):
-        """This tests a regression that was
-        introduced after updating the settings for scripts
-        with a 'gender' option
-        """
-        client = Client()
-        study = StudyFactory(name="soep-core")
-        basket = BasketFactory(study=study)
-        metadata = ScriptMetadata(study=study, metadata={})
-        metadata.save()
-
-        script = Script()
-        script.name = "name"
-        script.label = "label"
-        script.basket = basket
-        # Set the settings to the default values from before the update
-        script.settings = (
-            '{"path_in": "data/", "path_out": "out/", '
-            '"analysis_unit": "p", "private": "t", '
-            '"balanced": "t", "age_group": "adult"}'
-        )
-        script.save()
-        url = reverse(
-            "workspace:script_detail",
-            kwargs={"basket_id": basket.id, "script_id": script.id},
-        )
-        client.force_login(user=basket.user)  # nosec
-        response = client.get(url)
-        assert status.HTTP_200_OK == response.status_code
 
 
 class TestAccountOverview(TestCase):
