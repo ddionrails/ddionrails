@@ -41,10 +41,15 @@ FAKE_DE = Faker(locale="de_DE")
 User = get_user_model()
 
 
-def safe_word():
-    word = FAKE.word(part_of_speech="noun")
+def safe_word(faker=FAKE):
+    if faker == FAKE_DE:
+        word = faker.word()
+        while word == "none":
+            word = faker.word()
+        return word
+    word = faker.word(part_of_speech="noun")
     while word == "none":
-        word = FAKE.word(part_of_speech="noun")
+        word = faker.word(part_of_speech="noun")
     return word
 
 
@@ -92,8 +97,8 @@ class StudyFactory(DjangoModelFactory):
         model = Study
 
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
     repo = factory.LazyAttribute(lambda _: FAKE.url())
@@ -106,7 +111,7 @@ class PeriodFactory(DjangoModelFactory):
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: safe_word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
@@ -286,8 +291,8 @@ class ConceptualDatasetFactory(DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
@@ -313,7 +318,7 @@ class AnalysisUnitFactory(factory.django.DjangoModelFactory):
 
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
     label = factory.LazyAttribute(lambda _: safe_word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
 
@@ -339,8 +344,8 @@ class DatasetFactory(DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     folder = factory.LazyAttribute(lambda _: FAKE.word())
     primary_key = factory.LazyAttribute(lambda _: "")
 
@@ -532,8 +537,8 @@ class InstrumentFactory(DjangoModelFactory):
 
     study = factory.SubFactory(StudyFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
     description_de = factory.LazyAttribute(lambda _: FAKE_DE.paragraphs())
     mode = factory.LazyAttribute(lambda _: FAKE.word())
@@ -593,8 +598,8 @@ class AnswerFactory(DjangoModelFactory):
         model = Answer
 
     value = factory.Sequence(lambda n: n)
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
 
 
 class QuestionItemFactory(DjangoModelFactory):
@@ -604,8 +609,8 @@ class QuestionItemFactory(DjangoModelFactory):
 
     question = factory.LazyAttribute(lambda _: QuestionFactory())
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
-    label_de = factory.LazyAttribute(lambda _: FAKE_DE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
+    label_de = factory.LazyAttribute(lambda _: safe_word(faker=FAKE_DE))
     scale = factory.LazyAttribute(lambda _: choice(["txt", "cat", "bin", "int", "chr"]))
     position = factory.Sequence(lambda n: n)
 
@@ -814,7 +819,7 @@ class BasketFactory(factory.django.DjangoModelFactory):
     study = factory.SubFactory(StudyFactory)
     user = factory.SubFactory(UserFactory)
     name = factory.Sequence(lambda n: f"{FAKE.word()}_{n}")
-    label = factory.LazyAttribute(lambda _: FAKE.word())
+    label = factory.LazyAttribute(lambda _: safe_word())
     description = factory.LazyAttribute(lambda _: FAKE.paragraphs())
 
     @factory.post_generation

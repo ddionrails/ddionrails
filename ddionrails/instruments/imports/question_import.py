@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" Importer classes for ddionrails.instruments app """
+"""Importer classes for ddionrails.instruments app"""
 
 import uuid
 from csv import DictReader
@@ -82,12 +82,13 @@ def answer_relation_import(file: Path, study: Study) -> None:
                     relation.answer_id = answer_id  # type: ignore
                     relations.append(relation)
             except KeyError as error:
-                raise KeyError(f"{question_item}") from error
+                error_msg = f"{answerlist_key} from \n{question_item} not in \n{answers}"
+                raise KeyError(error_msg) from error
     Answer.question_items.through.objects.bulk_create(relations, ignore_conflicts=True)
 
 
 def _bulk_import_answers(
-    answers: Dict[str, List[QuestionAnswer]]
+    answers: Dict[str, List[QuestionAnswer]],
 ) -> Dict[str, List[uuid.UUID]]:
     answer_list_answer_ids: Dict[str, List[uuid.UUID]] = {}
     unique_answer_tuples = set()
