@@ -56,7 +56,7 @@ jobs:
         run: |
           docker exec --env DJANGO_DEBUG="False" ddionrails-web-1  python manage.py check \
           --deploy --settings=config.settings.production
-      - name: Import Codecov GPG key
+      - name: Import codecov key
         run: |
           gpg --keyserver hkps://keyserver.ubuntu.com \
               --recv-keys 27034E7FDB850E0BBC2C62FF806BB28AED779869 

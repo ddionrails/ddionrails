@@ -40,7 +40,6 @@ from tests.model_factories import (
     VariableFactory,
 )
 
-STUDY_NAME = "some-study"
 
 
 def get_options(study_name):
@@ -60,7 +59,7 @@ class TestUpdateWithCSV(TestCase):
         self.tmp_path, patch_dict = tmp_import_path_with_test_data()
         self.import_path_patch = patch(**patch_dict)
         self.import_path_patch.start()
-        self.study = StudyFactory(name=STUDY_NAME)
+        self.study = StudyFactory()
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -140,7 +139,7 @@ class TestUpdateWithCSV(TestCase):
             self.assertEqual(1, error.exception.code)
             log.assert_called_once_with(
                 'Study "%s" has no file: "%s"',
-                STUDY_NAME,
+                self.study.name,
                 "nonexistent-file.json",
             )
 
@@ -199,8 +198,8 @@ class TestStdOutAndStdErr(TestCase):
         self.assertIn("does not exist", output)
 
     def test_update_command_with_valid_study_name_and_invalid_entity_and_filename(self):
-        study = StudyFactory(name=STUDY_NAME)
-        filename = "tests/imports/test_data/sample.csv"
+        study = StudyFactory()
+        filename = "sample.csv"
 
         for option in ("-f", "--filename"):
 
@@ -251,14 +250,11 @@ class TestUpdateAllStudiesCompletely(TestCase):
 
 class TestUpdate(TestCase):
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.tmp_path, cls.patch_dict, cls.files, cls.file_content, cls.study_name = (
-            import_data_factory()
-        )
-        return super().setUpClass()
 
     def setUp(self):
+        self.tmp_path, self.patch_dict, self.files, self.file_content, self.study_name = (
+            import_data_factory()
+        )
         self.study = StudyFactory(name=self.study_name)
         self.dataset = DatasetFactory(name="test-dataset", study=self.study)
 
@@ -275,12 +271,8 @@ class TestUpdate(TestCase):
         self.import_path_patch.stop()
         self.tmp_backup_patch.stop()
         destroy_tmp_path(self.tmp_backup_path)
+        destroy_tmp_path(self.tmp_path)
         return super().tearDown()
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        destroy_tmp_path(cls.tmp_path)
-        return super().tearDownClass()
 
     def test_instrument_import(self):
         instrument_data = self.file_content["instruments.csv"][0]
