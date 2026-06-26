@@ -748,8 +748,8 @@ class QuestionFactory(DjangoModelFactory):
                 ),
             }
             if item.scale == "cat":
-                _question["answer_list"] = item.id
-                answer_list = item.id
+                answer_list = f"{instrument_name}{question.name}{item.name}"
+                _question["answer_list"] = answer_list
                 for answer in item.answers.all():
                     answers_csv.append(
                         {
