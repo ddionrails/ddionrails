@@ -5,7 +5,6 @@
 import hashlib
 import hmac
 import json
-from csv import DictReader
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
@@ -20,24 +19,23 @@ from ddionrails.imports.manager import StudyImportManager
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket_variable import BasketVariable
-from tests.file_factories import destroy_tmp_path, tmp_import_path_with_test_data
+from tests.file_factories import destroy_tmp_path, import_data_factory
 
-from ..workspace.factories import BasketFactory
+from ..workspace.factories import BasketFactory, BasketVariableFactory
 
 
 class WebhookEndpointTests(LiveServerTestCase):
     """Test Webhook for updating studies"""
 
     def setUp(self):
-        self.tmp_path, patch_arguments = tmp_import_path_with_test_data()
-        self.path_path = patch(**patch_arguments)
-        self.path_path.start()
-        with open(
-            self.tmp_path.joinpath("variables.csv"), encoding="utf8"
-        ) as variables_file:
+        self.tmp_path, self.patch_dict, self.files, self.file_content, self.study_name = (
+            import_data_factory(clean_database=False)
+        )
 
-            study_name = next(DictReader(variables_file))["study_name"]
-        self.study, _ = Study.objects.get_or_create(name=study_name)
+        self.path_path = patch(**self.patch_dict)
+        self.path_path.start()
+
+        self.study, _ = Study.objects.get_or_create(name=self.study_name)
         self.study.pin_reference = "main"
         self.study.save()
         self._set_up_webhook_content()
@@ -45,14 +43,17 @@ class WebhookEndpointTests(LiveServerTestCase):
 
         self._update_study()
 
-        self.basket = BasketFactory(name="test_basket")
-        self.basket.study = self.study
-        self.basket_variable = BasketVariable()
+        self.basket = BasketFactory(name="test_basket", study=self.study)
+        self.variable = Variable.objects.filter(dataset__study=self.study).first()
+        assert self.variable is not None
+        self.basket_variable = BasketVariableFactory(
+            basket=self.basket, variable=self.variable
+        )
         self.basket_variable.basket = self.basket
         self.basket_variable.variable = Variable.objects.filter(
             dataset__study=self.study
         ).first()
-        self.basket_variable_variable_name = self.basket_variable.variable.name
+        self.basket_variable_variable_name = self.variable.name
         self.basket_variable.save()
 
     def tearDown(self) -> None:
@@ -173,9 +174,7 @@ class WebhookEndpointTests(LiveServerTestCase):
         instrument = Instrument.objects.filter(study=self.study).first()
         instrument_name = instrument.name
         instrument.delete()
-        self.study.import_path = lambda *args: Path(
-            self.tmp_path
-        )
+        self.study.import_path = lambda *args: Path(self.tmp_path)
         self.study.save()
 
         # All the patching start

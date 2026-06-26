@@ -28,11 +28,7 @@ from ddionrails.imports.management.commands.update import (
 from ddionrails.instruments.models import Instrument
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models import Basket, BasketVariable
-from tests.file_factories import (
-    destroy_tmp_path,
-    import_data_factory,
-    tmp_import_path_with_test_data,
-)
+from tests.file_factories import destroy_tmp_path, import_data_factory
 from tests.model_factories import (
     BasketFactory,
     DatasetFactory,

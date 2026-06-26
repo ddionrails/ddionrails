@@ -61,14 +61,6 @@ def tmp_import_path(folder: Path | None = None) -> tuple[Path, _PatchKwargs]:
     return tmp_path, patch_dict
 
 
-def tmp_import_path_with_test_data() -> tuple[Path, _PatchKwargs]:
-    """Move test data into patched import path"""
-    csv_path = Path("./tests/functional/test_data/some-study/ddionrails/").absolute()
-    tmp_path, patch_dict = tmp_import_path()
-    copytree(csv_path, tmp_path, dirs_exist_ok=True)
-    return tmp_path, patch_dict
-
-
 def destroy_tmp_path(tmp_path: Path):
     """Use rmtree to remove directory."""
     tmp_path = Path(tmp_path)
