@@ -798,8 +798,8 @@ class QuestionVariableFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = QuestionVariable
 
-    question = factory.SubFactory(QuestionFactory, name="some-question", sort_id=1)
-    variable = factory.SubFactory(VariableFactory, name="some-variable")
+    question = factory.SubFactory(QuestionFactory, sort_id=1)
+    variable = factory.SubFactory(VariableFactory)
 
     @staticmethod
     def _to_csv(question_variable) -> dict[str, str]:

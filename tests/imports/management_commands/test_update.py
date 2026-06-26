@@ -41,7 +41,6 @@ from tests.model_factories import (
 )
 
 
-
 def get_options(study_name):
     options = {}
     options["study_name"] = study_name
@@ -56,10 +55,12 @@ def get_options(study_name):
 class TestUpdateWithCSV(TestCase):
 
     def setUp(self) -> None:
-        self.tmp_path, patch_dict = tmp_import_path_with_test_data()
-        self.import_path_patch = patch(**patch_dict)
+        self.tmp_path, self.patch_dict, self.files, self.file_content, self.study_name = (
+            import_data_factory()
+        )
+        self.import_path_patch = patch(**self.patch_dict)
         self.import_path_patch.start()
-        self.study = StudyFactory()
+        self.study = StudyFactory(name=self.study_name)
         return super().setUp()
 
     def tearDown(self) -> None:
@@ -111,7 +112,9 @@ class TestUpdateWithCSV(TestCase):
         self.assertEqual(expected_variables, result_union)
 
     def test_update_single_study_entity_filename_without_redis(self):
-        filename = Study().import_path().joinpath("instruments/some-instrument.json")
+        instrument_name = self.file_content["instruments.csv"][0]["name"]
+
+        filename = Study().import_path().joinpath(f"instruments/{instrument_name}.json")
         with patch("django_rq.enqueue") as redis_enqueue:
             with self.assertRaises(SystemExit) as error:
                 call_command(
@@ -144,10 +147,12 @@ class TestUpdateWithCSV(TestCase):
             )
 
     def test_update_command_with_valid_study_name_and_valid_entity_and_filename(self):
-        file_path = Study().import_path().joinpath("instruments/some-instrument.json")
+        instrument_name = self.file_content["instruments.csv"][0]["name"]
+
+        file_path = Study().import_path().joinpath(f"instruments/{instrument_name}.json")
 
         with self.assertRaises(Instrument.DoesNotExist):
-            Instrument.objects.get(name="some-instrument")
+            Instrument.objects.get(name=instrument_name)
 
         options = get_options(self.study.name)
         options["entity"] = "instruments.json"
@@ -156,7 +161,7 @@ class TestUpdateWithCSV(TestCase):
         success, error = update(options)
         self.assertIsNone(error)
         self.assertIsNotNone(success)
-        Instrument.objects.get(name="some-instrument")
+        Instrument.objects.get(name=instrument_name)
 
 
 class TestStdOutAndStdErr(TestCase):
@@ -249,7 +254,6 @@ class TestUpdateAllStudiesCompletely(TestCase):
 
 
 class TestUpdate(TestCase):
-
 
     def setUp(self):
         self.tmp_path, self.patch_dict, self.files, self.file_content, self.study_name = (
