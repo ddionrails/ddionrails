@@ -82,11 +82,15 @@ def answer_relation_import(file: Path, study: Study) -> None:
                     relation.answer_id = answer_id  # type: ignore
                     relations.append(relation)
             except KeyError as error:
-                error_msg = f"{answerlist_key} from \n{question_item} not in \n{answers}"
+                error_msg = (
+                    "Failed to import question_item with "
+                    "answer_list but without answers:\n"
+                    f"{question_item}"
+                )
 
                 # Raising a key error will not print newlines since it prints the message
                 # in quotes.
-                raise BaseException(error_msg) from error
+                raise ValueError(error_msg) from error
     Answer.question_items.through.objects.bulk_create(relations, ignore_conflicts=True)
 
 
