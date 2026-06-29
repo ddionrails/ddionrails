@@ -629,7 +629,7 @@ class QuestionItemFactory(DjangoModelFactory):
             self.save()
             return
         if self.scale == "cat":
-            numbers = list(range(randint(-9, -1), -1)) + list(range(1, randint(1, 10)))
+            numbers = list(range(randint(-9, -2), 0)) + list(range(1, randint(2, 10)))
             for number in numbers:
                 self.answers.add(AnswerFactory(value=number))
         if create:
@@ -853,23 +853,22 @@ class AttachmentFactory(DjangoModelFactory):
             return
         self.study = self.context_study
         fields = {
-            "dataset": DatasetFactory(),
-            "variable": VariableFactory(),
-            "instrument": InstrumentFactory(),
-            "question": QuestionFactory(),
+            "dataset": None,
+            "variable": None,
+            "instrument": None,
+            "question": None,
         }
         if not isinstance(extracted, dict):
             extracted = {}
 
         if all(field in fields for field in extracted):
             for key, value in extracted.items():
+                setattr(self, key, value)
                 fields[key] = value
 
         for field in fields:
             if getattr(self, field) is not None:
                 return
-        object_to_attach_to = choice(fields.keys())
-        setattr(self, object_to_attach_to, fields[object_to_attach_to])
 
     class Meta:
         model = Attachment
