@@ -33,7 +33,6 @@ services:
         # This Address is used in the nginx.example.conf and in the docker/mail/Dockerfile
         # If you want to change it, you have to also change it there.
         ipv4_address: 172.16.238.10
-        ipv6_address: 2001:3984:3989::10
     pids_limit: 100
     ports:
       - 8000
