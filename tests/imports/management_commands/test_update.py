@@ -91,6 +91,27 @@ class TestUpdateWithCSV(TestCase):
         result_union = expected_periods.intersection(result)
         self.assertEqual(expected_periods, result_union)
 
+    def test_update_single_study_entity_with_existing(self):
+        entities = ("periods",)
+
+        local = True
+        with open(self.tmp_path.joinpath("periods.csv"), encoding="utf8") as periods_file:
+            expected_periods = {row["name"] for row in csv.DictReader(periods_file)}
+        period_name = expected_periods.pop()
+        expected_periods.add(period_name)
+        existing_period = Period(study=self.study, name=period_name)
+        existing_period.save()
+        manager = StudyImportManager(self.study, redis=False)
+        update_single_study(self.study, local, entities, None, manager=manager)
+        result = {period.name for period in Period.objects.all()}
+        self.assertNotEqual(0, len(result))
+        # Result can contain more but should contain all from expected
+        result_union = expected_periods.intersection(result)
+        self.assertEqual(expected_periods, result_union)
+        self.assertNotIn(
+            Period.objects.get(study=self.study, name=period_name).label, ["", None]
+        )
+
     def test_update_single_study(self):
         with open(
             self.tmp_path.joinpath("variables.csv"), encoding="utf8"

@@ -19,18 +19,18 @@ from django.conf import settings
 
 from ddionrails.concepts.imports import (
     AnalysisUnitImport,
-    PeriodImport,
     TopicImport,
     TopicJsonImport,
     concept_import,
     conceptual_dataset_import,
+    period_import,
 )
 from ddionrails.data.imports import (
     DatasetImport,
     DatasetJsonImport,
-    siblings_generation,
     TransformationImport,
     VariableImport,
+    siblings_generation,
     variables_images_import,
 )
 from ddionrails.imports.git_repos import clean_repo_url
@@ -119,7 +119,7 @@ class StudyImportManager:
                     AnalysisUnitImport,
                     self.base_dir / "analysis_units.csv",
                 ),
-                "periods": (PeriodImport, self.base_dir / "periods.csv"),
+                "periods": (period_import, self.base_dir / "periods.csv"),
                 "conceptual_datasets": (
                     conceptual_dataset_import,
                     self.base_dir / "conceptual_datasets.csv",

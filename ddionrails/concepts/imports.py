@@ -11,11 +11,11 @@ from django.db.transaction import atomic
 
 from ddionrails.concepts.models import Concept, ConceptualDataset
 from ddionrails.imports import imports
-from ddionrails.imports.helpers import hash_with_base_uuid
+from ddionrails.imports.helpers import hash_with_base_uuid, hash_with_namespace_uuid
 from ddionrails.studies.models import Study
 
-from .forms import AnalysisUnitForm, PeriodForm, TopicForm
-from .models import Topic
+from .forms import AnalysisUnitForm, TopicForm
+from .models import Period, Topic
 
 
 class TopicImport(imports.CSVImport):
@@ -117,13 +117,36 @@ class AnalysisUnitImport(imports.CSVImport):
         return element
 
 
-class PeriodImport(imports.CSVImport):
-    class DOR:  # pylint: disable=missing-docstring,too-few-public-methods
-        form = PeriodForm
+@atomic
+def period_import(file_path: Union[Path, str], study: Optional[Study] = None):
+    """Import Conceptual Dataset Metadata."""
+    fields_to_update = ["label", "label_de", "description", "description_de"]
+    periods_to_import: dict[str, dict[str, str]] = {}
+    with open(file_path, "r", encoding="utf8") as file:
+        reader = DictReader(file)
+        for line in reader:
+            periods_to_import[line["name"]] = line
+    existing_periods = list(
+        Period.objects.filter(study=study, name__in=periods_to_import.keys())
+    )
+    existing_period_names = set()
+    for period in existing_periods:
+        for field in fields_to_update:
+            setattr(period, field, periods_to_import[period.name][field])
+            existing_period_names.add(period.name)
+    periods_to_create = []
+    for period_name, period_line in periods_to_import.items():
+        if period_name in existing_period_names:
+            continue
+        data = {field: period_line[field] for field in ["name"] + fields_to_update}
+        periods_to_create.append(
+            Period(
+                **data, study=study, id=hash_with_namespace_uuid(study.id, period_name)
+            )
+        )
 
-    def process_element(self, element):
-        element["study"] = self.study.id
-        return element
+    Period.objects.bulk_update(existing_periods, fields_to_update)
+    Period.objects.bulk_create(periods_to_create)
 
 
 @atomic

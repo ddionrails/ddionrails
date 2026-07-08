@@ -6,7 +6,7 @@ from csv import DictWriter
 from dataclasses import dataclass
 from os import mkdir, remove
 from pathlib import Path
-from shutil import copytree, rmtree
+from shutil import rmtree
 from tempfile import mkdtemp
 from typing import Any
 

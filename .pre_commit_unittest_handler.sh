@@ -10,7 +10,7 @@ run_unittest(){
 
     if [ "${docker_status}" -eq "0" ]; then
 
-	docker-compose \
+	docker compose \
 	    -f docker-compose.yml \
 	    -f docker-compose-remote-dev.yml \
 	    -f docker-compose.override.yml \
@@ -34,7 +34,7 @@ run_pylint(){
 
     if [ "${docker_status}" -eq "0" ]; then
     
-	docker-compose \
+	docker compose \
 	    -f docker-compose.yml \
 	    -f docker-compose-remote-dev.yml \
 	    -f docker-compose.override.yml \
