@@ -22,7 +22,7 @@ INSTALLED_APPS += ("debug_toolbar",)
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
 MIDDLEWARE = ("debug_toolbar.middleware.DebugToolbarMiddleware",) + MIDDLEWARE
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
-INTERNAL_IPS = ("127.0.0.1",)
+INTERNAL_IPS = ("0.0.0.0",)
 
 # credit to https://stackoverflow.com/a/50332425
 DEBUG_TOOLBAR_CONFIG = {"SHOW_TOOLBAR_CALLBACK": lambda request: True}

@@ -38,6 +38,11 @@ python manage.py rqworker &
 echo "Creating search indices"
 python manage.py search_index --create || echo "Creating search indices failed." &
 
+pip install --no-cache-dir --upgrade poetry poetry-plugin-export
+poetry export --without-hashes -f requirements.txt > /tmp/Requirements.txt 
+pip install --no-cache-dir -r Requirements.txt 
+rm /tmp/Requirements.txt
+
 echo "Starting server"
 exec "$@"
 

@@ -58,5 +58,3 @@ services:
     shm_size: "2gb"
     ports:
       - 4444
-    networks:
-      - ddi_net

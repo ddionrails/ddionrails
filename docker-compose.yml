@@ -28,14 +28,9 @@ services:
     #  - docker/environments/django.env
     #  - docker/environments/database.env
     #  - docker/environments/elasticsearch.env
-    networks:
-      ddi_net:
-        # This Address is used in the nginx.example.conf and in the docker/mail/Dockerfile
-        # If you want to change it, you have to also change it there.
-        ipv4_address: 172.16.238.10
+    expose:
+      - "8000"
     pids_limit: 100
-    ports:
-      - 8000
     restart: on-failure:5
     security_opt:
       - no-new-privileges
@@ -62,8 +57,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - ddi_net
     pids_limit: 100
     security_opt:
       - no-new-privileges
@@ -96,8 +89,6 @@ services:
       - bootstrap.memory_lock=true
       # Sets the RAM the java VM is allowed to use
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    networks:
-      - ddi_net
     pids_limit: 5000
     restart: on-failure:5
     security_opt:
@@ -115,8 +106,6 @@ services:
     build:
       context: https://github.com/ddionrails/ddionrails.git#master:.
       dockerfile: docker/postfix/Dockerfile
-    networks:
-      - ddi_net
     pids_limit: 30
     restart: on-failure:5
     security_opt:
@@ -128,10 +117,6 @@ services:
       - 80:80
     depends_on:
       - web
-    environment:
-      - HOST_NAME=127.0.0.1
-    networks:
-      - ddi_net
     pids_limit: 100
     restart: on-failure:5
     security_opt:
@@ -148,31 +133,11 @@ services:
 
   redis:
     image: redis:7.0.5-alpine3.16
-    networks:
-      - ddi_net
     pids_limit: 500
     restart: on-failure:5
     security_opt:
       - no-new-privileges
 
-  statistics-server:
-    image: statistics-server:dash
-    build: https://github.com/ddionrails/statistics-server.git#main:.
-    depends_on:
-      - web
-    expose:
-      - 8081
-    networks:
-      - ddi_net
-    volumes:
-      - statistics-data:/statistics_data
-    environment:
-      - STATISTICS_BASE_PATH=/statistics_data
-      - UI_TRANSLATIONS_PATH=statistics_server/ui_translations.yaml
-      - URL_BASE_PATHNAME=/statistics-server/
-    restart: on-failure:5
-    security_opt:
-      - no-new-privileges
 volumes:
   backup:
   ddi-psql-config:
@@ -182,11 +147,3 @@ volumes:
   media:
   static:
   statistics-data:
-
-networks:
-  ddi_net:
-    ipam:
-      driver: default
-      config:
-        - subnet: "172.16.238.0/24"
-        - subnet: "2001:3984:3989::/64"
