@@ -2,7 +2,7 @@
 
 """Views for ddionrails.api app"""
 
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 from django.db.models import CharField, QuerySet
 from django.db.models.expressions import Value
@@ -152,6 +152,11 @@ class RelatedVariableViewSet(
 
     serializer_class = RelatedVariableSerializer
 
+    # This does not actually return QuerySet[Variable] but QuerySet[dict[str, Any]]
+    # because annotation and values methods are used.
+    # Django RestFramework does however handle dict even though it types
+    # itself to only accept a model instance.
+    # This might change so if this breaks this might be the reason.
     def get_queryset(self) -> QuerySet[Variable]:
         variable_name = self.request.query_params.get("variable", None)
         variable_id = self.request.query_params.get("variable_id", None)
@@ -215,8 +220,11 @@ class RelatedVariableViewSet(
             "period__name",
         )
 
-        return input_variables_query.union(output_variables_query, all=True).union(
-            siblings_query, all=True
+        return cast(
+            QuerySet[Variable],
+            input_variables_query.union(output_variables_query, all=True).union(
+                siblings_query, all=True
+            ),
         )
 
 
