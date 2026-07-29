@@ -10,7 +10,10 @@ ENV WEB_LIBRARY_SERV_DIR /usr/src/app/static/dist
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
-COPY ./ ${DOCKER_APP_DIRECTORY}/
+RUN addgroup -g 1000 -S dev && \
+    adduser -u 1000 -G dev -s /bin/bash -D dev
+
+COPY --chown=dev:dev ./ ${DOCKER_APP_DIRECTORY}/
 
 # hadolint ignore=DL3003,DL3018
 RUN apk add --no-cache \
@@ -58,8 +61,6 @@ RUN git clone https://github.com/neovim/neovim.git  \
     && make install
     
 
-RUN adduser -D -u 1000 -s /bin/bash dev
-
 RUN git clone https://github.com/tree-sitter/tree-sitter-python.git \
     && cd tree-sitter-python \
     && cc -fPIC -O2 -shared src/parser.c src/scanner.c -o python.so \
@@ -71,6 +72,12 @@ RUN git clone https://github.com/tree-sitter/tree-sitter-python.git \
 RUN chown -R dev:dev /usr/local/share/nvim/runtime/
 
 # Set up entrypoint
-COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+COPY --chown=dev:dev docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+
+RUN mkdir /var/ddi_studies
+
+RUN chown -R dev:dev /var/ddi_studies
+
+USER dev 
 
 ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]

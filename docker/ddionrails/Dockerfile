@@ -10,7 +10,10 @@ ENV WEB_LIBRARY_SERV_DIR /usr/src/app/static/dist
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
-COPY --chown=root:root ./ ${DOCKER_APP_DIRECTORY}/
+RUN addgroup -g 1000 -S django && \
+    adduser -u 1000 -G django -s /bin/bash -D django
+
+COPY --chown=django:django ./ ${DOCKER_APP_DIRECTORY}/
 
 # hadolint ignore=DL3003,DL3018
 RUN apk add --no-cache \
@@ -36,7 +39,8 @@ RUN apk add --no-cache \
     && rm -rf node_modules \
     && mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
 
-# Set up entrypoint
-COPY docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+RUN chown -R django:django /usr/src/app/entrypoint.sh
+
+USER django
 
 ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]

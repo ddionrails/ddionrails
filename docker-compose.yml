@@ -4,6 +4,7 @@ services:
     build:
       context: https://github.com/ddionrails/ddionrails.git#master:.
       dockerfile: docker/ddionrails/Dockerfile
+    user: django
     command:
       [
         "gunicorn",

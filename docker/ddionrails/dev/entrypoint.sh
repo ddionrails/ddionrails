@@ -18,11 +18,6 @@ if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ] || [ ! -f "
     cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES}
 fi
 
-# Install pre-commit hooks
-pre-commit install
-nohup pre-commit install-hooks > /dev/null 2>&1 & 
-nohup pre-commit install -t pre-push > /dev/null 2>&1 &
-
 
 # Collect Admin styling etc.
 python manage.py collectstatic --noinput
@@ -35,13 +30,6 @@ python manage.py migrate && \
 echo "Starting rqworker" && \
 python manage.py rqworker &
 
-echo "Creating search indices"
-python manage.py search_index --create || echo "Creating search indices failed." &
-
-pip install --no-cache-dir --upgrade poetry poetry-plugin-export
-poetry export --without-hashes -f requirements.txt > /tmp/Requirements.txt 
-pip install --no-cache-dir -r Requirements.txt 
-rm /tmp/Requirements.txt
 
 echo "Starting server"
 exec "$@"
