@@ -1,30 +1,16 @@
+// This tests functionality currently not in use
+// Though the functionality might be reinstated in the future
+// It is currently excluded from test runs through config
 import {setUpSubTopics} from "../statistics_navigation_utils";
 
 const topicLeafsApiResponse = require("./testdata/topic_leaves_response.json");
 const variableApiResponse = require("./testdata/variables_response.json");
 
-const origin = "http://localhost";
-
-global.window = Object.create(window);
-Object.defineProperty(window, "location", {
-  value: {
-    origin,
-    href: origin + "/soep-core/statistics/"
-  },
-  writable: true,
-});
+window.history.pushState({}, "", "http://localhost/soep-core/statistics/");
 
 global.fetch = jest.fn(() => {
   return Promise.resolve({json: () => Promise.resolve({"tu": topicLeafsApiResponse["tu"]}), ok: true});
 }) as jest.Mock;
-
-global.document = Object.create(document);
-
-global.document.body.innerHTML =
-  "<html lang='en'>" +
-  "<head> <meta name='study' content='soep-core'> </head>" +
-  "<button id='language-switch' data-current-language='en' type='button' class='btn btn-outline-dark'></button>" +
-  "</html>";
 
 const expected = document.createElement("ul")
 

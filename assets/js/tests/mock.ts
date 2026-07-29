@@ -1,6 +1,3 @@
-delete global.window.location;
-global.window = Object.create(window);
-
 document.head.innerHTML = `
 <head>
     <meta charset="utf-8">
@@ -70,18 +67,8 @@ document.body.innerHTML =
 </div>
 `;
 
-(global.window as any).location = {
-  ancestorOrigins: null,
-  hash: null,
-  host: "localhost",
-  port: "80",
-  protocol: "http:",
-  hostname: "localhost",
-  href: "http://localhost/study-name/datasets/dataset-name/variable-name",
-  origin: "http://localhost",
-  pathname: null,
-  search: null,
-  assign: null,
-  reload: null,
-  replace: null,
-};
+window.history.pushState(
+  {},
+  "",
+  "http://localhost/study-name/datasets/dataset-name/variable-name"
+);
