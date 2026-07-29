@@ -11,7 +11,7 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "react": ["./node_modules/@types/react"]
-    },
+    }
   },
-  "exclude": ["node_modules", "static"],
+  "exclude": ["node_modules", "static"]
 }
