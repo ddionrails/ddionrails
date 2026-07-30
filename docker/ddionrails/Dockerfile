@@ -49,6 +49,7 @@ RUN apk add --no-cache \
 
 COPY --chown=django:django ./ ${DOCKER_APP_DIRECTORY}/
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 USER django
 
