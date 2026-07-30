@@ -54,7 +54,7 @@ services:
       - ./docker/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
 
   selenium-firefox:
-    image: selenium/standalone-firefox:111.0-geckodriver-0.32
+    image: selenium/standalone-firefox:152.0-geckodriver-0.37
     shm_size: "2gb"
     ports:
       - 4444
