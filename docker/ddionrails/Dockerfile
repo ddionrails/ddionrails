@@ -54,4 +54,4 @@ RUN chown -R django:django /usr/src/app/docker/ddionrails/entrypoint.sh
 
 USER django
 
-ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/src/app/docker/ddionrails/entrypoint.sh" ]
