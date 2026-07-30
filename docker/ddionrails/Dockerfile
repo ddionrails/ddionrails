@@ -29,7 +29,7 @@ RUN apk add --no-cache \
     && pip install --no-cache-dir -r Requirements.txt \
     && pip uninstall -y poetry \
     && rm Requirements.txt \
-    && npm install \
+    && npm ci \
     && npm run build \
     && rm -rf node_modules \
     && mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
