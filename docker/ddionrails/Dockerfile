@@ -44,6 +44,7 @@ RUN addgroup -g 1000 -S django && \
 RUN apk add --no-cache \
     bash \
     cairo \
+    git \
     postgresql-libs \
     && rm -rf /var/cache/apk/*
 
