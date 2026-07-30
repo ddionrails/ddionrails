@@ -50,7 +50,7 @@ RUN apk add --no-cache \
 COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 
-RUN chown -R django:django /usr/src/app/entrypoint.sh
+RUN chown -R django:django /usr/src/app/docker/ddionrails/entrypoint.sh
 
 USER django
 
