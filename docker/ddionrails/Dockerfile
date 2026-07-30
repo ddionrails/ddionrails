@@ -48,7 +48,7 @@ RUN apk add --no-cache \
     postgresql-libs \
     && rm -rf /var/cache/apk/*
 
-COPY --chown=django:django ./ ${DOCKER_APP_DIRECTORY}/
+COPY --chown=django:django --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
