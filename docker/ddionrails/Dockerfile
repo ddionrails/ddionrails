@@ -11,7 +11,7 @@ FROM base AS builder
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
-COPY ./ ${DOCKER_APP_DIRECTORY}/
+COPY --chown=root:root ./ ${DOCKER_APP_DIRECTORY}/
 
 # hadolint ignore=DL3003,DL3018
 RUN apk add --no-cache \
@@ -47,10 +47,8 @@ RUN apk add --no-cache \
     postgresql-libs \
     && rm -rf /var/cache/apk/*
 
-COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
+COPY --chown=django:django ./ ${DOCKER_APP_DIRECTORY}/
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
-
-RUN chown -R django:django /usr/src/app/docker/ddionrails/entrypoint.sh
 
 USER django
 
