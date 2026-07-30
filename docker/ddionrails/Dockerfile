@@ -51,6 +51,10 @@ COPY --chown=django:django ./ ${DOCKER_APP_DIRECTORY}/
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+RUN mkdir /var/ddi_studies
+
+RUN chown -R django:django /var/ddi_studies
+
 USER django
 
 ENTRYPOINT [ "bash", "/usr/src/app/docker/ddionrails/entrypoint.sh" ]
