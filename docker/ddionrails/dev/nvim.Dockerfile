@@ -102,8 +102,9 @@ COPY --chown=dev:dev --from=builder /tmp/nvim-parser/typescript.so /home/dev/.lo
 COPY --chown=dev:dev docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
 RUN mkdir /var/ddi_studies
+RUN mkdir -p /var/lib/ddionrails/backup/
 
-RUN chown -R dev:dev /var/ddi_studies /home/dev/.local
+RUN chown -R dev:dev /var/ddi_studies /home/dev/.local /var/lib/ddionrails/backup/
 
 USER dev
 

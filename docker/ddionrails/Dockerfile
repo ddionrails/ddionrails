@@ -53,8 +53,9 @@ COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 
 RUN mkdir /var/ddi_studies
+RUN mkdir -p /var/lib/ddionrails/backup/
 
-RUN chown -R django:django /var/ddi_studies
+RUN chown -R django:django /var/ddi_studies /var/lib/ddionrails/backup
 
 USER django
 
