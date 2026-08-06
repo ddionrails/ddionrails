@@ -308,30 +308,29 @@ def siblings_generation(_: Path, study: Study):
     Sibling.objects.filter(sibling_a__dataset__study=study).delete()
 
     long_variables = Variable.objects.filter(
-        dataset__period__name="0", dataset__study=study, name__endswith="_h"
+        dataset__period__name="0", dataset__study=study  # , name__endswith="_h"
     ).prefetch_related("origin_variables", "target_variables")
     siblings: list[Sibling] = []
 
     harmonized_suffix = re.compile(r".*_v/d+$")
 
     for long_variable in long_variables.all():
-        target_transformations = long_variable.target_variables.all().distinct()
-        origin_transformations = long_variable.origin_variables.all().distinct()
-        target_variables = [variable.target for variable in target_transformations]
-        origin_variables_variables = [
-            variable.origin for variable in origin_transformations
-        ]
-        for variables in (target_variables, origin_variables_variables):
-            if not variables:
-                continue
-            for pair in permutations(variables, 2):
-                sibling_relation = Sibling()
-                sibling_relation.sibling_a, sibling_relation.sibling_b = pair
+        variables = Variable.objects.filter(
+            (
+                Q(origin_variables__origin=long_variable)
+                | Q(target_variables__target=long_variable)
+            )
+            & ~Q(id=long_variable.id)
+        )
 
-                if harmonized_suffix.search(pair[0].name) or harmonized_suffix.search(
-                    pair[1].name
-                ):
-                    continue
-                siblings.append(sibling_relation)
+        for pair in permutations(variables, 2):
+            sibling_relation = Sibling()
+            sibling_relation.sibling_a, sibling_relation.sibling_b = pair
+
+            if harmonized_suffix.search(pair[0].name) or harmonized_suffix.search(
+                pair[1].name
+            ):
+                continue
+            siblings.append(sibling_relation)
 
     Sibling.objects.bulk_create(siblings)

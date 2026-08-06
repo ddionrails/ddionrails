@@ -75,11 +75,14 @@ const longVariableConainerID = "long-variable-info-container";
 function getRelationsApiUrl() {
   const studyMeta = document.querySelector('meta[name="study"]');
   const variableMeta = document.querySelector('meta[name="variable"]');
+
   const variableName =
     variableMeta instanceof HTMLMetaElement ? variableMeta.content : "";
+
   const datasetMeta = document.querySelector('meta[name="dataset"]');
   const datasetName =
     datasetMeta instanceof HTMLMetaElement ? datasetMeta.content : "";
+
   const studyName =
     studyMeta instanceof HTMLMetaElement ? studyMeta.content : "";
 

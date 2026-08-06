@@ -30,8 +30,10 @@ from ddionrails.api.views.parameters_definition import (
     STUDY_PARAMETER,
     TOPIC_PARAMETER,
 )
+from django.db.models import Q
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
+from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
 
@@ -177,7 +179,6 @@ class RelatedVariableViewSet(
         input_variables_query = (
             Variable.objects.filter(target_variables__target=variable)
             .annotate(relation=Value("input_variable", output_field=CharField()))
-            .select_related("dataset", "dataset__period")
         ).values(
             "id",
             "name",
@@ -192,7 +193,6 @@ class RelatedVariableViewSet(
         output_variables_query = (
             Variable.objects.filter(origin_variables__origin=variable)
             .annotate(relation=Value("output_variable", output_field=CharField()))
-            .select_related("dataset", "dataset__period")
         ).values(
             "id",
             "name",
@@ -203,10 +203,11 @@ class RelatedVariableViewSet(
             "relation",
             "period__name",
         )
+
         siblings_query = (
             Variable.objects.filter(siblings__sibling_a=variable)
-            .exclude(name__in=output_variables_query.values("name"))
-            .exclude(name__in=input_variables_query.values("name"))
+            .exclude(id__in=output_variables_query.values("id"))
+            .exclude(id__in=input_variables_query.values("id"))
             .annotate(relation=Value("sibling_variable", output_field=CharField()))
             .select_related("dataset", "dataset__period")
         ).values(

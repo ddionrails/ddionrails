@@ -190,8 +190,7 @@ export async function addConceptVariables() {
         ) as HTMLElement;
         let variableContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']` +
-            ` > div[data-variable-name='${variable.name}'] ` +
-            `div[data-variable-dataset-name='${variable.dataset_name}'] `,
+            `  div[data-variable-name='${variable.name}'][data-variable-dataset-name='${variable.dataset_name}'] `,
         );
 
         if (!variableContainer) {
