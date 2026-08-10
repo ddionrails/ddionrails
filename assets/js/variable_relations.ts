@@ -235,6 +235,7 @@ function parseRelatedJSON(json: RelatedVariablesAPIResponse) {
   }
 }
 
+
 function loadRelationData() {
   const apiUrl = getRelationsApiUrl();
   if (apiUrl == "") {
@@ -247,6 +248,7 @@ function loadRelationData() {
       parseRelatedJSON(json);
       addConceptVariables();
       addClickEventHandler();
+      document.querySelector(".loading-spinner")?.classList.add("hidden")
     });
   });
 }

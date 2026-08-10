@@ -30,7 +30,6 @@ from ddionrails.data.imports import (
     DatasetJsonImport,
     TransformationImport,
     VariableImport,
-    siblings_generation,
     variables_images_import,
 )
 from ddionrails.imports.git_repos import clean_repo_url
@@ -174,7 +173,6 @@ class StudyImportManager:
                     self.base_dir.joinpath("script_metadata.csv"),
                 ),
                 "study": (StudyDescriptionImport, self.base_dir / "study.md"),
-                "siblings": (siblings_generation, self.base_dir / "study.md"),
             }
         )
 

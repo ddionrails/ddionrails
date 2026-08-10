@@ -8,7 +8,7 @@ import re
 from collections import OrderedDict
 from csv import DictReader
 from functools import lru_cache
-from itertools import permutations
+from itertools import combinations
 from pathlib import Path
 
 from django.db.models import Q
@@ -298,39 +298,3 @@ def variables_images_import(file: Path, study: Study) -> None:
             Variable.objects.bulk_update(variables, ["images"], batch_size=1000)
 
 
-@atomic
-def siblings_generation(_: Path, study: Study):
-    """Create relations between variables related to the same harmonized variable
-
-    This is unique to variables created at SOEP
-
-    """
-    Sibling.objects.filter(sibling_a__dataset__study=study).delete()
-
-    long_variables = Variable.objects.filter(
-        dataset__period__name="0", dataset__study=study  # , name__endswith="_h"
-    ).prefetch_related("origin_variables", "target_variables")
-    siblings: list[Sibling] = []
-
-    harmonized_suffix = re.compile(r".*_v/d+$")
-
-    for long_variable in long_variables.all():
-        variables = Variable.objects.filter(
-            (
-                Q(origin_variables__origin=long_variable)
-                | Q(target_variables__target=long_variable)
-            )
-            & ~Q(id=long_variable.id)
-        )
-
-        for pair in permutations(variables, 2):
-            sibling_relation = Sibling()
-            sibling_relation.sibling_a, sibling_relation.sibling_b = pair
-
-            if harmonized_suffix.search(pair[0].name) or harmonized_suffix.search(
-                pair[1].name
-            ):
-                continue
-            siblings.append(sibling_relation)
-
-    Sibling.objects.bulk_create(siblings)

@@ -4,7 +4,7 @@
 
 from typing import Any, Dict, cast
 
-from django.db.models import CharField, QuerySet
+from django.db.models import CharField, Q, QuerySet
 from django.db.models.expressions import Value
 from django.http.response import Http404
 from django.shortcuts import get_object_or_404
@@ -30,7 +30,6 @@ from ddionrails.api.views.parameters_definition import (
     STUDY_PARAMETER,
     TOPIC_PARAMETER,
 )
-from django.db.models import Q
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
@@ -154,6 +153,10 @@ class RelatedVariableViewSet(
 
     serializer_class = RelatedVariableSerializer
 
+    @method_decorator(cache_page(60 * 60))
+    def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
+        return super().list(request, *args, **kwargs)
+
     # This does not actually return QuerySet[Variable] but QuerySet[dict[str, Any]]
     # because annotation and values methods are used.
     # Django RestFramework does however handle dict even though it types
@@ -177,8 +180,9 @@ class RelatedVariableViewSet(
             raise Http404
 
         input_variables_query = (
-            Variable.objects.filter(target_variables__target=variable)
-            .annotate(relation=Value("input_variable", output_field=CharField()))
+            Variable.objects.filter(target_variables__target=variable).annotate(
+                relation=Value("input_variable", output_field=CharField())
+            )
         ).values(
             "id",
             "name",
@@ -191,8 +195,9 @@ class RelatedVariableViewSet(
         )
 
         output_variables_query = (
-            Variable.objects.filter(origin_variables__origin=variable)
-            .annotate(relation=Value("output_variable", output_field=CharField()))
+            Variable.objects.filter(origin_variables__origin=variable).annotate(
+                relation=Value("output_variable", output_field=CharField())
+            )
         ).values(
             "id",
             "name",
@@ -204,12 +209,21 @@ class RelatedVariableViewSet(
             "period__name",
         )
 
+        long_variable = Variable.objects.filter((Q(origin_variables__origin__id=variable.id) | Q(target_variables__target__id=variable.id)) & Q(period__name="0") ).first()
+
+
         siblings_query = (
-            Variable.objects.filter(siblings__sibling_a=variable)
+            Variable.objects.filter(
+                (
+                    Q(target_variables__target=long_variable)
+                    | Q(origin_variables__origin=long_variable)
+                )
+                & ~Q(period__name="0")
+                & ~Q(id=variable.id)
+            )
             .exclude(id__in=output_variables_query.values("id"))
             .exclude(id__in=input_variables_query.values("id"))
             .annotate(relation=Value("sibling_variable", output_field=CharField()))
-            .select_related("dataset", "dataset__period")
         ).values(
             "id",
             "name",
@@ -219,7 +233,8 @@ class RelatedVariableViewSet(
             "dataset_id",
             "relation",
             "period__name",
-        )
+        ).distinct()
+
 
         return cast(
             QuerySet[Variable],
