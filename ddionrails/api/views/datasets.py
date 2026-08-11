@@ -209,32 +209,46 @@ class RelatedVariableViewSet(
             "period__name",
         )
 
-        long_variable = Variable.objects.filter((Q(origin_variables__origin__id=variable.id) | Q(target_variables__target__id=variable.id)) & Q(period__name="0") ).first()
+        long_variable = Variable.objects.filter(
+            (
+                Q(origin_variables__origin__id=variable.id)
+                | Q(target_variables__target__id=variable.id)
+            )
+            & Q(period__name="0")
+        ).first()
 
+        if long_variable is None:
+            return cast(
+                QuerySet[Variable],
+                input_variables_query.union(output_variables_query, all=True),
+            )
 
         siblings_query = (
-            Variable.objects.filter(
-                (
-                    Q(target_variables__target=long_variable)
-                    | Q(origin_variables__origin=long_variable)
+            (
+                Variable.objects.filter(
+                    (
+                        Q(target_variables__target=long_variable)
+                        | Q(origin_variables__origin=long_variable)
+                    )
+                    & ~Q(period__name="0")
+                    & ~Q(id=variable.id)
                 )
-                & ~Q(period__name="0")
-                & ~Q(id=variable.id)
+                .exclude(id__in=output_variables_query.values("id"))
+                .exclude(id__in=input_variables_query.values("id"))
+                .annotate(relation=Value("sibling_variable", output_field=CharField()))
             )
-            .exclude(id__in=output_variables_query.values("id"))
-            .exclude(id__in=input_variables_query.values("id"))
-            .annotate(relation=Value("sibling_variable", output_field=CharField()))
-        ).values(
-            "id",
-            "name",
-            "label",
-            "label_de",
-            "dataset__name",
-            "dataset_id",
-            "relation",
-            "period__name",
-        ).distinct()
-
+            .values(
+                "id",
+                "name",
+                "label",
+                "label_de",
+                "dataset__name",
+                "dataset_id",
+                "relation",
+                "period__name",
+            )
+            .distinct()
+        )
 
         return cast(
             QuerySet[Variable],
