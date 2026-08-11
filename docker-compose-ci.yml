@@ -1,6 +1,9 @@
 services:
   web:
-    image: hansendz/ddionrails:latest-dev
+    image: ddionrails:latest
+    build:
+      context: .
+      dockerfile: docker/ddionrails/Dockerfile
     command: tail -f /dev/null
     depends_on:
       postgres:
