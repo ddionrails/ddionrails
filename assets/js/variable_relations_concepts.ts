@@ -179,12 +179,18 @@ const ConceptIcon = createIcon(ConceptIconClasses, ConceptIconTooltipText);
  */
 export async function addConceptVariables() {
   const apiURL = getConceptAPIURL();
+  const variableIdContainer = document.querySelector('meta[name="id"]');
+  const variableId =
+    variableIdContainer instanceof HTMLMetaElement ? variableIdContainer.content : "";
 
   fetch(apiURL).then((response) => {
     response.json().then((json: ConceptVariables) => {
       insertMissingPeriodContainersToDOM(json);
 
       for (const variable of json) {
+        if (variable["id"] == variableId){
+          continue
+        }
         const periodContainer = document.querySelector(
           `div[data-period-name='${variable.period_name}']`,
         ) as HTMLElement;
