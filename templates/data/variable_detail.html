@@ -132,12 +132,12 @@
                         {% if request.COOKIES.paneldata_language == "de" %}
                             <div class="card-body">
                             Bitte <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">melden Sie sich an</a>
-                            oder <a href="{% url 'workspace:register' %">registrieren ein Nutzerkonto</a>
+			    oder <a href="{% url 'workspace:register' %}">registrieren ein Nutzerkonto</a>
                             um Ihre Variablensammlungen zu verwalten.
                         {% else %}
                             <div class="card-body">
                             Please <a href="{% url 'workspace:login' %}?next={% firstof request.path '/' %}">login</a>
-                            or <a href="{% url 'workspace:register' %">register</a>
+			    or <a href="{% url 'workspace:register' %}">register</a>
                             to
                             use the basket functionality.
                         {% endif %}
@@ -149,12 +149,14 @@
         </div>
     </div>
     <div id="label-table" class="hidden">
-        <h2>Codes of related variables with the same concept</h2>
-        <p>This table provides you with an overview of label definitions across
-            related variables to identify changes over time in longitudinal variables.
-            The first number indicates the value code, the second number (in brackets)
-            represents the frequency in the data. Please note that labels are simplified
-            and values with frequency = 0 are hidden.</p>
+        <h2 data-en="Label coding of variables with the same concept" data-de="Labelkodierung für Variablen mit dem selben Konzept"></h2>
+	<p><span
+           data-en="This table shows label codings across
+            variables with the same concept to help identify coding changes over time in longitudinal variables."
+	   data-de="Diese Tabelle zeigt Labelkodierung von Variablen mit dem selben Konzept.
+	   Sie soll bei der Analyse der Kodierungsänderung von Langzeitvariablen über die Zeit helfen."
+            ></span>
+	</p>
         <div id="table-container" data-bs-type="label-table">
         <table id="value-labels-table"
                class="display table table-striped table-bordered"

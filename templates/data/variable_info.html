@@ -18,18 +18,11 @@
                 No concept available.
             {% endif %}
         </p>
-        {% if variable.label %}
         <p>
-            <b><span data-en="English label" data-de="Englischer Bezeichner"></span></b>:
-            {{ variable.label }}
+            <b>Label</b>:
+	    <span data-en="{{ variable.label }}" data-de="{% firstof variable.label_de variable.label %}"></span>
+            
         </p>
-        {% endif %}
-        {% if variable.label_de %}
-        <p>
-            <b><span data-en="German label" data-de="Deutscher Bezeichner"></span></b>:
-                {{ variable.label_de }} 
-        </p>
-        {% endif %}
         {% include "publications/attachments_partial.html" with attachments=variable.attachments %}
 
         <hr>
