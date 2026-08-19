@@ -2,6 +2,9 @@
 # Collect Admin stiling etc.
 mv ${WEB_LIBRARY}/* ${WEB_LIBRARY_SERV_DIR}/
 python manage.py collectstatic --noinput
+chown -R root:root /usr/src/app/staticfiles
+
+su django
 
 echo "Initialising System"
 python manage.py system || echo "Initialising System failed." &

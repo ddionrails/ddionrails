@@ -57,6 +57,4 @@ RUN mkdir -p /var/lib/ddionrails/backup/
 
 RUN chown -R django:django /var/ddi_studies /var/lib/ddionrails/backup
 
-USER django
-
 ENTRYPOINT [ "bash", "/usr/src/app/docker/ddionrails/entrypoint.sh" ]
