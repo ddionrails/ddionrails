@@ -8,7 +8,7 @@ type labelsContainerType = {
   values: Array<number>;
 };
 
-type variableType = {
+export type variableType = {
   variable: string;
   dataset: string;
   period: string;

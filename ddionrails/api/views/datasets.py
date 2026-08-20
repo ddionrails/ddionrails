@@ -131,8 +131,16 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
     serializer_class = VariableLabelsSerializer
 
     def get_queryset(self) -> QuerySet[Variable]:
+        variable_id = self.kwargs.get('pk', None)
+        if variable_id:
+            return Variable.objects.filter(id=variable_id)
+
+        variable_id = self.request.query_params.get("variable_id", None)
         study = self.request.query_params.get("study", None)
         concept = self.request.query_params.get("concept", None)
+
+        if variable_id:
+            return Variable.objects.filter(id=variable_id)
 
         if concept is None:
             raise Http404

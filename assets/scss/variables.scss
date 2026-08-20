@@ -106,3 +106,11 @@
 #relations-buttons-container > .btn.active{
   background-color: #212529c7;
 }
+
+#value-labels-table-body td:first-child {
+  text-align: right;
+}
+#value-labels-table-body td:last-child {
+  padding-left: 2em;
+  text-align: left;
+}

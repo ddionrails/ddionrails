@@ -107,9 +107,17 @@
 	    </div>
 
 
-            {% if variable.has_translations and variable.translation_table %}
-                {% include "data/translation_table.html" %}
-            {% endif %}
+	    <!-- Value labels for this variable -->
+            <div class="card">
+                <div class="card-header">
+                    <span data-en="Value Labels" data-de="Wertelabel"></span>
+                </div>
+                <table class="table">
+                    <tbody id="value-labels-table-body">
+                    </tbody>
+                </table>
+            </div>
+            <!-- Value labels END -->
         </div>
         <div class="col-lg-4">
             <div class="card">
@@ -167,6 +175,7 @@
 {% endblock content %}
 {% block scripts %}
     <!-- Webpack bundle: "visualization" JS -->
+    {% render_bundle 'current_variable_labels' 'js' %}
     {% render_bundle 'variable_view_basket_button' 'js' %}
     {% render_bundle 'focus_anchor' 'js' %}
     {% render_bundle 'visualization' 'js' %}
