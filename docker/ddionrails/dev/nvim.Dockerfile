@@ -90,7 +90,7 @@ RUN apk add --no-cache \
     libuv \
     readline \
     tree-sitter tree-sitter-dev pkgconfig \
-    && npm install -g typescript typescript-language-server jest ts-node tree-sitter
+    && npm install -g pyright typescript typescript-language-server jest ts-node tree-sitter
 
 COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
