@@ -136,6 +136,34 @@
 
 
 
+<div class="card">
+    <div class="card-header"><b>Questions</b>
+    </div>
+    <div class="card-body">
+        <ul id="related-questions-short-list">
+                <li>
+                    <a href="{{ item.question.get_direct_url }}">
+                    <span
+                        data-en="{{ item.question.label }}"
+                        data-de="{{ item.question.label_de }}"></span>
+                    </a>
+                    - <span
+                        data-en="{{ item.label }}"
+                        data-de="{{ item.label_de }}"></span>
+                </li>
+        </ul>
+    </div>
+        <div class="card-footer text-center">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#relatedQuestionsModal">
+		    <span
+		      data-en="Show all questions"
+		      data-de="Alle Fragen anzeigen"></span>
+            </button>
+        </div>
+</div>
+
+
+
 
 
 {% if items_subset %}
@@ -144,7 +172,7 @@
     <div class="card-header"><b>Questions</b>
     </div>
     <div class="card-body">
-        <ul>
+        <ul id="related-questions-short-list">
             {% for item in items_subset %}
                 <li>
                     <a href="{{ item.question.get_direct_url }}">

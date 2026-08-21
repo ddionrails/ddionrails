@@ -21,6 +21,7 @@ from ddionrails.api.views.datasets import (
 from ddionrails.api.views.instruments import (
     InstrumentViewSet,
     QuestionComparisonViewSet,
+    QuestionItemsViewSet,
     QuestionViewSet,
 )
 from ddionrails.api.views.studies import StudyViewSet, TopicRootAndLeafs, TopicTreeViewSet
@@ -51,6 +52,7 @@ ROUTER.register(r"basket-variables", BasketVariableSet, basename="basket-variabl
 ROUTER.register(r"datasets", DatasetViewSet, basename="dataset")
 ROUTER.register(r"instruments", InstrumentViewSet, basename="instrument")
 ROUTER.register(r"questions", QuestionViewSet, basename="question")
+ROUTER.register(r"question_items", QuestionItemsViewSet, basename="question_item")
 ROUTER.register(
     r"question-comparison", QuestionComparisonViewSet, basename="question-comparison"
 )

@@ -13,6 +13,7 @@ from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.variable import Variable
 from ddionrails.instruments.models.instrument import Instrument
 from ddionrails.instruments.models.question import Question
+from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.publications.models import Attachment
 from ddionrails.studies.models import Study
 from ddionrails.workspace.models.basket import Basket
@@ -327,6 +328,9 @@ class QuestionSerializer(serializers.ModelSerializer):
     study_label = serializers.SlugRelatedField(
         source="instrument.study", read_only=True, slug_field="label"
     )
+    period_name = serializers.SlugRelatedField(
+        source="instrument.period", read_only=True, slug_field="name"
+    )
     position = serializers.IntegerField(source="sort_id")
 
     class Meta:
@@ -340,8 +344,59 @@ class QuestionSerializer(serializers.ModelSerializer):
             "study_name",
             "study_label",
             "instrument",
+            "period_name",
             "study",
             "position",
+        ]
+
+
+class QuestionItemSerializer(serializers.ModelSerializer):
+    """Serialize systems Variables."""
+
+    question = serializers.PrimaryKeyRelatedField(
+        read_only=True
+    )
+    question_name = serializers.SlugRelatedField(
+        source="question", read_only=True, slug_field="name"
+    )
+    question_label = serializers.SlugRelatedField(
+        source="question", read_only=True, slug_field="label"
+    )
+    question_label_de = serializers.SlugRelatedField(
+        source="question", read_only=True, slug_field="label_de"
+    )
+    instrument_name = serializers.SlugRelatedField(
+        source="question.instrument", read_only=True, slug_field="name"
+    )
+    study = serializers.SlugRelatedField(
+        source="question.instrument.study", read_only=True, slug_field="id"
+    )
+    study_name = serializers.SlugRelatedField(
+        source="question.instrument.study", read_only=True, slug_field="name"
+    )
+    study_label = serializers.SlugRelatedField(
+        source="question.instrument.study", read_only=True, slug_field="label"
+    )
+    period_name = serializers.SlugRelatedField(
+        source="question.instrument.period", read_only=True, slug_field="name"
+    )
+
+    class Meta:
+        model = QuestionItem
+        fields = [
+            "id",
+            "name",
+            "label",
+            "label_de",
+            "question",
+            "question_name",
+            "question_label",
+            "question_label_de",
+            "instrument_name",
+            "study_name",
+            "study_label",
+            "period_name",
+            "study",
         ]
 
 

@@ -17,7 +17,7 @@ from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from ddionrails.api.serializers import InstrumentSerializer, QuestionSerializer
+from ddionrails.api.serializers import InstrumentSerializer, QuestionItemSerializer, QuestionSerializer
 from ddionrails.api.views.parameters_definition import (
     CONCEPT_PARAMETER,
     INSTRUMENT_PARAMETER,
@@ -28,6 +28,7 @@ from ddionrails.api.views.parameters_definition import (
 )
 from ddionrails.concepts.models import Concept, Topic
 from ddionrails.instruments.models.question import Instrument, Question
+from ddionrails.instruments.models.question_item import QuestionItem
 from ddionrails.instruments.views import get_question_item_metadata
 from ddionrails.studies.models import Study
 
@@ -121,6 +122,21 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
         return instruments
 
 
+class QuestionItemsViewSet(viewsets.ModelViewSet):
+
+    serializer_class = QuestionItemSerializer
+
+    def get_queryset(self) -> QuerySet[QuestionItem]:
+        variable_id = self.request.query_params.get("variable_id", None)
+
+        if not variable_id:
+            return QuestionItem.objects.none()
+
+        return QuestionItem.objects.filter(variables__variable__id=variable_id).select_related(
+            "question", "question__instrument", "question__instrument__period"
+        )
+
+
 @extend_schema(
     parameters=[
         STUDY_PARAMETER,
@@ -135,7 +151,6 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
     """List metadata about all questions."""
 
     serializer_class = QuestionSerializer
-    pagination_class = None
     http_method_names = ["get"]
 
     def get_queryset(self):
@@ -144,6 +159,13 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
         instrument = self.request.query_params.get("instrument", None)
         study = self.request.query_params.get("study", None)
         variables = self.request.query_params.getlist("variables[]", None)
+        variable_ids = self.request.query_params.getlist("variable_ids[]", None)
+        pagination = self.request.query_params.get("pagination", None)
+
+        pagination_class = self.pagination_class
+
+        if not pagination:
+            self.pagination_class = None
 
         if instrument is None and topic is None and concept is None and variables is None:
             raise PermissionDenied()
@@ -156,6 +178,9 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
 
         if variables:
             queryset_filter["questions_variables__variable__name__in"] = variables
+
+        if variable_ids:
+            queryset_filter["questions_variables__variable__id__in"] = variable_ids
 
         if study:
             study_object = get_object_or_404(Study, name=study)
@@ -186,8 +211,15 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
             concept_object = get_object_or_404(Concept, name=concept)
             queryset_filter["concepts_questions__concept__id"] = concept_object.id
 
-        return (
+        if not queryset_filter:
+            return Question.objects.none()
+
+        query = (
             Question.objects.filter(**queryset_filter)
-            .select_related("instrument", "instrument__study")
+            .select_related("instrument", "instrument__study", "instrument__period")
             .distinct()
         )
+        if query.count() > 500:
+            self.pagination_class = pagination_class
+
+        return query
