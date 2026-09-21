@@ -62,7 +62,7 @@ jobs:
               --recv-keys 27034E7FDB850E0BBC2C62FF806BB28AED779869 
       - name: Upload codecov report
         if: always()
-        uses: codecov/codecov-action@5a1091511ad55cbe89839c7260b706298ca349f7 # v5.5.1
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./codecov_reports/coverage.xml
