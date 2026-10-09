@@ -80,6 +80,7 @@
     "mini-css-extract-plugin": "^2.7.5",
     "prettier": "^3.6.2",
     "prettier-eslint": ">=8.8.2",
+    "pyright": "^1.1.413",
     "sass": "^1.91.0",
     "sass-loader": "^16.0.5",
     "ts-jest": "^29.4.12",

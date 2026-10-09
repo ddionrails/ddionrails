@@ -144,13 +144,8 @@ class VariableDetailView(DetailView):
         study = self.object.get_study()
         variable: Variable = self.object
         context["study"] = study
-        if variable.period.name == "0":
-            context["items"] = _get_related_long_items(self.object)
-        else:
-            context["items"] = _get_related_items(self.object)
         # All questions are intended to be displayed separately in a bootstrap modal.
         # The subset here is to be displayed directly on the page.
-        context["items_subset"] = context["items"][:5]
         context["concept"] = self.object.get_concept()
         context["row_helper"] = RowHelper()
         context["basket_list"] = (
@@ -230,20 +225,3 @@ class VariableDetailView(DetailView):
         return _data
 
 
-def _get_related_long_items(variable: Variable) -> List[QuestionItem]:
-    return list(
-        variable.questions_variables.all()
-        .select_related("question", "question__period", "question__instrument")
-        .order_by("-question__period__name")
-    )
-
-
-def _get_related_items(variable: Variable) -> List[QuestionItem]:
-    return list(
-        variable.questions_variables.filter(
-            question__instrument__period=variable.period,
-        )
-        .select_related("question", "question__period", "question__instrument")
-        .order_by("-question__period__name")
-        .distinct()
-    )

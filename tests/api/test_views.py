@@ -256,7 +256,13 @@ class TestQuestionViewSet(LiveServerTestCase):
             question_variable.save()
             question.questions_variables.add(question_variable)
         variables = [variable.name for variable in self.variables]
-        response = self.api_client.get(self.API_PATH + f"?variables={variables}")
+        query_string_list = []
+        for variable in variables:
+            query_string_list.append(f"variables[]={variable}")
+
+        query_string = "&".join(query_string_list)
+
+        response = self.api_client.get(self.API_PATH + f"?{query_string}")
         content = json.loads(response.content)
         self.assertEqual(content[0].get("name"), question.name)
         self.assertEqual(1, len(content))
@@ -299,6 +305,7 @@ class TestQuestionViewSet(LiveServerTestCase):
             "study_name",
             "study_label",
             "instrument",
+            "period_name",
             "study",
             "position",
         ]

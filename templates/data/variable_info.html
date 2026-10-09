@@ -75,7 +75,7 @@
 <!-- Description Modal End -->
 
 <!-- Questions Modal  -->
-<div class="modal" tabindex="-1" role="dialog" id="relatedQuestionsModal">
+<div class="modal" tabindex="-1" role="dialog" id="related-question-modal">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -86,45 +86,26 @@
       </div>
       <div class="modal-body">
 
-        <table class="table">
-            <tr>
-                <th scope="col">
-                <span data-en="Period" data-de="Zeitraum"></span>
-                </th>
-                <th scope="col">
-                <span data-en="Instrument" data-de="Instrumente"</span>
-                </th>
-                <th scope="col">
-                <span data-en="Question Text" data-de="Fragentext"></span>
-                </th>
-            </tr>
+        <table class="table" id="question-item-table">
+	    <thead>
+              <tr>
+                  <th scope="col">
+                  <span data-en="Period" data-de="Zeitraum"></span>
+                  </th>
+                  <th scope="col">
+                  <span data-en="Instrument" data-de="Instrumente"</span>
+                  </th>
+                  <th scope="col">
+                  <span data-en="Item Text" data-de="Itemtext"></span>
+                  </th>
+                  <th scope="col">
+                  <span data-en="Question Text" data-de="Fragentext"></span>
+                  </th>
+              </tr>
+	    </thead>
+	    <tbody id="question-item-table-body">
+	    </tbody>
 
-            {% for item in items %}
-            <tr>
-                <td scope="row">
-                <span
-                    data-en="{{ item.question.period.label }}"
-                    data-de="{{ item.question.period.label_de }}"></span>
-                </td>
-                <td scope="row">
-                <span
-                    data-en="{{ item.question.instrument.label }}"
-                    data-de="{{ item.question.instrument.label_de }}"></span>
-                </td>
-                <td scope="row">
-                    <a href="{{ item.question.get_direct_url }}">
-                        <span
-                            data-en="{{ item.question.label }}"
-                            data-de="{{ item.question.label_de }}"></span>
-                        
-                    </a>
-                        - <span
-                            data-en="{{ item.label }}"
-			    data-de="{{ item.label_de }}"></span>
-                     
-                </td>
-            </tr>
-            {% endfor %}
 
         </table>
     </div>
@@ -136,40 +117,21 @@
 
 
 
-
-
-{% if items_subset %}
-
 <div class="card">
     <div class="card-header"><b>Questions</b>
     </div>
     <div class="card-body">
-        <ul>
-            {% for item in items_subset %}
-                <li>
-                    <a href="{{ item.question.get_direct_url }}">
-                    <span
-                        data-en="{{ item.question.label }}"
-                        data-de="{{ item.question.label_de }}"></span>
-                    </a>
-                {% if item.label != item.question.label %}
-                    - <span
-                        data-en="{{ item.label }}"
-                        data-de="{{ item.label_de }}"></span>
-                      
-                {% endif %}
-                </li>
-            {% endfor %}
+        <ul id="related-questions-short-list">
         </ul>
     </div>
-    {% if items_subset != items %}
         <div class="card-footer text-center">
-            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#relatedQuestionsModal">
+            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#related-question-modal">
 		    <span
-		      data-en="Show all questions"
-		      data-de="Alle Fragen anzeigen"></span>
+		      data-en="Show all question details"
+		      data-de="Alle Fragendetails anzeigen"></span>
             </button>
         </div>
-    {% endif %}
 </div>
-{% endif %}
+
+
+

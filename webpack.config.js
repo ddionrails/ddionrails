@@ -28,6 +28,7 @@ const config = {
     dataset_table: "./assets/js/tables/dataset_table.ts",
     variable_table: "./assets/js/tables/variable_table.ts",
     question_table: "./assets/js/tables/question_table.ts",
+    related_question_item_table: "./assets/js/tables/question_item_table.ts",
     search: ["./assets/js/search/main.tsx", "./assets/scss/search.scss"],
     topics: ["./assets/js/topics.js", "./assets/scss/topics.scss"],
     concept_table: [

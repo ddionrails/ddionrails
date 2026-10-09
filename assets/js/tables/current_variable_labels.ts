@@ -12,7 +12,7 @@ async function fillValueLabels() {
       : "";
   const tableBody = document.getElementById("value-labels-table-body");
   const apiURL = new URL(
-    `${window.location.origin}/api/variable_labels/${variableID}`,
+    `${window.location.origin}/api/variable_labels/${variableID}/`,
   );
   const response = await fetch(apiURL, {
     method: "GET",
