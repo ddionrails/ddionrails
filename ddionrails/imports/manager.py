@@ -69,6 +69,7 @@ def _initialize_studies():
         if not study_object.label:
             study_object.label = study.get("label", study["name"])
         study_object.pin_reference = study.get("ref", study_object.pin_reference)
+        study_object.webhook_secret = study.get("webhook_secret", study_object.webhook_secret)
 
         study_object.repo = clean_repo_url(study["repo"])
         study_object.save()
