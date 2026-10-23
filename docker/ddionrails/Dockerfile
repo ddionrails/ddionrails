@@ -5,7 +5,8 @@ ENV PYTHONUNBUFFERED 1
 
 ENV DOCKER_APP_DIRECTORY /usr/src/app
 ENV WEB_LIBRARY /usr/src/app/distribution
-ENV WEB_LIBRARY_SERV_DIR /usr/src/app/static/dist
+ENV WEB_LIBRARY_BASE=/usr/src/app/static
+ENV WEB_LIBRARY_SERV_DIR=${WEB_LIBRARY_BASE}/dist
 
 FROM base AS builder
 
@@ -56,5 +57,7 @@ RUN mkdir /var/ddi_studies
 RUN mkdir -p /var/lib/ddionrails/backup/
 
 RUN chown -R django:django /var/ddi_studies /var/lib/ddionrails/backup
+
+RUN chown -R django:django ${WEB_LIBRARY_BASE}
 
 ENTRYPOINT [ "bash", "/usr/src/app/docker/ddionrails/entrypoint.sh" ]

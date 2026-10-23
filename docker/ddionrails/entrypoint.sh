@@ -2,7 +2,7 @@
 # Collect Admin stiling etc.
 mv ${WEB_LIBRARY}/* ${WEB_LIBRARY_SERV_DIR}/
 python manage.py collectstatic --noinput
-chown -R root:root /usr/src/app/staticfiles
+chown -R django:django /usr/src/app/static
 
 su django
 
