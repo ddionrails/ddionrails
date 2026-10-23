@@ -70,7 +70,7 @@ services:
       - ddi-psql-logs:/var/log/postgresql
 
   elasticsearch:
-    image: elasticsearch:8.19.19
+    image: elasticsearch:9.5.5
     healthcheck:
       test:
         [
@@ -132,7 +132,7 @@ services:
       - media:/var/django/media
 
   redis:
-    image: redis:7.4.10-alpine3.21
+    image: redis:8.10.2-alpine3.23
     pids_limit: 500
     restart: on-failure:5
     security_opt:
