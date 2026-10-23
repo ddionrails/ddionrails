@@ -199,7 +199,7 @@ WEBPACK_LOADER = {
         "BUNDLE_DIR_NAME": "dist/",  # must end with slash
         "STATS_FILE": BASE_DIR.joinpath("webpack-stats.json"),
         "POLL_INTERVAL": 0.1,
-        "TIMEOUT": None,
+        "TIMEOUT": 10,
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
