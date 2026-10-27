@@ -5,6 +5,7 @@ import hmac
 import logging
 
 from django_rq.queues import enqueue
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -16,6 +17,7 @@ from ddionrails.studies.models import Study
 logger = logging.getLogger(__name__)
 
 
+@extend_schema(exclude=True)
 class WebhookView(ViewSet):
     """Handle WebHook requests"""
 

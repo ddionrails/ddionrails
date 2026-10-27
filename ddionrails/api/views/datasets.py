@@ -10,7 +10,7 @@ from django.http.response import Http404
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
@@ -52,11 +52,17 @@ class VariableViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
     http_method_names = ["get"]
     serializer_class = VariableSerializer
 
+    def retrieve(self, request, *args, **kwargs):
+        output = self.get_serializer(Variable.objects.get(id=kwargs["pk"]))
+        return Response(output.data)
+
     @method_decorator(cache_page(60 * 2))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self) -> QuerySet[Variable]:
+        if self.action == "retrieve":
+            return Variable.objects.all()
         topic = self.request.query_params.get("topic", None)
         concept = self.request.query_params.get("concept", None)
         study = self.request.query_params.get("study", None)
@@ -152,6 +158,34 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
         return Variable.objects.filter(**query).select_related("period")
 
 
+@extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="variable_id",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Internal ID of the requested variable. Will be ignored if parameter variable, dataset and study are set."
+                ),
+            OpenApiParameter(
+                name="variable",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Name of the requested variable. Needs dataset and study to be set."
+                ),
+            OpenApiParameter(
+                name="dataset",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Name of the dataset containing the variable. Needs variable and study to be set."
+                ),
+            OpenApiParameter(
+                name="study",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                description="Name of the study containing the variable. Needs variable and dataset to be set."
+                ),
+        ]
+)
 class RelatedVariableViewSet(
     viewsets.ReadOnlyModelViewSet
 ):  # pylint: disable=too-many-ancestors
@@ -160,6 +194,10 @@ class RelatedVariableViewSet(
     queryset = Variable.objects.none()
 
     serializer_class = RelatedVariableSerializer
+
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
 
     @method_decorator(cache_page(60 * 60))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
@@ -178,7 +216,7 @@ class RelatedVariableViewSet(
         variable = None
         if variable_id:
             variable = Variable.objects.get(id=variable_id)
-        if variable_name and dataset_name:
+        if variable_name and dataset_name and study_name:
             variable = Variable.objects.get(
                 name=variable_name,
                 dataset__name=dataset_name,
@@ -272,6 +310,11 @@ class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancesto
 
     serializer_class = DatasetSerializer
     http_method_names = ["get"]
+
+
+    def retrieve(self, request, *args, **kwargs):
+        output = self.get_serializer(Dataset.objects.get(id=kwargs["pk"]))
+        return Response(output.data)
 
     @method_decorator(cache_page(60 * 60 * 2, cache="dataset_api"))
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:

@@ -105,6 +105,10 @@ class InstrumentViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ance
     def list(self, request: Request, *args: Any, **kwargs: Any) -> Response:
         return super().list(request, *args, **kwargs)
 
+    def retrieve(self, request, *args, **kwargs):
+        output = self.get_serializer(Instrument.objects.get(id=kwargs["pk"]))
+        return Response(output.data)
+
     def get_queryset(self) -> QuerySet[Instrument]:
         _filter = {}
         paginate = self.request.query_params.get("paginate", "True")
@@ -137,6 +141,10 @@ class QuestionViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancest
     serializer_class = QuestionSerializer
     pagination_class = None
     http_method_names = ["get"]
+
+    def retrieve(self, request, *args, **kwargs):
+        output = self.get_serializer(Question.objects.get(id=kwargs["pk"]))
+        return Response(output.data)
 
     def get_queryset(self):
         topic = self.request.query_params.get("topic", None)

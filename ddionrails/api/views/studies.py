@@ -22,6 +22,8 @@ class TopicTreeViewSet(viewsets.GenericViewSet):
     queryset = Study.objects.all()
     pagination_class = None
 
+
+
     @staticmethod
     def list(request: Request) -> Response:
         """Read query parameters and return response or 404 if study does not exist."""
@@ -78,3 +80,7 @@ class StudyViewSet(viewsets.ModelViewSet):
     http_method_names = ["get"]
     queryset = Study.objects.all()
     serializer_class = StudySerializer
+
+    @extend_schema(exclude=True)
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
