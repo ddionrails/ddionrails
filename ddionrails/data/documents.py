@@ -13,14 +13,17 @@ License:
       `<https://www.gnu.org/licenses/agpl-3.0.txt>`_.
 """
 
+import json
 import re
 from itertools import zip_longest
 from typing import Dict, List
 
 from django.conf import settings
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django_elasticsearch_dsl import fields
 from django_elasticsearch_dsl.registries import registry
+from elasticsearch.dsl.field import DenseVector
+from numpy import ndarray
 
 from ddionrails.base.generic_documents import (
     GenericDataDocument,
@@ -30,6 +33,12 @@ from ddionrails.studies.models import Study
 
 from .models import Variable
 
+from sentence_transformers import SentenceTransformer
+
+variable_embedding_cache: dict = {}
+
+
+
 
 @registry.register_document
 class VariableDocument(GenericDataDocument):
@@ -37,6 +46,7 @@ class VariableDocument(GenericDataDocument):
 
     name = fields.TextField()
     name_keyword = fields.KeywordField()
+    embedding = DenseVector(dims=1024)
 
     dataset = fields.ObjectField(
         properties={
@@ -57,6 +67,15 @@ class VariableDocument(GenericDataDocument):
             "label_de": fields.KeywordField(),
         }
     )
+
+    def prepare(self, instance):
+        data = super().prepare(instance)
+
+        embedding = instance.embedding
+        if embedding is not None:
+            data["embedding"] = json.loads(bytes(embedding).decode('ASCII'))
+
+        return data
 
     @staticmethod
     def prepare_name_keyword(  # pylint: disable=missing-docstring
@@ -125,7 +144,8 @@ class VariableDocument(GenericDataDocument):
 
     def get_queryset(self) -> QuerySet:
         """Return the queryset that should be indexed by this doc type"""
-        return (
+
+        variables = (
             super()
             .get_queryset()
             .select_related(
@@ -137,3 +157,8 @@ class VariableDocument(GenericDataDocument):
                 "dataset__study",
             )
         )
+
+        global variable_embedding_cache
+
+
+        return variables

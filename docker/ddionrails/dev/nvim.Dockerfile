@@ -1,4 +1,6 @@
-FROM python:3.13-alpine3.23 AS base
+FROM node:22-slim AS node
+
+FROM python:3.13-slim AS base
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
@@ -14,35 +16,39 @@ WORKDIR ${DOCKER_APP_DIRECTORY}
 
 COPY ./ ${DOCKER_APP_DIRECTORY}/
 
-# hadolint ignore=DL3003,DL3018
-RUN apk add --no-cache \
-	build-base \
-	cairo \
-	cairo-dev \
-	freetype-dev \
-	git \
-	jpeg-dev \
-	nodejs \
-	npm \
-	pkgconfig \
-	postgresql-dev \
-	zlib-dev \
-	&& pip install --no-cache-dir poetry poetry-plugin-export \
-	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
-	&& pip install --no-cache-dir -r Requirements.txt \
-	&& rm Requirements.txt \
-	&& npm install \
-	&& npm run build \
-	&& rm -rf /var/cache/apk/* \
-	&& mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY}
+COPY --from=node /usr/local /usr/local
 
 # hadolint ignore=DL3003,DL3018
-RUN apk add --no-cache \
-    git cmake build-base libtool \
-    gettext curl unzip \
-    lua5.3 luajit \
-    readline-dev ncurses-dev libuv-dev \
-    tree-sitter tree-sitter-dev pkgconfig
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    ca-certificates \
+    cmake \
+    curl \
+    gettext \
+    git \
+    libcairo2 \
+    libcairo2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libluajit-5.1-dev \
+    libncurses-dev \
+    libpq-dev \
+    libreadline-dev \
+    libtool \
+    libuv1-dev \
+    lua5.3 \
+    pkg-config \
+    unzip \
+    zlib1g-dev \
+    tree-sitter-cli \
+	&& pip install --no-cache-dir poetry poetry-plugin-export \
+	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
+	&& pip install --no-cache-dir -r Requirements.txt 
+
+RUN npm install \
+	&& npm run build \
+	&& mv ${WEB_LIBRARY_SERV_DIR} ${WEB_LIBRARY} 
+
 
 RUN git clone https://github.com/neovim/neovim.git /tmp/neovim \
     && cd /tmp/neovim \
@@ -71,44 +77,52 @@ FROM base
 
 WORKDIR ${DOCKER_APP_DIRECTORY}
 
-RUN addgroup -g 1000 -S dev && \
-    adduser -u 1000 -G dev -s /bin/bash -D dev
+RUN groupadd -g 1000 dev \
+    && useradd --uid 1000 --gid 1000 --create-home --shell /bin/bash dev
 
-RUN apk add --no-cache \
-    bash \
-    cairo \
+COPY --from=node /usr/local /usr/local
+
+# hadolint ignore=DL3003,DL3018
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
     curl \
     git \
-    nodejs \
-    npm \
-    postgresql-libs \
-    ripgrep \
-    xclip \
-    gettext \
-    libstdc++ \
+    libcairo2 \
+    libpq5 \
+    libuv1 \
+    libncurses6 \
+    libreadline8 \
     luajit \
-    ncurses \
-    libuv \
-    readline \
-    tree-sitter tree-sitter-dev pkgconfig \
-    && npm install -g pyright typescript typescript-language-server jest ts-node tree-sitter
+    tree-sitter-cli \
+    xclip \
+    && rm -rf /var/lib/apt/lists/* 
+
+
+RUN npm install -g pyright typescript typescript-language-server jest ts-node tree-sitter
 
 COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
+
+COPY --from=builder /usr/local/bin/nvim /usr/local/bin/nvim
+COPY --from=builder /usr/local/share/nvim /usr/local/share/nvim
+
 COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+
+COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
 COPY --from=builder /usr/local/bin/nvim /usr/local/bin/nvim
 COPY --from=builder /usr/local/share/nvim /usr/local/share/nvim
 COPY --chown=dev:dev --from=builder /tmp/nvim-parser/python.so /home/dev/.local/share/nvim/site/parser/python.so
 COPY --chown=dev:dev --from=builder /tmp/nvim-parser/typescript.so /home/dev/.local/share/nvim/site/parser/typescript.so
 
-COPY --chown=dev:dev docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
+COPY --chown=dev:dev docker/ddionrails/dev/entrypoint.sh ${DOCKER_APP_DIRECTORY}/..
 
 RUN mkdir /var/ddi_studies
+RUN mkdir /var/model_cache
 RUN mkdir -p /var/lib/ddionrails/backup/
 
-RUN chown -R dev:dev /var/ddi_studies /home/dev/.local /var/lib/ddionrails/backup/
+RUN chown -R dev:dev /var/ddi_studies /var/model_cache /home/dev/.local /var/lib/ddionrails/backup/
 
 RUN chown -R dev:dev ${WEB_LIBRARY_BASE}
 
 USER dev
 
-ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/src/entrypoint.sh" ]

@@ -43,6 +43,7 @@ services:
       - media:/var/django/media
       # Hardcoded again in ./config/settings/base.py
       - backup:/var/lib/ddionrails/backup
+      - model_cache:/var/model_cache
       - statistics-data:/var/statistics_data
       # You can put studies.json and imprint_info.json in a folder and mount it like so in the override file.
       #- ./extended_conf_files:/var/extended_conf_files
@@ -145,5 +146,6 @@ volumes:
   ddi-psql-logs:
   elastic_data:
   media:
+  model_cache:
   static:
   statistics-data:

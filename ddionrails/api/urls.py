@@ -16,6 +16,7 @@ from ddionrails.api.views.datasets import (
     DatasetViewSet,
     RelatedVariableViewSet,
     VariableLabelsViewSet,
+    VariableSemanticSearch,
     VariableViewSet,
 )
 from ddionrails.api.views.instruments import (
@@ -43,6 +44,11 @@ urlpatterns = [
         name="swagger-ui",
     ),
     path("schema/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
+    path(
+        "search/variables_semantic/",
+        VariableSemanticSearch.as_view(),
+        name="variable-semantic-search",
+    ),
 ]
 
 ROUTER = routers.SimpleRouter()

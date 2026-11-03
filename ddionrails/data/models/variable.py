@@ -6,11 +6,12 @@ from __future__ import annotations
 import inspect
 import uuid
 from copy import deepcopy
-from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Optional, Union
+from typing import TYPE_CHECKING, Any, ByteString, Dict, List, NamedTuple, Optional, Union
 
 from django.db import models
 from django.db.models import JSONField as JSONBField
 from django.db.models import QuerySet
+from django.db.models.fields import FloatField, BinaryField
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.functional import cached_property
@@ -114,6 +115,12 @@ class Variable(ModelMixin, models.Model):
     statistics_flag = models.BooleanField(blank=False, null=False, default=False)
     categories = JSONBField(
         default=dict, null=True, blank=True, help_text="Categories of the variable(JSON)"
+    )
+    embedding = BinaryField(
+        default=None,
+        null=True,
+        blank=True,
+        help_text="Vector space embedding vector for semantic search.",
     )
 
     #############
@@ -353,4 +360,3 @@ class Variable(ModelMixin, models.Model):
                 )
             )
         return self.name < name
-

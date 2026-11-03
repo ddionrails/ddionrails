@@ -11,11 +11,17 @@ from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_spectacular.utils import OpenApiParameter, extend_schema
+from elasticsearch import Elasticsearch
+from elasticsearch.dsl import Search
+from huggingface_hub.errors import LocalEntryNotFoundError
 from rest_framework import viewsets
 from rest_framework.exceptions import NotAcceptable, PermissionDenied
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
+from sentence_transformers import SentenceTransformer
 
+from config.settings.base import ELASTICSEARCH_FULL_HOST
 from ddionrails.api.serializers import (
     DatasetSerializer,
     RelatedVariableSerializer,
@@ -35,6 +41,56 @@ from ddionrails.data.models.dataset import Dataset
 from ddionrails.data.models.transformation import Transformation
 from ddionrails.data.models.variable import Variable
 from ddionrails.studies.models import Study
+
+
+class EmbeddingService:
+
+    try: 
+        model = SentenceTransformer(
+                "intfloat/multilingual-e5-large-instruct",
+                cache_folder="/var/model_cache/",
+                local_files_only=True
+                )
+    except (LocalEntryNotFoundError, IOError):
+        model = SentenceTransformer(
+                "intfloat/multilingual-e5-large-instruct",
+                cache_folder="/var/model_cache/",
+                local_files_only=False
+                )
+    
+
+    @classmethod
+    def embed(cls, content):
+        return cls.model.encode(content, normalize_embeddings=True).tolist()
+
+
+class VariableSemanticSearch(APIView):
+    permission_classes = []
+
+
+    def get(self, request):
+
+        client = Elasticsearch(ELASTICSEARCH_FULL_HOST)
+        query = (
+            "Instruct: Retrieve the most relevant survey variables, given the following german or english query for a survey variable."
+            f"Query: {request.query_params['q']}"
+        )
+
+        vector = EmbeddingService.embed(query)
+        search = (
+            Search()
+            .using(client)
+            .index("variables")
+            .knn(
+                field="embedding",
+                query_vector=vector,
+                k=20,
+                num_candidates=200,
+            )
+        )
+
+        response = search.execute()
+        return Response(response.to_dict())
 
 
 @extend_schema(
@@ -137,7 +193,7 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
     serializer_class = VariableLabelsSerializer
 
     def get_queryset(self) -> QuerySet[Variable]:
-        variable_id = self.kwargs.get('pk', None)
+        variable_id = self.kwargs.get("pk", None)
         if variable_id:
             return Variable.objects.filter(id=variable_id)
 
@@ -159,32 +215,32 @@ class VariableLabelsViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-
 
 
 @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="variable_id",
-                type=str,
-                location=OpenApiParameter.QUERY,
-                description="Internal ID of the requested variable. Will be ignored if parameter variable, dataset and study are set."
-                ),
-            OpenApiParameter(
-                name="variable",
-                type=str,
-                location=OpenApiParameter.QUERY,
-                description="Name of the requested variable. Needs dataset and study to be set."
-                ),
-            OpenApiParameter(
-                name="dataset",
-                type=str,
-                location=OpenApiParameter.QUERY,
-                description="Name of the dataset containing the variable. Needs variable and study to be set."
-                ),
-            OpenApiParameter(
-                name="study",
-                type=str,
-                location=OpenApiParameter.QUERY,
-                description="Name of the study containing the variable. Needs variable and dataset to be set."
-                ),
-        ]
+    parameters=[
+        OpenApiParameter(
+            name="variable_id",
+            type=str,
+            location=OpenApiParameter.QUERY,
+            description="Internal ID of the requested variable. Will be ignored if parameter variable, dataset and study are set.",
+        ),
+        OpenApiParameter(
+            name="variable",
+            type=str,
+            location=OpenApiParameter.QUERY,
+            description="Name of the requested variable. Needs dataset and study to be set.",
+        ),
+        OpenApiParameter(
+            name="dataset",
+            type=str,
+            location=OpenApiParameter.QUERY,
+            description="Name of the dataset containing the variable. Needs variable and study to be set.",
+        ),
+        OpenApiParameter(
+            name="study",
+            type=str,
+            location=OpenApiParameter.QUERY,
+            description="Name of the study containing the variable. Needs variable and dataset to be set.",
+        ),
+    ]
 )
 class RelatedVariableViewSet(
     viewsets.ReadOnlyModelViewSet
@@ -310,7 +366,6 @@ class DatasetViewSet(viewsets.ModelViewSet):  # pylint: disable=too-many-ancesto
 
     serializer_class = DatasetSerializer
     http_method_names = ["get"]
-
 
     def retrieve(self, request, *args, **kwargs):
         output = self.get_serializer(Dataset.objects.get(id=kwargs["pk"]))

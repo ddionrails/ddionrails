@@ -11,13 +11,13 @@ DEPENDENCY_DIFF=$?
 if [ "${DEPENDENCY_DIFF}" -gt 0 ] || [ ! -f "${LIVE_DEPENDENCIES}" ] || [ ! -f "${BUILD_DEPENDENCIES}" ]; then
     echo "Image dependencies have changed."
     echo "Overwriting old dependencies."
-(\
-    rm -rf /usr/src/app/static/dist/* \
-    && npm install \
-    && cd /usr/src/app \
-    && npm run build \
-    && cp ${BUILD_DEPENDENCIES} ${LIVE_DEPENDENCIES} & \
- )  
+(
+    rm -rf /usr/src/app/static/dist/*
+    npm ci
+    cd /usr/src/app
+    npm run build
+    cp "${BUILD_DEPENDENCIES}" "${LIVE_DEPENDENCIES}"
+) &
     
     
     
@@ -37,5 +37,9 @@ python manage.py rqworker &
 
 
 echo "Starting server"
-exec "$@"
+
+while true; do
+    "$@" || true
+    sleep 5
+done
 

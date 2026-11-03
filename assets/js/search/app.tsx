@@ -65,6 +65,7 @@ import {
   variableFacets,
   variableSorting,
 } from "./search_configs/variable_search_config";
+import { SemanticVariableSearch } from "./search_components/semantic_search";
 import { VariableNames } from "./search_components/variable_name_search";
 import { questionResult } from "./result_customizations/question_result";
 import { variableResult } from "./result_customizations/variable_result";
@@ -302,6 +303,10 @@ function App() {
               <i className="fa-solid fa-terminal"></i>{" "}
               {language === "de" ? "Variablennamen" : "Variable name search"}
             </LinkWithQuery>
+            <LinkWithQuery to="/semantic-variable">
+              <i className="fa-solid fa-terminal"></i>{" "}
+              {language === "de" ? "Semantische Variablensuche" : "Semantic Variable search"}
+            </LinkWithQuery>
           </div>
         </div>
 
@@ -325,6 +330,10 @@ function App() {
           <Route
             path="/variable-names"
             element={<VariableNames language={language} />}
+          />
+          <Route
+            path="/semantic-variable"
+            element={<SemanticVariableSearch language={language} />}
           />
         </Routes>
       </BrowserRouter>

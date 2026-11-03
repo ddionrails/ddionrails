@@ -80,8 +80,12 @@ DJANGO_APPS = (
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
 )
+
+if os.getenv("DJANGO_DEBUG") != "True":
+    DJANGO_APPS = DJANGO_APPS + ("django.contrib.staticfiles",)
+
+    
 THIRD_PARTY_APPS = (
     "crispy_forms",
     "crispy_bootstrap5",
@@ -282,12 +286,13 @@ ELASTICSEARCH_PASSWORD = os.getenv("ELASTIC_PASSWORD")
 # Overwritten in testing settings to separate testings indices which get deleted a lot
 ELASTICSEARCH_DSL_INDEX_PREFIX = os.getenv("ELASTICSEARCH_DSL_INDEX_PREFIX", "")
 # https://django-elasticsearch-dsl.readthedocs.io/en/latest/quickstart.html
+ELASTICSEARCH_FULL_HOST = (
+    f"http://elastic:{ELASTICSEARCH_PASSWORD}@"
+    f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"
+)
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": (
-            f"http://elastic:{ELASTICSEARCH_PASSWORD}@"
-            f"{ELASTICSEARCH_HOST}:{ELASTICSEARCH_PORT}"
-        ),
+        "hosts": ELASTICSEARCH_FULL_HOST,
         "timeout": 1000,
     }
 }
