@@ -113,7 +113,7 @@ COPY --from=builder /usr/local/share/nvim /usr/local/share/nvim
 COPY --chown=django:django --from=builder /tmp/nvim-parser/python.so /home/django/.local/share/nvim/site/parser/python.so
 COPY --chown=django:django --from=builder /tmp/nvim-parser/typescript.so /home/django/.local/share/nvim/site/parser/typescript.so
 
-COPY --chown=django:django docker/ddionrails/django/entrypoint.sh ${DOCKER_APP_DIRECTORY}/..
+COPY --chown=django:django docker/ddionrails/entrypoint.sh ${DOCKER_APP_DIRECTORY}/
 
 RUN mkdir /var/ddi_studies
 RUN mkdir /var/model_cache
@@ -123,4 +123,4 @@ RUN chown -R django:django /var/ddi_studies /var/model_cache /home/django/.local
 
 RUN chown -R django:django ${WEB_LIBRARY_BASE}
 
-ENTRYPOINT [ "bash", "/usr/src/entrypoint.sh" ]
+ENTRYPOINT [ "bash", "/usr/src/app/entrypoint.sh" ]
