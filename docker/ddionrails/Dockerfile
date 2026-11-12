@@ -98,7 +98,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* 
 
 
-RUN npm install -g pyright typescript typescript-language-server jest ts-node tree-sitter
 
 COPY --from=builder ${DOCKER_APP_DIRECTORY} ${DOCKER_APP_DIRECTORY}
 
