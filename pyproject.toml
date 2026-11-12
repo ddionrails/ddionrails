@@ -134,6 +134,11 @@ description = ""
 authors = ["Dominique Hansen <dhansen@diw.de>"]
 readme = "README.md"
 
+[[tool.poetry.source]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
 [tool.poetry.dependencies]
 python = "^3.12"
 babel = ">=2.12.1"
@@ -156,9 +161,9 @@ gitpython = "<3.2.2"
 requests = ">=2.32.1"
 urllib3 = ">=2.2.2"
 drf-spectacular = "^0.28.0"
-sentence-transformers  = '*'
 transformers  = "*"
-torch = "*"
+sentence-transformers = "^5"
+torch = {version = "^2.8", source = "pytorch-cpu"}
 pgvector = "^0.5.1"
 
 
