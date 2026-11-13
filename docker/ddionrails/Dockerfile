@@ -42,7 +42,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     zlib1g-dev \
     tree-sitter-cli \
 	&& pip install --no-cache-dir poetry poetry-plugin-export \
-	&& poetry export --with dev --without-hashes -f requirements.txt > Requirements.txt \
+	&& poetry export --without dev --without-hashes -f requirements.txt > Requirements.txt \
 	&& pip install --no-cache-dir -r Requirements.txt 
 
 RUN npm install \
