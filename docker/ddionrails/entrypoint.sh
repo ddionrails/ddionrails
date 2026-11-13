@@ -1,6 +1,6 @@
 #!/bin/bash
 # Collect Admin stiling etc.
-mv ${WEB_LIBRARY}/* ${WEB_LIBRARY_SERV_DIR}/
+rsync -u ${WEB_LIBRARY}/ ${WEB_LIBRARY_SERV_DIR}/
 python manage.py collectstatic --noinput
 chown -R django:django /usr/src/app/static
 

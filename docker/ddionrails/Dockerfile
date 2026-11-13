@@ -67,9 +67,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libuv1 \
     libncurses6 \
     libreadline8 \
-    luajit \
-    tree-sitter-cli \
-    xclip \
+    rsync \
     && rm -rf /var/lib/apt/lists/* 
 
 
