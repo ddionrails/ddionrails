@@ -45,23 +45,30 @@ from ddionrails.studies.models import Study
 
 class EmbeddingService:
 
-    try: 
-        model = SentenceTransformer(
-                "intfloat/multilingual-e5-large-instruct",
-                cache_folder="/var/model_cache/",
-                local_files_only=True
-                )
-    except (LocalEntryNotFoundError, IOError):
-        model = SentenceTransformer(
-                "intfloat/multilingual-e5-large-instruct",
-                cache_folder="/var/model_cache/",
-                local_files_only=False
-                )
-    
+    model = None
+
+
+    @classmethod
+    def init_model(cls) -> SentenceTransformer:
+       if cls.model is None:
+            try: 
+                cls.model = SentenceTransformer(
+                        "intfloat/multilingual-e5-large-instruct",
+                        cache_folder="/var/model_cache/",
+                        local_files_only=True
+                        )
+            except (LocalEntryNotFoundError, IOError):
+                cls.model = SentenceTransformer(
+                        "intfloat/multilingual-e5-large-instruct",
+                        cache_folder="/var/model_cache/",
+                        local_files_only=False
+                        )
+       return cls.model
 
     @classmethod
     def embed(cls, content):
-        return cls.model.encode(content, normalize_embeddings=True).tolist()
+        model = cls.init_model()
+        return model.encode(content, normalize_embeddings=True).tolist()
 
 
 class VariableSemanticSearch(APIView):
